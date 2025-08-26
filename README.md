@@ -336,10 +336,58 @@ for (int i = 0; i < documentos.length; i++) {
 
 ## 🧪 Testes
 
-### Executar Testes
+### Pré-requisitos
+
+Antes de executar os testes, certifique-se de ter as dependências instaladas:
 
 ```bash
+# Instalar dependências
+dart pub get
+
+# Ou se estiver usando Flutter
+flutter pub get
+```
+
+### Executar Testes
+
+#### Executar Todos os Testes
+```bash
 dart test
+```
+
+#### Executar Testes com Cobertura
+```bash
+# Executar testes com relatório de cobertura
+dart test --coverage=coverage
+
+# Gerar relatório HTML da cobertura
+genhtml coverage/lcov.info -o coverage/html
+
+# Abrir relatório no navegador
+open coverage/html/index.html  # macOS
+start coverage/html/index.html  # Windows
+xdg-open coverage/html/index.html  # Linux
+```
+
+#### Executar Testes Específicos
+```bash
+# Executar apenas testes de um arquivo
+dart test test/models/identificacao_test.dart
+
+# Executar testes com nome específico
+dart test --name="deve validar CPF correto"
+
+# Executar testes em modo verbose
+dart test --verbose
+
+# Executar testes em modo concurrency
+dart test --concurrency=4
+```
+
+#### Executar Testes com Watch Mode
+```bash
+# Executar testes automaticamente quando arquivos mudam
+dart test --watch
 ```
 
 ### Exemplo de Teste
@@ -361,6 +409,180 @@ void main() {
     });
   });
 }
+```
+
+### Estrutura dos Testes
+
+```
+test/
+├── models/                          # Testes dos modelos
+│   └── identificacao_test.dart     # Testes da classe Identificacao
+├── services/                        # Testes dos serviços
+│   ├── integra_contador_service_test.dart
+│   └── integra_contador_service_test.mocks.dart
+└── integration/                     # Testes de integração (se houver)
+```
+
+## 🚀 Exemplos
+
+### Pré-requisitos
+
+Antes de executar os exemplos, você precisa:
+
+1. **Configurar tokens de acesso**:
+   - Obter um token JWT válido da API Integra Contador
+   - Opcionalmente, configurar token de procurador
+
+2. **Instalar dependências**:
+   ```bash
+   dart pub get
+   ```
+
+3. **Configurar variáveis de ambiente** (recomendado):
+   ```bash
+   # Windows (CMD)
+   set INTEGRA_CONTADOR_JWT_TOKEN=seu_token_aqui
+   
+   # Windows (PowerShell)
+   $env:INTEGRA_CONTADOR_JWT_TOKEN="seu_token_aqui"
+   
+   # Linux/macOS
+   export INTEGRA_CONTADOR_JWT_TOKEN=seu_token_aqui
+   ```
+
+### Executar Exemplos
+
+#### Exemplo Básico
+```bash
+# Executar exemplo principal
+dart run example/example.dart
+
+# Executar com token via linha de comando
+dart run example/example.dart --jwt-token=seu_token_aqui
+```
+
+#### Exemplo Estendido (84 Funcionalidades)
+```bash
+# Executar exemplo com todas as funcionalidades
+dart run example/example_extended.dart
+
+# Executar com configurações personalizadas
+dart run example/example_extended.dart --timeout=60 --retries=5
+```
+
+#### Exemplos com Configuração Personalizada
+```bash
+# Executar com timeout personalizado
+dart run example/example.dart --timeout=60
+
+# Executar com número máximo de tentativas
+dart run example/example.dart --max-retries=5
+
+# Executar com modo debug
+dart run example/example.dart --debug
+```
+
+### Modificar Exemplos
+
+#### Personalizar Tokens
+Edite os arquivos de exemplo para usar seus próprios tokens:
+
+```dart
+// example/example.dart (linha 6)
+final service = IntegraContadorServiceBuilder()
+    .withJwtToken('SEU_TOKEN_JWT_AQUI')  // ← Substitua aqui
+    .withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL')  // ← Opcional
+    .build();
+```
+
+#### Personalizar Dados de Teste
+```dart
+// Substitua CPFs/CNPJs de teste pelos seus
+final cpf = '11144477735';  // ← Use um CPF válido
+final cnpj = '11222333000181';  // ← Use um CNPJ válido
+```
+
+### Exemplos Disponíveis
+
+| Arquivo | Descrição | Funcionalidades |
+|---------|-----------|-----------------|
+| `example.dart` | Exemplo básico | 10 funcionalidades principais |
+| `example_extended.dart` | Exemplo completo | Todas as 84 funcionalidades |
+
+### Saída dos Exemplos
+
+Os exemplos produzem saída detalhada no console:
+
+```
+🚀 Iniciando exemplos da API Integra Contador
+
+=== Teste de Conectividade ===
+✅ Conectividade OK
+
+=== Consulta de Situação Fiscal ===
+✅ Consulta PF realizada com sucesso!
+Situação Fiscal: regular
+Débitos Pendentes: 0
+
+✅ Consulta PJ realizada com sucesso!
+Situação Fiscal: regular
+
+=== Consulta de Dados de Empresa ===
+✅ Consulta de empresa realizada com sucesso!
+Razão Social: EMPRESA EXEMPLO LTDA
+Situação: ativa
+Data Abertura: 01/01/2020
+
+✨ Todos os exemplos foram executados!
+```
+
+### Solução de Problemas
+
+#### Erro de Token
+```
+❌ Erro na consulta PF: Token JWT inválido ou expirado
+💡 Dica: Verifique se o token JWT está válido e não expirou
+```
+
+#### Erro de Conectividade
+```
+❌ Falha na conectividade: Timeout da requisição
+💡 Dica: Verifique sua conexão com a internet
+```
+
+#### Erro de Validação
+```
+❌ Erro: CPF inválido
+💡 Dica: Verifique os dados enviados na requisição
+```
+
+### Executar Exemplos em Modo Debug
+
+```bash
+# Habilitar logs detalhados
+dart run example/example.dart --debug
+
+# Com variáveis de ambiente
+set DEBUG=true
+dart run example/example.dart
+```
+
+### Integração com IDEs
+
+#### VS Code
+1. Abra o arquivo de exemplo
+2. Pressione `F5` ou use `Run and Debug`
+3. Configure o launch.json se necessário
+
+#### IntelliJ IDEA / Android Studio
+1. Abra o arquivo de exemplo
+2. Clique no ícone ▶️ ao lado da função `main`
+3. Ou use `Shift + F10`
+
+#### Flutter
+```bash
+# Se estiver em um projeto Flutter
+flutter run -d chrome --target=example/example.dart
 ```
 
 ## 📁 Estrutura do Projeto
@@ -531,19 +753,9 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 🆘 Suporte
 
-- 📧 Email: seu-email@exemplo.com
-- 🐛 Issues: [GitHub Issues](https://github.com/seu-usuario/integra-contador-dart/issues)
-- 📖 Documentação: [Wiki](https://github.com/seu-usuario/integra-contador-dart/wiki)
-
-## 📋 Changelog
-
-### v1.0.0
-- ✅ Implementação inicial completa
-- ✅ Todos os endpoints da API
-- ✅ Modelos tipados e validados
-- ✅ Tratamento robusto de erros
-- ✅ Testes unitários completos
-- ✅ Documentação completa
+- 📧 Email: marlon-20-12@hotmail.com
+- 🐛 Issues: [GitHub Issues](https://github.com/MarlonSantosDev/integra-contador-dart/issues)
+- 📖 Documentação: [Wiki](https://github.com/MarlonSantosDev/integra-contador-dart/wiki)
 
 ---
 
