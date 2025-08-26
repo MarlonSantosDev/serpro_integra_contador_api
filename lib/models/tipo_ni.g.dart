@@ -1,0 +1,17 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'tipo_ni.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+TipoNi _$TipoNiFromJson(Map<String, dynamic> json) => TipoNi(
+  codigo: json['codigo'] as String,
+  descricao: json['descricao'] as String,
+);
+
+Map<String, dynamic> _$TipoNiToJson(TipoNi instance) => <String, dynamic>{
+  'codigo': instance.codigo,
+  'descricao': instance.descricao,
+};
