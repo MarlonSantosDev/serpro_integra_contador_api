@@ -4,8 +4,9 @@ import '../lib/integra_contador_api.dart';
 void main() async {
   // 1. Configuração do serviço
   final service = IntegraContadorServiceBuilder()
-      .withJwtToken('SEU_TOKEN_JWT_AQUI')
-      .withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL') // Opcional
+      .withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e')
+      //.withJwtToken('SEU_TOKEN_JWT_AQUI')
+      //.withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL') // Opcional
       .withTimeout(Duration(seconds: 30))
       .withMaxRetries(3)
       .build();
