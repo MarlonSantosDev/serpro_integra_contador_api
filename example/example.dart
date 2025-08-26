@@ -1,4 +1,4 @@
-import 'package:integra_contador_api/integra_contador_api.dart';
+import '../lib/integra_contador_api.dart';
 
 /// Exemplo completo de uso da API Integra Contador
 void main() async {
@@ -38,16 +38,16 @@ void main() async {
 
   // 10. Limpeza de recursos
   service.dispose();
-  
+
   print('\n✨ Todos os exemplos foram executados!');
 }
 
 /// Testa a conectividade com a API
 Future<void> _testarConectividade(IntegraContadorService service) async {
   print('=== Teste de Conectividade ===');
-  
+
   final result = await service.testarConectividade();
-  
+
   if (result.isSuccess) {
     print('✅ Conectividade OK');
   } else {
@@ -59,7 +59,7 @@ Future<void> _testarConectividade(IntegraContadorService service) async {
 /// Exemplo de consulta de situação fiscal
 Future<void> _exemploConsultaSituacaoFiscal(IntegraContadorService service) async {
   print('=== Consulta de Situação Fiscal ===');
-  
+
   // Consulta para pessoa física
   final resultPF = await service.consultarSituacaoFiscal(
     documento: '11144477735', // CPF válido para teste
@@ -67,7 +67,7 @@ Future<void> _exemploConsultaSituacaoFiscal(IntegraContadorService service) asyn
     incluirDebitos: true,
     incluirCertidoes: true,
   );
-  
+
   if (resultPF.isSuccess) {
     print('✅ Consulta PF realizada com sucesso!');
     print('Situação Fiscal: ${resultPF.data?.situacaoFiscal}');
@@ -75,14 +75,14 @@ Future<void> _exemploConsultaSituacaoFiscal(IntegraContadorService service) asyn
   } else {
     print('❌ Erro na consulta PF: ${resultPF.error?.message}');
   }
-  
+
   // Consulta para pessoa jurídica
   final resultPJ = await service.consultarSituacaoFiscal(
     documento: '11222333000181', // CNPJ válido para teste
     anoBase: '2024',
     incluirDebitos: false,
   );
-  
+
   if (resultPJ.isSuccess) {
     print('✅ Consulta PJ realizada com sucesso!');
     print('Situação Fiscal: ${resultPJ.data?.situacaoFiscal}');
@@ -95,18 +95,13 @@ Future<void> _exemploConsultaSituacaoFiscal(IntegraContadorService service) asyn
 /// Exemplo de consulta de dados de empresa
 Future<void> _exemploConsultaDadosEmpresa(IntegraContadorService service) async {
   print('=== Consulta de Dados de Empresa ===');
-  
-  final result = await service.consultarDadosEmpresa(
-    cnpj: '11222333000181',
-    incluirSocios: true,
-    incluirAtividades: true,
-    incluirEndereco: true,
-  );
-  
+
+  final result = await service.consultarDadosEmpresa(cnpj: '11222333000181', incluirSocios: true, incluirAtividades: true, incluirEndereco: true);
+
   if (result.isSuccess) {
     print('✅ Consulta de empresa realizada com sucesso!');
     print('Razão Social: ${result.data?.razaoSocial}');
-    
+
     final dados = result.data?.dados;
     if (dados != null) {
       print('Situação: ${dados['situacao']}');
@@ -122,22 +117,16 @@ Future<void> _exemploConsultaDadosEmpresa(IntegraContadorService service) async 
 /// Exemplo de envio de declaração IRPF
 Future<void> _exemploDeclaracaoIRPF(IntegraContadorService service) async {
   print('=== Envio de Declaração IRPF ===');
-  
+
   // Simulando arquivo de declaração em base64
   final arquivoDeclaracao = 'base64_encoded_file_content_here';
-  
-  final result = await service.enviarDeclaracaoIRPF(
-    cpf: '11144477735',
-    anoCalendario: '2024',
-    tipoDeclaracao: 'completa',
-    arquivoDeclaracao: arquivoDeclaracao,
-    hashArquivo: 'sha256_hash_do_arquivo',
-  );
-  
+
+  final result = await service.enviarDeclaracaoIRPF(cpf: '11144477735', anoCalendario: '2024', tipoDeclaracao: 'completa', arquivoDeclaracao: arquivoDeclaracao, hashArquivo: 'sha256_hash_do_arquivo');
+
   if (result.isSuccess) {
     print('✅ Declaração IRPF enviada com sucesso!');
     print('Número do Recibo: ${result.data?.numeroRecibo}');
-    
+
     final dados = result.data?.dados;
     if (dados != null) {
       print('Data/Hora Envio: ${dados['data_hora_envio']}');
@@ -152,17 +141,9 @@ Future<void> _exemploDeclaracaoIRPF(IntegraContadorService service) async {
 /// Exemplo de emissão de DARF
 Future<void> _exemploEmissaoDARF(IntegraContadorService service) async {
   print('=== Emissão de DARF ===');
-  
-  final result = await service.emitirDARF(
-    documento: '11222333000181',
-    codigoReceita: '0220',
-    periodoApuracao: '012024',
-    valorPrincipal: '1500.00',
-    valorMulta: '75.00',
-    valorJuros: '25.50',
-    dataVencimento: DateTime(2024, 2, 20),
-  );
-  
+
+  final result = await service.emitirDARF(documento: '11222333000181', codigoReceita: '0220', periodoApuracao: '012024', valorPrincipal: '1500.00', valorMulta: '75.00', valorJuros: '25.50', dataVencimento: DateTime(2024, 2, 20));
+
   if (result.isSuccess) {
     print('✅ DARF emitido com sucesso!');
     print('Código de Barras: ${result.data?.codigoBarras}');
@@ -177,22 +158,18 @@ Future<void> _exemploEmissaoDARF(IntegraContadorService service) async {
 /// Exemplo de monitoramento de processamento
 Future<void> _exemploMonitoramento(IntegraContadorService service) async {
   print('=== Monitoramento de Processamento ===');
-  
-  final result = await service.monitorarProcessamento(
-    documento: '11144477735',
-    numeroProtocolo: '2024123456789',
-    tipoOperacao: 'declaracao_irpf',
-  );
-  
+
+  final result = await service.monitorarProcessamento(documento: '11144477735', numeroProtocolo: '2024123456789', tipoOperacao: 'declaracao_irpf');
+
   if (result.isSuccess) {
     print('✅ Status de processamento obtido com sucesso!');
-    
+
     final dados = result.data?.dados;
     if (dados != null) {
       print('Status: ${dados['status']}');
       print('Percentual Concluído: ${result.data?.percentualConcluido}%');
       print('Última Atualização: ${dados['ultima_atualizacao']}');
-      
+
       if (dados['status'] == 'concluido') {
         print('Resultado Final: ${result.data?.resultadoFinal}');
       } else if (dados['status'] == 'erro') {
@@ -208,19 +185,15 @@ Future<void> _exemploMonitoramento(IntegraContadorService service) async {
 /// Exemplo de validação de certificado
 Future<void> _exemploValidacaoCertificado(IntegraContadorService service) async {
   print('=== Validação de Certificado Digital ===');
-  
+
   // Simulando certificado em base64
   final certificadoBase64 = 'base64_encoded_certificate_here';
-  
-  final result = await service.validarCertificado(
-    certificadoBase64: certificadoBase64,
-    senha: 'senha_do_certificado',
-    validarCadeia: true,
-  );
-  
+
+  final result = await service.validarCertificado(certificadoBase64: certificadoBase64, senha: 'senha_do_certificado', validarCadeia: true);
+
   if (result.isSuccess) {
     print('✅ Certificado validado com sucesso!');
-    
+
     final dados = result.data?.dados;
     if (dados != null) {
       print('Certificado Válido: ${dados['certificado_valido']}');
@@ -236,25 +209,25 @@ Future<void> _exemploValidacaoCertificado(IntegraContadorService service) async 
 /// Exemplo de tratamento de diferentes tipos de erro
 Future<void> _exemploTratamentoErros(IntegraContadorService service) async {
   print('=== Tratamento de Erros ===');
-  
+
   // Simulando uma consulta com CPF inválido para gerar erro
   final result = await service.consultarSituacaoFiscal(
     documento: '12345678901', // CPF inválido
     anoBase: '2024',
   );
-  
+
   if (result.isFailure) {
     final error = result.error!;
-    
+
     print('❌ Erro capturado:');
     print('Tipo: ${error.runtimeType}');
     print('Mensagem: ${error.message}');
     print('Código: ${error.code}');
-    
+
     // Tratamento específico por tipo de erro
     if (error is ValidationException) {
       print('💡 Dica: Verifique os dados enviados na requisição');
-      
+
       if (error.fieldErrors != null) {
         print('Campos com erro:');
         error.fieldErrors!.forEach((field, errors) {
@@ -272,7 +245,8 @@ Future<void> _exemploTratamentoErros(IntegraContadorService service) async {
     } else if (error is TimeoutException) {
       print('💡 Dica: A requisição demorou muito, tente novamente');
     } else if (error is RateLimitException) {
-      final rateLimitError = error as RateLimitException;
+      //final rateLimitError = error as RateLimitException;
+      final rateLimitError = error;
       print('💡 Dica: Muitas requisições, aguarde ${rateLimitError.retryAfter ?? 60} segundos');
     }
   }
@@ -280,24 +254,16 @@ Future<void> _exemploTratamentoErros(IntegraContadorService service) async {
 }
 
 /// Exemplo de uso com transformação de dados
-Future<void> _exemploTransformacaoDados(IntegraContadorService service) async {
+Future<void> exemploTransformacaoDados(IntegraContadorService service) async {
   print('=== Transformação de Dados ===');
-  
-  final result = await service.consultarSituacaoFiscal(
-    documento: '11144477735',
-    anoBase: '2024',
-  );
-  
+
+  final result = await service.consultarSituacaoFiscal(documento: '11144477735', anoBase: '2024');
+
   // Transformando o resultado usando map
   final situacaoResult = result.map((dados) {
-    return {
-      'documento': '11144477735',
-      'situacao': dados.situacaoFiscal ?? 'Desconhecida',
-      'regular': dados.situacaoFiscal == 'regular',
-      'consultadoEm': DateTime.now().toIso8601String(),
-    };
+    return {'documento': '11144477735', 'situacao': dados.situacaoFiscal ?? 'Desconhecida', 'regular': dados.situacaoFiscal == 'regular', 'consultadoEm': DateTime.now().toIso8601String()};
   });
-  
+
   if (situacaoResult.isSuccess) {
     print('✅ Dados transformados:');
     print('Documento: ${situacaoResult.data!['documento']}');
@@ -309,22 +275,20 @@ Future<void> _exemploTransformacaoDados(IntegraContadorService service) async {
 }
 
 /// Exemplo de uso com processamento assíncrono
-Future<void> _exemploProcessamentoAssincrono(IntegraContadorService service) async {
+Future<void> exemploProcessamentoAssincrono(IntegraContadorService service) async {
   print('=== Processamento Assíncrono ===');
-  
+
   final documentos = ['11144477735', '11222333000181'];
-  
+
   // Processamento paralelo
-  final futures = documentos.map((doc) => 
-    service.consultarSituacaoFiscal(documento: doc, anoBase: '2024')
-  );
-  
+  final futures = documentos.map((doc) => service.consultarSituacaoFiscal(documento: doc, anoBase: '2024'));
+
   final results = await Future.wait(futures);
-  
+
   for (int i = 0; i < documentos.length; i++) {
     final doc = documentos[i];
     final result = results[i];
-    
+
     if (result.isSuccess) {
       print('✅ $doc: ${result.data?.situacaoFiscal}');
     } else {
@@ -333,4 +297,3 @@ Future<void> _exemploProcessamentoAssincrono(IntegraContadorService service) asy
   }
   print('');
 }
-
