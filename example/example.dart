@@ -5,7 +5,6 @@ void main() async {
   // 1. Configuração do serviço
   final service = IntegraContadorServiceBuilder()
       .withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e')
-      //.withJwtToken('SEU_TOKEN_JWT_AQUI')
       //.withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL') // Opcional
       .withTimeout(Duration(seconds: 30))
       .withMaxRetries(3)
@@ -246,8 +245,7 @@ Future<void> _exemploTratamentoErros(IntegraContadorService service) async {
     } else if (error is TimeoutException) {
       print('💡 Dica: A requisição demorou muito, tente novamente');
     } else if (error is RateLimitException) {
-      //final rateLimitError = error as RateLimitException;
-      final rateLimitError = error;
+      final rateLimitError = error as RateLimitException;
       print('💡 Dica: Muitas requisições, aguarde ${rateLimitError.retryAfter ?? 60} segundos');
     }
   }
@@ -255,7 +253,7 @@ Future<void> _exemploTratamentoErros(IntegraContadorService service) async {
 }
 
 /// Exemplo de uso com transformação de dados
-Future<void> exemploTransformacaoDados(IntegraContadorService service) async {
+Future<void> _exemploTransformacaoDados(IntegraContadorService service) async {
   print('=== Transformação de Dados ===');
 
   final result = await service.consultarSituacaoFiscal(documento: '11144477735', anoBase: '2024');
@@ -276,7 +274,7 @@ Future<void> exemploTransformacaoDados(IntegraContadorService service) async {
 }
 
 /// Exemplo de uso com processamento assíncrono
-Future<void> exemploProcessamentoAssincrono(IntegraContadorService service) async {
+Future<void> _exemploProcessamentoAssincrono(IntegraContadorService service) async {
   print('=== Processamento Assíncrono ===');
 
   final documentos = ['11144477735', '11222333000181'];

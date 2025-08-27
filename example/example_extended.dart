@@ -5,7 +5,7 @@ import '../lib/integra_contador_api.dart';
 void main() async {
   // Configuração do serviço estendido
   //final service = IntegraContadorBuilder().withJwtToken('SEU_TOKEN_JWT_AQUI').withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL').withTimeout(Duration(seconds: 30)).withMaxRetries(3).build();
-  final service = IntegraContadorBuilder().withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e').withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL').withTimeout(Duration(seconds: 30)).withMaxRetries(3).build();
+  final service = IntegraContadorBuilder().withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e').withTimeout(Duration(seconds: 30)).withMaxRetries(3).build();
 
   print('🚀 Iniciando demonstração das 84 funcionalidades da API Integra Contador\n');
 
