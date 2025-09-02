@@ -7,15 +7,15 @@ part of 'dados_saida.dart';
 // **************************************************************************
 
 DadosSaida _$DadosSaidaFromJson(Map<String, dynamic> json) => DadosSaida(
-  resultado: json['resultado'] as String?,
+  resultado: _stringFromJson(json['resultado']),
   dados: json['dados'] as Map<String, dynamic>?,
-  status: json['status'] as String?,
-  codigo: json['codigo'] as String?,
-  mensagem: json['mensagem'] as String?,
+  status: _stringFromJson(json['status']),
+  codigo: _stringFromJson(json['codigo']),
+  mensagem: _stringFromJson(json['mensagem']),
   timestamp: json['timestamp'] == null
       ? null
       : DateTime.parse(json['timestamp'] as String),
-  numeroProtocolo: json['numero_protocolo'] as String?,
+  numeroProtocolo: _stringFromJson(json['numero_protocolo']),
 );
 
 Map<String, dynamic> _$DadosSaidaToJson(DadosSaida instance) =>
@@ -28,3 +28,4 @@ Map<String, dynamic> _$DadosSaidaToJson(DadosSaida instance) =>
       'timestamp': instance.timestamp?.toIso8601String(),
       'numero_protocolo': instance.numeroProtocolo,
     };
+

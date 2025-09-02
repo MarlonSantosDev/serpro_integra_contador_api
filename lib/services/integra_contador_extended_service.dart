@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import '../models/identificacao.dart';
-import '../models/pedido_dados.dart';
 import '../models/dados_saida.dart';
+import '../models/dados_entrada.dart';
+import '../models/pedido_dados.dart';
+import '../exceptions/api_exception.dart';
 import 'integra_contador_service.dart';
 import 'integra_contador_helper.dart';
 
@@ -12,6 +14,52 @@ class IntegraContadorExtendedService {
   final IntegraContadorService _baseService;
 
   IntegraContadorExtendedService(this._baseService);
+
+  /// Método para testar a conectividade com a API
+  Future<ApiResult<bool>> testarConectividade() async {
+    try {
+      final url = Uri.parse('${_baseService.config.baseUrl}/health');
+      final response = await _baseService.httpClient.get(url, headers: _baseService.defaultHeaders).timeout(const Duration(seconds: 10));
+
+      return ApiResult.success(response.statusCode == 200);
+    } catch (e) {
+      return ApiResult.failure(ExceptionFactory.network('Erro ao testar conectividade: $e'));
+    }
+  }
+  
+  /// Método para consultar dados
+  Future<ApiResult<DadosSaida>> consultar(PedidoDados pedido) {
+    return _baseService.consultar(pedido);
+  }
+  
+  /// Método para emitir documentos
+  Future<ApiResult<DadosSaida>> emitir(PedidoDados pedido) {
+    return _baseService.emitir(pedido);
+  }
+  
+  /// Método para declarar dados
+  Future<ApiResult<DadosSaida>> declarar(PedidoDados pedido) {
+    return _baseService.declarar(pedido);
+  }
+  
+  /// Método para apoiar operações
+  Future<ApiResult<DadosSaida>> apoiar(PedidoDados pedido) {
+    // Converter PedidoDados para DadosEntrada
+    final dadosEntrada = DadosEntrada(
+      identificacao: pedido.servico,
+      tipoOperacao: pedido.servico,
+      versao: '1.0',
+      timestamp: DateTime.now(),
+      dados: {
+        ...pedido.parametros ?? {},
+        'identificacao': pedido.identificacao?.toJson(),
+        'periodo_apuracao': pedido.periodoApuracao,
+        'ano_base': pedido.anoBase,
+      },
+    );
+    
+    return _baseService.apoiar(dadosEntrada);
+  }
 
   // ========================================
   // INTEGRA-SN (Simples Nacional)

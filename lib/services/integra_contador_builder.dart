@@ -58,6 +58,18 @@ class IntegraContadorBuilder {
     return this;
   }
 
+  /// Configura o builder para o ambiente de demonstração (trial)
+  IntegraContadorBuilder forTrialEnvironment() {
+    _config = (_config ?? const ApiConfig()).copyWith(
+      baseUrl: 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1',
+      customHeaders: {
+        ..._config?.customHeaders ?? {},
+        'X-Environment': 'trial',
+      },
+    );
+    return this;
+  }
+
   /// Constrói o serviço base
   IntegraContadorService buildBaseService() {
     if (_jwtToken == null || _jwtToken!.isEmpty) {
@@ -157,6 +169,24 @@ class IntegraContadorFactory {
         .withHttpClient(mockClient ?? http.Client())
         .withCustomHeaders({
           'X-Environment': 'test',
+        })
+        .buildExtendedService();
+  }
+
+  /// Cria um serviço para o ambiente de demonstração (trial)
+  static IntegraContadorExtendedService createTrialService({
+    String jwtToken = '06aef429-a981-3ec5-a1f8-71d38d86481e',
+    String? procuradorToken,
+    Duration? timeout,
+  }) {
+    return IntegraContadorBuilder()
+        .withJwtToken(jwtToken)
+        .withProcuradorToken(procuradorToken ?? '')
+        .withTimeout(timeout ?? const Duration(seconds: 30))
+        .withMaxRetries(3)
+        .withBaseUrl('https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1')
+        .withCustomHeaders({
+          'X-Environment': 'trial',
         })
         .buildExtendedService();
   }

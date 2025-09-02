@@ -121,9 +121,6 @@ class IntegraContadorService {
   /// Executa uma requisição POST com retry automático
   Future<ApiResult<DadosSaida>> _executeRequest(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('${_config.baseUrl}$endpoint');
-    print('url: $url');
-    print('body: ${jsonEncode(body)}');
-    print('headers: ${_defaultHeaders}');
 
     for (int attempt = 1; attempt <= _config.maxRetries; attempt++) {
       try {
@@ -252,11 +249,20 @@ class IntegraContadorService {
 
       return ApiResult.success(response.statusCode == 200);
     } catch (e) {
-      return ApiResult.failure(ExceptionFactory.network('Falha no teste de conectividade: $e'));
+      return ApiResult.failure(ExceptionFactory.network('Erro ao testar conectividade: $e'));
     }
   }
+  
+  /// Configuração da API
+  ApiConfig get config => _config;
 
-  /// Libera recursos
+  /// Cliente HTTP
+  http.Client get httpClient => _httpClient;
+
+  /// Headers padrão
+  Map<String, String> get defaultHeaders => _defaultHeaders;
+  
+  /// Libera recursos utilizados pelo serviço
   void dispose() {
     _httpClient.close();
   }
@@ -314,3 +320,4 @@ class IntegraContadorServiceBuilder {
     return IntegraContadorService(jwtToken: _jwtToken!, procuradorToken: _procuradorToken, config: _config, httpClient: _httpClient);
   }
 }
+

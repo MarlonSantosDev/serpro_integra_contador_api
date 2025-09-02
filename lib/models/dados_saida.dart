@@ -2,22 +2,32 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dados_saida.g.dart';
 
+/// Converte o código para String, independente do tipo original
+String? _stringFromJson(dynamic value) {
+  if (value == null) return null;
+  return value.toString();
+}
+
 /// Modelo para dados de saída das operações da API
 @JsonSerializable()
 class DadosSaida {
   /// Resultado da operação
+  @JsonKey(fromJson: _stringFromJson)
   final String? resultado;
   
   /// Dados específicos retornados pela operação
   final Map<String, dynamic>? dados;
   
   /// Status da operação
+  @JsonKey(fromJson: _stringFromJson)
   final String? status;
   
   /// Código de retorno
+  @JsonKey(fromJson: _stringFromJson)
   final String? codigo;
   
   /// Mensagem descritiva
+  @JsonKey(fromJson: _stringFromJson)
   final String? mensagem;
   
   /// Timestamp da resposta
@@ -25,7 +35,7 @@ class DadosSaida {
   final DateTime? timestamp;
   
   /// Número do protocolo (quando aplicável)
-  @JsonKey(name: 'numero_protocolo')
+  @JsonKey(name: 'numero_protocolo', fromJson: _stringFromJson)
   final String? numeroProtocolo;
 
   const DadosSaida({
