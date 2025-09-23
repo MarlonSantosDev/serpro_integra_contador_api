@@ -1,24 +1,14 @@
 name: serpro_integra_contador_api
-description: Cliente Dart para a API Integra Contador do SERPRO - Pronto para produção, com suporte a todas as 84 funcionalidades.
+description: Um package Dart para acessar a API do SERPRO Integra Contado.
 version: 1.0.0
 homepage: https://github.com/MarlonSantosDev/serpro_integra_contador_api
-repository: https://github.com/MarlonSantosDev/serpro_integra_contador_api
-issue_tracker: https://github.com/MarlonSantosDev/serpro_integra_contador_api/issues
 
 environment:
-  sdk: ">=3.8.0 <4.0.0"
+  sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
   http: ^1.1.0
-  meta: ^1.9.1
-  json_annotation: ^4.9.0
-  crypto: ^3.0.6
 
 dev_dependencies:
-  test: ^1.24.0
-  mockito: ^5.4.2
-  build_runner: ^2.4.7
-  json_serializable: ^6.7.1
-  lints: ^2.1.1
-
+  test: ^1.24.3
 

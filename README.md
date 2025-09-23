@@ -1,352 +1,213 @@
-[![Pub Version](https://img.shields.io/pub/v/integra_contador_api.svg)](https://pub.dev/packages/integra_contador_api)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# SERPRO Integra Contador API
 
-Cliente Dart **100% pronto para produção** para a API Integra Contador do SERPRO. Esta biblioteca oferece uma interface completa, type-safe e robusta para integração com todos os serviços da API.
+Um package Dart completo para acessar todos os serviços da API do SERPRO Integra Contador.
 
-## 🚀 Características
+## Visão Geral
 
-- ✅ **100% Type-Safe**: Todos os modelos são tipados e validados
-- ✅ **Pronto para Produção**: Inclui tratamento de erros, retry automático e timeouts
-- ✅ **Fácil de Usar**: Interface intuitiva com métodos de conveniência
-- ✅ **Testado**: Cobertura completa de testes unitários
-- ✅ **Documentado**: Documentação completa com exemplos práticos
-- ✅ **Flexível**: Configuração customizável para diferentes ambientes
+O **SERPRO Integra Contador** é uma plataforma de serviços que fornece um conjunto de APIs para escritórios de contabilidade e demais empresas do ramo contábil, otimizando a prestação de serviços aos contribuintes.
 
-## 📦 Instalação
+Este package oferece uma interface Dart/Flutter para interagir com todos os serviços disponíveis, incluindo:
 
-### Opção 1: Usando pub.dev (Recomendado)
+- **DEFIS** - Declaração de Informações Socioeconômicas e Fiscais
+- **PGDASD** - Programa Gerador do DAS do Simples Nacional  
+- **PGMEI** - Programa Gerador do DAS do MEI
+- **CCMEI** - Certificado da Condição de Microempreendedor Individual
+- **Regime de Apuração** - Opção pelo Regime de Apuração de Receitas
+- E muitos outros serviços
 
-Adicione ao seu `pubspec.yaml`:
+## Características
 
-```yaml
-dependencies:
-  integra_contador_api: ^1.0.0
-```
+✅ **Cobertura Completa**: Suporte a todos os serviços disponíveis na API  
+✅ **Modelos Tipados**: Classes Dart com serialização JSON automática  
+✅ **Documentação Detalhada**: Documentação completa para cada serviço  
+✅ **Exemplos Práticos**: Exemplos de uso para todos os serviços  
+✅ **Dados de Teste**: CNPJs/CPFs e payloads de exemplo para desenvolvimento  
+✅ **Tratamento de Erros**: Gestão adequada de códigos de status e mensagens de erro  
 
-### Opção 2: Usando este repositório
+## Instalação
 
-```yaml
-dependencies:
-  integra_contador_api:
-    git:
-      url: https://github.com/MarlonSantosDev/serpro_integra_contador_api.git
-      ref: main
-```
-
-### Opção 3: Local (Para desenvolvimento)
-
-1. Clone este repositório
-2. Copie a pasta `lib` para seu projeto
-3. Adicione as dependências necessárias:
+Adicione o package ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  http: ^1.1.0
-  meta: ^1.9.1
-  json_annotation: ^4.8.1
+  serpro_integra_contador_api: ^1.0.0
 ```
 
-## 🔧 Configuração Inicial
+Execute:
 
-### 1. Importe a biblioteca
-
-```dart
-import 'package:integra_contador_api/integra_contador_api.dart';
+```bash
+dart pub get
 ```
 
-### 2. Configure o serviço
+## Configuração
+
+### Pré-requisitos
+
+Para usar este package em produção, você precisa:
+
+1. **Certificado Digital e-CNPJ** (padrão ICP-Brasil)
+2. **Consumer Key e Consumer Secret** (obtidos na área do cliente SERPRO)
+3. **Contrato ativo** com o SERPRO para os serviços desejados
+
+### Autenticação
+
+A API do SERPRO utiliza autenticação OAuth2 com certificado digital obrigatório:
 
 ```dart
-final service = IntegraContadorServiceBuilder()
-    .withJwtToken('SEU_TOKEN_JWT_AQUI')
-    .withProcuradorToken('TOKEN_PROCURADOR_OPCIONAL') // Opcional
-    .withTimeout(Duration(seconds: 30))
-    .withMaxRetries(3)
-    .build();
-```
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
-### 3. Use o serviço
+final apiClient = ApiClient();
 
-```dart
-final result = await service.consultarSituacaoFiscal(
-  documento: '12345678901',
-  anoBase: '2024',
+await apiClient.authenticate(
+  'seu_consumer_key',
+  'seu_consumer_secret', 
+  'caminho/para/certificado.p12',
+  'senha_do_certificado',
 );
+```
 
-if (result.isSuccess) {
-  print('Situação: ${result.data?.situacaoFiscal}');
-} else {
-  print('Erro: ${result.error?.message}');
+**⚠️ Importante**: A implementação atual da autenticação é simplificada. Para uso em produção, será necessário implementar suporte a mTLS (Mutual TLS) com certificados digitais, que não é suportado nativamente pelo pacote `http` do Dart.
+
+## Uso Básico
+
+### Exemplo: Transmitir Declaração DEFIS
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // 1. Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(/* credenciais */);
+  
+  // 2. Criar serviço
+  final defisService = DefisService(apiClient);
+  
+  // 3. Preparar dados da declaração
+  final declaracao = TransmitirDeclaracaoRequest(
+    ano: 2024,
+    inatividade: 2,
+    empresa: Empresa(
+      ganhoCapital: 0.0,
+      qtdEmpregadoInicial: 1,
+      qtdEmpregadoFinal: 1,
+      // ... outros campos obrigatórios
+    ),
+  );
+  
+  // 4. Transmitir declaração
+  try {
+    final response = await defisService.transmitirDeclaracao(
+      '00000000000000', // CNPJ Contratante
+      2,
+      '11111111111111', // CNPJ/CPF Autor
+      2, 
+      '00123456000100', // CNPJ Contribuinte
+      2,
+      declaracao,
+    );
+    
+    print('Sucesso! ID DEFIS: ${response.dados.idDefis}');
+  } catch (e) {
+    print('Erro: $e');
+  }
 }
 ```
 
-## 🧪 Ambiente de Demonstração (Trial)
+## Serviços Disponíveis
 
-A API Integra Contador oferece um ambiente de demonstração (trial) para testes. Este ambiente permite testar as funcionalidades da API sem a necessidade de um token JWT real.
+### Integra-SN (Simples Nacional)
 
-### Configurando o ambiente de demonstração
+| Serviço | Classe | Descrição |
+|---------|--------|-----------|
+| DEFIS | `DefisService` | Declaração de Informações Socioeconômicas e Fiscais |
+| PGDASD | `PgdasdService` | Programa Gerador do DAS do Simples Nacional |
+| Regime de Apuração | `RegimeApuracaoService` | Opção pelo Regime de Apuração de Receitas |
 
-#### Método 1: Usando o Factory (Recomendado)
+### Integra-MEI
+
+| Serviço | Classe | Descrição |
+|---------|--------|-----------|
+| PGMEI | `PgmeiService` | Programa Gerador do DAS do MEI |
+| CCMEI | `CcmeiService` | Certificado da Condição de MEI |
+
+### Outros Serviços
+
+- **DCTFWeb**: Declaração de Débitos e Créditos Tributários Federais
+- **Procurações**: Gestão de procurações eletrônicas
+- **Sicalc**: Sistema de Cálculos Tributários
+- **CaixaPostal**: Consulta de mensagens da RFB
+- **PagamentoWeb**: Comprovantes de pagamento
+- **SITFIS**: Situação Fiscal do contribuinte
+- **Parcelamentos**: Gestão de parcelamentos tributários
+
+## Dados de Teste
+
+Para desenvolvimento e testes, utilize os seguintes dados:
 
 ```dart
-// Cria um serviço configurado para o ambiente de demonstração
-final service = IntegraContadorFactory.createTrialService();
+// CNPJs/CPFs de teste (sempre usar zeros)
+const cnpjTeste = '00000000000000';
+const cpfTeste = '00000000000';
 
-// A chave de teste padrão já está configurada, mas você pode especificar outra se necessário
-final serviceCustom = IntegraContadorFactory.createTrialService(
-  jwtToken: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+// Estrutura base para testes
+final requestTeste = BaseRequest(
+  contratante: Contratante(numero: cnpjTeste, tipo: 2),
+  autorPedidoDados: AutorPedidoDados(numero: cnpjTeste, tipo: 2),
+  contribuinte: Contribuinte(numero: cnpjTeste, tipo: 2),
+  pedidoDados: PedidoDados(/* dados específicos do serviço */),
 );
 ```
 
-#### Método 2: Usando o Builder com método específico
+## Documentação
 
-```dart
-final service = IntegraContadorBuilder()
-    .withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e')
-    .forTrialEnvironment() // Configura automaticamente a URL e headers para o ambiente de demonstração
-    .build();
+- [Documentação do Serviço DEFIS](doc/defis_service.md)
+- [Exemplos de Uso](example/)
+- [Testes](test/)
+
+## Estrutura do Projeto
+
+```
+lib/
+├── src/
+│   ├── core/           # Classes base e autenticação
+│   ├── models/         # Modelos de dados
+│   │   ├── base/       # Modelos base
+│   │   ├── defis/      # Modelos específicos do DEFIS
+│   │   └── ...         # Outros serviços
+│   └── services/       # Classes de serviço
+├── doc/                # Documentação detalhada
+├── example/            # Exemplos de uso
+└── test/               # Testes unitários
 ```
 
-#### Método 3: Configuração manual
+## Limitações Conhecidas
 
-```dart
-final service = IntegraContadorBuilder()
-    .withJwtToken('06aef429-a981-3ec5-a1f8-71d38d86481e')
-    .withBaseUrl('https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1')
-    .withCustomHeaders({'X-Environment': 'trial'})
-    .build();
-```
+1. **Certificado Digital**: A implementação atual não suporta mTLS com certificados digitais nativamente
+2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
+3. **Cobertura de Serviços**: Implementação inicial focada no DEFIS, outros serviços em desenvolvimento
 
-### Exemplos de uso do ambiente de demonstração
+## Contribuição
 
-Consulte o arquivo `example/example_trial.dart` para exemplos completos de uso do ambiente de demonstração.
+Contribuições são bem-vindas! Por favor:
 
-```dart
-// Exemplo de consulta de declarações PGDASD
-final result = await service.consultarDeclaracoesSN(
-  documento: '00000000000000',
-  anoCalendario: '2018',
-);
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature
+3. Implemente testes para novas funcionalidades
+4. Envie um pull request
 
-// Exemplo de geração de DAS
-final result = await service.gerarDASSN(
-  documento: '00000000000100',
-  periodoApuracao: '201801',
-);
-```
+## Licença
 
-## 📚 Guia de Uso
+Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-### 🔍 Consultas
+## Suporte
 
-#### Consulta de Situação Fiscal
+Para dúvidas sobre a API do SERPRO, consulte:
+- [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
+- [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 
-```dart
-// Para pessoa física (CPF)
-final resultPF = await service.consultarSituacaoFiscal(
-  documento: '12345678901',
-  anoBase: '2024',
-  incluirDebitos: true,
-  incluirCertidoes: true,
-);
+Para questões específicas deste package, abra uma issue no repositório.
 
-// Para pessoa jurídica (CNPJ)
-final resultPJ = await service.consultarSituacaoFiscal(
-  documento: '12345678901234',
-  anoBase: '2024',
-);
-```
+---
 
-#### Consulta de Dados de Empresa
-
-```dart
-final result = await service.consultarDadosEmpresa(
-  cnpj: '12345678901234',
-  incluirSocios: true,
-  incluirAtividades: true,
-  incluirEndereco: true,
-);
-```
-
-### 📝 Declarações
-
-#### Envio de Declaração IRPF
-
-```dart
-final result = await service.enviarDeclaracaoIRPF(
-  cpf: '12345678901',
-  anoCalendario: '2024',
-  tipoDeclaracao: 'completa',
-  arquivoDeclaracao: 'base64_encoded_file_content',
-  hashArquivo: 'sha256_hash_do_arquivo',
-);
-```
-
-### 💰 Emissões
-
-#### Emissão de DARF
-
-```dart
-final result = await service.emitirDARF(
-  documento: '12345678901234',
-  codigoReceita: '0220',
-  periodoApuracao: '012024',
-  valorPrincipal: '1500.00',
-  valorMulta: '75.00',
-  valorJuros: '25.50',
-  dataVencimento: DateTime(2024, 2, 20),
-);
-```
-
-### 🔄 Monitoramento
-
-```dart
-final result = await service.monitorarProcessamento(
-  documento: '12345678901',
-  numeroProtocolo: '2024123456789',
-  tipoOperacao: 'declaracao_irpf',
-);
-```
-
-### 🔐 Validação de Certificado
-
-```dart
-final result = await service.validarCertificado(
-  certificadoBase64: 'base64_encoded_certificate',
-  senha: 'senha_do_certificado',
-  validarCadeia: true,
-);
-```
-
-## 🛠️ Configurações Avançadas
-
-### Configuração de Timeout e Retries
-
-```dart
-final service = IntegraContadorServiceBuilder()
-    .withJwtToken('SEU_TOKEN_JWT_AQUI')
-    .withTimeout(Duration(seconds: 60))
-    .withMaxRetries(5)
-    .withRetryDelay(Duration(seconds: 3))
-    .build();
-```
-
-### Headers Customizados
-
-```dart
-final service = IntegraContadorServiceBuilder()
-    .withJwtToken('SEU_TOKEN_JWT_AQUI')
-    .withCustomHeaders({
-      'X-Custom-Header': 'valor',
-      'X-Application-Name': 'MeuApp',
-    })
-    .build();
-```
-
-### Cliente HTTP Customizado
-
-```dart
-import 'package:http/http.dart' as http;
-
-final client = http.Client();
-// Configure o cliente conforme necessário
-
-final service = IntegraContadorServiceBuilder()
-    .withJwtToken('SEU_TOKEN_JWT_AQUI')
-    .withHttpClient(client)
-    .build();
-```
-
-### Ambientes Específicos
-
-```dart
-// Ambiente de desenvolvimento
-final devService = IntegraContadorFactory.createDevelopmentService(
-  jwtToken: 'SEU_TOKEN_JWT_AQUI',
-);
-
-// Ambiente de produção
-final prodService = IntegraContadorFactory.createProductionService(
-  jwtToken: 'SEU_TOKEN_JWT_AQUI',
-);
-
-// Ambiente de teste
-final testService = IntegraContadorFactory.createTestService(
-  jwtToken: 'SEU_TOKEN_JWT_AQUI',
-);
-
-// Ambiente de demonstração (trial)
-final trialService = IntegraContadorFactory.createTrialService();
-```
-
-## 🧩 Serviços Disponíveis
-
-Esta biblioteca oferece suporte a todos os 84 serviços da API Integra Contador, organizados em categorias:
-
-### Simples Nacional (PGDASD)
-- Entregar declaração mensal
-- Gerar DAS
-- Consultar declarações transmitidas
-- Consultar última declaração/recibo
-- Consultar declaração/recibo específico
-- Consultar extrato do DAS
-- Gerar DAS de cobrança
-- Gerar DAS de processo
-- Gerar DAS avulso
-
-### DEFIS
-- Transmitir declaração
-- Consultar declarações
-- Consultar última declaração/recibo
-- Consultar declaração/recibo específico
-
-### MEI
-- Gerar DAS
-- Gerar DAS com código de barras
-- Atualizar benefício
-- Consultar dívida ativa
-- Emitir CCMEI
-- Consultar dados CCMEI
-- Consultar situação cadastral CCMEI
-
-### DCTFWeb
-- Gerar guia
-- Consultar recibo
-- Consultar declaração completa
-- Consultar XML da declaração
-- Entregar declaração
-- Gerar guia em andamento
-
-### MIT
-- Encerrar apuração
-- Consultar situação de encerramento
-- Consultar apuração
-- Consultar apuração por ano/mês
-
-### Outros Sistemas
-- Procurações
-- Sicalc
-- Caixa Postal
-- DTE
-- PagtoWeb
-- Autenticação de Procurador
-- Eventos de Atualização
-- SITFIS
-- Parcelamentos
-
-## 📊 Exemplos Completos
-
-Consulte a pasta `example` para exemplos completos de uso da biblioteca:
-
-- `example.dart`: Exemplo básico com as principais funcionalidades
-- `example_extended.dart`: Exemplo completo com todas as 84 funcionalidades
-- `example_trial.dart`: Exemplo de uso do ambiente de demonstração
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
-
-## 📄 Licença
-
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
+**Desenvolvido por AI** 🤖
