@@ -11,14 +11,8 @@ class DctfWebService {
 
   Future<DctfWebResponse> gerarDarf(String cnpj, String periodoApuracao) async {
     final request = BaseRequest(
-      contratante: Contratante(numero: '00000000000000', tipo: 2),
-      autorPedidoDados: AutorPedidoDados(numero: '00000000000000', tipo: 2),
-      contribuinte: Contribuinte(numero: cnpj, tipo: 2),
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'GERAR_DARF_DECLARACAO_ANDAMENTO',
-        dados: jsonEncode({'periodoApuracao': periodoApuracao}),
-      ),
+      contribuinteNumero: cnpj,
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERAR_DARF_DECLARACAO_ANDAMENTO', dados: jsonEncode({'periodoApuracao': periodoApuracao})),
     );
 
     final response = await _apiClient.post('/', request);

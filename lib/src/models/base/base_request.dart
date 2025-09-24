@@ -1,20 +1,44 @@
+import '../../util/document_utils.dart';
+
+/// Requisição base simplificada - apenas com os dados do pedido
+/// Os dados de contratante, autorPedidoDados e contribuinte são gerenciados pelo ApiClient
 class BaseRequest {
-  final Contratante contratante;
-  final AutorPedidoDados autorPedidoDados;
-  final Contribuinte contribuinte;
+  final String contribuinteNumero;
+  final int contribuinteTipo;
   final PedidoDados pedidoDados;
 
-  BaseRequest({required this.contratante, required this.autorPedidoDados, required this.contribuinte, required this.pedidoDados});
+  BaseRequest({required this.contribuinteNumero, required this.pedidoDados}) : contribuinteTipo = DocumentUtils.detectDocumentType(contribuinteNumero);
 
-  factory BaseRequest.fromJson(Map<String, dynamic> json) {
-    return BaseRequest(contratante: Contratante.fromJson(json['contratante'] as Map<String, dynamic>), autorPedidoDados: AutorPedidoDados.fromJson(json['autorPedidoDados'] as Map<String, dynamic>), contribuinte: Contribuinte.fromJson(json['contribuinte'] as Map<String, dynamic>), pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>));
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'contratante': contratante.toJson(), 'autorPedidoDados': autorPedidoDados.toJson(), 'contribuinte': contribuinte.toJson(), 'pedidoDados': pedidoDados.toJson()};
+  /// Cria o JSON completo incluindo dados de autenticação
+  Map<String, dynamic> toJsonWithAuth({required String contratanteNumero, required int contratanteTipo, required String autorPedidoDadosNumero, required int autorPedidoDadosTipo}) {
+    return {
+      'contratante': {'numero': DocumentUtils.cleanDocumentNumber(contratanteNumero), 'tipo': contratanteTipo},
+      'autorPedidoDados': {'numero': DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero), 'tipo': autorPedidoDadosTipo},
+      'contribuinte': {'numero': DocumentUtils.cleanDocumentNumber(contribuinteNumero), 'tipo': contribuinteTipo},
+      'pedidoDados': pedidoDados.toJson(),
+    };
   }
 }
 
+class PedidoDados {
+  final String idSistema;
+  final String idServico;
+  final String? versaoSistema;
+  final String dados;
+
+  PedidoDados({required this.idSistema, required this.idServico, this.versaoSistema, required this.dados});
+
+  factory PedidoDados.fromJson(Map<String, dynamic> json) {
+    return PedidoDados(idSistema: json['idSistema'] as String, idServico: json['idServico'] as String, versaoSistema: json['versaoSistema'] as String?, dados: json['dados'] as String);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'idSistema': idSistema, 'idServico': idServico, 'versaoSistema': versaoSistema ?? '1.0', 'dados': dados};
+  }
+}
+
+// Classes mantidas para compatibilidade, mas não são mais usadas diretamente nos serviços
+@Deprecated('Use os dados de autenticação do ApiClient ao invés de criar manualmente')
 class Contratante {
   final String numero;
   final int tipo;
@@ -30,6 +54,7 @@ class Contratante {
   }
 }
 
+@Deprecated('Use os dados de autenticação do ApiClient ao invés de criar manualmente')
 class AutorPedidoDados {
   final String numero;
   final int tipo;
@@ -45,6 +70,7 @@ class AutorPedidoDados {
   }
 }
 
+@Deprecated('Use os dados de autenticação do ApiClient ao invés de criar manualmente')
 class Contribuinte {
   final String numero;
   final int tipo;
@@ -57,21 +83,5 @@ class Contribuinte {
 
   Map<String, dynamic> toJson() {
     return {'numero': numero, 'tipo': tipo};
-  }
-}
-
-class PedidoDados {
-  final String idSistema;
-  final String idServico;
-  final String dados;
-
-  PedidoDados({required this.idSistema, required this.idServico, required this.dados});
-
-  factory PedidoDados.fromJson(Map<String, dynamic> json) {
-    return PedidoDados(idSistema: json['idSistema'] as String, idServico: json['idServico'] as String, dados: json['dados'] as String);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'idSistema': idSistema, 'idServico': idServico, 'dados': dados};
   }
 }

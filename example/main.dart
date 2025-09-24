@@ -4,11 +4,14 @@ void main() async {
   // Inicializar o cliente da API
   final apiClient = ApiClient();
 
+  // Autenticar com dados da empresa contratante e autor do pedido
   await apiClient.authenticate(
-    '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Key
-    '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
-    '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
-    '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
+    consumerKey: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Key
+    consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
+    certPath: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
+    certPassword: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
+    contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
   // Exemplo de uso dos serviços

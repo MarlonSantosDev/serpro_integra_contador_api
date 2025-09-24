@@ -1,13 +1,16 @@
 /// Package para acessar a API do SERPRO Integra Contador
-/// 
+///
 /// Este package fornece uma interface Dart para interagir com todos os serviços
-/// disponíveis na API do SERPRO Integra Contador, incluindo DEFIS, PGDASD, 
+/// disponíveis na API do SERPRO Integra Contador, incluindo DEFIS, PGDASD,
 /// PGMEI, CCMEI e outros.
 library serpro_integra_contador_api;
 
 // Core
 export 'src/core/api_client.dart';
 export 'src/core/auth/authentication_model.dart';
+
+// Utilities
+export 'src/util/document_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';

@@ -11,9 +11,7 @@ class PgmeiService {
 
   Future<GerarDasResponse> gerarDas(String cnpj, String periodoApuracao) async {
     final request = BaseRequest(
-      contratante: Contratante(numero: '00000000000100', tipo: 2),
-      autorPedidoDados: AutorPedidoDados(numero: '00000000000100', tipo: 2),
-      contribuinte: Contribuinte(numero: cnpj, tipo: 2),
+      contribuinteNumero: cnpj,
       pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'GERARDASPDF21', dados: jsonEncode({'periodoApuracao': periodoApuracao})),
     );
 

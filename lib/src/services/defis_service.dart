@@ -12,9 +12,7 @@ class DefisService {
 
   Future<TransmitirDeclaracaoResponse> transmitirDeclaracao(String cnpj, TransmitirDeclaracaoRequest declaracaoData) async {
     final request = BaseRequest(
-      contratante: Contratante(numero: '00000000000000', tipo: 2),
-      autorPedidoDados: AutorPedidoDados(numero: '00000000000000', tipo: 2),
-      contribuinte: Contribuinte(numero: cnpj, tipo: 2),
+      contribuinteNumero: cnpj,
       pedidoDados: PedidoDados(idSistema: 'DEFIS', idServico: 'transmitir-declaracao', dados: jsonEncode(declaracaoData.toJson())),
     );
 

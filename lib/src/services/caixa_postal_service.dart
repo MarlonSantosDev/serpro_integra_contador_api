@@ -9,14 +9,8 @@ class CaixaPostalService {
 
   Future<CaixaPostalResponse> consultarMensagens(String ni) async {
     final request = BaseRequest(
-      contratante: Contratante(numero: '00000000000000', tipo: 2),
-      autorPedidoDados: AutorPedidoDados(numero: '00000000000000', tipo: 2),
-      contribuinte: Contribuinte(numero: ni, tipo: ni.length == 11 ? 1 : 2),
-      pedidoDados: PedidoDados(
-        idSistema: 'caixa-postal',
-        idServico: 'consultar-mensagens',
-        dados: '',
-      ),
+      contribuinteNumero: ni,
+      pedidoDados: PedidoDados(idSistema: 'caixa-postal', idServico: 'consultar-mensagens', dados: ''),
     );
 
     final response = await _apiClient.post('/', request);
