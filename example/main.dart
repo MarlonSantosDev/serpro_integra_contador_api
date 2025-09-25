@@ -10,17 +10,19 @@ void main() async {
     consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
     certPath: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
     certPassword: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
-    contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
-    autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+    contratanteNumero: '00000000000000', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    autorPedidoDadosNumero: '00000000000000', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+    //contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    //autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
   // Exemplo de uso dos serviços
-  //await exemplosCcmei(apiClient);
+  await exemplosCaixaPostal(apiClient);
   //await exemplosPgmei(apiClient);
+  //await exemplosCcmei(apiClient);
   //await exemplosPgdasd(apiClient);
   //await exemplosDctfWeb(apiClient);
   //await exemplosProcuracoes(apiClient);
-  await exemplosCaixaPostal(apiClient);
   //await exemplosDte(apiClient);
   //await exemplosSitfis(apiClient);
   //await exemplosDefis(apiClient);
@@ -52,7 +54,6 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   print('=== Exemplos PGMEI ===');
 
   final pgmeiService = PgmeiService(apiClient);
-  /*
   try {
     // Gerar DAS
     final response = await pgmeiService.gerarDas('00000000000100', '2023-10');
@@ -76,7 +77,6 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   } catch (e) {
     print('Erro no serviço PGMEI: .... $e');
   }
-  */
   try {
     final response = await pgmeiService.AtualizarBeneficio('00000000000100', '2023-10');
     print('DAS gerado com sucesso Atualizar Beneficio');
@@ -88,7 +88,6 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   } catch (e) {
     print('Erro no serviço PGMEI: Atualizar Beneficio: $e');
   }
-  /*
   try {
     final response = await pgmeiService.ConsultarDividaAtiva('00000000000100', '2020');
     print('DAS gerado com sucesso Consultar Divida Ativa');
@@ -99,7 +98,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     }
   } catch (e) {
     print('Erro no serviço PGMEI: .... $e');
-  }*/
+  }
 }
 
 Future<void> exemplosPgdasd(ApiClient apiClient) async {
@@ -152,12 +151,12 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
   try {
     // 1. Verificar se há mensagens novas
     print('\n--- Verificando mensagens novas ---');
-    final temNovas = await caixaPostalService.temMensagensNovas('99999999999999');
+    final temNovas = await caixaPostalService.temMensagensNovas('99999999999');
     print('Tem mensagens novas: $temNovas');
 
     // 2. Obter indicador detalhado de mensagens novas
     print('\n--- Indicador de mensagens novas ---');
-    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999999');
+    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
     print('Status HTTP: ${indicadorResponse.status}');
     if (indicadorResponse.dadosParsed != null) {
       final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
@@ -169,7 +168,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 3. Listar todas as mensagens
     print('\n--- Listando todas as mensagens ---');
-    final listaResponse = await caixaPostalService.listarTodasMensagens('99999999999999');
+    final listaResponse = await caixaPostalService.listarTodasMensagens('99999999999');
     print('Status HTTP: ${listaResponse.status}');
     if (listaResponse.dadosParsed != null && listaResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = listaResponse.dadosParsed!.conteudo.first;
@@ -194,7 +193,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 4. Listar apenas mensagens não lidas
     print('\n--- Listando mensagens não lidas ---');
-    final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999999');
+    final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
     if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
       print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
@@ -202,7 +201,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 5. Listar apenas mensagens lidas
     print('\n--- Listando mensagens lidas ---');
-    final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999999');
+    final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999');
     if (lidasResponse.dadosParsed != null && lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = lidasResponse.dadosParsed!.conteudo.first;
       print('Mensagens lidas: ${conteudo.quantidadeMensagensInt}');
@@ -210,7 +209,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 6. Listar mensagens favoritas
     print('\n--- Listando mensagens favoritas ---');
-    final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999999');
+    final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999');
     if (favoritasResponse.dadosParsed != null && favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = favoritasResponse.dadosParsed!.conteudo.first;
       print('Mensagens favoritas: ${conteudo.quantidadeMensagensInt}');
@@ -223,7 +222,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
       final primeiraMsg = listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
       print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
 
-      final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999999', primeiraMsg.isn);
+      final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
 
       if (detalhesResponse.dadosParsed != null && detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
         final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
@@ -255,7 +254,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
       print('\n--- Exemplo de paginação ---');
       final proximaPagina = listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
 
-      final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999999', ponteiroPagina: proximaPagina);
+      final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999', ponteiroPagina: proximaPagina);
 
       if (paginaResponse.dadosParsed != null && paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = paginaResponse.dadosParsed!.conteudo.first;
@@ -266,7 +265,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 9. Exemplo usando filtros específicos
     print('\n--- Exemplo com filtros específicos ---');
     final filtradaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-      '99999999999999',
+      '99999999999',
       statusLeitura: 0, // Todas as mensagens
       indicadorFavorito: null, // Sem filtro de favorita
       indicadorPagina: 0, // Página inicial
