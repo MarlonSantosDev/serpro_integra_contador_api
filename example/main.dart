@@ -52,19 +52,54 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   print('=== Exemplos PGMEI ===');
 
   final pgmeiService = PgmeiService(apiClient);
-
+  /*
   try {
     // Gerar DAS
     final response = await pgmeiService.gerarDas('00000000000100', '2023-10');
-    print('DAS gerado com sucesso');
+    print('DAS gerado com sucesso Padrao');
 
     if (response.dados.isNotEmpty) {
       final das = response.dados.first;
       print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
     }
   } catch (e) {
-    print('Erro no serviço PGMEI: $e');
+    print('Erro no serviço PGMEI: .... $e');
   }
+  try {
+    final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '2023-10');
+    print('DAS gerado com sucesso Codigo de Barras');
+
+    if (response.dados.isNotEmpty) {
+      final das = response.dados.first;
+      print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+    }
+  } catch (e) {
+    print('Erro no serviço PGMEI: .... $e');
+  }
+  */
+  try {
+    final response = await pgmeiService.AtualizarBeneficio('00000000000100', '2023-10');
+    print('DAS gerado com sucesso Atualizar Beneficio');
+
+    if (response.dados.isNotEmpty) {
+      //final das = response.dados.first;
+      print("response: ${response.dados.first.toJson()}");
+    }
+  } catch (e) {
+    print('Erro no serviço PGMEI: Atualizar Beneficio: $e');
+  }
+  /*
+  try {
+    final response = await pgmeiService.ConsultarDividaAtiva('00000000000100', '2020');
+    print('DAS gerado com sucesso Consultar Divida Ativa');
+
+    if (response.dados.isNotEmpty) {
+      final das = response.dados.first;
+      print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+    }
+  } catch (e) {
+    print('Erro no serviço PGMEI: .... $e');
+  }*/
 }
 
 Future<void> exemplosPgdasd(ApiClient apiClient) async {
@@ -174,9 +209,27 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
         qtdEmpregadoInicial: 1,
         qtdEmpregadoFinal: 1,
         receitaExportacaoDireta: 0,
-        socios: [Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0)],
+        socios: [
+          Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0),
+        ],
         ganhoRendaVariavel: 0,
-        estabelecimentos: [Estabelecimento(cnpjCompleto: '00000000000000', estoqueInicial: 1000, estoqueFinal: 2000, saldoCaixaInicial: 5000, saldoCaixaFinal: 15000, aquisicoesMercadoInterno: 10000, importacoes: 0, totalEntradasPorTransferencia: 0, totalSaidasPorTransferencia: 0, totalDevolucoesVendas: 100, totalEntradas: 10100, totalDevolucoesCompras: 50, totalDespesas: 8000)],
+        estabelecimentos: [
+          Estabelecimento(
+            cnpjCompleto: '00000000000000',
+            estoqueInicial: 1000,
+            estoqueFinal: 2000,
+            saldoCaixaInicial: 5000,
+            saldoCaixaFinal: 15000,
+            aquisicoesMercadoInterno: 10000,
+            importacoes: 0,
+            totalEntradasPorTransferencia: 0,
+            totalSaidasPorTransferencia: 0,
+            totalDevolucoesVendas: 100,
+            totalEntradas: 10100,
+            totalDevolucoesCompras: 50,
+            totalDespesas: 8000,
+          ),
+        ],
       ),
     );
 
