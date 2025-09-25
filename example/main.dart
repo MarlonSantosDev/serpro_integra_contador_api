@@ -1,4 +1,6 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
+import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
 
 void main() async {
   // Inicializar o cliente da API
@@ -12,16 +14,14 @@ void main() async {
     certPassword: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
     contratanteNumero: '00000000000000', // CNPJ da empresa que contratou o serviço na Loja Serpro
     autorPedidoDadosNumero: '00000000000000', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
-    //contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
-    //autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
   // Exemplo de uso dos serviços
-  await exemplosCaixaPostal(apiClient);
+  //await exemplosCaixaPostal(apiClient);
   //await exemplosPgmei(apiClient);
   //await exemplosCcmei(apiClient);
   //await exemplosPgdasd(apiClient);
-  //await exemplosDctfWeb(apiClient);
+  await exemplosDctfWeb(apiClient);
   //await exemplosProcuracoes(apiClient);
   //await exemplosDte(apiClient);
   //await exemplosSitfis(apiClient);
@@ -35,7 +35,7 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
 
   try {
     // Emitir CCMEI
-    final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
+    await ccmeiService.emitirCcmei('00000000000000');
     print('CCMEI emitido com sucesso');
 
     // Consultar Dados CCMEI
@@ -43,7 +43,7 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     print('Dados CCMEI consultados: ${consultarResponse.dados.nomeEmpresarial}');
 
     // Consultar Situação Cadastral
-    final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
+    await ccmeiService.consultarSituacaoCadastral('00000000000');
     print('Situação cadastral consultada');
   } catch (e) {
     print('Erro nos serviços CCMEI: $e');
@@ -107,9 +107,263 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
   final pgdasdService = PgdasdService(apiClient);
 
   try {
-    // Declarar
-    final response = await pgdasdService.declarar('00000000000000', '{}');
-    print('Declaração PGDASD realizada: ${response.status}');
+    // 1. Entregar Declaração Mensal (TRANSDECLARACAO11)
+    print('\n--- Entregando Declaração Mensal ---');
+
+    // Criar declaração de exemplo com dados reais conforme documentação
+    final declaracao = pgdasd_models.Declaracao(
+      tipoDeclaracao: 1, // Original
+      receitaPaCompetenciaInterno: 50000.00,
+      receitaPaCompetenciaExterno: 10000.00,
+      estabelecimentos: [
+        pgdasd_models.Estabelecimento(
+          cnpjCompleto: '00000000000100',
+          atividades: [
+            pgdasd_models.Atividade(
+              idAtividade: 1,
+              valorAtividade: 60000.00,
+              receitasAtividade: [
+                pgdasd_models.ReceitaAtividade(
+                  valor: 60000.00,
+                  isencoes: [pgdasd_models.Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
+                  reducoes: [pgdasd_models.Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+
+    final entregarResponse = await pgdasdService.entregarDeclaracaoSimples(
+      cnpj: '00000000000100',
+      periodoApuracao: 202101,
+      declaracao: declaracao,
+      transmitir: true,
+      compararValores: true,
+      valoresParaComparacao: [
+        pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
+        pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
+      ],
+    );
+
+    print('Status: ${entregarResponse.status}');
+    print('Sucesso: ${entregarResponse.sucesso}');
+
+    if (entregarResponse.dadosParsed != null) {
+      final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
+      print('ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
+      print('Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
+      print('Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}');
+      print('Tem MAED: ${declaracaoTransmitida.temMaed}');
+    }
+
+    // 2. Gerar DAS (GERARDAS12)
+    print('\n--- Gerando DAS ---');
+
+    final gerarDasResponse = await pgdasdService.gerarDasSimples(
+      cnpj: '00000000000100',
+      periodoApuracao: '202101',
+      dataConsolidacao: '20220831', // Data futura para consolidação
+    );
+
+    print('Status: ${gerarDasResponse.status}');
+    print('Sucesso: ${gerarDasResponse.sucesso}');
+
+    if (gerarDasResponse.dadosParsed != null) {
+      final das = gerarDasResponse.dadosParsed!.first;
+      print('CNPJ: ${das.cnpjCompleto}');
+      print('Período: ${das.detalhamento.periodoApuracao}');
+      print('Número Documento: ${das.detalhamento.numeroDocumento}');
+      print('Data Vencimento: ${das.detalhamento.dataVencimento}');
+      print('Valor Total: R\$ ${das.detalhamento.valores.total}');
+      print('PDF disponível: ${das.pdf.isNotEmpty}');
+    }
+
+    // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
+    print('\n--- Consultando Declarações por Ano ---');
+
+    final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(cnpj: '00000000000000', anoCalendario: '2018');
+
+    print('Status: ${consultarAnoResponse.status}');
+    print('Sucesso: ${consultarAnoResponse.sucesso}');
+
+    if (consultarAnoResponse.dadosParsed != null) {
+      final declaracoes = consultarAnoResponse.dadosParsed!;
+      print('Ano Calendário: ${declaracoes.anoCalendario}');
+      print('Períodos encontrados: ${declaracoes.listaPeriodos.length}');
+
+      for (final periodo in declaracoes.listaPeriodos.take(3)) {
+        print('\nPeríodo ${periodo.periodoApuracao}:');
+        print('  Operações: ${periodo.operacoes.length}');
+
+        for (final operacao in periodo.operacoes.take(2)) {
+          print('    ${operacao.tipoOperacao}');
+          if (operacao.isDeclaracao) {
+            print('      Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
+            print('      Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}');
+          }
+          if (operacao.isDas) {
+            print('      DAS: ${operacao.indiceDas!.numeroDas}');
+            print('      Pago: ${operacao.indiceDas!.foiPago}');
+          }
+        }
+      }
+    }
+
+    // 4. Consultar Declarações por Período (CONSDECLARACAO13)
+    print('\n--- Consultando Declarações por Período ---');
+
+    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+
+    print('Status: ${consultarPeriodoResponse.status}');
+    print('Sucesso: ${consultarPeriodoResponse.sucesso}');
+
+    // 5. Consultar Última Declaração (CONSULTIMADECREC14)
+    print('\n--- Consultando Última Declaração ---');
+
+    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+
+    print('Status: ${ultimaDeclaracaoResponse.status}');
+    print('Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
+
+    if (ultimaDeclaracaoResponse.dadosParsed != null) {
+      final declaracao = ultimaDeclaracaoResponse.dadosParsed!;
+      print('Número Declaração: ${declaracao.numeroDeclaracao}');
+      print('Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
+      print('Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
+      print('Tem MAED: ${declaracao.temMaed}');
+
+      if (declaracao.temMaed) {
+        print('  Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
+        print('  DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
+      }
+    }
+
+    // 6. Consultar Declaração por Número (CONSDECREC15)
+    print('\n--- Consultando Declaração por Número ---');
+
+    final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
+      cnpj: '00000000000000',
+      numeroDeclaracao: '00000000201801001',
+    );
+
+    print('Status: ${declaracaoNumeroResponse.status}');
+    print('Sucesso: ${declaracaoNumeroResponse.sucesso}');
+
+    // 7. Consultar Extrato do DAS (CONSEXTRATO16)
+    print('\n--- Consultando Extrato do DAS ---');
+
+    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(cnpj: '00000000000000', numeroDas: '07202136999997159');
+
+    print('Status: ${extratoDasResponse.status}');
+    print('Sucesso: ${extratoDasResponse.sucesso}');
+
+    if (extratoDasResponse.dadosParsed != null) {
+      final extrato = extratoDasResponse.dadosParsed!;
+      print('Número DAS: ${extrato.numeroDas}');
+      print('CNPJ: ${extrato.cnpjCompleto}');
+      print('Período: ${extrato.periodoApuracao}');
+      print('Data Vencimento: ${extrato.dataVencimento}');
+      print('Valor Total: R\$ ${extrato.valorTotal}');
+      print('Status Pagamento: ${extrato.statusPagamento}');
+      print('Foi Pago: ${extrato.foiPago}');
+      print('Está Vencido: ${extrato.estaVencido}');
+      print('Composição: ${extrato.composicao.length} tributos');
+
+      for (final composicao in extrato.composicao.take(3)) {
+        print('  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)');
+      }
+    }
+
+    // 8. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
+    print('\n--- Exemplo com Declaração Complexa ---');
+
+    final declaracaoComplexa = pgdasd_models.Declaracao(
+      tipoDeclaracao: 1, // Original
+      receitaPaCompetenciaInterno: 100000.00,
+      receitaPaCompetenciaExterno: 20000.00,
+      receitasBrutasAnteriores: [
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
+      ],
+      folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
+      estabelecimentos: [
+        pgdasd_models.Estabelecimento(
+          cnpjCompleto: '00000000000100',
+          atividades: [
+            pgdasd_models.Atividade(
+              idAtividade: 1,
+              valorAtividade: 120000.00,
+              receitasAtividade: [
+                pgdasd_models.ReceitaAtividade(
+                  valor: 120000.00,
+                  qualificacoesTributarias: [
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
+                  ],
+                  exigibilidadesSuspensas: [
+                    pgdasd_models.ExigibilidadeSuspensa(
+                      codTributo: 1,
+                      numeroProcesso: 123456789,
+                      uf: 'SP',
+                      vara: '1ª Vara Federal',
+                      existeDeposito: true,
+                      motivo: 1,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+
+    print('Declaração complexa criada com:');
+    print('- Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
+    print('- Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
+    print('- Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
+    print('- Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
+    print(
+      '- Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
+    );
+    print(
+      '- Exigibilidades suspensas: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.exigibilidadesSuspensas!.length}',
+    );
+
+    // 9. Exemplo de validação de dados
+    print('\n--- Exemplo de Validação de Dados ---');
+
+    // CNPJ inválido
+    try {
+      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
+        cnpjCompleto: '123', // CNPJ inválido
+        pa: 202101,
+        indicadorTransmissao: true,
+        indicadorComparacao: false,
+        declaracao: declaracao,
+      );
+      print('CNPJ inválido detectado: ${!requestInvalido.isCnpjValido}');
+    } catch (e) {
+      print('Erro esperado na validação: $e');
+    }
+
+    // Período inválido
+    try {
+      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
+        cnpjCompleto: '00000000000100',
+        pa: 201701, // Período anterior a 2018
+        indicadorTransmissao: true,
+        indicadorComparacao: false,
+        declaracao: declaracao,
+      );
+      print('Período inválido detectado: ${!requestInvalido.isPaValido}');
+    } catch (e) {
+      print('Erro esperado na validação: $e');
+    }
+
+    print('\n=== Exemplos PGDASD Concluídos ===');
   } catch (e) {
     print('Erro no serviço PGDASD: $e');
   }
@@ -121,9 +375,165 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
   final dctfWebService = DctfWebService(apiClient);
 
   try {
-    // Gerar DARF
-    final response = await dctfWebService.gerarDarf('00000000000000', '2023-10');
-    print('DARF gerado: ${response.status}');
+    // 1. Consultar XML de uma declaração (Geral Mensal)
+    print('\n--- Consultando XML da declaração ---');
+    final xmlResponse = await dctfWebService.consultarXmlDeclaracao(
+      contribuinteNumero: '00000000000',
+      categoria: CategoriaDctf.pfMensal,
+      anoPA: '2022',
+      mesPA: '06',
+    );
+
+    print('Status: ${xmlResponse.status}');
+    print('XML disponível: ${xmlResponse.xmlBase64 != null}');
+
+    if (xmlResponse.xmlBase64 != null) {
+      print('Tamanho do XML: ${xmlResponse.xmlBase64!.length} caracteres');
+    }
+
+    // Exibir mensagens
+    for (final msg in xmlResponse.mensagens) {
+      print('${msg.tipo}: ${msg.texto}');
+    }
+
+    // 2. Gerar documento de arrecadação para declaração ATIVA
+    print('\n--- Gerando documento de arrecadação (DARF) ---');
+    final darfResponse = await dctfWebService.gerarDocumentoArrecadacao(
+      contribuinteNumero: '00000000000',
+      categoria: CategoriaDctf.geralMensal,
+      anoPA: '2027',
+      mesPA: '11',
+    );
+
+    print('Status: ${darfResponse.status}');
+    print('DARF disponível: ${darfResponse.pdfBase64 != null}');
+
+    if (darfResponse.pdfBase64 != null) {
+      print('Tamanho do PDF: ${darfResponse.tamanhoPdfBytes} bytes');
+    }
+
+    // 3. Gerar documento de arrecadação para declaração EM ANDAMENTO
+    print('\n--- Gerando DARF para declaração em andamento ---');
+    final darfAndamentoResponse = await dctfWebService.gerarDocumentoArrecadacaoAndamento(
+      contribuinteNumero: '00000000000',
+      categoria: CategoriaDctf.geralMensal,
+      anoPA: '2025',
+      mesPA: '01',
+      idsSistemaOrigem: [SistemaOrigem.mit], // Apenas receitas do MIT
+    );
+
+    print('Status: ${darfAndamentoResponse.status}');
+    print('DARF em andamento disponível: ${darfAndamentoResponse.pdfBase64 != null}');
+
+    // 4. Consultar recibo de transmissão
+    print('\n--- Consultando recibo de transmissão ---');
+    final reciboResponse = await dctfWebService.consultarReciboTransmissao(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.geralMensal,
+      anoPA: '2027',
+      mesPA: '11',
+    );
+
+    print('Status: ${reciboResponse.status}');
+    print('Recibo disponível: ${reciboResponse.pdfBase64 != null}');
+
+    // 5. Consultar declaração completa
+    print('\n--- Consultando declaração completa ---');
+    final declaracaoResponse = await dctfWebService.consultarDeclaracaoCompleta(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.geralMensal,
+      anoPA: '2027',
+      mesPA: '11',
+    );
+
+    print('Status: ${declaracaoResponse.status}');
+    print('Declaração completa disponível: ${declaracaoResponse.pdfBase64 != null}');
+
+    // 6. Exemplo de métodos de conveniência
+    print('\n--- Métodos de conveniência ---');
+
+    // DARF Geral Mensal
+    final darfGeralResponse = await dctfWebService.gerarDarfGeralMensal(
+      contribuinteNumero: '00000000000000',
+      anoPA: '2027',
+      mesPA: '11',
+      idsSistemaOrigem: [SistemaOrigem.esocial, SistemaOrigem.mit],
+    );
+    print('DARF Geral Mensal: ${darfGeralResponse.sucesso}');
+
+    // DARF Pessoa Física Mensal
+    final darfPfResponse = await dctfWebService.gerarDarfPfMensal(contribuinteNumero: '00000000000', anoPA: '2022', mesPA: '06');
+    print('DARF PF Mensal: ${darfPfResponse.sucesso}');
+
+    // DARF 13º Salário
+    final darf13Response = await dctfWebService.gerarDarf13Salario(contribuinteNumero: '00000000000000', anoPA: '2022', isPessoaFisica: false);
+    print('DARF 13º Salário: ${darf13Response.sucesso}');
+
+    // 7. Exemplo com categoria específica - Espetáculo Desportivo
+    print('\n--- Exemplo Espetáculo Desportivo ---');
+    final espetaculoResponse = await dctfWebService.consultarXmlDeclaracao(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.espetaculoDesportivo,
+      anoPA: '2022',
+      mesPA: '05',
+      diaPA: '14', // Dia obrigatório para espetáculo desportivo
+    );
+    print('XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
+
+    // 8. Exemplo com categoria Aferição
+    print('\n--- Exemplo Aferição ---');
+    final afericaoResponse = await dctfWebService.consultarXmlDeclaracao(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.afericao,
+      anoPA: '2022',
+      mesPA: '03',
+      cnoAfericao: 28151, // CNO obrigatório para aferição
+    );
+    print('XML Aferição: ${afericaoResponse.sucesso}');
+
+    // 9. Exemplo com categoria Reclamatória Trabalhista
+    print('\n--- Exemplo Reclamatória Trabalhista ---');
+    final reclamatoriaResponse = await dctfWebService.consultarReciboTransmissao(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.reclamatoriaTrabalhista,
+      anoPA: '2022',
+      mesPA: '12',
+      numProcReclamatoria: '00365354520004013400', // Processo obrigatório
+    );
+    print('Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
+
+    // 10. Exemplo de transmissão completa (simulada)
+    print('\n--- Exemplo de fluxo completo (simulado) ---');
+    print('ATENÇÃO: Este exemplo simula a assinatura digital.');
+    print('Em produção, você deve implementar a assinatura real com certificado digital.');
+
+    try {
+      final transmissaoResponse = await dctfWebService.consultarXmlETransmitir(
+        contribuinteNumero: '00000000000',
+        categoria: CategoriaDctf.pfMensal,
+        anoPA: '2022',
+        mesPA: '06',
+        assinadorXml: (xmlBase64) async {
+          // SIMULAÇÃO: Em produção, aqui você faria a assinatura digital real
+          print('Simulando assinatura digital do XML...');
+
+          // Esta é apenas uma simulação - NÃO USE EM PRODUÇÃO
+          // Você deve implementar a assinatura digital real com seu certificado
+          return xmlBase64 + '_ASSINADO_SIMULADO';
+        },
+      );
+
+      print('Transmissão simulada: ${transmissaoResponse.status}');
+      print('Tem MAED: ${transmissaoResponse.temMaed}');
+
+      if (transmissaoResponse.infoTransmissao != null) {
+        final info = transmissaoResponse.infoTransmissao!;
+        print('Número do recibo: ${info.numeroRecibo}');
+        print('Data transmissão: ${info.dataTransmissao}');
+      }
+    } catch (e) {
+      print('Erro na transmissão simulada (esperado): $e');
+    }
   } catch (e) {
     print('Erro no serviço DCTFWeb: $e');
   }
@@ -301,14 +711,14 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
 
   try {
     // Solicitar Protocolo
-    final protocoloResponse = await sitfisService.solicitarProtocolo('00000000000');
+    await sitfisService.solicitarProtocolo('00000000000');
     print('Protocolo solicitado');
 
     // Simular protocolo para exemplo
     final protocolo = 'exemplo_protocolo';
 
     // Emitir Relatório
-    final relatorioResponse = await sitfisService.emitirRelatorio('00000000000', protocolo);
+    await sitfisService.emitirRelatorio('00000000000', protocolo);
     print('Relatório SITFIS emitido');
   } catch (e) {
     print('Erro no serviço SITFIS: $e');
@@ -322,21 +732,21 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
 
   try {
     // Criar uma declaração de exemplo
-    final declaracao = TransmitirDeclaracaoRequest(
+    final declaracao = defis.TransmitirDeclaracaoRequest(
       ano: 2023,
       situacaoEspecial: null,
       inatividade: 2,
-      empresa: Empresa(
+      empresa: defis.Empresa(
         ganhoCapital: 0,
         qtdEmpregadoInicial: 1,
         qtdEmpregadoFinal: 1,
         receitaExportacaoDireta: 0,
         socios: [
-          Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0),
+          defis.Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0),
         ],
         ganhoRendaVariavel: 0,
         estabelecimentos: [
-          Estabelecimento(
+          defis.Estabelecimento(
             cnpjCompleto: '00000000000000',
             estoqueInicial: 1000,
             estoqueFinal: 2000,

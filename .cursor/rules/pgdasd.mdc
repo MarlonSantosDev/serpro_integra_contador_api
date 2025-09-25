@@ -1,0 +1,1456 @@
+---
+alwaysApply: true
+---
+
+
+
+
+# Cenários PGDAS-D
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Consultar Declarações Transmitidas por Ano-Calendário ou Período de Apuração
+
+Esta simulação lista um índice com todas as declarações transmitidas no ano-calendário indicado.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "00000000000000",       "tipo": 2    },    "pedidoDados": {      "idSistema": "PGDASD",      "idServico": "CONSDECLARACAO13",      "versaoSistema": "1.0",      "dados": "{ \"anoCalendario\": \"2018\" }"    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "00000000000000",       "tipo": 2    },    "pedidoDados": {      "idSistema": "PGDASD",      "idServico": "CONSDECLARACAO13",      "versaoSistema": "1.0",      "dados": "{ \"anoCalendario\": \"2018\" }"    } }\'`
+
+## Gerar DAS
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000100",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000100",     "tipo": 2    },   "contribuinte": {     "numero": "00000000000100",     "tipo": 2    },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "GERARDAS12",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000100",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000100",     "tipo": 2    },   "contribuinte": {     "numero": "00000000000100",     "tipo": 2    },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "GERARDAS12",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"    } }\'`
+
+## Consultar a Última Declaração/Recibo
+
+Consulta a última declaração transmitida/recibo de entrega da declaração por período de apuração.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{ "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSULTIMADECREC14",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"   } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSULTIMADECREC14",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }\'`
+
+## Consultar Declaração/Recibo
+
+Consulta uma declaração transmitida/recibo de entrega da declaração por número de declaração.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{ "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSDECREC15",     "versaoSistema": "1.0",     "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"   } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{     "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECREC15",         "versaoSistema": "1.0",         "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"       }     }\'`
+
+## Consultar Extrato do DAS
+
+Consulta o extrato da apuração do DAS por número de DAS.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSEXTRATO16",     "versaoSistema": "1.0",     "dados": "{ \"numeroDas\": \"07202136999997159\" }"   }   }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {      "numero": "00000000000000",      "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSEXTRATO16",         "versaoSistema": "1.0",         "dados": "{ \"numeroDas\": \"07202136999997159\" }"       }       }\'`
+
+## Entregar Declaração
+
+Entregar uma declaração do PGDASD.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "00000000000100",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000100",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000100",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "TRANSDECLARACAO11",         "versaoSistema": "1.0",         "dados": "{\"cnpjCompleto\":\"00000000000100\",\"pa\":202101,\"indicadorTransmissao\":true,\"indicadorComparacao\":true,\"declaracao\":{\"tip...9999 bytes truncated...
+
+
+
+
+# Introdução
+
+## O que é o Integra PGDAS-D?
+
+É uma solução integrada ao sistema Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório (PGDAS-D 2018) que é um sistema eletrônico para a realização do cálculo do Simples Nacional para os períodos de apuração (PA) a partir de janeiro de 2018, conforme determinam a Lei Complementar nº 123, de 14 de dezembro de 2006 (e alterações) e Resolução CGSN nº 140, de 22 de maio de 2018.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra PGDASD, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PGDASD, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Entregar declaração mensal - Orientações para os dados de Entrada
+
+Serviço que permite a transmissão de uma Declaração do Simples Nacional, original ou retificadora.
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj completo sem formatação | `String` (14) | SIM |
+| pa | Período de apuração da declaração em formato AAAAMM | `Number` | SIM |
+| indicadorTransmissao | Indica se a declaração deve ser transmitida. No caso de "false", serão devolvidos os valores devidos sem transmissão | `Boolean` | SIM |
+| indicadorComparacao | Indica se há a necessidade de comparação dos valoresParaComparacao enviados na entrada com os valores calculados antes da transmissão. Ver [regra](). | `Boolean` | SIM |
+| declaracao | Objeto contendo os dados da declaração. Ver [declaracao](). | `Object` | SIM |
+| valoresParaComparacao | Valores para comparação com o valor apurado pelo sistema. Obrigatório, exceto quando não há valor devido. Ver [regra](). | `Array` de `Object` [valorDevido]() | NÃO |
+
+Objeto [Declaracao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| tipoDeclaracao | [Tipo da declaração]() | `Number` | SIM |
+| receitaPaCompetenciaInterno | Receita do mercado interno no pa de regime de competência | `Number` | SIM |
+| receitaPaCompetenciaExterno | Receita do mercado externo no pa de regime de competência | `Number` | SIM |
+| receitaPaCaixaInterno | Receita do mercado interno no pa de regime de caixa | `Number` | NÃO |
+| receitaPaCaixaExterno | Receita do mercado externo no pa de regime de caixa | `Number` | NÃO |
+| valorFixoIcms | Valor fixo de ICMS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| valorFixoIss | valor fixo de ISS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| receitasBrutasAnteriores | Lista de receita bruta anterior. Ver [regra](). | `Array` de `Object` [ReceitaBrutaAnterior]() | NÃO |
+| folhasSalario | Valores de folha de salário. | `Array` de `Object` [FolhaSalario]() | NÃO |
+| naoOptante | Informações de não optante | `Object` | NÃO |
+| estabelecimentos | Estabelecimentos da declaração. Deve conter todos os estabelecimentos vigentes à época do período de apuração da declaração. | `Array` de `Object` [Estabelecimento]() | SIM |
+
+Objeto [ReceitaBrutaAnterior:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valorInterno | Valor no mercado interno | `Number` | SIM |
+| valorExterno | Valor no mercado externo | `Number` | SIM |
+
+Objeto [FolhaSalario:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valor | Valor | `Number` | SIM |
+
+Objeto [NaoOptante:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| esferaAdm | 1 = Federal, 2= Distrital, 3 = Estadual, 4 = Municipal | `String` (1) | SIM |
+| uf | Uf do processo | `String` (2) | SIM |
+| codMunicipio | Código do município do processo | `String` (4) | SIM |
+| processo | Número do processo sem formatação | `String` | SIM |
+
+Objeto [Estabelecimento:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj do estabelecimento sem formatação | `String` (14) | SIM |
+| atividades | Atividades do estabelecimento. Se não houve atividade para o estabelecimento, não enviar esta lista. | `Array` de `Object` [Atividade]() | NÃO |
+
+Objeto [Atividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| idAtividade | Id da [atividade]() | `Number` | SIM |
+| valorAtividade | Valor da atividade | `Number` | SIM |
+| receitasAtividade | Parcela de receita da atividade. | `Array` de `Object` [ReceitaAtividade]() | SIM |
+
+Objeto [ReceitaAtividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| valor | Valor da parcela | `Number` | SIM |
+| codigoOutroMunicipio | Código do município no caso de atividade em outro município | `String` | NÃO |
+| outraUf | UF no caso de atividade em outro município/UF | `String` | NÃO |
+| isencoes | Informações de Isencao. | `Array` de `Object` [Isencao]() | NÃO |
+| reducoes | Informações de Reducao. | `Array` de `Object` [Reducao]() | NÃO |
+| qualificacoesTributarias | Informações de qualificacao. | `Array` de `Object` [qualificacao]() | NÃO |
+| exigibilidadesSuspensas | Informações de Exigibilidade Suspensa. | `Array` de `Object` [Exigibilidade Suspensa]() | NÃO |
+
+Objeto [Isencao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| valor | Valor da isenção | `Number` | SIM |
+| identificador | [Identificador]() do tipo de isenção | `Number` | SIM |
+
+Objeto [Reducao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| valor | Valor da redução | `Number` | SIM |
+| percentualReducao | Percentual da redução | `Number` | SIM |
+| identificador | [Identificador]() do tipo de redução | `Number` | SIM |
+
+Objeto [Qualificação Tributária:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` | SIM |
+| id | Id da [qualificacao]() | `Number` | SIM |
+
+Objeto [Exigibilidade Suspensa:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| numeroProcesso | Número do processo da exigibilidade suspensa | `Number` | SIM |
+| codMunicipio | Código de município da exigibilidade suspensa | `String` | NÃO |
+| uf | Uf da exigibilidade suspensa | `String` | SIM |
+| vara | Vara do processo da exigibilidade suspensa | `String` | SIM |
+| existeDeposito | Indicador de existência de depósito | `Boolean` | SIM |
+| motivo | [Motivo]() da exigibilidade suspensa | `Number` | SIM |
+
+Objeto [ValorDevido:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` |
+| valor | Valor devido do tributo | `Number` |
+
+
+
+
+# Entregar declaração mensal
+
+## **Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [DeclaracaoTransmitida](). | `String` |
+
+Objeto [DeclaraçãoTransmitida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDeclaracao | Id da Declaração que foi transmitida | `String` |
+| dataHoraTransmissao | Data e hora da transmissão no formato AAAAMMDDHHmmSS | `String` |
+| valoresDevidos | Valor devidos calculados pelo sistema. | `Array` de object [ValorDevido]() |
+| declaracao | PDF da declaração no formato Base64 | `String` |
+| recibo | PDF do recibo no formato Base64 | `String` |
+| notificacaoMaed | PDF da notificação MAED. No caso de não ter MAED este campo é nulo | `String` |
+| darf | PDF do DARF. No caso de não ter MAED este campo é nulo | `String` |
+| detalhamentoDarfMaed | Detalhamento dos valores do Darf. Ver [Detalhamento](). | `Object` |
+
+Objeto [ValorDevido:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` |
+| valor | Valor devido do tributo | `Number` |
+
+Objeto [Detalhamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores contidos no DARF. Ver [Valores](). | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Por se tratar de DARF, este campo não possui informação | `Null` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [retorno entregar declaração]()
+
+
+
+
+# Gerar DAS
+
+Essa funcionalidade permite a geração do DAS de uma declaração previamente transmitida. É possível também a geração de um DAS para data de consolidação posterior.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: GERARDAS12  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) | SIM |
+| dataConsolidacao | Data de consolidação no formato AAAAMMDD - Data futura | `String` (8) | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "GERARDAS12",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\", \"dataConsolidacao\": \"20220831\" }"       }     }`
+
+**_Dados de Saída_**
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [Das](). | `String` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS. Ver [DetalhamentoDas](). | `Object` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo. Ver [Valores](). | `Object` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [retorno gerar DAS]()
+
+
+
+
+# Consultar Declarações Transmitidas por Ano-Calendário ou Período de Apuração
+
+Essa consulta lista um índice com todas as declarações transmitidas na base de dados da RFB de um contribuinte para um determinado ano-calendário ou período de apuração mensal do PGDAS-D por tipo de operação (Declaração Original, Declaração Retificadora, Geração de DAS, DAS Avulso, DAS Medida Judicial).
+
+PedidoDados
+
+idSistema: PGDASD  
+idServico: CONSDECLARACAO13  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Quando pesquisado por ano-calendário:
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| anoCalendario | Ano-calendário da declaração. Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `String` (4) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECLARACAO13",         "versaoSistema": "1.0",         "dados": "{ \"anoCalendario\": \"2018\" }"       }     }`
+
+Quando pesquisado por período de apuração:
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período da apuração mensal. Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `String` (6) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECLARACAO13",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }`
+
+**_Dados de Saída_**
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto DeclaracoesEntregues. | `String` |
+
+Objeto: DeclaracoesEntregues
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| anoCalendario | Ano-calendário. | `Number` |
+| periodos | Contém uma lista de declarações em um determinado período de apuração (PA). Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `Array` de `Object` Periodo |
+| periodo | Contém apenas um período de apuração (PA). Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `Object` |
+
+Objeto Periodo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período da apuração, formato AAAAMM. | `Number` |
+| operacoes | Lista todas as operações realizadas no período de apuração. | `Array` de `Object` Operacao |
+
+Objeto Operacao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tipoOperacao | Tipo da operação realizada: (Declaração Original; Declaração Retificadora; Geração de DAS; DAS Avulso, DAS Medida Judicial ou DAS Cobrança). | `String` (30) |
+| indiceDeclaracao | Estrutura de dados da declaração.Objeto: IndiceDeclaracao indiceDas Estrutura de dados do DAS. | `Object` |
+
+Objeto IndiceDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| dataHoraTransmissao | Data e hora da entrega à RFB. Formato yyyyMMddHHmmss. | `Number` |
+| malha | Situação da malha quando aplicável: (Retida em Malha; Liberada, Intimada ou Rejeitada). A situação Liberada contempla 3 situações diferentes, liberada sem análise, liberada por alteração de parâmetros e aceita. Quando não está em Malha o campo retorna null. | `String` (30) |
+
+Objeto IndiceDas:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS (Documento de Arrecadação do Simples Nacional). | `String` (17) |
+| dataHoraEmissaoDas | Data e hora da emissão do DAS. Formato yyyyMMddHHmmss. | `Number` |
+| dasPago | Informa se houve ou não pagamento do DAS até o momento da consulta. Pago (true) e não consta pagamento até o momento (false). | `Boolean` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [índice de declarações recibo]()
+
+
+
+
+# Consultar a Última Declaração/Recibo transmitida
+
+Consulta uma cópia da última declaração com o recibo de entrega transmitida em um determinado período de apuração mensal. Nos casos de declaração original que incidiu Multa por Atraso na Entrega da Declaração (MAED), a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: CONSULTIMADECREC14  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração mensal. Formato: AAAAMM. | `String` (6) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSULTIMADECREC14",         "versaoSistema": "1.0",             "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }`
+
+**_Dados de Saída (retorno)_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+Objeto Declaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String`(17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF. | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+Objeto ArquivoRecibo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoMaed:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultar declaração recibo]()
+
+
+
+
+# Consultar Declaração/Recibo
+
+Consulta uma declaração/recibo específica com o número identificador da declaração. Nos casos de Multa de Atraso na Entrega da Declaração (MAED) a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: CONSDECREC15  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDeclaracao | Número identificador único da declaração. | `String` (17) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECREC15",         "versaoSistema": "1.0",         "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"       }     }`
+
+**_Dados de Saída (retorno)_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+Objeto Declaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+Objeto ArquivoRecibo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoMaed:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultar declaração recibo]()
+
+
+
+
+# Gerar DAS Cobrança
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+
+
+# Gerar DAS de Processo
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+
+
+# Gerar DAS Avulso
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+_ISN_034] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso, porém os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | Mensagem informativa de transmissão com sucesso, mas com divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso, porém os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[Aviso-PGDASD-MSG\_ISN\_035\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} não foi transmitida, pois os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | A transmissão não foi efetuada por divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 não foi transmitida, pois os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_036\] | O valor da parcela da receita da atividade deve ser maior que zero. | Algum campo ReceitaAtividade.Valor tem zero, o que não é permitido. Caso não tenha receita para a atividade, o bloco ListaReceitasAtividade não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_037\] | A soma dos valores das parcelas da receita da atividade está diferente do valor total da atividade. | A soma dos campos ReceitaAtividade.Valor não é igual ao campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_038\] | O valor da isenção deve ser maior que zero. | Algum campo Isencao.Valor tem zero, o que não é permitido. Caso não tenha isenção, o bloco ListaIsencoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_039\] | O valor da redução deve ser maior que zero. | Algum campo Reducao.Valor tem zero, o que não é permitido. Caso não tenha redução, o bloco ListaReducoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_040\] | O percentual da redução deve ser maior que zero. | Algum campo Reducao.PercentualReducao tem zero, o que não é permitido. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_041\] | O valor da isenção/redução não pode ser maior que o valor da parcela da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo ReceitaAtividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_042\] | O valor da isenção/redução não pode ser maior que o valor da atividade. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_043\] | O valor da isenção/redução não pode ser maior que o valor total da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_044\] | O valor da isenção/redução não pode ser maior que o valor da receita do estabelecimento. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos Atividade.Valor de todos os estabelecimentos. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_045\] | O valor da isenção/redução não pode ser maior que o valor da receita da empresa. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_046\] | O valor da isenção/redução não pode ser maior que o valor da receita do município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades do mesmo município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_047\] | O valor da isenção/redução não pode ser maior que o valor da receita da UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades da mesma UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_048\] | O valor da isenção/redução não pode ser maior que o valor da receita do país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_049\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_050\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo no município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_051\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo na UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo na UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_052\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo no país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no país. |
+
+
+Mensagens específicas para o Integra Simples Nacional
+
+| Códigos | Mensagem | Ação | Exemplo |
+| --- | --- | --- | --- |
+| \[Erro-PGDASD-MSG\_ISN\_001\] | Erro ao utilizar o Integra Contador SN. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_002\] | Parâmetros de entrada inválidos."Detalhes do problema".  | Problema de formatação do json de entrada ou entrada inválida ao negócio. Enviar novamente com os dados corretos. Exceto para o Declarar que possui mensagens específicas devido à complexidade. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_003\] | Não foi encontrada declaração para o número de declaração informado.  | Número de declaração inexistente. Reenviar corrigindo o número. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_004\] | Taxa Selic não cadastrada.  | A taxa Selic ainda não foi cadastrada pela RFB. Aguardar o próximo dia útil. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_005\] | Não há declaração transmitida para o período informado.  | Não foi encontrada declaração transmitida. Reenviar corrigindo o número. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_006\] | Informe apenas um parâmetro de consulta.  | A consulta deve ser feito por apenas um parâmetro. Remover um parâmetro de consulta. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_007\] | Informar anoCalendario ou periodoApuracao.  | Faltam parâmetros na consulta. Inserir um parâmetro de consulta. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_008\] | Campo \'{campo}\' inválido. | Valor inválido em algum campo na entrada. | _Campo ‘estabelecimento/cnpjCompleto’ inválido. Não possui 14 números._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_009\] | Bloco\'{nome}\' não pode ser nulo. | Bloco obrigatório que não foi enviado. | _Bloco ‘atividades/receitaAtividade ’ não pode ser nulo._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_010\] | Campo \'{campo}\' deve ser entre 0 e 99999999.99. | Campo numérico com valores diferentes do intervalo esperado. | _Campo ‘ReceitaPaCompetenciaInterno’ deve ser entre 0 e 99999999.99._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_011\] | Empresa com Regime {regime} não pode ter valores de receitas em \'{regime}\'. | Foram enviados valores de receita de Caixa mas a empresa tem regime de Competência. | _Empresa com Regime Competência não pode ter valores de receita em Caixa._ |
+| \[Erro-PGDASD-MSG\_ISN\_012\] | Houve um problema no processamento das informações. | Problema interno na aplicação. Tentar novamente em outro momento. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_013\] | Foi enviada uma declaração, mas não havia sido definido o regime de apuração. | O contribuinte deve entrar no portal e efetuar a opção pelo Regime. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_014\] | Necessário especificar as receitas brutas anteriores dos períodos: | Não foram enviadas as receitas brutas de determinados períodos. Fazer nova tentativa mandando os períodos solicitados. | _Necessário especificar as receitas brutas anteriores dos períodos: 01/2018 e 02/2018._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_015\] | O CNPJ completo da matriz não é igual ao CNPJ completo no Cadastro CNPJ. | O cnpj enviado no entrada.CnpjCompleto não é igual ao CNPJ da matriz corrente no cadastro CNPJ. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_016\] | Empresa Optante não pode ter dados de Não Optante. | A empresa é optante pelo Simples Nacional, mas foi enviado o bloco de Não Optante. Fazer novo envio retirando esse bloco. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_017\] | Empresa é não optante no período. O Campo Não Optante deve ter os dados preenchidos. | A empresa é não optante pelo Simples Nacional no período de apuração. Deve ser preenchido o bloco de Não Optante. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_018\] | Um ou mais nis existentes no Cadastro CNPJ não foram enviados no campo Estabelecimento: {cnpj}. | O cadastro CNPJ possui um estabelecimento que não foi enviado no campo Estabelecimento. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_019\] | Um ou mais nis enviados no estabelecimento ({cnpj}) não fazem parte da empresa {cnpjMatriz} de acordo com o Cadastro CNPJ. | Um ou mais cnpjs enviados no Estabelecimento não estão presentes no Cadastro CNPJ na época do período da declaração. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_020\] | Campo idAtividade inválido: {id}. | Foi enviada uma atividade não compatível com as atividades previstas. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_021\] | A soma dos valores das atividades está diferente do valor total de receita do Pa. | A soma dos campos Atividade.Valor de todos os estabelecimentos não é igual à soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[Erro-PGDASD-MSG\_ISN\_022\] | Houve um erro ao entregar a declaração. | Erro interno do sistema. Fazer nova tentativa em outro horário. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_023\] | O valor da atividade deve ser maior que zero | Algum campo Atividade.Valor tem zero, o que não é permitido. Caso não tenha atividade no período, o bloco ListaAtividades não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_024\] | Empresa não pode recolher valor fixo. Retire as entradas de ValorFixoIcms e/ou ValorFixoIss da Declaracao. | Foram passados valores fixos mas a empresa não pode recolher de acordo com as regras de negócio. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_025\] | Empresa não pode recolher valor fixo de {ISS}. Retire essa entrada da Declaracao. | Foi passado valor de valor fixo de ISS mas não é permitido de acordo com as regras de negócio. Retire da Declaracao. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_026\] | Informe valor fixo de {ICMS/ISS} maior do que 0,00 ou deixe o campo nulo. | Conforme a regra no PGDASD 2018 na Web, caso não tenha valor fixo a declarar, deixar o campo como null. Não será aceito o valor zero. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_027\] | Não há declaração transmitida para o parâmetro informado. | Não foi encontrada declaração. Corrigir o parâmetro e reenviar. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_028\] | Não foi encontrado DAS para o número de DAS informado. | Não foi encontrado DAS com o número fornecido. Verificar o número informado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_029\] | Existe atividade com folha de salário obrigatória. Informar o(s) período(s): {períodos}. | Se for declarada uma atividade com folha de salário obrigatória, as folhas dos 12 meses anteriores devem ser informadas. Caso ela já tenha sido informada em transmissão anterior, não é necessário fazer o envio. Se enviada, o valor enviado será considerado no cálculo. | _Existe atividade com folha de salário obrigatória. Informar o(s) período(s): 02/2020._ |
+| \[Aviso-PGDASD-MSG\_ISN\_030\] | Alterada a folha de salários do(s) mês(es) {MM/AAAA}. Os valores devidos dos períodos seguintes poderão sofrer alterações. Retifique as apurações posteriores ao(s) mês(es) alterados para ajustar o valor das folhas de salários. | Mensagem apenas informativa. Não impede a transmissão. |
+| \[Erro-PGDASD-MSG\_ISN\_031\] | Houve um problema na transmissão. Tente novamente mais tarde. | Erro interno durante a transmissão. Tente novamente mais tarde. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_032\] | Qualificação tributária inválida: {id} não é permitida para o idAtividade {idAtividade} com o tributo {nomeTributo}. | A qualificação tributária enviada não pode ser utilizada com o tipo de atividade e tributo. | _Qualificação tributária inválida: {1} não é permitida para o idAtividade {2} com o tributo {IRPJ}._ |
+| \[Aviso-PGDASD-MSG\_ISN\_033\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso. | Mensagem informativa de transmissão com sucesso. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso._ |
+| \[Aviso-PGDASD-MSG\_ISN\_034\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso, porém os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | Mensagem informativa de transmissão com sucesso, mas com divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso, porém os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[Aviso-PGDASD-MSG\_ISN\_035\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} não foi transmitida, pois os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | A transmissão não foi efetuada por divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 não foi transmitida, pois os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_036\] | O valor da parcela da receita da atividade deve ser maior que zero. | Algum campo ReceitaAtividade.Valor tem zero, o que não é permitido. Caso não tenha receita para a atividade, o bloco ListaReceitasAtividade não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_037\] | A soma dos valores das parcelas da receita da atividade está diferente do valor total da atividade. | A soma dos campos ReceitaAtividade.Valor não é igual ao campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_038\] | O valor da isenção deve ser maior que zero. | Algum campo Isencao.Valor tem zero, o que não é permitido. Caso não tenha isenção, o bloco ListaIsencoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_039\] | O valor da redução deve ser maior que zero. | Algum campo Reducao.Valor tem zero, o que não é permitido. Caso não tenha redução, o bloco ListaReducoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_040\] | O percentual da redução deve ser maior que zero. | Algum campo Reducao.PercentualReducao tem zero, o que não é permitido. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_041\] | O valor da isenção/redução não pode ser maior que o valor da parcela da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo ReceitaAtividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_042\] | O valor da isenção/redução não pode ser maior que o valor da atividade. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_043\] | O valor da isenção/redução não pode ser maior que o valor total da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_044\] | O valor da isenção/redução não pode ser maior que o valor da receita do estabelecimento. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos Atividade.Valor de todos os estabelecimentos. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_045\] | O valor da isenção/redução não pode ser maior que o valor da receita da empresa. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_046\] | O valor da isenção/redução não pode ser maior que o valor da receita do município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades do mesmo município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_047\] | O valor da isenção/redução não pode ser maior que o valor da receita da UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades da mesma UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_048\] | O valor da isenção/redução não pode ser maior que o valor da receita do país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_049\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_050\] | O valor da isenção/redução não pode ser maior que o valor do tributo no município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_051\] | O valor da isenção/redução não pode ser maior que o valor do tributo na UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo na UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_052\] | O valor da isenção/redução não pode ser maior que o valor do tributo no país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no país. |
+
+
+
+
+# Cenários PGDAS-D
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Consultar Declarações Transmitidas por Ano-Calendário ou Período de Apuração
+
+Esta simulação lista um índice com todas as declarações transmitidas no ano-calendário indicado.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "00000000000000",       "tipo": 2    },    "pedidoDados": {      "idSistema": "PGDASD",      "idServico": "CONSDECLARACAO13",      "versaoSistema": "1.0",      "dados": "{ \"anoCalendario\": \"2018\" }"    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "00000000000000",       "tipo": 2    },    "pedidoDados": {      "idSistema": "PGDASD",      "idServico": "CONSDECLARACAO13",      "versaoSistema": "1.0",      "dados": "{ \"anoCalendario\": \"2018\" }"    } }\'`
+
+## Gerar DAS
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000100",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000100",     "tipo": 2    },   "contribuinte": {     "numero": "00000000000100",     "tipo": 2    },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "GERARDAS12",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000100",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000100",     "tipo": 2    },   "contribuinte": {     "numero": "00000000000100",     "tipo": 2    },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "GERARDAS12",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"    } }\'`
+
+## Consultar a Última Declaração/Recibo
+
+Consulta a última declaração transmitida/recibo de entrega da declaração por período de apuração.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{ "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSULTIMADECREC14",     "versaoSistema": "1.0",     "dados": "{ \"periodoApuracao\": \"201801\" }"   } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSULTIMADECREC14",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }\'`
+
+## Consultar Declaração/Recibo
+
+Consulta uma declaração transmitida/recibo de entrega da declaração por número de declaração.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{ "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSDECREC15",     "versaoSistema": "1.0",     "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"   } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{     "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECREC15",         "versaoSistema": "1.0",         "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"       }     }\'`
+
+## Consultar Extrato do DAS
+
+Consulta o extrato da apuração do DAS por número de DAS.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "PGDASD",     "idServico": "CONSEXTRATO16",     "versaoSistema": "1.0",     "dados": "{ \"numeroDas\": \"07202136999997159\" }"   }   }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {      "numero": "00000000000000",      "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },       "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSEXTRATO16",         "versaoSistema": "1.0",         "dados": "{ \"numeroDas\": \"07202136999997159\" }"       }       }\'`
+
+## Entregar Declaração
+
+Entregar uma declaração do PGDASD.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "00000000000100",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000100",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000100",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "TRANSDECLARACAO11",         "versaoSistema": "1.0",         "dados": "{\"cnpjCompleto\":\"00000000000100\",\"pa\":202101,\"indicadorTransmissao\":true,\"indicadorComparacao\":true,\"declaracao\":{\"tip...9999 bytes truncated...
+
+
+
+
+# Introdução
+
+## O que é o Integra PGDAS-D?
+
+É uma solução integrada ao sistema Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório (PGDAS-D 2018) que é um sistema eletrônico para a realização do cálculo do Simples Nacional para os períodos de apuração (PA) a partir de janeiro de 2018, conforme determinam a Lei Complementar nº 123, de 14 de dezembro de 2006 (e alterações) e Resolução CGSN nº 140, de 22 de maio de 2018.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra PGDASD, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PGDASD, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Entregar declaração mensal - Orientações para os dados de Entrada
+
+Serviço que permite a transmissão de uma Declaração do Simples Nacional, original ou retificadora.
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj completo sem formatação | `String` (14) | SIM |
+| pa | Período de apuração da declaração em formato AAAAMM | `Number` | SIM |
+| indicadorTransmissao | Indica se a declaração deve ser transmitida. No caso de "false", serão devolvidos os valores devidos sem transmissão | `Boolean` | SIM |
+| indicadorComparacao | Indica se há a necessidade de comparação dos valoresParaComparacao enviados na entrada com os valores calculados antes da transmissão. Ver [regra](). | `Boolean` | SIM |
+| declaracao | Objeto contendo os dados da declaração. Ver [declaracao](). | `Object` | SIM |
+| valoresParaComparacao | Valores para comparação com o valor apurado pelo sistema. Obrigatório, exceto quando não há valor devido. Ver [regra](). | `Array` de `Object` [valorDevido]() | NÃO |
+
+Objeto [Declaracao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| tipoDeclaracao | [Tipo da declaração]() | `Number` | SIM |
+| receitaPaCompetenciaInterno | Receita do mercado interno no pa de regime de competência | `Number` | SIM |
+| receitaPaCompetenciaExterno | Receita do mercado externo no pa de regime de competência | `Number` | SIM |
+| receitaPaCaixaInterno | Receita do mercado interno no pa de regime de caixa | `Number` | NÃO |
+| receitaPaCaixaExterno | Receita do mercado externo no pa de regime de caixa | `Number` | NÃO |
+| valorFixoIcms | Valor fixo de ICMS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| valorFixoIss | valor fixo de ISS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| receitasBrutasAnteriores | Lista de receita bruta anterior. Ver [regra](). | `Array` de `Object` [ReceitaBrutaAnterior]() | NÃO |
+| folhasSalario | Valores de folha de salário. | `Array` de `Object` [FolhaSalario]() | NÃO |
+| naoOptante | Informações de não optante | `Object` | NÃO |
+| estabelecimentos | Estabelecimentos da declaração. Deve conter todos os estabelecimentos vigentes à época do período de apuração da declaração. | `Array` de `Object` [Estabelecimento]() | SIM |
+
+Objeto [ReceitaBrutaAnterior:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valorInterno | Valor no mercado interno | `Number` | SIM |
+| valorExterno | Valor no mercado externo | `Number` | SIM |
+
+Objeto [FolhaSalario:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valor | Valor | `Number` | SIM |
+
+Objeto [NaoOptante:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| esferaAdm | 1 = Federal, 2= Distrital, 3 = Estadual, 4 = Municipal | `String` (1) | SIM |
+| uf | Uf do processo | `String` (2) | SIM |
+| codMunicipio | Código do município do processo | `String` (4) | SIM |
+| processo | Número do processo sem formatação | `String` | SIM |
+
+Objeto [Estabelecimento:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj do estabelecimento sem formatação | `String` (14) | SIM |
+| atividades | Atividades do estabelecimento. Se não houve atividade para o estabelecimento, não enviar esta lista. | `Array` de `Object` [Atividade]() | NÃO |
+
+Objeto [Atividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| idAtividade | Id da [atividade]() | `Number` | SIM |
+| valorAtividade | Valor da atividade | `Number` | SIM |
+| receitasAtividade | Parcela de receita da atividade. | `Array` de `Object` [ReceitaAtividade]() | SIM |
+
+Objeto [ReceitaAtividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| valor | Valor da parcela | `Number` | SIM |
+| codigoOutroMunicipio | Código do município no caso de atividade em outro município | `String` | NÃO |
+| outraUf | UF no caso de atividade em outro município/UF | `String` | NÃO |
+| isencoes | Informações de Isencao. | `Array` de `Object` [Isencao]() | NÃO |
+| reducoes | Informações de Reducao. | `Array` de `Object` [Reducao]() | NÃO |
+| qualificacoesTributarias | Informações de qualificacao. | `Array` de `Object` [qualificacao]() | NÃO |
+| exigibilidadesSuspensas | Informações de Exigibilidade Suspensa. | `Array` de `Object` [Exigibilidade Suspensa]() | NÃO |
+
+Objeto [Isencao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| valor | Valor da isenção | `Number` | SIM |
+| identificador | [Identificador]() do tipo de isenção | `Number` | SIM |
+
+Objeto [Reducao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| valor | Valor da redução | `Number` | SIM |
+| percentualReducao | Percentual da redução | `Number` | SIM |
+| identificador | [Identificador]() do tipo de redução | `Number` | SIM |
+
+Objeto [Qualificação Tributária:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` | SIM |
+| id | Id da [qualificacao]() | `Number` | SIM |
+
+Objeto [Exigibilidade Suspensa:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codTributo | [Código do tributo]() | `Number` | SIM |
+| numeroProcesso | Número do processo da exigibilidade suspensa | `Number` | SIM |
+| codMunicipio | Código de município da exigibilidade suspensa | `String` | NÃO |
+| uf | Uf da exigibilidade suspensa | `String` | SIM |
+| vara | Vara do processo da exigibilidade suspensa | `String` | SIM |
+| existeDeposito | Indicador de existência de depósito | `Boolean` | SIM |
+| motivo | [Motivo]() da exigibilidade suspensa | `Number` | SIM |
+
+Objeto [ValorDevido:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` |
+| valor | Valor devido do tributo | `Number` |
+
+
+
+
+# Entregar declaração mensal
+
+## **Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [DeclaracaoTransmitida](). | `String` |
+
+Objeto [DeclaraçãoTransmitida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDeclaracao | Id da Declaração que foi transmitida | `String` |
+| dataHoraTransmissao | Data e hora da transmissão no formato AAAAMMDDHHmmSS | `String` |
+| valoresDevidos | Valor devidos calculados pelo sistema. | `Array` de object [ValorDevido]() |
+| declaracao | PDF da declaração no formato Base64 | `String` |
+| recibo | PDF do recibo no formato Base64 | `String` |
+| notificacaoMaed | PDF da notificação MAED. No caso de não ter MAED este campo é nulo | `String` |
+| darf | PDF do DARF. No caso de não ter MAED este campo é nulo | `String` |
+| detalhamentoDarfMaed | Detalhamento dos valores do Darf. Ver [Detalhamento](). | `Object` |
+
+Objeto [ValorDevido:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` |
+| valor | Valor devido do tributo | `Number` |
+
+Objeto [Detalhamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores contidos no DARF. Ver [Valores](). | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Por se tratar de DARF, este campo não possui informação | `Null` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [retorno entregar declaração]()
+
+
+
+
+# Gerar DAS
+
+Essa funcionalidade permite a geração do DAS de uma declaração previamente transmitida. É possível também a geração de um DAS para data de consolidação posterior.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: GERARDAS12  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) | SIM |
+| dataConsolidacao | Data de consolidação no formato AAAAMMDD - Data futura | `String` (8) | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "GERARDAS12",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\", \"dataConsolidacao\": \"20220831\" }"       }     }`
+
+**_Dados de Saída_**
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [Das](). | `String` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS. Ver [DetalhamentoDas](). | `Object` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo. Ver [Valores](). | `Object` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [retorno gerar DAS]()
+
+
+
+
+# Consultar Declarações Transmitidas por Ano-Calendário ou Período de Apuração
+
+Essa consulta lista um índice com todas as declarações transmitidas na base de dados da RFB de um contribuinte para um determinado ano-calendário ou período de apuração mensal do PGDAS-D por tipo de operação (Declaração Original, Declaração Retificadora, Geração de DAS, DAS Avulso, DAS Medida Judicial).
+
+PedidoDados
+
+idSistema: PGDASD  
+idServico: CONSDECLARACAO13  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Quando pesquisado por ano-calendário:
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| anoCalendario | Ano-calendário da declaração. Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `String` (4) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECLARACAO13",         "versaoSistema": "1.0",         "dados": "{ \"anoCalendario\": \"2018\" }"       }     }`
+
+Quando pesquisado por período de apuração:
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período da apuração mensal. Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `String` (6) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECLARACAO13",         "versaoSistema": "1.0",         "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }`
+
+**_Dados de Saída_**
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto DeclaracoesEntregues. | `String` |
+
+Objeto: DeclaracoesEntregues
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| anoCalendario | Ano-calendário. | `Number` |
+| periodos | Contém uma lista de declarações em um determinado período de apuração (PA). Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `Array` de `Object` Periodo |
+| periodo | Contém apenas um período de apuração (PA). Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `Object` |
+
+Objeto Periodo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período da apuração, formato AAAAMM. | `Number` |
+| operacoes | Lista todas as operações realizadas no período de apuração. | `Array` de `Object` Operacao |
+
+Objeto Operacao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tipoOperacao | Tipo da operação realizada: (Declaração Original; Declaração Retificadora; Geração de DAS; DAS Avulso, DAS Medida Judicial ou DAS Cobrança). | `String` (30) |
+| indiceDeclaracao | Estrutura de dados da declaração.Objeto: IndiceDeclaracao indiceDas Estrutura de dados do DAS. | `Object` |
+
+Objeto IndiceDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| dataHoraTransmissao | Data e hora da entrega à RFB. Formato yyyyMMddHHmmss. | `Number` |
+| malha | Situação da malha quando aplicável: (Retida em Malha; Liberada, Intimada ou Rejeitada). A situação Liberada contempla 3 situações diferentes, liberada sem análise, liberada por alteração de parâmetros e aceita. Quando não está em Malha o campo retorna null. | `String` (30) |
+
+Objeto IndiceDas:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS (Documento de Arrecadação do Simples Nacional). | `String` (17) |
+| dataHoraEmissaoDas | Data e hora da emissão do DAS. Formato yyyyMMddHHmmss. | `Number` |
+| dasPago | Informa se houve ou não pagamento do DAS até o momento da consulta. Pago (true) e não consta pagamento até o momento (false). | `Boolean` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [índice de declarações recibo]()
+
+
+
+
+# Consultar a Última Declaração/Recibo transmitida
+
+Consulta uma cópia da última declaração com o recibo de entrega transmitida em um determinado período de apuração mensal. Nos casos de declaração original que incidiu Multa por Atraso na Entrega da Declaração (MAED), a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: CONSULTIMADECREC14  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração mensal. Formato: AAAAMM. | `String` (6) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSULTIMADECREC14",         "versaoSistema": "1.0",             "dados": "{ \"periodoApuracao\": \"201801\" }"       }     }`
+
+**_Dados de Saída (retorno)_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+Objeto Declaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String`(17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF. | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+Objeto ArquivoRecibo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoMaed:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultar declaração recibo]()
+
+
+
+
+# Consultar Declaração/Recibo
+
+Consulta uma declaração/recibo específica com o número identificador da declaração. Nos casos de Multa de Atraso na Entrega da Declaração (MAED) a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+Identificação no Pedido de Dados
+
+idSistema: PGDASD  
+idServico: CONSDECREC15  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDeclaracao | Número identificador único da declaração. | `String` (17) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                 "pedidoDados": {         "idSistema": "PGDASD",         "idServico": "CONSDECREC15",         "versaoSistema": "1.0",         "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"       }     }`
+
+**_Dados de Saída (retorno)_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+Objeto Declaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+Objeto ArquivoRecibo:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoDeclaracao:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+Objeto ArquivoMaed:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultar declaração recibo]()
+
+
+
+
+# Gerar DAS Cobrança
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+
+
+# Gerar DAS de Processo
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+
+
+# Gerar DAS Avulso
+
+**_Erro 500 Internal Server Error_**
+
+A página retornou um erro 500 Internal Server Error, indicando que o conteúdo não pôde ser acessado no momento.
+
+
+_ISN_034] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso, porém os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | Mensagem informativa de transmissão com sucesso, mas com divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso, porém os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[Aviso-PGDASD-MSG\_ISN\_035\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} não foi transmitida, pois os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | A transmissão não foi efetuada por divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 não foi transmitida, pois os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_036\] | O valor da parcela da receita da atividade deve ser maior que zero. | Algum campo ReceitaAtividade.Valor tem zero, o que não é permitido. Caso não tenha receita para a atividade, o bloco ListaReceitasAtividade não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_037\] | A soma dos valores das parcelas da receita da atividade está diferente do valor total da atividade. | A soma dos campos ReceitaAtividade.Valor não é igual ao campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_038\] | O valor da isenção deve ser maior que zero. | Algum campo Isencao.Valor tem zero, o que não é permitido. Caso não tenha isenção, o bloco ListaIsencoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_039\] | O valor da redução deve ser maior que zero. | Algum campo Reducao.Valor tem zero, o que não é permitido. Caso não tenha redução, o bloco ListaReducoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_040\] | O percentual da redução deve ser maior que zero. | Algum campo Reducao.PercentualReducao tem zero, o que não é permitido. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_041\] | O valor da isenção/redução não pode ser maior que o valor da parcela da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo ReceitaAtividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_042\] | O valor da isenção/redução não pode ser maior que o valor da atividade. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_043\] | O valor da isenção/redução não pode ser maior que o valor total da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_044\] | O valor da isenção/redução não pode ser maior que o valor da receita do estabelecimento. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos Atividade.Valor de todos os estabelecimentos. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_045\] | O valor da isenção/redução não pode ser maior que o valor da receita da empresa. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_046\] | O valor da isenção/redução não pode ser maior que o valor da receita do município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades do mesmo município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_047\] | O valor da isenção/redução não pode ser maior que o valor da receita da UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades da mesma UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_048\] | O valor da isenção/redução não pode ser maior que o valor da receita do país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_049\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_050\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo no município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_051\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo na UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo na UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_052\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo no país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no país. |
+
+
+Mensagens específicas para o Integra Simples Nacional
+
+| Códigos | Mensagem | Ação | Exemplo |
+| --- | --- | --- | --- |
+| \[Erro-PGDASD-MSG\_ISN\_001\] | Erro ao utilizar o Integra Contador SN. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_002\] | Parâmetros de entrada inválidos."Detalhes do problema".  | Problema de formatação do json de entrada ou entrada inválida ao negócio. Enviar novamente com os dados corretos. Exceto para o Declarar que possui mensagens específicas devido à complexidade. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_003\] | Não foi encontrada declaração para o número de declaração informado.  | Número de declaração inexistente. Reenviar corrigindo o número. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_004\] | Taxa Selic não cadastrada.  | A taxa Selic ainda não foi cadastrada pela RFB. Aguardar o próximo dia útil. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_005\] | Não há declaração transmitida para o período informado.  | Não foi encontrada declaração transmitida. Reenviar corrigindo o número. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_006\] | Informe apenas um parâmetro de consulta.  | A consulta deve ser feito por apenas um parâmetro. Remover um parâmetro de consulta. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_007\] | Informar anoCalendario ou periodoApuracao.  | Faltam parâmetros na consulta. Inserir um parâmetro de consulta. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_008\] | Campo \'{campo}\' inválido. | Valor inválido em algum campo na entrada. | _Campo ‘estabelecimento/cnpjCompleto’ inválido. Não possui 14 números._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_009\] | Bloco\'{nome}\' não pode ser nulo. | Bloco obrigatório que não foi enviado. | _Bloco ‘atividades/receitaAtividade ’ não pode ser nulo._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_010\] | Campo \'{campo}\' deve ser entre 0 e 99999999.99. | Campo numérico com valores diferentes do intervalo esperado. | _Campo ‘ReceitaPaCompetenciaInterno’ deve ser entre 0 e 99999999.99._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_011\] | Empresa com Regime {regime} não pode ter valores de receitas em \'{regime}\'. | Foram enviados valores de receita de Caixa mas a empresa tem regime de Competência. | _Empresa com Regime Competência não pode ter valores de receita em Caixa._ |
+| \[Erro-PGDASD-MSG\_ISN\_012\] | Houve um problema no processamento das informações. | Problema interno na aplicação. Tentar novamente em outro momento. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_013\] | Foi enviada uma declaração, mas não havia sido definido o regime de apuração. | O contribuinte deve entrar no portal e efetuar a opção pelo Regime. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_014\] | Necessário especificar as receitas brutas anteriores dos períodos: | Não foram enviadas as receitas brutas de determinados períodos. Fazer nova tentativa mandando os períodos solicitados. | _Necessário especificar as receitas brutas anteriores dos períodos: 01/2018 e 02/2018._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_015\] | O CNPJ completo da matriz não é igual ao CNPJ completo no Cadastro CNPJ. | O cnpj enviado no entrada.CnpjCompleto não é igual ao CNPJ da matriz corrente no cadastro CNPJ. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_016\] | Empresa Optante não pode ter dados de Não Optante. | A empresa é optante pelo Simples Nacional, mas foi enviado o bloco de Não Optante. Fazer novo envio retirando esse bloco. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_017\] | Empresa é não optante no período. O Campo Não Optante deve ter os dados preenchidos. | A empresa é não optante pelo Simples Nacional no período de apuração. Deve ser preenchido o bloco de Não Optante. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_018\] | Um ou mais nis existentes no Cadastro CNPJ não foram enviados no campo Estabelecimento: {cnpj}. | O cadastro CNPJ possui um estabelecimento que não foi enviado no campo Estabelecimento. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_019\] | Um ou mais nis enviados no estabelecimento ({cnpj}) não fazem parte da empresa {cnpjMatriz} de acordo com o Cadastro CNPJ. | Um ou mais cnpjs enviados no Estabelecimento não estão presentes no Cadastro CNPJ na época do período da declaração. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_020\] | Campo idAtividade inválido: {id}. | Foi enviada uma atividade não compatível com as atividades previstas. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_021\] | A soma dos valores das atividades está diferente do valor total de receita do Pa. | A soma dos campos Atividade.Valor de todos os estabelecimentos não é igual à soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[Erro-PGDASD-MSG\_ISN\_022\] | Houve um erro ao entregar a declaração. | Erro interno do sistema. Fazer nova tentativa em outro horário. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_023\] | O valor da atividade deve ser maior que zero | Algum campo Atividade.Valor tem zero, o que não é permitido. Caso não tenha atividade no período, o bloco ListaAtividades não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_024\] | Empresa não pode recolher valor fixo. Retire as entradas de ValorFixoIcms e/ou ValorFixoIss da Declaracao. | Foram passados valores fixos mas a empresa não pode recolher de acordo com as regras de negócio. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_025\] | Empresa não pode recolher valor fixo de {ISS}. Retire essa entrada da Declaracao. | Foi passado valor de valor fixo de ISS mas não é permitido de acordo com as regras de negócio. Retire da Declaracao. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_026\] | Informe valor fixo de {ICMS/ISS} maior do que 0,00 ou deixe o campo nulo. | Conforme a regra no PGDASD 2018 na Web, caso não tenha valor fixo a declarar, deixar o campo como null. Não será aceito o valor zero. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_027\] | Não há declaração transmitida para o parâmetro informado. | Não foi encontrada declaração. Corrigir o parâmetro e reenviar. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_028\] | Não foi encontrado DAS para o número de DAS informado. | Não foi encontrado DAS com o número fornecido. Verificar o número informado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_029\] | Existe atividade com folha de salário obrigatória. Informar o(s) período(s): {períodos}. | Se for declarada uma atividade com folha de salário obrigatória, as folhas dos 12 meses anteriores devem ser informadas. Caso ela já tenha sido informada em transmissão anterior, não é necessário fazer o envio. Se enviada, o valor enviado será considerado no cálculo. | _Existe atividade com folha de salário obrigatória. Informar o(s) período(s): 02/2020._ |
+| \[Aviso-PGDASD-MSG\_ISN\_030\] | Alterada a folha de salários do(s) mês(es) {MM/AAAA}. Os valores devidos dos períodos seguintes poderão sofrer alterações. Retifique as apurações posteriores ao(s) mês(es) alterados para ajustar o valor das folhas de salários. | Mensagem apenas informativa. Não impede a transmissão. |
+| \[Erro-PGDASD-MSG\_ISN\_031\] | Houve um problema na transmissão. Tente novamente mais tarde. | Erro interno durante a transmissão. Tente novamente mais tarde. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_032\] | Qualificação tributária inválida: {id} não é permitida para o idAtividade {idAtividade} com o tributo {nomeTributo}. | A qualificação tributária enviada não pode ser utilizada com o tipo de atividade e tributo. | _Qualificação tributária inválida: {1} não é permitida para o idAtividade {2} com o tributo {IRPJ}._ |
+| \[Aviso-PGDASD-MSG\_ISN\_033\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso. | Mensagem informativa de transmissão com sucesso. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso._ |
+| \[Aviso-PGDASD-MSG\_ISN\_034\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} foi transmitida com sucesso, porém os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | Mensagem informativa de transmissão com sucesso, mas com divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 foi transmitida com sucesso, porém os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[Aviso-PGDASD-MSG\_ISN\_035\] | A declaração do período {período} da empresa {nome}, CNPJ {cnpj} não foi transmitida, pois os valores devidos calculados pelo sistema ({valoresSistema}) foram diferentes dos valores enviados para comparação ({valoresComparacao}). | A transmissão não foi efetuada por divergência de valores. | _A declaração do período 01/2018 da empresa EMPRESA TESTE, CNPJ 00000000000100 não foi transmitida, pois os valores devidos calculados pelo sistema (ICMS: 100.00) foram diferentes dos valores enviados para comparação (ICMS: 99.00)._ |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_036\] | O valor da parcela da receita da atividade deve ser maior que zero. | Algum campo ReceitaAtividade.Valor tem zero, o que não é permitido. Caso não tenha receita para a atividade, o bloco ListaReceitasAtividade não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_037\] | A soma dos valores das parcelas da receita da atividade está diferente do valor total da atividade. | A soma dos campos ReceitaAtividade.Valor não é igual ao campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_038\] | O valor da isenção deve ser maior que zero. | Algum campo Isencao.Valor tem zero, o que não é permitido. Caso não tenha isenção, o bloco ListaIsencoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_039\] | O valor da redução deve ser maior que zero. | Algum campo Reducao.Valor tem zero, o que não é permitido. Caso não tenha redução, o bloco ListaReducoes não deve ser enviado. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_040\] | O percentual da redução deve ser maior que zero. | Algum campo Reducao.PercentualReducao tem zero, o que não é permitido. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_041\] | O valor da isenção/redução não pode ser maior que o valor da parcela da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo ReceitaAtividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_042\] | O valor da isenção/redução não pode ser maior que o valor da atividade. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o campo Atividade.Valor. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_043\] | O valor da isenção/redução não pode ser maior que o valor total da receita. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_044\] | O valor da isenção/redução não pode ser maior que o valor da receita do estabelecimento. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos Atividade.Valor de todos os estabelecimentos. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_045\] | O valor da isenção/redução não pode ser maior que o valor da receita da empresa. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_046\] | O valor da isenção/redução não pode ser maior que o valor da receita do município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades do mesmo município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_047\] | O valor da isenção/redução não pode ser maior que o valor da receita da UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaAtividade.Valor de todas as atividades da mesma UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_048\] | O valor da isenção/redução não pode ser maior que o valor da receita do país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que a soma dos campos ReceitaPaCompetenciaInterno e ReceitaPaCompetenciaExterno, para regime de competência ou ReceitaPaCaixaInterno e ReceitaPaCaixaExterno para regime de Caixa. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_049\] | O valor da isenção/redução não pode ser maior que o valor da receita do tributo. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_050\] | O valor da isenção/redução não pode ser maior que o valor do tributo no município. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no município. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_051\] | O valor da isenção/redução não pode ser maior que o valor do tributo na UF. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo na UF. |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_052\] | O valor da isenção/redução não pode ser maior que o valor do tributo no país. | A soma dos campos Isencao.Valor e Reducao.Valor não pode ser maior que o valor do tributo no país. |
+

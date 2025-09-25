@@ -1,0 +1,248 @@
+/// Modelo de resposta para entrega de declaração PGDASD
+///
+/// Representa a resposta do serviço TRANSDECLARACAO11
+class EntregarDeclaracaoResponse {
+  /// Status HTTP retornado no acionamento do serviço
+  final int status;
+
+  /// Mensagem explicativa retornada no acionamento do serviço
+  final List<Mensagem> mensagens;
+
+  /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida
+  final String dados;
+
+  EntregarDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+
+  /// Indica se a operação foi bem-sucedida
+  bool get sucesso => status == 200;
+
+  /// Parse dos dados JSON retornados
+  List<DeclaracaoTransmitida>? get dadosParsed {
+    try {
+      final dadosJson = dados as List;
+      return dadosJson.map((d) => DeclaracaoTransmitida.fromJson(d)).toList();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+  }
+
+  factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+    return EntregarDeclaracaoResponse(
+      status: json['status'] as int,
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      dados: json['dados'] as String,
+    );
+  }
+}
+
+/// Mensagem de retorno
+class Mensagem {
+  /// Código da mensagem
+  final String codigo;
+
+  /// Texto da mensagem
+  final String texto;
+
+  Mensagem({required this.codigo, required this.texto});
+
+  Map<String, dynamic> toJson() {
+    return {'codigo': codigo, 'texto': texto};
+  }
+
+  factory Mensagem.fromJson(Map<String, dynamic> json) {
+    return Mensagem(codigo: json['codigo'] as String, texto: json['texto'] as String);
+  }
+}
+
+/// Declaração transmitida
+class DeclaracaoTransmitida {
+  /// ID da Declaração que foi transmitida
+  final String idDeclaracao;
+
+  /// Data e hora da transmissão no formato AAAAMMDDHHmmSS
+  final String dataHoraTransmissao;
+
+  /// Valor devidos calculados pelo sistema
+  final List<ValorDevido> valoresDevidos;
+
+  /// PDF da declaração no formato Base64
+  final String declaracao;
+
+  /// PDF do recibo no formato Base64
+  final String recibo;
+
+  /// PDF da notificação MAED. No caso de não ter MAED este campo é nulo
+  final String? notificacaoMaed;
+
+  /// PDF do DARF. No caso de não ter MAED este campo é nulo
+  final String? darf;
+
+  /// Detalhamento dos valores do Darf
+  final DetalhamentoDarfMaed? detalhamentoDarfMaed;
+
+  DeclaracaoTransmitida({
+    required this.idDeclaracao,
+    required this.dataHoraTransmissao,
+    required this.valoresDevidos,
+    required this.declaracao,
+    required this.recibo,
+    this.notificacaoMaed,
+    this.darf,
+    this.detalhamentoDarfMaed,
+  });
+
+  /// Indica se há MAED (Multa por Atraso na Entrega da Declaração)
+  bool get temMaed => notificacaoMaed != null && darf != null;
+
+  /// Valor total devido
+  double get valorTotalDevido => valoresDevidos.fold(0.0, (sum, valor) => sum + valor.valor);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idDeclaracao': idDeclaracao,
+      'dataHoraTransmissao': dataHoraTransmissao,
+      'valoresDevidos': valoresDevidos.map((v) => v.toJson()).toList(),
+      'declaracao': declaracao,
+      'recibo': recibo,
+      if (notificacaoMaed != null) 'notificacaoMaed': notificacaoMaed,
+      if (darf != null) 'darf': darf,
+      if (detalhamentoDarfMaed != null) 'detalhamentoDarfMaed': detalhamentoDarfMaed!.toJson(),
+    };
+  }
+
+  factory DeclaracaoTransmitida.fromJson(Map<String, dynamic> json) {
+    return DeclaracaoTransmitida(
+      idDeclaracao: json['idDeclaracao'] as String,
+      dataHoraTransmissao: json['dataHoraTransmissao'] as String,
+      valoresDevidos: (json['valoresDevidos'] as List).map((v) => ValorDevido.fromJson(v)).toList(),
+      declaracao: json['declaracao'] as String,
+      recibo: json['recibo'] as String,
+      notificacaoMaed: json['notificacaoMaed'] as String?,
+      darf: json['darf'] as String?,
+      detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed']) : null,
+    );
+  }
+}
+
+/// Valor devido
+class ValorDevido {
+  /// Código do tributo
+  final int codigoTributo;
+
+  /// Valor devido do tributo
+  final double valor;
+
+  ValorDevido({required this.codigoTributo, required this.valor});
+
+  Map<String, dynamic> toJson() {
+    return {'codigoTributo': codigoTributo, 'valor': valor};
+  }
+
+  factory ValorDevido.fromJson(Map<String, dynamic> json) {
+    return ValorDevido(codigoTributo: json['codigoTributo'] as int, valor: (json['valor'] as num).toDouble());
+  }
+}
+
+/// Detalhamento do DARF/MAED
+class DetalhamentoDarfMaed {
+  /// Período de Apuração no formato AAAAMM
+  final String periodoApuracao;
+
+  /// Número do documento gerado
+  final String numeroDocumento;
+
+  /// Data de vencimento no formato AAAAMMDD
+  final String dataVencimento;
+
+  /// Data limite para acolhimento no formato AAAAMMDD
+  final String dataLimiteAcolhimento;
+
+  /// Discriminação dos valores contidos no DARF
+  final ValoresDarf valores;
+
+  /// Observação 1
+  final String? observacao1;
+
+  /// Observação 2
+  final String? observacao2;
+
+  /// Observação 3
+  final String? observacao3;
+
+  /// Por se tratar de DARF, este campo não possui informação
+  final dynamic composicao;
+
+  DetalhamentoDarfMaed({
+    required this.periodoApuracao,
+    required this.numeroDocumento,
+    required this.dataVencimento,
+    required this.dataLimiteAcolhimento,
+    required this.valores,
+    this.observacao1,
+    this.observacao2,
+    this.observacao3,
+    this.composicao,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'periodoApuracao': periodoApuracao,
+      'numeroDocumento': numeroDocumento,
+      'dataVencimento': dataVencimento,
+      'dataLimiteAcolhimento': dataLimiteAcolhimento,
+      'valores': valores.toJson(),
+      if (observacao1 != null) 'observacao1': observacao1,
+      if (observacao2 != null) 'observacao2': observacao2,
+      if (observacao3 != null) 'observacao3': observacao3,
+      if (composicao != null) 'composicao': composicao,
+    };
+  }
+
+  factory DetalhamentoDarfMaed.fromJson(Map<String, dynamic> json) {
+    return DetalhamentoDarfMaed(
+      periodoApuracao: json['periodoApuracao'] as String,
+      numeroDocumento: json['numeroDocumento'] as String,
+      dataVencimento: json['dataVencimento'] as String,
+      dataLimiteAcolhimento: json['dataLimiteAcolhimento'] as String,
+      valores: ValoresDarf.fromJson(json['valores']),
+      observacao1: json['observacao1'] as String?,
+      observacao2: json['observacao2'] as String?,
+      observacao3: json['observacao3'] as String?,
+      composicao: json['composicao'],
+    );
+  }
+}
+
+/// Valores do DARF
+class ValoresDarf {
+  /// Valor do principal
+  final double principal;
+
+  /// Valor da multa
+  final double multa;
+
+  /// Valor dos juros
+  final double juros;
+
+  /// Valor total
+  final double total;
+
+  ValoresDarf({required this.principal, required this.multa, required this.juros, required this.total});
+
+  Map<String, dynamic> toJson() {
+    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
+  }
+
+  factory ValoresDarf.fromJson(Map<String, dynamic> json) {
+    return ValoresDarf(
+      principal: (json['principal'] as num).toDouble(),
+      multa: (json['multa'] as num).toDouble(),
+      juros: (json['juros'] as num).toDouble(),
+      total: (json['total'] as num).toDouble(),
+    );
+  }
+}

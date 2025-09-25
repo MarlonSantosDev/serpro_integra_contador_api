@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/pgmei/gerar_das_response.dart';

@@ -12,6 +12,7 @@ export 'src/core/auth/authentication_model.dart';
 // Utilities
 export 'src/util/document_utils.dart';
 export 'src/util/message_utils.dart';
+export 'src/util/dctfweb_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';
@@ -27,6 +28,12 @@ export 'src/models/pgmei/gerar_das_response.dart';
 
 // DCTFWeb Models
 export 'src/models/dctfweb/dctfweb_response.dart';
+export 'src/models/dctfweb/dctfweb_request.dart';
+export 'src/models/dctfweb/dctfweb_common.dart';
+export 'src/models/dctfweb/consultar_xml_response.dart';
+export 'src/models/dctfweb/gerar_guia_response.dart';
+export 'src/models/dctfweb/transmitir_declaracao_response.dart';
+export 'src/models/dctfweb/consultar_relatorio_response.dart';
 
 // Procurações Models
 export 'src/models/procuracoes/procuracoes_response.dart';

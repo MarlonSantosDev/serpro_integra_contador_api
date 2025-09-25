@@ -1,0 +1,177 @@
+/// Modelo de resposta para consultar declaração por número PGDASD
+///
+/// Representa a resposta do serviço CONSDECREC15
+class ConsultarDeclaracaoNumeroResponse {
+  /// Status HTTP retornado no acionamento do serviço
+  final int status;
+
+  /// Mensagem explicativa retornada no acionamento do serviço
+  final List<Mensagem> mensagens;
+
+  /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao
+  final String dados;
+
+  ConsultarDeclaracaoNumeroResponse({required this.status, required this.mensagens, required this.dados});
+
+  /// Indica se a operação foi bem-sucedida
+  bool get sucesso => status == 200;
+
+  /// Parse dos dados JSON retornados
+  DeclaracaoCompleta? get dadosParsed {
+    try {
+      final dadosJson = dados as Map<String, dynamic>;
+      return DeclaracaoCompleta.fromJson(dadosJson);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+  }
+
+  factory ConsultarDeclaracaoNumeroResponse.fromJson(Map<String, dynamic> json) {
+    return ConsultarDeclaracaoNumeroResponse(
+      status: json['status'] as int,
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      dados: json['dados'] as String,
+    );
+  }
+}
+
+/// Mensagem de retorno
+class Mensagem {
+  /// Código da mensagem
+  final String codigo;
+
+  /// Texto da mensagem
+  final String texto;
+
+  Mensagem({required this.codigo, required this.texto});
+
+  Map<String, dynamic> toJson() {
+    return {'codigo': codigo, 'texto': texto};
+  }
+
+  factory Mensagem.fromJson(Map<String, dynamic> json) {
+    return Mensagem(codigo: json['codigo'] as String, texto: json['texto'] as String);
+  }
+}
+
+/// Declaração completa
+class DeclaracaoCompleta {
+  /// Identificador único da declaração transmitida
+  final String numeroDeclaracao;
+
+  /// Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF
+  final ArquivoRecibo recibo;
+
+  /// Estrutura de dados completa da declaração entregue. A saída é um PDF
+  final ArquivoDeclaracao declaracao;
+
+  /// Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED
+  /// Essa estrutura representa os documentos de Notificação e DARF da MAED
+  final ArquivoMaed? maed;
+
+  DeclaracaoCompleta({required this.numeroDeclaracao, required this.recibo, required this.declaracao, this.maed});
+
+  /// Indica se há MAED (Multa por Atraso na Entrega da Declaração)
+  bool get temMaed => maed != null;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'numeroDeclaracao': numeroDeclaracao,
+      'recibo': recibo.toJson(),
+      'declaracao': declaracao.toJson(),
+      if (maed != null) 'maed': maed!.toJson(),
+    };
+  }
+
+  factory DeclaracaoCompleta.fromJson(Map<String, dynamic> json) {
+    return DeclaracaoCompleta(
+      numeroDeclaracao: json['numeroDeclaracao'] as String,
+      recibo: ArquivoRecibo.fromJson(json['recibo']),
+      declaracao: ArquivoDeclaracao.fromJson(json['declaracao']),
+      maed: json['maed'] != null ? ArquivoMaed.fromJson(json['maed']) : null,
+    );
+  }
+}
+
+/// Arquivo do recibo
+class ArquivoRecibo {
+  /// Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64
+  /// Ex. "recibo-pgdasd-{numeroDeclaracao}.pdf"
+  final String nomeArquivo;
+
+  /// Obtém o arquivo em base 64 para conversão em PDF
+  final String pdf;
+
+  ArquivoRecibo({required this.nomeArquivo, required this.pdf});
+
+  Map<String, dynamic> toJson() {
+    return {'nomeArquivo': nomeArquivo, 'pdf': pdf};
+  }
+
+  factory ArquivoRecibo.fromJson(Map<String, dynamic> json) {
+    return ArquivoRecibo(nomeArquivo: json['nomeArquivo'] as String, pdf: json['pdf'] as String);
+  }
+}
+
+/// Arquivo da declaração
+class ArquivoDeclaracao {
+  /// Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64
+  /// Ex. "dec-pgdasd-{numeroDeclaracao}.pdf"
+  final String nomeArquivo;
+
+  /// Obtém o arquivo em base 64 para conversão em PDF
+  final String pdf;
+
+  ArquivoDeclaracao({required this.nomeArquivo, required this.pdf});
+
+  Map<String, dynamic> toJson() {
+    return {'nomeArquivo': nomeArquivo, 'pdf': pdf};
+  }
+
+  factory ArquivoDeclaracao.fromJson(Map<String, dynamic> json) {
+    return ArquivoDeclaracao(nomeArquivo: json['nomeArquivo'] as String, pdf: json['pdf'] as String);
+  }
+}
+
+/// Arquivo MAED
+class ArquivoMaed {
+  /// Nome do arquivo da notificação da multa da declaracao entregue em atraso
+  /// para ser utilizado no processo de decodificação do base64
+  /// Ex. "notificacao-maed-pgdasd-{numeroDeclaracao}.pdf"
+  final String nomeArquivoNotificacao;
+
+  /// Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED
+  final String pdfNotificacao;
+
+  /// Nome do arquivo do DARF da multa da declaracao entregue em atraso
+  /// para ser utilizado no processo de decodificação do base64
+  /// Ex. "darf-maed-pgdasd-{numeroDeclaracao}.pdf"
+  final String nomeArquivoDarf;
+
+  /// Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED
+  final String pdfDarf;
+
+  ArquivoMaed({required this.nomeArquivoNotificacao, required this.pdfNotificacao, required this.nomeArquivoDarf, required this.pdfDarf});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nomeArquivoNotificacao': nomeArquivoNotificacao,
+      'pdfNotificacao': pdfNotificacao,
+      'nomeArquivoDarf': nomeArquivoDarf,
+      'pdfDarf': pdfDarf,
+    };
+  }
+
+  factory ArquivoMaed.fromJson(Map<String, dynamic> json) {
+    return ArquivoMaed(
+      nomeArquivoNotificacao: json['nomeArquivoNotificacao'] as String,
+      pdfNotificacao: json['pdfNotificacao'] as String,
+      nomeArquivoDarf: json['nomeArquivoDarf'] as String,
+      pdfDarf: json['pdfDarf'] as String,
+    );
+  }
+}

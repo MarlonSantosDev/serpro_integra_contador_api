@@ -1,0 +1,1312 @@
+---
+alwaysApply: true
+---
+
+
+# Cenários DCTFWEB
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+...
+
+## Consultar o XML da Declaração
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d ' {         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }}'`
+
+
+
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é a DCTFWeb?
+
+Os débitos e créditos na DCTFWeb são gerados, regra geral, a partir das informações prestadas nas escriturações do Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas (eSocial) e Escrituração Fiscal Digital de Retenções e Outras Informações Fiscais (EFD-Reinf), módulos integrantes do Sistema Público de Escrituração Digital (Sped). Por isso, para alterar seus valores é necessário, regra geral, corrigir as escriturações.
+
+Prazo: O prazo mensal para entregar a Declaração de Débitos e Créditos Tributários Federais Previdenciários e de Outras Entidades e Fundos (DCTFWeb) é até o dia 15 (quinze) do mês seguinte ao da ocorrência dos fatos geradores. Por exemplo, os débitos e créditos decorrentes do mês de janeiro, devem ser declarados no mês de fevereiro.
+
+Se você é um contribuinte obrigado por lei a entregar a declaração, mas enviar após o prazo, será cobrada Multa por Atraso na Entrega de Declaração (MAED).
+
+## Quem pode utilizar este serviço?
+
+Pessoas físicas ou jurídicas sujeitas ao recolhimento de contribuições e/ou informações à Previdência Social.
+
+Somente poderão enviar a DCTFWeb os contribuintes enquadrados nos grupos específicos, de acordo com o cronograma de implantação do Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas (eSocial), definidos pela Portaria SEPRT 1.419/2019.
+
+Para enviar a declaração, você precisará assiná-la utilizando certificado digital.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra DCTFWeb, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) ou tipo 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema DCTFWeb, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## Sumário dos serviços
+
+ATENÇÃO
+
+É essencial a leitura **cuidadosa** da documentação de cada serviço no menu **Documentação > Soluções > Integra-DCTFWeb > DCTFWeb > Serviços** para a utilização correta dos mesmos. Verifique também as páginas [Mensagens]() para um melhor entendimento das informações retornadas pela API e [Erros comuns ao usar o serviço]() para um detalhamento dos temas sobre os quais mais recebemos dúvidas.
+
+Lembrando que às declarações já transmitidas é atribuida a situação ATIVA, e às ainda não transmitidas, EM ANDAMENTO. Os serviços de **Consultar Recibo de transmissão**, **Consultar Declaração Completa** e **Gerar Documento de Arrecadação** só podem ser acionado para declarações já transmitidas.
+
+*   **Consultar XML da declaração:** Consulta o xml de uma declaração ATIVA (e portanto já assinada e transmitida), **ou** gera o xml de uma declaração EM ANDAMENTO, para posterior assinatura e transmissão a partir do serviço **Transmitir declaração**. Em ambos os casos, o xml retornado estará codificado em base64.
+*   **Transmitir declaração:** Efetua a transmissão de uma declaração EM ANDAMENTO a partir da informação do xml gerado no serviço **Consultar XML da declaração**. O xml deverá ser assinado digitalmente pelo contribuinte antes de acionar este serviço e codificado em base64.
+*   **Consultar Recibo de transmissão:** Consulta o recibo de transmissão de uma declaração.
+*   **Consultar Declaração Completa:** Consulta relatório de declaração completa transmitida.
+*   **Gerar Documento de Arrecadação:** Gera o documento de arrecadação para uma declaração na situação ATIVA.
+
+
+
+
+# Gerar Documento de Arrecadação
+
+Gera o documento de arrecadação para uma declaração na situação ATIVA
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: GERARGUIA31
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+| DataAcolhimentoProposta | Inteiro (não string). Dia útil (no município associado ao contribuinte) do mês corrente maior ou igual ao dia de hoje, no formato aaaammdd, para pagamento da guia. Segue as mesmas regras do DCTF Web (opção "editar DARF") para proposição de data de acolhimento/pagamento. Veja como exemplo o objeto "dados" para a categoria RECLAMATORIA\_TRABALHISTA abaixo. Ele assume que o mês corrente é julho de 2023, pagando uma guia atrasada e escolhendo a data de pagamento 31/07/2023 (último dia útil do mês). | `Number` | NÃO |
+| idsSistemaOrigem | Lista de sistema(s) de origem das receitas. Quando informado, a guia será gerada contendo apenas as receitas oriundas do(s) sistema(s) de origem especificado(s). | `Array` | NÃO |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\",\"DataAcolhimentoProposta\": 20230731}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"   "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\",\"idsSistemaOrigem\":[8]}"  "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\",\"idsSistemaOrigem\":[1,8]}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{     "contratante":      {       "numero": "00000000000000",       "tipo": 2     },     "autorPedidoDados":      {       "numero": "00000000000000",       "tipo": 2     },     "contribuinte":      {       "numero": "00000000000000",       "tipo": 2     },      "pedidoDados":      {       "idSistema": "DCTFWEB",       "idServico": "GERARGUIA31",       "versaoSistema": "1.0",       "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"     } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+
+Objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| PDFByteArrayBase64 | Documento DARF no formato PDF. | `String` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2    },    "autorPedidoDados":    {      "numero": "00000000000000",       "tipo": 2    },    "contribuinte":    {      "numero": "00000000000000",      "tipo": 2    },  "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "GERARGUIA31",      "versaoSistema": "1.0",      "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },  "status": 200,  "dados":  "{\"PDFByteArrayBase64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDI3OTAKPj4Kc3RyZWFtDQp4nNVbW2/bOhJ+96/gywI5QKvwfimKBVxbbtxLmiZOtsBiH3LUtMjCOd6Ttuf8/Z0ZkvItUpTKLhK4DccyOTPkfHOhRP05+BM+r2YDZZnnls0+D8rZ4ONAsjd4VTAOH/zrtWSzm8HhRDAB1JfBwW9s9l/sDBfgc/t1wAtn2N80FEYVQhodoFXGestOXw/+/R/g83kAF6VV7GZgtCVqPjBGFEbSF2Pwoiu0j6RTrBogZXnsiZTH3mmQFTAIOGFbIXMk5gOtkAXSKuQRRGEvIJDxnIgoLPZHDZJ+1eDL01H1LC/unwPho9G0LQz04MxpWWjHKjDe9c1XzsYLsO+KbZddwL5xNKDgeU2VqzDgyGdlsBK6EMxZX4iED8mER3xsQwAg8lJrO7HKGTu2xpYOvklutTWSa+Gkk3BVWQFXROlKZSf/RJBx9nWprVUFD6AxLAVJvFPOwecFuzpbVNeX898yh+15pDVDwD4YxJrZYAEZQgui5kCpwln6ItDIwRdSE+m4ABsRJTT1RMpi7zTIicCQE7YVMkcCkCGQBdJg/TSCKB2RgYwJGUlY7I8aJP0IxE9F1RrEzXDTpjAOuofCiBpuIsENPmjAXZtaWJEWENw4LaAx9QKSm8c5IRkXkChawEjRcqRBuEbIKS4gco8rKIzPSyiWg0TiBD0T9zlR2WZxEFky6Yk2f3o6dzC+MKHd9AdH718dTaZH5xfs7aeTo+nbj5/YETs/mpYf3346Z+OL43/tLxo4nl0MqKWLwRdyMSezi1lgGV3Mep9czAa+4mI2KBadVUUXQyK7GNLkRjy5GHIhF0PG0cWisNQfNEj65WjwJFTtEg0gpXpT+JR5FLPNicdwa5wsx5B+1pMOd3B9K93cA48mjawoII1bp1tAerz46+rm99vFoeTS7QeP5FZkZSgZkpWlDdnKkGfzwkcSrUwUWZmoaLM8CAxJnMjK0WnV0v0JBGYJDWOTpYkiU0dKrro/wi3pWYesJ6Vzl5BleWeIHowvv1+yz1fs4uqP6vrm6o/vi67oaBIvhSqCvweP3B0KuUcwSm+TYbXKhtWqNqzWtWEjaSiQZMMSFW2UB4HliBMZlriTYaVX2bDSixoNSJJhiSLDRipiKQ1ChCU9EYxPT+cOYJRed4+XupwMsUiH2BijJfzdLt77xkslYUayHaA92GvPCwwBXnZOEsI6CzsRielCOUoS9q49i3C6DN2mDxKCFBYk2SiQa9g2oUCR3efuHisFhgHTGZ/rOeNX6jkTt5/W8lzPWVvvRJ3NO1HnV+o5C2giTh4rP+LusUrTJiZi+KJxfxoHRdISxgNxnyeKROZBoEjWkyqNJ6dzl5LD6yI45Fd4VwNWI6TquLj3iIo1EnhNCk5ALYMTfKHoI3UdnKTLwcnKHJysXg1O4CLEybpUwwFR13BAY50WRxAlUw0nXarhkrDYnzSgJpebT0LVjuWmCYXqFD4nIFNh+HQWi8uJwXjSN1yiBtqvIo+vhUqI2q+Gkpt4GyVYmaI2fhthWMt1roJeSiqtjHLq59Tafcc1NxOwmDB...221933 bytes truncated...
+
+
+
+
+# Consultar Recibo de transmissão
+
+Consulta o recibo de transmissão de uma declaração
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSRECIBO32
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"    "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":    {      "numero": "00000000000000",      "tipo": 2   },  "contribuinte":    {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {     "idSistema": "DCTFWEB",     "idServico": "CONSRECIBO32",     "versaoSistema": "1.0",     "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":   {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":   {      "numero": "00000000000000",      "tipo": 2   },   "contribuinte":   {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "CONSRECIBO32",      "versaoSistema": "1.0",      "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },    "status": 200,    "dados":  "{\"PDFByteArrayBase64\":\"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...11008 bytes truncated..."}",    "mensagens": [      {        "codigo": "00",        "texto": "Recibo de transmissão gerado com sucesso."      }    ] }`
+
+
+
+
+# Consultar Declaração Completa
+
+Consulta relatório de declaração completa transmitida
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSDECCOMPLETA33
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":    {      "numero": "00000000000000",      "tipo": 2   },   "contribuinte":    {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {     "idSistema": "DCTFWEB",     "idServico": "CONSDECCOMPLETA33",     "versaoSistema": "1.0",     "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2    },  "autorPedidoDados":   {      "numero": "00000000000000",      "tipo": 2   },  "contribuinte":   {      "numero": "00000000000000",      "tipo": 2   },  "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "CONSDECCOMPLETA33",      "versaoSistema": "1.0",      "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },   "status": 200,   "dados": "{\"PDFByteArrayBase64\":\"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...12072 bytes truncated..."}",    "mensagens": [      {        "codigo": "00",        "texto": "Relatório de declaração completa gerado com sucesso."      }    ] }`
+
+
+
+
+# Consultar XML da declaração
+
+Consulta o xml de uma declaração já trasmitida (e portanto já assinada), **ou** gera o xml de uma declaração EM ANDAMENTO, para posterior assinatura e transmissão a partir do serviço TRANSDECLARACAO310.
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSXMLDECLARACAO38
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista. |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"08\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2022\",\"mesPA\":\"08\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"    "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+   `{         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: XMLStringBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{  "contratante":   {      "numero": "00000000000",      "tipo": 1   },  "autorPedidoDados":   {      "numero": "00000000000",      "tipo": 1   },   "contribuinte":   {      "numero": "00000000000",      "tipo": 1   },  "pedidoDados":  {   "idSistema": "DCTFWEB",   "idServico": "CONSXMLDECLARACAO38",   "versaoSistema": "1.0",   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   },  "status": 200,   "dados": "{\"XMLStringBase64\":\"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UHJvY0RjdGZ4bWxuczp4c2Q9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxucz0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiPjxDb250ZXVkb0RlY2xhcmFjYW8gaWQ9ImlkXzE2NDM2Ij48dG5zMTpEY3RmWG1sIHhzaTp0eXBlPSJEY3RmWG1sX3YzIiB2ZXJzYW89IjMuMCIgeG1sbnM6dG5zMT0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiIHhtbG5zPSJodHRwOi8vd3d3LnNlcnByby5nb3YuYnIvZGN0Zi92MSIgdHlwZT0iRGN0ZlhtbF92MyI+PEEwMDAtRGFkb3NJZGVudGlmaWNhZG9yZXNDb250cmlidWludGU+PG5vbWVDb250cmlidWludGU+TlpJWFJaIE5aSVhaIFBPTEtWSCBXViBITEZIWjwvbm9tZUNvbnRyaWJ1aW50ZT48dGlwb0luc2NDb250cmliPjI8L3RpcG9JbnNjQ29udHJpYj48aW5zY0NvbnRyaWI+MDAwMDAwMDAwMDA8L2luc2NDb250cmliPjxwZXJBcHVyYWNhbz4wNjIwMjI8L3BlckFwdXJhY2FvPjxjbGFzVHJpYj4yMTwvY2xhc1RyaWI+PGluZFJldGlmaWNhY2FvPjI8L2luZFJldGlmaWNhY2FvPjxudW1SZWNpYm8+MjQ2ODg8L251bVJlY2libz48aW5kT3JnRXN0cmFuZz4wPC9pbmRPcmdFc3RyYW5nPjxpbmRDb250ZXVkbz4xPC9pbmRDb250ZXVkbz48aW5kWmVyYWRhPjE8L2luZFplcmFkYT48Y2F0ZWdvcmlhRENURj41MDwvY2F0ZWdvcmlhRENURj48QTAwNS1EYWRvc0NhZGFzdHJhaXNDb250cmlidWludGU+PHRwTG9ncmFkb3Vybz5SVUE8L3RwTG9ncmFkb3Vybz48Y2FkTG9ncmFkb3Vybz5JIFpOVkdSSEdaIFhMTVdMTlJNUkwgWk9ZVklHIEhYU1pJT1Y8L2NhZExvZ3JhZG91cm8+PGNhZE51bWVybz4wMDA8L2NhZE51bWVybz48Y2FkQmFpcnJvPkJBSVJSTzwvY2FkQmFpcnJvPjxjYWRNdW5pY2lwaW8+NTEzMzwvY2FkTXVuaWNpcGlvPjxjYWRVZj5NRzwvY2FkVWY+PGNhZENlcD4zMTAwMDAwMDwvY2FkQ2VwPjxjYWRNdW5pY2lwaW9QQT41MTMzPC9jYWRNdW5pY2lwaW9QQT48L0EwMDUtRGFkb3NDYWRhc3RyYWlzQ29udHJpYnVpbnRlPjxBMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48Y29udGF0b0NwZj4wMDAwMDAwMDAwMDA8L2NvbnRhdG9DcGY+PGNvbnRhdG9VZkNyYz5NRzwvY29udGF0b1VmQ3JjPjxjb250YXRvVGVsZWZvbmU+MzEwMDAwMDAwMDwvY29udGF0b1RlbGVmb25lPjxjb250YXRvRW1haWw+dGVzdGVAdGVzdGUuY29tLmJyPC9jb250YXRvRW1haWw+PC9BMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48QTAzMC1EZWR1Y29lc1JldGVuY2FvTGVpOTcxMT48ZGVkU2FsRmFtaWxpYT4xMDAuMDA8L2RlZFNhbEZhbWlsaWE+PGRlZFNhbE1hdGVybj4yMDAuMDA8L2RlZFNhbE1hdGVybj48L0EwMzAtRGVkdWNvZXNSZXRlbmNhb0xlaTk3MTE+PEEwNTAtQ3JlZGl0b3NUcmlidXRhcmlvc0FwdXJhZG9zPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gRU1QUkVHQURPUy9BVlVMU088L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1Ym8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1Ym8+PGN0VmFsb3I+MS45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4xLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4xLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAyPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gVFJBQkFMSEFET1IgUlVSQUwgQ1VSVE8gUFJBWk88L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1Ym8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1Ym8+PGN0VmFsb3I+Mi45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4yLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4yLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA5OTAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gQ09OVFJJQlVJTlRFUyBJTkRJVklEVUFJUyAtIDExJTwvY3REZXNjcmljYW9UcmlidXRvPjxjdENvZEdydXBvPjQ1PC9jdENvZEdydXBvPjxjdERlc2NHcnVwbz5DT05UUklCVUnDh8ODTyBQUkVWSURFTkNJw4FSSUEgU0VHVVJBRE9TPC9jdERlc2NHcnVwbz48Y3RWYWxvcj4zLjk5PC9jdFZhbG9yPjxwYURlYml0bz4wMTA2MjAyMjwvcGFEZWJpdG8+PHZsVG90YWxDcmVkPjMuOTk8L3ZsVG90YWxDcmVkPjxzYWxkb2FQYWdhcj4wLjAwPC9zYWxkb2FQYWdhcj48QTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjxkZWRTYWxGYW1pbGlhPjMuOTk8L2RlZFNhbEZhbWlsaWE+PC9BMjUwLURlZHVjYW9TYWxGYW1pbGlhVmFsb3Jlc1ZpbmN1bGFkb3M+PC9DcmVkaXRvVHJpYnV0YXRyaW9BcHVyYWRvPjxDcmVkaXRv...16496 bytes truncated..."}",  "mensagens": [   {    "codigo": "00",    "texto": "XML da declaração gerado com sucesso."   }  ] }`
+
+
+
+
+# Transmitir declaração
+
+Efetua a transmissão de uma declaração EM ANDAMENTO a partir da informação do base64 gerado no serviço CONSXMLDECLARACAO38. O arquivo deverá ser assinado digitalmente pelo contribuinte antes de acionar o serviço TRANSDECLARACAO310.
+
+Conteúdo da declaração assinada deve ser imutável
+
+A declaração assinada deve ser idêntica, caractere a caractere, à recebida pelo serviço CONSXMLDECLARACAO38. **A comparação é feita via hash computado em cima do XML recebido, removida a tag de assinatura.** É muito comum recebermos queixas sobre transmissões recusadas quando o XML foi alterado no processo de assinatura (alterações que não alteram sua semântica, como troca de ordem dos atributos de uma tag ou transformação de maiúsculas em minúsculas em algum ponto). Recomendamos realizar a comparação dos arquivos por algum aplicativo ao invés de fazê-lo visualmente.
+
+Modelos de assinador digital
+
+Exemplos disponíveis nas linguagens C# e PHP:  
+\- [Dotnet]()  
+\- [PHP]()
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: TRANSDECLARACAO310
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+| xmlAssinadoBase64 | O XML obtido pela operação 'Consultar o XML da Declaração' assinado e em base64. **O certificado usado na assinatura deve ser o do autor do pedido de dados.** O elemento do XML a ser assinado é o 'ConteudoDeclaracao' (se não for o caso, a transmissão será rejeitada). Além disso, a assinatura deve seguir o padrão indicado na seção **Padrões exigidos para a assinatura digital** dessa página. | `String` | SIM |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"04\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"     "dados": "{\"categoria\": 40,\"anoPA\":\"2022\",\"mesPA\":\"04\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"04\",\"diaPA\":\"19\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"04\",\"diaPA\":\"19\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\":  \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2023\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"123456789012345\",\"xmlAssinadoBase64\": \"AQUI_VAI_TEXTOBASE64ASSINADO\"}"      "dados": "{\"categoria\": 46,\"anoPA\":\"2023\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"123456789012345\",\"xmlAssinadoBase64\": \"AQUI_VAI_TEXTOBASE64ASSINADO\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "contratante":          {            "numero": "00000000000",            "tipo": 1         },         "autorPedidoDados":          {            "numero": "00000000000",            "tipo": 1         },         "contribuinte":          {            "numero": "00000000000",            "tipo": 1         },          "pedidoDados":         {            "idSistema": "DCTFWEB",            "idServico": "TRANSDECLARACAO310",            "versaoSistema": "1.0",            "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UHJvY0RjdGYgeG1sbnM6eHNkPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM9Imh0dHA6Ly93d3cuc2VycHJvLmdvdi5ici9kY3RmL3YxIj48Q29udGV1ZG9EZWNsYXJhY2FvIGlkPSJpZF8xNjQzNiI+PHRuczE6RGN0ZlhtbCB4c2k6dHlwZT0iRGN0ZlhtbF92MyIgdmVyc2FvPSIzLjAiIHhtbG5zOnRuczE9Imh0dHA6Ly93d3cuc2VycHJvLmdvdi5ici9kY3RmL3YxIiB4bWxucz0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiIHR5cGU9IkRjdGZYbWxfdjMiPjxBMDAwLURhZG9zSWRlbnRpZmljYWRvcmVzQ29udHJpYnVpbnRlPjxub21lQ29udHJpYnVpbnRlPk5aSVhSWiBOWklSWiBPTEtWSCBXViBITEZIWjwvbm9tZUNvbnRyaWJ1aW50ZT48dGlwb0luc2NDb250cmliPjI8L3RpcG9JbnNjQ29udHJpYj48aW5zY0NvbnRyaWI+MDAwMDAwMDAwMDA8L2luc2NDb250cmliPjxwZXJBcHVyYWNhbz4wNjIwMjI8L3BlckFwdXJhY2FvPjxjbGFzVHJpYj4yMTwvY2xhc1RyaWJpPjxpbmRRetGlmaWNhY2FvPjI8L2luZFJldGlmaWNhY2FvPjxudW1SZWNpYm8+MjQ2ODg8L251bVJlY2libz48aW5kT3JnRXN0cmFuZz4wPC9pbmRPcmdFc3RyYW5nPjxpbmRDb250ZXVkbz4xPC9pbmRDb250ZXVkbz48aW5kWmVyYWRhPjE8L2luZFplcmFkYT48Y2F0ZWdvcmlhRENURj41MDwvY2F0ZWdvcmlhRENURj48QTAwNS1EYWRvc0NhZGFzdHJhaXNDb250cmlidWludGU+PHRwTG9ncmFkb3Vybz5SVUE8L3RwTG9ncmFkb3Vybz48Y2FkTG9ncmFkb3Vybz5JIFpOVkdSSEdaIFhMTVdMTlJNUkwgWk9ZVklHIEhYU1pJT1Y8L2NhZExvZ3JhZG91cm8+PGNhZE51bWVybz4wMDA8L2NhZE51bWVybz48Y2FkQmFpcnJvPkJBSVJSTzwvY2FkQmFpcnJvPjxjYWRNdW5pY2lwaW8+NTEzMzwvY2FkTXVuaWNpcGlvPjxjYWRVZj5NRzwvY2FkVWY+PGNhZENlcD4zMTAwMDAwMDwvY2FkQ2VwPjxjYWRNdW5pY2lwaW9QQT41MTMzPC9jYWRNdW5pY2lwaW9QQT48L0EwMDUtRGFkb3NDYWRhc3RyYWlzQ29udHJpYnVpbnRlPjxBMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48Y29udGF0b0NwZj4wMDAwMDAwMDAwMDA8L2NvbnRhdG9DcGY+PGNvbnRhdG9VZkNyYz5NRzwvY29udGF0b1VmQ3JjPjxjb250YXRvVGVsZWZvbmU+MzEwMDAwMDAwMDwvY29udGF0b1RlbGVmb25lPjxjb250YXRvRW1haWw+dGVzdGVAdGVzdGUuY29tLmJyPC9jb250YXRvRW1haWw+PC9BMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48QTAzMC1EZWR1Y29lc1JldGVuY2FvTGVpOTcxMT48ZGVkU2FsRmFtaWxpYT4xMDAuMDA8L2RlZFNhbEZhbWlsaWE+PGRlZFNhbE1hdGVybj4yMDAuMDA8L2RlZFNhbE1hdGVybj48L0EwMzAtRGVkdWNvZXNSZXRlbmNhb0xlaTk3MTE+PEEwNTAtQ3JlZGl0b3NUcmlidXRhcmlvc0FwdXJhZG9zPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gRU1QUkVHQURPUy9BVlVMU088L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1cG8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1cG8+PGN0VmFsb3I+MS45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4xLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4xLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAyPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gVFJBQkFMSEFET1IgUlVSQUwgQ1VSVE8gUFJBWk88L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1cG8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1cG8+PGN0VmFsb3I+Mi45OTwvY3RWYWxvcj48cGFEZWJpdG0+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4yLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4yLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA5OTAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gQ09OVFJJQlVJTlRFUyBJTkRJVklEVUFJUyAtIDExJTwvY3REZXNjcmljYW9UcmlidXRvPjxjdENvZEdydXBvPjQ1PC9jdENvZEdydXBvPjxjdERlc2NHcnVwbz5DT05UUklCVUnDh8ODTyBQUkVWSURFTkNJw4FSSUEgU0VHVVJBRE9TPC9jdERlc2NHcnVwbz48Y3RWYWxvcj4zLjk5PC9jdFZhbG9yPjxwYURlYml0bz4wMTA2MjAyMjwvcGFEZWJpdG8+PHZsVG90YWxDcmVkPjMuOTk8L3ZsVG90YWxDcmVkPjxzYWxkb2FQYWdhcj4wLjAwPC9zYWxkb2FQYWdhcj48QTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjxkZWRTYWxGYW1pbGlhPjMuOTk8L2RlZFNhbEZhbWlsaWE+PC9BMjUwLURlZHVjYW9TYWxGYW1pbGlhVmFsb3Jlc1ZpbmN1bGFkb3M+PC9DcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PENyZWRp...50013 bytes truncated..."}",  "mensagens": [   {    "codigo": "00",    "texto": "Declaração transmitida com sucesso."   }  ] }`
+
+
+
+
+# Gerar Documento de Arrecadação para Declaração em Andamento
+
+Gera o documento de arrecadação para uma declaração em andamento.
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: GERARGUIAANDAMENTO313
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório | Condicional |
+| --- | --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM | Para o MIT deve ser considerada a categoria 40 |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM | Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO | Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | CNO - Número Obra | `Number` | NÃO | Somente para categoria 44 AFERICAO |
+| numProcReclamatoria | Número do Processo - Reclamatória Trabalhista | `String` | NÃO | Somente para categoria 46 Reclamatória Trabalhista |
+| idsSistemaOrigem | Lista de sistema(s) de origem das receitas. Quando informado, a guia será gerada contendo apenas as receitas oriundas do(s) sistema(s) de origem especificado(s). | `Array` | NÃO |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"  "dados": "{\"categoria\":40,\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"   "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\",\"idsSistemaOrigem\":[8]}"  "dados": "{\"categoria\":40,\"anoPA\":\"2025\",\"mesPA\":\"01\",\"idsSistemaOrigem\":[1,8]}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DCTFWEB",     "idServico": "GERARGUIAANDAMENTO313",     "versaoSistema": "1.0",     "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+
+Objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| PDFByteArrayBase64 | Documento DARF no formato PDF. | `String` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DCTFWEB",     "idServico": "GERARGUIAANDAMENTO313",     "versaoSistema": "1.0",     "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   },   "status": "200",   "responseId": "8f380ff8-6099-4565-b433-c7fd65b7e8c1",   "responseDateTime": "2025-03-27T19:07:02.925Z",   "dados": "{\"PDFByteArrayBase64\":\"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...147640 bytes truncated..."}",   "mensagens": [     {       "codigo": "00",       "texto": "Guia gerada com sucesso."     }   ] }`
+
+
+
+
+# Mensagens específicas para o Integra DCTF
+
+## Como interpretar o retorno
+
+A cada chamada é retornado um conjunto de mensagens descrevendo o resultado do processamento. A estrutura do identificador das mensagens retornadas é:
+
+\[Tipo-Sistema-Código\]
+
+Sistema será "DCTF" e código será alguns dos valores tabelados nesssa página.
+
+Tipo pode ser:
+
+*   **EntradaIncorreta:** Os dados enviados pelo cliente contêm um ou mais erros que impedem o processamento da requisição.
+*   **Sucesso:** A requisição foi processada com sucesso. Isso significa apenas que não houve qualquer erro interno ao processsar a requisição.
+*   **Erro:** Houve um erro interno (i.e. do próprio sistema Integra Contador DCTF) ao tentar processar a requisição.
+*   **Aviso:** Informações complementares. Podem incluir detalhamento de por que uma operação não irá produzir os resultados esperados pelo cliente (por exemplo, acionou a Consulta de XML de declaração sendo que não existe nenhuma declaração na base correspondente aos dados passados na requisição).
+
+**ATENÇÃO:** Algumas mensagens nas tabelas abaixo são modelos que irão conter informações complementares de acordo com cada situação. Os locais onde essas informações complementares podem aparecer estão indicados pelas letras X, Y e Z em negrito.
+
+**Obs:** Parte das mensagens são descrições sumárias de falhas internas do sistema e visam agilizar a depuração, não correspondendo a qualquer erro da parte do usuário. Caso esteja tendo problemas que não consegue solucionar e opte por abrir um chamado de suporte, anexe ao chamado o JSON recebido como resposta do servidor.
+
+### Mensagens que podem surgir em qualquer serviço
+
+| Código | Mensagem |
+| --- | --- |
+| MG00 | Requisição efetuada com sucesso |
+| MG02 | Encaminhamento não autorizado. |
+| MG03 | Tratamento para IdServico não disponível. |
+| MG04 | Requisição efetuada com sucesso, mas os parametros implicam em de erro negócio. Veja as demais mensagens para detalhes. |
+| MG06 | IdServico desconhecido. |
+| MG07 | Dados de requisição inválidos. **X** |
+| MG08 | Não foi encontrada Declaração com os dados informados. |
+| MG09 | Dados informados não correspondem aos da declaração com este número recibo. |
+| MG10 | A declaração mais recente está na situação "Em Andamento", incompatível com a execução da funcionalidade. Favor informar o "numeroReciboEntrega" para identificar a declaração transmitida. |
+| MG11 | **X** executado com sucesso. |
+| MG12 | Exceção inespereada ao tentar executar o(a) **X**. |
+| MG15 | **X** retornou resposta vazia. |
+| MG18 | **X** executado, mas retornou erro." |
+| MG19 | Houve um erro interno ao processar a requisição. Tente novamente mais tarde. |
+| MG20 | O campo 'dados' do campo 'pedidoDados' do JSON de requisição está ausente ou é invalido. |
+| MG21 | Exceção lançada ao tentar buscar declaração no banco. |
+| MSGIC01 | Houve erro de negócio. Favor verificar as demais mensagens. |
+
+### Mensagens específicas do serviço [Consultar XML declaração para transmissão]()
+
+| Código | Mensagem |
+| --- | --- |
+| GERAXML01 | Declaracação em estado incompatível com geração de XML. |
+| GERAXML02 | Período informado não permitido para entrega da DCTF - WEB. |
+| GERAXML03 | O período de apuração da declaração é anterior à existencia legal do contribuinte. |
+| GERAXML04 | O valor total de débitos declarados excedeu R$ **X**. Favor procurar uma unidade da RFB. |
+| GERAXML05 | Já existe uma Declaração Ativa para este CNPJ Base **X**, porém pertencente a outro CNPJ completo(**Y**). |
+| GERAXML06 | O número de inscrição **X** está em situação **Y** no CNPJ. Compareça à unidade local da Receita Federal. |
+| GERAXML07 | Não há data estabelecida para a situação do número de inscrição **X** no CNPJ. Compareça à unidade local da Receita Federal. |
+| GERAXML08 | A DCTFWeb deve ser entregue pela matriz, **X** , da Pessoa Jurídica no cadastro da Receita Federal. O CNPJ informado foi **Y** . |
+| GERAXML09 | A soma do valor da vinculação da retenção na declaração mensal de dezembro (**X**) e do adiantamento da retenção na declaração de anual de décimo terceiro(**Y**) é superior ao valor do crédito disponível na declaração do mês de dezembro(**Z**). Proceda à sua regularização. |
+
+### Mensagens específicas do serviço [Transmitir Declaração]()
+
+| Código | Mensagem |
+| --- | --- |
+| TRANS01 | Estado da declaração não permite transmissão. |
+| TRANS02 | XML com formato inválido enviado para transmissão. **X**. |
+| TRANS04 | XML com conteúdo inválido enviado para transmissão. **X**. |
+| TRANS05 | Houve um erro ao tratar o elemento do XML. Algum elemento de seu conteúdo não está no formato esperado (confira, por exemplo, se o elemento <**X**509Certificate> é um base64 válido). |
+| TRANS07 | Não foi encontrado XML Gerado para validar a autenticidade do XML Assinado. |
+| TRANS09 | Assinatura inválida: **X** |
+| TRANS10 | A declaração foi atualizada depois da geração do XML que está sendo transmitido. |
+| TRANS11 | A declaração já foi transmitida. |
+| TRANS12 | A declaração não foi transmitida. |
+| TRANS13 | A DCTFWeb do contribuinte neste período de apuração está disponível apenas para consulta, não sendo possível transmiti-la. Embora esteja obrigado à entrega do eSocial/EFD-Reinf, neste PA, o contribuinte não se enquadra nas regras de obrigatoriedade da DCTFWeb, elencadas na IN RFB nº 2.005/2021. |
+| TRANS14 | Por ter sido entregue fora do prazo, ensejou a aplicação de Multa por Atraso na Entrega da DCTFWeb(MAED). Para visualizar a Notificação de Lançamento e o DARF da MAED acesse a DCTFWeb via Portal e-CAC. |
+| TRANS20 | Erro ao tentar persistir transmissão. |
+| TRANS15 | O XML não é bem-formado. Confira a corretude de sua estrutura (como a presença de um único elemento raiz e o fechamento de todas as tags). |
+| TRANS16 | Erro ao carregar XML. O XML recebido deveria ser a declaração gerada pelo DCTF acrescida da assinatura digital - se o XML não foi adulterado e a assinatura foi feita corretamente, não há margem para esse erro. Verifique que XML esta sendo enviado. |
+| TRANS17 | A tag Signature deve ser filha da tag ProcDctf. |
+| TRANS18 | Erro ao processar elemento Signature do XML. Verifique a validade dos elementos SignatureValue e SignedInfo do XML. |
+| TRANS19 | Certificado inválido: **X** |
+| TRANS20 | O campo XMLAssinadoBase64 não contém um base 64 válido |
+| TRANS21 | O campo XMLAssinadoBase64 é obrigatório |
+| TRANS22 | Erro ao carregar dados do certificado, alguns campos parecem estar ausentes - verifique se o mesmo não está corrompido |
+
+### Mensagens específicas dos serviços [Consultar Declaração Completa]() e [Consultar Recibo de transmissão]()
+
+| Código | Mensagem |
+| --- | --- | --- |
+| RELAT00 | Não foi encontrada declaração ativa para a geração do relatório |
+| RELAT01 | Erro ao consultar os dados base do(a) **X** |
+| RELAT02 | Erro ao gerar HTML do(a) **X** |
+| RELAT03 | Erro ao imprimir o PDF do(a) **X** |
+
+### Mensagens do serviço [Gerar Documento de Arrecadação]()
+
+| Código | Mensagem |
+| --- | --- |
+| APIGUIA01 | Não é permitido emitir guia de pagamento de declarações não ativas. |
+| APIGUIA02 | Data proposta para acolhimento de guia inválida. Motivo: **X** |
+| APIGUIA03 | IdSistemaOrigem inválido: **X** |
+| GUIA00 | Não será possível emitir a Guia nesta data. A Taxa Selic para o próximo mês ainda não foi divulgada. Emita a Guia no próximo dia útil. |
+| GUIA01 | Não é permitido emitir guia de pagamento de declarações não ativas. |
+| GUIA02 | Atenção! O saldo a pagar é inferior a R$**X**. A guia de pagamento não poderá ser emitida. Verifique na relação de declarações se há valores devidos inferiores a R$**X** que acumulados ultrapassem R$**X** e/ou efetue o pagamento junto com o débito da declaração imediatamente pos...2489 bytes truncated...
+
+
+
+
+# Erros comuns ao utilizar este serviço
+
+Essa página será incrementada conforme as dúvidas mais frequentes dos usuários.
+
+## Sobre a transmissão e a assinatura digital do XML
+
+A grande maioria dos erros reportados por usuários são relativos à funcionalidade [Transmitir Declaração](), especialmente no processo de assinatura no XML.
+
+Os padrões exigidos para a assinatura digital estão descritos em [Transmitir Declaração](), que também contém modelos de assinadores em C# e PHP. **O Serpro não presta consultoria na elaboração de assinadores em demais linguagens**. O material mais completo sobre os elementos da assinatura é a documentação da recomendação da W3C, lá referenciada ([http://www.w3.org/TR/xmldsig-core/]()). É um texto extenso e a maior parte dos ítens não é utilizada, mas é uma boa fonte para entender qual o papel de cada elemento da assinatura e assim guiar uma implementação correta do processo. As seções [3.1.1 Reference Generation]() e [3.1.2 Signature Generation]() contém o essencial e servem como ponto de partida para entender os demais elementos.
+
+Caso esteja tendo problemas **com a assinatura digital**, saiba que no [Serviço de validação de assinaturas eletrônicas do ITI]() é possivel validar sua assinatura gratuitamente. Com um detalhe - caso sua assinatura esteja **mal formada** (isto é, há um erro sério em sua estrutura conforme prescrita na referência acima) você não obterá qualquer resposta pois a página sequer conseguirá carregar a assinatura. Algo similar ocorrerá caso envie uma assinatura mal formada para nós - receberá o erro "TRANS18-Erro ao processar elemento Signature do XML. Verifique a validade dos elementos SignatureValue e SignedInfo do XML".
+
+A seguir, outros erros comuns de assinatura:
+
+*   **TRANS04-XML com conteúdo inválido enviado para transmissão.O XML enviado para transmissão é distinto do XML Gerado além da assinatura digital:** A declaração assinada deve ser idêntica, caractere a caractere, à recebida pelo serviço CONSXMLDECLARACAO38. **A comparação é feita via hash computado em cima do XML recebido, removida a tag de assinatura.** É muito comum recebermos queixas sobre transmissões recusadas quando o XML foi alterado no processo de assinatura (alterações que não alteram sua semântica, como troca de ordem dos atributos de uma tag ou transformação de maiúsculas em minúsculas em algum ponto). Caso passe por esse problema, inspecione tanto a string contendo o XML sendo repassada a seu assinador e o XML após a assinatura, pois algumas bibliotecas de manipulação de XML alteram automaticamente o XML (algumas trocam a ordem dos atributos, passam o valor do atributo encoding para maiúsculo etc). Recomendamos realizar a comparação das strings por algum aplicativo ao invés de fazê-lo visualmente, pois o último método é muito propenso a erros. É comum recebermos queixas improcedentes de usuários que usaram esse método (inclusive pela presença de caracteres invisíveis, como o UTF-8 BOM).
+*   **TRANS02- XML com formato inválido enviado para transmissão. O número de tags 'Reference' encontrado é diferente de 1:** A tag Reference descreve o que esta sendo assinado e como. Na operação de transmissão de declaração, a tag ConteudoDeclaracao é o que deve ser assinado - o que será indicado pelo valor do atributo URI da tag Reference como sendo o valor do atributo ID da tag ConteudoDeclaracao. No padrão que utilizamos (http://www.w3.org/TR/xmldsig-core/), há um elemento Reference para cada elemento assinado. Como exigimos a assinatura de um único elemento, deve haver exatamente uma tag Reference.
+
+
+
+
+# Dados de domínio
+
+| Domínio Categoria: |
+| --- |
+| GERAL\_MENSAL =40 |
+| GERAL\_13o\_SALARIO=41 |
+| AFERICAO=44 |
+| ESPETACULO\_DESPORTIVO=45 |
+| RECLAMATORIA\_TRABALHISTA=46 |
+| PF\_MENSAL=50 |
+| PF\_13o\_SALARIO=51 |
+
+| Domínio Tipo: |
+| --- |
+| CNPJ=2 |
+| CPF=1 |
+
+| Domínio idServico: |
+| --- |
+| GERARGUIA31 |
+| CONSRECIBO32 |
+| CONSDECCOMPLETA33 |
+| CONSXMLDECLARACAO38 |
+| TRANSDECLARACAO310 |
+| GERARGUIAANDAMENTO313 |
+
+| Domínio idsSistemaOrigem: |
+| --- |
+| eSocial = 1 |
+| Sero = 5 |
+| Reinf CP = 6 |
+| Reinf RET = 7 |
+| MIT = 8 |
+
+
+
+
+# Manual de Orientação da DCTFWeb - Outubro de 2021
+
+## SUMÁRIO
+
+*   SUMÁRIO .......................................................................................................... 2
+*   SUMÁRIO ESQUEMATIZADO .......................................................................... 5
+*   GLOSSÁRIO ...................................................................................................... 6
+*   SIGLAS .............................................................................................................. 7
+*   1. O QUE É DCTFWEB ..................................................................................... 8
+    *   1.1. Roteiro para envio da DCTFWeb ............................................................. 9
+    *   1.2. Fluxo de informações ............................................................................. 10
+*   2. QUEM ESTÁ OBRIGADO A DECLARAR ....................................................11
+    *   2.1. Consulta Início de Obrigatoriedade DCTFWeb ...................................... 12
+    *   2.2. Dispensa de apresentação .................................................................... 13
+*   3. TRIBUTOS DECLARADOS NA DCTFWEB ................................................ 14
+*   4. COMO APRESENTAR A DECLARAÇÃO ................................................... 14
+    *   4.1. Forma de apresentar ............................................................................. 14
+    *   4.2. Prazo para apresentar ........................................................................... 15
+    *   4.3. Ausência de informações a serem prestadas ........................................ 16
+    *   4.4. Apresentação em situações especiais ................................................... 16
+*   5. PENALIDADES E ACRÉSCIMOS LEGAIS ................................................. 16
+    *   5.1. Multa por Atraso na Entrega da Declaração (MAED)............................. 16
+    *   5.2. Multa por Incorreções ou Omissões ...................................................... 17
+    *   5.3. Multa mínima ......................................................................................... 17
+    *   5.4. Reduções ............................................................................................... 17
+    *   5.5. Impugnação ........................................................................................... 17
+    *   5.6. Acréscimos Legais ................................................................................. 17
+*   6. ACESSO AO SISTEMA ............................................................................... 18
+    *   6.1. Tipos de Acesso ..................................................................................... 19
+    *   6.1.1. Código de Acesso ........................................................................... 19
+    *   6.1.2. Acesso GovBR ................................................................................ 20
+*   7. TELA INICIAL (RELAÇÃO DE DECLARAÇÕES) ....................................... 20
+    *   7.1. Filtros ..................................................................................................... 21
+    *   7.2. Visão do Procurador .............................................................................. 23
+    *   7.3. Serviços da declaração .......................................................................... 23
+*   8. CLASSIFICAÇÕES DA DCTFWEB (CATEGORIA, SITUAÇÃO E TIPO) ... 24
+    *   8.1. Categorias de DCTFWeb ....................................................................... 24
+    *   8.2. Situações da DCTFWeb ........................................................................ 25
+    *   8.3. Tipos de DCTFWeb ............................................................................... 25
+*   9. TABELA DE VINCULAÇÃO ........................................................................ 25
+*   10. EDIÇÃO DE UMA DCTFWEB ................................................................... 28
+    *   10.1. Resumo da Situação ............................................................................ 30
+*   11. DADOS CADASTRAIS .............................................................................. 31
+    *   11.1. Dados do Contribuinte ......................................................................... 31
+    *   11.2. Dados do Responsável ........................................................................ 32
+*   12. CRÉDITOS VINCULÁVEIS ........................................................................ 33
+    *   12.1. Salário-Família ..................................................................................... 35
+    *   12.2. Salário-Maternidade ............................................................................. 36
+    *   12.3. Retenção Lei 9.711/98 ......................................................................... 37
+    *   12.3.1. Obrigações do Tomador ................................................................ 38
+    *   12.3.2. Obrigações do Prestador .............................................................. 39
+    *   12.4. Adiantamento de Retenção (exclusivamente para DCTFWeb 13º Salário) ...................................................................................................................... 40
+    *   12.5. Exclusão (lançamento de ofício) .......................................................... 43
+    *   12.5.1. Importar da RFB crédito de Exclusão ............................................ 44
+    *   12.5.2. Incluir manualmente crédito de Exclusão ...................................... 44
+    *   12.5.3. Vincular Exclusão .......................................................................... 45
+    *   12.6. Suspensão ........................................................................................... 45
+    *   12.6.1. Incluir Depósitos ............................................................................ 47
+    *   12.6.2. Vincular Suspensão ...................................................................... 51
+    *   12.6.3. Incluir manualmente processo de Suspensão ............................... 53
+    *   12.6.4. Suspensão recebida pela DCTFWeb com valor zero .................... 56
+    *   12.7. Parcelamento ....................................................................................... 57
+    *   12.7.1. Importar da RFB Parcelamento ..................................................... 59
+    *   12.7.2. Incluir manualmente Parcelamento ............................................... 59
+    *   12.7.3. Vincular Parcelamento .................................................................. 60
+    *   12.8. Compensação ...................................................................................... 60
+    *   12.8.1. Importar da RFB Compensação .................................................... 61
+    *   12.8.2. Incluir manualmente Compensação .............................................. 62
+    *   12.8.3. Vincular Compensação ................................................................. 63
+    *   12.8.4. Abater DComp ............................................................................... 63
+    *   12.9. Pagamento .......................................................................................... 65
+    *   12.9.1. Importar da RFB Documento de Arrecadação .............................. 66
+    *   12.9.2. Importar da RFB por número do Documento de Arrecadação ...... 67
+    *   12.10. Aplicar Vinculação Automática ........................................................... 67
+    *   12.11. Vincular e Desvincular manualmente ................................................. 68
+*   13. RELATÓRIOS ............................................................................................ 69
+    *   13.1. Relatório de Créditos por Documento .................................................. 70
+    *   13.2. Relatório Resumo de Débitos .............................................................. 71
+    *   13.3. Relatório Resumo de Créditos ............................................................. 72
+    *   13.4. Relatório de Débitos ............................................................................ 72
+    *   13.4.1. Comprovar retenção perante prestador dos serviços ................... 73
+    *   13.5. Relatório de Créditos ........................................................................... 74
+    *   13.6. Documentos disponíveis após transmissão da DCTFWeb .................. 74
+    *   13.6.1. Download Recibo .......................................................................... 75
+    *   13.6.2. Download XML de Saída ............................................................... 75
+    *   13.6.3. Declaração Completa .................................................................... 75
+*   14. TRANSMISSÃO DA DCTFWEB ................................................................ 75
+    *   14.1. Transmissão a partir da tela inicial ....................................................... 75
+    *   14.2. Transmissão em lote ............................................................................ 76
+    *   14.3. Transmissão por Procurador ................................................................ 77
+    *   14.4. Transmissão a partir da tela de edição ................................................ 78
+    *   14.5 Transmissão Direta pelo eSocial........................................................... 78
+*   15. RECIBO DE ENTREGA ............................................................................. 79
+    *   15.1. Acesso pela tela inicial ......................................................................... 80
+    *   15.2. Acesso pelo menu Relatórios .............................................................. 80
+*   16. EMITIR DOCUMENTO DE ARRECADAÇÃO (DARF/DAE) ...................... 80
+    *   16.1. Data de Vencimento ............................................................................. 81
+    *   16.2. Pagamento em atraso .......................................................................... 82
+    *   16.3. Pagamento mínimo .............................................................................. 82
+    *   16.4. Emissão de documento de arrecadação a partir da tela inicial ............ 83
+    *   16.4.1. DARF em Lote .............................................................................. 83
+    *   16.4.2. DARF de vários contribuintes (Procurador) ................................... 84
+    *   16.5. Emissão de DARF a partir da tela de edição ou visualização .............. 85
+    *   16.5.1. Utilização de filtros para emitir DARF ............................................ 86
+    *   16.5.2. Editar DARF .................................................................................. 87
+    *   16.5.3. Abater Pagamentos Anteriores ...................................................... 88
+*   17. DCTFWEB RETIFICADORA ..................................................................... 90
+    *   17.1. Retificação originada no eSocial ou na EFD-Reinf .............................. 91
+    *   17.1.1. DCTFWeb na situação “Em andamento” ...................................... 91
+    *   17.2. Retificação originada no sistema DCTFWeb ....................................... 91
+    *   17.3. Limitações das declarações retificadoras ............................................ 93
+    *   17.3.1. Reduzir o valor dos tributos ........................................................... 93
+    *   17.3.2. Alterar tributos sob fiscalização da RFB ........................................ 93
+*   18. DCTFWEB SEM MOVIMENTO .................................................................. 93
+*   19. DCTFWEB 13º SALÁRIO (ANUAL) .......................................................... 95
+*   20. DCTFWEB ESPETÁCULO DESPORTIVO (DIÁRIA) ................................ 96
+    *   20.1. Obrigações da entidade promotora do evento ..................................... 97
+    *   20.2. Obrigações da empresa ou entidade que efetuar pagamentos ........... 98
+*   21. DCTFWEB AFERIÇÃO .............................................................................. 99
+    *   21.1. Fluxo de informações Sero x DCTFWeb ........................................... 100
+*   22. DCTFWEB DE EXCLUSÃO..................................................................... 100
+*   ANEXO I – TABELAS CÓDIGOS DE RECEITA ............................................ 102
+    *   eSocial ........................................................................................................ 102
+    *   EFD-Reinf ................................................................................................... 104
+    *   Sero ............................................................................................................ 105
+
+
+
+# Cenários DCTFWEB
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+...
+
+## Consultar o XML da Declaração
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d ' {         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }}'`
+
+
+
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é a DCTFWeb?
+
+Os débitos e créditos na DCTFWeb são gerados, regra geral, a partir das informações prestadas nas escriturações do Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas (eSocial) e Escrituração Fiscal Digital de Retenções e Outras Informações Fiscais (EFD-Reinf), módulos integrantes do Sistema Público de Escrituração Digital (Sped). Por isso, para alterar seus valores é necessário, regra geral, corrigir as escriturações.
+
+Prazo: O prazo mensal para entregar a Declaração de Débitos e Créditos Tributários Federais Previdenciários e de Outras Entidades e Fundos (DCTFWeb) é até o dia 15 (quinze) do mês seguinte ao da ocorrência dos fatos geradores. Por exemplo, os débitos e créditos decorrentes do mês de janeiro, devem ser declarados no mês de fevereiro.
+
+Se você é um contribuinte obrigado por lei a entregar a declaração, mas enviar após o prazo, será cobrada Multa por Atraso na Entrega de Declaração (MAED).
+
+## Quem pode utilizar este serviço?
+
+Pessoas físicas ou jurídicas sujeitas ao recolhimento de contribuições e/ou informações à Previdência Social.
+
+Somente poderão enviar a DCTFWeb os contribuintes enquadrados nos grupos específicos, de acordo com o cronograma de implantação do Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas (eSocial), definidos pela Portaria SEPRT 1.419/2019.
+
+Para enviar a declaração, você precisará assiná-la utilizando certificado digital.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra DCTFWeb, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) ou tipo 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema DCTFWeb, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## Sumário dos serviços
+
+ATENÇÃO
+
+É essencial a leitura **cuidadosa** da documentação de cada serviço no menu **Documentação > Soluções > Integra-DCTFWeb > DCTFWeb > Serviços** para a utilização correta dos mesmos. Verifique também as páginas [Mensagens]() para um melhor entendimento das informações retornadas pela API e [Erros comuns ao usar o serviço]() para um detalhamento dos temas sobre os quais mais recebemos dúvidas.
+
+Lembrando que às declarações já transmitidas é atribuida a situação ATIVA, e às ainda não transmitidas, EM ANDAMENTO. Os serviços de **Consultar Recibo de transmissão**, **Consultar Declaração Completa** e **Gerar Documento de Arrecadação** só podem ser acionado para declarações já transmitidas.
+
+*   **Consultar XML da declaração:** Consulta o xml de uma declaração ATIVA (e portanto já assinada e transmitida), **ou** gera o xml de uma declaração EM ANDAMENTO, para posterior assinatura e transmissão a partir do serviço **Transmitir declaração**. Em ambos os casos, o xml retornado estará codificado em base64.
+*   **Transmitir declaração:** Efetua a transmissão de uma declaração EM ANDAMENTO a partir da informação do xml gerado no serviço **Consultar XML da declaração**. O xml deverá ser assinado digitalmente pelo contribuinte antes de acionar este serviço e codificado em base64.
+*   **Consultar Recibo de transmissão:** Consulta o recibo de transmissão de uma declaração.
+*   **Consultar Declaração Completa:** Consulta relatório de declaração completa transmitida.
+*   **Gerar Documento de Arrecadação:** Gera o documento de arrecadação para uma declaração na situação ATIVA.
+
+
+
+
+# Gerar Documento de Arrecadação
+
+Gera o documento de arrecadação para uma declaração na situação ATIVA
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: GERARGUIA31
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+| DataAcolhimentoProposta | Inteiro (não string). Dia útil (no município associado ao contribuinte) do mês corrente maior ou igual ao dia de hoje, no formato aaaammdd, para pagamento da guia. Segue as mesmas regras do DCTF Web (opção "editar DARF") para proposição de data de acolhimento/pagamento. Veja como exemplo o objeto "dados" para a categoria RECLAMATORIA\_TRABALHISTA abaixo. Ele assume que o mês corrente é julho de 2023, pagando uma guia atrasada e escolhendo a data de pagamento 31/07/2023 (último dia útil do mês). | `Number` | NÃO |
+| idsSistemaOrigem | Lista de sistema(s) de origem das receitas. Quando informado, a guia será gerada contendo apenas as receitas oriundas do(s) sistema(s) de origem especificado(s). | `Array` | NÃO |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\",\"DataAcolhimentoProposta\": 20230731}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"   "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\",\"idsSistemaOrigem\":[8]}"  "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\",\"idsSistemaOrigem\":[1,8]}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{     "contratante":      {       "numero": "00000000000000",       "tipo": 2     },     "autorPedidoDados":      {       "numero": "00000000000000",       "tipo": 2     },     "contribuinte":      {       "numero": "00000000000000",       "tipo": 2     },      "pedidoDados":      {       "idSistema": "DCTFWEB",       "idServico": "GERARGUIA31",       "versaoSistema": "1.0",       "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"     } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+
+Objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| PDFByteArrayBase64 | Documento DARF no formato PDF. | `String` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2    },    "autorPedidoDados":    {      "numero": "00000000000000",       "tipo": 2    },    "contribuinte":    {      "numero": "00000000000000",      "tipo": 2    },  "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "GERARGUIA31",      "versaoSistema": "1.0",      "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },  "status": 200,  "dados":  "{\"PDFByteArrayBase64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDI3OTAKPj4Kc3RyZWFtDQp4nNVbW2/bOhJ+96/gywI5QKvwfimKBVxbbtxLmiZOtsBiH3LUtMjCOd6Ttuf8/Z0ZkvItUpTKLhK4DccyOTPkfHOhRP05+BM+r2YDZZnnls0+D8rZ4ONAsjd4VTAOH/zrtWSzm8HhRDAB1JfBwW9s9l/sDBfgc/t1wAtn2N80FEYVQhodoFXGestOXw/+/R/g83kAF6VV7GZgtCVqPjBGFEbSF2Pwoiu0j6RTrBogZXnsiZTH3mmQFTAIOGFbIXMk5gOtkAXSKuQRRGEvIJDxnIgoLPZHDZJ+1eDL01H1LC/unwPho9G0LQz04MxpWWjHKjDe9c1XzsYLsO+KbZddwL5xNKDgeU2VqzDgyGdlsBK6EMxZX4iED8mER3xsQwAg8lJrO7HKGTu2xpYOvklutTWSa+Gkk3BVWQFXROlKZSf/RJBx9nWprVUFD6AxLAVJvFPOwecFuzpbVNeX898yh+15pDVDwD4YxJrZYAEZQgui5kCpwln6ItDIwRdSE+m4ABsRJTT1RMpi7zTIicCQE7YVMkcCkCGQBdJg/TSCKB2RgYwJGUlY7I8aJP0IxE9F1RrEzXDTpjAOuofCiBpuIsENPmjAXZtaWJEWENw4LaAx9QKSm8c5IRkXkChawEjRcqRBuEbIKS4gco8rKIzPSyiWg0TiBD0T9zlR2WZxEFky6Yk2f3o6dzC+MKHd9AdH718dTaZH5xfs7aeTo+nbj5/YETs/mpYf3346Z+OL43/tLxo4nl0MqKWLwRdyMSezi1lgGV3Mep9czAa+4mI2KBadVUUXQyK7GNLkRjy5GHIhF0PG0cWisNQfNEj65WjwJFTtEg0gpXpT+JR5FLPNicdwa5wsx5B+1pMOd3B9K93cA48mjawoII1bp1tAerz46+rm99vFoeTS7QeP5FZkZSgZkpWlDdnKkGfzwkcSrUwUWZmoaLM8CAxJnMjK0WnV0v0JBGYJDWOTpYkiU0dKrro/wi3pWYesJ6Vzl5BleWeIHowvv1+yz1fs4uqP6vrm6o/vi67oaBIvhSqCvweP3B0KuUcwSm+TYbXKhtWqNqzWtWEjaSiQZMMSFW2UB4HliBMZlriTYaVX2bDSixoNSJJhiSLDRipiKQ1ChCU9EYxPT+cOYJRed4+XupwMsUiH2BijJfzdLt77xkslYUayHaA92GvPCwwBXnZOEsI6CzsRielCOUoS9q49i3C6DN2mDxKCFBYk2SiQa9g2oUCR3efuHisFhgHTGZ/rOeNX6jkTt5/W8lzPWVvvRJ3NO1HnV+o5C2giTh4rP+LusUrTJiZi+KJxfxoHRdISxgNxnyeKROZBoEjWkyqNJ6dzl5LD6yI45Fd4VwNWI6TquLj3iIo1EnhNCk5ALYMTfKHoI3UdnKTLwcnKHJysXg1O4CLEybpUwwFR13BAY50WRxAlUw0nXarhkrDYnzSgJpebT0LVjuWmCYXqFD4nIFNh+HQWi8uJwXjSN1yiBtqvIo+vhUqI2q+Gkpt4GyVYmaI2fhthWMt1roJeSiqtjHLq59Tafcc1NxOwmDB...221933 bytes truncated...
+
+
+
+
+# Consultar Recibo de transmissão
+
+Consulta o recibo de transmissão de uma declaração
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSRECIBO32
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"    "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":    {      "numero": "00000000000000",      "tipo": 2   },  "contribuinte":    {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {     "idSistema": "DCTFWEB",     "idServico": "CONSRECIBO32",     "versaoSistema": "1.0",     "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":   {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":   {      "numero": "00000000000000",      "tipo": 2   },   "contribuinte":   {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "CONSRECIBO32",      "versaoSistema": "1.0",      "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },    "status": 200,    "dados":  "{\"PDFByteArrayBase64\":\"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...11008 bytes truncated..."}",    "mensagens": [      {        "codigo": "00",        "texto": "Recibo de transmissão gerado com sucesso."      }    ] }`
+
+
+
+
+# Consultar Declaração Completa
+
+Consulta relatório de declaração completa transmitida
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSDECCOMPLETA33
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  "dados": "{\"categoria\": 40,\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2   },   "autorPedidoDados":    {      "numero": "00000000000000",      "tipo": 2   },   "contribuinte":    {      "numero": "00000000000000",      "tipo": 2   },   "pedidoDados":   {     "idSistema": "DCTFWEB",     "idServico": "CONSDECCOMPLETA33",     "versaoSistema": "1.0",     "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"  } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante":    {      "numero": "00000000000000",      "tipo": 2    },  "autorPedidoDados":   {      "numero": "00000000000000",      "tipo": 2   },  "contribuinte":   {      "numero": "00000000000000",      "tipo": 2   },  "pedidoDados":   {      "idSistema": "DCTFWEB",      "idServico": "CONSDECCOMPLETA33",      "versaoSistema": "1.0",      "dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2027\",\"mesPA\":\"11\"}"   },   "status": 200,   "dados": "{\"PDFByteArrayBase64\":\"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...12072 bytes truncated..."}",    "mensagens": [      {        "codigo": "00",        "texto": "Relatório de declaração completa gerado com sucesso."      }    ] }`
+
+
+
+
+# Consultar XML da declaração
+
+Consulta o xml de uma declaração já trasmitida (e portanto já assinada), **ou** gera o xml de uma declaração EM ANDAMENTO, para posterior assinatura e transmissão a partir do serviço TRANSDECLARACAO310.
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: CONSXMLDECLARACAO38
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | Número Obra | `Number` | NÃO. Somente para categoria 44 AFERICAO |
+| numeroReciboEntrega | Número Recibo de entrega | `Number` | NÃO. Caso não informado a funcionalidade será executada para a declaração mais recente. |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista. |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"08\"}"   "dados": "{\"categoria\": 40,\"anoPA\":\"2022\",\"mesPA\":\"08\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"    "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+   `{         "contratante":          {           "numero": "00000000000",           "tipo": 1         },         "autorPedidoDados":          {           "numero": "00000000000",           "tipo": 1         },         "contribuinte":          {           "numero": "00000000000",           "tipo": 1         },          "pedidoDados":          {           "idSistema": "DCTFWEB",           "idServico": "CONSXMLDECLARACAO38",           "versaoSistema": "1.0",           "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"         }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: XMLStringBase64) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um texto de tamanho 5 que representa um código interno do negócio. | `Array` de `Object` |
+
+**_Exemplo: json retorno_**
+
+`{  "contratante":   {      "numero": "00000000000",      "tipo": 1   },  "autorPedidoDados":   {      "numero": "00000000000",      "tipo": 1   },   "contribuinte":   {      "numero": "00000000000",      "tipo": 1   },  "pedidoDados":  {   "idSistema": "DCTFWEB",   "idServico": "CONSXMLDECLARACAO38",   "versaoSistema": "1.0",   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   },  "status": 200,   "dados": "{\"XMLStringBase64\":\"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UHJvY0RjdGZ4bWxuczp4c2Q9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxucz0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiPjxDb250ZXVkb0RlY2xhcmFjYW8gaWQ9ImlkXzE2NDM2Ij48dG5zMTpEY3RmWG1sIHhzaTp0eXBlPSJEY3RmWG1sX3YzIiB2ZXJzYW89IjMuMCIgeG1sbnM6dG5zMT0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiIHhtbG5zPSJodHRwOi8vd3d3LnNlcnByby5nb3YuYnIvZGN0Zi92MSIgdHlwZT0iRGN0ZlhtbF92MyI+PEEwMDAtRGFkb3NJZGVudGlmaWNhZG9yZXNDb250cmlidWludGU+PG5vbWVDb250cmlidWludGU+TlpJWFJaIE5aSVhaIFBPTEtWSCBXViBITEZIWjwvbm9tZUNvbnRyaWJ1aW50ZT48dGlwb0luc2NDb250cmliPjI8L3RpcG9JbnNjQ29udHJpYj48aW5zY0NvbnRyaWI+MDAwMDAwMDAwMDA8L2luc2NDb250cmliPjxwZXJBcHVyYWNhbz4wNjIwMjI8L3BlckFwdXJhY2FvPjxjbGFzVHJpYj4yMTwvY2xhc1RyaWI+PGluZFJldGlmaWNhY2FvPjI8L2luZFJldGlmaWNhY2FvPjxudW1SZWNpYm8+MjQ2ODg8L251bVJlY2libz48aW5kT3JnRXN0cmFuZz4wPC9pbmRPcmdFc3RyYW5nPjxpbmRDb250ZXVkbz4xPC9pbmRDb250ZXVkbz48aW5kWmVyYWRhPjE8L2luZFplcmFkYT48Y2F0ZWdvcmlhRENURj41MDwvY2F0ZWdvcmlhRENURj48QTAwNS1EYWRvc0NhZGFzdHJhaXNDb250cmlidWludGU+PHRwTG9ncmFkb3Vybz5SVUE8L3RwTG9ncmFkb3Vybz48Y2FkTG9ncmFkb3Vybz5JIFpOVkdSSEdaIFhMTVdMTlJNUkwgWk9ZVklHIEhYU1pJT1Y8L2NhZExvZ3JhZG91cm8+PGNhZE51bWVybz4wMDA8L2NhZE51bWVybz48Y2FkQmFpcnJvPkJBSVJSTzwvY2FkQmFpcnJvPjxjYWRNdW5pY2lwaW8+NTEzMzwvY2FkTXVuaWNpcGlvPjxjYWRVZj5NRzwvY2FkVWY+PGNhZENlcD4zMTAwMDAwMDwvY2FkQ2VwPjxjYWRNdW5pY2lwaW9QQT41MTMzPC9jYWRNdW5pY2lwaW9QQT48L0EwMDUtRGFkb3NDYWRhc3RyYWlzQ29udHJpYnVpbnRlPjxBMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48Y29udGF0b0NwZj4wMDAwMDAwMDAwMDA8L2NvbnRhdG9DcGY+PGNvbnRhdG9VZkNyYz5NRzwvY29udGF0b1VmQ3JjPjxjb250YXRvVGVsZWZvbmU+MzEwMDAwMDAwMDwvY29udGF0b1RlbGVmb25lPjxjb250YXRvRW1haWw+dGVzdGVAdGVzdGUuY29tLmJyPC9jb250YXRvRW1haWw+PC9BMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48QTAzMC1EZWR1Y29lc1JldGVuY2FvTGVpOTcxMT48ZGVkU2FsRmFtaWxpYT4xMDAuMDA8L2RlZFNhbEZhbWlsaWE+PGRlZFNhbE1hdGVybj4yMDAuMDA8L2RlZFNhbE1hdGVybj48L0EwMzAtRGVkdWNvZXNSZXRlbmNhb0xlaTk3MTE+PEEwNTAtQ3JlZGl0b3NUcmlidXRhcmlvc0FwdXJhZG9zPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gRU1QUkVHQURPUy9BVlVMU088L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1Ym8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1Ym8+PGN0VmFsb3I+MS45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4xLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4xLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAyPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gVFJBQkFMSEFET1IgUlVSQUwgQ1VSVE8gUFJBWk88L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1Ym8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1Ym8+PGN0VmFsb3I+Mi45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4yLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4yLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA5OTAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gQ09OVFJJQlVJTlRFUyBJTkRJVklEVUFJUyAtIDExJTwvY3REZXNjcmljYW9UcmlidXRvPjxjdENvZEdydXBvPjQ1PC9jdENvZEdydXBvPjxjdERlc2NHcnVwbz5DT05UUklCVUnDh8ODTyBQUkVWSURFTkNJw4FSSUEgU0VHVVJBRE9TPC9jdERlc2NHcnVwbz48Y3RWYWxvcj4zLjk5PC9jdFZhbG9yPjxwYURlYml0bz4wMTA2MjAyMjwvcGFEZWJpdG8+PHZsVG90YWxDcmVkPjMuOTk8L3ZsVG90YWxDcmVkPjxzYWxkb2FQYWdhcj4wLjAwPC9zYWxkb2FQYWdhcj48QTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjxkZWRTYWxGYW1pbGlhPjMuOTk8L2RlZFNhbEZhbWlsaWE+PC9BMjUwLURlZHVjYW9TYWxGYW1pbGlhVmFsb3Jlc1ZpbmN1bGFkb3M+PC9DcmVkaXRvVHJpYnV0YXRyaW9BcHVyYWRvPjxDcmVkaXRv...16496 bytes truncated..."}",  "mensagens": [   {    "codigo": "00",    "texto": "XML da declaração gerado com sucesso."   }  ] }`
+
+
+
+
+# Transmitir declaração
+
+Efetua a transmissão de uma declaração EM ANDAMENTO a partir da informação do base64 gerado no serviço CONSXMLDECLARACAO38. O arquivo deverá ser assinado digitalmente pelo contribuinte antes de acionar o serviço TRANSDECLARACAO310.
+
+Conteúdo da declaração assinada deve ser imutável
+
+A declaração assinada deve ser idêntica, caractere a caractere, à recebida pelo serviço CONSXMLDECLARACAO38. **A comparação é feita via hash computado em cima do XML recebido, removida a tag de assinatura.** É muito comum recebermos queixas sobre transmissões recusadas quando o XML foi alterado no processo de assinatura (alterações que não alteram sua semântica, como troca de ordem dos atributos de uma tag ou transformação de maiúsculas em minúsculas em algum ponto). Recomendamos realizar a comparação dos arquivos por algum aplicativo ao invés de fazê-lo visualmente.
+
+Modelos de assinador digital
+
+Exemplos disponíveis nas linguagens C# e PHP:  
+\- [Dotnet]()  
+\- [PHP]()
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: TRANSDECLARACAO310
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM. Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO. Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| numProcReclamatoria | Número Processo Reclamatória | `String` | NÃO. Somente para categoria 46 Reclamatória Trabalhista |
+| xmlAssinadoBase64 | O XML obtido pela operação 'Consultar o XML da Declaração' assinado e em base64. **O certificado usado na assinatura deve ser o do autor do pedido de dados.** O elemento do XML a ser assinado é o 'ConteudoDeclaracao' (se não for o caso, a transmissão será rejeitada). Além disso, a assinatura deve seguir o padrão indicado na seção **Padrões exigidos para a assinatura digital** dessa página. | `String` | SIM |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+  `"dados": "{\"categoria\": \"GERAL_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"04\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"     "dados": "{\"categoria\": 40,\"anoPA\":\"2022\",\"mesPA\":\"04\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"04\",\"diaPA\":\"19\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"04\",\"diaPA\":\"19\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 41,\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"   "dados": "{\"categoria\": 51,\"anoPA\":\"2022\",\"xmlAssinadoBase64\":\"AQUI_VAI_TEXTOBASE64ASSINADO\"}"    "dados": "{\"categoria\":  \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2023\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"123456789012345\",\"xmlAssinadoBase64\": \"AQUI_VAI_TEXTOBASE64ASSINADO\"}"      "dados": "{\"categoria\": 46,\"anoPA\":\"2023\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"123456789012345\",\"xmlAssinadoBase64\": \"AQUI_VAI_TEXTOBASE64ASSINADO\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "contratante":          {            "numero": "00000000000",            "tipo": 1         },         "autorPedidoDados":          {            "numero": "00000000000",            "tipo": 1         },         "contribuinte":          {            "numero": "00000000000",            "tipo": 1         },          "pedidoDados":         {            "idSistema": "DCTFWEB",            "idServico": "TRANSDECLARACAO310",            "versaoSistema": "1.0",            "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\",\"xmlAssinadoBase64\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UHJvY0RjdGYgeG1sbnM6eHNkPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM9Imh0dHA6Ly93d3cuc2VycHJvLmdvdi5ici9kY3RmL3YxIj48Q29udGV1ZG9EZWNsYXJhY2FvIGlkPSJpZF8xNjQzNiI+PHRuczE6RGN0ZlhtbCB4c2k6dHlwZT0iRGN0ZlhtbF92MyIgdmVyc2FvPSIzLjAiIHhtbG5zOnRuczE9Imh0dHA6Ly93d3cuc2VycHJvLmdvdi5ici9kY3RmL3YxIiB4bWxucz0iaHR0cDovL3d3dy5zZXJwcm8uZ292LmJyL2RjdGYvdjEiIHR5cGU9IkRjdGZYbWxfdjMiPjxBMDAwLURhZG9zSWRlbnRpZmljYWRvcmVzQ29udHJpYnVpbnRlPjxub21lQ29udHJpYnVpbnRlPk5aSVhSWiBOWklSWiBPTEtWSCBXViBITEZIWjwvbm9tZUNvbnRyaWJ1aW50ZT48dGlwb0luc2NDb250cmliPjI8L3RpcG9JbnNjQ29udHJpYj48aW5zY0NvbnRyaWI+MDAwMDAwMDAwMDA8L2luc2NDb250cmliPjxwZXJBcHVyYWNhbz4wNjIwMjI8L3BlckFwdXJhY2FvPjxjbGFzVHJpYj4yMTwvY2xhc1RyaWJpPjxpbmRRetGlmaWNhY2FvPjI8L2luZFJldGlmaWNhY2FvPjxudW1SZWNpYm8+MjQ2ODg8L251bVJlY2libz48aW5kT3JnRXN0cmFuZz4wPC9pbmRPcmdFc3RyYW5nPjxpbmRDb250ZXVkbz4xPC9pbmRDb250ZXVkbz48aW5kWmVyYWRhPjE8L2luZFplcmFkYT48Y2F0ZWdvcmlhRENURj41MDwvY2F0ZWdvcmlhRENURj48QTAwNS1EYWRvc0NhZGFzdHJhaXNDb250cmlidWludGU+PHRwTG9ncmFkb3Vybz5SVUE8L3RwTG9ncmFkb3Vybz48Y2FkTG9ncmFkb3Vybz5JIFpOVkdSSEdaIFhMTVdMTlJNUkwgWk9ZVklHIEhYU1pJT1Y8L2NhZExvZ3JhZG91cm8+PGNhZE51bWVybz4wMDA8L2NhZE51bWVybz48Y2FkQmFpcnJvPkJBSVJSTzwvY2FkQmFpcnJvPjxjYWRNdW5pY2lwaW8+NTEzMzwvY2FkTXVuaWNpcGlvPjxjYWRVZj5NRzwvY2FkVWY+PGNhZENlcD4zMTAwMDAwMDwvY2FkQ2VwPjxjYWRNdW5pY2lwaW9QQT41MTMzPC9jYWRNdW5pY2lwaW9QQT48L0EwMDUtRGFkb3NDYWRhc3RyYWlzQ29udHJpYnVpbnRlPjxBMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48Y29udGF0b0NwZj4wMDAwMDAwMDAwMDA8L2NvbnRhdG9DcGY+PGNvbnRhdG9VZkNyYz5NRzwvY29udGF0b1VmQ3JjPjxjb250YXRvVGVsZWZvbmU+MzEwMDAwMDAwMDwvY29udGF0b1RlbGVmb25lPjxjb250YXRvRW1haWw+dGVzdGVAdGVzdGUuY29tLmJyPC9jb250YXRvRW1haWw+PC9BMDA4LURhZG9zQ29udGF0b0NvbnRyaWJ1aW50ZT48QTAzMC1EZWR1Y29lc1JldGVuY2FvTGVpOTcxMT48ZGVkU2FsRmFtaWxpYT4xMDAuMDA8L2RlZFNhbEZhbWlsaWE+PGRlZFNhbE1hdGVybj4yMDAuMDA8L2RlZFNhbE1hdGVybj48L0EwMzAtRGVkdWNvZXNSZXRlbmNhb0xlaTk3MTE+PEEwNTAtQ3JlZGl0b3NUcmlidXRhcmlvc0FwdXJhZG9zPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gRU1QUkVHQURPUy9BVlVMU088L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1cG8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1cG8+PGN0VmFsb3I+MS45OTwvY3RWYWxvcj48cGFEZWJpdG8+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4xLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4xLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA4MjAyPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gVFJBQkFMSEFET1IgUlVSQUwgQ1VSVE8gUFJBWk88L2N0RGVzY3JpY2FvVHJpYnV0bz48Y3RDb2RHcnVwbz40NTwvY3RDb2RHcnVwbz48Y3REZXNjR3J1cG8+Q09OVFJJQlVJw4fDg08gUFJFVklERU5DScOBUklBIFNFR1VSQURPUzwvY3REZXNjR3J1cG8+PGN0VmFsb3I+Mi45OTwvY3RWYWxvcj48cGFEZWJpdG0+MDEwNjIwMjI8L3BhRGViaXRvPjx2bFRvdGFsQ3JlZD4yLjk5PC92bFRvdGFsQ3JlZD48c2FsZG9hUGFnYXI+MC4wMDwvc2FsZG9hUGFnYXI+PEEyNTAtRGVkdWNhb1NhbEZhbWlsaWFWYWxvcmVzVmluY3VsYWRvcz48ZGVkU2FsRmFtaWxpYT4yLjk5PC9kZWRTYWxGYW1pbGlhPjwvQTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjwvQ3JlZGl0b1RyaWJ1dGFyaW9BcHVyYWRvPjxDcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PGNvZFJlY2VpdGE+MTA5OTAxPC9jb2RSZWNlaXRhPjxjdERlc2NyaWNhb1RyaWJ1dG8+Q1AgU0VHVVJBRE9TIC0gQ09OVFJJQlVJTlRFUyBJTkRJVklEVUFJUyAtIDExJTwvY3REZXNjcmljYW9UcmlidXRvPjxjdENvZEdydXBvPjQ1PC9jdENvZEdydXBvPjxjdERlc2NHcnVwbz5DT05UUklCVUnDh8ODTyBQUkVWSURFTkNJw4FSSUEgU0VHVVJBRE9TPC9jdERlc2NHcnVwbz48Y3RWYWxvcj4zLjk5PC9jdFZhbG9yPjxwYURlYml0bz4wMTA2MjAyMjwvcGFEZWJpdG8+PHZsVG90YWxDcmVkPjMuOTk8L3ZsVG90YWxDcmVkPjxzYWxkb2FQYWdhcj4wLjAwPC9zYWxkb2FQYWdhcj48QTI1MC1EZWR1Y2FvU2FsRmFtaWxpYVZhbG9yZXNWaW5jdWxhZG9zPjxkZWRTYWxGYW1pbGlhPjMuOTk8L2RlZFNhbEZhbWlsaWE+PC9BMjUwLURlZHVjYW9TYWxGYW1pbGlhVmFsb3Jlc1ZpbmN1bGFkb3M+PC9DcmVkaXRvVHJpYnV0YXJpb0FwdXJhZG8+PENyZWRp...50013 bytes truncated..."}",  "mensagens": [   {    "codigo": "00",    "texto": "Declaração transmitida com sucesso."   }  ] }`
+
+
+
+
+# Gerar Documento de Arrecadação para Declaração em Andamento
+
+Gera o documento de arrecadação para uma declaração em andamento.
+
+Identificação no Pedido de Dados
+
+idSistema: DCTFWEB  
+idServico: GERARGUIAANDAMENTO313
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório | Condicional |
+| --- | --- | --- | --- | --- |
+| categoria | Categoria declaração | `String` ou `Number` | SIM | Para o MIT deve ser considerada a categoria 40 |
+| anoPA | Ano período apuração | `String` | SIM |
+| mesPA | Mês período apuração | `String` | SIM | Exceto categoria 41 GERAL\_13o\_SALARIO ou 51 PF\_13o\_SALARIO |
+| diaPA | Dia período apuração | `String` | NÃO | Somente para categoria 45 ESPETACULO\_DESPORTIVO |
+| cnoAfericao | CNO - Número Obra | `Number` | NÃO | Somente para categoria 44 AFERICAO |
+| numProcReclamatoria | Número do Processo - Reclamatória Trabalhista | `String` | NÃO | Somente para categoria 46 Reclamatória Trabalhista |
+| idsSistemaOrigem | Lista de sistema(s) de origem das receitas. Quando informado, a guia será gerada contendo apenas as receitas oriundas do(s) sistema(s) de origem especificado(s). | `Array` | NÃO |
+
+**_Exemplos objeto "dados" variações por categoria:_**
+
+ `"dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"  "dados": "{\"categoria\":40,\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   "dados": "{\"categoria\": \"PF_MENSAL\",\"anoPA\":\"2022\",\"mesPA\":\"06\"}"  "dados": "{\"categoria\": 50,\"anoPA\":\"2022\",\"mesPA\":\"06\"}"   "dados": "{\"categoria\": \"ESPETACULO_DESPORTIVO\",\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"  "dados": "{\"categoria\": 45,\"anoPA\":\"2022\",\"mesPA\":\"05\",\"diaPA\":\"14\"}"   "dados": "{\"categoria\": \"AFERICAO\",\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"  "dados": "{\"categoria\": 44,\"anoPA\":\"2022\",\"mesPA\":\"03\",\"cnoAfericao\": 28151}"   "dados": "{\"categoria\": \"GERAL_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 41,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"PF_13o_SALARIO\",\"anoPA\":\"2022\"}"  "dados": "{\"categoria\": 51,\"anoPA\":\"2022\"}"   "dados": "{\"categoria\": \"RECLAMATORIA_TRABALHISTA\",\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"  "dados": "{\"categoria\":46,\"anoPA\":\"2022\",\"mesPA\":\"12\",\"numProcReclamatoria\": \"00365354520004013400\"}"   "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\",\"idsSistemaOrigem\":[8]}"  "dados": "{\"categoria\":40,\"anoPA\":\"2025\",\"mesPA\":\"01\",\"idsSistemaOrigem\":[1,8]}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DCTFWEB",     "idServico": "GERARGUIAANDAMENTO313",     "versaoSistema": "1.0",     "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| dados | Estrutura de dados de retorno. | `String` (`String` escapada: PDFByteArrayBase64) |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+
+Objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| PDFByteArrayBase64 | Documento DARF no formato PDF. | `String` |
+
+**_Exemplo: json retorno_**
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DCTFWEB",     "idServico": "GERARGUIAANDAMENTO313",     "versaoSistema": "1.0",     "dados": "{\"categoria\":\"GERAL_MENSAL\",\"anoPA\":\"2025\",\"mesPA\":\"01\"}"   },   "status": "200",   "responseId": "8f380ff8-6099-4565-b433-c7fd65b7e8c1",   "responseDateTime": "2025-03-27T19:07:02.925Z",   "dados": "{\"PDFByteArrayBase64\":\"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...147640 bytes truncated..."}",   "mensagens": [     {       "codigo": "00",       "texto": "Guia gerada com sucesso."     }   ] }`
+
+
+
+
+# Mensagens específicas para o Integra DCTF
+
+## Como interpretar o retorno
+
+A cada chamada é retornado um conjunto de mensagens descrevendo o resultado do processamento. A estrutura do identificador das mensagens retornadas é:
+
+\[Tipo-Sistema-Código\]
+
+Sistema será "DCTF" e código será alguns dos valores tabelados nesssa página.
+
+Tipo pode ser:
+
+*   **EntradaIncorreta:** Os dados enviados pelo cliente contêm um ou mais erros que impedem o processamento da requisição.
+*   **Sucesso:** A requisição foi processada com sucesso. Isso significa apenas que não houve qualquer erro interno ao processsar a requisição.
+*   **Erro:** Houve um erro interno (i.e. do próprio sistema Integra Contador DCTF) ao tentar processar a requisição.
+*   **Aviso:** Informações complementares. Podem incluir detalhamento de por que uma operação não irá produzir os resultados esperados pelo cliente (por exemplo, acionou a Consulta de XML de declaração sendo que não existe nenhuma declaração na base correspondente aos dados passados na requisição).
+
+**ATENÇÃO:** Algumas mensagens nas tabelas abaixo são modelos que irão conter informações complementares de acordo com cada situação. Os locais onde essas informações complementares podem aparecer estão indicados pelas letras X, Y e Z em negrito.
+
+**Obs:** Parte das mensagens são descrições sumárias de falhas internas do sistema e visam agilizar a depuração, não correspondendo a qualquer erro da parte do usuário. Caso esteja tendo problemas que não consegue solucionar e opte por abrir um chamado de suporte, anexe ao chamado o JSON recebido como resposta do servidor.
+
+### Mensagens que podem surgir em qualquer serviço
+
+| Código | Mensagem |
+| --- | --- |
+| MG00 | Requisição efetuada com sucesso |
+| MG02 | Encaminhamento não autorizado. |
+| MG03 | Tratamento para IdServico não disponível. |
+| MG04 | Requisição efetuada com sucesso, mas os parametros implicam em de erro negócio. Veja as demais mensagens para detalhes. |
+| MG06 | IdServico desconhecido. |
+| MG07 | Dados de requisição inválidos. **X** |
+| MG08 | Não foi encontrada Declaração com os dados informados. |
+| MG09 | Dados informados não correspondem aos da declaração com este número recibo. |
+| MG10 | A declaração mais recente está na situação "Em Andamento", incompatível com a execução da funcionalidade. Favor informar o "numeroReciboEntrega" para identificar a declaração transmitida. |
+| MG11 | **X** executado com sucesso. |
+| MG12 | Exceção inespereada ao tentar executar o(a) **X**. |
+| MG15 | **X** retornou resposta vazia. |
+| MG18 | **X** executado, mas retornou erro." |
+| MG19 | Houve um erro interno ao processar a requisição. Tente novamente mais tarde. |
+| MG20 | O campo 'dados' do campo 'pedidoDados' do JSON de requisição está ausente ou é invalido. |
+| MG21 | Exceção lançada ao tentar buscar declaração no banco. |
+| MSGIC01 | Houve erro de negócio. Favor verificar as demais mensagens. |
+
+### Mensagens específicas do serviço [Consultar XML declaração para transmissão]()
+
+| Código | Mensagem |
+| --- | --- |
+| GERAXML01 | Declaracação em estado incompatível com geração de XML. |
+| GERAXML02 | Período informado não permitido para entrega da DCTF - WEB. |
+| GERAXML03 | O período de apuração da declaração é anterior à existencia legal do contribuinte. |
+| GERAXML04 | O valor total de débitos declarados excedeu R$ **X**. Favor procurar uma unidade da RFB. |
+| GERAXML05 | Já existe uma Declaração Ativa para este CNPJ Base **X**, porém pertencente a outro CNPJ completo(**Y**). |
+| GERAXML06 | O número de inscrição **X** está em situação **Y** no CNPJ. Compareça à unidade local da Receita Federal. |
+| GERAXML07 | Não há data estabelecida para a situação do número de inscrição **X** no CNPJ. Compareça à unidade local da Receita Federal. |
+| GERAXML08 | A DCTFWeb deve ser entregue pela matriz, **X** , da Pessoa Jurídica no cadastro da Receita Federal. O CNPJ informado foi **Y** . |
+| GERAXML09 | A soma do valor da vinculação da retenção na declaração mensal de dezembro (**X**) e do adiantamento da retenção na declaração de anual de décimo terceiro(**Y**) é superior ao valor do crédito disponível na declaração do mês de dezembro(**Z**). Proceda à sua regularização. |
+
+### Mensagens específicas do serviço [Transmitir Declaração]()
+
+| Código | Mensagem |
+| --- | --- |
+| TRANS01 | Estado da declaração não permite transmissão. |
+| TRANS02 | XML com formato inválido enviado para transmissão. **X**. |
+| TRANS04 | XML com conteúdo inválido enviado para transmissão. **X**. |
+| TRANS05 | Houve um erro ao tratar o elemento do XML. Algum elemento de seu conteúdo não está no formato esperado (confira, por exemplo, se o elemento <**X**509Certificate> é um base64 válido). |
+| TRANS07 | Não foi encontrado XML Gerado para validar a autenticidade do XML Assinado. |
+| TRANS09 | Assinatura inválida: **X** |
+| TRANS10 | A declaração foi atualizada depois da geração do XML que está sendo transmitido. |
+| TRANS11 | A declaração já foi transmitida. |
+| TRANS12 | A declaração não foi transmitida. |
+| TRANS13 | A DCTFWeb do contribuinte neste período de apuração está disponível apenas para consulta, não sendo possível transmiti-la. Embora esteja obrigado à entrega do eSocial/EFD-Reinf, neste PA, o contribuinte não se enquadra nas regras de obrigatoriedade da DCTFWeb, elencadas na IN RFB nº 2.005/2021. |
+| TRANS14 | Por ter sido entregue fora do prazo, ensejou a aplicação de Multa por Atraso na Entrega da DCTFWeb(MAED). Para visualizar a Notificação de Lançamento e o DARF da MAED acesse a DCTFWeb via Portal e-CAC. |
+| TRANS20 | Erro ao tentar persistir transmissão. |
+| TRANS15 | O XML não é bem-formado. Confira a corretude de sua estrutura (como a presença de um único elemento raiz e o fechamento de todas as tags). |
+| TRANS16 | Erro ao carregar XML. O XML recebido deveria ser a declaração gerada pelo DCTF acrescida da assinatura digital - se o XML não foi adulterado e a assinatura foi feita corretamente, não há margem para esse erro. Verifique que XML esta sendo enviado. |
+| TRANS17 | A tag Signature deve ser filha da tag ProcDctf. |
+| TRANS18 | Erro ao processar elemento Signature do XML. Verifique a validade dos elementos SignatureValue e SignedInfo do XML. |
+| TRANS19 | Certificado inválido: **X** |
+| TRANS20 | O campo XMLAssinadoBase64 não contém um base 64 válido |
+| TRANS21 | O campo XMLAssinadoBase64 é obrigatório |
+| TRANS22 | Erro ao carregar dados do certificado, alguns campos parecem estar ausentes - verifique se o mesmo não está corrompido |
+
+### Mensagens específicas dos serviços [Consultar Declaração Completa]() e [Consultar Recibo de transmissão]()
+
+| Código | Mensagem |
+| --- | --- | --- |
+| RELAT00 | Não foi encontrada declaração ativa para a geração do relatório |
+| RELAT01 | Erro ao consultar os dados base do(a) **X** |
+| RELAT02 | Erro ao gerar HTML do(a) **X** |
+| RELAT03 | Erro ao imprimir o PDF do(a) **X** |
+
+### Mensagens do serviço [Gerar Documento de Arrecadação]()
+
+| Código | Mensagem |
+| --- | --- |
+| APIGUIA01 | Não é permitido emitir guia de pagamento de declarações não ativas. |
+| APIGUIA02 | Data proposta para acolhimento de guia inválida. Motivo: **X** |
+| APIGUIA03 | IdSistemaOrigem inválido: **X** |
+| GUIA00 | Não será possível emitir a Guia nesta data. A Taxa Selic para o próximo mês ainda não foi divulgada. Emita a Guia no próximo dia útil. |
+| GUIA01 | Não é permitido emitir guia de pagamento de declarações não ativas. |
+| GUIA02 | Atenção! O saldo a pagar é inferior a R$**X**. A guia de pagamento não poderá ser emitida. Verifique na relação de declarações se há valores devidos inferiores a R$**X** que acumulados ultrapassem R$**X** e/ou efetue o pagamento junto com o débito da declaração imediatamente pos...2489 bytes truncated...
+
+
+
+
+# Erros comuns ao utilizar este serviço
+
+Essa página será incrementada conforme as dúvidas mais frequentes dos usuários.
+
+## Sobre a transmissão e a assinatura digital do XML
+
+A grande maioria dos erros reportados por usuários são relativos à funcionalidade [Transmitir Declaração](), especialmente no processo de assinatura no XML.
+
+Os padrões exigidos para a assinatura digital estão descritos em [Transmitir Declaração](), que também contém modelos de assinadores em C# e PHP. **O Serpro não presta consultoria na elaboração de assinadores em demais linguagens**. O material mais completo sobre os elementos da assinatura é a documentação da recomendação da W3C, lá referenciada ([http://www.w3.org/TR/xmldsig-core/]()). É um texto extenso e a maior parte dos ítens não é utilizada, mas é uma boa fonte para entender qual o papel de cada elemento da assinatura e assim guiar uma implementação correta do processo. As seções [3.1.1 Reference Generation]() e [3.1.2 Signature Generation]() contém o essencial e servem como ponto de partida para entender os demais elementos.
+
+Caso esteja tendo problemas **com a assinatura digital**, saiba que no [Serviço de validação de assinaturas eletrônicas do ITI]() é possivel validar sua assinatura gratuitamente. Com um detalhe - caso sua assinatura esteja **mal formada** (isto é, há um erro sério em sua estrutura conforme prescrita na referência acima) você não obterá qualquer resposta pois a página sequer conseguirá carregar a assinatura. Algo similar ocorrerá caso envie uma assinatura mal formada para nós - receberá o erro "TRANS18-Erro ao processar elemento Signature do XML. Verifique a validade dos elementos SignatureValue e SignedInfo do XML".
+
+A seguir, outros erros comuns de assinatura:
+
+*   **TRANS04-XML com conteúdo inválido enviado para transmissão.O XML enviado para transmissão é distinto do XML Gerado além da assinatura digital:** A declaração assinada deve ser idêntica, caractere a caractere, à recebida pelo serviço CONSXMLDECLARACAO38. **A comparação é feita via hash computado em cima do XML recebido, removida a tag de assinatura.** É muito comum recebermos queixas sobre transmissões recusadas quando o XML foi alterado no processo de assinatura (alterações que não alteram sua semântica, como troca de ordem dos atributos de uma tag ou transformação de maiúsculas em minúsculas em algum ponto). Caso passe por esse problema, inspecione tanto a string contendo o XML sendo repassada a seu assinador e o XML após a assinatura, pois algumas bibliotecas de manipulação de XML alteram automaticamente o XML (algumas trocam a ordem dos atributos, passam o valor do atributo encoding para maiúsculo etc). Recomendamos realizar a comparação das strings por algum aplicativo ao invés de fazê-lo visualmente, pois o último método é muito propenso a erros. É comum recebermos queixas improcedentes de usuários que usaram esse método (inclusive pela presença de caracteres invisíveis, como o UTF-8 BOM).
+*   **TRANS02- XML com formato inválido enviado para transmissão. O número de tags 'Reference' encontrado é diferente de 1:** A tag Reference descreve o que esta sendo assinado e como. Na operação de transmissão de declaração, a tag ConteudoDeclaracao é o que deve ser assinado - o que será indicado pelo valor do atributo URI da tag Reference como sendo o valor do atributo ID da tag ConteudoDeclaracao. No padrão que utilizamos (http://www.w3.org/TR/xmldsig-core/), há um elemento Reference para cada elemento assinado. Como exigimos a assinatura de um único elemento, deve haver exatamente uma tag Reference.
+
+
+
+
+# Dados de domínio
+
+| Domínio Categoria: |
+| --- |
+| GERAL\_MENSAL =40 |
+| GERAL\_13o\_SALARIO=41 |
+| AFERICAO=44 |
+| ESPETACULO\_DESPORTIVO=45 |
+| RECLAMATORIA\_TRABALHISTA=46 |
+| PF\_MENSAL=50 |
+| PF\_13o\_SALARIO=51 |
+
+| Domínio Tipo: |
+| --- |
+| CNPJ=2 |
+| CPF=1 |
+
+| Domínio idServico: |
+| --- |
+| GERARGUIA31 |
+| CONSRECIBO32 |
+| CONSDECCOMPLETA33 |
+| CONSXMLDECLARACAO38 |
+| TRANSDECLARACAO310 |
+| GERARGUIAANDAMENTO313 |
+
+| Domínio idsSistemaOrigem: |
+| --- |
+| eSocial = 1 |
+| Sero = 5 |
+| Reinf CP = 6 |
+| Reinf RET = 7 |
+| MIT = 8 |
+
+
+
+
+# Manual de Orientação da DCTFWeb - Outubro de 2021
+
+## SUMÁRIO
+
+*   SUMÁRIO .......................................................................................................... 2
+*   SUMÁRIO ESQUEMATIZADO .......................................................................... 5
+*   GLOSSÁRIO ...................................................................................................... 6
+*   SIGLAS .............................................................................................................. 7
+*   1. O QUE É DCTFWEB ..................................................................................... 8
+    *   1.1. Roteiro para envio da DCTFWeb ............................................................. 9
+    *   1.2. Fluxo de informações ............................................................................. 10
+*   2. QUEM ESTÁ OBRIGADO A DECLARAR ....................................................11
+    *   2.1. Consulta Início de Obrigatoriedade DCTFWeb ...................................... 12
+    *   2.2. Dispensa de apresentação .................................................................... 13
+*   3. TRIBUTOS DECLARADOS NA DCTFWEB ................................................ 14
+*   4. COMO APRESENTAR A DECLARAÇÃO ................................................... 14
+    *   4.1. Forma de apresentar ............................................................................. 14
+    *   4.2. Prazo para apresentar ........................................................................... 15
+    *   4.3. Ausência de informações a serem prestadas ........................................ 16
+    *   4.4. Apresentação em situações especiais ................................................... 16
+*   5. PENALIDADES E ACRÉSCIMOS LEGAIS ................................................. 16
+    *   5.1. Multa por Atraso na Entrega da Declaração (MAED)............................. 16
+    *   5.2. Multa por Incorreções ou Omissões ...................................................... 17
+    *   5.3. Multa mínima ......................................................................................... 17
+    *   5.4. Reduções ............................................................................................... 17
+    *   5.5. Impugnação ........................................................................................... 17
+    *   5.6. Acréscimos Legais ................................................................................. 17
+*   6. ACESSO AO SISTEMA ............................................................................... 18
+    *   6.1. Tipos de Acesso ..................................................................................... 19
+    *   6.1.1. Código de Acesso ........................................................................... 19
+    *   6.1.2. Acesso GovBR ................................................................................ 20
+*   7. TELA INICIAL (RELAÇÃO DE DECLARAÇÕES) ....................................... 20
+    *   7.1. Filtros ..................................................................................................... 21
+    *   7.2. Visão do Procurador .............................................................................. 23
+    *   7.3. Serviços da declaração .......................................................................... 23
+*   8. CLASSIFICAÇÕES DA DCTFWEB (CATEGORIA, SITUAÇÃO E TIPO) ... 24
+    *   8.1. Categorias de DCTFWeb ....................................................................... 24
+    *   8.2. Situações da DCTFWeb ........................................................................ 25
+    *   8.3. Tipos de DCTFWeb ............................................................................... 25
+*   9. TABELA DE VINCULAÇÃO ........................................................................ 25
+*   10. EDIÇÃO DE UMA DCTFWEB ................................................................... 28
+    *   10.1. Resumo da Situação ............................................................................ 30
+*   11. DADOS CADASTRAIS .............................................................................. 31
+    *   11.1. Dados do Contribuinte ......................................................................... 31
+    *   11.2. Dados do Responsável ........................................................................ 32
+*   12. CRÉDITOS VINCULÁVEIS ........................................................................ 33
+    *   12.1. Salário-Família ..................................................................................... 35
+    *   12.2. Salário-Maternidade ............................................................................. 36
+    *   12.3. Retenção Lei 9.711/98 ......................................................................... 37
+    *   12.3.1. Obrigações do Tomador ................................................................ 38
+    *   12.3.2. Obrigações do Prestador .............................................................. 39
+    *   12.4. Adiantamento de Retenção (exclusivamente para DCTFWeb 13º Salário) ...................................................................................................................... 40
+    *   12.5. Exclusão (lançamento de ofício) .......................................................... 43
+    *   12.5.1. Importar da RFB crédito de Exclusão ............................................ 44
+    *   12.5.2. Incluir manualmente crédito de Exclusão ...................................... 44
+    *   12.5.3. Vincular Exclusão .......................................................................... 45
+    *   12.6. Suspensão ........................................................................................... 45
+    *   12.6.1. Incluir Depósitos ............................................................................ 47
+    *   12.6.2. Vincular Suspensão ...................................................................... 51
+    *   12.6.3. Incluir manualmente processo de Suspensão ............................... 53
+    *   12.6.4. Suspensão recebida pela DCTFWeb com valor zero .................... 56
+    *   12.7. Parcelamento ....................................................................................... 57
+    *   12.7.1. Importar da RFB Parcelamento ..................................................... 59
+    *   12.7.2. Incluir manualmente Parcelamento ............................................... 59
+    *   12.7.3. Vincular Parcelamento .................................................................. 60
+    *   12.8. Compensação ...................................................................................... 60
+    *   12.8.1. Importar da RFB Compensação .................................................... 61
+    *   12.8.2. Incluir manualmente Compensação .............................................. 62
+    *   12.8.3. Vincular Compensação ................................................................. 63
+    *   12.8.4. Abater DComp ............................................................................... 63
+    *   12.9. Pagamento .......................................................................................... 65
+    *   12.9.1. Importar da RFB Documento de Arrecadação .............................. 66
+    *   12.9.2. Importar da RFB por número do Documento de Arrecadação ...... 67
+    *   12.10. Aplicar Vinculação Automática ........................................................... 67
+    *   12.11. Vincular e Desvincular manualmente ................................................. 68
+*   13. RELATÓRIOS ............................................................................................ 69
+    *   13.1. Relatório de Créditos por Documento .................................................. 70
+    *   13.2. Relatório Resumo de Débitos .............................................................. 71
+    *   13.3. Relatório Resumo de Créditos ............................................................. 72
+    *   13.4. Relatório de Débitos ............................................................................ 72
+    *   13.4.1. Comprovar retenção perante prestador dos serviços ................... 73
+    *   13.5. Relatório de Créditos ........................................................................... 74
+    *   13.6. Documentos disponíveis após transmissão da DCTFWeb .................. 74
+    *   13.6.1. Download Recibo .......................................................................... 75
+    *   13.6.2. Download XML de Saída ............................................................... 75
+    *   13.6.3. Declaração Completa .................................................................... 75
+*   14. TRANSMISSÃO DA DCTFWEB ................................................................ 75
+    *   14.1. Transmissão a partir da tela inicial ....................................................... 75
+    *   14.2. Transmissão em lote ............................................................................ 76
+    *   14.3. Transmissão por Procurador ................................................................ 77
+    *   14.4. Transmissão a partir da tela de edição ................................................ 78
+    *   14.5 Transmissão Direta pelo eSocial........................................................... 78
+*   15. RECIBO DE ENTREGA ............................................................................. 79
+    *   15.1. Acesso pela tela inicial ......................................................................... 80
+    *   15.2. Acesso pelo menu Relatórios .............................................................. 80
+*   16. EMITIR DOCUMENTO DE ARRECADAÇÃO (DARF/DAE) ...................... 80
+    *   16.1. Data de Vencimento ............................................................................. 81
+    *   16.2. Pagamento em atraso .......................................................................... 82
+    *   16.3. Pagamento mínimo .............................................................................. 82
+    *   16.4. Emissão de documento de arrecadação a partir da tela inicial ............ 83
+    *   16.4.1. DARF em Lote .............................................................................. 83
+    *   16.4.2. DARF de vários contribuintes (Procurador) ................................... 84
+    *   16.5. Emissão de DARF a partir da tela de edição ou visualização .............. 85
+    *   16.5.1. Utilização de filtros para emitir DARF ............................................ 86
+    *   16.5.2. Editar DARF .................................................................................. 87
+    *   16.5.3. Abater Pagamentos Anteriores ...................................................... 88
+*   17. DCTFWEB RETIFICADORA ..................................................................... 90
+    *   17.1. Retificação originada no eSocial ou na EFD-Reinf .............................. 91
+    *   17.1.1. DCTFWeb na situação “Em andamento” ...................................... 91
+    *   17.2. Retificação originada no sistema DCTFWeb ....................................... 91
+    *   17.3. Limitações das declarações retificadoras ............................................ 93
+    *   17.3.1. Reduzir o valor dos tributos ........................................................... 93
+    *   17.3.2. Alterar tributos sob fiscalização da RFB ........................................ 93
+*   18. DCTFWEB SEM MOVIMENTO .................................................................. 93
+*   19. DCTFWEB 13º SALÁRIO (ANUAL) .......................................................... 95
+*   20. DCTFWEB ESPETÁCULO DESPORTIVO (DIÁRIA) ................................ 96
+    *   20.1. Obrigações da entidade promotora do evento ..................................... 97
+    *   20.2. Obrigações da empresa ou entidade que efetuar pagamentos ........... 98
+*   21. DCTFWEB AFERIÇÃO .............................................................................. 99
+    *   21.1. Fluxo de informações Sero x DCTFWeb ........................................... 100
+*   22. DCTFWEB DE EXCLUSÃO..................................................................... 100
+*   ANEXO I – TABELAS CÓDIGOS DE RECEITA ............................................ 102
+    *   eSocial ........................................................................................................ 102
+    *   EFD-Reinf ................................................................................................... 104
+    *   Sero ............................................................................................................ 105
+
+
