@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/relpmei/relpmei_response.dart';
 
@@ -10,4 +8,3 @@ class RelpmeiService {
 
   //TODO: Implement methods for RelpmeiService
 }
-

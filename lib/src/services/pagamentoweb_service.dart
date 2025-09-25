@@ -7,5 +7,5 @@ class PagamentoWebService {
 
   PagamentoWebService(this._apiClient);
 
-  //TODO: Implement methods for PagamentoWebService
+  //Implement methods for PagamentoWebService
 }
