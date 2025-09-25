@@ -1,0 +1,347 @@
+---
+alwaysApply: true
+---
+# Catálogo de Serviços
+
+Este catálogo de serviços do Integra Contador exibe a situação de todos os serviços. Não é uma página de Health Check, mas sim um local que contém o "roadmap" de todos os serviços do produto.
+
+Informação
+
+As colunas `idSistema` e `idServico` são utilizados no do pedido de dados. A coluna `Tipo` representa o método a ser invocado pelo serviço.
+
+## Integra-SN
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 001 | 1.1 | `PGDASD` | `TRANSDECLARACAO11` |  23/09/2022 | `Declarar` | Entregar declaração mensal |
+| 002 | 1.2 | `PGDASD` | `GERARDAS12` |  23/09/2022 | `Emitir` | Gerar DAS |
+| 003 | 1.3 | `PGDASD` | `CONSDECLARACAO13` |  23/09/2022 | `Consultar` | Consultar Declarações transmitidas |
+| 004 | 1.4 | `PGDASD` | `CONSULTIMADECREC14` |  23/09/2022 | `Consultar` | Consultar a Última Declaração/Recibo transmitida |
+| 005 | 1.5 | `PGDASD` | `CONSDECREC15` |  23/09/2022 | `Consultar` | Consultar Declaração/Recibo |
+| 006 | 1.6 | `PGDASD` | `CONSEXTRATO16` |  23/09/2022 | `Consultar` | Consultar Extrato do DAS |
+| 007 | 1.7 | `PGDASD` | `GERARDASCOBRANCA17` |  27/11/2024 | `Emitir` | Gerar um DAS referente a um período no sistema de Cobrança da RFB. |
+| 008 | 1.8 | `PGDASD` | `GERARDASPROCESSO18` |  27/11/2024 | `Emitir` | Gerar um DAS referente a um processo no sistema de Cobrança da RFB. |
+| 009 | 1.9 | `PGDASD` | `GERARDASAVULSO19` |  27/11/2024 | `Emitir` | Gerar um DAS Avulso para declarações transmitidas no período de apuração. |
+| 010 | 10.1 | `REGIMEAPURACAO` | `EFETUAROPCAOREGIME101` |  24/07/2023 | `Declarar` | Efetuar a opção pelo Regime de Apuração de Receitas |
+| 011 | 10.2 | `REGIMEAPURACAO` | `CONSULTARANOSCALENDARIOS102` |  24/07/2023 | `Consultar` | Consultar todas as opções de Regime de Apuração de Receitas |
+| 012 | 10.3 | `REGIMEAPURACAO` | `CONSULTAROPCAOREGIME103` |  24/07/2023 | `Consultar` | Consultar a opção pelo Regime de Apuração de Receitas |
+| 013 | 10.4 | `REGIMEAPURACAO` | `CONSULTARRESOLUCAO104` |  24/07/2023 | `Consultar` | Consultar a resolução para o Regime de Caixa |
+| 014 | 14.1 | `DEFIS` | `TRANSDECLARACAO141` |  25/09/2023 | `Declarar` | Transmissão da declaração das informações socioeconômicas e fiscais (DEFIS). |
+| 015 | 14.2 | `DEFIS` | `CONSDECLARACAO142` |  25/09/2023 | `Consultar` | Consulta que devolve uma lista com todas os números de declarações DEFIS transmitidas à base da RFB, para um contribuinte. |
+| 016 | 14.3 | `DEFIS` | `CONSULTIMADECREC143` |  25/09/2023 | `Consultar` | Consulta uma cópia do pdf do recibo de entrega e declaração referentes à última declaração transmitida à RFB em um determinado ano-calendário. |
+| 017 | 14.4 | `DEFIS` | `CONSDECREC144` |  25/09/2023 | `Consultar` | Consulta o pdf de uma declaração específica e seu recibo de entrega. |
+
+## Integra-MEI
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 018 | 2.1 | `PGMEI` | `GERARDASPDF21` |  23/09/2022 | `Emitir` | Gerar DAS em PDF |
+| 019 | 2.2 | `PGMEI` | `GERARDASCODBARRA22` |  23/09/2022 | `Emitir` | Gerar DAS em código de barras |
+| 020 | 2.3 | `PGMEI` | `ATUBENEFICIO23` |  23/09/2022 | `Emitir` | Atualizar Benefício |
+| 021 | 2.4 | `PGMEI` | `DIVIDAATIVA24` |  23/09/2022 | `Consultar` | Consultar Dívida Ativa |
+| 022 | 12.1 | `CCMEI` | `EMITIRCCMEI121` |  01/10/2024 | `Emitir` | Emissão do Certificado de Condição de MEI em formato PDF. |
+| 023 | 12.2 | `CCMEI` | `DADOSCCMEI122` |  01/10/2024 | `Consultar` | Consulta os dados do Certificado de Condição MEI. |
+| 024 | 12.3 | `CCMEI` | `CCMEISITCADASTRAL123` |  01/10/2024 | `Consultar` | Consulta a situação cadastral dos CNPJ MEI vinculados ao CPF. |
+| 025 | 15.1 | `DASNSIMEI` | `TRANSDECLARACAO151` | `Declarar` | Permite a entrega da declaração anual do MEI (DASN-SIMEI). |
+| 026 | 15.2 | `DASNSIMEI` | `CONSULTIMADECREC152` | `Consultar` | Consulta uma cópia da última declaração transmitida à RFB em um determinado ano-calendário. |
+| 027 | 15.3 | `DASNSIMEI` | `ATUALIZADASEXCESSO153` | `Emitir` | Atualizar o DAS de excesso de receitas. |
+
+## Integra-DCTFWeb
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 028 | 3.1 | `DCTFWEB` | `GERARGUIA31` |  23/09/2022 | `Emitir` | Gerar Guia Declaração |
+| 029 | 3.2 | `DCTFWEB` | `CONSRECIBO32` |  23/09/2022 | `Consultar` | Consultar o Recibo da Declaração |
+| 030 | 3.3 | `DCTFWEB` | `CONSDECCOMPLETA33` |  23/09/2022 | `Consultar` | Consultar Declaração Completa |
+| 031 | 3.4 | `DCTFWEB` | `CONSRELCREDITO34` | `Consultar` | Consultar Relatório de Crédito |
+| 032 | 3.5 | `DCTFWEB` | `CONSRELDEBITO35` | `Consultar` | Consultar Relatório de Débito |
+| 033 | 3.6 | `DCTFWEB` | `GERARGUIAMAED36` | `Emitir` | Emitir Guia do DARF da MAED |
+| 034 | 3.7 | `DCTFWEB` | `CONSNOTIFMAED37` | `Consultar` | Consultar Notificação da MAED |
+| 035 | 3.8 | `DCTFWEB` | `CONSXMLDECLARACAO38` |  23/09/2022 | `Consultar` | Consultar o XML da declaração |
+| 036 | 3.9 | `DCTFWEB` | `APLVINCULACAO39` | `Emitir` | Aplicar Vinculação |
+| 037 | 3.10 | `DCTFWEB` | `TRANSDECLARACAO310` |  23/09/2022 | `Declarar` | Transmitir Declaração |
+| 038 | 3.11 | `DCTFWEB` | `GERARGUIACOMABATIMENTO311` | `Emitir` | Gerar guia residual com abatimento de DARF pago anteriormente e DCOMP. |
+| 039 | 3.12 | `DCTFWEB` | `EDITARVALORSUSPENSO312` | `Emitir` | Editar valor Suspenso |
+| 040 | 3.13 | `DCTFWEB` | `GERARGUIAANDAMENTO313` |  28/03/2025 | `Emitir` | Gerar Documento de Arrecadação para Declaração em Andamento. |
+| 041 | 3.14 | `MIT` | `ENCAPURACAO314` |  28/03/2025 | `Declarar` | Encerrar Apuração MIT. |
+| 042 | 3.15 | `MIT` | `SITUACAOENC315` |  28/03/2025 | `Apoiar` | Consultar Situação Encerramento MIT. |
+| 043 | 3.16 | `MIT` | `CONSAPURACAO316` |  28/03/2025 | `Consultar` | Consultar Apuração MIT. |
+| 044 | 3.17 | `MIT` | `LISTAAPURACOES317` |  28/03/2025 | `Consultar` | Consultar Apurações MIT por ano ou mês. Permite listar todas as apurações MIT por ano ou mês. |
+
+## Integra-Procurações
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 045 | 4.1 | `PROCURACOES` | `OBTERPROCURACAO41` |  23/09/2022 | `Consultar` | Obter Procuração |
+
+## Integra-Sicalc
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 046 | 5.1 | `SICALC` | `CONSOLIDARGERARDARF51` |  23/09/2022 | `Emitir` | Consolidar e Emitir um DARF em documento PDF |
+| 047 | 5.2 | `SICALC` | `CONSULTAAPOIORECEITAS52` |  23/09/2022 | `Apoiar` | Apoio de consulta Receitas do Sicalc |
+| 048 | 5.3 | `SICALC` | `GERARDARFCODBARRA53` |  04/12/2023 | `Emitir` | Consolidar e Emitir um DARF em código de barras |
+
+## Integra-CaixaPostal
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 049 | 6.1 | `CAIXAPOSTAL` | `MSGCONTRIBUINTE61` |  23/09/2022 | `Consultar` | Consulta de Mensagens por Contribuinte |
+| 050 | 6.2 | `CAIXAPOSTAL` | `MSGDETALHAMENTO62` |  23/09/2022 | `Consultar` | Obter detalhes de uma mensagem específica |
+| 051 | 6.3 | `CAIXAPOSTAL` | `INNOVAMSG63` |  23/09/2022 | `Monitorar` | Obter Indicador de novas mensagens |
+| 052 | 11.1 | `DTE` | `CONSULTASITUACAODTE111` |  01/09/2023 | `Consultar` | Consulta a situação do contribuinte quanto a adesão ao Caixa Postal do Simples Nacional e eCAC |
+
+## Integra-Pagamento
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 053 | 7.1 | `PAGAMENTO` | `CONSULTAR71` |  23/09/2022 | `Consultar` | Consultar Pagamento |
+| 054 | 7.2 | `PAGAMENTO` | `CONSULTARLOTE72` |  23/09/2022 | `Consultar` | Consultar Pagamento em Lote |
+
+## Integra-Contador-Gerenciador
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 055 | 8.1 | `GERENCIADOR` | `CONSULTAR81` |  23/09/2022 | `Consultar` | Consultar |
+| 056 | 8.2 | `GERENCIADOR` | `CONSULTARLOTE82` |  23/09/2022 | `Consultar` | Consultar Lote |
+| 057 | 8.3 | `GERENCIADOR` | `CONSULTARRESPOSTA83` |  23/09/2022 | `Consultar` | Consultar Resposta |
+| 058 | 8.4 | `GERENCIADOR` | `CONSULTARRESPOSTALOTE84` |  23/09/2022 | `Consultar` | Consultar Resposta Lote |
+
+## Integra-SITFIS
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 059 | 9.1 | `SITFIS` | `CONSULTARINTIMACAO91` |  23/09/2022 | `Consultar` | Consultar Intimação |
+| 060 | 9.2 | `SITFIS` | `CONSULTARAUTOINFRACAO92` |  23/09/2022 | `Consultar` | Consultar Auto de Infração |
+| 061 | 9.3 | `SITFIS` | `CONSULTARCIENCIAINTIMACAO93` |  23/09/2022 | `Consultar` | Consultar Ciência da Intimação |
+| 062 | 9.4 | `SITFIS` | `CONSULTARCIENCIAAUTOINFRACAO94` |  23/09/2022 | `Consultar` | Consultar Ciência do Auto de Infração |
+| 063 | 9.5 | `SITFIS` | `CONSULTARPROCESSOSFISCAIS95` |  23/09/2022 | `Consultar` | Consultar Processos Fiscais |
+| 064 | 9.6 | `SITFIS` | `CONSULTARPROCESSOSFISCAISDETALHES96` |  23/09/2022 | `Consultar` | Consultar Detalhes de Processos Fiscais |
+| 065 | 9.7 | `SITFIS` | `CONSULTARPROCESSOSFISCAISCIENCIA97` |  23/09/2022 | `Consultar` | Consultar Ciência de Processos Fiscais |
+
+## Integra-Parcelamentos
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 066 | 13.1 | `PARCSN` | `EMITIRPARCELA131` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento do Simples Nacional. |
+| 067 | 13.2 | `PARCSN` | `CONSULTARPARCELAMENTOS132` |  01/03/2024 | `Consultar` | Consulta os parcelamentos do Simples Nacional. |
+| 068 | 13.3 | `PARCSN` | `CONSULTARPEDIDOS133` |  01/03/2024 | `Consultar` | Consulta os pedidos de parcelamento do Simples Nacional. |
+| 069 | 13.4 | `PARCSN` | `REGISTRARDEBITOAUTOMATICO134` |  01/03/2024 | `Declarar` | Registra ou desativa o débito automático de parcelamento do Simples Nacional. |
+| 070 | 13.5 | `PARCSN` | `DESISTIRPARCELAMENTO135` |  01/03/2024 | `Declarar` | Desistir do parcelamento do Simples Nacional. |
+| 071 | 16.1 | `PARCMEI` | `EMITIRPARCELA161` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento do MEI. |
+| 072 | 16.2 | `PARCMEI` | `CONSULTARPARCELAMENTOS162` |  01/03/2024 | `Consultar` | Consulta os parcelamentos do MEI. |
+| 073 | 16.3 | `PARCMEI` | `CONSULTARPEDIDOS163` |  01/03/2024 | `Consultar` | Consulta os pedidos de parcelamento do MEI. |
+| 074 | 16.4 | `PARCMEI` | `REGISTRARDEBITOAUTOMATICO164` |  01/03/2024 | `Declarar` | Registra ou desativa o débito automático de parcelamento do MEI. |
+| 075 | 16.5 | `PARCMEI` | `DESISTIRPARCELAMENTO165` |  01/03/2024 | `Declarar` | Desistir do parcelamento do MEI. |
+| 076 | 17.1 | `PARCPGFN` | `EMITIRPARCELA171` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento da PGFN. |
+| 077 | 17.2 | `PARCPGFN` | `CONSULTARPARCELAMENTOS172` |  01/03/2024 | `Consultar` | Consulta os parcelamentos da PGFN. |
+| 078 | 18.1 | `PARCRFB` | `EMITIRPARCELA181` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento da RFB. |
+| 079 | 18.2 | `PARCRFB` | `CONSULTARPARCELAMENTOS182` |  01/03/2024 | `Consultar` | Consulta os parcelamentos da RFB. |
+
+## Integra-Redesim
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 080 | 19.1 | `REDESIM` | `CONSULTAROPCAO191` |  01/03/2024 | `Consultar` | Consulta a existência de opção prévia pelo Domicílio Tributário Eletrônico (DTE). |
+| 081 | 19.2 | `REDESIM` | `EFETUAROPCAO192` |  01/03/2024 | `Declarar` | Efetua a opção pelo Domicílio Tributário Eletrônico (DTE). |
+| 082 | 20.1 | `REDESIM` | `CONSULTARVIABILIDADE201` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de viabilidade. |
+| 083 | 20.2 | `REDESIM` | `CONSULTARCOLETORDADOS202` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação no Coletor Nacional de Dados. |
+| 084 | 21.1 | `REDESIM` | `CONSULTARINSCRICAOTRIBUTARIA211` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de inscrição tributária. |
+| 085 | 22.1 | `REDESIM` | `CONSULTARALVARA221` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de alvará de funcionamento. |
+| 086 | 23.1 | `REDESIM` | `CONSULTARLICENCAS231` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de licenças. |
+| 087 | 24.1 | `REDESIM` | `CONSULTARDBE241` |  01/03/2024 | `Consultar` | Consulta o Documento Básico de Entrada (DBE). |
+| 088 | 25.1 | `REDESIM` | `ACOMPANHARPROTOCOLO251` |  01/03/2024 | `Consultar` | Acompanha o andamento de um protocolo na Redesim. |
+| 089 | 26.1 | `REDESIM` | `CONSULTARPJ261` |  01/03/2024 | `Consultar` | Consulta os dados de uma Pessoa Jurídica (PJ). |
+
+## Integra-e-Processo
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 090 | 27.1 | `EPROCESSO` | `CONSULTARPROCESSOSINTERESSADO271` |  01/03/2024 | `Consultar` | Consultar Processos por Interessado. |
+| 091 | 27.2 | `EPROCESSO` | `OBTERLISTADOCSPROC272` |  01/03/2024 | `Consultar` | Obter Lista dos Documentos do Processo. |
+| 092 | 27.3 | `EPROCESSO` | `OBTERDOCUMENTOPROCESSO273` |  01/03/2024 | `Consultar` | Obter Documento do Processo. |
+| 093 | 27.4 | `EPROCESSO` | `CONSULTARCOMUNICADOSINTIMACOES274` |  01/03/2024 | `Consultar` | Consultar Comunicados e Intimações. |
+
+## Legenda
+
+| Imagem | Status | Descrição |
+| --- | --- | --- |
+|  | Em produção | Disponível em produção |
+|  | Em demonstração | Disponível em demonstração |
+|  | Em construção | Em desenvolvimento |
+|  | Em prospecção | Em análise e planejamento. |
+|  | Cancelado | Serviço Descontinuado. |
+
+
+# Catálogo de Serviços
+
+Este catálogo de serviços do Integra Contador exibe a situação de todos os serviços. Não é uma página de Health Check, mas sim um local que contém o "roadmap" de todos os serviços do produto.
+
+Informação
+
+As colunas `idSistema` e `idServico` são utilizados no do pedido de dados. A coluna `Tipo` representa o método a ser invocado pelo serviço.
+
+## Integra-SN
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 001 | 1.1 | `PGDASD` | `TRANSDECLARACAO11` |  23/09/2022 | `Declarar` | Entregar declaração mensal |
+| 002 | 1.2 | `PGDASD` | `GERARDAS12` |  23/09/2022 | `Emitir` | Gerar DAS |
+| 003 | 1.3 | `PGDASD` | `CONSDECLARACAO13` |  23/09/2022 | `Consultar` | Consultar Declarações transmitidas |
+| 004 | 1.4 | `PGDASD` | `CONSULTIMADECREC14` |  23/09/2022 | `Consultar` | Consultar a Última Declaração/Recibo transmitida |
+| 005 | 1.5 | `PGDASD` | `CONSDECREC15` |  23/09/2022 | `Consultar` | Consultar Declaração/Recibo |
+| 006 | 1.6 | `PGDASD` | `CONSEXTRATO16` |  23/09/2022 | `Consultar` | Consultar Extrato do DAS |
+| 007 | 1.7 | `PGDASD` | `GERARDASCOBRANCA17` |  27/11/2024 | `Emitir` | Gerar um DAS referente a um período no sistema de Cobrança da RFB. |
+| 008 | 1.8 | `PGDASD` | `GERARDASPROCESSO18` |  27/11/2024 | `Emitir` | Gerar um DAS referente a um processo no sistema de Cobrança da RFB. |
+| 009 | 1.9 | `PGDASD` | `GERARDASAVULSO19` |  27/11/2024 | `Emitir` | Gerar um DAS Avulso para declarações transmitidas no período de apuração. |
+| 010 | 10.1 | `REGIMEAPURACAO` | `EFETUAROPCAOREGIME101` |  24/07/2023 | `Declarar` | Efetuar a opção pelo Regime de Apuração de Receitas |
+| 011 | 10.2 | `REGIMEAPURACAO` | `CONSULTARANOSCALENDARIOS102` |  24/07/2023 | `Consultar` | Consultar todas as opções de Regime de Apuração de Receitas |
+| 012 | 10.3 | `REGIMEAPURACAO` | `CONSULTAROPCAOREGIME103` |  24/07/2023 | `Consultar` | Consultar a opção pelo Regime de Apuração de Receitas |
+| 013 | 10.4 | `REGIMEAPURACAO` | `CONSULTARRESOLUCAO104` |  24/07/2023 | `Consultar` | Consultar a resolução para o Regime de Caixa |
+| 014 | 14.1 | `DEFIS` | `TRANSDECLARACAO141` |  25/09/2023 | `Declarar` | Transmissão da declaração das informações socioeconômicas e fiscais (DEFIS). |
+| 015 | 14.2 | `DEFIS` | `CONSDECLARACAO142` |  25/09/2023 | `Consultar` | Consulta que devolve uma lista com todas os números de declarações DEFIS transmitidas à base da RFB, para um contribuinte. |
+| 016 | 14.3 | `DEFIS` | `CONSULTIMADECREC143` |  25/09/2023 | `Consultar` | Consulta uma cópia do pdf do recibo de entrega e declaração referentes à última declaração transmitida à RFB em um determinado ano-calendário. |
+| 017 | 14.4 | `DEFIS` | `CONSDECREC144` |  25/09/2023 | `Consultar` | Consulta o pdf de uma declaração específica e seu recibo de entrega. |
+
+## Integra-MEI
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 018 | 2.1 | `PGMEI` | `GERARDASPDF21` |  23/09/2022 | `Emitir` | Gerar DAS em PDF |
+| 019 | 2.2 | `PGMEI` | `GERARDASCODBARRA22` |  23/09/2022 | `Emitir` | Gerar DAS em código de barras |
+| 020 | 2.3 | `PGMEI` | `ATUBENEFICIO23` |  23/09/2022 | `Emitir` | Atualizar Benefício |
+| 021 | 2.4 | `PGMEI` | `DIVIDAATIVA24` |  23/09/2022 | `Consultar` | Consultar Dívida Ativa |
+| 022 | 12.1 | `CCMEI` | `EMITIRCCMEI121` |  01/10/2024 | `Emitir` | Emissão do Certificado de Condição de MEI em formato PDF. |
+| 023 | 12.2 | `CCMEI` | `DADOSCCMEI122` |  01/10/2024 | `Consultar` | Consulta os dados do Certificado de Condição MEI. |
+| 024 | 12.3 | `CCMEI` | `CCMEISITCADASTRAL123` |  01/10/2024 | `Consultar` | Consulta a situação cadastral dos CNPJ MEI vinculados ao CPF. |
+| 025 | 15.1 | `DASNSIMEI` | `TRANSDECLARACAO151` | `Declarar` | Permite a entrega da declaração anual do MEI (DASN-SIMEI). |
+| 026 | 15.2 | `DASNSIMEI` | `CONSULTIMADECREC152` | `Consultar` | Consulta uma cópia da última declaração transmitida à RFB em um determinado ano-calendário. |
+| 027 | 15.3 | `DASNSIMEI` | `ATUALIZADASEXCESSO153` | `Emitir` | Atualizar o DAS de excesso de receitas. |
+
+## Integra-DCTFWeb
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 028 | 3.1 | `DCTFWEB` | `GERARGUIA31` |  23/09/2022 | `Emitir` | Gerar Guia Declaração |
+| 029 | 3.2 | `DCTFWEB` | `CONSRECIBO32` |  23/09/2022 | `Consultar` | Consultar o Recibo da Declaração |
+| 030 | 3.3 | `DCTFWEB` | `CONSDECCOMPLETA33` |  23/09/2022 | `Consultar` | Consultar Declaração Completa |
+| 031 | 3.4 | `DCTFWEB` | `CONSRELCREDITO34` | `Consultar` | Consultar Relatório de Crédito |
+| 032 | 3.5 | `DCTFWEB` | `CONSRELDEBITO35` | `Consultar` | Consultar Relatório de Débito |
+| 033 | 3.6 | `DCTFWEB` | `GERARGUIAMAED36` | `Emitir` | Emitir Guia do DARF da MAED |
+| 034 | 3.7 | `DCTFWEB` | `CONSNOTIFMAED37` | `Consultar` | Consultar Notificação da MAED |
+| 035 | 3.8 | `DCTFWEB` | `CONSXMLDECLARACAO38` |  23/09/2022 | `Consultar` | Consultar o XML da declaração |
+| 036 | 3.9 | `DCTFWEB` | `APLVINCULACAO39` | `Emitir` | Aplicar Vinculação |
+| 037 | 3.10 | `DCTFWEB` | `TRANSDECLARACAO310` |  23/09/2022 | `Declarar` | Transmitir Declaração |
+| 038 | 3.11 | `DCTFWEB` | `GERARGUIACOMABATIMENTO311` | `Emitir` | Gerar guia residual com abatimento de DARF pago anteriormente e DCOMP. |
+| 039 | 3.12 | `DCTFWEB` | `EDITARVALORSUSPENSO312` | `Emitir` | Editar valor Suspenso |
+| 040 | 3.13 | `DCTFWEB` | `GERARGUIAANDAMENTO313` |  28/03/2025 | `Emitir` | Gerar Documento de Arrecadação para Declaração em Andamento. |
+| 041 | 3.14 | `MIT` | `ENCAPURACAO314` |  28/03/2025 | `Declarar` | Encerrar Apuração MIT. |
+| 042 | 3.15 | `MIT` | `SITUACAOENC315` |  28/03/2025 | `Apoiar` | Consultar Situação Encerramento MIT. |
+| 043 | 3.16 | `MIT` | `CONSAPURACAO316` |  28/03/2025 | `Consultar` | Consultar Apuração MIT. |
+| 044 | 3.17 | `MIT` | `LISTAAPURACOES317` |  28/03/2025 | `Consultar` | Consultar Apurações MIT por ano ou mês. Permite listar todas as apurações MIT por ano ou mês. |
+
+## Integra-Procurações
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 045 | 4.1 | `PROCURACOES` | `OBTERPROCURACAO41` |  23/09/2022 | `Consultar` | Obter Procuração |
+
+## Integra-Sicalc
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 046 | 5.1 | `SICALC` | `CONSOLIDARGERARDARF51` |  23/09/2022 | `Emitir` | Consolidar e Emitir um DARF em documento PDF |
+| 047 | 5.2 | `SICALC` | `CONSULTAAPOIORECEITAS52` |  23/09/2022 | `Apoiar` | Apoio de consulta Receitas do Sicalc |
+| 048 | 5.3 | `SICALC` | `GERARDARFCODBARRA53` |  04/12/2023 | `Emitir` | Consolidar e Emitir um DARF em código de barras |
+
+## Integra-CaixaPostal
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 049 | 6.1 | `CAIXAPOSTAL` | `MSGCONTRIBUINTE61` |  23/09/2022 | `Consultar` | Consulta de Mensagens por Contribuinte |
+| 050 | 6.2 | `CAIXAPOSTAL` | `MSGDETALHAMENTO62` |  23/09/2022 | `Consultar` | Obter detalhes de uma mensagem específica |
+| 051 | 6.3 | `CAIXAPOSTAL` | `INNOVAMSG63` |  23/09/2022 | `Monitorar` | Obter Indicador de novas mensagens |
+| 052 | 11.1 | `DTE` | `CONSULTASITUACAODTE111` |  01/09/2023 | `Consultar` | Consulta a situação do contribuinte quanto a adesão ao Caixa Postal do Simples Nacional e eCAC |
+
+## Integra-Pagamento
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 053 | 7.1 | `PAGAMENTO` | `CONSULTAR71` |  23/09/2022 | `Consultar` | Consultar Pagamento |
+| 054 | 7.2 | `PAGAMENTO` | `CONSULTARLOTE72` |  23/09/2022 | `Consultar` | Consultar Pagamento em Lote |
+
+## Integra-Contador-Gerenciador
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 055 | 8.1 | `GERENCIADOR` | `CONSULTAR81` |  23/09/2022 | `Consultar` | Consultar |
+| 056 | 8.2 | `GERENCIADOR` | `CONSULTARLOTE82` |  23/09/2022 | `Consultar` | Consultar Lote |
+| 057 | 8.3 | `GERENCIADOR` | `CONSULTARRESPOSTA83` |  23/09/2022 | `Consultar` | Consultar Resposta |
+| 058 | 8.4 | `GERENCIADOR` | `CONSULTARRESPOSTALOTE84` |  23/09/2022 | `Consultar` | Consultar Resposta Lote |
+
+## Integra-SITFIS
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 059 | 9.1 | `SITFIS` | `CONSULTARINTIMACAO91` |  23/09/2022 | `Consultar` | Consultar Intimação |
+| 060 | 9.2 | `SITFIS` | `CONSULTARAUTOINFRACAO92` |  23/09/2022 | `Consultar` | Consultar Auto de Infração |
+| 061 | 9.3 | `SITFIS` | `CONSULTARCIENCIAINTIMACAO93` |  23/09/2022 | `Consultar` | Consultar Ciência da Intimação |
+| 062 | 9.4 | `SITFIS` | `CONSULTARCIENCIAAUTOINFRACAO94` |  23/09/2022 | `Consultar` | Consultar Ciência do Auto de Infração |
+| 063 | 9.5 | `SITFIS` | `CONSULTARPROCESSOSFISCAIS95` |  23/09/2022 | `Consultar` | Consultar Processos Fiscais |
+| 064 | 9.6 | `SITFIS` | `CONSULTARPROCESSOSFISCAISDETALHES96` |  23/09/2022 | `Consultar` | Consultar Detalhes de Processos Fiscais |
+| 065 | 9.7 | `SITFIS` | `CONSULTARPROCESSOSFISCAISCIENCIA97` |  23/09/2022 | `Consultar` | Consultar Ciência de Processos Fiscais |
+
+## Integra-Parcelamentos
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 066 | 13.1 | `PARCSN` | `EMITIRPARCELA131` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento do Simples Nacional. |
+| 067 | 13.2 | `PARCSN` | `CONSULTARPARCELAMENTOS132` |  01/03/2024 | `Consultar` | Consulta os parcelamentos do Simples Nacional. |
+| 068 | 13.3 | `PARCSN` | `CONSULTARPEDIDOS133` |  01/03/2024 | `Consultar` | Consulta os pedidos de parcelamento do Simples Nacional. |
+| 069 | 13.4 | `PARCSN` | `REGISTRARDEBITOAUTOMATICO134` |  01/03/2024 | `Declarar` | Registra ou desativa o débito automático de parcelamento do Simples Nacional. |
+| 070 | 13.5 | `PARCSN` | `DESISTIRPARCELAMENTO135` |  01/03/2024 | `Declarar` | Desistir do parcelamento do Simples Nacional. |
+| 071 | 16.1 | `PARCMEI` | `EMITIRPARCELA161` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento do MEI. |
+| 072 | 16.2 | `PARCMEI` | `CONSULTARPARCELAMENTOS162` |  01/03/2024 | `Consultar` | Consulta os parcelamentos do MEI. |
+| 073 | 16.3 | `PARCMEI` | `CONSULTARPEDIDOS163` |  01/03/2024 | `Consultar` | Consulta os pedidos de parcelamento do MEI. |
+| 074 | 16.4 | `PARCMEI` | `REGISTRARDEBITOAUTOMATICO164` |  01/03/2024 | `Declarar` | Registra ou desativa o débito automático de parcelamento do MEI. |
+| 075 | 16.5 | `PARCMEI` | `DESISTIRPARCELAMENTO165` |  01/03/2024 | `Declarar` | Desistir do parcelamento do MEI. |
+| 076 | 17.1 | `PARCPGFN` | `EMITIRPARCELA171` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento da PGFN. |
+| 077 | 17.2 | `PARCPGFN` | `CONSULTARPARCELAMENTOS172` |  01/03/2024 | `Consultar` | Consulta os parcelamentos da PGFN. |
+| 078 | 18.1 | `PARCRFB` | `EMITIRPARCELA181` |  01/03/2024 | `Emitir` | Emissão de Parcela do Parcelamento da RFB. |
+| 079 | 18.2 | `PARCRFB` | `CONSULTARPARCELAMENTOS182` |  01/03/2024 | `Consultar` | Consulta os parcelamentos da RFB. |
+
+## Integra-Redesim
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 080 | 19.1 | `REDESIM` | `CONSULTAROPCAO191` |  01/03/2024 | `Consultar` | Consulta a existência de opção prévia pelo Domicílio Tributário Eletrônico (DTE). |
+| 081 | 19.2 | `REDESIM` | `EFETUAROPCAO192` |  01/03/2024 | `Declarar` | Efetua a opção pelo Domicílio Tributário Eletrônico (DTE). |
+| 082 | 20.1 | `REDESIM` | `CONSULTARVIABILIDADE201` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de viabilidade. |
+| 083 | 20.2 | `REDESIM` | `CONSULTARCOLETORDADOS202` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação no Coletor Nacional de Dados. |
+| 084 | 21.1 | `REDESIM` | `CONSULTARINSCRICAOTRIBUTARIA211` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de inscrição tributária. |
+| 085 | 22.1 | `REDESIM` | `CONSULTARALVARA221` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de alvará de funcionamento. |
+| 086 | 23.1 | `REDESIM` | `CONSULTARLICENCAS231` |  01/03/2024 | `Consultar` | Consulta o resultado de uma solicitação de licenças. |
+| 087 | 24.1 | `REDESIM` | `CONSULTARDBE241` |  01/03/2024 | `Consultar` | Consulta o Documento Básico de Entrada (DBE). |
+| 088 | 25.1 | `REDESIM` | `ACOMPANHARPROTOCOLO251` |  01/03/2024 | `Consultar` | Acompanha o andamento de um protocolo na Redesim. |
+| 089 | 26.1 | `REDESIM` | `CONSULTARPJ261` |  01/03/2024 | `Consultar` | Consulta os dados de uma Pessoa Jurídica (PJ). |
+
+## Integra-e-Processo
+
+| Sequencial | Código | idSistema | idServico | Situação e Data da Implantação | Tipo | Descrição |
+| --- | --- | --- | --- | --- | --- | --- |
+| 090 | 27.1 | `EPROCESSO` | `CONSULTARPROCESSOSINTERESSADO271` |  01/03/2024 | `Consultar` | Consultar Processos por Interessado. |
+| 091 | 27.2 | `EPROCESSO` | `OBTERLISTADOCSPROC272` |  01/03/2024 | `Consultar` | Obter Lista dos Documentos do Processo. |
+| 092 | 27.3 | `EPROCESSO` | `OBTERDOCUMENTOPROCESSO273` |  01/03/2024 | `Consultar` | Obter Documento do Processo. |
+| 093 | 27.4 | `EPROCESSO` | `CONSULTARCOMUNICADOSINTIMACOES274` |  01/03/2024 | `Consultar` | Consultar Comunicados e Intimações. |
+
+## Legenda
+
+| Imagem | Status | Descrição |
+| --- | --- | --- |
+|  | Em produção | Disponível em produção |
+|  | Em demonstração | Disponível em demonstração |
+|  | Em construção | Em desenvolvimento |
+|  | Em prospecção | Em análise e planejamento. |
+|  | Cancelado | Serviço Descontinuado. |
+
+

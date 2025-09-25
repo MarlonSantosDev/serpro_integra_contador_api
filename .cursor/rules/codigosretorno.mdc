@@ -1,0 +1,60 @@
+---
+alwaysApply: true
+---
+
+# Códigos de retorno - Integra Contador
+
+# Códigos de Retorno
+
+As requisições à API podem retornar os seguintes códigos HTTP:
+
+Códigos não bilhetados
+
+Os códigos **204**, **304**, **400**, **401**, **404**, **429**, **500** e **503** não são bilhetados.
+
+**IMPORTANTE**
+
+Os serviços acionados pelo caminho `/Apoiar` ou `/Monitorar` não são bilhetados. Esse serviços fornecem suporte e auxiliam as soluções de negócio. [Saiba mais.]()
+
+| Código HTTP | Mensagem | Descrição | Tipo |
+| --- | --- | --- | --- |
+| 200 | OK | Indica que a requisição foi bem sucedida. Tudo funcionou como esperado e a validação dos dados foi realizada com sucesso. | Sucesso |
+| 202 | Reconhecido (Accepted) | Foi reconhecido o conteúdo da requisição com o servidor, mas o processo ainda não foi concluído. Verifique o tempo de espera estimado de quando a solicitação estará pronta para ser atendida.  Como exemplo o caso de uma solicitação de emissão de relatório de Situação Fiscal, onde o relatório não está pronto e o cliente solicitou antes do tempo de espera:  Mensagem explicativa: `A emissão relatório de situação fiscal está em processamento.`  Neste caso, deve-se aguardar o tempo informado no campo tempoEspera para fazer uma nova solicitação. | Sucesso |
+| 204 | No content (Sem contéudo) | Não há conteúdo da requisição disponível até o momento da solicitação com o servidor, o processo ainda não foi concluído e o servidor está processando o pedido. Verifique o novo tempo de espera estimado no campo eTag do response header. | Sucesso |
+| 304 | Não modificado (Not Modified) | Indica que a requisição foi bem sucedida. Essa resposta é usada para avisar o cliente que a requisição está dentro da validade da expiração do token do serviço de Envio do Termo de Autorização. A resposta não foi modificada. Portanto, o cliente pode usar a mesma versão em cache da resposta. Nessa resposta não existe conteúdo no corpo da mensagem (body no content), apenas os campos HEADER, por exemplo:  `"cache-control"`: `"termo_autorizacao"`,  `"etag"`: `"autenticar_procurador_token:zb87df0b-6d08-3d78-13d2-d474b90b05f3"`,  `"expires"`: `"sab, 15 out 2022 21:10:49 GMT"` | Sucesso |
+| 400 | Requisição inválida (Bad Request) | Dados inválidos na execução. Essa resposta significa que o servidor não entendeu a requisição, pois está com uma sintaxe inválida. É uma resposta de erro do cliente. | Insucesso |
+| 401 | Não autorizado (Unauthorized) | Problema durante a autenticação. O cliente deve se autenticar para obter a resposta solicitada. | Não autenticado |
+| 403 | Acesso Proibido (Forbidden) | O cliente não tem direitos de acesso ao conteúdo portanto o servidor está rejeitando dar a resposta. Diferente do código 401, aqui a identidade do cliente é conhecida. Exemplo: quando o CNPJ do Contratante é diferente do CNPJ do e-Commerce (Forbidden). Outros casos de acesso proibido pode ocorrer quando o autor do pedido de dados não tem procuração outorgada no eCAC no momento da requisição. | Insucesso |
+| 404 | Não Encontrado (Not Found) | O servidor não pode encontrar o recurso solicitado. | Falha |
+| 429 | Muitos pedidos (Too Many Requests) | Quando há limites de requisições no serviço. Alguns serviços podem ter esse controle. | Insucesso |
+| 500 | Erro no servidor (Internal Server Error) | Houve um erro interno não previsto. O servidor encontrou uma situação com a qual não sabe lidar. | Falha |
+| 503 | Serviço não disponível (Service Unavailable) | Houve um indisponibilidade do serviço no momento da requisição. Ocorre quando o serviço pode estar temporariamente em manutenção, sobrecarregado ou com alguma falha que possa torná-lo indisponível no momento da requisição. | Falha |
+
+# Códigos de retorno - Integra Contador
+
+# Códigos de Retorno
+
+As requisições à API podem retornar os seguintes códigos HTTP:
+
+Códigos não bilhetados
+
+Os códigos **204**, **304**, **400**, **401**, **404**, **429**, **500** e **503** não são bilhetados.
+
+**IMPORTANTE**
+
+Os serviços acionados pelo caminho `/Apoiar` ou `/Monitorar` não são bilhetados. Esse serviços fornecem suporte e auxiliam as soluções de negócio. [Saiba mais.]()
+
+| Código HTTP | Mensagem | Descrição | Tipo |
+| --- | --- | --- | --- |
+| 200 | OK | Indica que a requisição foi bem sucedida. Tudo funcionou como esperado e a validação dos dados foi realizada com sucesso. | Sucesso |
+| 202 | Reconhecido (Accepted) | Foi reconhecido o conteúdo da requisição com o servidor, mas o processo ainda não foi concluído. Verifique o tempo de espera estimado de quando a solicitação estará pronta para ser atendida.  Como exemplo o caso de uma solicitação de emissão de relatório de Situação Fiscal, onde o relatório não está pronto e o cliente solicitou antes do tempo de espera:  Mensagem explicativa: `A emissão relatório de situação fiscal está em processamento.`  Neste caso, deve-se aguardar o tempo informado no campo tempoEspera para fazer uma nova solicitação. | Sucesso |
+| 204 | No content (Sem contéudo) | Não há conteúdo da requisição disponível até o momento da solicitação com o servidor, o processo ainda não foi concluído e o servidor está processando o pedido. Verifique o novo tempo de espera estimado no campo eTag do response header. | Sucesso |
+| 304 | Não modificado (Not Modified) | Indica que a requisição foi bem sucedida. Essa resposta é usada para avisar o cliente que a requisição está dentro da validade da expiração do token do serviço de Envio do Termo de Autorização. A resposta não foi modificada. Portanto, o cliente pode usar a mesma versão em cache da resposta. Nessa resposta não existe conteúdo no corpo da mensagem (body no content), apenas os campos HEADER, por exemplo:  `"cache-control"`: `"termo_autorizacao"`,  `"etag"`: `"autenticar_procurador_token:zb87df0b-6d08-3d78-13d2-d474b90b05f3"`,  `"expires"`: `"sab, 15 out 2022 21:10:49 GMT"` | Sucesso |
+| 400 | Requisição inválida (Bad Request) | Dados inválidos na execução. Essa resposta significa que o servidor não entendeu a requisição, pois está com uma sintaxe inválida. É uma resposta de erro do cliente. | Insucesso |
+| 401 | Não autorizado (Unauthorized) | Problema durante a autenticação. O cliente deve se autenticar para obter a resposta solicitada. | Não autenticado |
+| 403 | Acesso Proibido (Forbidden) | O cliente não tem direitos de acesso ao conteúdo portanto o servidor está rejeitando dar a resposta. Diferente do código 401, aqui a identidade do cliente é conhecida. Exemplo: quando o CNPJ do Contratante é diferente do CNPJ do e-Commerce (Forbidden). Outros casos de acesso proibido pode ocorrer quando o autor do pedido de dados não tem procuração outorgada no eCAC no momento da requisição. | Insucesso |
+| 404 | Não Encontrado (Not Found) | O servidor não pode encontrar o recurso solicitado. | Falha |
+| 429 | Muitos pedidos (Too Many Requests) | Quando há limites de requisições no serviço. Alguns serviços podem ter esse controle. | Insucesso |
+| 500 | Erro no servidor (Internal Server Error) | Houve um erro interno não previsto. O servidor encontrou uma situação com a qual não sabe lidar. | Falha |
+| 503 | Serviço não disponível (Service Unavailable) | Houve um indisponibilidade do serviço no momento da requisição. Ocorre quando o serviço pode estar temporariamente em manutenção, sobrecarregado ou com alguma falha que possa torná-lo indisponível no momento da requisição. | Falha |
+

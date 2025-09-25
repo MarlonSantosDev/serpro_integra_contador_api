@@ -1,0 +1,784 @@
+---
+alwaysApply: true
+---
+
+# Cenários do Caixa Postal
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Obter Lista de Mensagens por Contribuintes
+
+Esta simulação obtém a lista de mensagens filtradas de acordo com o status (lida/não-lida).
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "99999999999999",     "tipo": 2   },   "autorPedidoDados": {     "numero": "99999999999999",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999999",     "tipo": 2   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "MSGCONTRIBUINTE61",     "versaoSistema": "1.0",     "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "99999999999999",         "tipo": 2       },       "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2       },       "contribuinte": {         "numero": "99999999999999",         "tipo": 2       },                "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGCONTRIBUINTE61",         "versaoSistema": "1.0",         "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"       }     }'`
+
+## Obter Detalhes de uma Mensagem Específica
+
+Esta simulação obtém os detalhes de uma mensagem específica.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "MSGDETALHAMENTO62",     "versaoSistema": "1.0",     "dados": "{\"isn\":\"0000082838\"}"   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\":\"0000082838\"}"       }     }'`
+
+## Obter Indicador de Novas Mensagens
+
+Esta simulação obtém informação que indica se há mensagens novas.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999",     "tipo": 1   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "INNOVAMSG63",     "versaoSistema": "1.0",     "dados": ""   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999",     "tipo": 1   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "INNOVAMSG63",     "versaoSistema": "1.0",     "dados": ""   } }'`
+
+
+
+
+# Obter Lista de Mensagens por Contribuintes
+
+Obtém uma lista de mensagens da Caixa Postal de um contribuinte.
+
+É possível obter a lista de mensagens filtradas de acordo com o status (lida/não-lida).
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+Para consulta de uma grande quantidade de mensagens, o sistema usuário poderá chamar esse serviço quantas vezes for necessário.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: MSGCONTRIBUINTE61 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| cnpjReferencia | Número do CNPJ para filtro. Aplica-se apenas ao caso de contribuinte Pessoa Jurídica. | Number(14) | \-- | NÃO |
+| statusLeitura | Status lida/não-lida da mensagem. | Number(1) | 0 – Não se aplica 1 – Lida 2 – Não Lida | SIM |
+| indicadorFavorito | Indicador favorita/não favorita da mensagem. | Number(1) | 0 – Não favorita 1 –Favorita | NÃO |
+| indicadorPagina | Indicador da página que está sendo solicitada. | Number(1) | 0 – Página inicial (contém as mensagens mais recentes) 1 – Página não-inicial | SIM |
+| ponteiroPagina | Ponteiro para página. Deve ser preenchido caso se escolha página não-inicial. | Number(14) | \-- | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGCONTRIBUINTE61",         "versaoSistema": "1.0",         "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| indicadorUltimaPagina | Indicador de Última Página. | String(1) | S – Sim N – Não |
+| quantidadeMensagens | Quantidade Total de Mensagens Encontradas. Até 50 elementos por página | Number (2) | \-- |
+| ponteiroPaginaRetornada | Ponteiro Página Anterior. | Number (14) | \-- |
+| ponteiroProximaPagina | Ponteiro Próxima Página. | Number (6) | \-- |
+| cnpjMatriz | Número do CNPJ contribuinte Pessoa Jurídica. | Number (14) | \-- |
+| listaMensagens | Quantidade Total de Mensagens Encontradas. Até 50 elementos | Array of Objeto: Mensagem (50) | \-- |
+
+Objeto Mensagem:
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigoSistemaRemetente | Código do sistema remetente no Caixa Postal. | Number (5) | \-- |
+| codigoModelo | Código do modelo da mensagem. | Number (5) | \-- |
+| dataEnvio | Data do envio da mensagem. | Number (8) | \-- |
+| horaEnvio | Hora do envio da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| numeroControle | Número de controle da mensagem no formato AAAA/999999999999999. | String (20) | \-- |
+| indicadorLeitura | Indicador que informa se a mensagem foi lida. |
+| indicadorFavorito | Indicador que informa se a mensagem é favorita ou não | Number (1) | 0 – Não lida 1 – Lida |
+| dataLeitura | Data da primeira leitura da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaLeitura | Hora da primeira leitura da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataExclusao | Data da exclusão da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaExclusao | Hora da exclusão da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataCiencia | Data da ciência da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| [assuntoModelo\*]() | Assunto do modelo da mensagem. | String (300) | \-- |
+| dataValidade | Data de validade da mensagem. | Number (8) | \-- |
+| origemModelo | Origem do modelo da mensagem. | Number (1) | 1 – Sistema Remetente 2 – RFB |
+| [valorParametroAssunto\*]() | Valor do parâmetro do assunto. | String (50) | \-- |
+| relevancia | Indicador de relevância do modelo da mensagem. | Number (1) | 1 – Sem relevância 2 – Com relevância |
+| isn | Identificador único do registro da mensagem do contribuinte. | Number (10) | \-- |
+| tipoOrigem | Indicador do tipo de origem da mensagem. | Number (1) | 1 – Receita 2 – Estado 3 – Município |
+| descricaoOrigem | Descrição da origem da mensagem podendo ser o nome da UA, nome do estado ou o nome do município. | String (100) | \-- |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+## Exibição do campo assuntoModelo \* `<a id="ancoraAssunto">` `</a>`
+
+O campo **assuntoModelo** poderá conter, opcionalmente, um parâmetro com tamanho máximo de 50 caracteres alfanuméricos, que é armazenado no campo **valorParametroAssunto**. Quando esse parâmetro for utilizado, o texto “++VARIAVEL++” é inserido no **assuntoModelo** indicando o local onde ele deverá ser substituído. Por exemplo:
+
+> Um modelo de mensagem com o campo assuntoModelo: "\[IRPF\] Declaração do exercício ++VARIAVEL++ processada", antes de ser exibido, o elemento ++VARIAVEL++ deve ser substituído pelo valor do campo valorParametroAssunto: "2023". Depois de ser substituído o valor no texto, o resultado deve ser: "\[IRPF\] Declaração do exercício 2023 processada".
+
+
+
+
+# Obter Detalhes de uma Mensagem Específica
+
+Obtém os detalhes de uma mensagem específica.
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+Para consulta de uma grande quantidade de mensagens, o sistema usuário poderá chamar esse serviço quantas vezes for necessário.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: MSGDETALHAMENTO62 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| isn | Identificador único do registro da mensagem do contribuinte.. | Number(10) | \-- | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\":\"0000082838\"}"       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| conteudo | Mensagens Encontradas. | Array of Objeto: Mensagem (100) | \-- |
+
+Objeto Mensagem:
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigoSistemaRemetente | Código do sistema remetente no Caixa Postal. | Number (5) | \-- |
+| codigoModelo | Código do modelo da mensagem. | Number (5) | \-- |
+| dataEnvio | Data do envio da mensagem. | Number (8) | \-- |
+| horaEnvio | Hora do envio da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| numeroControle | Número de controle da mensagem no formato AAAA/999999999999999. | String (20) | \-- |
+| indFavorito | Indicador que informa se a mensagem é favorita ou não | Number(1)) | 0 – Não favorita 1 –Favorita |
+| dataLeitura | Data da primeira leitura da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaLeitura | Hora da primeira leitura da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataExclusao | Data da exclusão da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaExclusao | Hora da exclusão da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataCiencia | Data da ciência da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| [assuntoModelo\*]() | Assunto do modelo da mensagem. | String (300) | \-- |
+| dataExpiracao | Data de expiração da mensagem. | Number (8) | \-- |
+| origemModelo | Origem do modelo da mensagem. | Number (1) | 1 – Sistema Remetente 2 – RFB |
+| [valorParametroAssunto\*]() | Valor do parâmetro do assunto. | String (50) | \-- |
+| relevancia | Indicador de relevância do modelo da mensagem. | Number (1) | 1 – Sem relevância 2 – Com relevância |
+| isn | Identificador único do registro da mensagem do contribuinte. | Number (10) | \-- |
+| tipoOrigem | Indicador do tipo de origem da mensagem. | Number (1) | 1 – Receita 2 – Estado 3 – Município |
+| descricaoOrigem | Descrição da origem da mensagem podendo ser o nome da UA, nome do estado ou o nome do município. | String (100) | \-- |
+| [corpoModelo\*\*]() | Texto do corpo do modelo de mensagem | String (10500) | \-- |
+| [variaveis\*\*]() | Valores dos parâmetros do corpo da mensagem. A quantidade de elementos do array depende da quantidade de variáveis do modelo de mensagem. | Array de Strings | \-- |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+## Exibição do campo assuntoModelo\*
+
+`<a id="ancoraAssunto"></a>`
+
+O campo **assuntoModelo** poderá conter, opcionalmente, um parâmetro com tamanho máximo de 50 caracteres alfanuméricos, que é armazenado no campo **valorParametroAssunto**. Quando esse parâmetro for utilizado, o texto “++VARIAVEL++” é inserido no **assuntoModelo** indicando o local onde ele deverá ser substituído. Por exemplo:
+
+> Um modelo de mensagem com o campo assuntoModelo: "\[IRPF\] Declaração do exercício ++VARIAVEL++ processada", antes de ser exibido, o elemento ++VARIAVEL++ deve ser substituído pelo valor do campo valorParametroAssunto: "2023". Depois de ser substituído o valor no texto, o resultado deve ser: "\[IRPF\] Declaração do exercício 2023 processada".
+
+## Exibição do campo corpoModelo\*\*
+
+`<a id="ancoraCorpo"></a>`
+
+O campo **corpoModelo** contém o corpo da mensagem e esta poderá conter, opcionalmente, “_n_” parâmetros, sendo "n" um número de 1 até 40. Quando os parâmetros forem utilizados, o texto “++y++” (onde y é um número sequencial), é inserido no corpo na mensagem indicando o(s) local(is) onde o parâmetro será substituído. Os parâmetros estão definidos no campo **variaveis** que contém uma lista de String. Por exemplo:
+
+> Uma mensagem com o campo **corpoModelo** contendo o valor: "A Declaração do exercício ++1++ foi processada e encontra-se disponível em ++2++" e o campo **variaveis** com o valor: "\[2010,http://receita.fazenda\]". Antes de exibir o conteúdo da mensagem, os parametros ++1++ e ++2++ devem ser substituídos pelos valores: "2010" e "http://receita.fazenda" respectivamente, conforme a ordem no campo **variaveis**. O resultado deve ser: "A Declaração do exercício 2010 foi processada e encontra-se disponível em http://receita.fazenda".
+
+
+
+
+# Obter Indicador de Novas Mensagens
+
+Obtém informação que indica se há mensagens novas.
+
+**Obs:** _Uma mensagem é considerada_ _nova_ _enquanto não for lida por ninguém. Ou seja, enquanto não for aberta, continuará sendo classificada como_ _nova_ _._
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: INNOVAMSG63 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+Não tem informação a ser preenchida no campo "dados", o campo deve ser enviado vazio (ex.: "dados":"")
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| \-- | \-- | \-- | \-- | \-- |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "INNOVAMSG63",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| indicadorMensagensNovas | Indicador de mensagens novas. | Number (1) | 0 – Contribuinte não possui mensagens novas. 1 – Contribuinte possui uma mensagem nova. 2 – Contribuinte possui mensagens novas. |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+
+
+
+# Exemplo de Json de retorno - Obter Lista de Mensagens por Contribuintes
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "CAIXAPOSTAL",             "idServico": "MSGCONTRIBUINTE61",             "versaoSistema": "1.0",             "dados": "{\"categoria\":\"0\",\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\","indicadorFavorito": "1",\"ponteiroPagina\":\"00000000000000\"}"         },         "status": "200",`
+
+"dados": "{\\"codigo\\":\\"00\\",\\"conteudo\\":\[{\\"quantidadeMensagens\\":\\"50\\",\\"indicadorUltimaPagina\\":\\"N\\",\\"ponteiroPaginaRetornada\\":\\"20250408092949\\",\\"ponteiroProximaPagina\\":\\"20250403093722\\",\\"cnpjMatriz\\":\\"03763656000154\\",\\"listaMensagens\\":\[{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092949\\",\\"numeroControle\\":\\"2025/000000000032113\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250423\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00160556\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626772\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092916\\",\\"numeroControle\\":\\"2025/000000000032112\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250423\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00158956\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626771\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092806\\",\\"numeroControle\\":\\"2025/000000000032111\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250408\\",\\"horaLeitura\\":\\"093111\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250408\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00164756\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626770\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00003\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092210\\",\\"numeroControle\\":\\"2025/000000000032091\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250408\\",\\"horaLeitura\\":\\"092403\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250408\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00164756\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626769\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"223135\\",\\"numeroControle\\":\\"2025/000000000000117\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"223329\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626765\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"223131\\",\\"numeroControle\\":\\"2025/000000000000116\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250422\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626764\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222915\\",\\"numeroControle\\":\\"2025/000000000000115\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222933\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626763\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222909\\",\\"numeroControle\\":\\"2025/000000000000114\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222949\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626762\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222903\\",\\"numeroControle\\":\\"2025/000000000000113\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222954\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626761\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250404\\",\\"horaEnvio\\":\\"094951\\",\\"numeroControle\\":\\"2025/000000000032077\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222648\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250704\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801775\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626516\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093728\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801774\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626515\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093725\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801773\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626514\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093724\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801772\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626513\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093723\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801771\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626512\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"}]}}
+
+## Json do campo "dados"
+
+    `{         "codigo": "00",         "conteudo": [             {                 "quantidadeMensagens": "50",                 "indicadorUltimaPagina": "N",                 "ponteiroPaginaRetornada": "20250408092949",                 "ponteiroProximaPagina": "20250403093722",                 "cnpjMatriz": "03763656000154",                 "listaMensagens": [                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092949",                         "numeroControle": "2025/000000000032113",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00160556",                         "relevancia": "2",                         "isn": "0001626772",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092916",                         "numeroControle": "2025/000000000032112",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00158956",                         "relevancia": "2",                         "isn": "0001626771",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092806",                         "numeroControle": "2025/000000000032111",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "093111",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626770",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00003",                         "dataEnvio": "20250408",                         "horaEnvio": "092210",                         "numeroControle": "2025/000000000032091",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "092403",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626769",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223135",                         "numeroControle": "2025/000000000000117",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "223329",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626765",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223131",                         "numeroControle": "2025/000000000000116",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250422",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626764",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222915",                         "numeroControle": "2025/000000000000115",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222933",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626763",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222909",                         "numeroControle": "2025/000000000000114",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222949",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626762",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222903",                         "numeroControle": "2025/000000000000113",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222954",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626761",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250404",                         "horaEnvio": "094951",                         "numeroControle": "2025/000000000032077",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222648",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250704",                         "origemModelo": "1",                         "valorParametroAssunto": "001801775",                         "relevancia": "2",                         "isn": "0001626516",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093728",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801774",                         "relevancia": "2",                         "isn": "0001626515",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093725",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801773",                         "relevancia": "2",                         "isn": "0001626514",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093724",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801772",                         "relevancia": "2",                         "isn": "0001626513",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093723",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801771",                         "relevancia": "2",                         "isn": "0001626512",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     }]}}
+
+## Json do campo "dados"
+
+    `{         "codigo": "00",         "conteudo": [             {                 "quantidadeMensagens": "50",                 "indicadorUltimaPagina": "N",                 "ponteiroPaginaRetornada": "20250408092949",                 "ponteiroProximaPagina": "20250403093722",                 "cnpjMatriz": "03763656000154",                 "listaMensagens": [                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092949",                         "numeroControle": "2025/000000000032113",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00160556",                         "relevancia": "2",                         "isn": "0001626772",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092916",                         "numeroControle": "2025/000000000032112",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00158956",                         "relevancia": "2",                         "isn": "0001626771",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092806",                         "numeroControle": "2025/000000000032111",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "093111",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626770",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00003",                         "dataEnvio": "20250408",                         "horaEnvio": "092210",                         "numeroControle": "2025/000000000032091",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "092403",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626769",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223135",                         "numeroControle": "2025/000000000000117",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "223329",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626765",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223131",                         "numeroControle": "2025/000000000000116",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250422",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626764",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222915",                         "numeroControle": "2025/000000000000115",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222933",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626763",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222909",                         "numeroControle": "2025/000000000000114",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222949",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626762",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222903",                         "numeroControle": "2025/000000000000113",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222954",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626761",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250404",                         "horaEnvio": "094951",                         "numeroControle": "2025/000000000032077",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222648",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250704",                         "origemModelo": "1",                         "valorParametroAssunto": "001801775",                         "relevancia": "2",                         "isn": "0001626516",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093728",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801774",                         "relevancia": "2",                         "isn": "0001626515",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093725",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801773",                         "relevancia": "2",                         "isn": "0001626514",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093724",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801772",                         "relevancia": "2",                         "isn": "0001626513",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093723",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801771",                         "relevancia": "2",                         "isn": "0001626512",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     }]}}
+
+
+
+
+# Exemplo de Json de retorno - Obter Detalhes de uma Mensagem Específica
+
+## Json de retorno completo
+
+    `{       "contratante": {         "numero": "99999999999",         "tipo": 1       },       "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },       "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\" : \"0001488766\"}"       },       "status": 200,       "dados": "{\"codigo\":\"00\",\"conteudo\":[{\"codigoSistemaRemetente\":\"00014\",\"codigoModelo\":\"00009\",\"assuntoModelo\":\"[e-Processo] Dossiê: ++VARIAVEL++ - Abertura do Dossiê de Atendimento através do Chat RFB\",\"origemModelo\":\"1\",\"dataEnvio\":\"20220620\",\"valorParametroAssunto\":\"11111.111111/2022-11\",\"dataLeitura\":\"20220623\",\"horaLeitura\":\"170051\",\"dataExpiracao\":\"20230621\",\"numeroControle\":\"\",\"dataCiencia\":\"\",\"enquadramento\":\"0\",\"dataAcessoExterno\":\"\",\"horaAcessoExterno\":\"\",\"tipoAutenticacaoUsuario\":\"0\",\"codigoAcesso\":\"\",\"numeroSerieCertificadoDigital\":\"\",\"emissorCertificadoDigital\":\"\",\"tipoUsuario\":\"0\",\"niUsuario\":\"00000000000000\",\"papelUsuario\":\"0\",\"codigoAplicacao\":\"00000\",\"tipoOrigem\":\"0\",\"descricaoOrigem\":\"\",\"corpoModelo\":\"<p>Prezado(a) Contribuinte,</p>  <p>O seu Atendimento pelo Chat RFB&nbsp;n&ordm; ++1++, do dia/hora&nbsp;++2++ /&nbsp;++3++ (Hor&aacute;rio de Bras&iacute;lia), foi direcionado para solu&ccedil;&atilde;o por equipe interna da RFB e consta no Dossi&ecirc; descrito abaixo. Para acompanhar o atendimento interno do mesmo, o contribuinte deve acessar o Portal e-CAC e escolher a op&ccedil;&atilde;o &ldquo;Legisla&ccedil;&atilde;o e Processo &gt; Processos&nbsp;Digitais (e-Processo) &gt; Meus Processos&rdquo; ou pode utilizar o app e-Processo.</p>  <p>Atrav&eacute;s do app e-Processo, voc&ecirc; pode consultar as informa&ccedil;&otilde;es e acompanhar o andamento desse&nbsp;Dossi&ecirc;, bem como consultar os documentos. O app e-Processo est&aacute; dispon&iacute;vel para dispositivos m&oacute;veis nas lojas de aplicativos Google Play Store, para o sistema Android, e Apple Store, para o sistema iOS.</p>  <p>N&uacute;mero: ++4++</p>  <p>Interessado: ++5++</p>  <p>&Aacute;rea de Concentra&ccedil;&atilde;o do Servi&ccedil;o:&nbsp;++6++</p>  <p>Servi&ccedil;o:&nbsp;++7++</p>  <p>Tipo do Dossi&ecirc;: ++8++</p>  <p>Subtipo do Dossi&ecirc;: ++9++</p>  <p>Descri&ccedil;&atilde;o: ++10++</p>  <p>Respons&aacute;vel pela Solicita&ccedil;&atilde;o de Atendimento: ++11++</p>  <p>Perfil de Acesso: ++12++</p>  <p>IMPORTANTE: Sugerimos consultar o Manual que est&aacute; dispon&iacute;vel no Portal e-CAC, na op&ccedil;&atilde;o &ldquo;Legisla&ccedil;&atilde;o e Processo &gt; Processos Digitais (e-Processo)&rdquo; para&nbsp;obter as orienta&ccedil;&otilde;es de uso das funcionalidades do e-Processo.</p>  <p>O presente dossi&ecirc; de atendimento ser&aacute; exclu&iacute;do&nbsp;ap&oacute;s 3&nbsp;(tr&ecirc;s) dias &uacute;teis, caso a solicita&ccedil;&atilde;o de juntada, contendo os documentos necess&aacute;rios ao&nbsp;atendimento, n&atilde;o seja enviada.</p>\",\"variaveis\":[\"202200000263\",\"20/06/2022\",\"14:31:05\",\"11111.111111/2022-11\",\"03.763.656/0001-54 - HMBHFIHUV KXPHIKQX H UHIEQKXU DVNW\",\"ASSUNTOS ADUANEIROS\",\"CREDENCIAMENTO SISCOMEX/MERCANTE -PESSOA FÍSICA - DECLARAÇÃO SIMPLIFICADA, INCLUSIVE BAGAGEM DESACOMPANHADA - Inc. I do Art. 8º da Portaria COANA nº 123/2015\",\"ATENDIMENTO\",\"CHAT RFB\",\"Criado automaticamente pelo Chat RFB, resultado de um atendimento não conclusivo, para ser tratado internamente por equipe especializada na Área/Serviço do Atendimento.\",\"999.999.999-99 - AXVOMZ NLIVML UVIRZMR\",\"Responsável Legal\"]}]}",       "mensagens": [         {           "codigo": "00",           "texto": "Recuperação OK."         }       ]     }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+    `{      "codigo": "00",      "conteudo": [{       "codigoSistemaRemetente": "00014",       "codigoModelo": "00009",       "assuntoModelo": "[e-Processo] Dossiê: ++VARIAVEL++ - Abertura do Dossiê de Atendimento através do Chat RFB",       "origemModelo": "1",       "dataEnvio": "20220620",       "valorParametroAssunto": "11111.111111/2022-11",       "dataLeitura": "20220623",       "horaLeitura": "170051",       "dataExpiracao": "20230621",       "numeroControle": "",       "dataCiencia": "",       "enquadramento": "0",       "dataAcessoExterno": "",       "horaAcessoExterno": "",       "tipoAutenticacaoUsuario": "0",       "codigoAcesso": "",       "numeroSerieCertificadoDigital": "",       "emissorCertificadoDigital": "",       "tipoUsuario": "0",       "niUsuario": "00000000000000",       "papelUsuario": "0",       "codigoAplicacao": "00000",       "tipoOrigem": "0",       "descricaoOrigem": "",       "corpoModelo": "<p>Prezado(a) Contribuinte,</p> <p>O seu Atendimento pelo Chat RFB nº ++1++, do dia/hora ++2++ / ++3++ (Horário de Brasília), foi direcionado para solução por equipe interna da RFB e consta no Dossiê descrito abaixo. Para acompanhar o atendimento interno do mesmo, o contribuinte deve acessar o Portal e-CAC e escolher a opção “Legislação e Processo > Processos Digitais (e-Processo) > Meus Processos” ou pode utilizar o app e-Processo.</p> <p>Através do app e-Processo, você pode consultar as informações e acompanhar o andamento desse Dossiê, bem como consultar os documentos. O app e-Processo está disponível para dispositivos móveis nas lojas de aplicativos Google Play Store, para o sistema Android, e Apple Store, para o sistema iOS.</p> <p>Número: ++4++</p> <p>Interessado: ++5++</p> <p>Área de Concentração do Serviço: ++6++</p> <p>Serviço: ++7++</p> <p>Tipo do Dossiê: ++8++</p> <p>Subtipo do Dossiê: ++9++</p> <p>Descrição: ++10++</p> <p>Responsável pela Solicitação de Atendimento: ++11++</p> <p>Perfil de Acesso: ++12++</p> <p>IMPORTANTE: Sugerimos consultar o Manual que está disponível no Portal e-CAC, na opção “Legislação e Processo > Processos Digitais (e-Processo)” para obter as orientações de uso das funcionalidades do e-Processo.</p> <p>O presente dossiê de atendimento será excluído após 3 (três) dias úteis, caso a solicitação de juntada, contendo os documentos necessários ao atendimento, não seja enviada.</p>",       "variaveis": ["202200000263", "20/06/2022", "14:31:05", "11111.111111/2022-11", "03.763.656/0001-54 - HMBHFIHUV KXPHIKQX H UHIEQKXU DVNW", "ASSUNTOS ADUANEIROS", "CREDENCIAMENTO SISCOMEX/MERCANTE -PESSOA FÍSICA - DECLARAÇÃO SIMPLIFICADA, INCLUSIVE BAGAGEM DESACOMPANHADA - Inc. I do Art. 8º da Portaria COANA nº 123/2015", "ATENDIMENTO", "CHAT RFB", "Criado automaticamente pelo Chat RFB, resultado de um atendimento não conclusivo, para ser tratado internamente por equipe especializada na Área/Serviço do Atendimento.", "999.999.999-99 - AVZRMZ NLIVML UVIRZMR", "Responsável Legal"]      }]     }`
+
+
+
+
+# Exemplo de Json de retorno - Obter Indicador de Novas Mensagens
+
+## Json de retorno completo
+
+   `{       "contratante": {         "numero": "99999999999",         "tipo": 1       },       "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },       "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "INNOVAMSG63",         "versaoSistema": "1.0",         "dados": ""       },       "status": 200,       "dados": "{\"codigo\":\"00\",\"conteudo\":[{\"indicadorMensagensNovas\":\"2\"}]}",       "mensagens": [         {           "codigo": "00",           "texto": "Operação realizada com sucesso."         }       ]     }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+  `{       "codigo": "00",       "conteudo": [{         "indicadorMensagensNovas": "2"       }]   }`
+
+
+
+
+# Mensagens de negócio
+
+## Mensagens Obter lista de mensagens por contribuintes
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| Erro-CAIXAPOSTAL-02 | Contribuinte não possui mensagem para filtro fornecido. |
+| Erro-CAIXAPOSTAL-04 | Contribuinte pessoa física não encontrado. |
+| Erro-CAIXAPOSTAL-05 | Contribuinte pessoa jurídica não encontrado. |
+| EntradaIncorreta-CAIXAPOSTAL-06 | Contribuinte pessoa jurídica do cnpj filtro não encontrado. |
+| EntradaIncorreta-CAIXAPOSTAL-07 | Indicador de filtro fora de domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-08 | Status fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | CNPJ básico do filtro deve ser ugual ao CNPJ básico do contribuinte. |
+| Erro-CAIXAPOSTAL-99 | Erro Natural |
+
+## Mensagens Obter detalhes de uma mensagem específica
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| Erro-CAIXAPOSTAL-01 | Mensagem não encontrada.. |
+| Erro-CAIXAPOSTAL-02 | ISN não encontrado. |
+| Erro-CAIXAPOSTAL-03 | Mensagem expirada não pode ser lida. |
+| EntradaIncorreta-CAIXAPOSTAL-04 | Sistema chamador inativo ou inválido. |
+| EntradaIncorreta-CAIXAPOSTAL-05 | Indicador de PF/PJ fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-06 | IP da máquina cliente obrigatório. |
+| EntradaIncorreta-CAIXAPOSTAL-07 | Indicador de filtro fora de domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-08 | Papel do usuário fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-09 | Tipo de autenticação do usuário fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | Codigo de acesso obrigatório para valor do tipo de autenticação do usuário. |
+| EntradaIncorreta-CAIXAPOSTAL-11 | Dados do certificado obrigatório para valor do tipo de autenticação do usuário. |
+| EntradaIncorreta-CAIXAPOSTAL-12 | Dados do contribuinte inválidos. |
+| AcessoNegado-CAIXAPOSTAL-13 | Usuário sem autorização para acessar a mensagem do contribuinte. |
+| Erro-CAIXAPOSTAL-99 | Erro Natural. |
+
+## Mensagens Obter indicador de novas mensagens
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | NI informado não numérico ou zerado. |
+| EntradaIncorreta-CAIXAPOSTAL-11 | Tipo de NI inválido. |
+| EntradaIncorreta-CAIXAPOSTAL-12 | NI incompatível com tipo de NI informado. |
+| Erro-CAIXAPOSTAL-99 | Erro natural. |
+
+## Mensagens de Exceção
+
+| Códigos | Mensagem |
+| --- | --- |
+| Erro-CAIXAPOSTAL-991 | Serviço informado não é um dos serviços disponibilizados pelo sistema. |
+| Erro-CAIXAPOSTAL-992 | Serviço informado ({0}) invá1lido. |
+| Erro-CAIXAPOSTAL-993 | Não foi possível converter retorno do serviço acionado do Caixa Postal. |
+| Erro-CAIXAPOSTAL-994 | Campo informado ({0}) inválido. |
+
+# Cenários do Caixa Postal
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Obter Lista de Mensagens por Contribuintes
+
+Esta simulação obtém a lista de mensagens filtradas de acordo com o status (lida/não-lida).
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "99999999999999",     "tipo": 2   },   "autorPedidoDados": {     "numero": "99999999999999",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999999",     "tipo": 2   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "MSGCONTRIBUINTE61",     "versaoSistema": "1.0",     "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "99999999999999",         "tipo": 2       },       "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2       },       "contribuinte": {         "numero": "99999999999999",         "tipo": 2       },                "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGCONTRIBUINTE61",         "versaoSistema": "1.0",         "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"       }     }'`
+
+## Obter Detalhes de uma Mensagem Específica
+
+Esta simulação obtém os detalhes de uma mensagem específica.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "00000000000000",     "tipo": 2   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "MSGDETALHAMENTO62",     "versaoSistema": "1.0",     "dados": "{\"isn\":\"0000082838\"}"   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\":\"0000082838\"}"       }     }'`
+
+## Obter Indicador de Novas Mensagens
+
+Esta simulação obtém informação que indica se há mensagens novas.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999",     "tipo": 1   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "INNOVAMSG63",     "versaoSistema": "1.0",     "dados": ""   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999",     "tipo": 1   },            "pedidoDados": {     "idSistema": "CAIXAPOSTAL",     "idServico": "INNOVAMSG63",     "versaoSistema": "1.0",     "dados": ""   } }'`
+
+
+
+
+# Obter Lista de Mensagens por Contribuintes
+
+Obtém uma lista de mensagens da Caixa Postal de um contribuinte.
+
+É possível obter a lista de mensagens filtradas de acordo com o status (lida/não-lida).
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+Para consulta de uma grande quantidade de mensagens, o sistema usuário poderá chamar esse serviço quantas vezes for necessário.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: MSGCONTRIBUINTE61 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| cnpjReferencia | Número do CNPJ para filtro. Aplica-se apenas ao caso de contribuinte Pessoa Jurídica. | Number(14) | \-- | NÃO |
+| statusLeitura | Status lida/não-lida da mensagem. | Number(1) | 0 – Não se aplica 1 – Lida 2 – Não Lida | SIM |
+| indicadorFavorito | Indicador favorita/não favorita da mensagem. | Number(1) | 0 – Não favorita 1 –Favorita | NÃO |
+| indicadorPagina | Indicador da página que está sendo solicitada. | Number(1) | 0 – Página inicial (contém as mensagens mais recentes) 1 – Página não-inicial | SIM |
+| ponteiroPagina | Ponteiro para página. Deve ser preenchido caso se escolha página não-inicial. | Number(14) | \-- | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGCONTRIBUINTE61",         "versaoSistema": "1.0",         "dados": "{\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\",\"ponteiroPagina\":\"00000000000000\"}"       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| indicadorUltimaPagina | Indicador de Última Página. | String(1) | S – Sim N – Não |
+| quantidadeMensagens | Quantidade Total de Mensagens Encontradas. Até 50 elementos por página | Number (2) | \-- |
+| ponteiroPaginaRetornada | Ponteiro Página Anterior. | Number (14) | \-- |
+| ponteiroProximaPagina | Ponteiro Próxima Página. | Number (6) | \-- |
+| cnpjMatriz | Número do CNPJ contribuinte Pessoa Jurídica. | Number (14) | \-- |
+| listaMensagens | Quantidade Total de Mensagens Encontradas. Até 50 elementos | Array of Objeto: Mensagem (50) | \-- |
+
+Objeto Mensagem:
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigoSistemaRemetente | Código do sistema remetente no Caixa Postal. | Number (5) | \-- |
+| codigoModelo | Código do modelo da mensagem. | Number (5) | \-- |
+| dataEnvio | Data do envio da mensagem. | Number (8) | \-- |
+| horaEnvio | Hora do envio da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| numeroControle | Número de controle da mensagem no formato AAAA/999999999999999. | String (20) | \-- |
+| indicadorLeitura | Indicador que informa se a mensagem foi lida. |
+| indicadorFavorito | Indicador que informa se a mensagem é favorita ou não | Number (1) | 0 – Não lida 1 – Lida |
+| dataLeitura | Data da primeira leitura da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaLeitura | Hora da primeira leitura da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataExclusao | Data da exclusão da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaExclusao | Hora da exclusão da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataCiencia | Data da ciência da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| [assuntoModelo\*]() | Assunto do modelo da mensagem. | String (300) | \-- |
+| dataValidade | Data de validade da mensagem. | Number (8) | \-- |
+| origemModelo | Origem do modelo da mensagem. | Number (1) | 1 – Sistema Remetente 2 – RFB |
+| [valorParametroAssunto\*]() | Valor do parâmetro do assunto. | String (50) | \-- |
+| relevancia | Indicador de relevância do modelo da mensagem. | Number (1) | 1 – Sem relevância 2 – Com relevância |
+| isn | Identificador único do registro da mensagem do contribuinte. | Number (10) | \-- |
+| tipoOrigem | Indicador do tipo de origem da mensagem. | Number (1) | 1 – Receita 2 – Estado 3 – Município |
+| descricaoOrigem | Descrição da origem da mensagem podendo ser o nome da UA, nome do estado ou o nome do município. | String (100) | \-- |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+## Exibição do campo assuntoModelo \* `<a id="ancoraAssunto">` `</a>`
+
+O campo **assuntoModelo** poderá conter, opcionalmente, um parâmetro com tamanho máximo de 50 caracteres alfanuméricos, que é armazenado no campo **valorParametroAssunto**. Quando esse parâmetro for utilizado, o texto “++VARIAVEL++” é inserido no **assuntoModelo** indicando o local onde ele deverá ser substituído. Por exemplo:
+
+> Um modelo de mensagem com o campo assuntoModelo: "\[IRPF\] Declaração do exercício ++VARIAVEL++ processada", antes de ser exibido, o elemento ++VARIAVEL++ deve ser substituído pelo valor do campo valorParametroAssunto: "2023". Depois de ser substituído o valor no texto, o resultado deve ser: "\[IRPF\] Declaração do exercício 2023 processada".
+
+
+
+
+# Obter Detalhes de uma Mensagem Específica
+
+Obtém os detalhes de uma mensagem específica.
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+Para consulta de uma grande quantidade de mensagens, o sistema usuário poderá chamar esse serviço quantas vezes for necessário.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: MSGDETALHAMENTO62 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| isn | Identificador único do registro da mensagem do contribuinte.. | Number(10) | \-- | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\":\"0000082838\"}"       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| conteudo | Mensagens Encontradas. | Array of Objeto: Mensagem (100) | \-- |
+
+Objeto Mensagem:
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigoSistemaRemetente | Código do sistema remetente no Caixa Postal. | Number (5) | \-- |
+| codigoModelo | Código do modelo da mensagem. | Number (5) | \-- |
+| dataEnvio | Data do envio da mensagem. | Number (8) | \-- |
+| horaEnvio | Hora do envio da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| numeroControle | Número de controle da mensagem no formato AAAA/999999999999999. | String (20) | \-- |
+| indFavorito | Indicador que informa se a mensagem é favorita ou não | Number(1)) | 0 – Não favorita 1 –Favorita |
+| dataLeitura | Data da primeira leitura da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaLeitura | Hora da primeira leitura da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataExclusao | Data da exclusão da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| horaExclusao | Hora da exclusão da mensagem. Formato: HHMMSS. | Number (6) | \-- |
+| dataCiencia | Data da ciência da mensagem. Formato: AAAAMMDD. | Number (8) | \-- |
+| [assuntoModelo\*]() | Assunto do modelo da mensagem. | String (300) | \-- |
+| dataExpiracao | Data de expiração da mensagem. | Number (8) | \-- |
+| origemModelo | Origem do modelo da mensagem. | Number (1) | 1 – Sistema Remetente 2 – RFB |
+| [valorParametroAssunto\*]() | Valor do parâmetro do assunto. | String (50) | \-- |
+| relevancia | Indicador de relevância do modelo da mensagem. | Number (1) | 1 – Sem relevância 2 – Com relevância |
+| isn | Identificador único do registro da mensagem do contribuinte. | Number (10) | \-- |
+| tipoOrigem | Indicador do tipo de origem da mensagem. | Number (1) | 1 – Receita 2 – Estado 3 – Município |
+| descricaoOrigem | Descrição da origem da mensagem podendo ser o nome da UA, nome do estado ou o nome do município. | String (100) | \-- |
+| [corpoModelo\*\*]() | Texto do corpo do modelo de mensagem | String (10500) | \-- |
+| [variaveis\*\*]() | Valores dos parâmetros do corpo da mensagem. A quantidade de elementos do array depende da quantidade de variáveis do modelo de mensagem. | Array de Strings | \-- |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+## Exibição do campo assuntoModelo\*
+
+`<a id="ancoraAssunto"></a>`
+
+O campo **assuntoModelo** poderá conter, opcionalmente, um parâmetro com tamanho máximo de 50 caracteres alfanuméricos, que é armazenado no campo **valorParametroAssunto**. Quando esse parâmetro for utilizado, o texto “++VARIAVEL++” é inserido no **assuntoModelo** indicando o local onde ele deverá ser substituído. Por exemplo:
+
+> Um modelo de mensagem com o campo assuntoModelo: "\[IRPF\] Declaração do exercício ++VARIAVEL++ processada", antes de ser exibido, o elemento ++VARIAVEL++ deve ser substituído pelo valor do campo valorParametroAssunto: "2023". Depois de ser substituído o valor no texto, o resultado deve ser: "\[IRPF\] Declaração do exercício 2023 processada".
+
+## Exibição do campo corpoModelo\*\*
+
+`<a id="ancoraCorpo"></a>`
+
+O campo **corpoModelo** contém o corpo da mensagem e esta poderá conter, opcionalmente, “_n_” parâmetros, sendo "n" um número de 1 até 40. Quando os parâmetros forem utilizados, o texto “++y++” (onde y é um número sequencial), é inserido no corpo na mensagem indicando o(s) local(is) onde o parâmetro será substituído. Os parâmetros estão definidos no campo **variaveis** que contém uma lista de String. Por exemplo:
+
+> Uma mensagem com o campo **corpoModelo** contendo o valor: "A Declaração do exercício ++1++ foi processada e encontra-se disponível em ++2++" e o campo **variaveis** com o valor: "\[2010,http://receita.fazenda\]". Antes de exibir o conteúdo da mensagem, os parametros ++1++ e ++2++ devem ser substituídos pelos valores: "2010" e "http://receita.fazenda" respectivamente, conforme a ordem no campo **variaveis**. O resultado deve ser: "A Declaração do exercício 2010 foi processada e encontra-se disponível em http://receita.fazenda".
+
+
+
+
+# Obter Indicador de Novas Mensagens
+
+Obtém informação que indica se há mensagens novas.
+
+**Obs:** _Uma mensagem é considerada_ _nova_ _enquanto não for lida por ninguém. Ou seja, enquanto não for aberta, continuará sendo classificada como_ _nova_ _._
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+PedidoDados
+
+idSistema: CAIXAPOSTAL idServico: INNOVAMSG63 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+Não tem informação a ser preenchida no campo "dados", o campo deve ser enviado vazio (ex.: "dados":"")
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| \-- | \-- | \-- | \-- | \-- |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       }, "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "INNOVAMSG63",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| codigo | Resultado da Requisição. | Number (2) | Tabela:[Lista códigos de retorno]() |
+| indicadorMensagensNovas | Indicador de mensagens novas. | Number (1) | 0 – Contribuinte não possui mensagens novas. 1 – Contribuinte possui uma mensagem nova. 2 – Contribuinte possui mensagens novas. |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de mensagens por contribuintes]()
+
+
+
+
+# Exemplo de Json de retorno - Obter Lista de Mensagens por Contribuintes
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "CAIXAPOSTAL",             "idServico": "MSGCONTRIBUINTE61",             "versaoSistema": "1.0",             "dados": "{\"categoria\":\"0\",\"statusLeitura\":\"0\",\"indicadorPagina\":\"0\","indicadorFavorito": "1",\"ponteiroPagina\":\"00000000000000\"}"         },         "status": "200",`
+
+"dados": "{\\"codigo\\":\\"00\\",\\"conteudo\\":\[{\\"quantidadeMensagens\\":\\"50\\",\\"indicadorUltimaPagina\\":\\"N\\",\\"ponteiroPaginaRetornada\\":\\"20250408092949\\",\\"ponteiroProximaPagina\\":\\"20250403093722\\",\\"cnpjMatriz\\":\\"03763656000154\\",\\"listaMensagens\\":\[{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092949\\",\\"numeroControle\\":\\"2025/000000000032113\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250423\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00160556\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626772\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092916\\",\\"numeroControle\\":\\"2025/000000000032112\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250423\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00158956\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626771\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092806\\",\\"numeroControle\\":\\"2025/000000000032111\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250408\\",\\"horaLeitura\\":\\"093111\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250408\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00164756\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626770\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00003\\",\\"dataEnvio\\":\\"20250408\\",\\"horaEnvio\\":\\"092210\\",\\"numeroControle\\":\\"2025/000000000032091\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250408\\",\\"horaLeitura\\":\\"092403\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250408\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)\\",\\"dataValidade\\":\\"20250708\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"00164756\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626769\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"223135\\",\\"numeroControle\\":\\"2025/000000000000117\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"223329\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626765\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"223131\\",\\"numeroControle\\":\\"2025/000000000000116\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250422\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626764\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222915\\",\\"numeroControle\\":\\"2025/000000000000115\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222933\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626763\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222909\\",\\"numeroControle\\":\\"2025/000000000000114\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222949\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626762\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00101\\",\\"dataEnvio\\":\\"20250407\\",\\"horaEnvio\\":\\"222903\\",\\"numeroControle\\":\\"2025/000000000000113\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222954\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"TESTE CXPOSTAL-2949138 - envio de e-mail de alerta\\",\\"dataValidade\\":\\"20250523\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626761\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00019\\",\\"codigoModelo\\":\\"00007\\",\\"dataEnvio\\":\\"20250404\\",\\"horaEnvio\\":\\"094951\\",\\"numeroControle\\":\\"2025/000000000032077\\",\\"indicadorLeitura\\":\\"1\\",\\"dataLeitura\\":\\"20250407\\",\\"horaLeitura\\":\\"222648\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"20250407\\",\\"assuntoModelo\\":\\"Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)\\",\\"dataValidade\\":\\"20250704\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801775\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626516\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093728\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801774\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626515\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093725\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801773\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626514\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093724\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801772\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626513\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"},{\\"codigoSistemaRemetente\\":\\"00001\\",\\"codigoModelo\\":\\"00001\\",\\"dataEnvio\\":\\"20250403\\",\\"horaEnvio\\":\\"093723\\",\\"numeroControle\\":\\"\\",\\"indicadorLeitura\\":\\"0\\",\\"dataLeitura\\":\\"\\",\\"horaLeitura\\":\\"\\",\\"dataExclusao\\":\\"\\",\\"horaExclusao\\":\\"\\",\\"dataCiencia\\":\\"\\",\\"assuntoModelo\\":\\"Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++\\",\\"dataValidade\\":\\"20250703\\",\\"origemModelo\\":\\"1\\",\\"valorParametroAssunto\\":\\"001801771\\",\\"relevancia\\":\\"2\\",\\"isn\\":\\"0001626512\\",\\"tipoOrigem\\":\\"0\\",\\"descricaoOrigem\\":\\"RECEITA FEDERAL DO BRASIL\\",\\"indicadorFavorito\\":\\"0\\"}]}}
+
+## Json do campo "dados"
+
+    `{         "codigo": "00",         "conteudo": [             {                 "quantidadeMensagens": "50",                 "indicadorUltimaPagina": "N",                 "ponteiroPaginaRetornada": "20250408092949",                 "ponteiroProximaPagina": "20250403093722",                 "cnpjMatriz": "03763656000154",                 "listaMensagens": [                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092949",                         "numeroControle": "2025/000000000032113",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00160556",                         "relevancia": "2",                         "isn": "0001626772",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092916",                         "numeroControle": "2025/000000000032112",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00158956",                         "relevancia": "2",                         "isn": "0001626771",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092806",                         "numeroControle": "2025/000000000032111",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "093111",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626770",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00003",                         "dataEnvio": "20250408",                         "horaEnvio": "092210",                         "numeroControle": "2025/000000000032091",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "092403",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626769",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223135",                         "numeroControle": "2025/000000000000117",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "223329",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626765",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223131",                         "numeroControle": "2025/000000000000116",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250422",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626764",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222915",                         "numeroControle": "2025/000000000000115",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222933",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626763",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222909",                         "numeroControle": "2025/000000000000114",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222949",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626762",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222903",                         "numeroControle": "2025/000000000000113",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222954",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626761",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250404",                         "horaEnvio": "094951",                         "numeroControle": "2025/000000000032077",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222648",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250704",                         "origemModelo": "1",                         "valorParametroAssunto": "001801775",                         "relevancia": "2",                         "isn": "0001626516",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093728",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801774",                         "relevancia": "2",                         "isn": "0001626515",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093725",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801773",                         "relevancia": "2",                         "isn": "0001626514",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093724",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801772",                         "relevancia": "2",                         "isn": "0001626513",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093723",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801771",                         "relevancia": "2",                         "isn": "0001626512",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     }]}}
+
+## Json do campo "dados"
+
+    `{         "codigo": "00",         "conteudo": [             {                 "quantidadeMensagens": "50",                 "indicadorUltimaPagina": "N",                 "ponteiroPaginaRetornada": "20250408092949",                 "ponteiroProximaPagina": "20250403093722",                 "cnpjMatriz": "03763656000154",                 "listaMensagens": [                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092949",                         "numeroControle": "2025/000000000032113",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00160556",                         "relevancia": "2",                         "isn": "0001626772",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092916",                         "numeroControle": "2025/000000000032112",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250423",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00158956",                         "relevancia": "2",                         "isn": "0001626771",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250408",                         "horaEnvio": "092806",                         "numeroControle": "2025/000000000032111",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "093111",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626770",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00003",                         "dataEnvio": "20250408",                         "horaEnvio": "092210",                         "numeroControle": "2025/000000000032091",                         "indicadorLeitura": "1",                         "dataLeitura": "20250408",                         "horaLeitura": "092403",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250408",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (nova)",                         "dataValidade": "20250708",                         "origemModelo": "1",                         "valorParametroAssunto": "00164756",                         "relevancia": "2",                         "isn": "0001626769",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223135",                         "numeroControle": "2025/000000000000117",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "223329",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626765",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "223131",                         "numeroControle": "2025/000000000000116",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250422",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626764",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222915",                         "numeroControle": "2025/000000000000115",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222933",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626763",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222909",                         "numeroControle": "2025/000000000000114",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222949",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626762",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00101",                         "dataEnvio": "20250407",                         "horaEnvio": "222903",                         "numeroControle": "2025/000000000000113",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222954",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "TESTE CXPOSTAL-2949138 - envio de e-mail de alerta",                         "dataValidade": "20250523",                         "origemModelo": "1",                         "valorParametroAssunto": "",                         "relevancia": "2",                         "isn": "0001626761",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00019",                         "codigoModelo": "00007",                         "dataEnvio": "20250404",                         "horaEnvio": "094951",                         "numeroControle": "2025/000000000032077",                         "indicadorLeitura": "1",                         "dataLeitura": "20250407",                         "horaLeitura": "222648",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "20250407",                         "assuntoModelo": "Notificação de recebimento de mensagem e-MAC - Mensagem nº ++VARIAVEL++ (complemento)",                         "dataValidade": "20250704",                         "origemModelo": "1",                         "valorParametroAssunto": "001801775",                         "relevancia": "2",                         "isn": "0001626516",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093728",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801774",                         "relevancia": "2",                         "isn": "0001626515",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093725",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801773",                         "relevancia": "2",                         "isn": "0001626514",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093724",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801772",                         "relevancia": "2",                         "isn": "0001626513",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     },                     {                         "codigoSistemaRemetente": "00001",                         "codigoModelo": "00001",                         "dataEnvio": "20250403",                         "horaEnvio": "093723",                         "numeroControle": "",                         "indicadorLeitura": "0",                         "dataLeitura": "",                         "horaLeitura": "",                         "dataExclusao": "",                         "horaExclusao": "",                         "dataCiencia": "",                         "assuntoModelo": "Aviso de publicação de edital eletrônico - Edital nº ++VARIAVEL++",                         "dataValidade": "20250703",                         "origemModelo": "1",                         "valorParametroAssunto": "001801771",                         "relevancia": "2",                         "isn": "0001626512",                         "tipoOrigem": "0",                         "descricaoOrigem": "RECEITA FEDERAL DO BRASIL",                         "indicadorFavorito": "0"                     }]}}
+
+
+
+
+# Exemplo de Json de retorno - Obter Detalhes de uma Mensagem Específica
+
+## Json de retorno completo
+
+    `{       "contratante": {         "numero": "99999999999",         "tipo": 1       },       "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },       "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "MSGDETALHAMENTO62",         "versaoSistema": "1.0",         "dados": "{\"isn\" : \"0001488766\"}"       },       "status": 200,       "dados": "{\"codigo\":\"00\",\"conteudo\":[{\"codigoSistemaRemetente\":\"00014\",\"codigoModelo\":\"00009\",\"assuntoModelo\":\"[e-Processo] Dossiê: ++VARIAVEL++ - Abertura do Dossiê de Atendimento através do Chat RFB\",\"origemModelo\":\"1\",\"dataEnvio\":\"20220620\",\"valorParametroAssunto\":\"11111.111111/2022-11\",\"dataLeitura\":\"20220623\",\"horaLeitura\":\"170051\",\"dataExpiracao\":\"20230621\",\"numeroControle\":\"\",\"dataCiencia\":\"\",\"enquadramento\":\"0\",\"dataAcessoExterno\":\"\",\"horaAcessoExterno\":\"\",\"tipoAutenticacaoUsuario\":\"0\",\"codigoAcesso\":\"\",\"numeroSerieCertificadoDigital\":\"\",\"emissorCertificadoDigital\":\"\",\"tipoUsuario\":\"0\",\"niUsuario\":\"00000000000000\",\"papelUsuario\":\"0\",\"codigoAplicacao\":\"00000\",\"tipoOrigem\":\"0\",\"descricaoOrigem\":\"\",\"corpoModelo\":\"<p>Prezado(a) Contribuinte,</p>  <p>O seu Atendimento pelo Chat RFB&nbsp;n&ordm; ++1++, do dia/hora&nbsp;++2++ /&nbsp;++3++ (Hor&aacute;rio de Bras&iacute;lia), foi direcionado para solu&ccedil;&atilde;o por equipe interna da RFB e consta no Dossi&ecirc; descrito abaixo. Para acompanhar o atendimento interno do mesmo, o contribuinte deve acessar o Portal e-CAC e escolher a op&ccedil;&atilde;o &ldquo;Legisla&ccedil;&atilde;o e Processo &gt; Processos&nbsp;Digitais (e-Processo) &gt; Meus Processos&rdquo; ou pode utilizar o app e-Processo.</p>  <p>Atrav&eacute;s do app e-Processo, voc&ecirc; pode consultar as informa&ccedil;&otilde;es e acompanhar o andamento desse&nbsp;Dossi&ecirc;, bem como consultar os documentos. O app e-Processo est&aacute; dispon&iacute;vel para dispositivos m&oacute;veis nas lojas de aplicativos Google Play Store, para o sistema Android, e Apple Store, para o sistema iOS.</p>  <p>N&uacute;mero: ++4++</p>  <p>Interessado: ++5++</p>  <p>&Aacute;rea de Concentra&ccedil;&atilde;o do Servi&ccedil;o:&nbsp;++6++</p>  <p>Servi&ccedil;o:&nbsp;++7++</p>  <p>Tipo do Dossi&ecirc;: ++8++</p>  <p>Subtipo do Dossi&ecirc;: ++9++</p>  <p>Descri&ccedil;&atilde;o: ++10++</p>  <p>Respons&aacute;vel pela Solicita&ccedil;&atilde;o de Atendimento: ++11++</p>  <p>Perfil de Acesso: ++12++</p>  <p>IMPORTANTE: Sugerimos consultar o Manual que est&aacute; dispon&iacute;vel no Portal e-CAC, na op&ccedil;&atilde;o &ldquo;Legisla&ccedil;&atilde;o e Processo &gt; Processos Digitais (e-Processo)&rdquo; para&nbsp;obter as orienta&ccedil;&otilde;es de uso das funcionalidades do e-Processo.</p>  <p>O presente dossi&ecirc; de atendimento ser&aacute; exclu&iacute;do&nbsp;ap&oacute;s 3&nbsp;(tr&ecirc;s) dias &uacute;teis, caso a solicita&ccedil;&atilde;o de juntada, contendo os documentos necess&aacute;rios ao&nbsp;atendimento, n&atilde;o seja enviada.</p>\",\"variaveis\":[\"202200000263\",\"20/06/2022\",\"14:31:05\",\"11111.111111/2022-11\",\"03.763.656/0001-54 - HMBHFIHUV KXPHIKQX H UHIEQKXU DVNW\",\"ASSUNTOS ADUANEIROS\",\"CREDENCIAMENTO SISCOMEX/MERCANTE -PESSOA FÍSICA - DECLARAÇÃO SIMPLIFICADA, INCLUSIVE BAGAGEM DESACOMPANHADA - Inc. I do Art. 8º da Portaria COANA nº 123/2015\",\"ATENDIMENTO\",\"CHAT RFB\",\"Criado automaticamente pelo Chat RFB, resultado de um atendimento não conclusivo, para ser tratado internamente por equipe especializada na Área/Serviço do Atendimento.\",\"999.999.999-99 - AXVOMZ NLIVML UVIRZMR\",\"Responsável Legal\"]}]}",       "mensagens": [         {           "codigo": "00",           "texto": "Recuperação OK."         }       ]     }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+    `{      "codigo": "00",      "conteudo": [{       "codigoSistemaRemetente": "00014",       "codigoModelo": "00009",       "assuntoModelo": "[e-Processo] Dossiê: ++VARIAVEL++ - Abertura do Dossiê de Atendimento através do Chat RFB",       "origemModelo": "1",       "dataEnvio": "20220620",       "valorParametroAssunto": "11111.111111/2022-11",       "dataLeitura": "20220623",       "horaLeitura": "170051",       "dataExpiracao": "20230621",       "numeroControle": "",       "dataCiencia": "",       "enquadramento": "0",       "dataAcessoExterno": "",       "horaAcessoExterno": "",       "tipoAutenticacaoUsuario": "0",       "codigoAcesso": "",       "numeroSerieCertificadoDigital": "",       "emissorCertificadoDigital": "",       "tipoUsuario": "0",       "niUsuario": "00000000000000",       "papelUsuario": "0",       "codigoAplicacao": "00000",       "tipoOrigem": "0",       "descricaoOrigem": "",       "corpoModelo": "<p>Prezado(a) Contribuinte,</p> <p>O seu Atendimento pelo Chat RFB nº ++1++, do dia/hora ++2++ / ++3++ (Horário de Brasília), foi direcionado para solução por equipe interna da RFB e consta no Dossiê descrito abaixo. Para acompanhar o atendimento interno do mesmo, o contribuinte deve acessar o Portal e-CAC e escolher a opção “Legislação e Processo > Processos Digitais (e-Processo) > Meus Processos” ou pode utilizar o app e-Processo.</p> <p>Através do app e-Processo, você pode consultar as informações e acompanhar o andamento desse Dossiê, bem como consultar os documentos. O app e-Processo está disponível para dispositivos móveis nas lojas de aplicativos Google Play Store, para o sistema Android, e Apple Store, para o sistema iOS.</p> <p>Número: ++4++</p> <p>Interessado: ++5++</p> <p>Área de Concentração do Serviço: ++6++</p> <p>Serviço: ++7++</p> <p>Tipo do Dossiê: ++8++</p> <p>Subtipo do Dossiê: ++9++</p> <p>Descrição: ++10++</p> <p>Responsável pela Solicitação de Atendimento: ++11++</p> <p>Perfil de Acesso: ++12++</p> <p>IMPORTANTE: Sugerimos consultar o Manual que está disponível no Portal e-CAC, na opção “Legislação e Processo > Processos Digitais (e-Processo)” para obter as orientações de uso das funcionalidades do e-Processo.</p> <p>O presente dossiê de atendimento será excluído após 3 (três) dias úteis, caso a solicitação de juntada, contendo os documentos necessários ao atendimento, não seja enviada.</p>",       "variaveis": ["202200000263", "20/06/2022", "14:31:05", "11111.111111/2022-11", "03.763.656/0001-54 - HMBHFIHUV KXPHIKQX H UHIEQKXU DVNW", "ASSUNTOS ADUANEIROS", "CREDENCIAMENTO SISCOMEX/MERCANTE -PESSOA FÍSICA - DECLARAÇÃO SIMPLIFICADA, INCLUSIVE BAGAGEM DESACOMPANHADA - Inc. I do Art. 8º da Portaria COANA nº 123/2015", "ATENDIMENTO", "CHAT RFB", "Criado automaticamente pelo Chat RFB, resultado de um atendimento não conclusivo, para ser tratado internamente por equipe especializada na Área/Serviço do Atendimento.", "999.999.999-99 - AVZRMZ NLIVML UVIRZMR", "Responsável Legal"]      }]     }`
+
+
+
+
+# Exemplo de Json de retorno - Obter Indicador de Novas Mensagens
+
+## Json de retorno completo
+
+   `{       "contratante": {         "numero": "99999999999",         "tipo": 1       },       "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },       "pedidoDados": {         "idSistema": "CAIXAPOSTAL",         "idServico": "INNOVAMSG63",         "versaoSistema": "1.0",         "dados": ""       },       "status": 200,       "dados": "{\"codigo\":\"00\",\"conteudo\":[{\"indicadorMensagensNovas\":\"2\"}]}",       "mensagens": [         {           "codigo": "00",           "texto": "Operação realizada com sucesso."         }       ]     }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+  `{       "codigo": "00",       "conteudo": [{         "indicadorMensagensNovas": "2"       }]   }`
+
+
+
+
+# Mensagens de negócio
+
+## Mensagens Obter lista de mensagens por contribuintes
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| Erro-CAIXAPOSTAL-02 | Contribuinte não possui mensagem para filtro fornecido. |
+| Erro-CAIXAPOSTAL-04 | Contribuinte pessoa física não encontrado. |
+| Erro-CAIXAPOSTAL-05 | Contribuinte pessoa jurídica não encontrado. |
+| EntradaIncorreta-CAIXAPOSTAL-06 | Contribuinte pessoa jurídica do cnpj filtro não encontrado. |
+| EntradaIncorreta-CAIXAPOSTAL-07 | Indicador de filtro fora de domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-08 | Status fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | CNPJ básico do filtro deve ser ugual ao CNPJ básico do contribuinte. |
+| Erro-CAIXAPOSTAL-99 | Erro Natural |
+
+## Mensagens Obter detalhes de uma mensagem específica
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| Erro-CAIXAPOSTAL-01 | Mensagem não encontrada.. |
+| Erro-CAIXAPOSTAL-02 | ISN não encontrado. |
+| Erro-CAIXAPOSTAL-03 | Mensagem expirada não pode ser lida. |
+| EntradaIncorreta-CAIXAPOSTAL-04 | Sistema chamador inativo ou inválido. |
+| EntradaIncorreta-CAIXAPOSTAL-05 | Indicador de PF/PJ fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-06 | IP da máquina cliente obrigatório. |
+| EntradaIncorreta-CAIXAPOSTAL-07 | Indicador de filtro fora de domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-08 | Papel do usuário fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-09 | Tipo de autenticação do usuário fora do domínio. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | Codigo de acesso obrigatório para valor do tipo de autenticação do usuário. |
+| EntradaIncorreta-CAIXAPOSTAL-11 | Dados do certificado obrigatório para valor do tipo de autenticação do usuário. |
+| EntradaIncorreta-CAIXAPOSTAL-12 | Dados do contribuinte inválidos. |
+| AcessoNegado-CAIXAPOSTAL-13 | Usuário sem autorização para acessar a mensagem do contribuinte. |
+| Erro-CAIXAPOSTAL-99 | Erro Natural. |
+
+## Mensagens Obter indicador de novas mensagens
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-CAIXAPOSTAL-00 | Requisição efetuada com sucesso. |
+| EntradaIncorreta-CAIXAPOSTAL-10 | NI informado não numérico ou zerado. |
+| EntradaIncorreta-CAIXAPOSTAL-11 | Tipo de NI inválido. |
+| EntradaIncorreta-CAIXAPOSTAL-12 | NI incompatível com tipo de NI informado. |
+| Erro-CAIXAPOSTAL-99 | Erro natural. |
+
+## Mensagens de Exceção
+
+| Códigos | Mensagem |
+| --- | --- |
+| Erro-CAIXAPOSTAL-991 | Serviço informado não é um dos serviços disponibilizados pelo sistema. |
+| Erro-CAIXAPOSTAL-992 | Serviço informado ({0}) invá1lido. |
+| Erro-CAIXAPOSTAL-993 | Não foi possível converter retorno do serviço acionado do Caixa Postal. |
+| Erro-CAIXAPOSTAL-994 | Campo informado ({0}) inválido. |
+

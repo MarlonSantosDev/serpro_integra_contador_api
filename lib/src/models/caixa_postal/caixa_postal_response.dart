@@ -21,7 +21,12 @@ class Mensagem {
   Mensagem({required this.id, required this.assunto, required this.dataRecebimento, required this.lida});
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(id: json['id'] as String, assunto: json['assunto'] as String, dataRecebimento: json['dataRecebimento'] as String, lida: json['lida'] as bool);
+    return Mensagem(
+      id: json['id'] as String,
+      assunto: json['assunto'] as String,
+      dataRecebimento: json['dataRecebimento'] as String,
+      lida: json['lida'] as bool,
+    );
   }
 
   Map<String, dynamic> toJson() {
