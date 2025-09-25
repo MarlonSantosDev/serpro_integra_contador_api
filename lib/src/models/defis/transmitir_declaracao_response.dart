@@ -6,7 +6,11 @@ class TransmitirDeclaracaoResponse {
   TransmitirDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
 
   factory TransmitirDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
-    return TransmitirDeclaracaoResponse(status: json['status'] as int, mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(), dados: SaidaEntregar.fromJson(json['dados'] as Map<String, dynamic>));
+    return TransmitirDeclaracaoResponse(
+      status: json['status'] as int,
+      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(),
+      dados: SaidaEntregar.fromJson(json['dados'] as Map<String, dynamic>),
+    );
   }
 
   Map<String, dynamic> toJson() {

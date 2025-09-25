@@ -11,10 +11,10 @@ export 'src/core/auth/authentication_model.dart';
 
 // Utilities
 export 'src/util/document_utils.dart';
+export 'src/util/message_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';
-
 // CCMEI Models
 export 'src/models/ccmei/emitir_ccmei_response.dart';
 export 'src/models/ccmei/consultar_dados_ccmei_response.dart';
@@ -32,7 +32,10 @@ export 'src/models/dctfweb/dctfweb_response.dart';
 export 'src/models/procuracoes/procuracoes_response.dart';
 
 // Caixa Postal Models
-export 'src/models/caixa_postal/caixa_postal_response.dart';
+export 'src/models/caixa_postal/mensagem_negocio.dart';
+export 'src/models/caixa_postal/lista_mensagens_response.dart';
+export 'src/models/caixa_postal/detalhes_mensagem_response.dart';
+export 'src/models/caixa_postal/indicador_mensagens_response.dart';
 
 // DTE Models
 export 'src/models/dte/dte_response.dart';

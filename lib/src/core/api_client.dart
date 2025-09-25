@@ -9,7 +9,14 @@ class ApiClient {
   AuthenticationModel? _authModel;
 
   // TODO: Implementar lógica de autenticação com certificado digital
-  Future<void> authenticate({required String consumerKey, required String consumerSecret, required String certPath, required String certPassword, required String contratanteNumero, required String autorPedidoDadosNumero}) async {
+  Future<void> authenticate({
+    required String consumerKey,
+    required String consumerSecret,
+    required String certPath,
+    required String certPassword,
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+  }) async {
     // Esta é uma implementação simplificada.
     // A autenticação real requer uma chamada HTTP com certificado cliente (mTLS).
     // O pacote http padrão do Dart não suporta isso diretamente.
@@ -45,7 +52,13 @@ class ApiClient {
     */
 
     // Valores de exemplo para desenvolvimento
-    _authModel = AuthenticationModel(accessToken: '06aef429-a981-3ec5-a1f8-71d38d86481e', jwtToken: '06aef429-a981-3ec5-a1f8-71d38d86481e', expiresIn: 3600, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    _authModel = AuthenticationModel(
+      accessToken: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+      jwtToken: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+      expiresIn: 3600,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   Future<Map<String, dynamic>> post(String endpoint, BaseRequest request) async {
@@ -54,12 +67,32 @@ class ApiClient {
     }
 
     // Cria o JSON completo usando os dados de autenticação
-    final requestBody = request.toJsonWithAuth(contratanteNumero: _authModel!.contratanteNumero, contratanteTipo: _authModel!.contratanteTipo, autorPedidoDadosNumero: _authModel!.autorPedidoDadosNumero, autorPedidoDadosTipo: _authModel!.autorPedidoDadosTipo);
+    final requestBody = request.toJsonWithAuth(
+      contratanteNumero: _authModel!.contratanteNumero,
+      contratanteTipo: _authModel!.contratanteTipo,
+      autorPedidoDadosNumero: _authModel!.autorPedidoDadosNumero,
+      autorPedidoDadosTipo: _authModel!.autorPedidoDadosTipo,
+    );
 
-    final response = await http.post(Uri.parse('$_baseUrl$endpoint'), headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'}, body: json.encode(requestBody));
+    final response = await http.post(
+      Uri.parse('$_baseUrl$endpoint'),
+      headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'},
+      body: json.encode(requestBody),
+    );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      if (responseBody.isNotEmpty && responseBody['mensagens'][0]['codigo'] == "ERRO") {
+        responseBody = {
+          "rota": endpoint,
+          "status": response.statusCode,
+          "idSistema": requestBody['pedidoDados']['idSistema'],
+          "idServico": requestBody['pedidoDados']['idServico'],
+          "mensagens": "${responseBody['mensagens'][0]['texto']}",
+        };
+        throw Exception(responseBody);
+      }
+      return responseBody;
     } else {
       // Lança uma exceção com o corpo da resposta para depuração
       throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');

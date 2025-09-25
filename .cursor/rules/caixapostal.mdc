@@ -781,4 +781,3 @@ Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo �
 | Erro-CAIXAPOSTAL-992 | Serviço informado ({0}) invá1lido. |
 | Erro-CAIXAPOSTAL-993 | Não foi possível converter retorno do serviço acionado do Caixa Postal. |
 | Erro-CAIXAPOSTAL-994 | Campo informado ({0}) inválido. |
-
