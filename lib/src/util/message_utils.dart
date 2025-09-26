@@ -6,7 +6,10 @@ class MessageUtils {
   /// - assunto: "[IRPF] Declaração do exercício ++VARIAVEL++ processada"
   /// - valorParametro: "2023"
   /// - resultado: "[IRPF] Declaração do exercício 2023 processada"
-  static String processarAssunto(String assuntoModelo, String valorParametroAssunto) {
+  static String processarAssunto(
+    String assuntoModelo,
+    String valorParametroAssunto,
+  ) {
     if (valorParametroAssunto.isEmpty) return assuntoModelo;
     return assuntoModelo.replaceAll('++VARIAVEL++', valorParametroAssunto);
   }
@@ -17,7 +20,10 @@ class MessageUtils {
   /// - corpo: "A Declaração do exercício ++1++ foi processada em ++2++"
   /// - variaveis: ["2023", "http://receita.fazenda"]
   /// - resultado: "A Declaração do exercício 2023 foi processada em http://receita.fazenda"
-  static String processarCorpoMensagem(String corpoModelo, List<String> variaveis) {
+  static String processarCorpoMensagem(
+    String corpoModelo,
+    List<String> variaveis,
+  ) {
     if (variaveis.isEmpty) return corpoModelo;
 
     String corpoProcessado = corpoModelo;
@@ -162,7 +168,10 @@ class MensagemProcessada {
   final String assuntoProcessado;
   final String corpoProcessado;
 
-  MensagemProcessada({required this.assuntoProcessado, required this.corpoProcessado});
+  MensagemProcessada({
+    required this.assuntoProcessado,
+    required this.corpoProcessado,
+  });
 
   /// Obtém o corpo da mensagem sem tags HTML
   String get corpoLimpo => MessageUtils.removerTagsHtml(corpoProcessado);

@@ -27,7 +27,10 @@ class CaixaPostalService {
     int indicadorPagina = 0,
     String? ponteiroPagina,
   }) async {
-    final dadosMap = <String, dynamic>{'statusLeitura': statusLeitura.toString(), 'indicadorPagina': indicadorPagina.toString()};
+    final dadosMap = <String, dynamic>{
+      'statusLeitura': statusLeitura.toString(),
+      'indicadorPagina': indicadorPagina.toString(),
+    };
 
     if (cnpjReferencia != null && cnpjReferencia.isNotEmpty) {
       dadosMap['cnpjReferencia'] = cnpjReferencia;
@@ -45,7 +48,12 @@ class CaixaPostalService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGCONTRIBUINTE61', versaoSistema: '1.0', dados: jsonEncode(dadosMap)),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'MSGCONTRIBUINTE61',
+        versaoSistema: '1.0',
+        dados: jsonEncode(dadosMap),
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -56,10 +64,18 @@ class CaixaPostalService {
   ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
   /// [isn] - Identificador único da mensagem
-  Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(String contribuinte, String isn) async {
+  Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(
+    String contribuinte,
+    String isn,
+  ) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGDETALHAMENTO62', versaoSistema: '1.0', dados: jsonEncode({'isn': isn})),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'MSGDETALHAMENTO62',
+        versaoSistema: '1.0',
+        dados: jsonEncode({'isn': isn}),
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -74,10 +90,17 @@ class CaixaPostalService {
   /// - 0: Contribuinte não possui mensagens novas
   /// - 1: Contribuinte possui uma mensagem nova
   /// - 2: Contribuinte possui mensagens novas
-  Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(String contribuinte) async {
+  Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(
+    String contribuinte,
+  ) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'INNOVAMSG63', versaoSistema: '1.0', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'INNOVAMSG63',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
     final response = await _apiClient.post('/Monitorar', request);
     return IndicadorMensagensResponse.fromJson(response);
@@ -102,7 +125,10 @@ class CaixaPostalService {
 
   /// Obtém apenas mensagens favoritas
   Future<ListaMensagensResponse> listarMensagensFavoritas(String contribuinte) {
-    return obterListaMensagensPorContribuinte(contribuinte, indicadorFavorito: 1);
+    return obterListaMensagensPorContribuinte(
+      contribuinte,
+      indicadorFavorito: 1,
+    );
   }
 
   /// Obtém mensagens com paginação
@@ -124,6 +150,7 @@ class CaixaPostalService {
   /// Verifica se há mensagens novas (método de conveniência)
   Future<bool> temMensagensNovas(String contribuinte) async {
     final response = await obterIndicadorNovasMensagens(contribuinte);
-    return response.dadosParsed?.conteudo.isNotEmpty == true && response.dadosParsed!.conteudo.first.temMensagensNovas;
+    return response.dadosParsed?.conteudo.isNotEmpty == true &&
+        response.dadosParsed!.conteudo.first.temMensagensNovas;
   }
 }

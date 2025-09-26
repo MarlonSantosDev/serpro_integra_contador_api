@@ -158,7 +158,9 @@ class DctfWebUtils {
 
       // Verificar se contém caracteres XML básicos
       final xmlString = String.fromCharCodes(decoded);
-      return xmlString.contains('<?xml') && xmlString.contains('<ConteudoDeclaracao') && xmlString.contains('</ConteudoDeclaracao>');
+      return xmlString.contains('<?xml') &&
+          xmlString.contains('<ConteudoDeclaracao') &&
+          xmlString.contains('</ConteudoDeclaracao>');
     } catch (e) {
       return false;
     }
@@ -174,19 +176,25 @@ class DctfWebUtils {
       final info = <String, String?>{};
 
       // Categoria
-      final categoriaMatch = RegExp(r'<categoriaDCTF>(\d+)</categoriaDCTF>').firstMatch(xmlString);
+      final categoriaMatch = RegExp(
+        r'<categoriaDCTF>(\d+)</categoriaDCTF>',
+      ).firstMatch(xmlString);
       if (categoriaMatch != null) {
         info['categoria'] = categoriaMatch.group(1);
       }
 
       // Período de apuração
-      final periodoMatch = RegExp(r'<perApuracao>(\d+)</perApuracao>').firstMatch(xmlString);
+      final periodoMatch = RegExp(
+        r'<perApuracao>(\d+)</perApuracao>',
+      ).firstMatch(xmlString);
       if (periodoMatch != null) {
         info['periodoApuracao'] = periodoMatch.group(1);
       }
 
       // Contribuinte
-      final contribuinteMatch = RegExp(r'<inscContrib>(\d+)</inscContrib>').firstMatch(xmlString);
+      final contribuinteMatch = RegExp(
+        r'<inscContrib>(\d+)</inscContrib>',
+      ).firstMatch(xmlString);
       if (contribuinteMatch != null) {
         info['contribuinte'] = contribuinteMatch.group(1);
       }

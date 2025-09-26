@@ -7,13 +7,21 @@ class GerarGuiaResponse {
   final String dados;
   final List<MensagemDctf> mensagens;
 
-  GerarGuiaResponse({required this.status, required this.dados, required this.mensagens});
+  GerarGuiaResponse({
+    required this.status,
+    required this.dados,
+    required this.mensagens,
+  });
 
   factory GerarGuiaResponse.fromJson(Map<String, dynamic> json) {
     return GerarGuiaResponse(
       status: json['status']?.toString() ?? '',
       dados: json['dados']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -43,6 +51,10 @@ class GerarGuiaResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'dados': dados, 'mensagens': mensagens.map((m) => m.toJson()).toList()};
+    return {
+      'status': status,
+      'dados': dados,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+    };
   }
 }

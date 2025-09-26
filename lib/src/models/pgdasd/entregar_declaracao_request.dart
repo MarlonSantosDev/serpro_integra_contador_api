@@ -34,7 +34,8 @@ class EntregarDeclaracaoRequest {
   });
 
   /// Valida se o CNPJ possui 14 dígitos
-  bool get isCnpjValido => cnpjCompleto.length == 14 && RegExp(r'^\d{14}$').hasMatch(cnpjCompleto);
+  bool get isCnpjValido =>
+      cnpjCompleto.length == 14 && RegExp(r'^\d{14}$').hasMatch(cnpjCompleto);
 
   /// Valida se o período de apuração está no formato correto (AAAAMM)
   bool get isPaValido => pa >= 201801 && pa <= 999912;
@@ -54,7 +55,10 @@ class EntregarDeclaracaoRequest {
       'indicadorTransmissao': indicadorTransmissao,
       'indicadorComparacao': indicadorComparacao,
       'declaracao': declaracao.toJson(),
-      if (valoresParaComparacao != null) 'valoresParaComparacao': valoresParaComparacao!.map((v) => v.toJson()).toList(),
+      if (valoresParaComparacao != null)
+        'valoresParaComparacao': valoresParaComparacao!
+            .map((v) => v.toJson())
+            .toList(),
     };
   }
 
@@ -64,9 +68,13 @@ class EntregarDeclaracaoRequest {
       pa: json['pa'] as int,
       indicadorTransmissao: json['indicadorTransmissao'] as bool,
       indicadorComparacao: json['indicadorComparacao'] as bool,
-      declaracao: Declaracao.fromJson(json['declaracao'] as Map<String, dynamic>),
+      declaracao: Declaracao.fromJson(
+        json['declaracao'] as Map<String, dynamic>,
+      ),
       valoresParaComparacao: json['valoresParaComparacao'] != null
-          ? (json['valoresParaComparacao'] as List).map((v) => ValorDevido.fromJson(v)).toList()
+          ? (json['valoresParaComparacao'] as List)
+                .map((v) => ValorDevido.fromJson(v))
+                .toList()
           : null,
     );
   }
@@ -123,10 +131,18 @@ class Declaracao {
 
   /// Valida se os valores estão dentro dos limites permitidos (0 a 99999999.99)
   bool get isValoresValidos {
-    if (receitaPaCompetenciaInterno < 0 || receitaPaCompetenciaInterno > 99999999.99) return false;
-    if (receitaPaCompetenciaExterno < 0 || receitaPaCompetenciaExterno > 99999999.99) return false;
-    if (receitaPaCaixaInterno != null && (receitaPaCaixaInterno! < 0 || receitaPaCaixaInterno! > 99999999.99)) return false;
-    if (receitaPaCaixaExterno != null && (receitaPaCaixaExterno! < 0 || receitaPaCaixaExterno! > 99999999.99)) return false;
+    if (receitaPaCompetenciaInterno < 0 ||
+        receitaPaCompetenciaInterno > 99999999.99)
+      return false;
+    if (receitaPaCompetenciaExterno < 0 ||
+        receitaPaCompetenciaExterno > 99999999.99)
+      return false;
+    if (receitaPaCaixaInterno != null &&
+        (receitaPaCaixaInterno! < 0 || receitaPaCaixaInterno! > 99999999.99))
+      return false;
+    if (receitaPaCaixaExterno != null &&
+        (receitaPaCaixaExterno! < 0 || receitaPaCaixaExterno! > 99999999.99))
+      return false;
     if (valorFixoIcms != null && valorFixoIcms! <= 0) return false;
     if (valorFixoIss != null && valorFixoIss! <= 0) return false;
     return true;
@@ -148,12 +164,18 @@ class Declaracao {
       'tipoDeclaracao': tipoDeclaracao,
       'receitaPaCompetenciaInterno': receitaPaCompetenciaInterno,
       'receitaPaCompetenciaExterno': receitaPaCompetenciaExterno,
-      if (receitaPaCaixaInterno != null) 'receitaPaCaixaInterno': receitaPaCaixaInterno,
-      if (receitaPaCaixaExterno != null) 'receitaPaCaixaExterno': receitaPaCaixaExterno,
+      if (receitaPaCaixaInterno != null)
+        'receitaPaCaixaInterno': receitaPaCaixaInterno,
+      if (receitaPaCaixaExterno != null)
+        'receitaPaCaixaExterno': receitaPaCaixaExterno,
       if (valorFixoIcms != null) 'valorFixoIcms': valorFixoIcms,
       if (valorFixoIss != null) 'valorFixoIss': valorFixoIss,
-      if (receitasBrutasAnteriores != null) 'receitasBrutasAnteriores': receitasBrutasAnteriores!.map((r) => r.toJson()).toList(),
-      if (folhasSalario != null) 'folhasSalario': folhasSalario!.map((f) => f.toJson()).toList(),
+      if (receitasBrutasAnteriores != null)
+        'receitasBrutasAnteriores': receitasBrutasAnteriores!
+            .map((r) => r.toJson())
+            .toList(),
+      if (folhasSalario != null)
+        'folhasSalario': folhasSalario!.map((f) => f.toJson()).toList(),
       if (naoOptante != null) 'naoOptante': naoOptante!.toJson(),
       'estabelecimentos': estabelecimentos.map((e) => e.toJson()).toList(),
     };
@@ -162,18 +184,38 @@ class Declaracao {
   factory Declaracao.fromJson(Map<String, dynamic> json) {
     return Declaracao(
       tipoDeclaracao: json['tipoDeclaracao'] as int,
-      receitaPaCompetenciaInterno: (json['receitaPaCompetenciaInterno'] as num).toDouble(),
-      receitaPaCompetenciaExterno: (json['receitaPaCompetenciaExterno'] as num).toDouble(),
-      receitaPaCaixaInterno: json['receitaPaCaixaInterno'] != null ? (json['receitaPaCaixaInterno'] as num).toDouble() : null,
-      receitaPaCaixaExterno: json['receitaPaCaixaExterno'] != null ? (json['receitaPaCaixaExterno'] as num).toDouble() : null,
-      valorFixoIcms: json['valorFixoIcms'] != null ? (json['valorFixoIcms'] as num).toDouble() : null,
-      valorFixoIss: json['valorFixoIss'] != null ? (json['valorFixoIss'] as num).toDouble() : null,
-      receitasBrutasAnteriores: json['receitasBrutasAnteriores'] != null
-          ? (json['receitasBrutasAnteriores'] as List).map((r) => ReceitaBrutaAnterior.fromJson(r)).toList()
+      receitaPaCompetenciaInterno: (json['receitaPaCompetenciaInterno'] as num)
+          .toDouble(),
+      receitaPaCompetenciaExterno: (json['receitaPaCompetenciaExterno'] as num)
+          .toDouble(),
+      receitaPaCaixaInterno: json['receitaPaCaixaInterno'] != null
+          ? (json['receitaPaCaixaInterno'] as num).toDouble()
           : null,
-      folhasSalario: json['folhasSalario'] != null ? (json['folhasSalario'] as List).map((f) => FolhaSalario.fromJson(f)).toList() : null,
-      naoOptante: json['naoOptante'] != null ? NaoOptante.fromJson(json['naoOptante']) : null,
-      estabelecimentos: (json['estabelecimentos'] as List).map((e) => Estabelecimento.fromJson(e)).toList(),
+      receitaPaCaixaExterno: json['receitaPaCaixaExterno'] != null
+          ? (json['receitaPaCaixaExterno'] as num).toDouble()
+          : null,
+      valorFixoIcms: json['valorFixoIcms'] != null
+          ? (json['valorFixoIcms'] as num).toDouble()
+          : null,
+      valorFixoIss: json['valorFixoIss'] != null
+          ? (json['valorFixoIss'] as num).toDouble()
+          : null,
+      receitasBrutasAnteriores: json['receitasBrutasAnteriores'] != null
+          ? (json['receitasBrutasAnteriores'] as List)
+                .map((r) => ReceitaBrutaAnterior.fromJson(r))
+                .toList()
+          : null,
+      folhasSalario: json['folhasSalario'] != null
+          ? (json['folhasSalario'] as List)
+                .map((f) => FolhaSalario.fromJson(f))
+                .toList()
+          : null,
+      naoOptante: json['naoOptante'] != null
+          ? NaoOptante.fromJson(json['naoOptante'])
+          : null,
+      estabelecimentos: (json['estabelecimentos'] as List)
+          .map((e) => Estabelecimento.fromJson(e))
+          .toList(),
     );
   }
 }
@@ -189,7 +231,11 @@ class ReceitaBrutaAnterior {
   /// Valor no mercado externo
   final double valorExterno;
 
-  ReceitaBrutaAnterior({required this.pa, required this.valorInterno, required this.valorExterno});
+  ReceitaBrutaAnterior({
+    required this.pa,
+    required this.valorInterno,
+    required this.valorExterno,
+  });
 
   /// Valida se o período está no formato correto
   bool get isPaValido => pa >= 201801 && pa <= 999912;
@@ -198,7 +244,11 @@ class ReceitaBrutaAnterior {
   bool get isValid => isPaValido && valorInterno >= 0 && valorExterno >= 0;
 
   Map<String, dynamic> toJson() {
-    return {'pa': pa, 'valorInterno': valorInterno, 'valorExterno': valorExterno};
+    return {
+      'pa': pa,
+      'valorInterno': valorInterno,
+      'valorExterno': valorExterno,
+    };
   }
 
   factory ReceitaBrutaAnterior.fromJson(Map<String, dynamic> json) {
@@ -231,7 +281,10 @@ class FolhaSalario {
   }
 
   factory FolhaSalario.fromJson(Map<String, dynamic> json) {
-    return FolhaSalario(pa: json['pa'] as int, valor: (json['valor'] as num).toDouble());
+    return FolhaSalario(
+      pa: json['pa'] as int,
+      valor: (json['valor'] as num).toDouble(),
+    );
   }
 }
 
@@ -249,7 +302,12 @@ class NaoOptante {
   /// Número do processo sem formatação
   final String processo;
 
-  NaoOptante({required this.esferaAdm, required this.uf, required this.codMunicipio, required this.processo});
+  NaoOptante({
+    required this.esferaAdm,
+    required this.uf,
+    required this.codMunicipio,
+    required this.processo,
+  });
 
   /// Valida se a esfera administrativa é válida
   bool get isEsferaValida => ['1', '2', '3', '4'].contains(esferaAdm);
@@ -261,10 +319,19 @@ class NaoOptante {
   bool get isCodMunicipioValido => codMunicipio.length == 4;
 
   /// Valida se todos os campos estão corretos
-  bool get isValid => isEsferaValida && isUfValida && isCodMunicipioValido && processo.isNotEmpty;
+  bool get isValid =>
+      isEsferaValida &&
+      isUfValida &&
+      isCodMunicipioValido &&
+      processo.isNotEmpty;
 
   Map<String, dynamic> toJson() {
-    return {'esferaAdm': esferaAdm, 'uf': uf, 'codMunicipio': codMunicipio, 'processo': processo};
+    return {
+      'esferaAdm': esferaAdm,
+      'uf': uf,
+      'codMunicipio': codMunicipio,
+      'processo': processo,
+    };
   }
 
   factory NaoOptante.fromJson(Map<String, dynamic> json) {
@@ -288,7 +355,8 @@ class Estabelecimento {
   Estabelecimento({required this.cnpjCompleto, this.atividades});
 
   /// Valida se o CNPJ possui 14 dígitos
-  bool get isCnpjValido => cnpjCompleto.length == 14 && RegExp(r'^\d{14}$').hasMatch(cnpjCompleto);
+  bool get isCnpjValido =>
+      cnpjCompleto.length == 14 && RegExp(r'^\d{14}$').hasMatch(cnpjCompleto);
 
   /// Valida se o estabelecimento está correto
   bool get isValid {
@@ -302,13 +370,21 @@ class Estabelecimento {
   }
 
   Map<String, dynamic> toJson() {
-    return {'cnpjCompleto': cnpjCompleto, if (atividades != null) 'atividades': atividades!.map((a) => a.toJson()).toList()};
+    return {
+      'cnpjCompleto': cnpjCompleto,
+      if (atividades != null)
+        'atividades': atividades!.map((a) => a.toJson()).toList(),
+    };
   }
 
   factory Estabelecimento.fromJson(Map<String, dynamic> json) {
     return Estabelecimento(
       cnpjCompleto: json['cnpjCompleto'] as String,
-      atividades: json['atividades'] != null ? (json['atividades'] as List).map((a) => Atividade.fromJson(a)).toList() : null,
+      atividades: json['atividades'] != null
+          ? (json['atividades'] as List)
+                .map((a) => Atividade.fromJson(a))
+                .toList()
+          : null,
     );
   }
 }
@@ -324,7 +400,11 @@ class Atividade {
   /// Parcela de receita da atividade
   final List<ReceitaAtividade> receitasAtividade;
 
-  Atividade({required this.idAtividade, required this.valorAtividade, required this.receitasAtividade});
+  Atividade({
+    required this.idAtividade,
+    required this.valorAtividade,
+    required this.receitasAtividade,
+  });
 
   /// Valida se o valor da atividade é positivo
   bool get isValorValido => valorAtividade > 0;
@@ -340,14 +420,20 @@ class Atividade {
   }
 
   Map<String, dynamic> toJson() {
-    return {'idAtividade': idAtividade, 'valorAtividade': valorAtividade, 'receitasAtividade': receitasAtividade.map((r) => r.toJson()).toList()};
+    return {
+      'idAtividade': idAtividade,
+      'valorAtividade': valorAtividade,
+      'receitasAtividade': receitasAtividade.map((r) => r.toJson()).toList(),
+    };
   }
 
   factory Atividade.fromJson(Map<String, dynamic> json) {
     return Atividade(
       idAtividade: json['idAtividade'] as int,
       valorAtividade: (json['valorAtividade'] as num).toDouble(),
-      receitasAtividade: (json['receitasAtividade'] as List).map((r) => ReceitaAtividade.fromJson(r)).toList(),
+      receitasAtividade: (json['receitasAtividade'] as List)
+          .map((r) => ReceitaAtividade.fromJson(r))
+          .toList(),
     );
   }
 }
@@ -407,12 +493,21 @@ class ReceitaAtividade {
   Map<String, dynamic> toJson() {
     return {
       'valor': valor,
-      if (codigoOutroMunicipio != null) 'codigoOutroMunicipio': codigoOutroMunicipio,
+      if (codigoOutroMunicipio != null)
+        'codigoOutroMunicipio': codigoOutroMunicipio,
       if (outraUf != null) 'outraUf': outraUf,
-      if (isencoes != null) 'isencoes': isencoes!.map((i) => i.toJson()).toList(),
-      if (reducoes != null) 'reducoes': reducoes!.map((r) => r.toJson()).toList(),
-      if (qualificacoesTributarias != null) 'qualificacoesTributarias': qualificacoesTributarias!.map((q) => q.toJson()).toList(),
-      if (exigibilidadesSuspensas != null) 'exigibilidadesSuspensas': exigibilidadesSuspensas!.map((e) => e.toJson()).toList(),
+      if (isencoes != null)
+        'isencoes': isencoes!.map((i) => i.toJson()).toList(),
+      if (reducoes != null)
+        'reducoes': reducoes!.map((r) => r.toJson()).toList(),
+      if (qualificacoesTributarias != null)
+        'qualificacoesTributarias': qualificacoesTributarias!
+            .map((q) => q.toJson())
+            .toList(),
+      if (exigibilidadesSuspensas != null)
+        'exigibilidadesSuspensas': exigibilidadesSuspensas!
+            .map((e) => e.toJson())
+            .toList(),
     };
   }
 
@@ -421,13 +516,21 @@ class ReceitaAtividade {
       valor: (json['valor'] as num).toDouble(),
       codigoOutroMunicipio: json['codigoOutroMunicipio'] as String?,
       outraUf: json['outraUf'] as String?,
-      isencoes: json['isencoes'] != null ? (json['isencoes'] as List).map((i) => Isencao.fromJson(i)).toList() : null,
-      reducoes: json['reducoes'] != null ? (json['reducoes'] as List).map((r) => Reducao.fromJson(r)).toList() : null,
+      isencoes: json['isencoes'] != null
+          ? (json['isencoes'] as List).map((i) => Isencao.fromJson(i)).toList()
+          : null,
+      reducoes: json['reducoes'] != null
+          ? (json['reducoes'] as List).map((r) => Reducao.fromJson(r)).toList()
+          : null,
       qualificacoesTributarias: json['qualificacoesTributarias'] != null
-          ? (json['qualificacoesTributarias'] as List).map((q) => QualificacaoTributaria.fromJson(q)).toList()
+          ? (json['qualificacoesTributarias'] as List)
+                .map((q) => QualificacaoTributaria.fromJson(q))
+                .toList()
           : null,
       exigibilidadesSuspensas: json['exigibilidadesSuspensas'] != null
-          ? (json['exigibilidadesSuspensas'] as List).map((e) => ExigibilidadeSuspensa.fromJson(e)).toList()
+          ? (json['exigibilidadesSuspensas'] as List)
+                .map((e) => ExigibilidadeSuspensa.fromJson(e))
+                .toList()
           : null,
     );
   }
@@ -444,17 +547,29 @@ class Isencao {
   /// Identificador do tipo de isenção
   final int identificador;
 
-  Isencao({required this.codTributo, required this.valor, required this.identificador});
+  Isencao({
+    required this.codTributo,
+    required this.valor,
+    required this.identificador,
+  });
 
   /// Valida se o valor é positivo
   bool get isValid => valor > 0;
 
   Map<String, dynamic> toJson() {
-    return {'codTributo': codTributo, 'valor': valor, 'identificador': identificador};
+    return {
+      'codTributo': codTributo,
+      'valor': valor,
+      'identificador': identificador,
+    };
   }
 
   factory Isencao.fromJson(Map<String, dynamic> json) {
-    return Isencao(codTributo: json['codTributo'] as int, valor: (json['valor'] as num).toDouble(), identificador: json['identificador'] as int);
+    return Isencao(
+      codTributo: json['codTributo'] as int,
+      valor: (json['valor'] as num).toDouble(),
+      identificador: json['identificador'] as int,
+    );
   }
 }
 
@@ -472,13 +587,23 @@ class Reducao {
   /// Identificador do tipo de redução
   final int identificador;
 
-  Reducao({required this.codTributo, required this.valor, required this.percentualReducao, required this.identificador});
+  Reducao({
+    required this.codTributo,
+    required this.valor,
+    required this.percentualReducao,
+    required this.identificador,
+  });
 
   /// Valida se os valores são positivos
   bool get isValid => valor > 0 && percentualReducao > 0;
 
   Map<String, dynamic> toJson() {
-    return {'codTributo': codTributo, 'valor': valor, 'percentualReducao': percentualReducao, 'identificador': identificador};
+    return {
+      'codTributo': codTributo,
+      'valor': valor,
+      'percentualReducao': percentualReducao,
+      'identificador': identificador,
+    };
   }
 
   factory Reducao.fromJson(Map<String, dynamic> json) {
@@ -506,7 +631,10 @@ class QualificacaoTributaria {
   }
 
   factory QualificacaoTributaria.fromJson(Map<String, dynamic> json) {
-    return QualificacaoTributaria(codigoTributo: json['codigoTributo'] as int, id: json['id'] as int);
+    return QualificacaoTributaria(
+      codigoTributo: json['codigoTributo'] as int,
+      id: json['id'] as int,
+    );
   }
 }
 
@@ -589,6 +717,9 @@ class ValorDevido {
   }
 
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
-    return ValorDevido(codigoTributo: json['codigoTributo'] as int, valor: (json['valor'] as num).toDouble());
+    return ValorDevido(
+      codigoTributo: json['codigoTributo'] as int,
+      valor: (json['valor'] as num).toDouble(),
+    );
   }
 }

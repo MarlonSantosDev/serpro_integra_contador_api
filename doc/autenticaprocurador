@@ -1,0 +1,547 @@
+## 3. Exemplos de Retorno - Envio de XML Assinado
+
+### Descrição
+Retorna o token de autorização de acesso por parte do Autor Pedido de Dados após o envio bem-sucedido do XML assinado.
+
+### JSON de Retorno Completo
+
+A resposta da API contém a seguinte estrutura:
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "11111111111111",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "AUTENTICAPROCURADOR",
+        "idServico": "ENVIOXMLASSINADO81",
+        "versaoSistema": "1.0",
+        "dados": "{\"xml\": \"[XML_BASE64_ENCODED]\"}"
+    },
+    "status": 200,
+    "dados": "{\"autenticar_procurador_token\":\"b06feea3-1ca8-49f4-bdb4-211ab006cb92\",\"data_hora_expiracao\":\"2022-08-12T00:00:01\"}",
+    "mensagens": [
+        {
+            "codigo": "200",
+            "texto": "Sucesso na execução."
+        }
+    ]
+}
+```
+
+### JSON do Campo "dados" (Formatado)
+
+O campo "dados" contém as informações essenciais do token de autorização:
+
+```json
+{
+    "autenticar_procurador_token": "b06feea3-1ca8-49f4-bdb4-211ab006cb92",
+    "data_hora_expiracao": "2022-08-12T00:00:01"
+}
+```
+
+#### Campos Importantes do Retorno
+
+| Campo | Descrição | Exemplo |
+|-------|-----------|---------|
+| `autenticar_procurador_token` | Token de autorização para usar nas requisições subsequentes | `b06feea3-1ca8-49f4-bdb4-211ab006cb92` |
+| `data_hora_expiracao` | Data e hora de expiração do token (meia-noite do dia seguinte) | `2022-08-12T00:00:01` |
+| `status` | Código de status HTTP da operação | `200` |
+| `mensagens` | Array com mensagens de retorno da operação | `[{"codigo": "200", "texto": "Sucesso na execução."}]` |
+
+#### Estrutura dos Participantes
+
+| Participante | Tipo | Descrição |
+|-------------|------|-----------|
+| `contratante` | Pessoa Jurídica (tipo 2) | Empresa que contratou a API |
+| `autorPedidoDados` | Pessoa Jurídica (tipo 2) | Procurador autorizado no eCAC |
+| `contribuinte` | Pessoa Jurídica (tipo 2) | Contribuinte cujos dados serão acessados |
+
+---
+
+## 4. Mensagens de Negócio - AUTENTICAPROCURADOR
+
+### Envio de XML Assinado (Termo de Autorização)
+
+A seguir estão todas as mensagens de retorno possíveis do sistema, organizadas por categoria:
+
+#### Mensagens de Sucesso
+
+| Código | Mensagem | Status HTTP | Ação |
+|--------|----------|-------------|------|
+| `[Sucesso-AUTENTICAPROCURADOR]` | Requisição efetuada com sucesso. | 200 | Operação realizada com êxito |
+
+#### Mensagens de Entrada Incorreta (HTTP 400)
+
+| Código | Mensagem | Ação Recomendada |
+|--------|----------|------------------|
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-002]` | Parâmetros de entrada inválidos. Campo xml nulo, vazio ou não encontrado. | Verifique os dados de entrada informados |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-015]` | Layout do XML inválido: tag {0} não encontrada. | Tags existentes: `dados`, `assinadoPor`, `sistema`, `destinatario`, `vigencia`, `dataAssinatura`, `finalidade`, `avisoLegal`, `termo` |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-016]` | Layout do XML inválido: atributo {0} da tag {1} inválido. | Atributos válidos: `id`, `data`, `nome`, `papel`, `numero`, `texto` |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-017]` | Layout do XML inválido: data de vigência deve ser maior ou igual que a data corrente. | Verificar data de vigência |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-018]` | Layout do XML inválido: data de assinatura não deve ser posterior a data atual. | Verificar data de assinatura |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-019]` | Layout do XML inválido: tag raiz deve ser termoDeAutorizacao. | Corrigir estrutura do XML |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-020]` | A string fornecida do xml não é uma base64 válida. Conteúdo do xml: {0}. | Verificar codificação base64 |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-025]` | Xml sem assinatura. A validação de estrutura deveria encontrar esse problema (Namespace: {0}). | Assinar o XML digitalmente |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-026]` | Elemento 'CanonicalizationMethod' inválido: '{0}'. | Usar método de canonicalização correto |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-027]` | Elemento 'SignatureMethod' inválido: '{0}'. | Usar método de assinatura correto |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-028]` | Apenas um Elemento 'Reference' é requerido/permitido. | Ajustar elementos Reference |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-029]` | A assinatura do evento deverá ser realizada sobre todo documento Xml (Atributo 'URI' dever ser vazio). | Corrigir atributo URI |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-030]` | Elemento 'DigestMethod' inválido: '{0}'. | Usar método de digest correto |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-031]` | As seguintes transformações são exigidas: 'http://www.w3.org/2000/09/xmldsig#enveloped-signature' e 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315'. | Aplicar transformações obrigatórias |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-032]` | Apenas um Elemento 'KeyInfo/X509Data' é requerido/permitido. | Ajustar elementos KeyInfo |
+| `[EntradaIncorreta-AUTENTICAPROCURADOR-033]` | Ações Sugeridas: Verificar se houve alteração do evento após a assinatura. Verificar a validade da assinatura. | Validar integridade da assinatura |
+
+#### Mensagens de Acesso Negado (HTTP 403)
+
+| Código | Mensagem | Ação Recomendada |
+|--------|----------|------------------|
+| `[AcessoNegado-AUTENTICAPROCURADOR-009]` | Certificado Digital deve ser e-PF, e-CPF, e-PJ ou e-CNPJ. | Usar certificado ICP-Brasil válido |
+| `[AcessoNegado-AUTENTICAPROCURADOR-010]` | Certificado Digital está expirado. | Renovar certificado digital |
+| `[AcessoNegado-AUTENTICAPROCURADOR-011]` | Acesso negado, NI do procurador diferente do NI do certificado. | Verificar correspondência entre procurador e certificado |
+| `[AcessoNegado-AUTENTICAPROCURADOR-012]` | Acesso negado, NI do contratante diferente do NI do contratante do XML assinado. | Verificar dados do contratante |
+| `[AcessoNegado-AUTENTICAPROCURADOR-013]` | Acesso negado, XML assinado inválido: {0} | Corrigir estrutura do XML |
+| `[AcessoNegado-AUTENTICAPROCURADOR-021]` | Certificado fornecido não possui extensões da ICP-Brasil. | Usar certificado ICP-Brasil |
+| `[AcessoNegado-AUTENTICAPROCURADOR-023]` | O certificado informado não está autorizado. | Verificar autorização do certificado |
+| `[AcessoNegado-AUTENTICAPROCURADOR-037]` | O certificado digital do signatário ou do solicitante da informação encontra-se revogado. | Informar certificado válido |
+| `[AcessoNegado-AUTENTICAPROCURADOR-038]` | Ocorreu um erro ao realizar a análise do XML. Verifique se o XML não está mal formado, e se não existem caracteres inválidos no documento. | Verificar formatação do XML |
+| `[AcessoNegado-AUTENTICAPROCURADOR-039]` | O certificado não foi considerado válido pelas verificações internas do conteúdo X509Certificate2. | Verificar características do certificado ICP-Brasil |
+| `[AcessoNegado-AUTENTICAPROCURADOR-040]` | A formação da cadeia de certificação até sua raiz deve ser confiável. | Verificar cadeia de certificação |
+| `[AcessoNegado-AUTENTICAPROCURADOR-041]` | O certificado não pode ser do tipo autoassinado (self-signed). | Usar certificado emitido por AC válida |
+
+#### Mensagens de Erro Interno (HTTP 500)
+
+| Código | Mensagem | Ação Recomendada |
+|--------|----------|------------------|
+| `[Erro-AUTENTICAPROCURADOR-003]` | Erro ao efetuar login. | Verificar dados e tentar novamente; se persistir, abrir acionamento |
+| `[Erro-AUTENTICAPROCURADOR-008]` | Erro ao validar o certificado digital. | Verificar dados e tentar novamente; se persistir, abrir acionamento |
+| `[Erro-AUTENTICAPROCURADOR-014]` | Erro ao obter o CNPJ do certificado presente no XML assinado. | Verificar dados e tentar novamente; se persistir, abrir acionamento |
+| `[Erro-AUTENTICAPROCURADOR-034]` | Padrão de assinatura não reconhecido. | Verificar dados e tentar novamente; se persistir, abrir acionamento |
+
+### Padrões Técnicos de Assinatura XML
+
+#### Transformações Obrigatórias
+- `http://www.w3.org/2000/09/xmldsig#enveloped-signature`
+- `http://www.w3.org/TR/2001/REC-xml-c14n-20010315`
+
+#### Tags XML Obrigatórias
+- `dados`
+- `assinadoPor`
+- `sistema`
+- `destinatario`
+- `vigencia`
+- `dataAssinatura`
+- `finalidade`
+- `avisoLegal`
+- `termo`
+
+#### Atributos XML Válidos
+- `id`
+- `data`
+- `nome`
+- `papel`
+- `numero`
+- `texto`
+
+---
+
+## 5. Dados de Domínio - Termo de Autorização
+
+### Estrutura do Termo de Autorização
+
+O Termo de Autorização é composto por três elementos textuais obrigatórios que devem estar presentes no XML assinado:
+
+#### 1. Termo de Autorização (Texto Principal)
+
+**Conteúdo obrigatório:**
+```
+Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS.
+```
+
+#### 2. Aviso Legal (Conformidade LGPD)
+
+**Conteúdo obrigatório:**
+```
+O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD).
+```
+
+#### 3. Finalidade
+
+**Conteúdo obrigatório:**
+```
+A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE).
+```
+
+### Características dos Textos
+
+| Elemento | Propósito | Obrigatoriedade |
+|----------|-----------|-----------------|
+| **Termo** | Define a autorização específica para uso da API | Obrigatório |
+| **Aviso Legal** | Garante conformidade com a LGPD | Obrigatório |
+| **Finalidade** | Especifica o uso exclusivo do termo | Obrigatório |
+
+### Observações Importantes
+
+- Todos os textos devem ser incluídos exatamente como especificado na documentação
+- Os textos fazem parte da estrutura XML que será assinada digitalmente
+- A alteração de qualquer texto pode invalidar o termo de autorização
+- Os textos garantem conformidade legal com a Lei Geral de Proteção de Dados (LGPD)
+
+---
+
+## 6. Glossário de Termos Técnicos
+
+### Definições Fundamentais
+
+| Termo | Descrição |
+|-------|-----------|
+| **base64** | Método para codificação de dados para transferência na Internet |
+| **Destinatário** | A quem se destina o termo de autorização (empresa contratante) |
+| **JSON** | JavaScript Object Notation - formato leve de troca de informações/dados entre sistemas |
+| **ICP-Brasil** | Infraestrutura de Chaves Públicas Brasileira - cadeia hierárquica de confiança que viabiliza a emissão de certificados digitais para identificação virtual do cidadão |
+| **XML** | eXtensible Markup Language - formato de arquivo universal usado para criar documentos com dados organizados |
+| **XMLdsig** | XML Signature - define uma sintaxe XML para assinaturas digitais conforme recomendação do W3C. Funcionalmente similar ao PKCS #7, mas mais extensível e voltado para assinatura de documentos XML |
+
+### Papéis e Responsabilidades
+
+| Papel | Descrição |
+|-------|-----------|
+| **Papel Autor Pedido de Dados** | Contribuinte responsável pelo Pedido de dados. Esse autor precisa ser o titular dos dados do contribuinte ou procurador do contribuinte |
+| **Papel Contratante** | Contratante da API Integra Contador no e-Commerce do SERPRO |
+
+### Tipos de Pessoa
+
+| Tipo | Descrição |
+|------|-----------|
+| **PF** | Pessoa Física |
+| **PJ** | Pessoa Jurídica |
+
+### Documentos e Estruturas
+
+| Documento | Descrição |
+|-----------|-----------|
+| **Termo de Autorização** | Documento XML contendo o termo de autorização com assinatura digital do autor pedido de dados |
+
+### Conceitos Técnicos Importantes
+
+#### Certificados Digitais
+- Devem seguir o padrão **ICP-Brasil**
+- Tipos aceitos: **eCPF** (Pessoa Física) ou **eCNPJ** (Pessoa Jurídica)
+- Formatos suportados: **A1** ou **A3**
+- Não podem ser autoassinados (self-signed)
+- Devem ter cadeia de certificação confiável até a raiz
+
+#### Assinatura Digital
+- Segue padrão **XMLDSig do W3C**
+- Mesmo padrão usado em **NFe** e **eSocial** da RFB
+- Requer transformações específicas obrigatórias
+- Deve ser realizada sobre todo o documento XML
+
+#### Codificação
+- XML deve ser enviado como **string base64**
+- Formato JSON para estrutura de dados
+- Validação rigorosa de estrutura e conteúdo
+
+---
+
+## 7. Sistema de Cache - Termo de Autorização
+
+### Funcionamento do Cache
+
+Todo Termo de Autorização válido é armazenado em um mecanismo interno de cache. Quando o cliente envia um Termo de Autorização repetido e que ainda esteja na situação validado/autenticado, o Integra Contador responde com o **status code 304 (Not Modified)** como uma resposta de sucesso.
+
+Esta resposta comunica ao cliente que não houve modificação da requisição anterior e que o Termo de Autorização ainda está válido, pois o token não expirou. Portanto, o token `autenticar_procurador_token` pode continuar sendo utilizado nas chamadas da API.
+
+### Importância do Cache
+
+**ATENÇÃO**: É importante que a aplicação cliente utilize esse recurso de cache. Esse mecanismo é seguro e ajuda a otimizar o ambiente computacional.
+
+### Status Code de Cache
+
+- **304 - Not Modified**: Indica que o Termo de Autorização ainda está válido em cache
+
+### Tempo de Expiração
+
+O token válido fica disponível até a **meia-noite do dia seguinte**, horário de Brasília.
+
+### Response Headers para Gerenciamento de Cache
+
+A aplicação cliente pode utilizar os headers abaixo para recuperar o token e adicionar a lógica para enviar um novo Termo de Autorização assinado digitalmente quando expira a validade do token de autenticação:
+
+| Header | Descrição |
+|--------|-----------|
+| `cache-control` | Nome do mecanismo de cache |
+| `etag` | Contém o token `autenticar_procurador_token` em cache |
+| `expires` | Data e hora da expiração do token |
+
+### Exemplo de Response Headers
+
+```http
+cache-control: termo_autorizacao
+etag: "autenticar_procurador_token:ab87df0b-6d08-3d78-13d2-d474b90b05f3"
+expires: Sat, 15 Oct 2022 00:00:01 GMT
+```
+
+### Formato do Header `expires`
+
+O `expires` segue o padrão da especificação **RFC 7231, seção 7.1.1.2: Date**:
+
+#### Componentes da Data
+- **Dia da semana**: "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", ou "Sun"
+- **Dia**: Número de 2 dígitos, ex. "04" ou "23"
+- **Mês**: "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+- **Ano**: Número de 4 dígitos, ex. "2022" ou "2023"
+- **Hora**: Número de 2 dígitos, ex. "09" ou "23"
+- **Minutos**: Número de 2 dígitos, ex. "04" ou "59"
+- **Segundos**: Número de 2 dígitos, ex. "04" ou "59"
+- **GMT**: Todas as datas deste protocolo são expressas em GMT
+
+### Response Body
+
+Quando o status é **304 (Not Modified)**, o response body é **"No content"**, significando que não é enviado um JSON com conteúdo de resposta.
+
+### Estratégia de Implementação
+
+1. **Primeira requisição**: Enviar Termo de Autorização assinado
+2. **Requisições subsequentes**: Verificar se o token ainda está válido através do cache
+3. **Token expirado**: Enviar novo Termo de Autorização assinado
+4. **Otimização**: Usar headers de cache para gerenciar automaticamente a validade
+
+---
+
+## 8. Padrões Técnicos de Assinatura do XML
+
+### Objetivo
+
+Prover as informações dos padrões técnicos utilizados na assinatura digital do documento XML. A sigla XML significa "eXtensible Markup Language" em inglês, que é um formato de arquivo universal usado para criar documentos com dados organizados.
+
+### Padrão de Documento XML
+
+A especificação do documento XML adotada é a recomendação W3C para XML 1.0, disponível em [http://www.w3.org/TR/REC-xml](http://www.w3.org/TR/REC-xml). A codificação dos caracteres será em UTF-8, assim todos os documentos XML serão iniciados com a seguinte declaração:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+```
+
+Cada arquivo XML somente poderá ter uma única declaração `<?xml version="1.0" encoding="UTF-8"?>`.
+
+### Caracteres de Escape
+
+| Caractere | Escape |
+|---|---|
+| > (sinal de maior) | `&gt;` |
+| < (sinal de menor) | `&lt;` |
+| & (e comercial) | `&amp;` |
+| " (aspas duplas) | `&quot;` |
+| ' (sinal de apóstrofe ou aspas simples) | `&apos;` |
+
+### Modelo do XML (Termo de Autorização)
+
+A seguir o modelo de documento XML para ser assinado digitalmente. Essa estrutura é obrigatória. A declaração do namespace da assinatura digital deverá ser realizada na própria tag `<Signature>`, conforme exemplo abaixo:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<termoDeAutorizacao>
+    <dados>
+        <sistema id="API Integra Contador" />
+        <termo texto="Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS." />
+        <avisoLegal texto="O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD)." />
+        <finalidade texto="A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE)." />
+        <dataAssinatura data="20220614" />
+        <vigencia data="20221231" />
+        <destinatario numero="33683111000107" nome="SERVICO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)" tipo="PJ" papel="contratante" />
+        <assinadoPor numero="00000000000000" nome="NOME DO CONTRIBUINTE" tipo="PJ" papel="autor pedido de dados"/>
+    </dados>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        ...
+    </Signature>
+</termoDeAutorizacao>
+```
+
+### Descrição das Tags e Atributos
+
+*   **Termo de Autorização**: documento XML com os dados da autorização e assinado digitalmente.
+*   **Sistema**: identificação do sistema a ser utilizado esse termo de autorização.
+*   **Termo**: texto de autorização com o seguinte conteúdo:
+*   **Aviso Legal**: texto LGPD com o seguinte conteúdo:
+*   **Finalidade**: texto que define a finalidade do uso desse termo de autorização, contem o seguinte conteúdo:
+*   **Data da Assinatura**: data da assinatura deste termo de autorização, no formato AAAAMMDD (A = ano, M = mês e D = dia).
+*   **Vigência**: data de validade desse termo de autorização.
+*   **Destinatário**: pessoa jurídica que contratou o produto API Integra Contador no eCommerce da Loja Serpro e quer autenticar uma sessão com a assinatura do Autor do Pedido de Dados para consumir os serviços do API Integra Contador em nome do PROCURADOR ou OUTORGADO DO CONTRIBUINTE.
+    *   **Número**: com tamanho de 14 posições, o atributo número representa o CNPJ sem máscara e só é permitido números.
+    *   **Nome**: nome do contratante (razão social).
+    *   **Tipo**: PJ – pessoa jurídica
+    *   **Papel**: Contratante
+*   **Assinado Por**: pessoa física (PF) ou jurídica (PJ) que está assinando este documento XML com seu certificado digital. Dessa forma ele está autorizando o Contratante para poder consumir os serviços na API Integra Contador com o seu número de CPF ou CNPJ pelo período de vigência aqui indicado.
+    *   **Número**: com tamanho de 11 posições (CPF) quando pessoa física ou com tamanho de 14 posições (CNPJ) quando pessoa jurídica, sem máscara e só permitido números.
+    *   **Nome**: nome do autor do pedido de dados procurador.
+    *   **Tipo**: PF – pessoa física ou PJ – pessoa jurídica
+    *   **Papel**: autor pedido de dados
+*   **Signature**: assinatura digital deste documento XML.
+
+### Schema do XML
+
+A estrutura dos XML recebidos pelo Autentica-Procurado são especificadas e checadas por um Schema, que é uma linguagem que define a estrutura do documento XML, descrevendo os seus elementos e a sua organização, além de estabelecer regras de preenchimento de conteúdo e de obrigatoriedade de cada elemento ou grupo de informação. Este Schema A validação da estrutura XML da mensagem é realizada por um analisador sintático (parser) que verifica se a mensagem atende as definições e regras de seu Schema XML.
+
+Qualquer divergência da estrutura XML da mensagem em relação ao seu Schema XML provoca um erro de validação.
+
+### Padrão de Comunicação
+
+A comunicação será baseada em Web Service, disponibilizados pelo serviço chamado Autenticação Procurador.
+
+A troca de mensagens será por meio de Json. Sendo que o XML após assinado será transformado em uma String codificada em `base64`.
+
+### Padrão de Certificado Digital
+
+O certificado digital utilizado para assinar o documento XML deverá ser emitido por Autoridade Certificadora credenciada pela Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil.
+
+Este deverá pertencer à série A. Existem duas séries as quais os certificados podem pertencer, a série A e a S. A série A reúne os certificados de assinatura digital utilizados na confirmação de identidade na Web, em e-mails, em redes privadas virtuais (VPN) e em documentos eletrônicos com verificação da integridade de suas informações. A série S reúne os certificados de sigilo que são utilizados na codificação de documentos, de bases de dados, de mensagens e de outras informações eletrônicas sigilosas. O certificado digital deverá ser do tipo A1 ou A3. Certificados digitais de tipo A1 ficam armazenados no próprio computador a partir do qual ele será utilizado. Certificados digitais do tipo A3 são armazenados em dispositivo portátil inviolável do tipo smart card ou token, que possuem um chip com capacidade de realizar a assinatura digital. Este tipo de dispositivo é bastante seguro, pois toda operação é realizada pelo chip existente no dispositivo, sem qualquer acesso externo à chave privada do certificado digital.
+
+Para que um certificado seja aceito na função de transmissor de solicitações este deverá ser do tipo e-CPF (e-PF) ou e-CNPJ (e-PJ).
+
+O certificado digital é exigido no momento da assinatura do documento XML para envio ao login do serviço Autenticação Procurador.
+
+#### Padrões do Certificado Digital
+
+Para assinatura, utilizar o certificado digital do responsável que vai exercer o papel de PROCURADOR ou OUTORGADO DO CONTRIBUINTE, autor do pedido de dados.
+
+X.509 versão 3, emitido por Autoridade Certificadora credenciada pela Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil, do Padrão de certificado tipo A1 ou A3, devendo ser um e-CPF (e-PF) ou e-CNPJ (e-PJ).
+
+### Assinatura do Documento XML
+
+Os documentos XML são assinados digitalmente utilizando o certificado digital do Procurador para garantir autenticidade e a integridade das informações dos documentos eletrônicos. Este XML é assinado digitalmente seguindo a especificação descrita na sessão Padrão de assinatura digital.
+
+### Padrão de Assinatura Digital
+
+O sistema utiliza um subconjunto do padrão de assinatura XML definido pelo [http://www.w3.org/TR/xmldsig-core/](http://www.w3.org/TR/xmldsig-core/).
+
+1.  **Padrão de assinatura**: XML Digital Signature, utilizando o formato Enveloped [http://www.w3.org/TR/xmldsig-core/](http://www.w3.org/TR/xmldsig-core/)
+2.  **Certificado digital**: emitido por AC credenciada no ICP-Brasil [http://www.w3.org/2000/09/xmldsig#X509Data](http://www.w3.org/2000/09/xmldsig#X509Data)
+3.  **Cadeia de certificação**: EndCertOnly (Incluir na assinatura apenas o certificado do usuário final):
+    3.1. **Tipo do certificado**: A1 ou A3
+4.  **Tamanho da chave criptográfica**: compatível com os certificados A1 e A3 (2048 bits)
+5.  **Função criptográfica assimétrica**: RSA [http://www.w3.org/2001/04/xmldsigmore#rsa-sha256](http://www.w3.org/2001/04/xmldsigmore#rsa-sha256)
+6.  **Função de message digest**: SHA-256. [http://www.w3.org/2001/04/xmlenc#sha256](http://www.w3.org/2001/04/xmlenc#sha256)
+7.  **Codificação**: Base64 [http://www.w3.org/2000/09/xmldsig#base64](http://www.w3.org/2000/09/xmldsig#base64)
+8.  **Transformações exigidas**: útil para realizar a canonicalização do XML enviado para realizar a validação correta da assinatura digital. São elas:
+    8.1. Enveloped [http://www.w3.org/2000/09/xmldsig#enveloped-signature](http://www.w3.org/2000/09/xmldsig#enveloped-signature)
+
+As informações necessárias à identificação do assinante estão presentes dentro do certificado digital. O arquivo XML assinado deve conter apenas a tag X509Certificate nas informações que dizem respeito ao certificado.
+
+| Padrão da assinatura digital |
+| --- |
+| XML Digital Signature, Enveloped, com certificado digital X.509 versão 3, com chave privada de tamanho variável, conforme o padrão da ICP-Brasil (1024, 2048, ou mais bits), com padrões de criptografia assimétrica RSA, algoritmo message digest SHA-256 e utilização das transformações Enveloped e C14N. |
+
+---
+
+## 9. Modelo de Assinador Digital - .NET
+
+### Introdução
+
+Aqui você encontra um programa de modelo, escrito na linguagem `C#` para servir de referência na implementação do assinador digital. Este exemplo, utiliza um subconjunto do padrão `XMLDSig` para assinatura de documentos XML.
+
+O assinador digital é necessário para assinar o documento `XML` Termo de Autorização. O certificado digital aqui disponibilizado, será utilizado para testes deste programa, sendo possível simular a assinatura como autor do pedido de dados, para ser submetido a um destinatário.
+
+### Componente
+
+`Serpro.Componentes.AssinaturaDigital`
+
+Realiza a assinatura digital de documento XML utilizando o padrão `W3C XMLDSig`.
+
+### Linguagem de programação
+
+`C# dotnet`
+
+| Versão | Autor | Código-fonte |
+| --- | --- | --- |
+| 1.0.0 | SERPRO | [Serpro.Componentes.AssinaturaDigital.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/Serpro.Componentes.AssinaturaDigital.zip) |
+
+### Certificado Digital
+
+Como demonstração, está sendo disponibilizado este certificado digital que só funciona em ambiente de desenvolvimento e homologação:
+
+**Atenção**: Este certificado digital e-CNPJ disponibilizado é compatível somente com o ambiente de demonstração. Não possui valor em ambientes produtivos.
+
+*   **Certificado de homologação**: [eCNPJ-SERPRO-33683111000107.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/eCNPJ-SERPRO-33683111000107.zip)
+*   **Cadeias de certificação - homologação**: [https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b](https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b)
+*   **LCR**: [https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl](https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl)
+
+### Dependências
+
+Pacotes importados via [https://nuget.org](https://nuget.org) em `.Net Standard 2.0`:
+
+*   `microsoft.extensions.configuration.abstractions`
+*   `microsoft.extensions.dependencyinjection.abstractions`
+*   `netstandard.library`
+*   `system.security.cryptography.xml`
+
+### Créditos e Licença
+
+Esse componente foi criado pelas equipes do SERPRO.
+
+E foi utilizado [licença MIT](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/licenca%20MIT).
+
+### Nota
+
+Os modelos de implementação aqui fornecidos são exemplos básicos destinados a orientar na implementação de soluções. Recomendamos utilizá-los como referência inicial, mas com cuidado ao considerar sua aplicação em um ambiente de produção. É essencial realizar testes completos para garantir o correto funcionamento e considerar possíveis ajustes e atualizações necessárias antes de utilizar o modelo em um ambiente de produção.
+
+---
+
+## 10. Modelo de Assinador Digital - PHP
+
+### Introdução
+
+Aqui você encontra um programa de modelo, escrito em `PHP` para servir de referência na implementação do assinador digital. Este exemplo, utiliza um subconjunto do padrão `XMLDSig` para assinatura de documentos XML utilizando a biblioteca OpenSSL.
+
+O assinador digital é necessário para assinar o documento `XML` Termo de Autorização. O certificado digital aqui disponibilizado, será utilizado para testes deste programa, sendo possível simular a assinatura como autor do pedido de dados, para ser submetido a um destinatário.
+
+### Componente
+
+`Serpro.Componentes.AssinadorDigital.php`
+
+Realiza a assinatura digital de documento XML utilizando o padrão `W3C XMLDSig`.
+
+### Linguagem de programação
+
+`PHP`
+
+| Versão | Autor | Código-fonte |
+| --- | --- | --- |
+| 1.0.0 | SERPRO | [Serpro.Componentes.AssinadorDigital.php.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/Serpro.Componentes.AssinadorDigital.php.zip) |
+
+### Certificado Digital
+
+Como demonstração, está sendo disponibilizado este certificado digital que só funciona em ambiente de desenvolvimento e homologação:
+
+**Atenção**: Este certificado digital e-CNPJ disponibilizado é compatível somente com o ambiente de demonstração. Não possui valor em ambientes produtivos.
+
+*   **Certificado de homologação**: [eCNPJ-SERPRO-33683111000107.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/eCNPJ-SERPRO-33683111000107.zip)
+*   **Cadeias de certificação - homologação**: [https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b](https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b)
+*   **LCR**: [https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl](https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl)
+
+### Dependências
+
+*   PHP 8.0+
+*   Extensão Openssl
+*   Um certificado digital do tipo ICPBrasil válido
+
+### Créditos e Licença
+
+Esse componente foi criado pelas equipes do SERPRO.
+
+E foi utilizado [licença MIT](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/licen%C3%A7a%20MIT) baseado no código open source no projeto do Github [XMLDSIG for PHP](https://github.com/xmlseclibs/xmlseclibs).
+
+### Nota
+
+Os modelos de implementação aqui fornecidos são exemplos básicos destinados a orientar na implementação de soluções. Recomendamos utilizá-los como referência inicial, mas com cuidado ao considerar sua aplicação em um ambiente de produção. É essencial realizar testes completos para garantir o correto funcionamento e considerar possíveis ajustes e atualizações necessárias antes de utilizar o modelo em um ambiente de produção.
+
+---

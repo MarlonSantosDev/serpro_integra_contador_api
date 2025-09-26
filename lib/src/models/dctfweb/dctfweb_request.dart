@@ -82,22 +82,31 @@ class DctfWebRequest {
   void _validarCampos() {
     // Validar mês de apuração
     if (categoria.requerMes && (mesPA == null || mesPA!.isEmpty)) {
-      throw ArgumentError('Mês de apuração é obrigatório para categoria ${categoria.nome}');
+      throw ArgumentError(
+        'Mês de apuração é obrigatório para categoria ${categoria.nome}',
+      );
     }
 
     // Validar dia de apuração
     if (categoria.requerDia && (diaPA == null || diaPA!.isEmpty)) {
-      throw ArgumentError('Dia de apuração é obrigatório para categoria ${categoria.nome}');
+      throw ArgumentError(
+        'Dia de apuração é obrigatório para categoria ${categoria.nome}',
+      );
     }
 
     // Validar CNO de aferição
     if (categoria.requerCnoAfericao && cnoAfericao == null) {
-      throw ArgumentError('CNO de aferição é obrigatório para categoria ${categoria.nome}');
+      throw ArgumentError(
+        'CNO de aferição é obrigatório para categoria ${categoria.nome}',
+      );
     }
 
     // Validar número do processo de reclamatória
-    if (categoria.requerNumProcReclamatoria && (numProcReclamatoria == null || numProcReclamatoria!.isEmpty)) {
-      throw ArgumentError('Número do processo de reclamatória é obrigatório para categoria ${categoria.nome}');
+    if (categoria.requerNumProcReclamatoria &&
+        (numProcReclamatoria == null || numProcReclamatoria!.isEmpty)) {
+      throw ArgumentError(
+        'Número do processo de reclamatória é obrigatório para categoria ${categoria.nome}',
+      );
     }
 
     // Validar formato do ano
@@ -182,7 +191,9 @@ class TransmitirDeclaracaoDctfRequest extends DctfWebRequest {
     required this.xmlAssinadoBase64,
   }) {
     if (xmlAssinadoBase64.isEmpty) {
-      throw ArgumentError('XML assinado em Base64 é obrigatório para transmissão');
+      throw ArgumentError(
+        'XML assinado em Base64 é obrigatório para transmissão',
+      );
     }
   }
 

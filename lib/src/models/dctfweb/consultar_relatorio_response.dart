@@ -7,13 +7,21 @@ class ConsultarRelatorioResponse {
   final String dados;
   final List<MensagemDctf> mensagens;
 
-  ConsultarRelatorioResponse({required this.status, required this.dados, required this.mensagens});
+  ConsultarRelatorioResponse({
+    required this.status,
+    required this.dados,
+    required this.mensagens,
+  });
 
   factory ConsultarRelatorioResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarRelatorioResponse(
       status: json['status']?.toString() ?? '',
       dados: json['dados']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -49,12 +57,18 @@ class ConsultarRelatorioResponse {
   }
 
   /// Obtém todas as mensagens de sucesso
-  List<MensagemDctf> get mensagensSucesso => mensagens.where((m) => m.isSucesso).toList();
+  List<MensagemDctf> get mensagensSucesso =>
+      mensagens.where((m) => m.isSucesso).toList();
 
   /// Obtém todas as mensagens de erro
-  List<MensagemDctf> get mensagensErro => mensagens.where((m) => m.isErro).toList();
+  List<MensagemDctf> get mensagensErro =>
+      mensagens.where((m) => m.isErro).toList();
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'dados': dados, 'mensagens': mensagens.map((m) => m.toJson()).toList()};
+    return {
+      'status': status,
+      'dados': dados,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+    };
   }
 }

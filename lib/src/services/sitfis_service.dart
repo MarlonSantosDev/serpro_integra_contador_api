@@ -11,7 +11,11 @@ class SitfisService {
   Future<dynamic> solicitarProtocolo(String ni) async {
     final request = BaseRequest(
       contribuinteNumero: ni,
-      pedidoDados: PedidoDados(idSistema: 'SITFIS', idServico: 'SOLICITARPROTOCOLO91', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'SITFIS',
+        idServico: 'SOLICITARPROTOCOLO91',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/', request);
@@ -21,7 +25,11 @@ class SitfisService {
   Future<dynamic> emitirRelatorio(String ni, String protocolo) async {
     final request = BaseRequest(
       contribuinteNumero: ni,
-      pedidoDados: PedidoDados(idSistema: 'SITFIS', idServico: 'RELATORIOSITFIS92', dados: jsonEncode({'protocoloRelatorio': protocolo})),
+      pedidoDados: PedidoDados(
+        idSistema: 'SITFIS',
+        idServico: 'RELATORIOSITFIS92',
+        dados: jsonEncode({'protocoloRelatorio': protocolo}),
+      ),
     );
 
     final response = await _apiClient.post('/', request);

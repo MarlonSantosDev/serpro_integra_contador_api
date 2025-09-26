@@ -12,8 +12,8 @@ void main() async {
     consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
     certPath: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
     certPassword: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
-    contratanteNumero: '00000000000000', // CNPJ da empresa que contratou o serviço na Loja Serpro
-    autorPedidoDadosNumero: '00000000000000', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+    contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
   // Exemplo de uso dos serviços
@@ -375,6 +375,7 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
   final dctfWebService = DctfWebService(apiClient);
 
   try {
+    /*
     // 1. Consultar XML de uma declaração (Geral Mensal)
     print('\n--- Consultando XML da declaração ---');
     final xmlResponse = await dctfWebService.consultarXmlDeclaracao(
@@ -382,6 +383,8 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
       categoria: CategoriaDctf.pfMensal,
       anoPA: '2022',
       mesPA: '06',
+      contratanteNumero: '00000000000',
+      autorPedidoDadosNumero: '00000000000',
     );
 
     print('Status: ${xmlResponse.status}');
@@ -399,10 +402,12 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
     // 2. Gerar documento de arrecadação para declaração ATIVA
     print('\n--- Gerando documento de arrecadação (DARF) ---');
     final darfResponse = await dctfWebService.gerarDocumentoArrecadacao(
-      contribuinteNumero: '00000000000',
+      contribuinteNumero: '00000000000000',
       categoria: CategoriaDctf.geralMensal,
       anoPA: '2027',
       mesPA: '11',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('Status: ${darfResponse.status}');
@@ -415,11 +420,13 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
     // 3. Gerar documento de arrecadação para declaração EM ANDAMENTO
     print('\n--- Gerando DARF para declaração em andamento ---');
     final darfAndamentoResponse = await dctfWebService.gerarDocumentoArrecadacaoAndamento(
-      contribuinteNumero: '00000000000',
+      contribuinteNumero: '00000000000000',
       categoria: CategoriaDctf.geralMensal,
       anoPA: '2025',
       mesPA: '01',
       idsSistemaOrigem: [SistemaOrigem.mit], // Apenas receitas do MIT
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('Status: ${darfAndamentoResponse.status}');
@@ -432,6 +439,8 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
       categoria: CategoriaDctf.geralMensal,
       anoPA: '2027',
       mesPA: '11',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('Status: ${reciboResponse.status}');
@@ -444,11 +453,13 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
       categoria: CategoriaDctf.geralMensal,
       anoPA: '2027',
       mesPA: '11',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('Status: ${declaracaoResponse.status}');
     print('Declaração completa disponível: ${declaracaoResponse.pdfBase64 != null}');
-
+*/
     // 6. Exemplo de métodos de conveniência
     print('\n--- Métodos de conveniência ---');
 

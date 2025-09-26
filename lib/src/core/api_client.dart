@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.dart';
+import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
 
 class ApiClient {
-  final String _baseUrl = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  final String _baseUrl =
+      'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
 
   AuthenticationModel? _authModel;
 
@@ -61,28 +63,49 @@ class ApiClient {
     );
   }
 
-  Future<Map<String, dynamic>> post(String endpoint, BaseRequest request) async {
+  Future<Map<String, dynamic>> post(
+    String endpoint,
+    BaseRequest request, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     if (_authModel == null) {
-      throw Exception('Cliente não autenticado. Chame o método authenticate primeiro.');
+      throw Exception(
+        'Cliente não autenticado. Chame o método authenticate primeiro.',
+      );
     }
 
-    // Cria o JSON completo usando os dados de autenticação
+    // Usa os dados customizados se fornecidos, senão usa os dados padrão da autenticação
+    final finalContratanteNumero =
+        contratanteNumero ?? _authModel!.contratanteNumero;
+    final finalAutorPedidoDadosNumero =
+        autorPedidoDadosNumero ?? _authModel!.autorPedidoDadosNumero;
+
+    // Cria o JSON completo usando os dados de autenticação (padrão ou customizados)
     final requestBody = request.toJsonWithAuth(
-      contratanteNumero: _authModel!.contratanteNumero,
-      contratanteTipo: _authModel!.contratanteTipo,
-      autorPedidoDadosNumero: _authModel!.autorPedidoDadosNumero,
-      autorPedidoDadosTipo: _authModel!.autorPedidoDadosTipo,
+      contratanteNumero: finalContratanteNumero,
+      contratanteTipo: DocumentUtils.detectDocumentType(finalContratanteNumero),
+      autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
+      autorPedidoDadosTipo: DocumentUtils.detectDocumentType(
+        finalAutorPedidoDadosNumero,
+      ),
     );
 
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
-      headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer ${_authModel!.accessToken}',
+        'jwt_token': _authModel!.jwtToken,
+        'Content-Type': 'application/json',
+      },
       body: json.encode(requestBody),
     );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-      if (responseBody.isNotEmpty && responseBody['mensagens'][0]['codigo'] == "ERRO") {
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      if (responseBody.isNotEmpty &&
+          responseBody['mensagens'][0]['codigo'] == "ERRO") {
         responseBody = {
           "rota": endpoint,
           "status": response.statusCode,
@@ -95,7 +118,9 @@ class ApiClient {
       return responseBody;
     } else {
       // Lança uma exceção com o corpo da resposta para depuração
-      throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
+      throw Exception(
+        'Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}',
+      );
     }
   }
 

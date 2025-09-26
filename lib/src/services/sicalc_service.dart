@@ -10,4 +10,3 @@ class SicalcService {
 
   //TODO: Implement methods for SicalcService
 }
-

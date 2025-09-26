@@ -10,4 +10,3 @@ class PertmeiService {
 
   //TODO: Implement methods for PertmeiService
 }
-

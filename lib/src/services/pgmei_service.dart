@@ -11,27 +11,45 @@ class PgmeiService {
   Future<GerarDasResponse> gerarDas(String cnpj, String periodoApuracao) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'GERARDASPDF21', dados: jsonEncode({'periodoApuracao': periodoApuracao})),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'GERARDASPDF21',
+        dados: jsonEncode({'periodoApuracao': periodoApuracao}),
+      ),
     );
 
     final response = await _apiClient.post('/Emitir', request);
     return GerarDasResponse.fromJson(response);
   }
 
-  Future<GerarDasResponse> gerarDasCodigoDeBarras(String cnpj, String periodoApuracao) async {
+  Future<GerarDasResponse> gerarDasCodigoDeBarras(
+    String cnpj,
+    String periodoApuracao,
+  ) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'GERARDASCODBARRA22', dados: jsonEncode({'periodoApuracao': periodoApuracao})),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'GERARDASCODBARRA22',
+        dados: jsonEncode({'periodoApuracao': periodoApuracao}),
+      ),
     );
 
     final response = await _apiClient.post('/Emitir', request);
     return GerarDasResponse.fromJson(response);
   }
 
-  Future<GerarDasResponse> AtualizarBeneficio(String cnpj, String periodoApuracao) async {
+  Future<GerarDasResponse> AtualizarBeneficio(
+    String cnpj,
+    String periodoApuracao,
+  ) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'ATUBENEFICIO23', dados: jsonEncode({'periodoApuracao': periodoApuracao})),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'ATUBENEFICIO23',
+        dados: jsonEncode({'periodoApuracao': periodoApuracao}),
+      ),
     );
 
     final response = await _apiClient.post('/Emitir', request);
@@ -41,7 +59,11 @@ class PgmeiService {
   Future<GerarDasResponse> ConsultarDividaAtiva(String cnpj, String ano) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'DIVIDAATIVA24', dados: jsonEncode({'anoCalendario': ano})),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'DIVIDAATIVA24',
+        dados: jsonEncode({'anoCalendario': ano}),
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);

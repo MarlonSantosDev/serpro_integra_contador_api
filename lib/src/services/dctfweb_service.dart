@@ -44,6 +44,8 @@ class DctfWebService {
     String? numProcReclamatoria,
     int? dataAcolhimentoProposta,
     List<SistemaOrigem>? idsSistemaOrigem,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
@@ -59,11 +61,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIA31', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'GERARGUIA31',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('GERARGUIA31');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -86,6 +97,8 @@ class DctfWebService {
     int? cnoAfericao,
     int? numeroReciboEntrega,
     String? numProcReclamatoria,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
@@ -99,11 +112,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSRECIBO32', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'CONSRECIBO32',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSRECIBO32');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -126,6 +148,8 @@ class DctfWebService {
     int? cnoAfericao,
     int? numeroReciboEntrega,
     String? numProcReclamatoria,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
@@ -139,11 +163,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSDECCOMPLETA33', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'CONSDECCOMPLETA33',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSDECCOMPLETA33');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -169,6 +202,8 @@ class DctfWebService {
     int? cnoAfericao,
     int? numeroReciboEntrega,
     String? numProcReclamatoria,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
@@ -182,11 +217,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSXMLDECLARACAO38', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'CONSXMLDECLARACAO38',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSXMLDECLARACAO38');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarXmlResponse.fromJson(response);
   }
 
@@ -211,6 +255,8 @@ class DctfWebService {
     String? diaPA,
     String? numProcReclamatoria,
     required String xmlAssinadoBase64,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     // Validar XML antes de enviar
     if (!DctfWebUtils.validarXmlBase64(xmlAssinadoBase64)) {
@@ -228,11 +274,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'TRANSDECLARACAO310', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'TRANSDECLARACAO310',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('TRANSDECLARACAO310');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return TransmitirDeclaracaoDctfResponse.fromJson(response);
   }
 
@@ -255,6 +310,8 @@ class DctfWebService {
     int? cnoAfericao,
     String? numProcReclamatoria,
     List<SistemaOrigem>? idsSistemaOrigem,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
@@ -268,11 +325,20 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIAANDAMENTO313', dados: dctfRequest.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'DCTFWEB',
+        idServico: 'GERARGUIAANDAMENTO313',
+        dados: dctfRequest.toDadosJson(),
+      ),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('GERARGUIAANDAMENTO313');
-    final response = await _apiClient.post(endpoint, request);
+    final response = await _apiClient.post(
+      endpoint,
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -286,6 +352,8 @@ class DctfWebService {
     int? numeroReciboEntrega,
     int? dataAcolhimentoProposta,
     List<SistemaOrigem>? idsSistemaOrigem,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     return gerarDocumentoArrecadacao(
       contribuinteNumero: contribuinteNumero,
@@ -295,6 +363,8 @@ class DctfWebService {
       numeroReciboEntrega: numeroReciboEntrega,
       dataAcolhimentoProposta: dataAcolhimentoProposta,
       idsSistemaOrigem: idsSistemaOrigem,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
@@ -305,6 +375,8 @@ class DctfWebService {
     required String mesPA,
     int? numeroReciboEntrega,
     int? dataAcolhimentoProposta,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     return gerarDocumentoArrecadacao(
       contribuinteNumero: contribuinteNumero,
@@ -313,6 +385,8 @@ class DctfWebService {
       mesPA: mesPA,
       numeroReciboEntrega: numeroReciboEntrega,
       dataAcolhimentoProposta: dataAcolhimentoProposta,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
@@ -323,13 +397,19 @@ class DctfWebService {
     bool isPessoaFisica = false,
     int? numeroReciboEntrega,
     int? dataAcolhimentoProposta,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     return gerarDocumentoArrecadacao(
       contribuinteNumero: contribuinteNumero,
-      categoria: isPessoaFisica ? CategoriaDctf.pf13Salario : CategoriaDctf.geral13Salario,
+      categoria: isPessoaFisica
+          ? CategoriaDctf.pf13Salario
+          : CategoriaDctf.geral13Salario,
       anoPA: anoPA,
       numeroReciboEntrega: numeroReciboEntrega,
       dataAcolhimentoProposta: dataAcolhimentoProposta,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
@@ -364,7 +444,9 @@ class DctfWebService {
     );
 
     if (!xmlResponse.sucesso || xmlResponse.xmlBase64 == null) {
-      throw Exception('Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}');
+      throw Exception(
+        'Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}',
+      );
     }
 
     // 2. Assinar XML externamente

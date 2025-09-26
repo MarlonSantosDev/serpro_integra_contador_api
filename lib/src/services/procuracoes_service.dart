@@ -7,13 +7,26 @@ class ProcuracoesService {
 
   ProcuracoesService(this._apiClient);
 
-  Future<ProcuracoesResponse> obterProcuracao(String cnpj) async {
+  Future<ProcuracoesResponse> obterProcuracao(
+    String cnpj, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PROCURACOES', idServico: 'OBTERPROCURACAO41', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'PROCURACOES',
+        idServico: 'OBTERPROCURACAO41',
+        dados: '',
+      ),
     );
 
-    final response = await _apiClient.post('/', request);
+    final response = await _apiClient.post(
+      '/',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ProcuracoesResponse.fromJson(response);
   }
 }

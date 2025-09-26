@@ -11,7 +11,11 @@ class ConsultarUltimaDeclaracaoResponse {
   /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao
   final String dados;
 
-  ConsultarUltimaDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarUltimaDeclaracaoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -27,13 +31,21 @@ class ConsultarUltimaDeclaracaoResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
-  factory ConsultarUltimaDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarUltimaDeclaracaoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarUltimaDeclaracaoResponse(
       status: json['status'] as int,
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: json['dados'] as String,
     );
   }
@@ -54,7 +66,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'] as String, texto: json['texto'] as String);
+    return Mensagem(
+      codigo: json['codigo'] as String,
+      texto: json['texto'] as String,
+    );
   }
 }
 
@@ -73,7 +88,12 @@ class DeclaracaoCompleta {
   /// Essa estrutura representa os documentos de Notificação e DARF da MAED
   final ArquivoMaed? maed;
 
-  DeclaracaoCompleta({required this.numeroDeclaracao, required this.recibo, required this.declaracao, this.maed});
+  DeclaracaoCompleta({
+    required this.numeroDeclaracao,
+    required this.recibo,
+    required this.declaracao,
+    this.maed,
+  });
 
   /// Indica se há MAED (Multa por Atraso na Entrega da Declaração)
   bool get temMaed => maed != null;
@@ -113,7 +133,10 @@ class ArquivoRecibo {
   }
 
   factory ArquivoRecibo.fromJson(Map<String, dynamic> json) {
-    return ArquivoRecibo(nomeArquivo: json['nomeArquivo'] as String, pdf: json['pdf'] as String);
+    return ArquivoRecibo(
+      nomeArquivo: json['nomeArquivo'] as String,
+      pdf: json['pdf'] as String,
+    );
   }
 }
 
@@ -133,7 +156,10 @@ class ArquivoDeclaracao {
   }
 
   factory ArquivoDeclaracao.fromJson(Map<String, dynamic> json) {
-    return ArquivoDeclaracao(nomeArquivo: json['nomeArquivo'] as String, pdf: json['pdf'] as String);
+    return ArquivoDeclaracao(
+      nomeArquivo: json['nomeArquivo'] as String,
+      pdf: json['pdf'] as String,
+    );
   }
 }
 
@@ -155,7 +181,12 @@ class ArquivoMaed {
   /// Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED
   final String pdfDarf;
 
-  ArquivoMaed({required this.nomeArquivoNotificacao, required this.pdfNotificacao, required this.nomeArquivoDarf, required this.pdfDarf});
+  ArquivoMaed({
+    required this.nomeArquivoNotificacao,
+    required this.pdfNotificacao,
+    required this.nomeArquivoDarf,
+    required this.pdfDarf,
+  });
 
   Map<String, dynamic> toJson() {
     return {

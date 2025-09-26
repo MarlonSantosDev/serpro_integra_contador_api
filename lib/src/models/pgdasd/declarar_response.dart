@@ -9,7 +9,13 @@ class DeclararResponse {
   final String detail;
   final String instance;
 
-  DeclararResponse({required this.type, required this.title, required this.status, required this.detail, required this.instance});
+  DeclararResponse({
+    required this.type,
+    required this.title,
+    required this.status,
+    required this.detail,
+    required this.instance,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -25,6 +31,12 @@ class DeclararResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'type': type, 'title': title, 'status': status, 'detail': detail, 'instance': instance};
+    return {
+      'type': type,
+      'title': title,
+      'status': status,
+      'detail': detail,
+      'instance': instance,
+    };
   }
 }

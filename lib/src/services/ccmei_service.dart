@@ -11,7 +11,11 @@ class CcmeiService {
   Future<EmitirCcmeiResponse> emitirCcmei(String cnpj) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'EMITIRCCMEI121', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'EMITIRCCMEI121',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/', request);
@@ -21,7 +25,11 @@ class CcmeiService {
   Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(String cnpj) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'DADOSCCMEI122', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'DADOSCCMEI122',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/', request);
@@ -31,7 +39,11 @@ class CcmeiService {
   Future<dynamic> consultarSituacaoCadastral(String cpf) async {
     final request = BaseRequest(
       contribuinteNumero: cpf,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'CCMEISITCADASTRAL123', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'CCMEISITCADASTRAL123',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/', request);

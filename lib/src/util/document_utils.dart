@@ -11,7 +11,9 @@ class DocumentUtils {
     } else if (cleanNumber.length == 14) {
       return 2; // CNPJ
     } else {
-      throw ArgumentError('Número de documento inválido. Deve conter 11 dígitos (CPF) ou 14 dígitos (CNPJ). Recebido: $cleanNumber');
+      throw ArgumentError(
+        'Número de documento inválido. Deve conter 11 dígitos (CPF) ou 14 dígitos (CNPJ). Recebido: $cleanNumber',
+      );
     }
   }
 

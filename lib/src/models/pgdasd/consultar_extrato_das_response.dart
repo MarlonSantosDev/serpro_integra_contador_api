@@ -11,7 +11,11 @@ class ConsultarExtratoDasResponse {
   /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto ExtratoDas
   final String dados;
 
-  ConsultarExtratoDasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarExtratoDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -27,13 +31,19 @@ class ConsultarExtratoDasResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   factory ConsultarExtratoDasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarExtratoDasResponse(
       status: json['status'] as int,
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: json['dados'] as String,
     );
   }
@@ -54,7 +64,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'] as String, texto: json['texto'] as String);
+    return Mensagem(
+      codigo: json['codigo'] as String,
+      texto: json['texto'] as String,
+    );
   }
 }
 
@@ -140,7 +153,9 @@ class ExtratoDas {
       valorTotal: (json['valorTotal'] as num).toDouble(),
       statusPagamento: json['statusPagamento'] as String,
       dataPagamento: json['dataPagamento'] as String?,
-      composicao: (json['composicao'] as List).map((c) => ComposicaoExtratoDas.fromJson(c)).toList(),
+      composicao: (json['composicao'] as List)
+          .map((c) => ComposicaoExtratoDas.fromJson(c))
+          .toList(),
     );
   }
 }
@@ -159,10 +174,20 @@ class ComposicaoExtratoDas {
   /// Percentual aplicado
   final double percentual;
 
-  ComposicaoExtratoDas({required this.codigoTributo, required this.nomeTributo, required this.valorTributo, required this.percentual});
+  ComposicaoExtratoDas({
+    required this.codigoTributo,
+    required this.nomeTributo,
+    required this.valorTributo,
+    required this.percentual,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'codigoTributo': codigoTributo, 'nomeTributo': nomeTributo, 'valorTributo': valorTributo, 'percentual': percentual};
+    return {
+      'codigoTributo': codigoTributo,
+      'nomeTributo': nomeTributo,
+      'valorTributo': valorTributo,
+      'percentual': percentual,
+    };
   }
 
   factory ComposicaoExtratoDas.fromJson(Map<String, dynamic> json) {

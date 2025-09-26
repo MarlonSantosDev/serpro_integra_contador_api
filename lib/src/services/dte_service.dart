@@ -10,7 +10,11 @@ class DteService {
   Future<DteResponse> declarar(String cnpj, String dados) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'DTE', idServico: 'declarar', dados: dados),
+      pedidoDados: PedidoDados(
+        idSistema: 'DTE',
+        idServico: 'declarar',
+        dados: dados,
+      ),
     );
 
     final response = await _apiClient.post('/', request);

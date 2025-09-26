@@ -7,13 +7,21 @@ class ConsultarXmlResponse {
   final String dados;
   final List<MensagemDctf> mensagens;
 
-  ConsultarXmlResponse({required this.status, required this.dados, required this.mensagens});
+  ConsultarXmlResponse({
+    required this.status,
+    required this.dados,
+    required this.mensagens,
+  });
 
   factory ConsultarXmlResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarXmlResponse(
       status: json['status']?.toString() ?? '',
       dados: json['dados']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -40,6 +48,10 @@ class ConsultarXmlResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'dados': dados, 'mensagens': mensagens.map((m) => m.toJson()).toList()};
+    return {
+      'status': status,
+      'dados': dados,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+    };
   }
 }

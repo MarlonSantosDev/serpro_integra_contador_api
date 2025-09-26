@@ -5,18 +5,28 @@ class GerarDasResponse {
   final List<String> mensagens;
   final List<GerarDas> dados;
 
-  GerarDasResponse({required this.status, required this.mensagens, required this.dados});
+  GerarDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory GerarDasResponse.fromJson(Map<String, dynamic> json) {
     return GerarDasResponse(
       status: int.parse(json['status']),
       mensagens: (json['mensagens'] as List).map((e) => e.toString()).toList(),
-      dados: (jsonDecode(json['dados']) as List).map((e) => GerarDas.fromJson(e)).toList(),
+      dados: (jsonDecode(json['dados']) as List)
+          .map((e) => GerarDas.fromJson(e))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens, 'dados': dados.map((e) => e.toJson()).toList()};
+    return {
+      'status': status,
+      'mensagens': mensagens,
+      'dados': dados.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -25,7 +35,11 @@ class GerarDas {
   final String cnpjCompleto;
   final DetalhamentoDas detalhamento;
 
-  GerarDas({required this.pdf, required this.cnpjCompleto, required this.detalhamento});
+  GerarDas({
+    required this.pdf,
+    required this.cnpjCompleto,
+    required this.detalhamento,
+  });
 
   factory GerarDas.fromJson(Map<String, dynamic> json) {
     return GerarDas(
@@ -36,7 +50,11 @@ class GerarDas {
   }
 
   Map<String, dynamic> toJson() {
-    return {'pdf': pdf, 'cnpjCompleto': cnpjCompleto, 'detalhamento': detalhamento.toJson()};
+    return {
+      'pdf': pdf,
+      'cnpjCompleto': cnpjCompleto,
+      'detalhamento': detalhamento.toJson(),
+    };
   }
 }
 
@@ -73,7 +91,9 @@ class DetalhamentoDas {
       observacao1: json['observacao1'].toString(),
       observacao2: json['observacao2'].toString(),
       observacao3: json['observacao3'].toString(),
-      composicao: (json['composicao'] as List).map((e) => Composicao.fromJson(e)).toList(),
+      composicao: (json['composicao'] as List)
+          .map((e) => Composicao.fromJson(e))
+          .toList(),
     );
   }
 
@@ -98,7 +118,12 @@ class Valores {
   final double juros;
   final double total;
 
-  Valores({required this.principal, required this.multa, required this.juros, required this.total});
+  Valores({
+    required this.principal,
+    required this.multa,
+    required this.juros,
+    required this.total,
+  });
 
   factory Valores.fromJson(Map<String, dynamic> json) {
     return Valores(
@@ -110,7 +135,12 @@ class Valores {
   }
 
   Map<String, dynamic> toJson() {
-    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
+    return {
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+    };
   }
 }
 
@@ -120,7 +150,12 @@ class Composicao {
   final String denominacao;
   final Valores valores;
 
-  Composicao({required this.periodoApuracao, required this.codigo, required this.denominacao, required this.valores});
+  Composicao({
+    required this.periodoApuracao,
+    required this.codigo,
+    required this.denominacao,
+    required this.valores,
+  });
 
   factory Composicao.fromJson(Map<String, dynamic> json) {
     return Composicao(
@@ -132,6 +167,11 @@ class Composicao {
   }
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'codigo': codigo, 'denominacao': denominacao, 'valores': valores.toJson()};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'codigo': codigo,
+      'denominacao': denominacao,
+      'valores': valores.toJson(),
+    };
   }
 }

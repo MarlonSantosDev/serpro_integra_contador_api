@@ -10,10 +10,17 @@ class DefisService {
 
   DefisService(this._apiClient);
 
-  Future<TransmitirDeclaracaoResponse> transmitirDeclaracao(String cnpj, TransmitirDeclaracaoRequest declaracaoData) async {
+  Future<TransmitirDeclaracaoResponse> transmitirDeclaracao(
+    String cnpj,
+    TransmitirDeclaracaoRequest declaracaoData,
+  ) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'DEFIS', idServico: 'transmitir-declaracao', dados: jsonEncode(declaracaoData.toJson())),
+      pedidoDados: PedidoDados(
+        idSistema: 'DEFIS',
+        idServico: 'transmitir-declaracao',
+        dados: jsonEncode(declaracaoData.toJson()),
+      ),
     );
 
     final response = await _apiClient.post('/', request);

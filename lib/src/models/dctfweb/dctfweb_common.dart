@@ -8,11 +8,15 @@ class MensagemDctf {
   MensagemDctf({required this.codigo, required this.texto});
 
   factory MensagemDctf.fromJson(Map<String, dynamic> json) {
-    return MensagemDctf(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return MensagemDctf(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   /// Verifica se é uma mensagem de sucesso
-  bool get isSucesso => codigo == '00' || texto.toLowerCase().contains('sucesso');
+  bool get isSucesso =>
+      codigo == '00' || texto.toLowerCase().contains('sucesso');
 
   /// Verifica se é uma mensagem de erro
   bool get isErro => codigo != '00' && !isSucesso;
