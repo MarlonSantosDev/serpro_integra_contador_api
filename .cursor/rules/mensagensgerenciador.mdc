@@ -1,0 +1,66 @@
+---
+alwaysApply: true
+---
+
+# Mensagens do Gerenciador
+
+As mensagens a seguir referem-se ao módulo gerenciador da API Integra Contador. Esse módulo é responsável gerenciamento de todos os pedidos de dados da solução do Integra Contador.
+
+## Integra Contador - Gerenciador
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Erro-ICGERENCIADOR-001\] | Erro no acionamento do serviço do tipo {0}. | Verifique no catálogo de serviços se o idSistema e idServico estão mapeados nos caminhos por tipo correspondente. HTTP STATUS: 500 |
+| \[Erro-ICGERENCIADOR-002\] | Erro no acionamento do serviço {0} (Status HTTP {1}). | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar o erro. HTTP STATUS: 500 |
+| \[AcessoNegado-ICGERENCIADOR-003\] | Nenhum cabeçalho enviado na requisição (x-jwt-assertion). | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-004\] | Chave usada no token JWT não foi encontrada no WSO2 de SPO. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-005\] | Assinatura inválida do token recebido. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[EntradaIncorreta-ICGERENCIADOR-006\] | AutorPedidoDados: CNPJ inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-007\] | AutorPedidoDados: CPF inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-008\] | Contribuinte: CNPJ inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-009\] | Contribuinte: CPF inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-010\] | Contratante: CNPJ inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-011\] | Contratante: CPF inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-012\] | {0}: Tipo de NI inválido. | Corrija o dado de entrada informado. HTTP STATUS: 400 |
+| \[AcessoNegado-ICGERENCIADOR-013\] | Validação da assinatura do jwt\_token informado no header inválido. A assinatura é inválida. | HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-014\] | NI do Contratante inválido, é nulo ou vazio, esse NI foi obtido do x-jwt-assertion informado pela loja no e-Commerce. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-015\] | NI do Contratante inválido, é nulo ou vazio, esse NI foi obtido do jwt\_token do certificado digital do Contratante informado pelo jwt\_token validado no sistema SAPI. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-016\] | NI do Contratante inválido, é diferente do NI do Contratante obtido do certificado digital do Contratante informado pelo jwt\_token validado no sistema SAPI. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-017\] | Acesso negado. Esse serviço acionado não é uma funcionalidade do tipo {0}. Verifique os códigos dos campos idSistema e idServiço no catálogo de funcionalidades disponíveis. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-018\] | Acesso negado. O número: {0} do Contratante informado é diferente do conteúdo do Contratante habilitado no ecommerce. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-019\] | Acesso negado. Autor do pedido de dados não é o contratante da solução. É necessário enviar o termo de autorização com a assinatura do procurador ou do autor do pedido de dados. | Como o autor do pedido de dados é diferente do contratante, neste caso o autor do pedido de dados deverá assinar um termo de autorização e enviar antes de acionar o Integra Contador. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-020\] | Acesso negado. Token de autenticação do procurador ou autor do pedido de dados não encontrado ou expirado. É necessário enviar o termo de autorização com a assinatura do procurador ou do autor do pedido de dados. | Verifique a data e hora de expiração do token e submeta no cabeçalho do HTTP. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-021\] | Código do sistema {0} e/ou funcionalidade {1} não encontrados na lista de sistemas elegíveis ao Procuração Eletrônica. | Verifique o catálogo de serviços para indormar o idSistema e idServico vigente. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-022\] | Acesso negado. O autor do pedido de dados de número:{0} não tem procuração autorizada no Portal eCAC para o Contribuinte de número {1}. | Por meio do Portal eCAC é necessário o Contribuinte atribuir de procuração eletrônica. HTTP STATUS: 403 |
+| \[Erro-ICGERENCIADOR-023\] | Erro interno na validação de acesso. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar o erro. HTTP STATUS: 500 |
+| \[AcessoNegado-ICGERENCIADOR-025\] | Falha na validação da assinatura digital do token JWT do SAPI ({0}). | Informe um jwt token válido no header da requisição ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-026\] | Falha na decodificação do token JWT do SAPI ({0}). | Informe um jwt token válido no header da requisição ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-027\] | Acesso negado. | Faça uma autenticação com credenciais válidas. HTTP STATUS: 403 |
+| \[Erro-ICGERENCIADOR-028\] | Serviço não encontrado. | Verifique no catálogo de serviços se o idSistema e idServico estão mapeados nos caminhos por tipo correspondente. HTTP STATUS: 500 |
+| \[Erro-ICGERENCIADOR-029\] | Erro ao acionar serviço. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar o erro. HTTP STATUS: 500 |
+| \[Erro-ICGERENCIADOR-030\] | PROELETRON400 - Requisição Inválida. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 400 |
+| \[Erro-ICGERENCIADOR-031\] | PROELETRON403 - Requisição Não Autorizada. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 403 |
+| \[Erro-ICGERENCIADOR-032\] | PROELETRON404 - Sistemas Não Encontrados na Procuração. | Não tem procuração outorgada no eCAC. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-033\] | PROELETRON500 - Erro Interno do Servidor. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 403 |
+| \[Erro-ICGERENCIADOR-034\] | PROELETRON500 - Erro Interno do Servidor. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 500 |
+| \[Erro-ICGERENCIADOR-035\] | PROELETRON503 - Falha na consulta ao sistema Procuração Eletrônica. Serviço indisponível. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 500 |
+| \[Erro-ICGERENCIADOR-036\] | PROELETRON{0} - Status HTTP não mapeado ou desconhecido. | Esse problema é interno, se persistir deverá abrir um chamado na central de serviços para tratar esse problema. HTTP STATUS: 500 |
+| \[AcessoNegado-ICGERENCIADOR-037\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-038\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-039\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-040\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-041\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-042\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-043\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-044\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-045\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-046\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-047\] | Acesso negado. Houve uma falha na validação do token JWT. | Verifique ou tente uma nova autenticação na loja com credenciais válidas. HTTP STATUS: 403 |
+| \[EntradaIncorreta-ICGERENCIADOR-048\] | Contribuinte: CPF inválido {0} não enviado. | Verifique se o número do CPF é válido antes de submeter a requisição. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-049\] | Contribuinte: CPF inválido {0} no lote enviado. | Verifique se o número do CPF é válido antes de submeter a requisição. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-050\] | Contribuinte: Número inválido. O lote contém elemento nulo ou com espaço em branco. | Verifique se existe algum NI nulo ou com espaço em branco. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-051\] | Contribuinte: Tipo de NI inválido para este idServiço. Informe um tipo válido para prosseguir. | Verifique o tipo de NI informado para essa situação de lote de PF ou PJ para este tipo de idServiço. HTTP STATUS: 400 |
+| \[EntradaIncorreta-ICGERENCIADOR-052\] | PedidoDados.IdSistema: identificação do sistema não localizado no catálogo de serviços. Revise o valor desse atributo. | Verifique o idSistema informado. HTTP STATUS: 400 |
+| \[AcessoNegado-ICGERENCIADOR-053\] | Acesso negado. O Contratante ({0}) não é o destinatário ({1}) que consta no Termo de Autorização. É necessário enviar o termo de autorização para o destinatário correto. | Foi enviado um termo de autorização para outro destinatário. Esses valores devem ser iguais. HTTP STATUS: 403 |
+| \[AcessoNegado-ICGERENCIADOR-054\] | Acesso negado. Autor do pedido de dados ({0}) não foi quem assinou ({1}) o Termo de Autorização. É necessário enviar o termo de autorização com a assinatura do procurador ou do autor do pedido de dados correto. | Foi enviado um termo de autorização assinado por outro autor pedido de dados. Esses valores devem ser iguais. HTTP STATUS: 403 |
+| \[EntradaIncorreta-ICGERENCIADOR-055\] | O serviço solicitado foi descontinuado. A notificação sobre essa mudança foi enviada antecipadamente aos clientes cadastrados na Loja, por e-mail. | O serviço invocado não está mais disponível para uso. HTTP STATUS: 400 |

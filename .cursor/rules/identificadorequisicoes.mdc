@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+---
+
+# Identificador Opcional de Requisições
+
+## Campo cabeçalho da requisição (X-Request-Tag)
+
+Este campo é opcional na utilização das chamadas à API e serve como identificador de requisições. É informado no cabeçalho HTTP da requisição `[HEADER]`.
+
+Sugestivamente, o `X-Request-Tag` poderá conter, por exemplo, o autor do pedido de dados, contribuinte e funcionalidade para uma melhor identificação de requisições, no formato `TAAAAAAAAAAAAAATCCCCCCCCCCCCCCFF`, onde:
+
+*   T = Tipo do autor do pedido de dados (1-CPF ou 2-CNPJ)
+*   AAAAAAAAAAAAAA = autor do pedido de dados (CNPJ 14 posições)
+*   T = Tipo do autor do pedido de dados (1-CPF ou 2-CNPJ)
+*   CCCCCCCCCCCCCC = contribuinte (CPF ou CNPJ 14 posições)
+*   FF = Sequencial da Funcionalidade conforme Catálogo de Serviços, caso necessário, completados com zeros à esquerda no limite de 2 posições
+
+Exemplo do conteúdo de uma requisição para o Integra-SN - Entregar declaração mensal - TRANSDECLARACAO11 do `X-Request-Tag:` `23368311100010723368311100087501`
+
+O campo é de texto livre (string até 32 caracteres) e não possui validação de seu conteúdo. Cabe, portanto, ao cliente manter o controle das informações que são enviadas para essa informação seja vinculado no relatório de consumo detalhado.
+
+O relatório de consumo detalhado pode ser solicitado na área do cliente, opção Consultar Consumo, Relatório e gerará um arquivo para extração (.csv) das requisições realizadas no período informado contendo, por exemplo:
+
+`DATA,CNPJ/CPF,URL,RESPONSE_CODE,IP,OBSERVAÇÃO,TAG,QUANTIDADE "20/08/2022 09:05:32.694-0300","33683111000985","/Consultar","200","200.220.180.71","","23368311100010723368311100087501","1.0000"`
+# Identificador Opcional de Requisições
+
+## Campo cabeçalho da requisição (X-Request-Tag)
+
+Este campo é opcional na utilização das chamadas à API e serve como identificador de requisições. É informado no cabeçalho HTTP da requisição `[HEADER]`.
+
+Sugestivamente, o `X-Request-Tag` poderá conter, por exemplo, o autor do pedido de dados, contribuinte e funcionalidade para uma melhor identificação de requisições, no formato `TAAAAAAAAAAAAAATCCCCCCCCCCCCCCFF`, onde:
+
+*   T = Tipo do autor do pedido de dados (1-CPF ou 2-CNPJ)
+*   AAAAAAAAAAAAAA = autor do pedido de dados (CNPJ 14 posições)
+*   T = Tipo do autor do pedido de dados (1-CPF ou 2-CNPJ)
+*   CCCCCCCCCCCCCC = contribuinte (CPF ou CNPJ 14 posições)
+*   FF = Sequencial da Funcionalidade conforme Catálogo de Serviços, caso necessário, completados com zeros à esquerda no limite de 2 posições
+
+Exemplo do conteúdo de uma requisição para o Integra-SN - Entregar declaração mensal - TRANSDECLARACAO11 do `X-Request-Tag:` `23368311100010723368311100087501`
+
+O campo é de texto livre (string até 32 caracteres) e não possui validação de seu conteúdo. Cabe, portanto, ao cliente manter o controle das informações que são enviadas para essa informação seja vinculado no relatório de consumo detalhado.
+
+O relatório de consumo detalhado pode ser solicitado na área do cliente, opção Consultar Consumo, Relatório e gerará um arquivo para extração (.csv) das requisições realizadas no período informado contendo, por exemplo:
+
+`DATA,CNPJ/CPF,URL,RESPONSE_CODE,IP,OBSERVAÇÃO,TAG,QUANTIDADE "20/08/2022 09:05:32.694-0300","33683111000985","/Consultar","200","200.220.180.71","","23368311100010723368311100087501","1.0000"`

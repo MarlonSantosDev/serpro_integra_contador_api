@@ -1,0 +1,105 @@
+---
+alwaysApply: true
+---
+
+# Serviços x Procurações - Integra Contador
+
+# Serviços x Procuração
+
+Existem serviços que exigem a procuração eletrônica quando o autor do pedido de dados não é o próprio contribuinte. A procuração pode ser cadastrada no portal eCAC. A tabela abaixo exibe os nomes dos serviços do cadastro de procuração.
+
+Aqui é possível saber qual serviço exige procuração no Integra Contador.
+
+Informação
+
+Para saber como cadastrar ou cancelar uma procuração eletrônica no portal eCAC acesse esse endereço [https://www.gov.br/pt-br/servicos/cadastrar-ou-cancelar-procuracao-para-acesso-ao-e-cac]()
+
+| # | SOLUÇÃO | idSistema | idServico | Cód. Procuração | Nome do Serviço (procuração eCAC) |
+| --- | --- | --- | --- | --- | --- |
+| 1.1 | Integra-SN | `PGDASD` | `TRANSDECLARACAO11` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 1.2 | Integra-SN | `PGDASD` | `GERARDAS12` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 1.3 | Integra-SN | `PGDASD` | `CONSDECLARACAO13` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 1.4 | Integra-SN | `PGDASD` | `CONSULTIMADECREC14` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 1.5 | Integra-SN | `PGDASD` | `CONSDECREC15` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 1.6 | Integra-SN | `PGDASD` | `CONSEXTRATO16` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 2.1 | Integra-MEI | `PGMEI` | `GERARDASPDF21` | n/a | n/a |
+| 2.2 | Integra-MEI | `PGMEI` | `GERARDASCODBARRA22` | n/a | n/a |
+| 2.3 | Integra-MEI | `PGMEI` | `ATUBENEFICIO23` | n/a | n/a |
+| 2.4 | Integra-MEI | `PGMEI` | `DIVIDAATIVA24` | n/a | n/a |
+| 3.1 | Integra-DCTFWeb | `DCTFWEB` | `GERARGUIA31` | 00103 | Acessar o sistema DCTFWeb |
+| 3.2 | Integra-DCTFWeb | `DCTFWEB` | `CONSRECIBO32` | 00103 | Acessar o sistema DCTFWeb |
+| 3.3 | Integra-DCTFWeb | `DCTFWEB` | `CONSDECCOMPLETA33` | 00103 | Acessar o sistema DCTFWeb |
+| 3.8 | Integra-DCTFWeb | `DCTFWEB` | `CONSXMLDECLARACAO38` | 00103 | Acessar o sistema DCTFWeb |
+| 3.10 | Integra-DCTFWeb | `DCTFWEB` | `TRANSDECLARACAO310` | 00103 | Acessar o sistema DCTFWeb |
+| 4.1 | Integra-Procurações | `PROCURACOES` | `OBTERPROCURACAO41` | n/a | n/a |
+| 5.1 | Integra-Sicalc | `SICALC` | `CONSOLIDARGERARDARF51` | n/a | n/a |
+| 5.2 | Integra-Sicalc | `SICALC` | `CONSULTAAPOIORECEITAS52` | n/a | n/a |
+| 5.3 | Integra-Sicalc | `SICALC` | `GERARDARFCODBARRA53` | n/a | n/a |
+| 6.1 | Integra-CaixaPostal | `CAIXAPOSTAL` | `MSGCONTRIBUINTE61` | 00006 | Caixa Postal - Mensagens |
+| 6.2 | Integra-CaixaPostal | `CAIXAPOSTAL` | `MSGDETALHAMENTO62` | 00006 | Caixa Postal - Mensagens |
+| 6.3 | Integra-CaixaPostal | `CAIXAPOSTAL` | `INNOVAMSG63` | 00006 | Caixa Postal - Mensagens |
+| 7.1 | Integra-Pagamento | `PAGTOWEB` | `PAGAMENTOS71` | 00004 | Pagamentos - Comprovante de Arrecadação |
+| 7.2 | Integra-Pagamento | `PAGTOWEB` | `COMPARRECADACAO72` | 00004 | Pagamentos - Comprovante de Arrecadação |
+| 7.3 | Integra-Pagamento | `PAGTOWEB` | `CONTACONSDOCARRPG73` | 00004 | Pagamentos - Comprovante de Arrecadação |
+| 8.1 | Integra-Contador-Gerenciador | `AUTENTICAPROCURADOR` | `ENVIOXMLASSINADO81` | N/A | n/a |
+| 9.1 | Integra-SITFIS | `SITFIS` | `SOLICITARPROTOCOLO91` | 00002 | Situação Fiscal do Contribuinte |
+| 9.2 | Integra-SITFIS | `SITFIS` | `RELATORIOSITFIS92` | 00002 | Situação Fiscal do Contribuinte |
+| 10.1 | Integra-Contador-Gerenciador | `REGIMEAPURACAO` | `EFETUAROPCAOREGIME101` | 00060 | Simples Nacional - Opção pelo Regime de Apuração de Receitas |
+| 10.2 | Integra-Contador-Gerenciador | `REGIMEAPURACAO` | `CONSULTARANOSCALENDARIOS102` | 00060 | Simples Nacional - Opção pelo Regime de Apuração de Receitas |
+| 10.3 | Integra-Contador-Gerenciador | `REGIMEAPURACAO` | `CONSULTAROPCAOREGIME103` | 00060 | Simples Nacional - Opção pelo Regime de Apuração de Receitas |
+| 10.4 | Integra-Contador-Gerenciador | `REGIMEAPURACAO` | `CONSULTARRESOLUCAO104` | 00060 | Simples Nacional - Opção pelo Regime de Apuração de Receitas |
+| 11.1 | Integra-CaixaPostal | `DTE` | `CONSULTASITUACAODTE111` | 00050 | Caixa Postal - Termo de Opção pelo Domicílio Tributário Eletrônico |
+| 12.1 | Integra-MEI | `CCMEI` | `EMITIRCCMEI121` | n/a | n/a |
+| 12.2 | Integra-MEI | `CCMEI` | `DADOSCCMEI122` | n/a | n/a |
+| 12.3 | Integra-MEI | `CCMEI` | `CCMEISITCADASTRAL123` | n/a | n/a |
+| 13.1 | Integra-Contador-Gerenciador | `EVENTOSATUALIZACAO` | `SOLICEVENTOSPF131` | sim¹ | n/a |
+| 13.2 | Integra-Contador-Gerenciador | `EVENTOSATUALIZACAO` | `SOLICEVENTOSPJ132` | sim¹ | n/a |
+| 13.3 | Integra-Contador-Gerenciador | `EVENTOSATUALIZACAO` | `OBTEREVENTOSPF133` | sim¹ | n/a |
+| 13.4 | Integra-Contador-Gerenciador | `EVENTOSATUALIZACAO` | `OBTEREVENTOSPJ134` | sim¹ | n/a |
+| 14.1 | Integra-SN | `DEFIS` | `TRANSDECLARACAO141` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 14.2 | Integra-SN | `DEFIS` | `CONSDECLARACAO142` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 14.3 | Integra-SN | `DEFIS` | `CONSULTIMADECREC143` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 14.4 | Integra-SN | `DEFIS` | `CONSDECREC144` | 00146 | PGDAS-D - a partir de 01/2018 |
+| 16.1 | Integra-Parcelamentos | `PARCSN` | `GERARDAS161` | 00076 | Parcelamento de Débitos do Simples Nacional |
+| 16.2 | Integra-Parcelamentos | `PARCSN` | `PARCELASPARAGERAR162` | 00076 | Parcelamento de Débitos do Simples Nacional |
+| 16.3 | Integra-Parcelamentos | `PARCSN` | `PEDIDOSPARC163` | 00076 | Parcelamento de Débitos do Simples Nacional |
+| 16.4 | Integra-Parcelamentos | `PARCSN` | `OBTERPARC164` | 00076 | Parcelamento de Débitos do Simples Nacional |
+| 16.5 | Integra-Parcelamentos | `PARCSN` | `DETPAGTOPARC165` | 00076 | Parcelamento de Débitos do Simples Nacional |
+| 17.1 | Integra-Parcelamentos | `PARCSN-ESP` | `GERARDAS171` | 00125 | Parcelamento Especial Simples Nacional |
+| 17.2 | Integra-Parcelamentos | `PARCSN-ESP` | `PARCELASPARAGERAR172` | 00125 | Parcelamento Especial Simples Nacional |
+| 17.3 | Integra-Parcelamentos | `PARCSN-ESP` | `PEDIDOSPARC173` | 00125 | Parcelamento Especial Simples Nacional |
+| 17.4 | Integra-Parcelamentos | `PARCSN-ESP` | `OBTERPARC174` | 00125 | Parcelamento Especial Simples Nacional |
+| 17.5 | Integra-Parcelamentos | `PARCSN-ESP` | `DETPAGTOPARC175` | 00125 | Parcelamento Especial Simples Nacional |
+| 18.1 | Integra-Parcelamentos | `PERTSN` | `GERARDAS181` | 00149 | Programa Especial Regularização Tributária - PERT-SN |
+| 18.2 | Integra-Parcelamentos | `PERTSN` | `PARCELASPARAGERAR182` | 00149 | Programa Especial Regularização Tributária - PERT-SN |
+| 18.3 | Integra-Parcelamentos | `PERTSN` | `PEDIDOSPARC183` | 00149 | Programa Especial Regularização Tributária - PERT-SN |
+| 18.4 | Integra-Parcelamentos | `PERTSN` | `OBTERPARC184` | 00149 | Programa Especial Regularização Tributária - PERT-SN |
+| 18.5 | Integra-Parcelamentos | `PERTSN` | `DETPAGTOPARC185` | 00149 | Programa Especial Regularização Tributária - PERT-SN |
+| 19.1 | Integra-Parcelamentos | `RELPSN` | `GERARDAS191` | 00210 | Parcelar dívidas do SN pela LC 193/2022 (RELP) |
+| 19.2 | Integra-Parcelamentos | `RELPSN` | `PARCELASPARAGERAR192` | 00210 | Parcelar dívidas do SN pela LC 193/2022 (RELP) |
+| 19.3 | Integra-Parcelamentos | `RELPSN` | `PEDIDOSPARC193` | 00210 | Parcelar dívidas do SN pela LC 193/2022 (RELP) |
+| 19.4 | Integra-Parcelamentos | `RELPSN` | `OBTERPARC194` | 00210 | Parcelar dívidas do SN pela LC 193/2022 (RELP) |
+| 19.5 | Integra-Parcelamentos | `RELPSN` | `DETPAGTOPARC195` | 00210 | Parcelar dívidas do SN pela LC 193/2022 (RELP) |
+| 20.1 | Integra-Parcelamentos | `PARCMEI` | `GERARDAS201` | 00134 | Parcelamento - Microempreendedor Individual |
+| 20.2 | Integra-Parcelamentos | `PARCMEI` | `PARCELASPARAGERAR202` | 00134 | Parcelamento - Microempreendedor Individual |
+| 20.3 | Integra-Parcelamentos | `PARCMEI` | `PEDIDOSPARC203` | 00134 | Parcelamento - Microempreendedor Individual |
+| 20.4 | Integra-Parcelamentos | `PARCMEI` | `OBTERPARC204` | 00134 | Parcelamento - Microempreendedor Individual |
+| 20.5 | Integra-Parcelamentos | `PARCMEI` | `DETPAGTOPARC205` | 00134 | Parcelamento - Microempreendedor Individual |
+| 21.1 | Integra-Parcelamentos | `PARCMEI-ESP` | `GERARDAS211` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 21.2 | Integra-Parcelamentos | `PARCMEI-ESP` | `PARCELASPARAGERAR212` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 21.3 | Integra-Parcelamentos | `PARCMEI-ESP` | `PEDIDOSPARC213` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 21.4 | Integra-Parcelamentos | `PARCMEI-ESP` | `OBTERPARC214` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 21.5 | Integra-Parcelamentos | `PARCMEI-ESP` | `DETPAGTOPARC215` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 22.1 | Integra-Parcelamentos | `PERTMEI` | `GERARDAS221` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 22.2 | Integra-Parcelamentos | `PERTMEI` | `PARCELASPARAGERAR222` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 22.3 | Integra-Parcelamentos | `PERTMEI` | `PEDIDOSPARC223` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 22.4 | Integra-Parcelamentos | `PERTMEI` | `OBTERPARC224` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 22.5 | Integra-Parcelamentos | `PERTMEI` | `DETPAGTOPARC225` | 00152 | Programa Especial de Regularização Tributária - PERT-MEI |
+| 23.1 | Integra-Parcelamentos | `RELPMIEI` | `GERARDAS231` | 00209 | Parcelar dívidas do MEI pela LC 193/2022 (RELP) |
+| 23.2 | Integra-Parcelamentos | `RELPMIEI` | `PARCELASPARAGERAR232` | 00209 | Parcelar dívidas do MEI pela LC 193/2022 (RELP) |
+| 23.3 | Integra-Parcelamentos | `RELPMIEI` | `PEDIDOSPARC233` | 00209 | Parcelar dívidas do MEI pela LC 193/2022 (RELP) |
+| 23.4 | Integra-Parcelamentos | `RELPMIEI` | `OBTERPARC234` | 00209 | Parcelar dívidas do MEI pela LC 193/2022 (RELP) |
+| 23.5 | Integra-Parcelamentos | `RELPMIEI` | `DETPAGTOPARC235` | 00209 | Parcelar dívidas do MEI pela LC 193/2022 (RELP) |
+
+*   "n/a" é uma abreviação de "não se aplica"
+*   ¹ significa que é mandatório que o "Autor do Pedido de Dados" possua uma procuração válida para acessar os eventos de última atualização dos "Contribuintes" monitorados nos sistemas de negócio. Por exemplo, o evento E0301 (DCTFWeb) requer uma procuração eletrônica emitida no Portal e-CAC, com o código de procuração 00103.
