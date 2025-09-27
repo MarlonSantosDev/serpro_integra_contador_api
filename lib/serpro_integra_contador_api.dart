@@ -39,7 +39,7 @@ export 'src/models/dctfweb/consultar_relatorio_response.dart';
 export 'src/models/procuracoes/procuracoes_response.dart';
 
 // Caixa Postal Models
-export 'src/models/caixa_postal/mensagem_negocio.dart';
+export 'src/models/caixa_postal/mensagem_negocio.dart' hide MensagemNegocio;
 export 'src/models/caixa_postal/lista_mensagens_response.dart';
 export 'src/models/caixa_postal/detalhes_mensagem_response.dart';
 export 'src/models/caixa_postal/indicador_mensagens_response.dart';
@@ -78,6 +78,7 @@ export 'src/models/relpmei/relpmei_response.dart';
 export 'src/models/sicalc/sicalc_response.dart';
 
 // PAGTOWEB Models
+export 'src/models/pagtoweb/pagtoweb_request.dart';
 export 'src/models/pagtoweb/pagtoweb_response.dart';
 
 // SITFIS Models

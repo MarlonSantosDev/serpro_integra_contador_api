@@ -1,6 +1,7 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
 import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
+import 'package:serpro_integra_contador_api/src/services/autenticaprocurador_service.dart';
 
 void main() async {
   // Inicializar o cliente da API
@@ -26,6 +27,8 @@ void main() async {
   //await exemplosDte(apiClient);
   //await exemplosSitfis(apiClient);
   //await exemplosDefis(apiClient);
+  await exemplosPagtoWeb(apiClient);
+  await exemplosAutenticaProcurador(apiClient);
 }
 
 Future<void> exemplosCcmei(ApiClient apiClient) async {
@@ -781,5 +784,460 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
     print('Declaração DEFIS transmitida: ${response.dados.idDefis}');
   } catch (e) {
     print('Erro no serviço DEFIS: $e');
+  }
+}
+
+Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
+  print('=== Exemplos PAGTOWEB ===');
+
+  final pagtoWebService = PagtoWebService(apiClient);
+
+  try {
+    // 1. Consultar pagamentos por intervalo de data
+    print('\n--- Consultando pagamentos por data ---');
+    final consultarDataResponse = await pagtoWebService.consultarPagamentosPorData(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
+
+    print('Status: ${consultarDataResponse.status}');
+    print('Sucesso: ${consultarDataResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarDataResponse.dados.length}');
+
+    if (consultarDataResponse.dados.isNotEmpty) {
+      final pagamento = consultarDataResponse.dados.first;
+      print('Primeiro pagamento:');
+      print('  Número: ${pagamento.numeroDocumento}');
+      print('  Tipo: ${pagamento.tipo.descricao}');
+      print('  Período: ${pagamento.periodoApuracao}');
+      print('  Data Arrecadação: ${pagamento.dataArrecadacao}');
+      print('  Valor Total: R\$ ${pagamento.valorTotal}');
+      print('  Receita: ${pagamento.receitaPrincipal.descricao}');
+    }
+
+    // 2. Consultar pagamentos por códigos de receita
+    print('\n--- Consultando pagamentos por receita ---');
+    final consultarReceitaResponse = await pagtoWebService.consultarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Status: ${consultarReceitaResponse.status}');
+    print('Sucesso: ${consultarReceitaResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarReceitaResponse.dados.length}');
+
+    // 3. Consultar pagamentos por intervalo de valor
+    print('\n--- Consultando pagamentos por valor ---');
+    final consultarValorResponse = await pagtoWebService.consultarPagamentosPorValor(
+      contribuinteNumero: '00000000000100',
+      valorInicial: 100.00,
+      valorFinal: 1000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Status: ${consultarValorResponse.status}');
+    print('Sucesso: ${consultarValorResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarValorResponse.dados.length}');
+
+    // 4. Consultar pagamentos por números de documento
+    print('\n--- Consultando pagamentos por documento ---');
+    final consultarDocumentoResponse = await pagtoWebService.consultarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
+
+    print('Status: ${consultarDocumentoResponse.status}');
+    print('Sucesso: ${consultarDocumentoResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarDocumentoResponse.dados.length}');
+
+    // 5. Contar pagamentos por data
+    print('\n--- Contando pagamentos por data ---');
+    final contarDataResponse = await pagtoWebService.contarPagamentosPorData(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+    );
+
+    print('Status: ${contarDataResponse.status}');
+    print('Sucesso: ${contarDataResponse.sucesso}');
+    print('Quantidade total: ${contarDataResponse.quantidade}');
+
+    // 6. Contar pagamentos por receita
+    print('\n--- Contando pagamentos por receita ---');
+    final contarReceitaResponse = await pagtoWebService.contarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+    );
+
+    print('Status: ${contarReceitaResponse.status}');
+    print('Sucesso: ${contarReceitaResponse.sucesso}');
+    print('Quantidade total: ${contarReceitaResponse.quantidade}');
+
+    // 7. Contar pagamentos por valor
+    print('\n--- Contando pagamentos por valor ---');
+    final contarValorResponse = await pagtoWebService.contarPagamentosPorValor(
+      contribuinteNumero: '00000000000100',
+      valorInicial: 100.00,
+      valorFinal: 1000.00,
+    );
+
+    print('Status: ${contarValorResponse.status}');
+    print('Sucesso: ${contarValorResponse.sucesso}');
+    print('Quantidade total: ${contarValorResponse.quantidade}');
+
+    // 8. Contar pagamentos por documento
+    print('\n--- Contando pagamentos por documento ---');
+    final contarDocumentoResponse = await pagtoWebService.contarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+    );
+
+    print('Status: ${contarDocumentoResponse.status}');
+    print('Sucesso: ${contarDocumentoResponse.sucesso}');
+    print('Quantidade total: ${contarDocumentoResponse.quantidade}');
+
+    // 9. Emitir comprovante de pagamento
+    print('\n--- Emitindo comprovante de pagamento ---');
+    final emitirComprovanteResponse = await pagtoWebService.emitirComprovante(
+      contribuinteNumero: '00000000000100',
+      numeroDocumento: '12345678901234567890',
+    );
+
+    print('Status: ${emitirComprovanteResponse.status}');
+    print('Sucesso: ${emitirComprovanteResponse.sucesso}');
+    print('PDF disponível: ${emitirComprovanteResponse.pdfBase64 != null}');
+
+    if (emitirComprovanteResponse.pdfBase64 != null) {
+      print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
+    }
+
+    // 10. Exemplo com filtros combinados
+    print('\n--- Exemplo com filtros combinados ---');
+    final consultarCombinadoResponse = await pagtoWebService.consultarPagamentos(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-06-01',
+      dataFinal: '2023-06-30',
+      codigoReceitaLista: ['0001'],
+      valorInicial: 500.00,
+      valorFinal: 2000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 20,
+    );
+
+    print('Status: ${consultarCombinadoResponse.status}');
+    print('Sucesso: ${consultarCombinadoResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarCombinadoResponse.dados.length}');
+
+    // 11. Exemplo de paginação
+    print('\n--- Exemplo de paginação ---');
+    final pagina1Response = await pagtoWebService.consultarPagamentos(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Página 1 - Status: ${pagina1Response.status}');
+    print('Página 1 - Quantidade: ${pagina1Response.dados.length}');
+
+    if (pagina1Response.dados.length == 5) {
+      // Simular próxima página
+      final pagina2Response = await pagtoWebService.consultarPagamentos(
+        contribuinteNumero: '00000000000100',
+        dataInicial: '2023-01-01',
+        dataFinal: '2023-12-31',
+        primeiroDaPagina: 5,
+        tamanhoDaPagina: 5,
+      );
+
+      print('Página 2 - Status: ${pagina2Response.status}');
+      print('Página 2 - Quantidade: ${pagina2Response.dados.length}');
+    }
+
+    // 12. Exemplo de tratamento de erros
+    print('\n--- Exemplo de tratamento de erros ---');
+    try {
+      final erroResponse = await pagtoWebService.consultarPagamentos(
+        contribuinteNumero: '00000000000000', // CNPJ inválido
+        dataInicial: '2023-01-01',
+        dataFinal: '2023-12-31',
+      );
+
+      print('Status: ${erroResponse.status}');
+      print('Sucesso: ${erroResponse.sucesso}');
+
+      if (!erroResponse.sucesso) {
+        print('Mensagens de erro:');
+        for (final mensagem in erroResponse.mensagens) {
+          print('  ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+    } catch (e) {
+      print('Erro capturado: $e');
+    }
+
+    // 13. Exemplo de análise de desmembramentos
+    print('\n--- Exemplo de análise de desmembramentos ---');
+    if (consultarDataResponse.dados.isNotEmpty) {
+      final pagamento = consultarDataResponse.dados.first;
+      print('Análise do pagamento ${pagamento.numeroDocumento}:');
+      print('  Desmembramentos: ${pagamento.desmembramentos.length}');
+
+      for (int i = 0; i < pagamento.desmembramentos.length; i++) {
+        final desmembramento = pagamento.desmembramentos[i];
+        print('  Desmembramento ${i + 1}:');
+        print('    Sequencial: ${desmembramento.sequencial}');
+        print('    Receita: ${desmembramento.receitaPrincipal.descricao}');
+        print('    Período: ${desmembramento.periodoApuracao}');
+        print('    Valor Total: R\$ ${desmembramento.valorTotal ?? 0.0}');
+        print('    Valor Principal: R\$ ${desmembramento.valorPrincipal ?? 0.0}');
+        print('    Valor Multa: R\$ ${desmembramento.valorMulta ?? 0.0}');
+        print('    Valor Juros: R\$ ${desmembramento.valorJuros ?? 0.0}');
+      }
+    }
+
+    print('\n=== Exemplos PAGTOWEB Concluídos ===');
+  } catch (e) {
+    print('Erro no serviço PAGTOWEB: $e');
+  }
+}
+
+Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
+  print('=== Exemplos Autenticação de Procurador ===');
+
+  final autenticaProcuradorService = AutenticaProcuradorService(apiClient);
+
+  try {
+    // Dados de exemplo para demonstração
+    const contratanteNumero = '00000000000100'; // CNPJ da empresa contratante
+    const contratanteNome = 'EMPRESA EXEMPLO LTDA';
+    const autorPedidoDadosNumero = '00000000000'; // CPF do procurador/contador
+    const autorPedidoDadosNome = 'JOÃO DA SILVA CONTADOR';
+
+    // 1. Criar termo de autorização
+    print('\n--- 1. Criando Termo de Autorização ---');
+    final termo = await autenticaProcuradorService.criarTermoComDataAtual(
+      contratanteNumero: contratanteNumero,
+      contratanteNome: contratanteNome,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+      autorPedidoDadosNome: autorPedidoDadosNome,
+    );
+
+    print('Termo criado com sucesso');
+    print('Data de assinatura: ${termo.dataAssinatura}');
+    print('Data de vigência: ${termo.dataVigencia}');
+
+    // 2. Validar dados do termo
+    print('\n--- 2. Validando Dados do Termo ---');
+    final erros = termo.validarDados();
+    if (erros.isEmpty) {
+      print('✓ Dados do termo são válidos');
+    } else {
+      print('✗ Erros encontrados:');
+      for (final erro in erros) {
+        print('  - $erro');
+      }
+    }
+
+    // 3. Criar XML do termo
+    print('\n--- 3. Criando XML do Termo ---');
+    final xml = termo.criarXmlTermo();
+    print('XML criado com ${xml.length} caracteres');
+
+    // 4. Validar estrutura do XML
+    print('\n--- 4. Validando Estrutura do XML ---');
+    final errosXml = await autenticaProcuradorService.validarTermoAutorizacao(xml);
+    if (errosXml.isEmpty) {
+      print('✓ Estrutura do XML é válida');
+    } else {
+      print('✗ Erros na estrutura do XML:');
+      for (final erro in errosXml) {
+        print('  - $erro');
+      }
+    }
+
+    // 5. Assinar termo digitalmente (simulado)
+    print('\n--- 5. Assinando Termo Digitalmente (Simulado) ---');
+    final xmlAssinado = await autenticaProcuradorService.assinarTermoDigital(termo);
+    print('Termo assinado com sucesso');
+    print('XML assinado tem ${xmlAssinado.length} caracteres');
+
+    // 6. Validar assinatura digital
+    print('\n--- 6. Validando Assinatura Digital ---');
+    final relatorioAssinatura = await autenticaProcuradorService.validarAssinaturaDigital(xmlAssinado);
+    print('Relatório de validação:');
+    print('  - Tem assinatura: ${relatorioAssinatura['tem_assinatura']}');
+    print('  - Tem signed info: ${relatorioAssinatura['tem_signed_info']}');
+    print('  - Tem signature value: ${relatorioAssinatura['tem_signature_value']}');
+    print('  - Tem X509 certificate: ${relatorioAssinatura['tem_x509_certificate']}');
+    print('  - Algoritmo assinatura correto: ${relatorioAssinatura['algoritmo_assinatura_correto']}');
+    print('  - Algoritmo hash correto: ${relatorioAssinatura['algoritmo_hash_correto']}');
+    print('  - Assinatura válida: ${relatorioAssinatura['assinatura_valida']}');
+
+    // 7. Autenticar procurador
+    print('\n--- 7. Autenticando Procurador ---');
+    try {
+      final response = await autenticaProcuradorService.autenticarProcurador(
+        xmlAssinado: xmlAssinado,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
+
+      print('Status da autenticação: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+      print('Código: ${response.codigoMensagem}');
+
+      if (response.sucesso && response.autenticarProcuradorToken != null) {
+        print('✓ Token obtido: ${response.autenticarProcuradorToken!.substring(0, 8)}...');
+        print('✓ Data de expiração: ${response.dataExpiracao}');
+        print('✓ Token em cache: ${response.isCacheValido}');
+      }
+    } catch (e) {
+      print('Erro na autenticação (esperado em ambiente de teste): $e');
+    }
+
+    // 8. Verificar cache de token
+    print('\n--- 8. Verificando Cache de Token ---');
+    final cache = await autenticaProcuradorService.verificarCacheToken(
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    if (cache != null) {
+      print('✓ Token encontrado em cache');
+      print('  - Válido: ${cache.isTokenValido}');
+      print('  - Expira em breve: ${cache.expiraEmBreve}');
+      print('  - Tempo restante: ${cache.tempoRestante.inHours} horas');
+    } else {
+      print('✗ Nenhum token válido em cache');
+    }
+
+    // 9. Obter token válido (do cache ou renovar)
+    print('\n--- 9. Obtendo Token Válido ---');
+    try {
+      final token = await autenticaProcuradorService.obterTokenValido(
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        autorPedidoDadosNome: autorPedidoDadosNome,
+      );
+
+      print('✓ Token obtido: ${token.substring(0, 8)}...');
+    } catch (e) {
+      print('Erro ao obter token (esperado em ambiente de teste): $e');
+    }
+
+    // 10. Exemplo com certificado digital (simulado)
+    print('\n--- 10. Exemplo com Certificado Digital (Simulado) ---');
+    try {
+      final termoComCertificado = await autenticaProcuradorService.criarTermoComDataAtual(
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        autorPedidoDadosNome: autorPedidoDadosNome,
+        certificadoPath: '/caminho/para/certificado.p12',
+        certificadoPassword: 'senha123',
+      );
+
+      print('Termo com certificado criado');
+      print('Caminho do certificado: ${termoComCertificado.certificadoPath}');
+
+      // Simular obtenção de informações do certificado
+      final infoCertificado = await autenticaProcuradorService.obterInfoCertificado(
+        certificadoPath: '/caminho/para/certificado.p12',
+        senha: 'senha123',
+      );
+
+      print('Informações do certificado:');
+      print('  - Serial: ${infoCertificado['serial']}');
+      print('  - Subject: ${infoCertificado['subject']}');
+      print('  - Tipo: ${infoCertificado['tipo']}');
+      print('  - Formato: ${infoCertificado['formato']}');
+      print('  - Tamanho: ${infoCertificado['tamanho_bytes']} bytes');
+    } catch (e) {
+      print('Erro com certificado (esperado em ambiente de teste): $e');
+    }
+
+    // 11. Exemplo de renovação de token
+    print('\n--- 11. Exemplo de Renovação de Token ---');
+    try {
+      final responseRenovacao = await autenticaProcuradorService.renovarToken(
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        autorPedidoDadosNome: autorPedidoDadosNome,
+      );
+
+      print('Status da renovação: ${responseRenovacao.status}');
+      print('Sucesso: ${responseRenovacao.sucesso}');
+    } catch (e) {
+      print('Erro na renovação (esperado em ambiente de teste): $e');
+    }
+
+    // 12. Gerenciamento de cache
+    print('\n--- 12. Gerenciamento de Cache ---');
+    final estatisticas = await autenticaProcuradorService.obterEstatisticasCache();
+    print('Estatísticas do cache:');
+    print('  - Total de caches: ${estatisticas['total_caches']}');
+    print('  - Caches válidos: ${estatisticas['caches_validos']}');
+    print('  - Caches expirados: ${estatisticas['caches_expirados']}');
+    print('  - Taxa de válidos: ${estatisticas['taxa_validos']}%');
+    print('  - Tamanho total: ${estatisticas['tamanho_total_kb']} KB');
+
+    // 13. Limpeza de cache
+    print('\n--- 13. Limpeza de Cache ---');
+    final removidos = await autenticaProcuradorService.removerCachesExpirados();
+    print('Caches expirados removidos: $removidos');
+
+    // 14. Exemplo de uso com ApiClient
+    print('\n--- 14. Exemplo de Uso com ApiClient ---');
+    print('Verificando se ApiClient tem token de procurador:');
+    print('  - Tem token: ${apiClient.hasProcuradorToken}');
+    print('  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...');
+
+    // Simular definição de token manual
+    apiClient.setProcuradorToken('token_exemplo_123456789', contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+
+    print('Após definir token manualmente:');
+    print('  - Tem token: ${apiClient.hasProcuradorToken}');
+    print('  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...');
+
+    final infoCache = apiClient.procuradorCacheInfo;
+    if (infoCache != null) {
+      print('Informações do cache:');
+      print('  - Token: ${infoCache['token']}');
+      print('  - Válido: ${infoCache['is_valido']}');
+      print('  - Expira em breve: ${infoCache['expira_em_breve']}');
+      print('  - Tempo restante: ${infoCache['tempo_restante_horas']} horas');
+    }
+
+    // 15. Exemplo de fluxo completo
+    print('\n--- 15. Exemplo de Fluxo Completo ---');
+    print('Este exemplo demonstra o fluxo completo de autenticação de procurador:');
+    print('1. ✓ Criar termo de autorização');
+    print('2. ✓ Validar dados do termo');
+    print('3. ✓ Criar XML do termo');
+    print('4. ✓ Validar estrutura do XML');
+    print('5. ✓ Assinar termo digitalmente');
+    print('6. ✓ Validar assinatura digital');
+    print('7. ✓ Autenticar procurador');
+    print('8. ✓ Verificar cache de token');
+    print('9. ✓ Obter token válido');
+    print('10. ✓ Gerenciar cache');
+    print('11. ✓ Usar com ApiClient');
+
+    print('\n=== Exemplos Autenticação de Procurador Concluídos ===');
+  } catch (e) {
+    print('Erro no serviço de Autenticação de Procurador: $e');
   }
 }

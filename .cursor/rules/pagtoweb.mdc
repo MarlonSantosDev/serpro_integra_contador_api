@@ -1,0 +1,775 @@
+---
+alwaysApply: true
+---
+# Cenários do Pagamentos (PAGTOWEB)
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por intervaloDataArrecadacao.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1     },     "contribuinte": {         "numero": "99999999999",         "tipo": 1     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "PAGAMENTOS71",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Consulta Pagamento: quando pesquisado por codigoReceitaLista
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por codigoReceitaLista.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"], \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "PAGAMENTOS71",             "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"], \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por intervaloValorTotalDocumento.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"     } }
+
+## Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"     } }
+
+## Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"         }     }'`
+
+## Emitir Comprovante de Pagamento
+
+Esta simulação retorna o comprovante de pagamento de um documento de arrecadação.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "EMITECOMPROVANTEPAGAMENTO72",         "dados": "{\"codigoReceita\": \"9999\", \"numeroDocumento\": \"99999999999999999\"}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "EMITECOMPROVANTEPAGAMENTO72",         "dados": "{\"codigoReceita\": \"9999\", \"numeroDocumento\": \"99999999999999999\"}"         }     }'`
+
+
+
+
+# Integra-Pagamento
+
+O Integra-Pagamento disponibiliza serviços de consulta dos pagamentos, saldo e a emissão de Comprovantes de Pagamento. Permite a integração com a base do sistema abaixo:
+
+## Sistemas disponíveis
+
+- PAGTOWEB
+- Pagamentos RFB
+
+
+
+
+# Introdução
+
+## O que é o Integra PAGTOWEB?
+
+É uma solução integrada ao sistema PagtoWeb. Permite ao contribuinte a consulta dos seus pagamentos e saldo e a emissão de Comprovantes de Pagamento, instrumento que garante que o documento está pago e armazenado nas bases de dados da Receita Federal.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Pagamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PAGTOWEB, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Conta Consulta Pagamento
+
+Essa consulta retorna um quantitativo de documentos de arrecadação pagos.
+
+PedidoDados
+
+idSistema: PAGTOWEB  
+idServico: CONTACONSDOCARRPG73  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto IntervaloData:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| dataInicial | Formato AAAA-MM-DD | `String` | NÃO |
+| dataFinal | Formato AAAA-MM-DD | `String` | NÃO |
+
+Objeto IntervaloValor:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| valorInicial | Número com o valor inicial | `Number` | NÃO |
+| valorFinal | Número com o valor final | `Number` | NÃO |
+
+Objeto ParametroEmissaoComprovanteIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumento | Número do documento. | `String` (até 17 bytes) | NÃO |
+
+Objeto ParametroContaConsultaDocumentoIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumentoLista | Lista com números de documentos, cada número tem até 17 posições. | `Array` | NÃO |
+| codigoReceitaLista | Lista com códigos de receita. Tamanho máx. do código: 4. | `Array` | NÃO |
+| intervaloDataArrecadacao | Intervalo de data de arrecadação a ser pesquisado. A data de arrecadação é a data contábil da efetivação do pagamento. | `IntervaloData` | NÃO |
+| intervaloValorTotalDocumento | Intervalo de valor total a ser pesquisado. | `IntervaloValor` | NÃO |
+| codigoTipoDocumentoLista | Tipos de documento que serão retornados. Numérico. Tamanho máx. do código: 2 | `Array` | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+Quando pesquisado por intervaloDataArrecadacao
+
+    `{         "contratante": {             "numero": "99999999999",             "tipo": 1         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1         },         "contribuinte": {             "numero": "99999999999",             "tipo": 1         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"         }     }`
+
+Quando pesquisado por codigoReceitaLista:
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"         }     }`
+
+Quando pesquisado por intervaloValorTotalDocumento:
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"         }     }`
+
+Os parâmetros de consulta, podem ser combinados. A consulta sempre retorna quantidade de documentos do contribuinte informado em "contribuinte".
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [Conta Consulta Pagamento]()
+
+
+
+
+# Emite Comprovante Pagamento
+
+Esse método retorna o comprovante de pagamento.
+
+PedidoDados
+
+idSistema: PAGTOWEB  
+idServico: COMPARRECADACAO72  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto ParametroEmissaoComprovanteIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumento | Número do documento. | `String` (até 17 bytes) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1    },         "contribuinte": {             "numero": "99999999999",             "tipo": 1    },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "COMPARRECADACAO72",             "dados": "{\"numeroDocumento\": \"99999999999999999\"}"         }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | PDF codificado em Base64 | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [Emite Comprovante Pagamento]()
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumentoLista\":[\"9999999999\"],\"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     },     "status": 200,     "dados": "[{\"numeroDocumento\":\"9999999999\",\"tipo\":{\"codigo\":\"4\",\"descricao\":\"DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS\",\"descricaoAbreviada\":\"DARF\"},\"periodoApuracao\":\"2019-09-30T00:00:00-03:00\",\"dataArrecadacao\":\"2019-09-30T00:00:00-03:00\",\"dataVencimento\":\"2019-09-30T00:00:00-03:00\",\"receitaPrincipal\":{\"codigo\":\"481\",\"descricao\":\"IRRF - Juros e Comissões em Geral - Residentes no Exterior\",\"extensaoReceita\":null},\"referencia\":null,\"valorTotal\":369176.53,\"valorPrincipal\":369176.53,\"valorMulta\":null,\"valorJuros\":null,\"valorSaldoTotal\":null,\"valorSaldoPrincipal\":null,\"valorSaldoMulta\":null,\"valorSaldoJuros\":null,\"desmembramentos\":[{\"sequencial\":\"1\",\"receitaPrincipal\":{\"codigo\":\"481\",\"descricao\":\"IRRF - Juros e Comissões em Geral - Residentes no Exterior\",\"extensaoReceita\":null},\"periodoApuracao\":\"2019-09-30T00:00:00-03:00\",\"dataVencimento\":\"2019-09-30T00:00:00-03:00\",\"valorTotal\":null,\"valorPrincipal\":null,\"valorMulta\":null,\"valorJuros\":null,\"valorSaldoTotal\":null,\"valorSaldoPrincipal\":null,\"valorSaldoMulta\":null,\"valorSaldoJuros\":null}]}]",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+`{     "numeroDocumento": "9999999999",     "tipo": {         "codigo": "4",         "descricao": "DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS",         "descricaoAbreviada": "DARF"     },     "periodoApuracao": "2019-09-30T00:00:00-03:00",     "dataArrecadacao": "2019-09-30T00:00:00-03:00",     "dataVencimento": "2019-09-30T00:00:00-03:00",     "receitaPrincipal": {         "codigo": "481",         "descricao": "IRRF - Juros e Comissões em Geral - Residentes no Exterior",         "extensaoReceita": null     },     "referencia": null,     "valorTotal": 369176.53,     "valorPrincipal": 369176.53,     "valorMulta": null,     "valorJuros": null,     "valorSaldoTotal": null,     "valorSaldoPrincipal": null,     "valorSaldoMulta": null,     "valorSaldoJuros": null,     "desmembramentos": [{         "sequencial": "1",         "receitaPrincipal": {             "codigo": "481",             "descricao": "IRRF - Juros e Comissões em Geral - Residentes no Exterior",             "extensaoReceita": null         },         "periodoApuracao": "2019-09-30T00:00:00-03:00",         "dataVencimento": "2019-09-30T00:00:00-03:00",         "valorTotal": null,         "valorPrincipal": null,         "valorMulta": null,         "valorJuros": null,         "valorSaldoTotal": null,         "valorSaldoPrincipal": null,         "valorSaldoMulta": null,         "valorSaldoJuros": null     }] }`
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumentoLista\":[\"9999999999\"]}"     },     "status": 200,     "dados": "1",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1     },     "contribuinte": {         "numero": "99999999999",         "tipo": 1     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "COMPARRECADACAO72",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumento\": \"99999999999999999\"}"     },     "status": 200,     "dados": "{\"pdf\":\"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...201927 bytes truncated..."}",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+`{     "pdf": "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...201927 bytes truncated..."}
+
+
+
+
+# Mensagens de negócio
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| Sucesso-PAGTOWEB-00000 | Requisição efetuada com sucesso. |
+| EntradaIncorreta-PAGTOWEB-00001 | Parâmetro de entrada (nomeParametro) inválido |
+| EntradaIncorreta-PAGTOWEB-00002 | Usuário não pode consultar o documento |
+| Erro-PAGTOWEB-00099 | Ocorreu um erro inesperado na aplicação. Protocolo de erro: {numeroProtocolo}. Data/hora: {dataHora} |
+
+
+
+
+# Dados de domínio
+
+## Tipos de Documento
+
+| Código | Descrição |
+| --- | --- |
+| 04 | DARF |
+| 07 | DJE |
+| 08 | DARF SIMPLES |
+| 09 | DAS |
+| 10 | DAE |
+
+
+
+
+# Glossário
+
+## Siglas
+
+Principais siglas utilizadas no PAGTOWEB.
+
+| Sigla | Descrição |
+| --- | --- |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| DARF | Documento de Arrecadação de Receitas Federais |
+| DAS | Documento de Arrecadação do Simples Nacional |
+| DAE | Documento de Arrecadação do eSocial |
+| DJE | Documento para Depósitos Judiciais ou Extrajudiciais |
+| PF | Pessoa Física |
+| PJ | Pessoa Jurídica |
+
+## Termos
+
+Principais termos utilizadas no PAGTOWEB.
+
+| Termo | Descrição |
+| --- | --- |
+| Código de receita | É o código através do qual o contribuinte pessoa física ou jurídica paga seus tributos federais |
+| Cadastro Imobiliário Brasileiro (CIB) | São informações cadastrais de imóveis rurais e urbanas, públicos ou privados, inscritos nos respectivos cadastros de origem, como o Cadastro Nacional de Imóveis Rurais (CNIR) |
+| Data de arrecadação | É a data contábil da efetivação do pagamento |
+| Data de Vencimento | Data de vencimento do tributo |
+| Desmembramentos | Os desmembramentos são os desdobramento dos tributos pagos em um único documento de arrecadação |
+| Documento de Arrecadação | Documento de Arrecadação de Receitas Federais emitido para o pagamento de tributos federais (impostos, taxas e contribuições). O mesmo pode representar uma arrecadação efetivamente paga pelo contribuinte bem como um agendamento ou uma emissão de documento de arrecadação. Observação: Para esse serviço somente os documentos pagos serão disponibilizado |
+| Extensão da Receita | É o código da extensão de receita que identifica datas de vencimentos ou alíquotas de um tributo dentro de um mesmo código de receita |
+| Período de Apuração | Período de apuração do débito/tributo do pagamento |
+| Receita principal | É o código de receita principal do tributo |
+| Receita multa | É o código de receita de multa associada do tributo principal nos casos de pagamento em atraso |
+| Receita juros | É o código de receita de Juros associado ao tributo principal nos casos de atualização monetária |
+| Referencia | O número de referência no DARF é um código numérico que complementa a informação |
+| Tipos de documento | Tipo do documento de arrecadação (DARF, DAS, DAE, DJE) |
+| Valor Saldo Total | Valor não utilizado do pagamento |
+
+# Cenários do Pagamentos (PAGTOWEB)
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por intervaloDataArrecadacao.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1     },     "contribuinte": {         "numero": "99999999999",         "tipo": 1     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "PAGAMENTOS71",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Consulta Pagamento: quando pesquisado por codigoReceitaLista
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por codigoReceitaLista.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"], \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "PAGAMENTOS71",             "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"], \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+
+Esta simulação retorna os detalhes de documentos de arrecadação pagos pesquisando por intervaloValorTotalDocumento.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}, \"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"         }     }'`
+
+## Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"     } }
+
+## Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"     } }
+
+## Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+
+Esta simulação retorna um quantitativo de documentos de arrecadação pagos.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"         }     }'`
+
+## Emitir Comprovante de Pagamento
+
+Esta simulação retorna o comprovante de pagamento de um documento de arrecadação.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "EMITECOMPROVANTEPAGAMENTO72",         "dados": "{\"codigoReceita\": \"9999\", \"numeroDocumento\": \"99999999999999999\"}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "EMITECOMPROVANTEPAGAMENTO72",         "dados": "{\"codigoReceita\": \"9999\", \"numeroDocumento\": \"99999999999999999\"}"         }     }'`
+
+
+
+
+# Integra-Pagamento
+
+O Integra-Pagamento disponibiliza serviços de consulta dos pagamentos, saldo e a emissão de Comprovantes de Pagamento. Permite a integração com a base do sistema abaixo:
+
+## Sistemas disponíveis
+
+- PAGTOWEB
+- Pagamentos RFB
+
+
+
+
+# Introdução
+
+## O que é o Integra PAGTOWEB?
+
+É uma solução integrada ao sistema PagtoWeb. Permite ao contribuinte a consulta dos seus pagamentos e saldo e a emissão de Comprovantes de Pagamento, instrumento que garante que o documento está pago e armazenado nas bases de dados da Receita Federal.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Pagamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PAGTOWEB, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Conta Consulta Pagamento
+
+Essa consulta retorna um quantitativo de documentos de arrecadação pagos.
+
+PedidoDados
+
+idSistema: PAGTOWEB  
+idServico: CONTACONSDOCARRPG73  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto IntervaloData:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| dataInicial | Formato AAAA-MM-DD | `String` | NÃO |
+| dataFinal | Formato AAAA-MM-DD | `String` | NÃO |
+
+Objeto IntervaloValor:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| valorInicial | Número com o valor inicial | `Number` | NÃO |
+| valorFinal | Número com o valor final | `Number` | NÃO |
+
+Objeto ParametroEmissaoComprovanteIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumento | Número do documento. | `String` (até 17 bytes) | NÃO |
+
+Objeto ParametroContaConsultaDocumentoIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumentoLista | Lista com números de documentos, cada número tem até 17 posições. | `Array` | NÃO |
+| codigoReceitaLista | Lista com códigos de receita. Tamanho máx. do código: 4. | `Array` | NÃO |
+| intervaloDataArrecadacao | Intervalo de data de arrecadação a ser pesquisado. A data de arrecadação é a data contábil da efetivação do pagamento. | `IntervaloData` | NÃO |
+| intervaloValorTotalDocumento | Intervalo de valor total a ser pesquisado. | `IntervaloValor` | NÃO |
+| codigoTipoDocumentoLista | Tipos de documento que serão retornados. Numérico. Tamanho máx. do código: 2 | `Array` | NÃO |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+Quando pesquisado por intervaloDataArrecadacao
+
+    `{         "contratante": {             "numero": "99999999999",             "tipo": 1         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1         },         "contribuinte": {             "numero": "99999999999",             "tipo": 1         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2019-09-01\", \"dataFinal\": \"2019-11-30\"}}"         }     }`
+
+Quando pesquisado por codigoReceitaLista:
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{\"codigoReceitaLista\": [\"9999\", \"9999\"]}"         }     }`
+
+Quando pesquisado por intervaloValorTotalDocumento:
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999999",             "tipo": 2         },         "contribuinte": {             "numero": "99999999999999",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "CONTACONSDOCARRPG73",             "dados": "{ \"intervaloDataArrecadacao\": {\"dataInicial\": \"2022-01-01\", \"dataFinal\": \"2022-01-31\"}, \"intervaloValorTotalDocumento\": {\"valorInicial\": 6000,\"valorFinal\": 13000}}"         }     }`
+
+Os parâmetros de consulta, podem ser combinados. A consulta sempre retorna quantidade de documentos do contribuinte informado em "contribuinte".
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [Conta Consulta Pagamento]()
+
+
+
+
+# Emite Comprovante Pagamento
+
+Esse método retorna o comprovante de pagamento.
+
+PedidoDados
+
+idSistema: PAGTOWEB  
+idServico: COMPARRECADACAO72  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto ParametroEmissaoComprovanteIC:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDocumento | Número do documento. | `String` (até 17 bytes) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1    },         "contribuinte": {             "numero": "99999999999",             "tipo": 1    },         "pedidoDados": {             "idSistema": "PAGTOWEB",             "idServico": "COMPARRECADACAO72",             "dados": "{\"numeroDocumento\": \"99999999999999999\"}"         }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | PDF codificado em Base64 | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [Emite Comprovante Pagamento]()
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "PAGAMENTOS71",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumentoLista\":[\"9999999999\"],\"primeiroDaPagina\": 0,\"tamanhoDaPagina\": 100}"     },     "status": 200,     "dados": "[{\"numeroDocumento\":\"9999999999\",\"tipo\":{\"codigo\":\"4\",\"descricao\":\"DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS\",\"descricaoAbreviada\":\"DARF\"},\"periodoApuracao\":\"2019-09-30T00:00:00-03:00\",\"dataArrecadacao\":\"2019-09-30T00:00:00-03:00\",\"dataVencimento\":\"2019-09-30T00:00:00-03:00\",\"receitaPrincipal\":{\"codigo\":\"481\",\"descricao\":\"IRRF - Juros e Comissões em Geral - Residentes no Exterior\",\"extensaoReceita\":null},\"referencia\":null,\"valorTotal\":369176.53,\"valorPrincipal\":369176.53,\"valorMulta\":null,\"valorJuros\":null,\"valorSaldoTotal\":null,\"valorSaldoPrincipal\":null,\"valorSaldoMulta\":null,\"valorSaldoJuros\":null,\"desmembramentos\":[{\"sequencial\":\"1\",\"receitaPrincipal\":{\"codigo\":\"481\",\"descricao\":\"IRRF - Juros e Comissões em Geral - Residentes no Exterior\",\"extensaoReceita\":null},\"periodoApuracao\":\"2019-09-30T00:00:00-03:00\",\"dataVencimento\":\"2019-09-30T00:00:00-03:00\",\"valorTotal\":null,\"valorPrincipal\":null,\"valorMulta\":null,\"valorJuros\":null,\"valorSaldoTotal\":null,\"valorSaldoPrincipal\":null,\"valorSaldoMulta\":null,\"valorSaldoJuros\":null}]}]",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+`{     "numeroDocumento": "9999999999",     "tipo": {         "codigo": "4",         "descricao": "DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS",         "descricaoAbreviada": "DARF"     },     "periodoApuracao": "2019-09-30T00:00:00-03:00",     "dataArrecadacao": "2019-09-30T00:00:00-03:00",     "dataVencimento": "2019-09-30T00:00:00-03:00",     "receitaPrincipal": {         "codigo": "481",         "descricao": "IRRF - Juros e Comissões em Geral - Residentes no Exterior",         "extensaoReceita": null     },     "referencia": null,     "valorTotal": 369176.53,     "valorPrincipal": 369176.53,     "valorMulta": null,     "valorJuros": null,     "valorSaldoTotal": null,     "valorSaldoPrincipal": null,     "valorSaldoMulta": null,     "valorSaldoJuros": null,     "desmembramentos": [{         "sequencial": "1",         "receitaPrincipal": {             "codigo": "481",             "descricao": "IRRF - Juros e Comissões em Geral - Residentes no Exterior",             "extensaoReceita": null         },         "periodoApuracao": "2019-09-30T00:00:00-03:00",         "dataVencimento": "2019-09-30T00:00:00-03:00",         "valorTotal": null,         "valorPrincipal": null,         "valorMulta": null,         "valorJuros": null,         "valorSaldoTotal": null,         "valorSaldoPrincipal": null,         "valorSaldoMulta": null,         "valorSaldoJuros": null     }] }`
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "CONTACONSDOCARRPG73",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumentoLista\":[\"9999999999\"]}"     },     "status": 200,     "dados": "1",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+
+
+
+# Exemplo de Json de retorno
+
+Consultar Pagamentos.
+
+## Json de retorno completo
+
+`{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1     },     "contribuinte": {         "numero": "99999999999",         "tipo": 1     },     "pedidoDados": {         "idSistema": "PAGTOWEB",         "idServico": "COMPARRECADACAO72",         "versaoSistema": "1.0",         "dados": "{\"numeroDocumento\": \"99999999999999999\"}"     },     "status": 200,     "dados": "{\"pdf\":\"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...201927 bytes truncated..."}",     "mensagens": [         {             "codigo": "Sucesso-PAGTOWEB-00000",             "texto": "Requisição efetuada com sucesso."         }     ] }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+`{     "pdf": "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...201927 bytes truncated..."}
+
+
+
+
+# Mensagens de negócio
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| Sucesso-PAGTOWEB-00000 | Requisição efetuada com sucesso. |
+| EntradaIncorreta-PAGTOWEB-00001 | Parâmetro de entrada (nomeParametro) inválido |
+| EntradaIncorreta-PAGTOWEB-00002 | Usuário não pode consultar o documento |
+| Erro-PAGTOWEB-00099 | Ocorreu um erro inesperado na aplicação. Protocolo de erro: {numeroProtocolo}. Data/hora: {dataHora} |
+
+
+
+
+# Dados de domínio
+
+## Tipos de Documento
+
+| Código | Descrição |
+| --- | --- |
+| 04 | DARF |
+| 07 | DJE |
+| 08 | DARF SIMPLES |
+| 09 | DAS |
+| 10 | DAE |
+
+
+
+
+# Glossário
+
+## Siglas
+
+Principais siglas utilizadas no PAGTOWEB.
+
+| Sigla | Descrição |
+| --- | --- |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| DARF | Documento de Arrecadação de Receitas Federais |
+| DAS | Documento de Arrecadação do Simples Nacional |
+| DAE | Documento de Arrecadação do eSocial |
+| DJE | Documento para Depósitos Judiciais ou Extrajudiciais |
+| PF | Pessoa Física |
+| PJ | Pessoa Jurídica |
+
+## Termos
+
+Principais termos utilizadas no PAGTOWEB.
+
+| Termo | Descrição |
+| --- | --- |
+| Código de receita | É o código através do qual o contribuinte pessoa física ou jurídica paga seus tributos federais |
+| Cadastro Imobiliário Brasileiro (CIB) | São informações cadastrais de imóveis rurais e urbanas, públicos ou privados, inscritos nos respectivos cadastros de origem, como o Cadastro Nacional de Imóveis Rurais (CNIR) |
+| Data de arrecadação | É a data contábil da efetivação do pagamento |
+| Data de Vencimento | Data de vencimento do tributo |
+| Desmembramentos | Os desmembramentos são os desdobramento dos tributos pagos em um único documento de arrecadação |
+| Documento de Arrecadação | Documento de Arrecadação de Receitas Federais emitido para o pagamento de tributos federais (impostos, taxas e contribuições). O mesmo pode representar uma arrecadação efetivamente paga pelo contribuinte bem como um agendamento ou uma emissão de documento de arrecadação. Observação: Para esse serviço somente os documentos pagos serão disponibilizado |
+| Extensão da Receita | É o código da extensão de receita que identifica datas de vencimentos ou alíquotas de um tributo dentro de um mesmo código de receita |
+| Período de Apuração | Período de apuração do débito/tributo do pagamento |
+| Receita principal | É o código de receita principal do tributo |
+| Receita multa | É o código de receita de multa associada do tributo principal nos casos de pagamento em atraso |
+| Receita juros | É o código de receita de Juros associado ao tributo principal nos casos de atualização monetária |
+| Referencia | O número de referência no DARF é um código numérico que complementa a informação |
+| Tipos de documento | Tipo do documento de arrecadação (DARF, DAS, DAE, DJE) |
+| Valor Saldo Total | Valor não utilizado do pagamento |
+
