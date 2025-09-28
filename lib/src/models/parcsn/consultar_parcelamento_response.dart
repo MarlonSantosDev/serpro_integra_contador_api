@@ -73,10 +73,10 @@ class ParcelamentoDetalhado {
   factory ParcelamentoDetalhado.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return ParcelamentoDetalhado(
-      numero: json['numero'] as int,
-      dataDoPedido: json['dataDoPedido'] as int,
-      situacao: json['situacao'] as String,
-      dataDaSituacao: json['dataDaSituacao'] as int,
+      numero: int.parse(json['numero'].toString()),
+      dataDoPedido: int.parse(json['dataDoPedido'].toString()),
+      situacao: json['situacao'].toString(),
+      dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacoesOriginais:
           (json['consolidacoesOriginais'] as List?)?.map((e) => ConsolidacaoOriginal.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       alteracoesDivida: (json['alteracoesDivida'] as List?)?.map((e) => AlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList() ?? [],
@@ -136,8 +136,8 @@ class ConsolidacaoOriginal {
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
-      numero: json['numero'] as int,
-      tipo: json['tipo'] as String,
+      numero: int.parse(json['numero'].toString()),
+      tipo: json['tipo'].toString(),
       detalhes: (json['detalhes'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -164,11 +164,11 @@ class DetalhesConsolidacao {
 
   factory DetalhesConsolidacao.fromJson(Map<String, dynamic> json) {
     return DetalhesConsolidacao(
-      competencia: json['competencia'] as String,
-      valorPrincipal: (json['valorPrincipal'] as num).toDouble(),
-      valorMulta: (json['valorMulta'] as num).toDouble(),
-      valorJuros: (json['valorJuros'] as num).toDouble(),
-      valorTotal: (json['valorTotal'] as num).toDouble(),
+      competencia: json['competencia'].toString(),
+      valorPrincipal: (num.parse(json['valorPrincipal'].toString())).toDouble(),
+      valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
+      valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
+      valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
     );
   }
 
@@ -197,8 +197,8 @@ class AlteracaoDivida {
 
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
-      numero: json['numero'] as int,
-      tipo: json['tipo'] as String,
+      numero: int.parse(json['numero'].toString()),
+      tipo: json['tipo'].toString(),
       detalhes: (json['detalhes'] as List).map((e) => DetalhesAlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -225,11 +225,11 @@ class DetalhesAlteracaoDivida {
 
   factory DetalhesAlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return DetalhesAlteracaoDivida(
-      competencia: json['competencia'] as String,
-      valorPrincipal: (json['valorPrincipal'] as num).toDouble(),
-      valorMulta: (json['valorMulta'] as num).toDouble(),
-      valorJuros: (json['valorJuros'] as num).toDouble(),
-      valorTotal: (json['valorTotal'] as num).toDouble(),
+      competencia: json['competencia'].toString(),
+      valorPrincipal: (num.parse(json['valorPrincipal'].toString())).toDouble(),
+      valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
+      valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
+      valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
     );
   }
 
@@ -258,8 +258,8 @@ class DemonstrativoPagamento {
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
-      numero: json['numero'] as int,
-      tipo: json['tipo'] as String,
+      numero: int.parse(json['numero'].toString()),
+      tipo: json['tipo'].toString(),
       detalhes: (json['detalhes'] as List).map((e) => DetalhesDemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -286,11 +286,11 @@ class DetalhesDemonstrativoPagamento {
 
   factory DetalhesDemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DetalhesDemonstrativoPagamento(
-      competencia: json['competencia'] as String,
-      valorPrincipal: (json['valorPrincipal'] as num).toDouble(),
-      valorMulta: (json['valorMulta'] as num).toDouble(),
-      valorJuros: (json['valorJuros'] as num).toDouble(),
-      valorTotal: (json['valorTotal'] as num).toDouble(),
+      competencia: json['competencia'].toString(),
+      valorPrincipal: (num.parse(json['valorPrincipal'].toString())).toDouble(),
+      valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
+      valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
+      valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
     );
   }
 

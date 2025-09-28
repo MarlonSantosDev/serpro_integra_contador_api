@@ -11,8 +11,8 @@ class DctfWebResponse {
 
   factory DctfWebResponse.fromJson(Map<String, dynamic> json) {
     return DctfWebResponse(
-      status: json['status'] as String,
-      mensagem: json['mensagem'] as String,
+      status: json['status'].toString(),
+      mensagem: json['mensagem'].toString(),
       detalhes: json['detalhes'] as Map<String, dynamic>,
     );
   }

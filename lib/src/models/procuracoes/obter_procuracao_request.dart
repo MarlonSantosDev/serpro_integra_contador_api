@@ -79,10 +79,10 @@ class ObterProcuracaoRequest {
   /// Cria a partir de JSON
   factory ObterProcuracaoRequest.fromJson(Map<String, dynamic> json) {
     return ObterProcuracaoRequest(
-      outorgante: json['outorgante'] as String,
-      tipoOutorgante: json['tipoOutorgante'] as String,
-      outorgado: json['outorgado'] as String,
-      tipoOutorgado: json['tipoOutorgado'] as String,
+      outorgante: json['outorgante'].toString(),
+      tipoOutorgante: json['tipoOutorgante'].toString(),
+      outorgado: json['outorgado'].toString(),
+      tipoOutorgado: json['tipoOutorgado'].toString(),
     );
   }
 

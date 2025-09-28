@@ -22,11 +22,11 @@ class DeclararResponse {
 
   factory DeclararResponse.fromJson(Map<String, dynamic> json) {
     return DeclararResponse(
-      type: json['type'] as String,
-      title: json['title'] as String,
-      status: json['status'] as int,
-      detail: json['detail'] as String,
-      instance: json['instance'] as String,
+      type: json['type'].toString(),
+      title: json['title'].toString(),
+      status: int.parse(json['status'].toString()),
+      detail: json['detail'].toString(),
+      instance: json['instance'].toString(),
     );
   }
 

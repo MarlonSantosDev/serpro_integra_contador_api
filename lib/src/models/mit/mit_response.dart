@@ -19,9 +19,9 @@ class MitResponse {
     }
 
     return MitResponse._internal(
-      status: json['status'] as String? ?? '',
-      responseId: json['responseId'] as String?,
-      responseDateTime: json['responseDateTime'] as String?,
+      status: json['status']?.toString() ?? '',
+      responseId: json['responseId']?.toString(),
+      responseDateTime: json['responseDateTime']?.toString(),
       mensagens: mensagens,
     );
   }
@@ -53,7 +53,7 @@ class EncerrarApuracaoResponse extends MitResponse {
     int? idApuracao;
 
     if (json['dados'] != null) {
-      final dadosStr = json['dados'] as String;
+      final dadosStr = json['dados'].toString();
       try {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
         protocoloEncerramento = dados['protocoloEncerramento'] as String?;
@@ -104,7 +104,7 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
     String? dataEncerramento;
 
     if (json['dados'] != null) {
-      final dadosStr = json['dados'] as String;
+      final dadosStr = json['dados'].toString();
       try {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
         idApuracao = dados['idApuracao'] as int?;
@@ -160,7 +160,7 @@ class ConsultarApuracaoResponse extends MitResponse {
     List<DadosApuracaoMit>? dadosApuracaoMit;
 
     if (json['dados'] != null) {
-      final dadosStr = json['dados'] as String;
+      final dadosStr = json['dados'].toString();
       try {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
         situacaoApuracao = dados['situacaoApuracao'] as int?;
@@ -200,7 +200,7 @@ class ListarApuracaoesResponse extends MitResponse {
     List<ApuracaoResumo>? apuracoes;
 
     if (json['dados'] != null) {
-      final dadosStr = json['dados'] as String;
+      final dadosStr = json['dados'].toString();
       try {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
 
@@ -230,7 +230,7 @@ class MensagemMit {
   MensagemMit({required this.codigo, required this.texto});
 
   factory MensagemMit.fromJson(Map<String, dynamic> json) {
-    return MensagemMit(codigo: json['codigo'] as String? ?? '', texto: json['texto'] as String? ?? '');
+    return MensagemMit(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -272,12 +272,12 @@ class ApuracaoResumo {
 
   factory ApuracaoResumo.fromJson(Map<String, dynamic> json) {
     return ApuracaoResumo(
-      periodoApuracao: json['periodoApuracao'] as String?,
-      idApuracao: json['idApuracao'] as int?,
-      situacao: json['situacao'] as int?,
-      dataEncerramento: json['dataEncerramento'] as String?,
+      periodoApuracao: json['periodoApuracao']?.toString(),
+      idApuracao: int.parse(json['idApuracao'].toString()),
+      situacao: int.parse(json['situacao'].toString()),
+      dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
-      valorTotalApurado: (json['valorTotalApurado'] as num?)?.toDouble(),
+      valorTotalApurado: (num.parse(json['valorTotalApurado'].toString())).toDouble(),
     );
   }
 
@@ -292,7 +292,7 @@ class PeriodoApuracaoResponse {
   PeriodoApuracaoResponse({this.mesApuracao, this.anoApuracao});
 
   factory PeriodoApuracaoResponse.fromJson(Map<String, dynamic> json) {
-    return PeriodoApuracaoResponse(mesApuracao: json['MesApuracao'] as int?, anoApuracao: json['AnoApuracao'] as int?);
+    return PeriodoApuracaoResponse(mesApuracao: int.parse(json['MesApuracao'].toString()), anoApuracao: int.parse(json['AnoApuracao'].toString()));
   }
 }
 
@@ -305,7 +305,11 @@ class EventoEspecialResponse {
   EventoEspecialResponse({this.idEvento, this.diaEvento, this.tipoEvento});
 
   factory EventoEspecialResponse.fromJson(Map<String, dynamic> json) {
-    return EventoEspecialResponse(idEvento: json['IdEvento'] as int?, diaEvento: json['DiaEvento'] as int?, tipoEvento: json['TipoEvento'] as int?);
+    return EventoEspecialResponse(
+      idEvento: int.parse(json['IdEvento'].toString()),
+      diaEvento: int.parse(json['DiaEvento'].toString()),
+      tipoEvento: int.parse(json['TipoEvento'].toString()),
+    );
   }
 
   TipoEventoEspecial? get tipoEventoEnum => tipoEvento != null ? TipoEventoEspecial.fromCodigo(tipoEvento!) : null;
@@ -332,10 +336,10 @@ class DadosIniciaisResponse {
   factory DadosIniciaisResponse.fromJson(Map<String, dynamic> json) {
     return DadosIniciaisResponse(
       semMovimento: json['SemMovimento'] as bool?,
-      qualificacaoPj: json['QualificacaoPj'] as int?,
-      tributacaoLucro: json['TributacaoLucro'] as int?,
-      variacoesMonetarias: json['VariacoesMonetarias'] as int?,
-      regimePisCofins: json['RegimePisCofins'] as int?,
+      qualificacaoPj: int.parse(json['QualificacaoPj'].toString()),
+      tributacaoLucro: int.parse(json['TributacaoLucro'].toString()),
+      variacoesMonetarias: int.parse(json['VariacoesMonetarias'].toString()),
+      regimePisCofins: int.parse(json['RegimePisCofins'].toString()),
       responsavelApuracao: json['ResponsavelApuracao'] != null ? ResponsavelApuracaoResponse.fromJson(json['ResponsavelApuracao']) : null,
     );
   }
@@ -360,9 +364,9 @@ class ResponsavelApuracaoResponse {
 
   factory ResponsavelApuracaoResponse.fromJson(Map<String, dynamic> json) {
     return ResponsavelApuracaoResponse(
-      cpfResponsavel: json['CpfResponsavel'] as String?,
+      cpfResponsavel: json['CpfResponsavel']?.toString(),
       telResponsavel: json['TelResponsavel'] != null ? TelefoneResponsavelResponse.fromJson(json['TelResponsavel']) : null,
-      emailResponsavel: json['EmailResponsavel'] as String?,
+      emailResponsavel: json['EmailResponsavel']?.toString(),
       registroCrc: json['RegistroCrc'] != null ? RegistroCrcResponse.fromJson(json['RegistroCrc']) : null,
     );
   }
@@ -376,7 +380,7 @@ class TelefoneResponsavelResponse {
   TelefoneResponsavelResponse({this.ddd, this.numTelefone});
 
   factory TelefoneResponsavelResponse.fromJson(Map<String, dynamic> json) {
-    return TelefoneResponsavelResponse(ddd: json['Ddd'] as String?, numTelefone: json['NumTelefone'] as String?);
+    return TelefoneResponsavelResponse(ddd: json['Ddd']?.toString(), numTelefone: json['NumTelefone']?.toString());
   }
 }
 
@@ -388,7 +392,7 @@ class RegistroCrcResponse {
   RegistroCrcResponse({this.ufRegistro, this.numRegistro});
 
   factory RegistroCrcResponse.fromJson(Map<String, dynamic> json) {
-    return RegistroCrcResponse(ufRegistro: json['UfRegistro'] as String?, numRegistro: json['NumRegistro'] as String?);
+    return RegistroCrcResponse(ufRegistro: json['UfRegistro']?.toString(), numRegistro: json['NumRegistro']?.toString());
   }
 }
 

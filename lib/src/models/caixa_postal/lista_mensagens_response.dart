@@ -16,7 +16,7 @@ class ListaMensagensResponse {
   });
 
   factory ListaMensagensResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'] as String;
+    final dados = json['dados'].toString();
     DadosListaMensagens? dadosParsed;
 
     try {
@@ -27,7 +27,7 @@ class ListaMensagensResponse {
     }
 
     return ListaMensagensResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? [])
           .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -54,7 +54,7 @@ class DadosListaMensagens {
 
   factory DadosListaMensagens.fromJson(Map<String, dynamic> json) {
     return DadosListaMensagens(
-      codigo: json['codigo'] as String,
+      codigo: json['codigo'].toString(),
       conteudo: (json['conteudo'] as List<dynamic>? ?? [])
           .map(
             (e) => ConteudoListaMensagens.fromJson(e as Map<String, dynamic>),
@@ -91,11 +91,11 @@ class ConteudoListaMensagens {
 
   factory ConteudoListaMensagens.fromJson(Map<String, dynamic> json) {
     return ConteudoListaMensagens(
-      quantidadeMensagens: json['quantidadeMensagens'] as String,
-      indicadorUltimaPagina: json['indicadorUltimaPagina'] as String,
-      ponteiroPaginaRetornada: json['ponteiroPaginaRetornada'] as String,
-      ponteiroProximaPagina: json['ponteiroProximaPagina'] as String,
-      cnpjMatriz: json['cnpjMatriz'] as String?,
+      quantidadeMensagens: json['quantidadeMensagens'].toString(),
+      indicadorUltimaPagina: json['indicadorUltimaPagina'].toString(),
+      ponteiroPaginaRetornada: json['ponteiroPaginaRetornada'].toString(),
+      ponteiroProximaPagina: json['ponteiroProximaPagina'].toString(),
+      cnpjMatriz: json['cnpjMatriz']?.toString(),
       listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? [])
           .map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -168,26 +168,26 @@ class MensagemCaixaPostal {
 
   factory MensagemCaixaPostal.fromJson(Map<String, dynamic> json) {
     return MensagemCaixaPostal(
-      codigoSistemaRemetente: json['codigoSistemaRemetente'] as String? ?? '',
-      codigoModelo: json['codigoModelo'] as String? ?? '',
-      dataEnvio: json['dataEnvio'] as String? ?? '',
-      horaEnvio: json['horaEnvio'] as String? ?? '',
-      numeroControle: json['numeroControle'] as String? ?? '',
-      indicadorLeitura: json['indicadorLeitura'] as String? ?? '',
-      dataLeitura: json['dataLeitura'] as String? ?? '',
-      horaLeitura: json['horaLeitura'] as String? ?? '',
-      dataExclusao: json['dataExclusao'] as String? ?? '',
-      horaExclusao: json['horaExclusao'] as String? ?? '',
-      dataCiencia: json['dataCiencia'] as String? ?? '',
-      assuntoModelo: json['assuntoModelo'] as String? ?? '',
-      dataValidade: json['dataValidade'] as String? ?? '',
-      origemModelo: json['origemModelo'] as String? ?? '',
-      valorParametroAssunto: json['valorParametroAssunto'] as String? ?? '',
-      relevancia: json['relevancia'] as String? ?? '',
-      isn: json['isn'] as String? ?? '',
-      tipoOrigem: json['tipoOrigem'] as String? ?? '',
-      descricaoOrigem: json['descricaoOrigem'] as String? ?? '',
-      indicadorFavorito: json['indicadorFavorito'] as String? ?? '',
+      codigoSistemaRemetente: json['codigoSistemaRemetente']?.toString() ?? '',
+      codigoModelo: json['codigoModelo']?.toString() ?? '',
+      dataEnvio: json['dataEnvio']?.toString() ?? '',
+      horaEnvio: json['horaEnvio']?.toString() ?? '',
+      numeroControle: json['numeroControle']?.toString() ?? '',
+      indicadorLeitura: json['indicadorLeitura']?.toString() ?? '',
+      dataLeitura: json['dataLeitura']?.toString() ?? '',
+      horaLeitura: json['horaLeitura']?.toString() ?? '',
+      dataExclusao: json['dataExclusao']?.toString() ?? '',
+      horaExclusao: json['horaExclusao']?.toString() ?? '',
+      dataCiencia: json['dataCiencia']?.toString() ?? '',
+      assuntoModelo: json['assuntoModelo']?.toString() ?? '',
+      dataValidade: json['dataValidade']?.toString() ?? '',
+      origemModelo: json['origemModelo']?.toString() ?? '',
+      valorParametroAssunto: json['valorParametroAssunto']?.toString() ?? '',
+      relevancia: json['relevancia']?.toString() ?? '',
+      isn: json['isn']?.toString() ?? '',
+      tipoOrigem: json['tipoOrigem']?.toString() ?? '',
+      descricaoOrigem: json['descricaoOrigem']?.toString() ?? '',
+      indicadorFavorito: json['indicadorFavorito']?.toString() ?? '',
     );
   }
 

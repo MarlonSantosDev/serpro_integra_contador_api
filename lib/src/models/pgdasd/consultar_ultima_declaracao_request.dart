@@ -28,7 +28,7 @@ class ConsultarUltimaDeclaracaoRequest {
 
   factory ConsultarUltimaDeclaracaoRequest.fromJson(Map<String, dynamic> json) {
     return ConsultarUltimaDeclaracaoRequest(
-      periodoApuracao: json['periodoApuracao'] as String,
+      periodoApuracao: json['periodoApuracao'].toString(),
     );
   }
 }

@@ -42,11 +42,11 @@ class ConsultarDeclaracaoNumeroResponse {
     Map<String, dynamic> json,
   ) {
     return ConsultarDeclaracaoNumeroResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
           .toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 }
@@ -67,8 +67,8 @@ class Mensagem {
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
     return Mensagem(
-      codigo: json['codigo'] as String,
-      texto: json['texto'] as String,
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
     );
   }
 }
@@ -109,7 +109,7 @@ class DeclaracaoCompleta {
 
   factory DeclaracaoCompleta.fromJson(Map<String, dynamic> json) {
     return DeclaracaoCompleta(
-      numeroDeclaracao: json['numeroDeclaracao'] as String,
+      numeroDeclaracao: json['numeroDeclaracao'].toString(),
       recibo: ArquivoRecibo.fromJson(json['recibo']),
       declaracao: ArquivoDeclaracao.fromJson(json['declaracao']),
       maed: json['maed'] != null ? ArquivoMaed.fromJson(json['maed']) : null,
@@ -134,8 +134,8 @@ class ArquivoRecibo {
 
   factory ArquivoRecibo.fromJson(Map<String, dynamic> json) {
     return ArquivoRecibo(
-      nomeArquivo: json['nomeArquivo'] as String,
-      pdf: json['pdf'] as String,
+      nomeArquivo: json['nomeArquivo'].toString(),
+      pdf: json['pdf'].toString(),
     );
   }
 }
@@ -157,8 +157,8 @@ class ArquivoDeclaracao {
 
   factory ArquivoDeclaracao.fromJson(Map<String, dynamic> json) {
     return ArquivoDeclaracao(
-      nomeArquivo: json['nomeArquivo'] as String,
-      pdf: json['pdf'] as String,
+      nomeArquivo: json['nomeArquivo'].toString(),
+      pdf: json['pdf'].toString(),
     );
   }
 }
@@ -199,10 +199,10 @@ class ArquivoMaed {
 
   factory ArquivoMaed.fromJson(Map<String, dynamic> json) {
     return ArquivoMaed(
-      nomeArquivoNotificacao: json['nomeArquivoNotificacao'] as String,
-      pdfNotificacao: json['pdfNotificacao'] as String,
-      nomeArquivoDarf: json['nomeArquivoDarf'] as String,
-      pdfDarf: json['pdfDarf'] as String,
+      nomeArquivoNotificacao: json['nomeArquivoNotificacao'].toString(),
+      pdfNotificacao: json['pdfNotificacao'].toString(),
+      nomeArquivoDarf: json['nomeArquivoDarf'].toString(),
+      pdfDarf: json['pdfDarf'].toString(),
     );
   }
 }

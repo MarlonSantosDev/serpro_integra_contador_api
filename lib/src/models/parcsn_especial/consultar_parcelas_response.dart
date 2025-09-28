@@ -94,7 +94,7 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(parcela: json['parcela'] as int, valor: (json['valor'] as num).toDouble());
+    return Parcela(parcela: int.parse(json['parcela'].toString()), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {

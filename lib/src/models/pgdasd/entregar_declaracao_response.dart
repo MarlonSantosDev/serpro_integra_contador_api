@@ -40,11 +40,11 @@ class EntregarDeclaracaoResponse {
 
   factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
     return EntregarDeclaracaoResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
           .toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 }
@@ -65,8 +65,8 @@ class Mensagem {
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
     return Mensagem(
-      codigo: json['codigo'] as String,
-      texto: json['texto'] as String,
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
     );
   }
 }
@@ -131,15 +131,15 @@ class DeclaracaoTransmitida {
 
   factory DeclaracaoTransmitida.fromJson(Map<String, dynamic> json) {
     return DeclaracaoTransmitida(
-      idDeclaracao: json['idDeclaracao'] as String,
-      dataHoraTransmissao: json['dataHoraTransmissao'] as String,
+      idDeclaracao: json['idDeclaracao'].toString(),
+      dataHoraTransmissao: json['dataHoraTransmissao'].toString(),
       valoresDevidos: (json['valoresDevidos'] as List)
           .map((v) => ValorDevido.fromJson(v))
           .toList(),
-      declaracao: json['declaracao'] as String,
-      recibo: json['recibo'] as String,
-      notificacaoMaed: json['notificacaoMaed'] as String?,
-      darf: json['darf'] as String?,
+      declaracao: json['declaracao'].toString(),
+      recibo: json['recibo'].toString(),
+      notificacaoMaed: json['notificacaoMaed']?.toString(),
+      darf: json['darf']?.toString(),
       detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null
           ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed'])
           : null,
@@ -163,8 +163,8 @@ class ValorDevido {
 
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
     return ValorDevido(
-      codigoTributo: json['codigoTributo'] as int,
-      valor: (json['valor'] as num).toDouble(),
+      codigoTributo: int.parse(json['codigoTributo'].toString()),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
     );
   }
 }
@@ -226,14 +226,14 @@ class DetalhamentoDarfMaed {
 
   factory DetalhamentoDarfMaed.fromJson(Map<String, dynamic> json) {
     return DetalhamentoDarfMaed(
-      periodoApuracao: json['periodoApuracao'] as String,
-      numeroDocumento: json['numeroDocumento'] as String,
-      dataVencimento: json['dataVencimento'] as String,
-      dataLimiteAcolhimento: json['dataLimiteAcolhimento'] as String,
+      periodoApuracao: json['periodoApuracao'].toString(),
+      numeroDocumento: json['numeroDocumento'].toString(),
+      dataVencimento: json['dataVencimento'].toString(),
+      dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
       valores: ValoresDarf.fromJson(json['valores']),
-      observacao1: json['observacao1'] as String?,
-      observacao2: json['observacao2'] as String?,
-      observacao3: json['observacao3'] as String?,
+      observacao1: json['observacao1']?.toString(),
+      observacao2: json['observacao2']?.toString(),
+      observacao3: json['observacao3']?.toString(),
       composicao: json['composicao'],
     );
   }
@@ -271,10 +271,10 @@ class ValoresDarf {
 
   factory ValoresDarf.fromJson(Map<String, dynamic> json) {
     return ValoresDarf(
-      principal: (json['principal'] as num).toDouble(),
-      multa: (json['multa'] as num).toDouble(),
-      juros: (json['juros'] as num).toDouble(),
-      total: (json['total'] as num).toDouble(),
+      principal: (num.parse(json['principal'].toString())).toDouble(),
+      multa: (num.parse(json['multa'].toString())).toDouble(),
+      juros: (num.parse(json['juros'].toString())).toDouble(),
+      total: (num.parse(json['total'].toString())).toDouble(),
     );
   }
 }

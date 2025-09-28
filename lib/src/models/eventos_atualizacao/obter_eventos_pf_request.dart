@@ -26,8 +26,8 @@ class ObterEventosPFRequest {
   }
 
   factory ObterEventosPFRequest.fromJson(Map<String, dynamic> json) {
-    final protocolo = json['protocolo'] as String;
-    final eventoCodigo = json['evento'] as String;
+    final protocolo = json['protocolo'].toString();
+    final eventoCodigo = json['evento'].toString();
     final evento = TipoEvento.fromCodigo(eventoCodigo) ?? TipoEvento.dctfWeb;
 
     return ObterEventosPFRequest(protocolo: protocolo, evento: evento);

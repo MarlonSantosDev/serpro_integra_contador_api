@@ -11,9 +11,9 @@ class SolicitarProtocoloResponse {
 
   factory SolicitarProtocoloResponse.fromJson(Map<String, dynamic> json) {
     return SolicitarProtocoloResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] != null ? SolicitarProtocoloDados.fromJson(json['dados'] as String) : null,
+      dados: json['dados'] != null ? SolicitarProtocoloDados.fromJson(json['dados'].toString()) : null,
     );
   }
 
@@ -41,7 +41,10 @@ class SolicitarProtocoloDados {
   factory SolicitarProtocoloDados.fromJson(String jsonString) {
     try {
       final Map<String, dynamic> json = _parseJsonString(jsonString);
-      return SolicitarProtocoloDados(protocoloRelatorio: json['protocoloRelatorio'] as String?, tempoEspera: json['tempoEspera'] as int?);
+      return SolicitarProtocoloDados(
+        protocoloRelatorio: json['protocoloRelatorio']?.toString(),
+        tempoEspera: int.parse(json['tempoEspera'].toString()),
+      );
     } catch (e) {
       return SolicitarProtocoloDados();
     }

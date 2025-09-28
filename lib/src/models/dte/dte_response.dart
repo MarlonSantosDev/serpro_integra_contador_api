@@ -10,7 +10,7 @@ class DteResponse {
   DteResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
 
   factory DteResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'] as String? ?? '';
+    final dados = json['dados']?.toString() ?? '';
     DteDados? dadosParsed;
 
     try {
@@ -23,7 +23,7 @@ class DteResponse {
     }
 
     return DteResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       dados: dados,
       dadosParsed: dadosParsed,
@@ -82,7 +82,7 @@ class DteDados {
   DteDados({required this.indicadorEnquadramento, required this.statusEnquadramento});
 
   factory DteDados.fromJson(Map<String, dynamic> json) {
-    return DteDados(indicadorEnquadramento: json['indicadorEnquadramento'] as int, statusEnquadramento: json['statusEnquadramento'] as String);
+    return DteDados(indicadorEnquadramento: int.parse(json['indicadorEnquadramento'].toString()), statusEnquadramento: json['statusEnquadramento'].toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -119,7 +119,7 @@ class MensagemNegocio {
   MensagemNegocio({required this.codigo, required this.texto});
 
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'] as String, texto: json['texto'] as String);
+    return MensagemNegocio(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

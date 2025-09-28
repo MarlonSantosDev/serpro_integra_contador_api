@@ -10,7 +10,7 @@ class SolicitarEventosPJResponse {
 
   factory SolicitarEventosPJResponse.fromJson(Map<String, dynamic> json) {
     return SolicitarEventosPJResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>)).toList(),
       dados: SolicitarEventosPJDados.fromJson(json['dados'] as Map<String, dynamic>),
     );
@@ -31,9 +31,9 @@ class SolicitarEventosPJDados {
 
   factory SolicitarEventosPJDados.fromJson(Map<String, dynamic> json) {
     return SolicitarEventosPJDados(
-      protocolo: json['protocolo'] as String,
-      tempoEsperaMedioEmMs: json['TempoEsperaMedioEmMs'] as int,
-      tempoLimiteEmMin: json['TempoLimiteEmMin'] as int,
+      protocolo: json['protocolo'].toString(),
+      tempoEsperaMedioEmMs: int.parse(json['TempoEsperaMedioEmMs'].toString()),
+      tempoLimiteEmMin: int.parse(json['TempoLimiteEmMin'].toString()),
     );
   }
 

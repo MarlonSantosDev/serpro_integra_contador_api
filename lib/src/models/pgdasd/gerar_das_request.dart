@@ -70,8 +70,8 @@ class GerarDasRequest {
 
   factory GerarDasRequest.fromJson(Map<String, dynamic> json) {
     return GerarDasRequest(
-      periodoApuracao: json['periodoApuracao'] as String,
-      dataConsolidacao: json['dataConsolidacao'] as String?,
+      periodoApuracao: json['periodoApuracao'].toString(),
+      dataConsolidacao: json['dataConsolidacao']?.toString(),
     );
   }
 }

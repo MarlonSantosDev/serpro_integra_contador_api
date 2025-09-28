@@ -32,10 +32,10 @@ class SitfisCache {
 
   factory SitfisCache.fromJson(Map<String, dynamic> json) {
     return SitfisCache(
-      protocoloRelatorio: json['protocoloRelatorio'] as String,
-      dataExpiracao: DateTime.parse(json['dataExpiracao'] as String),
-      etag: json['etag'] as String?,
-      cacheControl: json['cacheControl'] as String?,
+      protocoloRelatorio: json['protocoloRelatorio'].toString(),
+      dataExpiracao: DateTime.parse(json['dataExpiracao'].toString()),
+      etag: json['etag']?.toString(),
+      cacheControl: json['cacheControl']?.toString(),
     );
   }
 }

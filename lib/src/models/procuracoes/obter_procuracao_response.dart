@@ -20,7 +20,7 @@ class ObterProcuracaoResponse {
   String get codigoMensagem => mensagens.isNotEmpty ? mensagens.first.codigo : '';
 
   factory ObterProcuracaoResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'] as String;
+    final dados = json['dados'].toString();
     List<Procuracao>? dadosParsed;
 
     try {
@@ -33,7 +33,7 @@ class ObterProcuracaoResponse {
     }
 
     return ObterProcuracaoResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
       dados: dados,
       dadosParsed: dadosParsed,
@@ -95,8 +95,8 @@ class Procuracao {
 
   factory Procuracao.fromJson(Map<String, dynamic> json) {
     return Procuracao(
-      dtexpiracao: json['dtexpiracao'] as String,
-      nrsistemas: json['nrsistemas'] as int,
+      dtexpiracao: json['dtexpiracao'].toString(),
+      nrsistemas: int.parse(json['nrsistemas'].toString()),
       sistemas: (json['sistemas'] as List<dynamic>).map((e) => e as String).toList(),
     );
   }

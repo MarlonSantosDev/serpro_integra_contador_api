@@ -69,10 +69,10 @@ class DetalhesPagamentoData {
   factory DetalhesPagamentoData.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return DetalhesPagamentoData(
-      numeroDas: json['numeroDas'] as String,
-      codigoBarras: json['codigoBarras'] as String,
-      valorPagoArrecadacao: (json['valorPagoArrecadacao'] as num).toDouble(),
-      dataPagamento: json['dataPagamento'] as String,
+      numeroDas: json['numeroDas'].toString(),
+      codigoBarras: json['codigoBarras'].toString(),
+      valorPagoArrecadacao: (num.parse(json['valorPagoArrecadacao'].toString())).toDouble(),
+      dataPagamento: json['dataPagamento'].toString(),
       pagamentosDebitos: (json['pagamentosDebitos'] as List?)?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
   }
@@ -133,12 +133,12 @@ class PagamentoDebito {
 
   factory PagamentoDebito.fromJson(Map<String, dynamic> json) {
     return PagamentoDebito(
-      competencia: json['competencia'] as String,
-      tipoDebito: json['tipoDebito'] as String,
-      valorPrincipal: (json['valorPrincipal'] as num).toDouble(),
-      valorMulta: (json['valorMulta'] as num).toDouble(),
-      valorJuros: (json['valorJuros'] as num).toDouble(),
-      valorTotal: (json['valorTotal'] as num).toDouble(),
+      competencia: json['competencia'].toString(),
+      tipoDebito: json['tipoDebito'].toString(),
+      valorPrincipal: (num.parse(json['valorPrincipal'].toString())).toDouble(),
+      valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
+      valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
+      valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
       discriminacoes: (json['discriminacoes'] as List?)?.map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
   }
@@ -192,7 +192,7 @@ class DiscriminacaoDebito {
   DiscriminacaoDebito({required this.codigo, required this.descricao, required this.valor});
 
   factory DiscriminacaoDebito.fromJson(Map<String, dynamic> json) {
-    return DiscriminacaoDebito(codigo: json['codigo'] as String, descricao: json['descricao'] as String, valor: (json['valor'] as num).toDouble());
+    return DiscriminacaoDebito(codigo: json['codigo'].toString(), descricao: json['descricao'].toString(), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {

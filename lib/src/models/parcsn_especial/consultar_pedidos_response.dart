@@ -97,10 +97,10 @@ class Parcelamento {
 
   factory Parcelamento.fromJson(Map<String, dynamic> json) {
     return Parcelamento(
-      numero: json['numero'] as int,
-      dataDoPedido: json['dataDoPedido'] as int,
-      situacao: json['situacao'] as String,
-      dataDaSituacao: json['dataDaSituacao'] as int,
+      numero: int.parse(json['numero'].toString()),
+      dataDoPedido: int.parse(json['dataDoPedido'].toString()),
+      situacao: json['situacao'].toString(),
+      dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
     );
   }
 

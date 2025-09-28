@@ -40,11 +40,11 @@ class ConsultarExtratoDasResponse {
 
   factory ConsultarExtratoDasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarExtratoDasResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
           .toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 }
@@ -65,8 +65,8 @@ class Mensagem {
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
     return Mensagem(
-      codigo: json['codigo'] as String,
-      texto: json['texto'] as String,
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
     );
   }
 }
@@ -145,14 +145,14 @@ class ExtratoDas {
 
   factory ExtratoDas.fromJson(Map<String, dynamic> json) {
     return ExtratoDas(
-      numeroDas: json['numeroDas'] as String,
-      cnpjCompleto: json['cnpjCompleto'] as String,
-      periodoApuracao: json['periodoApuracao'] as String,
-      dataVencimento: json['dataVencimento'] as String,
-      dataLimiteAcolhimento: json['dataLimiteAcolhimento'] as String,
-      valorTotal: (json['valorTotal'] as num).toDouble(),
-      statusPagamento: json['statusPagamento'] as String,
-      dataPagamento: json['dataPagamento'] as String?,
+      numeroDas: json['numeroDas'].toString(),
+      cnpjCompleto: json['cnpjCompleto'].toString(),
+      periodoApuracao: json['periodoApuracao'].toString(),
+      dataVencimento: json['dataVencimento'].toString(),
+      dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
+      valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
+      statusPagamento: json['statusPagamento'].toString(),
+      dataPagamento: json['dataPagamento']?.toString(),
       composicao: (json['composicao'] as List)
           .map((c) => ComposicaoExtratoDas.fromJson(c))
           .toList(),
@@ -192,10 +192,10 @@ class ComposicaoExtratoDas {
 
   factory ComposicaoExtratoDas.fromJson(Map<String, dynamic> json) {
     return ComposicaoExtratoDas(
-      codigoTributo: json['codigoTributo'] as String,
-      nomeTributo: json['nomeTributo'] as String,
-      valorTributo: (json['valorTributo'] as num).toDouble(),
-      percentual: (json['percentual'] as num).toDouble(),
+      codigoTributo: json['codigoTributo'].toString(),
+      nomeTributo: json['nomeTributo'].toString(),
+      valorTributo: (num.parse(json['valorTributo'].toString())).toDouble(),
+      percentual: (num.parse(json['percentual'].toString())).toDouble(),
     );
   }
 }

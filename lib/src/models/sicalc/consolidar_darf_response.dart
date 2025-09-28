@@ -15,7 +15,7 @@ class ConsolidarDarfResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'] as String) as Map<String, dynamic>;
+          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = ConsolidarDarfDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
           dadosParsed = ConsolidarDarfDados.fromJson(json['dados'] as Map<String, dynamic>);
@@ -26,7 +26,7 @@ class ConsolidarDarfResponse {
     }
 
     return ConsolidarDarfResponse(
-      status: json['status'] as int? ?? 0,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       dados: dadosParsed,
     );
@@ -95,17 +95,17 @@ class ConsolidarDarfDados {
 
   factory ConsolidarDarfDados.fromJson(Map<String, dynamic> json) {
     return ConsolidarDarfDados(
-      valorPrincipalMoedaCorrente: json['valorPrincipalMoedaCorrente'] as String? ?? '',
-      valorTotalConsolidado: json['valorTotalConsolidado'] as String? ?? '',
-      valorMultaMora: json['valorMultaMora'] as String? ?? '',
-      percentualMultaMora: (json['percentualMultaMora'] as num?)?.toDouble() ?? 0.0,
-      valorJuros: json['valorJuros'] as String? ?? '',
-      percentualJuros: (json['percentualJuros'] as num?)?.toDouble() ?? 0.0,
-      termoInicialJuros: json['termoInicialJuros'] as String? ?? '',
-      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao'] as String? ?? '',
-      dataValidadeCalculo: json['dataValidadeCalculo'] as String? ?? '',
-      darf: json['darf'] as String?,
-      numeroDocumento: json['numeroDocumento'] as int? ?? 0,
+      valorPrincipalMoedaCorrente: json['valorPrincipalMoedaCorrente']?.toString() ?? '',
+      valorTotalConsolidado: json['valorTotalConsolidado']?.toString() ?? '',
+      valorMultaMora: json['valorMultaMora']?.toString() ?? '',
+      percentualMultaMora: (num.parse(json['percentualMultaMora'].toString())).toDouble(),
+      valorJuros: json['valorJuros']?.toString() ?? '',
+      percentualJuros: (num.parse(json['percentualJuros'].toString())).toDouble(),
+      termoInicialJuros: json['termoInicialJuros']?.toString() ?? '',
+      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao']?.toString() ?? '',
+      dataValidadeCalculo: json['dataValidadeCalculo']?.toString() ?? '',
+      darf: json['darf']?.toString(),
+      numeroDocumento: int.parse(json['numeroDocumento'].toString()),
     );
   }
 

@@ -9,7 +9,7 @@ class ConsultarDadosCcmeiResponse {
 
   factory ConsultarDadosCcmeiResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDadosCcmeiResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemCcmei.fromJson(e as Map<String, dynamic>)).toList(),
       dados: ConsultarDadosCcmeiDados.fromJson(json['dados'] as Map<String, dynamic>),
     );
@@ -51,18 +51,18 @@ class ConsultarDadosCcmeiDados {
 
   factory ConsultarDadosCcmeiDados.fromJson(Map<String, dynamic> json) {
     return ConsultarDadosCcmeiDados(
-      cnpj: json['cnpj'] as String,
+      cnpj: json['cnpj'].toString(),
       empresario: Empresario.fromJson(json['empresario'] as Map<String, dynamic>),
-      dataInicioAtividades: json['dataInicioAtividades'] as String,
-      nomeEmpresarial: json['nomeEmpresarial'] as String,
-      capitalSocial: (json['capitalSocial'] as num).toDouble(),
-      situacaoCadastralVigente: json['situacaoCadastralVigente'] as String,
-      dataInicioSituacaoCadastral: json['dataInicioSituacaoCadastral'] as String,
+      dataInicioAtividades: json['dataInicioAtividades'].toString(),
+      nomeEmpresarial: json['nomeEmpresarial'].toString(),
+      capitalSocial: (num.parse(json['capitalSocial'].toString())).toDouble(),
+      situacaoCadastralVigente: json['situacaoCadastralVigente'].toString(),
+      dataInicioSituacaoCadastral: json['dataInicioSituacaoCadastral'].toString(),
       enderecoComercial: EnderecoComercial.fromJson(json['enderecoComercial'] as Map<String, dynamic>),
       enquadramento: Enquadramento.fromJson(json['enquadramento'] as Map<String, dynamic>),
       atividade: Atividade.fromJson(json['atividade'] as Map<String, dynamic>),
       termoCienciaDispensa: TermoCienciaDispensa.fromJson(json['termoCienciaDispensa'] as Map<String, dynamic>),
-      qrcode: json['qrcode'] as String?,
+      qrcode: json['qrcode']?.toString(),
     );
   }
 
@@ -92,7 +92,7 @@ class Empresario {
   Empresario({required this.nomeCivil, this.nomeSocial, required this.cpf});
 
   factory Empresario.fromJson(Map<String, dynamic> json) {
-    return Empresario(nomeCivil: json['nomeCivil'] as String, nomeSocial: json['nomeSocial'] as String?, cpf: json['cpf'] as String);
+    return Empresario(nomeCivil: json['nomeCivil'].toString(), nomeSocial: json['nomeSocial']?.toString(), cpf: json['cpf'].toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -121,13 +121,13 @@ class EnderecoComercial {
 
   factory EnderecoComercial.fromJson(Map<String, dynamic> json) {
     return EnderecoComercial(
-      cep: json['cep'] as String,
-      logradouro: json['logradouro'] as String?,
-      numero: json['numero'] as String,
-      complemento: json['complemento'] as String?,
-      bairro: json['bairro'] as String,
-      municipio: json['municipio'] as String,
-      uf: json['uf'] as String,
+      cep: json['cep'].toString(),
+      logradouro: json['logradouro']?.toString(),
+      numero: json['numero'].toString(),
+      complemento: json['complemento']?.toString(),
+      bairro: json['bairro'].toString(),
+      municipio: json['municipio'].toString(),
+      uf: json['uf'].toString(),
     );
   }
 
@@ -146,7 +146,7 @@ class Enquadramento {
   factory Enquadramento.fromJson(Map<String, dynamic> json) {
     return Enquadramento(
       periodosMei: (json['periodosMei'] as List<dynamic>).map((e) => PeriodosMei.fromJson(e as Map<String, dynamic>)).toList(),
-      situacao: json['situacao'] as String,
+      situacao: json['situacao'].toString(),
       optanteMei: json['optanteMei'] as bool,
     );
   }
@@ -164,7 +164,7 @@ class PeriodosMei {
   PeriodosMei({required this.indice, required this.dataInicio, this.dataFim});
 
   factory PeriodosMei.fromJson(Map<String, dynamic> json) {
-    return PeriodosMei(indice: json['indice'] as int, dataInicio: json['dataInicio'] as String, dataFim: json['dataFim'] as String?);
+    return PeriodosMei(indice: int.parse(json['indice'].toString()), dataInicio: json['dataInicio'].toString(), dataFim: json['dataFim']?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -208,9 +208,9 @@ class Ocupacao {
 
   factory Ocupacao.fromJson(Map<String, dynamic> json) {
     return Ocupacao(
-      descricaoOcupacao: json['descricaoOcupacao'] as String,
-      codigoCNAE: json['codigoCNAE'] as String?,
-      descricaoCNAE: json['descricaoCNAE'] as String?,
+      descricaoOcupacao: json['descricaoOcupacao'].toString(),
+      codigoCNAE: json['codigoCNAE']?.toString(),
+      descricaoCNAE: json['descricaoCNAE']?.toString(),
     );
   }
 
@@ -226,7 +226,7 @@ class TermoCienciaDispensa {
   TermoCienciaDispensa({required this.titulo, required this.texto});
 
   factory TermoCienciaDispensa.fromJson(Map<String, dynamic> json) {
-    return TermoCienciaDispensa(titulo: json['titulo'] as String, texto: json['texto'] as String);
+    return TermoCienciaDispensa(titulo: json['titulo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

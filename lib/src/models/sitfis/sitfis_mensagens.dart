@@ -6,7 +6,7 @@ class SitfisMensagem {
   SitfisMensagem({required this.codigo, required this.texto});
 
   factory SitfisMensagem.fromJson(Map<String, dynamic> json) {
-    return SitfisMensagem(codigo: json['codigo'] as String, texto: json['texto'] as String);
+    return SitfisMensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

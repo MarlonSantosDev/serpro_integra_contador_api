@@ -9,7 +9,7 @@ class ConsultarSituacaoCadastralCcmeiResponse {
 
   factory ConsultarSituacaoCadastralCcmeiResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarSituacaoCadastralCcmeiResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemCcmei.fromJson(e as Map<String, dynamic>)).toList(),
       dados: (json['dados'] as List<dynamic>).map((e) => CcmeiSituacaoCadastral.fromJson(e as Map<String, dynamic>)).toList(),
     );
@@ -28,7 +28,7 @@ class CcmeiSituacaoCadastral {
   CcmeiSituacaoCadastral({required this.cnpj, required this.situacao, required this.enquadradoMei});
 
   factory CcmeiSituacaoCadastral.fromJson(Map<String, dynamic> json) {
-    return CcmeiSituacaoCadastral(cnpj: json['cnpj'] as String, situacao: json['situacao'] as String, enquadradoMei: json['enquadradoMei'] as bool);
+    return CcmeiSituacaoCadastral(cnpj: json['cnpj'].toString(), situacao: json['situacao'].toString(), enquadradoMei: json['enquadradoMei'] as bool);
   }
 
   Map<String, dynamic> toJson() {

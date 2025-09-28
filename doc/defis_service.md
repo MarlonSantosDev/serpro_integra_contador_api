@@ -1,194 +1,306 @@
 # DEFIS - Declaração de Informações Socioeconômicas e Fiscais
 
-## Visão Geral
+O serviço DEFIS permite efetuar a Declaração de Informações Socioeconômicas e Fiscais conforme determina a Lei Complementar nº 123, de 2006, art. 25, caput e a Resolução CGSN nº 140/2018.
 
-O serviço DEFIS permite transmitir declarações de informações socioeconômicas e fiscais para empresas do Simples Nacional. Este serviço é essencial para empresas que precisam declarar suas informações fiscais periodicamente.
+## Características
 
-## Funcionalidades
+- ✅ **Apenas Pessoa Jurídica**: O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica)
+- ✅ **Enums Tipados**: Todos os dados de domínio são representados por enums com validação
+- ✅ **4 Serviços Completos**: Transmissão e consultas de declarações
+- ✅ **Suporte a Procurador**: Todos os métodos suportam token de procurador opcional
 
-- **Transmitir Declaração**: Envio de declarações DEFIS com dados socioeconômicos e fiscais
-- **Validação de Dados**: Validação automática dos dados antes do envio
-- **Tratamento de Erros**: Gestão adequada de códigos de status e mensagens de erro
+## Serviços Disponíveis
 
-## Configuração
+### 1. Transmitir Declaração Sócio Econômica (TRANSDECLARACAO141)
 
-### Pré-requisitos
-
-- Certificado digital e-CNPJ (padrão ICP-Brasil)
-- Consumer Key e Consumer Secret do SERPRO
-- Contrato ativo com o SERPRO para o serviço DEFIS
-
-### Autenticação
+Transmite uma nova declaração DEFIS para o ano especificado.
 
 ```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-final apiClient = ApiClient();
-await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+final response = await defisService.transmitirDeclaracao(
+  contribuinteNumero: '00000000000000',
+  declaracaoData: declaracao,
+  contratanteNumero: '00000000000100', // Opcional
+  autorPedidoDadosNumero: '00000000000100', // Opcional
+  procuradorToken: 'token_procurador', // Opcional
 );
 ```
 
-## Como Utilizar
+**Parâmetros:**
+- `contribuinteNumero` (obrigatório): CNPJ do contribuinte
+- `declaracaoData` (obrigatório): Dados da declaração
+- `contratanteNumero` (opcional): Usa dados da autenticação se não informado
+- `autorPedidoDadosNumero` (opcional): Usa dados da autenticação se não informado
+- `procuradorToken` (opcional): Token de procurador
 
-### 1. Criar Instância do Serviço
+**Retorno:**
+- `status`: Status HTTP da operação
+- `mensagens`: Lista de mensagens de retorno
+- `dados`: Objeto com `idDefis`, `declaracaoPdf` e `reciboPdf`
+
+### 2. Consultar Declarações Transmitidas (CONSDECLARACAO142)
+
+Consulta todas as declarações transmitidas pelo contribuinte.
 
 ```dart
-final defisService = DefisService(apiClient);
-```
-
-### 2. Preparar Dados da Declaração
-
-```dart
-final declaracao = TransmitirDeclaracaoRequest(
-  ano: 2024,
-  inatividade: 2,
-  empresa: Empresa(
-    ganhoCapital: 0.0,
-    qtdEmpregadoInicial: 1,
-    qtdEmpregadoFinal: 1,
-    receitaBruta: 100000.0,
-    // ... outros campos obrigatórios
-  ),
+final response = await defisService.consultarDeclaracoesTransmitidas(
+  contribuinteNumero: '00000000000000',
 );
 ```
 
-### 3. Transmitir Declaração
+**Retorno:**
+- `status`: Status HTTP da operação
+- `mensagens`: Lista de mensagens de retorno
+- `dados`: Lista de declarações com `idDefis`, `ano`, `dataTransmissao`, `situacao`, etc.
+
+### 3. Consultar Última Declaração Transmitida (CONSULTIMADECREC143)
+
+Consulta a última declaração transmitida para um ano específico.
 
 ```dart
-try {
-  final response = await defisService.transmitirDeclaracao(
-    '00000000000000', // CNPJ Contratante
-    declaracao,
-  );
-  
-  if (response.sucesso) {
-    print('Sucesso! ID DEFIS: ${response.dados.idDefis}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro na transmissão: $e');
+final response = await defisService.consultarUltimaDeclaracao(
+  contribuinteNumero: '00000000000000',
+  ano: 2023,
+);
+```
+
+**Parâmetros:**
+- `contribuinteNumero` (obrigatório): CNPJ do contribuinte
+- `ano` (obrigatório): Ano calendário para consulta
+
+**Retorno:**
+- `status`: Status HTTP da operação
+- `mensagens`: Lista de mensagens de retorno
+- `dados`: Objeto com dados da última declaração
+
+### 4. Consultar Declaração Específica (CONSDECREC144)
+
+Consulta uma declaração específica pelo seu ID DEFIS.
+
+```dart
+final response = await defisService.consultarDeclaracaoEspecifica(
+  contribuinteNumero: '00000000000000',
+  idDefis: 12345,
+);
+```
+
+**Parâmetros:**
+- `contribuinteNumero` (obrigatório): CNPJ do contribuinte
+- `idDefis` (obrigatório): ID da declaração específica
+
+**Retorno:**
+- `status`: Status HTTP da operação
+- `mensagens`: Lista de mensagens de retorno
+- `dados`: Objeto com dados da declaração específica
+
+## Dados de Domínio (Enums)
+
+### Tipos de Evento para Situação Especial
+
+```dart
+enum TipoEventoSituacaoEspecial {
+  cisaoParcial(1, 'Cisão parcial'),
+  cisaoTotal(2, 'Cisão total'),
+  extincao(3, 'Extinção'),
+  fusao(4, 'Fusão'),
+  incorporacaoIncorporada(5, 'Incorporação/Incorporada');
 }
 ```
 
-## Estrutura de Dados
-
-### TransmitirDeclaracaoRequest
+### Regras de Inatividade
 
 ```dart
-class TransmitirDeclaracaoRequest {
-  final int ano;                    // Ano da declaração
-  final int inatividade;            // Indicador de inatividade
-  final Empresa empresa;            // Dados da empresa
-  // ... outros campos
+enum RegraInatividade {
+  atividadesZeroNao(0, 'Atividades zero - Responde NÃO à pergunta sobre inatividade'),
+  atividadesZeroSim(1, 'Atividades zero - Responde SIM à pergunta sobre inatividade'),
+  atividadesMaiorZero(2, 'Total das atividades maior que zero');
 }
 ```
 
-### Empresa
+### Tipos de Beneficiário de Doação
 
 ```dart
-class Empresa {
-  final double ganhoCapital;        // Ganho de capital
-  final int qtdEmpregadoInicial;    // Quantidade de empregados inicial
-  final int qtdEmpregadoFinal;      // Quantidade de empregados final
-  final double receitaBruta;        // Receita bruta
-  // ... outros campos
+enum TipoBeneficiarioDoacao {
+  candidatoCargoPolitico(1, 'Candidato a cargo político eletivo'),
+  comiteFinanceiro(2, 'Comitê financeiro'),
+  partidoPolitico(3, 'Partido político');
 }
 ```
 
-## Códigos de Erro Comuns
+### Formas de Doação
 
-| Código | Descrição | Solução |
-|--------|-----------|---------|
-| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CNPJ inválido | Verificar formato do CNPJ |
-| 003 | Ano inválido | Usar ano válido para declaração |
-| 004 | Empresa não encontrada | Verificar se empresa está cadastrada |
+```dart
+enum FormaDoacao {
+  cheque(1, 'Cheque'),
+  outrosTitulosCredito(2, 'Outro títulos de crédito'),
+  transferenciaEletronica(3, 'Transferência eletrônica'),
+  depositoEspecie(4, 'Depósito em espécie'),
+  dinheiro(5, 'Dinheiro'),
+  bens(6, 'Bens'),
+  servicos(7, 'Serviços');
+}
+```
 
-## Exemplos Práticos
+### Tipos de Operação
 
-### Exemplo Completo
+```dart
+enum TipoOperacao {
+  entrada(1, 'Entrada'),
+  saida(2, 'Saída');
+}
+```
+
+### Administrações Tributárias
+
+```dart
+enum AdministracaoTributaria {
+  distrital(1, 'Distrital'),
+  estadual(2, 'Estadual'),
+  federal(3, 'Federal'),
+  municipal(4, 'Municipal');
+}
+```
+
+## Exemplo Completo
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // 1. Configurar cliente
+  // Inicializar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certPath: 'caminho_certificado',
+    certPassword: 'senha_certificado',
+    contratanteNumero: '00000000000100',
+    autorPedidoDadosNumero: '00000000000100',
   );
-  
-  // 2. Criar serviço
+
   final defisService = DefisService(apiClient);
-  
-  // 3. Preparar dados da declaração
+
+  // Criar declaração com enums tipados
   final declaracao = TransmitirDeclaracaoRequest(
-    ano: 2024,
-    inatividade: 2,
+    ano: 2023,
+    situacaoEspecial: SituacaoEspecial(
+      tipoEvento: TipoEventoSituacaoEspecial.cisaoParcial,
+      dataEvento: 20230101,
+    ),
+    inatividade: RegraInatividade.atividadesMaiorZero,
     empresa: Empresa(
-      ganhoCapital: 0.0,
+      ganhoCapital: 0,
       qtdEmpregadoInicial: 1,
       qtdEmpregadoFinal: 1,
-      receitaBruta: 100000.0,
-      // ... outros campos obrigatórios
+      receitaExportacaoDireta: 0,
+      socios: [
+        Socio(
+          cpf: '00000000000',
+          rendimentosIsentos: 10000,
+          rendimentosTributaveis: 5000,
+          participacaoCapitalSocial: 100,
+          irRetidoFonte: 0,
+        ),
+      ],
+      ganhoRendaVariavel: 0,
+      doacoesCampanhaEleitoral: [
+        Doacao(
+          cnpjBeneficiario: '00000000000000',
+          tipoBeneficiario: TipoBeneficiarioDoacao.candidatoCargoPolitico,
+          formaDoacao: FormaDoacao.dinheiro,
+          valor: 1000.00,
+        ),
+      ],
+      estabelecimentos: [
+        Estabelecimento(
+          cnpjCompleto: '00000000000000',
+          estoqueInicial: 1000,
+          estoqueFinal: 2000,
+          saldoCaixaInicial: 5000,
+          saldoCaixaFinal: 15000,
+          aquisicoesMercadoInterno: 10000,
+          importacoes: 0,
+          totalEntradasPorTransferencia: 0,
+          totalSaidasPorTransferencia: 0,
+          totalDevolucoesVendas: 100,
+          totalEntradas: 10100,
+          totalDevolucoesCompras: 50,
+          totalDespesas: 8000,
+          operacoesInterestaduais: [
+            OperacaoInterestadual(
+              uf: 'SP',
+              valor: 5000.00,
+              tipoOperacao: TipoOperacao.entrada,
+            ),
+          ],
+          naoOptante: NaoOptante(
+            administracaoTributaria: AdministracaoTributaria.federal,
+            uf: 'SP',
+            codigoMunicipio: '3550308',
+            numeroProcesso: '12345678901234567890',
+          ),
+        ),
+      ],
     ),
   );
-  
-  // 4. Transmitir declaração
+
   try {
-    final response = await defisService.transmitirDeclaracao(
-      '00000000000000', // CNPJ Contratante
-      declaracao,
+    // Transmitir declaração
+    final transmitirResponse = await defisService.transmitirDeclaracao(
+      contribuinteNumero: '00000000000000',
+      declaracaoData: declaracao,
     );
     
-    if (response.sucesso) {
-      print('Sucesso! ID DEFIS: ${response.dados.idDefis}');
-    } else {
-      print('Erro: ${response.mensagemErro}');
-    }
+    print('Declaração transmitida: ${transmitirResponse.dados.idDefis}');
+    print('PDF disponível: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty}');
+
+    // Consultar declarações
+    final consultarResponse = await defisService.consultarDeclaracoesTransmitidas(
+      contribuinteNumero: '00000000000000',
+    );
+    
+    print('Total de declarações: ${consultarResponse.dados.length}');
+
+    // Consultar última declaração
+    final ultimaResponse = await defisService.consultarUltimaDeclaracao(
+      contribuinteNumero: '00000000000000',
+      ano: 2023,
+    );
+    
+    print('Última declaração: ${ultimaResponse.dados.idDefis}');
+
   } catch (e) {
-    print('Erro na transmissão: $e');
+    print('Erro: $e');
   }
 }
 ```
 
-## Dados de Teste
+## Mensagens de Erro Comuns
 
-Para desenvolvimento e testes, utilize os seguintes dados:
+| Código | Mensagem | Ação |
+|--------|----------|------|
+| [EntradaIncorreta-DEFIS-MSG_0001] | O campo _campo_ possui valor inválido. Dever ser numérico com o valor mínimo de _valormínimo_ e o máximo _valormaximo_. | Corrigir o campo e reenviar |
+| [Erro-DEFIS-MSG_0002] | Houve um erro ao utilizar o sistema. Tente novamente mais tarde. | Erro interno. Reenviar a requisição |
+| [EntradaIncorreta-DEFIS-MSG_0006] | O ano deve estar entre _inicio_ e _fim_. | Corrigir o valor e reenviar |
+| [EntradaIncorreta-DEFIS-MSG_0008] | Contribuinte não optante e bloco NaoOptante não preenchido. | Corrigir e reenviar |
+| [EntradaIncorreta-DEFIS-MSG_0010] | Para administração tributária distrital deve ser passado DF no campo UF. | Corrigir e reenviar |
 
-```dart
-// CNPJs/CPFs de teste (sempre usar zeros)
-const cnpjTeste = '00000000000000';
-const cpfTeste = '00000000000';
+## Regras de Negócio
 
-// Estrutura base para testes (usando a nova API simplificada)
-final requestTeste = BaseRequest(
-  contribuinteNumero: cnpjTeste,
-  pedidoDados: PedidoDados(
-    idSistema: 'DEFIS',
-    idServico: 'SERVICO_EXEMPLO',
-    dados: 'dados_do_servico',
-  ),
-);
-```
+### Regra da Informação Opcional
 
-## Limitações
+O Estabelecimento incorreu em pelo menos uma das hipóteses a seguir?
 
-1. **Certificado Digital**: Requer certificado digital válido para autenticação
-2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
-3. **Validação**: Todos os dados devem ser validados antes do envio
+- Saídas por transferência de mercadorias entre estabelecimentos do mesmo proprietário
+- Vendas por meio de revendedores ambulantes autônomos em outros municípios dentro do estado
+- Preparo e comercialização de refeições em municípios diferentes do município de localização
+- Produção rural ocorrida no território de mais de um município do estado
+- Aquisição de mercadorias de produtores rurais não equiparados a comerciantes ou industriais
+- Aquisição de mercadorias de contribuintes dispensados de inscrição, exceto produtor rural
+- Autos de infração pagos ou com decisão administrativa irrecorrível decorrentes de saídas de mercadorias ou prestações de serviço não oferecidas à tributação
+- Rateio de receita oriundo de regime especial concedido pela secretaria estadual de fazenda e de decisão judicial ou de situações similares
 
-## Suporte
+## Links Úteis
 
-Para dúvidas sobre o serviço DEFIS:
-- Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
-- Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
-- Abra uma issue no repositório para questões específicas do package
+- [Documentação Oficial DEFIS](https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1)
+- [Lei Complementar nº 123/2006](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm)
+- [Resolução CGSN nº 140/2018](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/legislacao/resolucoes-da-cgsn/resolucao-cgsn-n-140-de-2018)

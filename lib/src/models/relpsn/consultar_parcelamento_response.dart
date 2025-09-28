@@ -9,9 +9,9 @@ class ConsultarParcelamentoResponse {
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelamentoResponse(
-      status: json['status'] as String,
+      status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 
@@ -64,10 +64,10 @@ class ParcelamentoDetalhado {
   factory ParcelamentoDetalhado.fromJson(String jsonString) {
     final json = jsonString as Map<String, dynamic>;
     return ParcelamentoDetalhado(
-      numero: json['numero'] as int,
-      dataDoPedido: json['dataDoPedido'] as int,
-      situacao: json['situacao'] as String,
-      dataDaSituacao: json['dataDaSituacao'] as int,
+      numero: int.parse(json['numero'].toString()),
+      dataDoPedido: int.parse(json['dataDoPedido'].toString()),
+      situacao: json['situacao'].toString(),
+      dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacaoOriginal: json['consolidacaoOriginal'] != null
           ? ConsolidacaoOriginal.fromJson(json['consolidacaoOriginal'] as Map<String, dynamic>)
           : null,
@@ -128,11 +128,11 @@ class ConsolidacaoOriginal {
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
-      valorTotalConsolidadoDaEntrada: (json['valorTotalConsolidadoDaEntrada'] as num).toDouble(),
-      dataConsolidacao: json['dataConsolidacao'] as int,
-      parcelaDeEntrada: (json['parcelaDeEntrada'] as num).toDouble(),
-      quantidadeParcelasDeEntrada: json['quantidadeParcelasDeEntrada'] as int,
-      valorConsolidadoDivida: (json['valorConsolidadoDivida'] as num).toDouble(),
+      valorTotalConsolidadoDaEntrada: (num.parse(json['valorTotalConsolidadoDaEntrada'].toString())).toDouble(),
+      dataConsolidacao: int.parse(json['dataConsolidacao'].toString()),
+      parcelaDeEntrada: (num.parse(json['parcelaDeEntrada'].toString())).toDouble(),
+      quantidadeParcelasDeEntrada: int.parse(json['quantidadeParcelasDeEntrada'].toString()),
+      valorConsolidadoDivida: (num.parse(json['valorConsolidadoDivida'].toString())).toDouble(),
       detalhesConsolidacao: (json['detalhesConsolidacao'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -175,11 +175,11 @@ class DetalhesConsolidacao {
 
   factory DetalhesConsolidacao.fromJson(Map<String, dynamic> json) {
     return DetalhesConsolidacao(
-      periodoApuracao: json['periodoApuracao'] as int,
-      vencimento: json['vencimento'] as int,
-      numeroProcesso: json['numeroProcesso'] as String,
-      saldoDevedorOriginal: (json['saldoDevedorOriginal'] as num).toDouble(),
-      valorAtualizado: (json['valorAtualizado'] as num).toDouble(),
+      periodoApuracao: int.parse(json['periodoApuracao'].toString()),
+      vencimento: int.parse(json['vencimento'].toString()),
+      numeroProcesso: json['numeroProcesso'].toString(),
+      saldoDevedorOriginal: (num.parse(json['saldoDevedorOriginal'].toString())).toDouble(),
+      valorAtualizado: (num.parse(json['valorAtualizado'].toString())).toDouble(),
     );
   }
 
@@ -235,12 +235,12 @@ class AlteracaoDivida {
 
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
-      dataAlteracaoDivida: json['dataAlteracaoDivida'] as int,
-      identificadorConsolidacao: json['identificadorConsolidacao'] as int,
-      saldoDevedorOriginalSemReducoes: (json['saldoDevedorOriginalSemReducoes'] as num).toDouble(),
-      valorRemanescenteComReducoes: (json['valorRemanescenteComReducoes'] as num).toDouble(),
-      partePrevidenciaria: (json['partePrevidenciaria'] as num).toDouble(),
-      demaisDebitos: (json['demaisDebitos'] as num).toDouble(),
+      dataAlteracaoDivida: int.parse(json['dataAlteracaoDivida'].toString()),
+      identificadorConsolidacao: int.parse(json['identificadorConsolidacao'].toString()),
+      saldoDevedorOriginalSemReducoes: (num.parse(json['saldoDevedorOriginalSemReducoes'].toString())).toDouble(),
+      valorRemanescenteComReducoes: (num.parse(json['valorRemanescenteComReducoes'].toString())).toDouble(),
+      partePrevidenciaria: (num.parse(json['partePrevidenciaria'].toString())).toDouble(),
+      demaisDebitos: (num.parse(json['demaisDebitos'].toString())).toDouble(),
       detalhesConsolidacao: (json['detalhesConsolidacao'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
       parcelasAlteracao: (json['parcelasAlteracao'] as List).map((e) => ParcelaAlteracao.fromJson(e as Map<String, dynamic>)).toList(),
     );
@@ -291,10 +291,10 @@ class ParcelaAlteracao {
 
   factory ParcelaAlteracao.fromJson(Map<String, dynamic> json) {
     return ParcelaAlteracao(
-      faixaParcelas: json['faixaParcelas'] as String,
-      parcelaInicial: json['parcelaInicial'] as int,
-      vencimentoInicial: json['vencimentoInicial'] as int,
-      parcelaBasica: (json['parcelaBasica'] as num).toDouble(),
+      faixaParcelas: json['faixaParcelas'].toString(),
+      parcelaInicial: int.parse(json['parcelaInicial'].toString()),
+      vencimentoInicial: int.parse(json['vencimentoInicial'].toString()),
+      parcelaBasica: (num.parse(json['parcelaBasica'].toString())).toDouble(),
     );
   }
 
@@ -331,10 +331,10 @@ class DemonstrativoPagamento {
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
-      mesDaParcela: json['mesDaParcela'] as int,
-      vencimentoDoDas: json['vencimentoDoDas'] as int,
-      dataDeArrecadacao: json['dataDeArrecadacao'] as int,
-      valorPago: (json['valorPago'] as num).toDouble(),
+      mesDaParcela: int.parse(json['mesDaParcela'].toString()),
+      vencimentoDoDas: int.parse(json['vencimentoDoDas'].toString()),
+      dataDeArrecadacao: int.parse(json['dataDeArrecadacao'].toString()),
+      valorPago: (num.parse(json['valorPago'].toString())).toDouble(),
     );
   }
 

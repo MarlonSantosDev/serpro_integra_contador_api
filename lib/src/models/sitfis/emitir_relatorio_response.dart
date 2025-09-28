@@ -11,9 +11,9 @@ class EmitirRelatorioResponse {
 
   factory EmitirRelatorioResponse.fromJson(Map<String, dynamic> json) {
     return EmitirRelatorioResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] != null ? EmitirRelatorioDados.fromJson(json['dados'] as String) : null,
+      dados: json['dados'] != null ? EmitirRelatorioDados.fromJson(json['dados'].toString()) : null,
     );
   }
 
@@ -44,7 +44,7 @@ class EmitirRelatorioDados {
   factory EmitirRelatorioDados.fromJson(String jsonString) {
     try {
       final Map<String, dynamic> json = _parseJsonString(jsonString);
-      return EmitirRelatorioDados(pdf: json['pdf'] as String?, tempoEspera: json['tempoEspera'] as int?);
+      return EmitirRelatorioDados(pdf: json['pdf']?.toString(), tempoEspera: int.parse(json['tempoEspera'].toString()));
     } catch (e) {
       return EmitirRelatorioDados();
     }

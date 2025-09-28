@@ -53,16 +53,16 @@ class TermoAutorizacaoResponse {
         }
       } else if (json['mensagens'] is String) {
         // Caso especial quando mensagens vem como string
-        mensagens.add(MensagemNegocio(codigo: 'INFO', texto: json['mensagens'] as String));
+        mensagens.add(MensagemNegocio(codigo: 'INFO', texto: json['mensagens'].toString()));
       }
     }
 
     return TermoAutorizacaoResponse(
-      status: json['status'] as int? ?? 0,
+      status: int.parse(json['status'].toString()),
       mensagens: mensagens,
-      dados: json['dados'] as String?,
-      autenticarProcuradorToken: json['autenticar_procurador_token'] as String?,
-      dataExpiracao: json['data_expiracao'] != null ? DateTime.tryParse(json['data_expiracao'] as String) : null,
+      dados: json['dados']?.toString(),
+      autenticarProcuradorToken: json['autenticar_procurador_token']?.toString(),
+      dataExpiracao: json['data_expiracao'] != null ? DateTime.tryParse(json['data_expiracao'].toString()) : null,
     );
   }
 
@@ -129,7 +129,7 @@ class MensagemNegocio {
   MensagemNegocio({required this.codigo, required this.texto});
 
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'] as String? ?? 'UNKNOWN', texto: json['texto'] as String? ?? '');
+    return MensagemNegocio(codigo: json['codigo']?.toString() ?? 'UNKNOWN', texto: json['texto']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -161,9 +161,9 @@ class CacheToken {
 
   factory CacheToken.fromJson(Map<String, dynamic> json) {
     return CacheToken(
-      token: json['token'] as String,
-      dataExpiracao: DateTime.parse(json['data_expiracao'] as String),
-      dataCriacao: DateTime.parse(json['data_criacao'] as String),
+      token: json['token'].toString(),
+      dataExpiracao: DateTime.parse(json['data_expiracao'].toString()),
+      dataCriacao: DateTime.parse(json['data_criacao'].toString()),
     );
   }
 

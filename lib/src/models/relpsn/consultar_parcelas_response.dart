@@ -9,9 +9,9 @@ class ConsultarParcelasResponse {
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
-      status: json['status'] as String,
+      status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 
@@ -94,7 +94,7 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(parcela: json['parcela'] as String, valor: (json['valor'] as num).toDouble());
+    return Parcela(parcela: json['parcela'].toString(), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {

@@ -24,7 +24,7 @@ class ConsultarDeclaracaoNumeroRequest {
 
   factory ConsultarDeclaracaoNumeroRequest.fromJson(Map<String, dynamic> json) {
     return ConsultarDeclaracaoNumeroRequest(
-      numeroDeclaracao: json['numeroDeclaracao'] as String,
+      numeroDeclaracao: json['numeroDeclaracao'].toString(),
     );
   }
 }

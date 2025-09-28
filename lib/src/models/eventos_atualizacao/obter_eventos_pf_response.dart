@@ -14,7 +14,7 @@ class ObterEventosPFResponse {
     // Parse dos dados que vêm como string JSON escapada
     List<EventoAtualizacaoPF> eventos = [];
     if (json['dados'] != null) {
-      final dadosString = json['dados'] as String;
+      final dadosString = json['dados'].toString();
       if (dadosString.isNotEmpty) {
         try {
           final dadosList = jsonDecode(dadosString) as List<dynamic>;
@@ -27,10 +27,10 @@ class ObterEventosPFResponse {
     }
 
     return ObterEventosPFResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>)).toList(),
       dados: eventos,
-      responseId: json['responseId'] as String?,
+      responseId: json['responseId']?.toString(),
     );
   }
 

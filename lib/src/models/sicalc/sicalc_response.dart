@@ -11,7 +11,7 @@ class SicalcResponse {
 
   factory SicalcResponse.fromJson(Map<String, dynamic> json) {
     return SicalcResponse(
-      status: json['status'] as int? ?? 0,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     );
   }

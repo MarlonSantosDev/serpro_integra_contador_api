@@ -154,11 +154,11 @@ class CacheModel {
 
   factory CacheModel.fromJson(Map<String, dynamic> json) {
     return CacheModel(
-      token: json['token'] as String,
-      dataCriacao: DateTime.parse(json['data_criacao'] as String),
-      dataExpiracao: DateTime.parse(json['data_expiracao'] as String),
-      contratanteNumero: json['contratante_numero'] as String,
-      autorPedidoDadosNumero: json['autor_pedido_dados_numero'] as String,
+      token: json['token'].toString(),
+      dataCriacao: DateTime.parse(json['data_criacao'].toString()),
+      dataExpiracao: DateTime.parse(json['data_expiracao'].toString()),
+      contratanteNumero: json['contratante_numero'].toString(),
+      autorPedidoDadosNumero: json['autor_pedido_dados_numero'].toString(),
       headers: Map<String, String>.from(json['headers'] as Map? ?? {}),
       isValido: json['is_valido'] as bool? ?? true,
     );

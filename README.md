@@ -211,6 +211,85 @@ final response = await sicalcService.gerarDarfPessoaFisica(
 ```
 **📖 [Documentação Completa](doc/sicalc_service.md)**
 
+#### 📋 DEFIS - Declaração de Informações Socioeconômicas e Fiscais
+```dart
+final defisService = DefisService(apiClient);
+
+// Transmitir declaração usando enums tipados
+final declaracao = TransmitirDeclaracaoRequest(
+  ano: 2023,
+  situacaoEspecial: SituacaoEspecial(
+    tipoEvento: TipoEventoSituacaoEspecial.cisaoParcial,
+    dataEvento: 20230101,
+  ),
+  inatividade: RegraInatividade.atividadesMaiorZero,
+  empresa: Empresa(
+    ganhoCapital: 0,
+    qtdEmpregadoInicial: 1,
+    qtdEmpregadoFinal: 1,
+    receitaExportacaoDireta: 0,
+    socios: [
+      Socio(
+        cpf: '00000000000',
+        rendimentosIsentos: 10000,
+        rendimentosTributaveis: 5000,
+        participacaoCapitalSocial: 100,
+        irRetidoFonte: 0,
+      ),
+    ],
+    ganhoRendaVariavel: 0,
+    estabelecimentos: [
+      Estabelecimento(
+        cnpjCompleto: '00000000000000',
+        estoqueInicial: 1000,
+        estoqueFinal: 2000,
+        saldoCaixaInicial: 5000,
+        saldoCaixaFinal: 15000,
+        aquisicoesMercadoInterno: 10000,
+        importacoes: 0,
+        totalEntradasPorTransferencia: 0,
+        totalSaidasPorTransferencia: 0,
+        totalDevolucoesVendas: 100,
+        totalEntradas: 10100,
+        totalDevolucoesCompras: 50,
+        totalDespesas: 8000,
+        operacoesInterestaduais: [
+          OperacaoInterestadual(
+            uf: 'SP',
+            valor: 5000.00,
+            tipoOperacao: TipoOperacao.entrada,
+          ),
+        ],
+      ),
+    ],
+  ),
+);
+
+// Transmitir declaração
+final transmitirResponse = await defisService.transmitirDeclaracao(
+  contribuinteNumero: '00000000000000',
+  declaracaoData: declaracao,
+);
+
+// Consultar declarações transmitidas
+final consultarResponse = await defisService.consultarDeclaracoesTransmitidas(
+  contribuinteNumero: '00000000000000',
+);
+
+// Consultar última declaração por ano
+final ultimaResponse = await defisService.consultarUltimaDeclaracao(
+  contribuinteNumero: '00000000000000',
+  ano: 2023,
+);
+
+// Consultar declaração específica
+final especificaResponse = await defisService.consultarDeclaracaoEspecifica(
+  contribuinteNumero: '00000000000000',
+  idDefis: 12345,
+);
+```
+**📖 [Documentação Completa](doc/defis_service.md)**
+
 #### 📬 Caixa Postal - Consulta de Mensagens da RFB
 ```dart
 final caixaPostalService = CaixaPostalService(apiClient);

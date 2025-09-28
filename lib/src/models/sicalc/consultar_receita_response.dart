@@ -15,7 +15,7 @@ class ConsultarReceitaResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'] as String) as Map<String, dynamic>;
+          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = ConsultarReceitaDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
           dadosParsed = ConsultarReceitaDados.fromJson(json['dados'] as Map<String, dynamic>);
@@ -26,7 +26,7 @@ class ConsultarReceitaResponse {
     }
 
     return ConsultarReceitaResponse(
-      status: json['status'] as int? ?? 0,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       dados: dadosParsed,
     );
@@ -72,14 +72,14 @@ class ConsultarReceitaDados {
 
   factory ConsultarReceitaDados.fromJson(Map<String, dynamic> json) {
     return ConsultarReceitaDados(
-      codigoReceita: json['codigoReceita'] as int? ?? 0,
-      descricaoReceita: json['descricaoReceita'] as String? ?? '',
-      tipoPessoa: json['tipoPessoa'] as String? ?? '',
-      tipoPeriodoApuracao: json['tipoPeriodoApuracao'] as String?,
-      observacoes: json['observacoes'] as String?,
+      codigoReceita: int.parse(json['codigoReceita'].toString()),
+      descricaoReceita: json['descricaoReceita']?.toString() ?? '',
+      tipoPessoa: json['tipoPessoa']?.toString() ?? '',
+      tipoPeriodoApuracao: json['tipoPeriodoApuracao']?.toString(),
+      observacoes: json['observacoes']?.toString(),
       ativa: json['ativa'] as bool? ?? true,
-      dataInicioVigencia: json['dataInicioVigencia'] as String?,
-      dataFimVigencia: json['dataFimVigencia'] as String?,
+      dataInicioVigencia: json['dataInicioVigencia']?.toString(),
+      dataFimVigencia: json['dataFimVigencia']?.toString(),
     );
   }
 

@@ -84,8 +84,8 @@ class ConsultarDeclaracoesRequest {
 
   factory ConsultarDeclaracoesRequest.fromJson(Map<String, dynamic> json) {
     return ConsultarDeclaracoesRequest(
-      anoCalendario: json['anoCalendario'] as String?,
-      periodoApuracao: json['periodoApuracao'] as String?,
+      anoCalendario: json['anoCalendario']?.toString(),
+      periodoApuracao: json['periodoApuracao']?.toString(),
     );
   }
 }

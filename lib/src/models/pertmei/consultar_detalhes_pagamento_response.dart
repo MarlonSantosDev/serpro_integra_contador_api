@@ -9,9 +9,9 @@ class ConsultarDetalhesPagamentoResponse {
 
   factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDetalhesPagamentoResponse(
-      status: json['status'] as String? ?? '',
+      status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] as String? ?? '',
+      dados: json['dados']?.toString() ?? '',
     );
   }
 
@@ -62,17 +62,17 @@ class DetalhesPagamento {
 
   factory DetalhesPagamento.fromJson(Map<String, dynamic> json) {
     return DetalhesPagamento(
-      numeroDas: json['numeroDas'] as String? ?? '',
-      dataVencimento: json['dataVencimento'] as int? ?? 0,
-      paDasGerado: json['paDasGerado'] as int? ?? 0,
-      geradoEm: json['geradoEm'] as String? ?? '',
-      numeroParcelamento: json['numeroParcelamento'] as String? ?? '',
-      numeroParcela: json['numeroParcela'] as String? ?? '',
-      dataLimiteAcolhimento: json['dataLimiteAcolhimento'] as int? ?? 0,
+      numeroDas: json['numeroDas']?.toString() ?? '',
+      dataVencimento: int.parse(json['dataVencimento'].toString()),
+      paDasGerado: int.parse(json['paDasGerado'].toString()),
+      geradoEm: json['geradoEm']?.toString() ?? '',
+      numeroParcelamento: json['numeroParcelamento']?.toString() ?? '',
+      numeroParcela: json['numeroParcela']?.toString() ?? '',
+      dataLimiteAcolhimento: int.parse(json['dataLimiteAcolhimento'].toString()),
       pagamentoDebitos: (json['pagamentoDebitos'] as List<dynamic>?)?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dataPagamento: json['dataPagamento'] as int? ?? 0,
-      bancoAgencia: json['bancoAgencia'] as String? ?? '',
-      valorPagoArrecadacao: (json['valorPagoArrecadacao'] as num?)?.toDouble() ?? 0.0,
+      dataPagamento: int.parse(json['dataPagamento'].toString()),
+      bancoAgencia: json['bancoAgencia']?.toString() ?? '',
+      valorPagoArrecadacao: (num.parse(json['valorPagoArrecadacao'].toString())).toDouble(),
     );
   }
 
@@ -102,8 +102,8 @@ class PagamentoDebito {
 
   factory PagamentoDebito.fromJson(Map<String, dynamic> json) {
     return PagamentoDebito(
-      paDebito: json['paDebito'] as int? ?? 0,
-      processo: json['processo'] as String? ?? '',
+      paDebito: int.parse(json['paDebito'].toString()),
+      processo: json['processo']?.toString() ?? '',
       discriminacoesDebito:
           (json['discriminacoesDebito'] as List<dynamic>?)?.map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
@@ -133,12 +133,12 @@ class DiscriminacaoDebito {
 
   factory DiscriminacaoDebito.fromJson(Map<String, dynamic> json) {
     return DiscriminacaoDebito(
-      tributo: json['tributo'] as String? ?? '',
-      principal: (json['principal'] as num?)?.toDouble() ?? 0.0,
-      multa: (json['multa'] as num?)?.toDouble() ?? 0.0,
-      juros: (json['juros'] as num?)?.toDouble() ?? 0.0,
-      total: (json['total'] as num?)?.toDouble() ?? 0.0,
-      enteFederadoDestino: json['enteFederadoDestino'] as String? ?? '',
+      tributo: json['tributo']?.toString() ?? '',
+      principal: (num.parse(json['principal'].toString())).toDouble(),
+      multa: (num.parse(json['multa'].toString())).toDouble(),
+      juros: (num.parse(json['juros'].toString())).toDouble(),
+      total: (num.parse(json['total'].toString())).toDouble(),
+      enteFederadoDestino: json['enteFederadoDestino']?.toString() ?? '',
     );
   }
 

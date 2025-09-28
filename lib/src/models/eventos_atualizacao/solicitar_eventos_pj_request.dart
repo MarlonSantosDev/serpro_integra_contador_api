@@ -38,9 +38,9 @@ class SolicitarEventosPJRequest {
   }
 
   factory SolicitarEventosPJRequest.fromJson(Map<String, dynamic> json) {
-    final cnpjsString = json['cnpjs'] as String;
+    final cnpjsString = json['cnpjs'].toString();
     final cnpjs = cnpjsString.split(',').map((e) => e.trim()).toList();
-    final eventoCodigo = json['evento'] as String;
+    final eventoCodigo = json['evento'].toString();
     final evento = TipoEvento.fromCodigo(eventoCodigo) ?? TipoEvento.dctfWeb;
 
     return SolicitarEventosPJRequest(cnpjs: cnpjs, evento: evento);

@@ -64,8 +64,8 @@ class EntregarDeclaracaoRequest {
 
   factory EntregarDeclaracaoRequest.fromJson(Map<String, dynamic> json) {
     return EntregarDeclaracaoRequest(
-      cnpjCompleto: json['cnpjCompleto'] as String,
-      pa: json['pa'] as int,
+      cnpjCompleto: json['cnpjCompleto'].toString(),
+      pa: int.parse(json['pa'].toString()),
       indicadorTransmissao: json['indicadorTransmissao'] as bool,
       indicadorComparacao: json['indicadorComparacao'] as bool,
       declaracao: Declaracao.fromJson(
@@ -183,22 +183,22 @@ class Declaracao {
 
   factory Declaracao.fromJson(Map<String, dynamic> json) {
     return Declaracao(
-      tipoDeclaracao: json['tipoDeclaracao'] as int,
-      receitaPaCompetenciaInterno: (json['receitaPaCompetenciaInterno'] as num)
+      tipoDeclaracao: int.parse(json['tipoDeclaracao'].toString()),
+      receitaPaCompetenciaInterno: (num.parse(json['receitaPaCompetenciaInterno'].toString()))
           .toDouble(),
-      receitaPaCompetenciaExterno: (json['receitaPaCompetenciaExterno'] as num)
+      receitaPaCompetenciaExterno: (num.parse(json['receitaPaCompetenciaExterno'].toString()))
           .toDouble(),
       receitaPaCaixaInterno: json['receitaPaCaixaInterno'] != null
-          ? (json['receitaPaCaixaInterno'] as num).toDouble()
+          ? (num.parse(json['receitaPaCaixaInterno'].toString())).toDouble()
           : null,
       receitaPaCaixaExterno: json['receitaPaCaixaExterno'] != null
-          ? (json['receitaPaCaixaExterno'] as num).toDouble()
+          ? (num.parse(json['receitaPaCaixaExterno'].toString())).toDouble()
           : null,
       valorFixoIcms: json['valorFixoIcms'] != null
-          ? (json['valorFixoIcms'] as num).toDouble()
+          ? (num.parse(json['valorFixoIcms'].toString())).toDouble()
           : null,
       valorFixoIss: json['valorFixoIss'] != null
-          ? (json['valorFixoIss'] as num).toDouble()
+          ? (num.parse(json['valorFixoIss'].toString())).toDouble()
           : null,
       receitasBrutasAnteriores: json['receitasBrutasAnteriores'] != null
           ? (json['receitasBrutasAnteriores'] as List)
@@ -253,9 +253,9 @@ class ReceitaBrutaAnterior {
 
   factory ReceitaBrutaAnterior.fromJson(Map<String, dynamic> json) {
     return ReceitaBrutaAnterior(
-      pa: json['pa'] as int,
-      valorInterno: (json['valorInterno'] as num).toDouble(),
-      valorExterno: (json['valorExterno'] as num).toDouble(),
+      pa: int.parse(json['pa'].toString()),
+      valorInterno: (num.parse(json['valorInterno'].toString())).toDouble(),
+      valorExterno: (num.parse(json['valorExterno'].toString())).toDouble(),
     );
   }
 }
@@ -282,8 +282,8 @@ class FolhaSalario {
 
   factory FolhaSalario.fromJson(Map<String, dynamic> json) {
     return FolhaSalario(
-      pa: json['pa'] as int,
-      valor: (json['valor'] as num).toDouble(),
+      pa: int.parse(json['pa'].toString()),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
     );
   }
 }
@@ -336,10 +336,10 @@ class NaoOptante {
 
   factory NaoOptante.fromJson(Map<String, dynamic> json) {
     return NaoOptante(
-      esferaAdm: json['esferaAdm'] as String,
-      uf: json['uf'] as String,
-      codMunicipio: json['codMunicipio'] as String,
-      processo: json['processo'] as String,
+      esferaAdm: json['esferaAdm'].toString(),
+      uf: json['uf'].toString(),
+      codMunicipio: json['codMunicipio'].toString(),
+      processo: json['processo'].toString(),
     );
   }
 }
@@ -379,7 +379,7 @@ class Estabelecimento {
 
   factory Estabelecimento.fromJson(Map<String, dynamic> json) {
     return Estabelecimento(
-      cnpjCompleto: json['cnpjCompleto'] as String,
+      cnpjCompleto: json['cnpjCompleto'].toString(),
       atividades: json['atividades'] != null
           ? (json['atividades'] as List)
                 .map((a) => Atividade.fromJson(a))
@@ -429,8 +429,8 @@ class Atividade {
 
   factory Atividade.fromJson(Map<String, dynamic> json) {
     return Atividade(
-      idAtividade: json['idAtividade'] as int,
-      valorAtividade: (json['valorAtividade'] as num).toDouble(),
+      idAtividade: int.parse(json['idAtividade'].toString()),
+      valorAtividade: (num.parse(json['valorAtividade'].toString())).toDouble(),
       receitasAtividade: (json['receitasAtividade'] as List)
           .map((r) => ReceitaAtividade.fromJson(r))
           .toList(),
@@ -513,9 +513,9 @@ class ReceitaAtividade {
 
   factory ReceitaAtividade.fromJson(Map<String, dynamic> json) {
     return ReceitaAtividade(
-      valor: (json['valor'] as num).toDouble(),
-      codigoOutroMunicipio: json['codigoOutroMunicipio'] as String?,
-      outraUf: json['outraUf'] as String?,
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      codigoOutroMunicipio: json['codigoOutroMunicipio']?.toString(),
+      outraUf: json['outraUf']?.toString(),
       isencoes: json['isencoes'] != null
           ? (json['isencoes'] as List).map((i) => Isencao.fromJson(i)).toList()
           : null,
@@ -566,9 +566,9 @@ class Isencao {
 
   factory Isencao.fromJson(Map<String, dynamic> json) {
     return Isencao(
-      codTributo: json['codTributo'] as int,
-      valor: (json['valor'] as num).toDouble(),
-      identificador: json['identificador'] as int,
+      codTributo: int.parse(json['codTributo'].toString()),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      identificador: int.parse(json['identificador'].toString()),
     );
   }
 }
@@ -608,10 +608,10 @@ class Reducao {
 
   factory Reducao.fromJson(Map<String, dynamic> json) {
     return Reducao(
-      codTributo: json['codTributo'] as int,
-      valor: (json['valor'] as num).toDouble(),
-      percentualReducao: (json['percentualReducao'] as num).toDouble(),
-      identificador: json['identificador'] as int,
+      codTributo: int.parse(json['codTributo'].toString()),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      percentualReducao: (num.parse(json['percentualReducao'].toString())).toDouble(),
+      identificador: int.parse(json['identificador'].toString()),
     );
   }
 }
@@ -632,8 +632,8 @@ class QualificacaoTributaria {
 
   factory QualificacaoTributaria.fromJson(Map<String, dynamic> json) {
     return QualificacaoTributaria(
-      codigoTributo: json['codigoTributo'] as int,
-      id: json['id'] as int,
+      codigoTributo: int.parse(json['codigoTributo'].toString()),
+      id: int.parse(json['id'].toString()),
     );
   }
 }
@@ -688,13 +688,13 @@ class ExigibilidadeSuspensa {
 
   factory ExigibilidadeSuspensa.fromJson(Map<String, dynamic> json) {
     return ExigibilidadeSuspensa(
-      codTributo: json['codTributo'] as int,
-      numeroProcesso: json['numeroProcesso'] as int,
-      codMunicipio: json['codMunicipio'] as String?,
-      uf: json['uf'] as String,
-      vara: json['vara'] as String,
+      codTributo: int.parse(json['codTributo'].toString()),
+      numeroProcesso: int.parse(json['numeroProcesso'].toString()),
+      codMunicipio: json['codMunicipio']?.toString(),
+      uf: json['uf'].toString(),
+      vara: json['vara'].toString(),
       existeDeposito: json['existeDeposito'] as bool,
-      motivo: json['motivo'] as int,
+      motivo: int.parse(json['motivo'].toString()),
     );
   }
 }
@@ -718,8 +718,8 @@ class ValorDevido {
 
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
     return ValorDevido(
-      codigoTributo: json['codigoTributo'] as int,
-      valor: (json['valor'] as num).toDouble(),
+      codigoTributo: int.parse(json['codigoTributo'].toString()),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
     );
   }
 }

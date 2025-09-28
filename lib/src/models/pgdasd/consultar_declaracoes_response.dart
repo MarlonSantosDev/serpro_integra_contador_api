@@ -40,11 +40,11 @@ class ConsultarDeclaracoesResponse {
 
   factory ConsultarDeclaracoesResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDeclaracoesResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
           .toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 }
@@ -65,8 +65,8 @@ class Mensagem {
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
     return Mensagem(
-      codigo: json['codigo'] as String,
-      texto: json['texto'] as String,
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
     );
   }
 }
@@ -108,7 +108,7 @@ class DeclaracoesEntregues {
 
   factory DeclaracoesEntregues.fromJson(Map<String, dynamic> json) {
     return DeclaracoesEntregues(
-      anoCalendario: json['anoCalendario'] as int,
+      anoCalendario: int.parse(json['anoCalendario'].toString()),
       periodos: json['periodos'] != null
           ? (json['periodos'] as List).map((p) => Periodo.fromJson(p)).toList()
           : null,
@@ -159,7 +159,7 @@ class Periodo {
 
   factory Periodo.fromJson(Map<String, dynamic> json) {
     return Periodo(
-      periodoApuracao: json['periodoApuracao'] as int,
+      periodoApuracao: int.parse(json['periodoApuracao'].toString()),
       operacoes: (json['operacoes'] as List)
           .map((o) => Operacao.fromJson(o))
           .toList(),
@@ -197,7 +197,7 @@ class Operacao {
 
   factory Operacao.fromJson(Map<String, dynamic> json) {
     return Operacao(
-      tipoOperacao: json['tipoOperacao'] as String,
+      tipoOperacao: json['tipoOperacao'].toString(),
       indiceDeclaracao: json['indiceDeclaracao'] != null
           ? IndiceDeclaracao.fromJson(json['indiceDeclaracao'])
           : null,
@@ -246,9 +246,9 @@ class IndiceDeclaracao {
 
   factory IndiceDeclaracao.fromJson(Map<String, dynamic> json) {
     return IndiceDeclaracao(
-      numeroDeclaracao: json['numeroDeclaracao'] as String,
-      dataHoraTransmissao: json['dataHoraTransmissao'] as int,
-      malha: json['malha'] as String?,
+      numeroDeclaracao: json['numeroDeclaracao'].toString(),
+      dataHoraTransmissao: int.parse(json['dataHoraTransmissao'].toString()),
+      malha: json['malha']?.toString(),
     );
   }
 }
@@ -284,8 +284,8 @@ class IndiceDas {
 
   factory IndiceDas.fromJson(Map<String, dynamic> json) {
     return IndiceDas(
-      numeroDas: json['numeroDas'] as String,
-      dataHoraEmissaoDas: json['dataHoraEmissaoDas'] as int,
+      numeroDas: json['numeroDas'].toString(),
+      dataHoraEmissaoDas: int.parse(json['dataHoraEmissaoDas'].toString()),
       dasPago: json['dasPago'] as bool,
     );
   }

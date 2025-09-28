@@ -15,7 +15,7 @@ class GerarCodigoBarrasResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'] as String) as Map<String, dynamic>;
+          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = GerarCodigoBarrasDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
           dadosParsed = GerarCodigoBarrasDados.fromJson(json['dados'] as Map<String, dynamic>);
@@ -26,7 +26,7 @@ class GerarCodigoBarrasResponse {
     }
 
     return GerarCodigoBarrasResponse(
-      status: json['status'] as int? ?? 0,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       dados: dadosParsed,
     );
@@ -78,12 +78,12 @@ class GerarCodigoBarrasDados {
 
   factory GerarCodigoBarrasDados.fromJson(Map<String, dynamic> json) {
     return GerarCodigoBarrasDados(
-      numeroDocumento: json['numeroDocumento'] as int? ?? 0,
-      codigoBarras: json['codigoBarras'] as String?,
-      linhaDigitavel: json['linhaDigitavel'] as String?,
-      qrCode: json['qrCode'] as String?,
-      dataGeracao: json['dataGeracao'] as String?,
-      dataValidade: json['dataValidade'] as String?,
+      numeroDocumento: int.parse(json['numeroDocumento'].toString()),
+      codigoBarras: json['codigoBarras']?.toString(),
+      linhaDigitavel: json['linhaDigitavel']?.toString(),
+      qrCode: json['qrCode']?.toString(),
+      dataGeracao: json['dataGeracao']?.toString(),
+      dataValidade: json['dataValidade']?.toString(),
     );
   }
 

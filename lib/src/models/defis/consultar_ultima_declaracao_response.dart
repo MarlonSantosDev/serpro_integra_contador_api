@@ -1,34 +1,27 @@
-/// Classes compartilhadas para responses do DEFIS
+import 'defis_response.dart';
 
-class DefisResponse {
-  DefisResponse();
+/// Response para consultar a última declaração transmitida na DEFIS
+class ConsultarUltimaDeclaracaoResponse {
+  final int status;
+  final List<MensagemDefis> mensagens;
+  final UltimaDeclaracao dados;
 
-  factory DefisResponse.fromJson(Map<String, dynamic> json) {
-    return DefisResponse();
+  ConsultarUltimaDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+
+  factory ConsultarUltimaDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+    return ConsultarUltimaDeclaracaoResponse(
+      status: int.parse(json['status'].toString()),
+      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(),
+      dados: UltimaDeclaracao.fromJson(json['dados'] as Map<String, dynamic>),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {};
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.toJson()};
   }
 }
 
-/// Mensagem padrão do DEFIS
-class MensagemDefis {
-  final String codigo;
-  final String texto;
-
-  MensagemDefis({required this.codigo, required this.texto});
-
-  factory MensagemDefis.fromJson(Map<String, dynamic> json) {
-    return MensagemDefis(codigo: json['codigo'].toString(), texto: json['texto'].toString());
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'texto': texto};
-  }
-}
-
-/// Modelo para última declaração (usado em consultas específicas)
+/// Modelo para última declaração
 class UltimaDeclaracao {
   final int idDefis;
   final int ano;

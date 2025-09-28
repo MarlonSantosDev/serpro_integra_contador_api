@@ -1,0 +1,218 @@
+---
+alwaysApply: true
+---
+# Documentação da API Integra Contador - DEFIS
+
+Esta documentação fornece informações detalhadas sobre a API Integra Contador do SERPRO, com foco na Declaração de Informações Socioeconômicas e Fiscais (DEFIS).
+
+## 1. Introdução
+
+### O que é o Integra DEFIS?
+
+É uma solução integrada ao sistema DEFIS que permite efetuar a Declaração de Informações Socioeconômicas e Fiscais (DEFIS), conforme determina a Lei Complementar nº 123, de 2006, art. 25, caput e a Resolução CGSN nº 140/2018.
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra DEFIS, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema DEFIS, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## 2. Serviços
+
+### 2.1. Transmitir a Declaração Sócio Econômica - DEFIS
+
+Permite a transmissão da declaração.
+
+**PedidoDados**
+
+*   **idSistema:** `DEFIS`
+*   **idServico:** `TRANSDECLARACAO141`
+*   **versaoSistema:** `1.0`
+
+#### Dados de Entrada
+
+`O objeto Dados é um JSON dentro de uma string.`
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| ano | Ano calendário | `Number` | SIM |
+| situacaoEspecial | Informações de situação especial | `Object` | NÃO |
+| inatividade | Resposta à pergunta sobre inatividade. | `Number` | SIM (somente para AC anterior a 2025) |
+| empresa | Informações da matriz. | `Object` | SIM |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+### 2.2. Consultar Declarações Transmitidas na Defis
+
+Consulta todas as declarações transmitidas.
+
+**PedidoDados**
+
+*   **idSistema:** `DEFIS`
+*   **idServico:** `CONSDECLARACAO142`
+*   **versaoSistema:** `1.0`
+
+#### Dados de Entrada
+
+Não é necessário passar nenhum conteúdo no campo `Dados`.
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto Declarações. | `String` |
+
+### 2.3. Consultar a Última Declaração Transmitida na Defis
+
+Consulta a última declaração transmitida no ano calendário.
+
+**PedidoDados**
+
+*   **idSistema:** `DEFIS`
+*   **idServico:** `CONSULTIMADECREC143`
+*   **versaoSistema:** `1.0`
+
+#### Dados de Entrada
+
+`O objeto Dados é um JSON dentro de uma string.`
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| ano | Ano calendário que se deseja consultar a última declaração transmitida | `Number` |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto UltimaDeclaracao. | `String` |
+
+### 2.4. Consultar Declaração Específica Transmitida na Defis
+
+Consulta uma determinada declaração.
+
+**PedidoDados**
+
+*   **idSistema:** `DEFIS`
+*   **idServico:** `CONSDECREC144`
+*   **versaoSistema:** `1.0`
+
+#### Dados de Entrada
+
+`O objeto Dados é um JSON dentro de uma string.`
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDefis | Id Defis de uma declaração. | `Number` |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto UltimaDeclaracao. | `String` |
+
+## 3. Mensagens
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[EntradaIncorreta-DEFIS-MSG\_0001\] | O campo _campo_ possui valor inválido. Dever ser numérico com o valor mínimo de _valormínimo_ e o máximo _valormaximo_. | Corrigir o campo e reenviar. |
+| \[Erro-DEFIS-MSG\_0002\] | Houve um erro ao utilizar o sistema. Tente novamente mais tarde.  | Erro interno. Reenviar a requisição. |
+| \[EntradaIncorreta-DEFIS-MSG\_0003\] | O campo _campo_ possui valor inválido. Dever ser numérico, inteiro e com o valor mínimo de _valorminimo_ e o máximo _valormaximo_. | Corrigir o campo e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0004\] | O campo _campo_ possui valor inválido. | Corrigir o campo e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0005\] | O campo _campo_ deve ter o total de _total_ caracteres. | O valor está acima do que o permitido. Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0006\] | O ano deve estar entre _inicio_ e _fim_. | Corrigir o valor e reenviar. |
+| \[Erro-DEFIS-MSG\_0007\] | Erro no acesso ao Sinac. Tente novamente mais tarde. | Uma integração não está disponível. Tentar novamente mais tarde. |
+| \[EntradaIncorreta-DEFIS-MSG\_0008\] | Contribuinte não optante e bloco NaoOptante não preenchido. | Corrigir e reenviar. |
+| \[Erro-DEFIS-MSG\_0009\] | Ocorreu um erro durante o acesso ao sistema COMPROT. O número do processo não pôde ser validado. Por favor, tente mais tarde. | Houve um erro em uma integração. Tente novamente mais tarde. |
+| \[EntradaIncorreta-DEFIS-MSG\_0010\] | Para administração tributária distrital deve ser passado DF no campo UF. | Corrigir e reenviar. |
+
+## 4. Dados de Domínio
+
+### Tipos de evento para situação especial
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Cisão parcial |
+| 2 | Cisão total |
+| 3 | Extinção |
+| 4 | Fusão |
+| 5 | Incorporação/Incorporada |
+
+### Regra para inatividade
+
+| Código | Descrição |
+| --- | --- |
+| 0 | As atividades do PGDASD totalizam zero. Responde NÃO à pergunta "Contribuinte declara que permaneceu, durante o ano calendário, sem efetuar qualquer atividade operacional, não operacional, financeira ou patrimonial?" |
+| 1 | As atividades do PGDASD totalizam zero. Responde SIM à pergunta "Contribuinte declara que permaneceu, durante o ano calendário, sem efetuar qualquer atividade operacional, não operacional, financeira ou patrimonial?" |
+| 2 | O total das atividades do PGDASD (incluindo valor fixo) é maior que zero. |
+
+### Tipo de beneficiário da doação à campanha eleitoral
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Candidato a cargo político eletivo |
+| 2 | Comitê financeiro |
+| 3 | Partido político |
+
+### Forma de doação
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Cheque |
+| 2 | Outro títulos de crédito |
+| 3 | Transferência eletrônica |
+| 4 | Depósito em espécie |
+| 5 | Dinheiro |
+| 6 | Bens |
+| 7 | Serviços |
+
+### Tipo de operação
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Entrada |
+| 2 | Saída |
+
+### Administração tributária
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Distrital |
+| 2 | Estadual |
+| 3 | Federal |
+| 4 | Municipal |
+
+## 5. Regras de Negócio
+
+### Regra da informação opcional
+
+O Estabelecimento incorreu em pelo menos uma das hipóteses a seguir?
+
+*   Saídas por transferência de mercadorias entre estabelecimentos do mesmo proprietário;
+*   Vendas por meio de revendedores ambulantes autônomos em outros municípios dentro do estado em que esteja localizado o estabelecimento;
+*   Preparo e comercialização de refeições em municípios diferentes do município de localização do estabelecimento;
+*   Produção rural ocorrida no território de mais de um município do estado em que esteja localizado o estabelecimento
+*   Aquisição de mercadorias de produtores rurais não equiparados a comerciantes ou a industriais;
+*   Aquisição de mercadorias de contribuintes dispensados de inscrição, exceto produtor rural;
+*   Autos de infração pagos ou com decisão administrativa irrecorrível decorrentes de saídas de mercadorias ou prestações de serviço não oferecidas à tributação, somente o valor da operação;
+*   Rateio de receita oriundo de regime especial concedido pela secretaria estadual de fazenda e de decisão judicial ou de situações similares.

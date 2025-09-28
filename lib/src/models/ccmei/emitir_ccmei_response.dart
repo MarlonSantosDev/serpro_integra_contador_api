@@ -9,7 +9,7 @@ class EmitirCcmeiResponse {
 
   factory EmitirCcmeiResponse.fromJson(Map<String, dynamic> json) {
     return EmitirCcmeiResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemCcmei.fromJson(e as Map<String, dynamic>)).toList(),
       dados: EmitirCcmeiDados.fromJson(json['dados'] as Map<String, dynamic>),
     );
@@ -27,7 +27,7 @@ class EmitirCcmeiDados {
   EmitirCcmeiDados({required this.cnpj, required this.pdf});
 
   factory EmitirCcmeiDados.fromJson(Map<String, dynamic> json) {
-    return EmitirCcmeiDados(cnpj: json['cnpj'] as String, pdf: json['pdf'] as String);
+    return EmitirCcmeiDados(cnpj: json['cnpj'].toString(), pdf: json['pdf'].toString());
   }
 
   Map<String, dynamic> toJson() {

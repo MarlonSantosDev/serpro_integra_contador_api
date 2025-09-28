@@ -96,7 +96,7 @@ class DasData {
 
   factory DasData.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'] as String);
+    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
   }
 
   Map<String, dynamic> toJson() {

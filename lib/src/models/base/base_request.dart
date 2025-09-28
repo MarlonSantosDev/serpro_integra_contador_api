@@ -36,10 +36,10 @@ class PedidoDados {
 
   factory PedidoDados.fromJson(Map<String, dynamic> json) {
     return PedidoDados(
-      idSistema: json['idSistema'] as String,
-      idServico: json['idServico'] as String,
-      versaoSistema: json['versaoSistema'] as String?,
-      dados: json['dados'] as String,
+      idSistema: json['idSistema'].toString(),
+      idServico: json['idServico'].toString(),
+      versaoSistema: json['versaoSistema']?.toString(),
+      dados: json['dados'].toString(),
     );
   }
 

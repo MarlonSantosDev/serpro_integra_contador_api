@@ -38,9 +38,9 @@ class SolicitarEventosPFRequest {
   }
 
   factory SolicitarEventosPFRequest.fromJson(Map<String, dynamic> json) {
-    final cpfsString = json['cpfs'] as String;
+    final cpfsString = json['cpfs'].toString();
     final cpfs = cpfsString.split(',').map((e) => e.trim()).toList();
-    final eventoCodigo = json['evento'] as String;
+    final eventoCodigo = json['evento'].toString();
     final evento = TipoEvento.fromCodigo(eventoCodigo) ?? TipoEvento.dctfWeb;
 
     return SolicitarEventosPFRequest(cpfs: cpfs, evento: evento);

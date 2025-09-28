@@ -40,11 +40,11 @@ class GerarDasResponse {
 
   factory GerarDasResponse.fromJson(Map<String, dynamic> json) {
     return GerarDasResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
           .toList(),
-      dados: json['dados'] as String,
+      dados: json['dados'].toString(),
     );
   }
 }
@@ -65,8 +65,8 @@ class Mensagem {
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
     return Mensagem(
-      codigo: json['codigo'] as String,
-      texto: json['texto'] as String,
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
     );
   }
 }
@@ -98,8 +98,8 @@ class Das {
 
   factory Das.fromJson(Map<String, dynamic> json) {
     return Das(
-      pdf: json['pdf'] as String,
-      cnpjCompleto: json['cnpjCompleto'] as String,
+      pdf: json['pdf'].toString(),
+      cnpjCompleto: json['cnpjCompleto'].toString(),
       detalhamento: DetalhamentoDas.fromJson(json['detalhamento']),
     );
   }
@@ -163,14 +163,14 @@ class DetalhamentoDas {
 
   factory DetalhamentoDas.fromJson(Map<String, dynamic> json) {
     return DetalhamentoDas(
-      periodoApuracao: json['periodoApuracao'] as String,
-      numeroDocumento: json['numeroDocumento'] as String,
-      dataVencimento: json['dataVencimento'] as String,
-      dataLimiteAcolhimento: json['dataLimiteAcolhimento'] as String,
+      periodoApuracao: json['periodoApuracao'].toString(),
+      numeroDocumento: json['numeroDocumento'].toString(),
+      dataVencimento: json['dataVencimento'].toString(),
+      dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
       valores: ValoresDas.fromJson(json['valores']),
-      observacao1: json['observacao1'] as String?,
-      observacao2: json['observacao2'] as String?,
-      observacao3: json['observacao3'] as String?,
+      observacao1: json['observacao1']?.toString(),
+      observacao2: json['observacao2']?.toString(),
+      observacao3: json['observacao3']?.toString(),
       composicao: json['composicao'] != null
           ? (json['composicao'] as List)
                 .map((c) => ComposicaoDas.fromJson(c))
@@ -212,10 +212,10 @@ class ValoresDas {
 
   factory ValoresDas.fromJson(Map<String, dynamic> json) {
     return ValoresDas(
-      principal: (json['principal'] as num).toDouble(),
-      multa: (json['multa'] as num).toDouble(),
-      juros: (json['juros'] as num).toDouble(),
-      total: (json['total'] as num).toDouble(),
+      principal: (num.parse(json['principal'].toString())).toDouble(),
+      multa: (num.parse(json['multa'].toString())).toDouble(),
+      juros: (num.parse(json['juros'].toString())).toDouble(),
+      total: (num.parse(json['total'].toString())).toDouble(),
     );
   }
 }
@@ -252,9 +252,9 @@ class ComposicaoDas {
 
   factory ComposicaoDas.fromJson(Map<String, dynamic> json) {
     return ComposicaoDas(
-      periodoApuracao: json['periodoApuracao'] as String,
-      codigo: json['codigo'] as String,
-      denominacao: json['denominacao'] as String,
+      periodoApuracao: json['periodoApuracao'].toString(),
+      codigo: json['codigo'].toString(),
+      denominacao: json['denominacao'].toString(),
       valores: ValoresDas.fromJson(json['valores']),
     );
   }

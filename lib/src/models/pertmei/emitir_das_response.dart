@@ -9,9 +9,9 @@ class EmitirDasResponse {
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
-      status: json['status'] as String? ?? '',
+      status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] as String? ?? '',
+      dados: json['dados']?.toString() ?? '',
     );
   }
 
@@ -39,7 +39,7 @@ class DasGerado {
   DasGerado({required this.docArrecadacaoPdfB64});
 
   factory DasGerado.fromJson(Map<String, dynamic> json) {
-    return DasGerado(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'] as String? ?? '');
+    return DasGerado(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() {

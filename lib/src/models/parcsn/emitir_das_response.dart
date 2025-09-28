@@ -140,11 +140,11 @@ class DasData {
   factory DasData.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return DasData(
-      numeroDas: json['numeroDas'] as String,
-      codigoBarras: json['codigoBarras'] as String,
-      valor: (json['valor'] as num).toDouble(),
-      dataVencimento: json['dataVencimento'] as String,
-      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'] as String,
+      numeroDas: json['numeroDas'].toString(),
+      codigoBarras: json['codigoBarras'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      dataVencimento: json['dataVencimento'].toString(),
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
     );
   }
 

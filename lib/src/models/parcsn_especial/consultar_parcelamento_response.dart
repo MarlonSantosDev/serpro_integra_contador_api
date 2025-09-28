@@ -73,10 +73,10 @@ class ParcelamentoDetalhado {
   factory ParcelamentoDetalhado.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return ParcelamentoDetalhado(
-      numero: json['numero'] as int,
-      dataDoPedido: json['dataDoPedido'] as int,
-      situacao: json['situacao'] as String,
-      dataDaSituacao: json['dataDaSituacao'] as int,
+      numero: int.parse(json['numero'].toString()),
+      dataDoPedido: int.parse(json['dataDoPedido'].toString()),
+      situacao: json['situacao'].toString(),
+      dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacaoOriginal: json['consolidacaoOriginal'] != null
           ? ConsolidacaoOriginal.fromJson(json['consolidacaoOriginal'] as Map<String, dynamic>)
           : null,
@@ -147,11 +147,11 @@ class ConsolidacaoOriginal {
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
-      valorTotalConsolidado: (json['valorTotalConsolidado'] as num).toDouble(),
-      quantidadeParcelas: json['quantidadeParcelas'] as int,
-      primeiraParcela: (json['primeiraParcela'] as num).toDouble(),
-      parcelaBasica: (json['parcelaBasica'] as num).toDouble(),
-      dataConsolidacao: json['dataConsolidacao'] as int,
+      valorTotalConsolidado: (num.parse(json['valorTotalConsolidado'].toString())).toDouble(),
+      quantidadeParcelas: int.parse(json['quantidadeParcelas'].toString()),
+      primeiraParcela: (num.parse(json['primeiraParcela'].toString())).toDouble(),
+      parcelaBasica: (num.parse(json['parcelaBasica'].toString())).toDouble(),
+      dataConsolidacao: int.parse(json['dataConsolidacao'].toString()),
       detalhesConsolidacao: (json['detalhesConsolidacao'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -215,11 +215,11 @@ class DetalhesConsolidacao {
 
   factory DetalhesConsolidacao.fromJson(Map<String, dynamic> json) {
     return DetalhesConsolidacao(
-      periodoApuracao: json['periodoApuracao'] as int,
-      vencimento: json['vencimento'] as int,
-      numeroProcesso: json['numeroProcesso'] as String,
-      saldoDevedorOriginal: (json['saldoDevedorOriginal'] as num).toDouble(),
-      valorAtualizado: (json['valorAtualizado'] as num).toDouble(),
+      periodoApuracao: int.parse(json['periodoApuracao'].toString()),
+      vencimento: int.parse(json['vencimento'].toString()),
+      numeroProcesso: json['numeroProcesso'].toString(),
+      saldoDevedorOriginal: (num.parse(json['saldoDevedorOriginal'].toString())).toDouble(),
+      valorAtualizado: (num.parse(json['valorAtualizado'].toString())).toDouble(),
     );
   }
 
@@ -279,10 +279,10 @@ class AlteracaoDivida {
 
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
-      valorTotalConsolidado: (json['valorTotalConsolidado'] as num).toDouble(),
-      parcelasRemanescentes: json['parcelasRemanescentes'] as int,
-      parcelaBasica: (json['parcelaBasica'] as num).toDouble(),
-      dataAlteracaoDivida: json['dataAlteracaoDivida'] as int,
+      valorTotalConsolidado: (num.parse(json['valorTotalConsolidado'].toString())).toDouble(),
+      parcelasRemanescentes: int.parse(json['parcelasRemanescentes'].toString()),
+      parcelaBasica: (num.parse(json['parcelaBasica'].toString())).toDouble(),
+      dataAlteracaoDivida: int.parse(json['dataAlteracaoDivida'].toString()),
       detalhesConsolidacao: (json['detalhesConsolidacao'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -327,10 +327,10 @@ class DemonstrativoPagamento {
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
-      mesDaParcela: json['mesDaParcela'] as int,
-      vencimentoDoDas: json['vencimentoDoDas'] as int,
-      dataDeArrecadacao: json['dataDeArrecadacao'] as int,
-      valorPago: (json['valorPago'] as num).toDouble(),
+      mesDaParcela: int.parse(json['mesDaParcela'].toString()),
+      vencimentoDoDas: int.parse(json['vencimentoDoDas'].toString()),
+      dataDeArrecadacao: int.parse(json['dataDeArrecadacao'].toString()),
+      valorPago: (num.parse(json['valorPago'].toString())).toDouble(),
     );
   }
 

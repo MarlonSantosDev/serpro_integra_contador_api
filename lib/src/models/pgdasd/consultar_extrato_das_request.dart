@@ -23,6 +23,6 @@ class ConsultarExtratoDasRequest {
   }
 
   factory ConsultarExtratoDasRequest.fromJson(Map<String, dynamic> json) {
-    return ConsultarExtratoDasRequest(numeroDas: json['numeroDas'] as String);
+    return ConsultarExtratoDasRequest(numeroDas: json['numeroDas'].toString());
   }
 }

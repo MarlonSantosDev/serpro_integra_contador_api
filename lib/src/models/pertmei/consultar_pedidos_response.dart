@@ -9,9 +9,9 @@ class ConsultarPedidosResponse {
 
   factory ConsultarPedidosResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarPedidosResponse(
-      status: json['status'] as String? ?? '',
+      status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] as String? ?? '',
+      dados: json['dados']?.toString() ?? '',
     );
   }
 
@@ -50,10 +50,10 @@ class Parcelamento {
 
   factory Parcelamento.fromJson(Map<String, dynamic> json) {
     return Parcelamento(
-      numero: json['numero'] as int? ?? 0,
-      dataDoPedido: json['dataDoPedido'] as int? ?? 0,
-      situacao: json['situacao'] as String? ?? '',
-      dataDaSituacao: json['dataDaSituacao'] as int? ?? 0,
+      numero: int.parse(json['numero'].toString()),
+      dataDoPedido: int.parse(json['dataDoPedido'].toString()),
+      situacao: json['situacao']?.toString() ?? '',
+      dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
     );
   }
 

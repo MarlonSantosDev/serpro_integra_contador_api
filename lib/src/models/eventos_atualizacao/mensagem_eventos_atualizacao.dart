@@ -6,7 +6,7 @@ class MensagemEventosAtualizacao {
   MensagemEventosAtualizacao({required this.codigo, required this.texto});
 
   factory MensagemEventosAtualizacao.fromJson(Map<String, dynamic> json) {
-    return MensagemEventosAtualizacao(codigo: json['codigo'] as String, texto: json['texto'] as String);
+    return MensagemEventosAtualizacao(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

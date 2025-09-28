@@ -54,7 +54,7 @@ class DadosDetalhesMensagem {
 
   factory DadosDetalhesMensagem.fromJson(Map<String, dynamic> json) {
     return DadosDetalhesMensagem(
-      codigo: json['codigo'] as String,
+      codigo: json['codigo'].toString(),
       conteudo: (json['conteudo'] as List<dynamic>? ?? [])
           .map(
             (e) => DetalheMensagemCompleta.fromJson(e as Map<String, dynamic>),
@@ -133,37 +133,37 @@ class DetalheMensagemCompleta {
 
   factory DetalheMensagemCompleta.fromJson(Map<String, dynamic> json) {
     return DetalheMensagemCompleta(
-      codigoSistemaRemetente: json['codigoSistemaRemetente'] as String? ?? '',
-      codigoModelo: json['codigoModelo'] as String? ?? '',
-      assuntoModelo: json['assuntoModelo'] as String? ?? '',
-      origemModelo: json['origemModelo'] as String? ?? '',
-      dataEnvio: json['dataEnvio'] as String? ?? '',
-      valorParametroAssunto: json['valorParametroAssunto'] as String? ?? '',
-      dataLeitura: json['dataLeitura'] as String? ?? '',
-      horaLeitura: json['horaLeitura'] as String? ?? '',
-      dataExpiracao: json['dataExpiracao'] as String? ?? '',
-      numeroControle: json['numeroControle'] as String? ?? '',
-      dataCiencia: json['dataCiencia'] as String? ?? '',
-      enquadramento: json['enquadramento'] as String? ?? '',
-      dataAcessoExterno: json['dataAcessoExterno'] as String? ?? '',
-      horaAcessoExterno: json['horaAcessoExterno'] as String? ?? '',
-      tipoAutenticacaoUsuario: json['tipoAutenticacaoUsuario'] as String? ?? '',
-      codigoAcesso: json['codigoAcesso'] as String? ?? '',
+      codigoSistemaRemetente: json['codigoSistemaRemetente']?.toString() ?? '',
+      codigoModelo: json['codigoModelo']?.toString() ?? '',
+      assuntoModelo: json['assuntoModelo']?.toString() ?? '',
+      origemModelo: json['origemModelo']?.toString() ?? '',
+      dataEnvio: json['dataEnvio']?.toString() ?? '',
+      valorParametroAssunto: json['valorParametroAssunto']?.toString() ?? '',
+      dataLeitura: json['dataLeitura']?.toString() ?? '',
+      horaLeitura: json['horaLeitura']?.toString() ?? '',
+      dataExpiracao: json['dataExpiracao']?.toString() ?? '',
+      numeroControle: json['numeroControle']?.toString() ?? '',
+      dataCiencia: json['dataCiencia']?.toString() ?? '',
+      enquadramento: json['enquadramento']?.toString() ?? '',
+      dataAcessoExterno: json['dataAcessoExterno']?.toString() ?? '',
+      horaAcessoExterno: json['horaAcessoExterno']?.toString() ?? '',
+      tipoAutenticacaoUsuario: json['tipoAutenticacaoUsuario']?.toString() ?? '',
+      codigoAcesso: json['codigoAcesso']?.toString() ?? '',
       numeroSerieCertificadoDigital:
-          json['numeroSerieCertificadoDigital'] as String? ?? '',
+          json['numeroSerieCertificadoDigital']?.toString() ?? '',
       emissorCertificadoDigital:
-          json['emissorCertificadoDigital'] as String? ?? '',
-      tipoUsuario: json['tipoUsuario'] as String? ?? '',
-      niUsuario: json['niUsuario'] as String? ?? '',
-      papelUsuario: json['papelUsuario'] as String? ?? '',
-      codigoAplicacao: json['codigoAplicacao'] as String? ?? '',
-      tipoOrigem: json['tipoOrigem'] as String? ?? '',
-      descricaoOrigem: json['descricaoOrigem'] as String? ?? '',
-      corpoModelo: json['corpoModelo'] as String? ?? '',
+          json['emissorCertificadoDigital']?.toString() ?? '',
+      tipoUsuario: json['tipoUsuario']?.toString() ?? '',
+      niUsuario: json['niUsuario']?.toString() ?? '',
+      papelUsuario: json['papelUsuario']?.toString() ?? '',
+      codigoAplicacao: json['codigoAplicacao']?.toString() ?? '',
+      tipoOrigem: json['tipoOrigem']?.toString() ?? '',
+      descricaoOrigem: json['descricaoOrigem']?.toString() ?? '',
+      corpoModelo: json['corpoModelo']?.toString() ?? '',
       variaveis: (json['variaveis'] as List<dynamic>? ?? [])
           .map((e) => e.toString())
           .toList(),
-      indFavorito: json['indFavorito'] as String?,
+      indFavorito: json['indFavorito']?.toString(),
     );
   }
 
