@@ -18,7 +18,8 @@ void main() async {
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
   // Exemplo de uso dos serviços
-  await exemplosCaixaPostal(apiClient);
+  //await exemplosCaixaPostal(apiClient);
+  await exemplosCcmei(apiClient);
   // await exemplosPgmei(apiClient);
   // await exemplosCcmei(apiClient);
   // await exemplosPgdasd(apiClient);
@@ -62,6 +63,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print('❌ Erro ao verificar mensagens novas: $e');
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 2. Obter indicador detalhado de mensagens novas
     try {
@@ -82,6 +84,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print('❌ Erro ao obter indicador de mensagens novas: $e');
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 3. Listar todas as mensagens
     try {
@@ -115,6 +118,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao listar todas as mensagens: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 4. Listar apenas mensagens não lidas
     try {
@@ -131,6 +135,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print('❌ Erro ao listar todas as mensagens: $e');
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 5. Listar apenas mensagens lidas
     try {
@@ -147,6 +152,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao listar mensagens lidas: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 6. Listar mensagens favoritas
     try {
@@ -163,6 +169,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao listar mensagens favoritas: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 7. Obter detalhes de uma mensagem específica (usando ISN da primeira mensagem)
     try {
@@ -173,9 +180,9 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
         print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
 
         final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
-          '99999999999999',
-          contratanteNumero: '99999999999999',
-          autorPedidoDadosNumero: '99999999999999',
+          '00000000000000',
+          contratanteNumero: '00000000000000',
+          autorPedidoDadosNumero: '00000000000000',
           primeiraMsg.isn,
         );
 
@@ -204,6 +211,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao obter detalhes da mensagem específica: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 8. Exemplo de paginação (se houver mais páginas)
     try {
@@ -228,6 +236,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao listar paginação: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 9. Exemplo usando filtros específicos
     try {
@@ -248,6 +257,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     } catch (e) {
       print("❌ Erro ao listar mensagens com filtros específicos: $e");
     }
+    await Future.delayed(Duration(seconds: 10));
   } catch (e) {
     print('💥 Erro no serviço da Caixa Postal: $e');
   }
@@ -262,7 +272,11 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     // 1. Emitir CCMEI (PDF)
     try {
       print('\n--- 1. Emitir CCMEI (PDF) ---');
-      final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
+      final emitirResponse = await ccmeiService.emitirCcmei(
+        '00000000000000',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
       print('✅ Status: ${emitirResponse.status}');
       print('📋 Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
       print('🏢 CNPJ: ${emitirResponse.dados.cnpj}');
@@ -275,7 +289,11 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     // 2. Consultar Dados CCMEI
     try {
       print('\n--- 2. Consultar Dados CCMEI ---');
-      final consultarResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
+      final consultarResponse = await ccmeiService.consultarDadosCcmei(
+        '00000000000000',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
       print('✅ Status: ${consultarResponse.status}');
       print('📋 Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
       print('🏢 CNPJ: ${consultarResponse.dados.cnpj}');
@@ -318,7 +336,11 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     // 3. Consultar Situação Cadastral por CPF
     try {
       print('\n--- 3. Consultar Situação Cadastral por CPF ---');
-      final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
+      final situacaoResponse = await ccmeiService.consultarSituacaoCadastral(
+        '00000000000000',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
       print('✅ Status: ${situacaoResponse.status}');
       print('📋 Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
       print('🔍 CNPJs encontrados: ${situacaoResponse.dados.length}');

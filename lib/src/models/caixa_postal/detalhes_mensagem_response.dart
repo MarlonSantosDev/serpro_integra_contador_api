@@ -8,12 +8,7 @@ class DetalhesMensagemResponse {
   final String dados;
   final DadosDetalhesMensagem? dadosParsed;
 
-  DetalhesMensagemResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-    this.dadosParsed,
-  });
+  DetalhesMensagemResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
 
   factory DetalhesMensagemResponse.fromJson(Map<String, dynamic> json) {
     final dados = json['dados'].toString();
@@ -27,21 +22,15 @@ class DetalhesMensagemResponse {
     }
 
     return DetalhesMensagemResponse(
-      status: int.parse(json['status']),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
-          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      status: int.parse(json['status'].toString()),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
       dados: dados,
       dadosParsed: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 }
 
@@ -55,19 +44,12 @@ class DadosDetalhesMensagem {
   factory DadosDetalhesMensagem.fromJson(Map<String, dynamic> json) {
     return DadosDetalhesMensagem(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
-          .map(
-            (e) => DetalheMensagemCompleta.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => DetalheMensagemCompleta.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'codigo': codigo,
-      'conteudo': conteudo.map((e) => e.toJson()).toList(),
-    };
+    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -147,13 +129,10 @@ class DetalheMensagemCompleta {
       enquadramento: json['enquadramento']?.toString() ?? '',
       dataAcessoExterno: json['dataAcessoExterno']?.toString() ?? '',
       horaAcessoExterno: json['horaAcessoExterno']?.toString() ?? '',
-      tipoAutenticacaoUsuario:
-          json['tipoAutenticacaoUsuario']?.toString() ?? '',
+      tipoAutenticacaoUsuario: json['tipoAutenticacaoUsuario']?.toString() ?? '',
       codigoAcesso: json['codigoAcesso']?.toString() ?? '',
-      numeroSerieCertificadoDigital:
-          json['numeroSerieCertificadoDigital']?.toString() ?? '',
-      emissorCertificadoDigital:
-          json['emissorCertificadoDigital']?.toString() ?? '',
+      numeroSerieCertificadoDigital: json['numeroSerieCertificadoDigital']?.toString() ?? '',
+      emissorCertificadoDigital: json['emissorCertificadoDigital']?.toString() ?? '',
       tipoUsuario: json['tipoUsuario']?.toString() ?? '',
       niUsuario: json['niUsuario']?.toString() ?? '',
       papelUsuario: json['papelUsuario']?.toString() ?? '',
@@ -161,9 +140,7 @@ class DetalheMensagemCompleta {
       tipoOrigem: json['tipoOrigem']?.toString() ?? '',
       descricaoOrigem: json['descricaoOrigem']?.toString() ?? '',
       corpoModelo: json['corpoModelo']?.toString() ?? '',
-      variaveis: (json['variaveis'] as List<dynamic>? ?? [])
-          .map((e) => e.toString())
-          .toList(),
+      variaveis: (json['variaveis'] as List<dynamic>? ?? []).map((e) => e.toString()).toList(),
       indFavorito: json['indFavorito']?.toString(),
     );
   }
