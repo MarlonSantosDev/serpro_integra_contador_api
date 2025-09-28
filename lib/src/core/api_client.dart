@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.dart';
 import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart';
 import 'package:serpro_integra_contador_api/src/models/autenticaprocurador/cache_model.dart';
 
 /// Cliente principal para comunicação com a API do SERPRO Integra Contador
@@ -134,6 +135,14 @@ class ApiClient {
       headers['autenticar_procurador_token'] = procuradorToken;
     }
 
+    // Gerar e adicionar identificador de requisição (X-Request-Tag)
+    final requestTag = RequestTagGenerator.generateRequestTag(
+      autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
+      contribuinteNumero: request.contribuinteNumero,
+      idServico: request.pedidoDados.idServico,
+    );
+    headers['X-Request-Tag'] = requestTag;
+
     // Executar requisição HTTP POST para o endpoint da API
     final response = await http.post(Uri.parse('$_baseUrlDemo$endpoint'), headers: headers, body: json.encode(requestBody));
 
@@ -184,10 +193,22 @@ class ApiClient {
     // Preparar corpo da requisição com o termo de autorização
     final requestBody = {'termoAutorizacao': termoAutorizacaoBase64};
 
+    // Gerar identificador de requisição para autenticação de procurador
+    final requestTag = RequestTagGenerator.generateRequestTag(
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+      contribuinteNumero: contratanteNumero, // Para autenticação, usar contratante como contribuinte
+      idServico: 'AUTENTICARPROCURADOR', // Código específico para autenticação
+    );
+
     // Executar requisição para autenticar procurador
     final response = await http.post(
       Uri.parse('$_baseUrlDemo/AutenticarProcurador'),
-      headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer ${_authModel!.accessToken}',
+        'jwt_token': _authModel!.jwtToken,
+        'Content-Type': 'application/json',
+        'X-Request-Tag': requestTag,
+      },
       body: json.encode(requestBody),
     );
 
