@@ -2,23 +2,44 @@ import 'dart:convert';
 import 'dart:io';
 import '../models/autenticaprocurador/cache_model.dart';
 
-/// Utilitários para gerenciamento de cache
+/// Utilitários para gerenciamento de cache de autenticação
+///
+/// Esta classe fornece funcionalidades completas para:
+/// - Armazenar tokens de procurador em arquivos locais
+/// - Gerenciar expiração automática de tokens
+/// - Limpar caches expirados
+/// - Exportar/importar caches para backup
+/// - Obter estatísticas de uso do cache
+///
+/// O cache é armazenado no diretório temporário do sistema por padrão,
+/// mas pode ser customizado para diferentes cenários de uso.
 class CacheUtils {
+  /// Nome do diretório padrão para armazenar caches
   static const String _diretorioPadrao = '.cache_autenticacao';
+
+  /// Nome do arquivo de configuração do cache
   static const String _arquivoConfig = 'cache_config.json';
 
-  /// Obtém diretório de cache
+  /// Obtém o diretório onde os caches serão armazenados
+  ///
+  /// [diretorioCustomizado]: Diretório personalizado (opcional)
+  ///
+  /// Retorna: Caminho do diretório de cache (customizado ou padrão do sistema)
   static String obterDiretorioCache({String? diretorioCustomizado}) {
     if (diretorioCustomizado != null) {
       return diretorioCustomizado;
     }
 
-    // Usar diretório temporário do sistema
+    // Usar diretório temporário do sistema para evitar problemas de permissão
     final tempDir = Directory.systemTemp;
     return '${tempDir.path}/$_diretorioPadrao';
   }
 
-  /// Cria diretório de cache se não existir
+  /// Cria o diretório de cache se não existir
+  ///
+  /// [diretorioCustomizado]: Diretório personalizado (opcional)
+  ///
+  /// Cria recursivamente todos os diretórios necessários
   static Future<void> criarDiretorioCache({String? diretorioCustomizado}) async {
     final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
     final dir = Directory(diretorio);
@@ -28,7 +49,13 @@ class CacheUtils {
     }
   }
 
-  /// Salva cache em arquivo
+  /// Salva um cache em arquivo JSON
+  ///
+  /// [chave]: Identificador único do cache (geralmente baseado em contratante + autor)
+  /// [cache]: Objeto CacheModel com os dados do token
+  /// [diretorioCustomizado]: Diretório personalizado (opcional)
+  ///
+  /// Lança exceção se houver erro ao salvar
   static Future<void> salvarCache(String chave, CacheModel cache, {String? diretorioCustomizado}) async {
     try {
       await criarDiretorioCache(diretorioCustomizado: diretorioCustomizado);
@@ -43,7 +70,13 @@ class CacheUtils {
     }
   }
 
-  /// Carrega cache de arquivo
+  /// Carrega um cache de arquivo JSON
+  ///
+  /// [chave]: Identificador único do cache
+  /// [diretorioCustomizado]: Diretório personalizado (opcional)
+  ///
+  /// Retorna: CacheModel se encontrado e válido, null caso contrário
+  /// Remove automaticamente caches expirados
   static Future<CacheModel?> carregarCache(String chave, {String? diretorioCustomizado}) async {
     try {
       final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
@@ -56,7 +89,7 @@ class CacheUtils {
       final json = jsonDecode(await arquivo.readAsString());
       final cache = CacheModel.fromJson(json);
 
-      // Verificar se o cache ainda é válido
+      // Verificar se o cache ainda é válido (não expirado)
       if (!cache.isTokenValido) {
         await removerCache(chave, diretorioCustomizado: diretorioCustomizado);
         return null;
@@ -64,6 +97,7 @@ class CacheUtils {
 
       return cache;
     } catch (e) {
+      // Retornar null em caso de erro (arquivo corrompido, etc.)
       return null;
     }
   }
@@ -189,12 +223,21 @@ class CacheUtils {
     return chave.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
   }
 
-  /// Gera chave única para cache
+  /// Gera uma chave única para cache baseada nos dados de autenticação
+  ///
+  /// [contratanteNumero]: CNPJ da empresa contratante
+  /// [autorPedidoDadosNumero]: CPF/CNPJ do autor da requisição
+  ///
+  /// Retorna: Chave única no formato "contratante_autor"
   static String gerarChaveCache({required String contratanteNumero, required String autorPedidoDadosNumero}) {
     return '${contratanteNumero}_$autorPedidoDadosNumero';
   }
 
-  /// Valida se a chave de cache é válida
+  /// Valida se uma chave de cache tem formato válido
+  ///
+  /// [chave]: Chave a ser validada
+  ///
+  /// Retorna: true se a chave é válida (não vazia, tamanho adequado, sem espaços, com separador)
   static bool isChaveValida(String chave) {
     return chave.isNotEmpty && chave.length > 5 && !chave.contains(' ') && chave.contains('_');
   }

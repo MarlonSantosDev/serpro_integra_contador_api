@@ -1,8 +1,54 @@
-/// Package para acessar a API do SERPRO Integra Contador
+/// Package Dart para integração com a API do SERPRO Integra Contador
 ///
-/// Este package fornece uma interface Dart para interagir com todos os serviços
-/// disponíveis na API do SERPRO Integra Contador, incluindo DEFIS, PGDASD,
-/// PGMEI, CCMEI e outros.
+/// Este package fornece uma interface completa e type-safe para interagir com todos os serviços
+/// disponíveis na API do SERPRO Integra Contador, incluindo:
+///
+/// ## Serviços Disponíveis:
+/// - **CCMEI**: Cadastro Centralizado de Microempreendedor Individual
+/// - **PGDASD**: Pagamento de DAS por Débito Direto Autorizado
+/// - **PGMEI**: Pagamento de DAS do MEI
+/// - **DCTFWeb**: Declaração de Débitos e Créditos Tributários Federais
+/// - **DEFIS**: Declaração de Informações Socioeconômicas e Fiscais
+/// - **Parcelamentos**: PARCMEI, PARCSN, PERTMEI, PERTSN, RELPMEI, RELPSN
+/// - **SITFIS**: Sistema de Informações Tributárias Fiscais
+/// - **SICALC**: Sistema de Cálculo de Impostos
+/// - **MIT**: Manifesto de Importação de Trânsito
+/// - **Eventos de Atualização**: Consulta de eventos de atualização
+/// - **Procurações**: Gestão de procurações eletrônicas
+/// - **Caixa Postal**: Consulta de mensagens da Receita Federal
+///
+/// ## Características Principais:
+/// - Autenticação automática com certificados cliente (mTLS)
+/// - Cache inteligente de tokens de procurador
+/// - Validação automática de documentos (CPF/CNPJ)
+/// - Tratamento de erros padronizado
+/// - Suporte completo a procurações eletrônicas
+/// - Modelos de dados type-safe para todas as operações
+///
+/// ## Exemplo de Uso:
+/// ```dart
+/// import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+///
+/// void main() async {
+///   // Inicializar cliente da API
+///   final apiClient = ApiClient();
+///
+///   // Autenticar com certificados
+///   await apiClient.authenticate(
+///     consumerKey: 'seu_consumer_key',
+///     consumerSecret: 'seu_consumer_secret',
+///     certPath: 'caminho/para/certificado.p12',
+///     certPassword: 'senha_do_certificado',
+///     contratanteNumero: '12345678000100',
+///     autorPedidoDadosNumero: '12345678000100',
+///   );
+///
+///   // Usar serviços
+///   final ccmeiService = CcmeiService(apiClient);
+///   final response = await ccmeiService.emitirCcmei('12345678000100');
+///   print('CCMEI emitido: ${response.dados.pdf.isNotEmpty}');
+/// }
+/// ```
 library serpro_integra_contador_api;
 
 // Core

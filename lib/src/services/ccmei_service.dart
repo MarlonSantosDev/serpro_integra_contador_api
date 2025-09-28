@@ -5,46 +5,100 @@ import 'package:serpro_integra_contador_api/src/models/ccmei/consultar_situacao_
 import 'package:serpro_integra_contador_api/src/models/ccmei/emitir_ccmei_response.dart';
 import 'package:serpro_integra_contador_api/src/util/validation_utils.dart';
 
+/// Serviço para operações relacionadas ao CCMEI (Cadastro Centralizado de Microempreendedor Individual)
+///
+/// O CCMEI é um documento que comprova a situação cadastral do MEI junto à Receita Federal.
+/// Este serviço permite:
+/// - Emitir CCMEI em PDF
+/// - Consultar dados completos do MEI
+/// - Consultar situação cadastral por CPF
 class CcmeiService {
+  /// Cliente da API para comunicação com o SERPRO
   final ApiClient _apiClient;
 
+  /// Construtor que recebe o cliente da API
   CcmeiService(this._apiClient);
 
+  /// Emite o CCMEI (Cadastro Centralizado de MEI) em formato PDF
+  ///
+  /// [cnpj]: CNPJ do MEI (deve ser válido)
+  ///
+  /// Retorna: EmitirCcmeiResponse com o PDF e informações do documento
+  /// Lança exceção se o CNPJ for inválido ou houver erro na API
   Future<EmitirCcmeiResponse> emitirCcmei(String cnpj) async {
-    // Validações
+    // Validar formato do CNPJ antes de fazer a requisição
     ValidationUtils.validateCNPJ(cnpj);
 
+    // Criar requisição com dados específicos do serviço CCMEI
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'EMITIRCCMEI121', versaoSistema: '1.0', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'EMITIRCCMEI121', // ID específico para emissão de CCMEI
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
+    // Executar requisição para o endpoint de emissão
     final response = await _apiClient.post('/Emitir', request);
     return EmitirCcmeiResponse.fromJson(response);
   }
 
+  /// Consulta dados completos do MEI através do CNPJ
+  ///
+  /// [cnpj]: CNPJ do MEI (deve ser válido)
+  ///
+  /// Retorna: ConsultarDadosCcmeiResponse com informações completas do MEI incluindo:
+  /// - Dados empresariais (nome, endereço, capital social)
+  /// - Dados do empresário (nome, CPF)
+  /// - Situação cadastral e enquadramento
+  /// - Atividades econômicas (CNAE principal e secundárias)
+  /// - Períodos de enquadramento como MEI
+  /// Lança exceção se o CNPJ for inválido ou houver erro na API
   Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(String cnpj) async {
-    // Validações
+    // Validar formato do CNPJ antes de fazer a requisição
     ValidationUtils.validateCNPJ(cnpj);
 
+    // Criar requisição para consulta de dados completos
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'DADOSCCMEI122', versaoSistema: '1.0', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'DADOSCCMEI122', // ID específico para consulta de dados
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
+    // Executar requisição para o endpoint de consulta
     final response = await _apiClient.post('/Consultar', request);
     return ConsultarDadosCcmeiResponse.fromJson(response);
   }
 
+  /// Consulta situação cadastral do MEI através do CPF do empresário
+  ///
+  /// [cpf]: CPF do empresário MEI (deve ser válido)
+  ///
+  /// Retorna: ConsultarSituacaoCadastralCcmeiResponse com lista de CNPJs vinculados ao CPF
+  /// Útil para encontrar todos os CNPJs de um empresário MEI
+  /// Lança exceção se o CPF for inválido ou houver erro na API
   Future<ConsultarSituacaoCadastralCcmeiResponse> consultarSituacaoCadastral(String cpf) async {
-    // Validações
+    // Validar formato do CPF antes de fazer a requisição
     ValidationUtils.validateCPF(cpf);
 
+    // Criar requisição para consulta de situação cadastral
     final request = BaseRequest(
       contribuinteNumero: cpf,
-      pedidoDados: PedidoDados(idSistema: 'CCMEI', idServico: 'CCMEISITCADASTRAL123', versaoSistema: '1.0', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CCMEI',
+        idServico: 'CCMEISITCADASTRAL123', // ID específico para consulta de situação
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
+    // Executar requisição para o endpoint de consulta
     final response = await _apiClient.post('/Consultar', request);
     return ConsultarSituacaoCadastralCcmeiResponse.fromJson(response);
   }

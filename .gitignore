@@ -1,0 +1,8 @@
+texto
+.dart_tool
+.flutter-plugins-dependencies
+.flutter-plugins
+.vscode
+.idea
+pubspec.lock
+assistant\prompt.txt
