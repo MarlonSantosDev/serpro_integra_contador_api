@@ -50,7 +50,6 @@ class RelpmeiBaseRequest extends BaseRequest {
     this.dataEmissao,
   });
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       'cpfCnpj': cpfCnpj,

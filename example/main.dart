@@ -820,16 +820,6 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
       print('Erro na análise: $e');
     }
 
-    // 11. Exemplo - Método legado (deprecated)
-    print('\n--- 11. Método Legado (Deprecated) ---');
-    try {
-      final responseLegado = await procuracoesService.obterProcuracaoLegado('99999999999999');
-      print('Status legado: ${responseLegado.status}');
-      print('Mensagem legado: ${responseLegado.mensagem}');
-    } catch (e) {
-      print('Erro no método legado: $e');
-    }
-
     // 12. Exemplo - Diferentes cenários de uso
     print('\n--- 12. Cenários de Uso ---');
 

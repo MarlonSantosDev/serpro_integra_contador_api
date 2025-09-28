@@ -2,7 +2,6 @@ import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/procuracoes/obter_procuracao_request.dart';
 import 'package:serpro_integra_contador_api/src/models/procuracoes/obter_procuracao_response.dart';
-import 'package:serpro_integra_contador_api/src/models/procuracoes/procuracoes_response.dart';
 
 /// Serviço para operações de Procurações Eletrônicas
 class ProcuracoesService {
@@ -173,22 +172,5 @@ class ProcuracoesService {
     final cleaned = limparDocumento(cnpj);
     if (cleaned.length != 14) return cnpj;
     return '${cleaned.substring(0, 2)}.${cleaned.substring(2, 5)}.${cleaned.substring(5, 8)}/${cleaned.substring(8, 12)}-${cleaned.substring(12)}';
-  }
-
-  /// Método legado mantido para compatibilidade
-  @Deprecated('Use obterProcuracao() ao invés de obterProcuracaoLegado()')
-  Future<ProcuracoesResponse> obterProcuracaoLegado(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final request = BaseRequest(
-      contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PROCURACOES', idServico: 'OBTERPROCURACAO41', dados: ''),
-    );
-
-    final response = await _apiClient.post(
-      '/Consultar',
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-    return ProcuracoesResponse.fromJson(response);
   }
 }

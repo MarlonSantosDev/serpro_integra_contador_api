@@ -39,7 +39,6 @@ export 'src/models/dctfweb/transmitir_declaracao_response.dart';
 export 'src/models/dctfweb/consultar_relatorio_response.dart';
 
 // Procurações Models
-export 'src/models/procuracoes/procuracoes_response.dart' hide Procuracao;
 export 'src/models/procuracoes/obter_procuracao_request.dart';
 export 'src/models/procuracoes/obter_procuracao_response.dart';
 export 'src/models/procuracoes/mensagem_negocio.dart';

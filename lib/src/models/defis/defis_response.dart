@@ -1,6 +1,4 @@
 class DefisResponse {
-  //TODO: Add fields for DefisResponse
-
   DefisResponse();
 
   factory DefisResponse.fromJson(Map<String, dynamic> json) {

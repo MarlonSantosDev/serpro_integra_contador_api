@@ -18,18 +18,9 @@ class BaseRequest {
     required int autorPedidoDadosTipo,
   }) {
     return {
-      'contratante': {
-        'numero': DocumentUtils.cleanDocumentNumber(contratanteNumero),
-        'tipo': contratanteTipo,
-      },
-      'autorPedidoDados': {
-        'numero': DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero),
-        'tipo': autorPedidoDadosTipo,
-      },
-      'contribuinte': {
-        'numero': DocumentUtils.cleanDocumentNumber(contribuinteNumero),
-        'tipo': contribuinteTipo,
-      },
+      'contratante': {'numero': DocumentUtils.cleanDocumentNumber(contratanteNumero), 'tipo': contratanteTipo},
+      'autorPedidoDados': {'numero': DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero), 'tipo': autorPedidoDadosTipo},
+      'contribuinte': {'numero': DocumentUtils.cleanDocumentNumber(contribuinteNumero), 'tipo': contribuinteTipo},
       'pedidoDados': pedidoDados.toJson(),
     };
   }
@@ -41,12 +32,7 @@ class PedidoDados {
   final String? versaoSistema;
   final String dados;
 
-  PedidoDados({
-    required this.idSistema,
-    required this.idServico,
-    this.versaoSistema,
-    required this.dados,
-  });
+  PedidoDados({required this.idSistema, required this.idServico, this.versaoSistema, required this.dados});
 
   factory PedidoDados.fromJson(Map<String, dynamic> json) {
     return PedidoDados(
@@ -58,75 +44,6 @@ class PedidoDados {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'idSistema': idSistema,
-      'idServico': idServico,
-      'versaoSistema': versaoSistema ?? '1.0',
-      'dados': dados,
-    };
-  }
-}
-
-// Classes mantidas para compatibilidade, mas não são mais usadas diretamente nos serviços
-@Deprecated(
-  'Use os dados de autenticação do ApiClient ao invés de criar manualmente',
-)
-class Contratante {
-  final String numero;
-  final int tipo;
-
-  Contratante({required this.numero, required this.tipo});
-
-  factory Contratante.fromJson(Map<String, dynamic> json) {
-    return Contratante(
-      numero: json['numero'] as String,
-      tipo: json['tipo'] as int,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo};
-  }
-}
-
-@Deprecated(
-  'Use os dados de autenticação do ApiClient ao invés de criar manualmente',
-)
-class AutorPedidoDados {
-  final String numero;
-  final int tipo;
-
-  AutorPedidoDados({required this.numero, required this.tipo});
-
-  factory AutorPedidoDados.fromJson(Map<String, dynamic> json) {
-    return AutorPedidoDados(
-      numero: json['numero'] as String,
-      tipo: json['tipo'] as int,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo};
-  }
-}
-
-@Deprecated(
-  'Use os dados de autenticação do ApiClient ao invés de criar manualmente',
-)
-class Contribuinte {
-  final String numero;
-  final int tipo;
-
-  Contribuinte({required this.numero, required this.tipo});
-
-  factory Contribuinte.fromJson(Map<String, dynamic> json) {
-    return Contribuinte(
-      numero: json['numero'] as String,
-      tipo: json['tipo'] as int,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo};
+    return {'idSistema': idSistema, 'idServico': idServico, 'versaoSistema': versaoSistema ?? '1.0', 'dados': dados};
   }
 }

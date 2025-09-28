@@ -169,12 +169,14 @@ Para desenvolvimento e testes, utilize os seguintes dados:
 const cnpjTeste = '00000000000000';
 const cpfTeste = '00000000000';
 
-// Estrutura base para testes
+// Estrutura base para testes (usando a nova API simplificada)
 final requestTeste = BaseRequest(
-  contratante: Contratante(numero: cnpjTeste, tipo: 2),
-  autorPedidoDados: AutorPedidoDados(numero: cnpjTeste, tipo: 2),
-  contribuinte: Contribuinte(numero: cnpjTeste, tipo: 2),
-  pedidoDados: PedidoDados(/* dados específicos do serviço */),
+  contribuinteNumero: cnpjTeste,
+  pedidoDados: PedidoDados(
+    idSistema: 'DEFIS',
+    idServico: 'SERVICO_EXEMPLO',
+    dados: 'dados_do_servico',
+  ),
 );
 ```
 
