@@ -1,10 +1,7 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart'
-    as defis;
-import 'package:serpro_integra_contador_api/src/models/defis/defis_enums.dart'
-    as defis;
-import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart'
-    as pgdasd_models;
+import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
+import 'package:serpro_integra_contador_api/src/models/defis/defis_enums.dart' as defis;
+import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
 import 'package:serpro_integra_contador_api/src/services/autenticaprocurador_service.dart';
 
 void main() async {
@@ -13,18 +10,12 @@ void main() async {
 
   // Autenticar com dados da empresa contratante e autor do pedido
   await apiClient.authenticate(
-    consumerKey:
-        '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Key
-    consumerSecret:
-        '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
-    certPath:
-        '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
-    certPassword:
-        '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
-    contratanteNumero:
-        '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
-    autorPedidoDadosNumero:
-        '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+    consumerKey: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Key
+    consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
+    certPath: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Caminho para seu certificado
+    certPassword: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Senha do certificado
+    contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
   // Exemplo de uso dos serviços
   await exemplosCaixaPostal(apiClient);
@@ -59,91 +50,53 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     print('\n--- 1. Emitir CCMEI (PDF) ---');
     final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
     print('Status: ${emitirResponse.status}');
-    print(
-      'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('CNPJ: ${emitirResponse.dados.cnpj}');
     print('PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
     print('Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
 
     print('\n--- 2. Consultar Dados CCMEI ---');
-    final consultarResponse = await ccmeiService.consultarDadosCcmei(
-      '00000000000000',
-    );
+    final consultarResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
     print('Status: ${consultarResponse.status}');
-    print(
-      'Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('CNPJ: ${consultarResponse.dados.cnpj}');
     print('Nome Empresarial: ${consultarResponse.dados.nomeEmpresarial}');
     print('Empresário: ${consultarResponse.dados.empresario.nomeCivil}');
     print('CPF Empresário: ${consultarResponse.dados.empresario.cpf}');
-    print(
-      'Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}',
-    );
-    print(
-      'Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}',
-    );
+    print('Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}');
+    print('Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}');
     print('Capital Social: R\$ ${consultarResponse.dados.capitalSocial}');
-    print(
-      'Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}',
-    );
+    print('Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}');
     print('Bairro: ${consultarResponse.dados.enderecoComercial.bairro}');
-    print(
-      'Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}',
-    );
+    print('Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}');
     print('CEP: ${consultarResponse.dados.enderecoComercial.cep}');
-    print(
-      'Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}',
-    );
-    print(
-      'Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}',
-    );
-    print(
-      'Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)',
-    );
+    print('Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
+    print('Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}');
+    print('Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)');
     for (var periodo in consultarResponse.dados.enquadramento.periodosMei) {
-      print(
-        '  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}',
-      );
+      print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
     }
-    print(
-      'Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}',
-    );
-    print(
-      'Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}',
-    );
-    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE !=
-        null) {
+    print('Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}');
+    print('Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
+    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
       print(
         'CNAE Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoCNAE}',
       );
     }
-    print(
-      'Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}',
-    );
-    for (var ocupacao
-        in consultarResponse.dados.atividade.ocupacoesSecundarias) {
+    print('Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}');
+    for (var ocupacao in consultarResponse.dados.atividade.ocupacoesSecundarias) {
       print('  - ${ocupacao.descricaoOcupacao}');
       if (ocupacao.codigoCNAE != null) {
         print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
       }
     }
-    print(
-      'Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}',
-    );
-    print(
-      'QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}',
-    );
+    print('Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
+    print('QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
 
     print('\n--- 3. Consultar Situação Cadastral por CPF ---');
-    final situacaoResponse = await ccmeiService.consultarSituacaoCadastral(
-      '00000000000',
-    );
+    final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
     print('Status: ${situacaoResponse.status}');
-    print(
-      'Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('CNPJs encontrados: ${situacaoResponse.dados.length}');
     for (var situacao in situacaoResponse.dados) {
       print('  - CNPJ: ${situacao.cnpj}');
@@ -155,9 +108,7 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
   } catch (e) {
     print('❌ Erro nos serviços CCMEI: $e');
     if (e.toString().contains('status')) {
-      print(
-        'Verifique se o CNPJ/CPF informado é válido e se a empresa está cadastrada como MEI.',
-      );
+      print('Verifique se o CNPJ/CPF informado é válido e se a empresa está cadastrada como MEI.');
     }
   }
 }
@@ -179,10 +130,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: .... $e');
   }
   try {
-    final response = await pgmeiService.gerarDasCodigoDeBarras(
-      '00000000000100',
-      '202310',
-    );
+    final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '202310');
     print('DAS gerado com sucesso Codigo de Barras');
 
     if (response.dados.isNotEmpty) {
@@ -193,10 +141,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: .... $e');
   }
   try {
-    final response = await pgmeiService.atualizarBeneficio(
-      '00000000000100',
-      '202310',
-    );
+    final response = await pgmeiService.atualizarBeneficio('00000000000100', '202310');
     print('DAS gerado com sucesso Atualizar Beneficio');
 
     if (response.dados.isNotEmpty) {
@@ -207,10 +152,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: Atualizar Beneficio: $e');
   }
   try {
-    final response = await pgmeiService.consultarDividaAtiva(
-      '00000000000100',
-      '2020',
-    );
+    final response = await pgmeiService.consultarDividaAtiva('00000000000100', '2020');
     print('DAS gerado com sucesso Consultar Divida Ativa');
 
     if (response.dados.isNotEmpty) {
@@ -246,21 +188,8 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
               receitasAtividade: [
                 pgdasd_models.ReceitaAtividade(
                   valor: 60000.00,
-                  isencoes: [
-                    pgdasd_models.Isencao(
-                      codTributo: 1,
-                      valor: 1000.00,
-                      identificador: 1,
-                    ),
-                  ],
-                  reducoes: [
-                    pgdasd_models.Reducao(
-                      codTributo: 1,
-                      valor: 500.00,
-                      percentualReducao: 5.0,
-                      identificador: 1,
-                    ),
-                  ],
+                  isencoes: [pgdasd_models.Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
+                  reducoes: [pgdasd_models.Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
                 ),
               ],
             ),
@@ -288,9 +217,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
       final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
       print('ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
       print('Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
-      print(
-        'Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}',
-      );
+      print('Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}');
       print('Tem MAED: ${declaracaoTransmitida.temMaed}');
     }
 
@@ -319,10 +246,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
     print('\n--- Consultando Declarações por Ano ---');
 
-    final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(
-      cnpj: '00000000000000',
-      anoCalendario: '2018',
-    );
+    final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(cnpj: '00000000000000', anoCalendario: '2018');
 
     print('Status: ${consultarAnoResponse.status}');
     print('Sucesso: ${consultarAnoResponse.sucesso}');
@@ -339,12 +263,8 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
         for (final operacao in periodo.operacoes.take(2)) {
           print('    ${operacao.tipoOperacao}');
           if (operacao.isDeclaracao) {
-            print(
-              '      Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}',
-            );
-            print(
-              '      Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}',
-            );
+            print('      Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
+            print('      Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}');
           }
           if (operacao.isDas) {
             print('      DAS: ${operacao.indiceDas!.numeroDas}');
@@ -357,11 +277,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     // 4. Consultar Declarações por Período (CONSDECLARACAO13)
     print('\n--- Consultando Declarações por Período ---');
 
-    final consultarPeriodoResponse = await pgdasdService
-        .consultarDeclaracoesPorPeriodo(
-          cnpj: '00000000000000',
-          periodoApuracao: '201801',
-        );
+    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
 
     print('Status: ${consultarPeriodoResponse.status}');
     print('Sucesso: ${consultarPeriodoResponse.sucesso}');
@@ -369,11 +285,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     // 5. Consultar Última Declaração (CONSULTIMADECREC14)
     print('\n--- Consultando Última Declaração ---');
 
-    final ultimaDeclaracaoResponse = await pgdasdService
-        .consultarUltimaDeclaracaoPorPeriodo(
-          cnpj: '00000000000000',
-          periodoApuracao: '201801',
-        );
+    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
 
     print('Status: ${ultimaDeclaracaoResponse.status}');
     print('Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
@@ -386,9 +298,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
       print('Tem MAED: ${declaracao.temMaed}');
 
       if (declaracao.temMaed) {
-        print(
-          '  Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}',
-        );
+        print('  Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
         print('  DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
       }
     }
@@ -396,11 +306,10 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     // 6. Consultar Declaração por Número (CONSDECREC15)
     print('\n--- Consultando Declaração por Número ---');
 
-    final declaracaoNumeroResponse = await pgdasdService
-        .consultarDeclaracaoPorNumeroSimples(
-          cnpj: '00000000000000',
-          numeroDeclaracao: '00000000201801001',
-        );
+    final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
+      cnpj: '00000000000000',
+      numeroDeclaracao: '00000000201801001',
+    );
 
     print('Status: ${declaracaoNumeroResponse.status}');
     print('Sucesso: ${declaracaoNumeroResponse.sucesso}');
@@ -408,10 +317,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     // 7. Consultar Extrato do DAS (CONSEXTRATO16)
     print('\n--- Consultando Extrato do DAS ---');
 
-    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(
-      cnpj: '00000000000000',
-      numeroDas: '07202136999997159',
-    );
+    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(cnpj: '00000000000000', numeroDas: '07202136999997159');
 
     print('Status: ${extratoDasResponse.status}');
     print('Sucesso: ${extratoDasResponse.sucesso}');
@@ -429,9 +335,7 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
       print('Composição: ${extrato.composicao.length} tributos');
 
       for (final composicao in extrato.composicao.take(3)) {
-        print(
-          '  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)',
-        );
+        print('  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)');
       }
     }
 
@@ -443,21 +347,10 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
       receitaPaCompetenciaInterno: 100000.00,
       receitaPaCompetenciaExterno: 20000.00,
       receitasBrutasAnteriores: [
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202012,
-          valorInterno: 80000.00,
-          valorExterno: 15000.00,
-        ),
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202011,
-          valorInterno: 75000.00,
-          valorExterno: 12000.00,
-        ),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
       ],
-      folhasSalario: [
-        pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00),
-        pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00),
-      ],
+      folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
       estabelecimentos: [
         pgdasd_models.Estabelecimento(
           cnpjCompleto: '00000000000100',
@@ -469,14 +362,8 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
                 pgdasd_models.ReceitaAtividade(
                   valor: 120000.00,
                   qualificacoesTributarias: [
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 1,
-                      id: 1,
-                    ),
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 2,
-                      id: 2,
-                    ),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
                   ],
                   exigibilidadesSuspensas: [
                     pgdasd_models.ExigibilidadeSuspensa(
@@ -497,16 +384,10 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
     );
 
     print('Declaração complexa criada com:');
-    print(
-      '- Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos',
-    );
-    print(
-      '- Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos',
-    );
+    print('- Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
+    print('- Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
     print('- Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
-    print(
-      '- Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}',
-    );
+    print('- Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
     print(
       '- Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
     );
@@ -655,19 +536,11 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
     print('DARF Geral Mensal: ${darfGeralResponse.sucesso}');
 
     // DARF Pessoa Física Mensal
-    final darfPfResponse = await dctfWebService.gerarDarfPfMensal(
-      contribuinteNumero: '00000000000',
-      anoPA: '2022',
-      mesPA: '06',
-    );
+    final darfPfResponse = await dctfWebService.gerarDarfPfMensal(contribuinteNumero: '00000000000', anoPA: '2022', mesPA: '06');
     print('DARF PF Mensal: ${darfPfResponse.sucesso}');
 
     // DARF 13º Salário
-    final darf13Response = await dctfWebService.gerarDarf13Salario(
-      contribuinteNumero: '00000000000000',
-      anoPA: '2022',
-      isPessoaFisica: false,
-    );
+    final darf13Response = await dctfWebService.gerarDarf13Salario(contribuinteNumero: '00000000000000', anoPA: '2022', isPessoaFisica: false);
     print('DARF 13º Salário: ${darf13Response.sucesso}');
 
     // 7. Exemplo com categoria específica - Espetáculo Desportivo
@@ -694,22 +567,19 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
 
     // 9. Exemplo com categoria Reclamatória Trabalhista
     print('\n--- Exemplo Reclamatória Trabalhista ---');
-    final reclamatoriaResponse = await dctfWebService
-        .consultarReciboTransmissao(
-          contribuinteNumero: '00000000000000',
-          categoria: CategoriaDctf.reclamatoriaTrabalhista,
-          anoPA: '2022',
-          mesPA: '12',
-          numProcReclamatoria: '00365354520004013400', // Processo obrigatório
-        );
+    final reclamatoriaResponse = await dctfWebService.consultarReciboTransmissao(
+      contribuinteNumero: '00000000000000',
+      categoria: CategoriaDctf.reclamatoriaTrabalhista,
+      anoPA: '2022',
+      mesPA: '12',
+      numProcReclamatoria: '00365354520004013400', // Processo obrigatório
+    );
     print('Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
 
     // 10. Exemplo de transmissão completa (simulada)
     print('\n--- Exemplo de fluxo completo (simulado) ---');
     print('ATENÇÃO: Este exemplo simula a assinatura digital.');
-    print(
-      'Em produção, você deve implementar a assinatura real com certificado digital.',
-    );
+    print('Em produção, você deve implementar a assinatura real com certificado digital.');
 
     try {
       final transmissaoResponse = await dctfWebService.consultarXmlETransmitir(
@@ -860,30 +730,18 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     // Validar CPF
     final cpfValido = '12345678901';
     final cpfInvalido = '123';
-    print(
-      'CPF $cpfValido é válido: ${procuracoesService.isCpfValido(cpfValido)}',
-    );
-    print(
-      'CPF $cpfInvalido é válido: ${procuracoesService.isCpfValido(cpfInvalido)}',
-    );
+    print('CPF $cpfValido é válido: ${procuracoesService.isCpfValido(cpfValido)}');
+    print('CPF $cpfInvalido é válido: ${procuracoesService.isCpfValido(cpfInvalido)}');
 
     // Validar CNPJ
     final cnpjValido = '12345678000195';
     final cnpjInvalido = '123';
-    print(
-      'CNPJ $cnpjValido é válido: ${procuracoesService.isCnpjValido(cnpjValido)}',
-    );
-    print(
-      'CNPJ $cnpjInvalido é válido: ${procuracoesService.isCnpjValido(cnpjInvalido)}',
-    );
+    print('CNPJ $cnpjValido é válido: ${procuracoesService.isCnpjValido(cnpjValido)}');
+    print('CNPJ $cnpjInvalido é válido: ${procuracoesService.isCnpjValido(cnpjInvalido)}');
 
     // Detectar tipo de documento
-    print(
-      'Tipo do documento $cpfValido: ${procuracoesService.detectarTipoDocumento(cpfValido)} (1=CPF, 2=CNPJ)',
-    );
-    print(
-      'Tipo do documento $cnpjValido: ${procuracoesService.detectarTipoDocumento(cnpjValido)} (1=CPF, 2=CNPJ)',
-    );
+    print('Tipo do documento $cpfValido: ${procuracoesService.detectarTipoDocumento(cpfValido)} (1=CPF, 2=CNPJ)');
+    print('Tipo do documento $cnpjValido: ${procuracoesService.detectarTipoDocumento(cnpjValido)} (1=CPF, 2=CNPJ)');
 
     // 7. Exemplo - Formatação de documentos
     print('\n--- 7. Formatação de Documentos ---');
@@ -895,9 +753,7 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     print('CPF formatado: ${procuracoesService.formatarCpf(cpfSemFormatacao)}');
 
     print('CNPJ sem formatação: $cnpjSemFormatacao');
-    print(
-      'CNPJ formatado: ${procuracoesService.formatarCnpj(cnpjSemFormatacao)}',
-    );
+    print('CNPJ formatado: ${procuracoesService.formatarCnpj(cnpjSemFormatacao)}');
 
     // 8. Exemplo - Limpeza de documentos
     print('\n--- 8. Limpeza de Documentos ---');
@@ -909,19 +765,14 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     print('CPF limpo: ${procuracoesService.limparDocumento(cpfComPontuacao)}');
 
     print('CNPJ com pontuação: $cnpjComPontuacao');
-    print(
-      'CNPJ limpo: ${procuracoesService.limparDocumento(cnpjComPontuacao)}',
-    );
+    print('CNPJ limpo: ${procuracoesService.limparDocumento(cnpjComPontuacao)}');
 
     // 9. Exemplo - Tratamento de erros
     print('\n--- 9. Tratamento de Erros ---');
 
     try {
       // Tentar com dados inválidos
-      await procuracoesService.obterProcuracaoPf(
-        '123',
-        '456',
-      ); // CPFs inválidos
+      await procuracoesService.obterProcuracaoPf('123', '456'); // CPFs inválidos
     } catch (e) {
       print('Erro capturado (esperado): $e');
     }
@@ -929,10 +780,7 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     // 10. Exemplo - Análise de procurações
     print('\n--- 10. Análise de Procurações ---');
     try {
-      final responseAnalise = await procuracoesService.obterProcuracaoPf(
-        '99999999999',
-        '88888888888',
-      );
+      final responseAnalise = await procuracoesService.obterProcuracaoPf('99999999999', '88888888888');
 
       if (responseAnalise.sucesso && responseAnalise.dadosParsed != null) {
         final procuracoes = responseAnalise.dadosParsed!;
@@ -1035,8 +883,7 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 2. Obter indicador detalhado de mensagens novas
     print('\n--- Indicador de mensagens novas ---');
-    final indicadorResponse = await caixaPostalService
-        .obterIndicadorNovasMensagens('99999999999');
+    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
     print('Status HTTP: ${indicadorResponse.status}');
     if (indicadorResponse.dadosParsed != null) {
       final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
@@ -1048,12 +895,9 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
     // 3. Listar todas as mensagens
     print('\n--- Listando todas as mensagens ---');
-    final listaResponse = await caixaPostalService.listarTodasMensagens(
-      '99999999999',
-    );
+    final listaResponse = await caixaPostalService.listarTodasMensagens('99999999999');
     print('Status HTTP: ${listaResponse.status}');
-    if (listaResponse.dadosParsed != null &&
-        listaResponse.dadosParsed!.conteudo.isNotEmpty) {
+    if (listaResponse.dadosParsed != null && listaResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = listaResponse.dadosParsed!.conteudo.first;
       print('Quantidade de mensagens: ${conteudo.quantidadeMensagensInt}');
       print('É última página: ${conteudo.isUltimaPagina}');
@@ -1069,42 +913,31 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
         print('  Data envio: ${MessageUtils.formatarData(msg.dataEnvio)}');
         print('  Foi lida: ${msg.foiLida}');
         print('  É favorita: ${msg.isFavorita}');
-        print(
-          '  Relevância: ${MessageUtils.obterDescricaoRelevancia(msg.relevancia)}',
-        );
+        print('  Relevância: ${MessageUtils.obterDescricaoRelevancia(msg.relevancia)}');
         print('  Origem: ${msg.descricaoOrigem}');
       }
     }
 
     // 4. Listar apenas mensagens não lidas
     print('\n--- Listando mensagens não lidas ---');
-    final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas(
-      '99999999999',
-    );
-    if (naoLidasResponse.dadosParsed != null &&
-        naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
+    final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
+    if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
       print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
     }
 
     // 5. Listar apenas mensagens lidas
     print('\n--- Listando mensagens lidas ---');
-    final lidasResponse = await caixaPostalService.listarMensagensLidas(
-      '99999999999',
-    );
-    if (lidasResponse.dadosParsed != null &&
-        lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
+    final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999');
+    if (lidasResponse.dadosParsed != null && lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = lidasResponse.dadosParsed!.conteudo.first;
       print('Mensagens lidas: ${conteudo.quantidadeMensagensInt}');
     }
 
     // 6. Listar mensagens favoritas
     print('\n--- Listando mensagens favoritas ---');
-    final favoritasResponse = await caixaPostalService.listarMensagensFavoritas(
-      '99999999999',
-    );
-    if (favoritasResponse.dadosParsed != null &&
-        favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
+    final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999');
+    if (favoritasResponse.dadosParsed != null && favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = favoritasResponse.dadosParsed!.conteudo.first;
       print('Mensagens favoritas: ${conteudo.quantidadeMensagensInt}');
     }
@@ -1113,30 +946,23 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     if (listaResponse.dadosParsed != null &&
         listaResponse.dadosParsed!.conteudo.isNotEmpty &&
         listaResponse.dadosParsed!.conteudo.first.listaMensagens.isNotEmpty) {
-      final primeiraMsg =
-          listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
+      final primeiraMsg = listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
       print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
 
-      final detalhesResponse = await caixaPostalService
-          .obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
+      final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
 
-      if (detalhesResponse.dadosParsed != null &&
-          detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
+      if (detalhesResponse.dadosParsed != null && detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
         final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
         print('Assunto processado: ${detalhe.assuntoProcessado}');
         print('Data de envio: ${MessageUtils.formatarData(detalhe.dataEnvio)}');
-        print(
-          'Data de expiração: ${MessageUtils.formatarData(detalhe.dataExpiracao)}',
-        );
+        print('Data de expiração: ${MessageUtils.formatarData(detalhe.dataExpiracao)}');
         print('É favorita: ${detalhe.isFavorita}');
 
         // Corpo da mensagem processado
         final corpoProcessado = detalhe.corpoProcessado;
         final corpoLimpo = MessageUtils.removerTagsHtml(corpoProcessado);
         print('Corpo (primeiros 200 caracteres):');
-        print(
-          '${corpoLimpo.length > 200 ? corpoLimpo.substring(0, 200) + '...' : corpoLimpo}',
-        );
+        print('${corpoLimpo.length > 200 ? corpoLimpo.substring(0, 200) + '...' : corpoLimpo}');
 
         // Mostrar variáveis se existirem
         if (detalhe.variaveis.isNotEmpty) {
@@ -1153,40 +979,28 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
         listaResponse.dadosParsed!.conteudo.isNotEmpty &&
         !listaResponse.dadosParsed!.conteudo.first.isUltimaPagina) {
       print('\n--- Exemplo de paginação ---');
-      final proximaPagina =
-          listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
+      final proximaPagina = listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
 
-      final paginaResponse = await caixaPostalService
-          .listarMensagensComPaginacao(
-            '99999999999',
-            ponteiroPagina: proximaPagina,
-          );
+      final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999', ponteiroPagina: proximaPagina);
 
-      if (paginaResponse.dadosParsed != null &&
-          paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
+      if (paginaResponse.dadosParsed != null && paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = paginaResponse.dadosParsed!.conteudo.first;
-        print(
-          'Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}',
-        );
+        print('Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}');
       }
     }
 
     // 9. Exemplo usando filtros específicos
     print('\n--- Exemplo com filtros específicos ---');
-    final filtradaResponse = await caixaPostalService
-        .obterListaMensagensPorContribuinte(
-          '99999999999',
-          statusLeitura: 0, // Todas as mensagens
-          indicadorFavorito: null, // Sem filtro de favorita
-          indicadorPagina: 0, // Página inicial
-        );
+    final filtradaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
+      '99999999999',
+      statusLeitura: 0, // Todas as mensagens
+      indicadorFavorito: null, // Sem filtro de favorita
+      indicadorPagina: 0, // Página inicial
+    );
 
-    if (filtradaResponse.dadosParsed != null &&
-        filtradaResponse.dadosParsed!.conteudo.isNotEmpty) {
+    if (filtradaResponse.dadosParsed != null && filtradaResponse.dadosParsed!.conteudo.isNotEmpty) {
       final conteudo = filtradaResponse.dadosParsed!.conteudo.first;
-      print(
-        'Mensagens com filtros específicos: ${conteudo.quantidadeMensagensInt}',
-      );
+      print('Mensagens com filtros específicos: ${conteudo.quantidadeMensagensInt}');
     }
   } catch (e) {
     print('Erro no serviço da Caixa Postal: $e');
@@ -1288,15 +1102,7 @@ Future<void> exemplosDte(ApiClient apiClient) async {
     // 5. Tratamento de erros específicos
     print('\n--- 5. Tratamento de Erros Específicos ---');
 
-    final codigosErro = [
-      'Erro-DTE-04',
-      'Erro-DTE-05',
-      'Erro-DTE-991',
-      'Erro-DTE-992',
-      'Erro-DTE-993',
-      'Erro-DTE-994',
-      'Erro-DTE-995',
-    ];
+    final codigosErro = ['Erro-DTE-04', 'Erro-DTE-05', 'Erro-DTE-991', 'Erro-DTE-992', 'Erro-DTE-993', 'Erro-DTE-994', 'Erro-DTE-995'];
 
     for (final codigo in codigosErro) {
       final isKnown = dteService.isErroConhecido(codigo);
@@ -1380,12 +1186,9 @@ Future<void> exemplosDte(ApiClient apiClient) async {
         print('\nResultado da verificação:');
         print('Status: ${dados.statusEnquadramento}');
 
-        if (dados.indicadorEnquadramento == 0 ||
-            dados.indicadorEnquadramento == 2) {
+        if (dados.indicadorEnquadramento == 0 || dados.indicadorEnquadramento == 2) {
           print('✓ Esta empresa PODE utilizar o DTE');
-          print(
-            '✓ Sua Caixa Postal no e-CAC será considerada Domicílio Tributário',
-          );
+          print('✓ Sua Caixa Postal no e-CAC será considerada Domicílio Tributário');
         } else if (dados.indicadorEnquadramento == 1) {
           print('⚠ Esta empresa é optante do Simples Nacional');
           print('⚠ Verifique se pode utilizar o DTE conforme legislação');
@@ -1407,11 +1210,7 @@ Future<void> exemplosDte(ApiClient apiClient) async {
     print('\n--- 9. Exemplo com Dados da Documentação Oficial ---');
 
     // Dados do exemplo da documentação
-    final exemploDocumentacao = {
-      'contratante': '11111111111111',
-      'autorPedidoDados': '11111111111111',
-      'contribuinte': '99999999999999',
-    };
+    final exemploDocumentacao = {'contratante': '11111111111111', 'autorPedidoDados': '11111111111111', 'contribuinte': '99999999999999'};
 
     print('Dados do exemplo da documentação:');
     print('Contratante: ${exemploDocumentacao['contratante']}');
@@ -1419,9 +1218,7 @@ Future<void> exemplosDte(ApiClient apiClient) async {
     print('Contribuinte: ${exemploDocumentacao['contribuinte']}');
 
     try {
-      final response = await dteService.obterIndicadorDte(
-        exemploDocumentacao['contribuinte']!,
-      );
+      final response = await dteService.obterIndicadorDte(exemploDocumentacao['contribuinte']!);
 
       print('\nResposta do exemplo da documentação:');
       print('Status HTTP: ${response.status}');
@@ -1499,13 +1296,9 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
 
   try {
     print('\n--- 1. Solicitar Protocolo do Relatório ---');
-    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(
-      '99999999999',
-    );
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio('99999999999');
     print('Status: ${protocoloResponse.status}');
-    print(
-      'Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (protocoloResponse.isSuccess) {
       print('Sucesso: ${protocoloResponse.isSuccess}');
@@ -1513,16 +1306,12 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
       print('Tem tempo de espera: ${protocoloResponse.hasTempoEspera}');
 
       if (protocoloResponse.hasProtocolo) {
-        print(
-          'Protocolo: ${protocoloResponse.dados!.protocoloRelatorio!.substring(0, 20)}...',
-        );
+        print('Protocolo: ${protocoloResponse.dados!.protocoloRelatorio!.substring(0, 20)}...');
       }
 
       if (protocoloResponse.hasTempoEspera) {
         final tempoEspera = protocoloResponse.dados!.tempoEspera!;
-        print(
-          'Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)',
-        );
+        print('Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)');
       }
     }
 
@@ -1537,14 +1326,9 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
         await Future.delayed(Duration(milliseconds: tempoEspera));
       }
 
-      final emitirResponse = await sitfisService.emitirRelatorioSituacaoFiscal(
-        '99999999999',
-        protocolo,
-      );
+      final emitirResponse = await sitfisService.emitirRelatorioSituacaoFiscal('99999999999', protocolo);
       print('Status: ${emitirResponse.status}');
-      print(
-        'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-      );
+      print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
       print('Sucesso: ${emitirResponse.isSuccess}');
       print('Em processamento: ${emitirResponse.isProcessing}');
       print('Tem PDF: ${emitirResponse.hasPdf}');
@@ -1554,9 +1338,7 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
         final infoPdf = sitfisService.obterInformacoesPdf(emitirResponse);
         print('Informações do PDF:');
         print('  - Disponível: ${infoPdf['disponivel']}');
-        print(
-          '  - Tamanho: ${infoPdf['tamanhoKB']} KB (${infoPdf['tamanhoMB']} MB)',
-        );
+        print('  - Tamanho: ${infoPdf['tamanhoKB']} KB (${infoPdf['tamanhoMB']} MB)');
         print('  - Tamanho Base64: ${infoPdf['tamanhoBase64']} caracteres');
 
         // Salvar PDF em arquivo (opcional)
@@ -1569,9 +1351,7 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
 
       if (emitirResponse.hasTempoEspera) {
         final tempoEspera = emitirResponse.dados!.tempoEspera!;
-        print(
-          'Novo tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)',
-        );
+        print('Novo tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)');
       }
     }
 
@@ -1612,10 +1392,7 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
     print('Cache válido: ${cacheSimulado.isValid}');
     print('Tempo restante: ${cacheSimulado.tempoRestanteEmSegundos}s');
 
-    final protocoloComCache = await sitfisService.solicitarProtocoloComCache(
-      '99999999999',
-      cache: cacheSimulado,
-    );
+    final protocoloComCache = await sitfisService.solicitarProtocoloComCache('99999999999', cache: cacheSimulado);
 
     if (protocoloComCache == null) {
       print('Usando cache existente - não fez nova solicitação');
@@ -1656,10 +1433,7 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
     // Criar uma declaração de exemplo usando os enums
     final declaracao = defis.TransmitirDeclaracaoRequest(
       ano: 2023,
-      situacaoEspecial: defis.SituacaoEspecial(
-        tipoEvento: defis.TipoEventoSituacaoEspecial.cisaoParcial,
-        dataEvento: 20230101,
-      ),
+      situacaoEspecial: defis.SituacaoEspecial(tipoEvento: defis.TipoEventoSituacaoEspecial.cisaoParcial, dataEvento: 20230101),
       inatividade: defis.RegraInatividade.atividadesMaiorZero,
       empresa: defis.Empresa(
         ganhoCapital: 0,
@@ -1667,20 +1441,13 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
         qtdEmpregadoFinal: 1,
         receitaExportacaoDireta: 0,
         socios: [
-          defis.Socio(
-            cpf: '00000000000',
-            rendimentosIsentos: 10000,
-            rendimentosTributaveis: 5000,
-            participacaoCapitalSocial: 100,
-            irRetidoFonte: 0,
-          ),
+          defis.Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0),
         ],
         ganhoRendaVariavel: 0,
         doacoesCampanhaEleitoral: [
           defis.Doacao(
             cnpjBeneficiario: '00000000000000',
-            tipoBeneficiario:
-                defis.TipoBeneficiarioDoacao.candidatoCargoPolitico,
+            tipoBeneficiario: defis.TipoBeneficiarioDoacao.candidatoCargoPolitico,
             formaDoacao: defis.FormaDoacao.dinheiro,
             valor: 1000.00,
           ),
@@ -1700,13 +1467,7 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
             totalEntradas: 10100,
             totalDevolucoesCompras: 50,
             totalDespesas: 8000,
-            operacoesInterestaduais: [
-              defis.OperacaoInterestadual(
-                uf: 'SP',
-                valor: 5000.00,
-                tipoOperacao: defis.TipoOperacao.entrada,
-              ),
-            ],
+            operacoesInterestaduais: [defis.OperacaoInterestadual(uf: 'SP', valor: 5000.00, tipoOperacao: defis.TipoOperacao.entrada)],
           ),
         ],
         naoOptante: defis.NaoOptante(
@@ -1718,89 +1479,57 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
       ),
     );
 
-    final transmitirResponse = await defisService.transmitirDeclaracao(
-      contribuinteNumero: '00000000000000',
-      declaracaoData: declaracao,
-    );
+    final transmitirResponse = await defisService.transmitirDeclaracao(contribuinteNumero: '00000000000000', declaracaoData: declaracao);
 
     print('Status: ${transmitirResponse.status}');
-    print(
-      'Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
-    print(
-      'Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}',
-    );
-    print(
-      'Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}',
-    );
+    print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
 
     print('\n--- 2. Consultar Declarações Transmitidas ---');
-    final consultarDeclaracoesResponse = await defisService
-        .consultarDeclaracoesTransmitidas(contribuinteNumero: '00000000000000');
+    final consultarDeclaracoesResponse = await defisService.consultarDeclaracoesTransmitidas(contribuinteNumero: '00000000000000');
 
     print('Status: ${consultarDeclaracoesResponse.status}');
-    print(
-      'Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
-    print(
-      'Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}',
-    );
+    print('Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}');
 
     for (var declaracao in consultarDeclaracoesResponse.dados) {
-      print(
-        '  - ID: ${declaracao.idDefis}, Ano: ${declaracao.ano}, Data: ${declaracao.dataTransmissao}, Situação: ${declaracao.situacao}',
-      );
+      print('  - ID: ${declaracao.idDefis}, Ano: ${declaracao.ano}, Data: ${declaracao.dataTransmissao}, Situação: ${declaracao.situacao}');
     }
 
     print('\n--- 3. Consultar Última Declaração Transmitida ---');
-    final consultarUltimaResponse = await defisService
-        .consultarUltimaDeclaracao(
-          contribuinteNumero: '00000000000000',
-          ano: 2023,
-        );
+    final consultarUltimaResponse = await defisService.consultarUltimaDeclaracao(contribuinteNumero: '00000000000000', ano: 2023);
 
     print('Status: ${consultarUltimaResponse.status}');
-    print(
-      'Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('ID DEFIS: ${consultarUltimaResponse.dados.idDefis}');
     print('Ano: ${consultarUltimaResponse.dados.ano}');
     print('Data Transmissão: ${consultarUltimaResponse.dados.dataTransmissao}');
     print('Situação: ${consultarUltimaResponse.dados.situacao}');
-    print(
-      'Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf != null ? 'Disponível' : 'Não disponível'}',
-    );
-    print(
-      'Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf != null ? 'Disponível' : 'Não disponível'}',
-    );
+    print('Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf != null ? 'Disponível' : 'Não disponível'}');
+    print('Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf != null ? 'Disponível' : 'Não disponível'}');
 
     print('\n--- 4. Consultar Declaração Específica ---');
-    final consultarEspecificaResponse = await defisService
-        .consultarDeclaracaoEspecifica(
-          contribuinteNumero: '00000000000000',
-          idDefis: 12345, // Usar um ID real se disponível
-        );
+    final consultarEspecificaResponse = await defisService.consultarDeclaracaoEspecifica(
+      contribuinteNumero: '00000000000000',
+      idDefis: 12345, // Usar um ID real se disponível
+    );
 
     print('Status: ${consultarEspecificaResponse.status}');
-    print(
-      'Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('ID DEFIS: ${consultarEspecificaResponse.dados.idDefis}');
     print('Ano: ${consultarEspecificaResponse.dados.ano}');
-    print(
-      'Data Transmissão: ${consultarEspecificaResponse.dados.dataTransmissao}',
-    );
+    print('Data Transmissão: ${consultarEspecificaResponse.dados.dataTransmissao}');
     print('Situação: ${consultarEspecificaResponse.dados.situacao}');
 
     print('\n--- 5. Exemplo com Procurador ---');
     // Exemplo usando token de procurador (se disponível)
     if (apiClient.hasProcuradorToken) {
-      final procuradorResponse = await defisService
-          .consultarDeclaracoesTransmitidas(
-            contribuinteNumero: '00000000000000',
-            procuradorToken: apiClient.procuradorToken,
-          );
+      final procuradorResponse = await defisService.consultarDeclaracoesTransmitidas(
+        contribuinteNumero: '00000000000000',
+        procuradorToken: apiClient.procuradorToken,
+      );
 
       print('Status com procurador: ${procuradorResponse.status}');
       print('Quantidade de declarações: ${procuradorResponse.dados.length}');
@@ -1846,14 +1575,13 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
   try {
     // 1. Consultar pagamentos por intervalo de data
     print('\n--- Consultando pagamentos por data ---');
-    final consultarDataResponse = await pagtoWebService
-        .consultarPagamentosPorData(
-          contribuinteNumero: '00000000000100',
-          dataInicial: '2023-01-01',
-          dataFinal: '2023-12-31',
-          primeiroDaPagina: 0,
-          tamanhoDaPagina: 10,
-        );
+    final consultarDataResponse = await pagtoWebService.consultarPagamentosPorData(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
 
     print('Status: ${consultarDataResponse.status}');
     print('Sucesso: ${consultarDataResponse.sucesso}');
@@ -1872,13 +1600,12 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
 
     // 2. Consultar pagamentos por códigos de receita
     print('\n--- Consultando pagamentos por receita ---');
-    final consultarReceitaResponse = await pagtoWebService
-        .consultarPagamentosPorReceita(
-          contribuinteNumero: '00000000000100',
-          codigoReceitaLista: ['0001', '0002'],
-          primeiroDaPagina: 0,
-          tamanhoDaPagina: 5,
-        );
+    final consultarReceitaResponse = await pagtoWebService.consultarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
 
     print('Status: ${consultarReceitaResponse.status}');
     print('Sucesso: ${consultarReceitaResponse.sucesso}');
@@ -1886,14 +1613,13 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
 
     // 3. Consultar pagamentos por intervalo de valor
     print('\n--- Consultando pagamentos por valor ---');
-    final consultarValorResponse = await pagtoWebService
-        .consultarPagamentosPorValor(
-          contribuinteNumero: '00000000000100',
-          valorInicial: 100.00,
-          valorFinal: 1000.00,
-          primeiroDaPagina: 0,
-          tamanhoDaPagina: 5,
-        );
+    final consultarValorResponse = await pagtoWebService.consultarPagamentosPorValor(
+      contribuinteNumero: '00000000000100',
+      valorInicial: 100.00,
+      valorFinal: 1000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
 
     print('Status: ${consultarValorResponse.status}');
     print('Sucesso: ${consultarValorResponse.sucesso}');
@@ -1901,22 +1627,16 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
 
     // 4. Consultar pagamentos por números de documento
     print('\n--- Consultando pagamentos por documento ---');
-    final consultarDocumentoResponse = await pagtoWebService
-        .consultarPagamentosPorDocumento(
-          contribuinteNumero: '00000000000100',
-          numeroDocumentoLista: [
-            '12345678901234567890',
-            '09876543210987654321',
-          ],
-          primeiroDaPagina: 0,
-          tamanhoDaPagina: 10,
-        );
+    final consultarDocumentoResponse = await pagtoWebService.consultarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
 
     print('Status: ${consultarDocumentoResponse.status}');
     print('Sucesso: ${consultarDocumentoResponse.sucesso}');
-    print(
-      'Quantidade de pagamentos: ${consultarDocumentoResponse.dados.length}',
-    );
+    print('Quantidade de pagamentos: ${consultarDocumentoResponse.dados.length}');
 
     // 5. Contar pagamentos por data
     print('\n--- Contando pagamentos por data ---');
@@ -1932,11 +1652,10 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
 
     // 6. Contar pagamentos por receita
     print('\n--- Contando pagamentos por receita ---');
-    final contarReceitaResponse = await pagtoWebService
-        .contarPagamentosPorReceita(
-          contribuinteNumero: '00000000000100',
-          codigoReceitaLista: ['0001', '0002'],
-        );
+    final contarReceitaResponse = await pagtoWebService.contarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+    );
 
     print('Status: ${contarReceitaResponse.status}');
     print('Sucesso: ${contarReceitaResponse.sucesso}');
@@ -1956,14 +1675,10 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
 
     // 8. Contar pagamentos por documento
     print('\n--- Contando pagamentos por documento ---');
-    final contarDocumentoResponse = await pagtoWebService
-        .contarPagamentosPorDocumento(
-          contribuinteNumero: '00000000000100',
-          numeroDocumentoLista: [
-            '12345678901234567890',
-            '09876543210987654321',
-          ],
-        );
+    final contarDocumentoResponse = await pagtoWebService.contarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+    );
 
     print('Status: ${contarDocumentoResponse.status}');
     print('Sucesso: ${contarDocumentoResponse.sucesso}');
@@ -1981,30 +1696,25 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
     print('PDF disponível: ${emitirComprovanteResponse.pdfBase64 != null}');
 
     if (emitirComprovanteResponse.pdfBase64 != null) {
-      print(
-        'Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres',
-      );
+      print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
     }
 
     // 10. Exemplo com filtros combinados
     print('\n--- Exemplo com filtros combinados ---');
-    final consultarCombinadoResponse = await pagtoWebService
-        .consultarPagamentos(
-          contribuinteNumero: '00000000000100',
-          dataInicial: '2023-06-01',
-          dataFinal: '2023-06-30',
-          codigoReceitaLista: ['0001'],
-          valorInicial: 500.00,
-          valorFinal: 2000.00,
-          primeiroDaPagina: 0,
-          tamanhoDaPagina: 20,
-        );
+    final consultarCombinadoResponse = await pagtoWebService.consultarPagamentos(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-06-01',
+      dataFinal: '2023-06-30',
+      codigoReceitaLista: ['0001'],
+      valorInicial: 500.00,
+      valorFinal: 2000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 20,
+    );
 
     print('Status: ${consultarCombinadoResponse.status}');
     print('Sucesso: ${consultarCombinadoResponse.sucesso}');
-    print(
-      'Quantidade de pagamentos: ${consultarCombinadoResponse.dados.length}',
-    );
+    print('Quantidade de pagamentos: ${consultarCombinadoResponse.dados.length}');
 
     // 11. Exemplo de paginação
     print('\n--- Exemplo de paginação ---');
@@ -2069,9 +1779,7 @@ Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
         print('    Receita: ${desmembramento.receitaPrincipal.descricao}');
         print('    Período: ${desmembramento.periodoApuracao}');
         print('    Valor Total: R\$ ${desmembramento.valorTotal ?? 0.0}');
-        print(
-          '    Valor Principal: R\$ ${desmembramento.valorPrincipal ?? 0.0}',
-        );
+        print('    Valor Principal: R\$ ${desmembramento.valorPrincipal ?? 0.0}');
         print('    Valor Multa: R\$ ${desmembramento.valorMulta ?? 0.0}');
         print('    Valor Juros: R\$ ${desmembramento.valorJuros ?? 0.0}');
       }
@@ -2127,9 +1835,7 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
 
     // 4. Validar estrutura do XML
     print('\n--- 4. Validando Estrutura do XML ---');
-    final errosXml = await autenticaProcuradorService.validarTermoAutorizacao(
-      xml,
-    );
+    final errosXml = await autenticaProcuradorService.validarTermoAutorizacao(xml);
     if (errosXml.isEmpty) {
       print('✓ Estrutura do XML é válida');
     } else {
@@ -2141,31 +1847,20 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
 
     // 5. Assinar termo digitalmente (simulado)
     print('\n--- 5. Assinando Termo Digitalmente (Simulado) ---');
-    final xmlAssinado = await autenticaProcuradorService.assinarTermoDigital(
-      termo,
-    );
+    final xmlAssinado = await autenticaProcuradorService.assinarTermoDigital(termo);
     print('Termo assinado com sucesso');
     print('XML assinado tem ${xmlAssinado.length} caracteres');
 
     // 6. Validar assinatura digital
     print('\n--- 6. Validando Assinatura Digital ---');
-    final relatorioAssinatura = await autenticaProcuradorService
-        .validarAssinaturaDigital(xmlAssinado);
+    final relatorioAssinatura = await autenticaProcuradorService.validarAssinaturaDigital(xmlAssinado);
     print('Relatório de validação:');
     print('  - Tem assinatura: ${relatorioAssinatura['tem_assinatura']}');
     print('  - Tem signed info: ${relatorioAssinatura['tem_signed_info']}');
-    print(
-      '  - Tem signature value: ${relatorioAssinatura['tem_signature_value']}',
-    );
-    print(
-      '  - Tem X509 certificate: ${relatorioAssinatura['tem_x509_certificate']}',
-    );
-    print(
-      '  - Algoritmo assinatura correto: ${relatorioAssinatura['algoritmo_assinatura_correto']}',
-    );
-    print(
-      '  - Algoritmo hash correto: ${relatorioAssinatura['algoritmo_hash_correto']}',
-    );
+    print('  - Tem signature value: ${relatorioAssinatura['tem_signature_value']}');
+    print('  - Tem X509 certificate: ${relatorioAssinatura['tem_x509_certificate']}');
+    print('  - Algoritmo assinatura correto: ${relatorioAssinatura['algoritmo_assinatura_correto']}');
+    print('  - Algoritmo hash correto: ${relatorioAssinatura['algoritmo_hash_correto']}');
     print('  - Assinatura válida: ${relatorioAssinatura['assinatura_valida']}');
 
     // 7. Autenticar procurador
@@ -2183,9 +1878,7 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
       print('Código: ${response.codigoMensagem}');
 
       if (response.sucesso && response.autenticarProcuradorToken != null) {
-        print(
-          '✓ Token obtido: ${response.autenticarProcuradorToken!.substring(0, 8)}...',
-        );
+        print('✓ Token obtido: ${response.autenticarProcuradorToken!.substring(0, 8)}...');
         print('✓ Data de expiração: ${response.dataExpiracao}');
         print('✓ Token em cache: ${response.isCacheValido}');
       }
@@ -2227,25 +1920,23 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
     // 10. Exemplo com certificado digital (simulado)
     print('\n--- 10. Exemplo com Certificado Digital (Simulado) ---');
     try {
-      final termoComCertificado = await autenticaProcuradorService
-          .criarTermoComDataAtual(
-            contratanteNumero: contratanteNumero,
-            contratanteNome: contratanteNome,
-            autorPedidoDadosNumero: autorPedidoDadosNumero,
-            autorPedidoDadosNome: autorPedidoDadosNome,
-            certificadoPath: '/caminho/para/certificado.p12',
-            certificadoPassword: 'senha123',
-          );
+      final termoComCertificado = await autenticaProcuradorService.criarTermoComDataAtual(
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        autorPedidoDadosNome: autorPedidoDadosNome,
+        certificadoPath: '/caminho/para/certificado.p12',
+        certificadoPassword: 'senha123',
+      );
 
       print('Termo com certificado criado');
       print('Caminho do certificado: ${termoComCertificado.certificadoPath}');
 
       // Simular obtenção de informações do certificado
-      final infoCertificado = await autenticaProcuradorService
-          .obterInfoCertificado(
-            certificadoPath: '/caminho/para/certificado.p12',
-            senha: 'senha123',
-          );
+      final infoCertificado = await autenticaProcuradorService.obterInfoCertificado(
+        certificadoPath: '/caminho/para/certificado.p12',
+        senha: 'senha123',
+      );
 
       print('Informações do certificado:');
       print('  - Serial: ${infoCertificado['serial']}');
@@ -2275,8 +1966,7 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
 
     // 12. Gerenciamento de cache
     print('\n--- 12. Gerenciamento de Cache ---');
-    final estatisticas = await autenticaProcuradorService
-        .obterEstatisticasCache();
+    final estatisticas = await autenticaProcuradorService.obterEstatisticasCache();
     print('Estatísticas do cache:');
     print('  - Total de caches: ${estatisticas['total_caches']}');
     print('  - Caches válidos: ${estatisticas['caches_validos']}');
@@ -2293,22 +1983,14 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
     print('\n--- 14. Exemplo de Uso com ApiClient ---');
     print('Verificando se ApiClient tem token de procurador:');
     print('  - Tem token: ${apiClient.hasProcuradorToken}');
-    print(
-      '  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...',
-    );
+    print('  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...');
 
     // Simular definição de token manual
-    apiClient.setProcuradorToken(
-      'token_exemplo_123456789',
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    apiClient.setProcuradorToken('token_exemplo_123456789', contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
     print('Após definir token manualmente:');
     print('  - Tem token: ${apiClient.hasProcuradorToken}');
-    print(
-      '  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...',
-    );
+    print('  - Token: ${apiClient.procuradorToken?.substring(0, 8) ?? 'N/A'}...');
 
     final infoCache = apiClient.procuradorCacheInfo;
     if (infoCache != null) {
@@ -2321,9 +2003,7 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
 
     // 15. Exemplo de fluxo completo
     print('\n--- 15. Exemplo de Fluxo Completo ---');
-    print(
-      'Este exemplo demonstra o fluxo completo de autenticação de procurador:',
-    );
+    print('Este exemplo demonstra o fluxo completo de autenticação de procurador:');
     print('1. ✓ Criar termo de autorização');
     print('2. ✓ Validar dados do termo');
     print('3. ✓ Criar XML do termo');
@@ -2367,9 +2047,7 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
         print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
       }
     } else {
-      print(
-        '✗ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
     }
 
     // 2. Consultar Parcelamento Específico
@@ -2377,9 +2055,7 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     const numeroParcelamento = 123456; // Número de exemplo
 
     try {
-      final parcelamentoResponse = await relpsnService.consultarParcelamento(
-        numeroParcelamento,
-      );
+      final parcelamentoResponse = await relpsnService.consultarParcelamento(numeroParcelamento);
 
       if (parcelamentoResponse.sucesso) {
         print('✓ Parcelamento consultado com sucesso');
@@ -2395,90 +2071,52 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
           final consolidacao = parcelamento.consolidacaoOriginal;
           if (consolidacao != null) {
             print('Consolidação original:');
-            print(
-              '  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDaEntrada.toStringAsFixed(2)}',
-            );
+            print('  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDaEntrada.toStringAsFixed(2)}');
             print('  Data: ${consolidacao.dataConsolidacaoFormatada}');
-            print(
-              '  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}',
-            );
-            print(
-              '  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}',
-            );
-            print(
-              '  Valor consolidado da dívida: R\$ ${consolidacao.valorConsolidadoDivida.toStringAsFixed(2)}',
-            );
+            print('  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}');
+            print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}');
+            print('  Valor consolidado da dívida: R\$ ${consolidacao.valorConsolidadoDivida.toStringAsFixed(2)}');
 
             print('  Detalhes da consolidação:');
             for (final detalhe in consolidacao.detalhesConsolidacao) {
               print('    - Período: ${detalhe.periodoApuracaoFormatado}');
               print('      Vencimento: ${detalhe.vencimentoFormatado}');
               print('      Processo: ${detalhe.numeroProcesso}');
-              print(
-                '      Saldo original: R\$ ${detalhe.saldoDevedorOriginal.toStringAsFixed(2)}',
-              );
-              print(
-                '      Valor atualizado: R\$ ${detalhe.valorAtualizado.toStringAsFixed(2)}',
-              );
+              print('      Saldo original: R\$ ${detalhe.saldoDevedorOriginal.toStringAsFixed(2)}');
+              print('      Valor atualizado: R\$ ${detalhe.valorAtualizado.toStringAsFixed(2)}');
             }
           }
 
           // Alterações de dívida
-          print(
-            'Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
-          );
+          print('Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
           for (final alteracao in parcelamento.alteracoesDivida) {
             print('  - Data: ${alteracao.dataAlteracaoDividaFormatada}');
-            print(
-              '    Identificador: ${alteracao.identificadorConsolidacaoDescricao}',
-            );
-            print(
-              '    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}',
-            );
-            print(
-              '    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}',
-            );
-            print(
-              '    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}',
-            );
-            print(
-              '    Demais débitos: R\$ ${alteracao.demaisDebitos.toStringAsFixed(2)}',
-            );
+            print('    Identificador: ${alteracao.identificadorConsolidacaoDescricao}');
+            print('    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}');
+            print('    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}');
+            print('    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}');
+            print('    Demais débitos: R\$ ${alteracao.demaisDebitos.toStringAsFixed(2)}');
 
             print('    Parcelas da alteração:');
             for (final parcela in alteracao.parcelasAlteracao) {
               print('      - Faixa: ${parcela.faixaParcelas}');
-              print(
-                '        Parcela inicial: ${parcela.parcelaInicialFormatada}',
-              );
-              print(
-                '        Vencimento inicial: ${parcela.vencimentoInicialFormatado}',
-              );
-              print(
-                '        Parcela básica: R\$ ${parcela.parcelaBasica.toStringAsFixed(2)}',
-              );
+              print('        Parcela inicial: ${parcela.parcelaInicialFormatada}');
+              print('        Vencimento inicial: ${parcela.vencimentoInicialFormatado}');
+              print('        Parcela básica: R\$ ${parcela.parcelaBasica.toStringAsFixed(2)}');
             }
           }
 
           // Demonstrativo de pagamentos
-          print(
-            'Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
-          );
+          print('Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
           for (final pagamento in parcelamento.demonstrativoPagamentos) {
             print('  - Mês: ${pagamento.mesDaParcelaFormatado}');
             print('    Vencimento DAS: ${pagamento.vencimentoDoDasFormatado}');
-            print(
-              '    Data de arrecadação: ${pagamento.dataDeArrecadacaoFormatada}',
-            );
-            print(
-              '    Valor pago: R\$ ${pagamento.valorPago.toStringAsFixed(2)}',
-            );
+            print('    Data de arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
+            print('    Valor pago: R\$ ${pagamento.valorPago.toStringAsFixed(2)}');
           }
         }
       } else {
-        print(
-          '✗ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
-        );
+        print('✗ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('✗ Erro ao consultar parcelamento: $e');
@@ -2488,22 +2126,17 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
 
     try {
-      final parcelasResponse = await relpsnService.consultarParcelas(
-        numeroParcelamento,
-      );
+      final parcelasResponse = await relpsnService.consultarParcelas(numeroParcelamento);
 
       if (parcelasResponse.sucesso) {
         print('✓ Parcelas consultadas com sucesso');
         final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
 
         print('Total de parcelas: ${parcelas.length}');
-        print(
-          'Valor total: R\$ ${relpsnService.consultarParcelas(numeroParcelamento).then((r) => r.dadosParsed?.valorTotalParcelas ?? 0.0)}',
-        );
+        print('Valor total: R\$ ${relpsnService.consultarParcelas(numeroParcelamento).then((r) => r.dadosParsed?.valorTotalParcelas ?? 0.0)}');
 
         // Parcelas ordenadas
-        final parcelasOrdenadas =
-            parcelasResponse.dadosParsed?.parcelasOrdenadas ?? [];
+        final parcelasOrdenadas = parcelasResponse.dadosParsed?.parcelasOrdenadas ?? [];
         print('Parcelas ordenadas:');
         for (final parcela in parcelasOrdenadas) {
           print('  - ${parcela.descricaoCompleta}');
@@ -2514,14 +2147,10 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
         // Próxima parcela a vencer
         final proximaParcela = parcelasResponse.dadosParsed?.proximaParcela;
         if (proximaParcela != null) {
-          print(
-            'Próxima parcela a vencer: ${proximaParcela.descricaoCompleta}',
-          );
+          print('Próxima parcela a vencer: ${proximaParcela.descricaoCompleta}');
         }
       } else {
-        print(
-          '✗ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
-        );
+        print('✗ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('✗ Erro ao consultar parcelas: $e');
@@ -2532,10 +2161,7 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     const anoMesParcela = 202401; // Janeiro de 2024
 
     try {
-      final detalhesResponse = await relpsnService.consultarDetalhesPagamento(
-        numeroParcelamento,
-        anoMesParcela,
-      );
+      final detalhesResponse = await relpsnService.consultarDetalhesPagamento(numeroParcelamento, anoMesParcela);
 
       if (detalhesResponse.sucesso) {
         print('✓ Detalhes de pagamento consultados com sucesso');
@@ -2548,53 +2174,33 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
           print('Gerado em: ${detalhes.geradoEmFormatado}');
           print('Número do parcelamento: ${detalhes.numeroParcelamento}');
           print('Número da parcela: ${detalhes.numeroParcela}');
-          print(
-            'Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}',
-          );
+          print('Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
           print('Data do pagamento: ${detalhes.dataPagamentoFormatada}');
           print('Banco/Agência: ${detalhes.bancoAgencia}');
           print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
 
-          print(
-            'Total de débitos pagos: R\$ ${detalhes.totalDebitosPagos.toStringAsFixed(2)}',
-          );
-          print(
-            'Total de tributos pagos: R\$ ${detalhes.totalTributosPagos.toStringAsFixed(2)}',
-          );
+          print('Total de débitos pagos: R\$ ${detalhes.totalDebitosPagos.toStringAsFixed(2)}');
+          print('Total de tributos pagos: R\$ ${detalhes.totalTributosPagos.toStringAsFixed(2)}');
 
           print('Pagamentos de débitos:');
           for (final pagamento in detalhes.pagamentoDebitos) {
             print('  - PA Débito: ${pagamento.paDebitoFormatado}');
             print('    Processo: ${pagamento.processo}');
-            print(
-              '    Total de débitos: R\$ ${pagamento.totalDebitos.toStringAsFixed(2)}',
-            );
-            print(
-              '    Total principal: R\$ ${pagamento.totalPrincipal.toStringAsFixed(2)}',
-            );
-            print(
-              '    Total multa: R\$ ${pagamento.totalMulta.toStringAsFixed(2)}',
-            );
-            print(
-              '    Total juros: R\$ ${pagamento.totalJuros.toStringAsFixed(2)}',
-            );
+            print('    Total de débitos: R\$ ${pagamento.totalDebitos.toStringAsFixed(2)}');
+            print('    Total principal: R\$ ${pagamento.totalPrincipal.toStringAsFixed(2)}');
+            print('    Total multa: R\$ ${pagamento.totalMulta.toStringAsFixed(2)}');
+            print('    Total juros: R\$ ${pagamento.totalJuros.toStringAsFixed(2)}');
 
             print('    Discriminações:');
             for (final discriminacao in pagamento.discriminacoesDebito) {
               print('      - ${discriminacao.descricaoCompleta}');
-              print(
-                '        Percentual multa: ${discriminacao.percentualMulta.toStringAsFixed(2)}%',
-              );
-              print(
-                '        Percentual juros: ${discriminacao.percentualJuros.toStringAsFixed(2)}%',
-              );
+              print('        Percentual multa: ${discriminacao.percentualMulta.toStringAsFixed(2)}%');
+              print('        Percentual juros: ${discriminacao.percentualJuros.toStringAsFixed(2)}%');
             }
           }
         }
       } else {
-        print(
-          '✗ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
-        );
+        print('✗ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('✗ Erro ao consultar detalhes: $e');
@@ -2605,17 +2211,12 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     const parcelaParaEmitir = 202401; // Janeiro de 2024
 
     try {
-      final dasResponse = await relpsnService.emitirDas(
-        numeroParcelamento,
-        parcelaParaEmitir,
-      );
+      final dasResponse = await relpsnService.emitirDas(numeroParcelamento, parcelaParaEmitir);
 
       if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
         print('✓ DAS emitido com sucesso');
         print('Tamanho do PDF: ${dasResponse.tamanhoPdfFormatado}');
-        print(
-          'PDF disponível: ${dasResponse.dadosParsed?.pdfDisponivel == true ? 'Sim' : 'Não'}',
-        );
+        print('PDF disponível: ${dasResponse.dadosParsed?.pdfDisponivel == true ? 'Sim' : 'Não'}');
 
         final pdfInfo = dasResponse.dadosParsed?.pdfInfo;
         if (pdfInfo != null) {
@@ -2636,9 +2237,7 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     print('\n--- 6. Validações ---');
 
     // Validar número do parcelamento
-    final validacaoParcelamento = relpsnService.validarNumeroParcelamento(
-      numeroParcelamento,
-    );
+    final validacaoParcelamento = relpsnService.validarNumeroParcelamento(numeroParcelamento);
     print('Validação parcelamento: ${validacaoParcelamento ?? 'Válido'}');
 
     // Validar ano/mês da parcela
@@ -2646,15 +2245,11 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     print('Validação ano/mês: ${validacaoAnoMes ?? 'Válido'}');
 
     // Validar parcela para emitir
-    final validacaoParcela = relpsnService.validarParcelaParaEmitir(
-      parcelaParaEmitir,
-    );
+    final validacaoParcela = relpsnService.validarParcelaParaEmitir(parcelaParaEmitir);
     print('Validação parcela para emitir: ${validacaoParcela ?? 'Válido'}');
 
     // Validar prazo de emissão
-    final validacaoPrazo = relpsnService.validarPrazoEmissaoParcela(
-      parcelaParaEmitir,
-    );
+    final validacaoPrazo = relpsnService.validarPrazoEmissaoParcela(parcelaParaEmitir);
     print('Validação prazo de emissão: ${validacaoPrazo ?? 'Válido'}');
 
     // 7. Tratamento de Erros
@@ -2676,23 +2271,16 @@ Future<void> exemplosRelpsn(ApiClient apiClient) async {
     }
 
     // Analisar um erro
-    final analysis = relpsnService.analyzeError(
-      codigoErroExemplo,
-      'Não há parcelamento ativo para o contribuinte.',
-    );
+    final analysis = relpsnService.analyzeError(codigoErroExemplo, 'Não há parcelamento ativo para o contribuinte.');
     print('Análise do erro:');
     print('  - Resumo: ${analysis.summary}');
     print('  - Ação recomendada: ${analysis.recommendedAction}');
     print('  - Severidade: ${analysis.severity}');
     print('  - Pode tentar novamente: ${analysis.canRetry ? 'Sim' : 'Não'}');
-    print(
-      '  - Requer ação do usuário: ${analysis.requiresUserAction ? 'Sim' : 'Não'}',
-    );
+    print('  - Requer ação do usuário: ${analysis.requiresUserAction ? 'Sim' : 'Não'}');
     print('  - É crítico: ${analysis.isCritical ? 'Sim' : 'Não'}');
     print('  - É ignorável: ${analysis.isIgnorable ? 'Sim' : 'Não'}');
-    print(
-      '  - É erro de validação: ${analysis.isValidationError ? 'Sim' : 'Não'}',
-    );
+    print('  - É erro de validação: ${analysis.isValidationError ? 'Sim' : 'Não'}');
     print('  - É erro de sistema: ${analysis.isSystemError ? 'Sim' : 'Não'}');
     print('  - É aviso: ${analysis.isWarning ? 'Sim' : 'Não'}');
 
@@ -2757,9 +2345,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         }
       }
     } else {
-      print(
-        '✗ Erro ao consultar receita: ${consultarReceitaResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao consultar receita: ${consultarReceitaResponse.mensagemPrincipal}');
     }
 
     // 2. Gerar DARF para Pessoa Física (IRPF)
@@ -2849,9 +2435,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF PIS/PASEP: ${darfPisResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF PIS/PASEP: ${darfPisResponse.mensagemPrincipal}');
     }
 
     // 5. Gerar DARF para COFINS
@@ -2878,9 +2462,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF COFINS: ${darfCofinsResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF COFINS: ${darfCofinsResponse.mensagemPrincipal}');
     }
 
     // 6. Gerar código de barras para DARF já calculado
@@ -2915,9 +2497,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
           print('  - Preview: ${info['preview']}');
         }
       } else {
-        print(
-          '✗ Erro ao gerar código de barras: ${codigoBarrasResponse.mensagemPrincipal}',
-        );
+        print('✗ Erro ao gerar código de barras: ${codigoBarrasResponse.mensagemPrincipal}');
       }
     }
 
@@ -2948,9 +2528,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Tem QR Code: ${dados.temQrCode}');
       }
     } else {
-      print(
-        '✗ Erro no fluxo completo: ${fluxoCompletoResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro no fluxo completo: ${fluxoCompletoResponse.mensagemPrincipal}');
     }
 
     // 8. Consultar informações detalhadas de receita
@@ -2968,9 +2546,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
       print('Período de apuração: ${infoReceita['tipoPeriodoApuracao']}');
       print('Ativa: ${infoReceita['ativa']}');
       print('Vigente: ${infoReceita['vigente']}');
-      print(
-        'Compatível com contribuinte: ${infoReceita['compativelComContribuinte']}',
-      );
+      print('Compatível com contribuinte: ${infoReceita['compativelComContribuinte']}');
       if (infoReceita['observacoes'] != null) {
         print('Observações: ${infoReceita['observacoes']}');
       }
@@ -2995,9 +2571,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
     print('Receita 220 (IRPJ) é compatível com CNPJ: $isCompatiblePJ');
 
     // 10. Exemplo com DARF manual (com multa e juros pré-calculados)
-    print(
-      '\n--- 10. Exemplo com DARF Manual (Multa e Juros Pré-calculados) ---',
-    );
+    print('\n--- 10. Exemplo com DARF Manual (Multa e Juros Pré-calculados) ---');
     final darfManualResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000',
       uf: 'SP',
@@ -3027,9 +2601,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor juros: ${dados.valorJurosFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF manual: ${darfManualResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF manual: ${darfManualResponse.mensagemPrincipal}');
     }
 
     // 11. Exemplo com DARF de ganho de capital
@@ -3060,9 +2632,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF ganho de capital: ${darfGanhoCapitalResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF ganho de capital: ${darfGanhoCapitalResponse.mensagemPrincipal}');
     }
 
     // 12. Exemplo com DARF com cota
@@ -3092,9 +2662,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF com cota: ${darfCotaResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF com cota: ${darfCotaResponse.mensagemPrincipal}');
     }
 
     // 13. Exemplo com DARF com CNO (Cadastro Nacional de Obras)
@@ -3124,9 +2692,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF com CNO: ${darfCnoResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF com CNO: ${darfCnoResponse.mensagemPrincipal}');
     }
 
     // 14. Exemplo com DARF com CNPJ do prestador
@@ -3156,9 +2722,7 @@ Future<void> exemplosSicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print(
-        '✗ Erro ao gerar DARF com CNPJ do prestador: ${darfCnpjPrestadorResponse.mensagemPrincipal}',
-      );
+      print('✗ Erro ao gerar DARF com CNPJ do prestador: ${darfCnpjPrestadorResponse.mensagemPrincipal}');
     }
 
     // 15. Exemplo com diferentes tipos de período de apuração
@@ -3231,11 +2795,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Consultando Pedidos de Parcelamento ---');
     final consultarPedidosRequest = ConsultarPedidosRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PEDIDOS',
-        dados: 'Consulta de pedidos RELPMEI',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta de pedidos RELPMEI'),
       cpfCnpj: '12345678901', // CPF de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3259,16 +2819,10 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
       dataEmissao: '2024-01-15',
     );
 
-    final consultarPedidosResponse = await relpmeiService.consultarPedidos(
-      consultarPedidosRequest,
-    );
-    print(
-      'Consulta de pedidos: ${consultarPedidosResponse.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    final consultarPedidosResponse = await relpmeiService.consultarPedidos(consultarPedidosRequest);
+    print('Consulta de pedidos: ${consultarPedidosResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarPedidosResponse.sucesso) {
-      print(
-        'Pedidos encontrados: ${consultarPedidosResponse.pedidos?.length ?? 0}',
-      );
+      print('Pedidos encontrados: ${consultarPedidosResponse.pedidos?.length ?? 0}');
     } else {
       print('Erro: ${consultarPedidosResponse.mensagem}');
       print('Código: ${consultarPedidosResponse.codigoErro}');
@@ -3279,11 +2833,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Consultando Parcelamentos Existentes ---');
     final consultarParcelamentoRequest = ConsultarParcelamentoRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PARCELAMENTOS',
-        dados: 'Consulta de parcelamentos RELPMEI',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PARCELAMENTOS', dados: 'Consulta de parcelamentos RELPMEI'),
       cpfCnpj: '12345678901', // CPF de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3307,15 +2857,10 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
       dataEmissao: '2024-01-15',
     );
 
-    final consultarParcelamentoResponse = await relpmeiService
-        .consultarParcelamento(consultarParcelamentoRequest);
-    print(
-      'Consulta de parcelamentos: ${consultarParcelamentoResponse.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    final consultarParcelamentoResponse = await relpmeiService.consultarParcelamento(consultarParcelamentoRequest);
+    print('Consulta de parcelamentos: ${consultarParcelamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarParcelamentoResponse.sucesso) {
-      print(
-        'Parcelamentos encontrados: ${consultarParcelamentoResponse.parcelamentos?.length ?? 0}',
-      );
+      print('Parcelamentos encontrados: ${consultarParcelamentoResponse.parcelamentos?.length ?? 0}');
     } else {
       print('Erro: ${consultarParcelamentoResponse.mensagem}');
       print('Código: ${consultarParcelamentoResponse.codigoErro}');
@@ -3326,11 +2871,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Consultando Parcelas para Impressão ---');
     final consultarParcelasImpressaoRequest = ConsultarParcelasImpressaoRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PARCELAS_IMPRESSAO',
-        dados: 'Consulta de parcelas para impressão RELPMEI',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PARCELAS_IMPRESSAO', dados: 'Consulta de parcelas para impressão RELPMEI'),
       cpfCnpj: '12345678901', // CPF de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3354,15 +2895,10 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
       dataEmissao: '2024-01-15',
     );
 
-    final consultarParcelasImpressaoResponse = await relpmeiService
-        .consultarParcelasImpressao(consultarParcelasImpressaoRequest);
-    print(
-      'Consulta de parcelas para impressão: ${consultarParcelasImpressaoResponse.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    final consultarParcelasImpressaoResponse = await relpmeiService.consultarParcelasImpressao(consultarParcelasImpressaoRequest);
+    print('Consulta de parcelas para impressão: ${consultarParcelasImpressaoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarParcelasImpressaoResponse.sucesso) {
-      print(
-        'Parcelas para impressão encontradas: ${consultarParcelasImpressaoResponse.parcelas?.length ?? 0}',
-      );
+      print('Parcelas para impressão encontradas: ${consultarParcelasImpressaoResponse.parcelas?.length ?? 0}');
     } else {
       print('Erro: ${consultarParcelasImpressaoResponse.mensagem}');
       print('Código: ${consultarParcelasImpressaoResponse.codigoErro}');
@@ -3373,11 +2909,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Consultando Detalhes de Pagamento ---');
     final consultarDetalhesPagamentoRequest = ConsultarDetalhesPagamentoRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_DETALHES_PAGAMENTO',
-        dados: 'Consulta de detalhes de pagamento RELPMEI',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_DETALHES_PAGAMENTO', dados: 'Consulta de detalhes de pagamento RELPMEI'),
       cpfCnpj: '12345678901', // CPF de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3401,15 +2933,10 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
       dataEmissao: '2024-01-15',
     );
 
-    final consultarDetalhesPagamentoResponse = await relpmeiService
-        .consultarDetalhesPagamento(consultarDetalhesPagamentoRequest);
-    print(
-      'Consulta de detalhes de pagamento: ${consultarDetalhesPagamentoResponse.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    final consultarDetalhesPagamentoResponse = await relpmeiService.consultarDetalhesPagamento(consultarDetalhesPagamentoRequest);
+    print('Consulta de detalhes de pagamento: ${consultarDetalhesPagamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarDetalhesPagamentoResponse.sucesso) {
-      print(
-        'Detalhes de pagamento encontrados: ${consultarDetalhesPagamentoResponse.detalhes?.length ?? 0}',
-      );
+      print('Detalhes de pagamento encontrados: ${consultarDetalhesPagamentoResponse.detalhes?.length ?? 0}');
     } else {
       print('Erro: ${consultarDetalhesPagamentoResponse.mensagem}');
       print('Código: ${consultarDetalhesPagamentoResponse.codigoErro}');
@@ -3420,11 +2947,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Emitindo DAS ---');
     final emitirDasRequest = EmitirDasRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'EMITIR_DAS',
-        dados: 'Emissão de DAS RELPMEI',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'EMITIR_DAS', dados: 'Emissão de DAS RELPMEI'),
       cpfCnpj: '12345678901', // CPF de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3464,20 +2987,12 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Teste de Validação com CPF/CNPJ Inválido ---');
     final requestInvalido = ConsultarPedidosRequest(
       contribuinteNumero: '',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PEDIDOS',
-        dados: 'Teste de validação',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Teste de validação'),
       cpfCnpj: '', // CPF vazio para testar validação
     );
 
-    final responseInvalido = await relpmeiService.consultarPedidos(
-      requestInvalido,
-    );
-    print(
-      'Validação de CPF vazio: ${responseInvalido.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    final responseInvalido = await relpmeiService.consultarPedidos(requestInvalido);
+    print('Validação de CPF vazio: ${responseInvalido.sucesso ? 'Sucesso' : 'Erro'}');
     if (!responseInvalido.sucesso) {
       print('Erro esperado: ${responseInvalido.mensagem}');
       print('Código: ${responseInvalido.codigoErro}');
@@ -3487,11 +3002,7 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Teste com CNPJ ---');
     final requestCnpj = ConsultarPedidosRequest(
       contribuinteNumero: '12345678000195',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PEDIDOS',
-        dados: 'Consulta com CNPJ',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta com CNPJ'),
       cpfCnpj: '12345678000195', // CNPJ de exemplo
       inscricaoEstadual: '123456789',
       codigoReceita: '1001',
@@ -3510,18 +3021,12 @@ Future<void> exemplosRelpmei(ApiClient apiClient) async {
     print('\n--- Teste com Dados Mínimos ---');
     final requestMinimo = ConsultarPedidosRequest(
       contribuinteNumero: '12345678901',
-      pedidoDados: PedidoDados(
-        idSistema: 'RELPMEI',
-        idServico: 'CONSULTAR_PEDIDOS',
-        dados: 'Consulta com dados mínimos',
-      ),
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta com dados mínimos'),
       cpfCnpj: '12345678901', // Apenas CPF obrigatório
     );
 
     final responseMinimo = await relpmeiService.consultarPedidos(requestMinimo);
-    print(
-      'Consulta com dados mínimos: ${responseMinimo.sucesso ? 'Sucesso' : 'Erro'}',
-    );
+    print('Consulta com dados mínimos: ${responseMinimo.sucesso ? 'Sucesso' : 'Erro'}');
     if (responseMinimo.sucesso) {
       print('Pedidos encontrados: ${responseMinimo.pedidos?.length ?? 0}');
     } else {
@@ -3543,86 +3048,60 @@ Future<void> exemplosPertmei(ApiClient apiClient) async {
   try {
     // 1. Consultar Pedidos de Parcelamento
     print('\n1. Consultando pedidos de parcelamento...');
-    final pedidosResponse = await pertmeiService.consultarPedidos(
-      cnpjContribuinte,
-    );
+    final pedidosResponse = await pertmeiService.consultarPedidos(cnpjContribuinte);
     print('Status: ${pedidosResponse.status}');
-    print(
-      'Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (pedidosResponse.status == '200') {
       final parcelamentos = pedidosResponse.parcelamentos;
       print('Parcelamentos encontrados: ${parcelamentos.length}');
       for (final parcelamento in parcelamentos) {
-        print(
-          '  - Número: ${parcelamento.numero}, Situação: ${parcelamento.situacao}',
-        );
+        print('  - Número: ${parcelamento.numero}, Situação: ${parcelamento.situacao}');
       }
     }
 
     // 2. Consultar Parcelamento Específico
     print('\n2. Consultando parcelamento específico...');
     const numeroParcelamento = 9001; // Número de exemplo da documentação
-    final parcelamentoResponse = await pertmeiService.consultarParcelamento(
-      cnpjContribuinte,
-      numeroParcelamento,
-    );
+    final parcelamentoResponse = await pertmeiService.consultarParcelamento(cnpjContribuinte, numeroParcelamento);
     print('Status: ${parcelamentoResponse.status}');
-    print(
-      'Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (parcelamentoResponse.status == '200') {
       final parcelamentoDetalhado = parcelamentoResponse.parcelamentoDetalhado;
       if (parcelamentoDetalhado != null) {
         print('Parcelamento encontrado: ${parcelamentoDetalhado.numero}');
         print('Situação: ${parcelamentoDetalhado.situacao}');
-        print(
-          'Consolidação original: ${parcelamentoDetalhado.consolidacaoOriginal?.valorTotalConsolidadoDaDivida ?? 0.0}',
-        );
+        print('Consolidação original: ${parcelamentoDetalhado.consolidacaoOriginal?.valorTotalConsolidadoDaDivida ?? 0.0}');
       }
     }
 
     // 3. Consultar Parcelas para Impressão
     print('\n3. Consultando parcelas para impressão...');
-    final parcelasResponse = await pertmeiService
-        .consultarParcelasParaImpressao(cnpjContribuinte);
+    final parcelasResponse = await pertmeiService.consultarParcelasParaImpressao(cnpjContribuinte);
     print('Status: ${parcelasResponse.status}');
-    print(
-      'Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (parcelasResponse.status == '200') {
       final parcelas = parcelasResponse.parcelas;
       print('Parcelas disponíveis: ${parcelas.length}');
       for (final parcela in parcelas) {
-        print(
-          '  - Parcela: ${parcela.parcela}, Valor: R\$ ${parcela.valor.toStringAsFixed(2)}',
-        );
+        print('  - Parcela: ${parcela.parcela}, Valor: R\$ ${parcela.valor.toStringAsFixed(2)}');
       }
     }
 
     // 4. Consultar Detalhes de Pagamento
     print('\n4. Consultando detalhes de pagamento...');
     const anoMesParcela = 201907; // Exemplo da documentação
-    final detalhesResponse = await pertmeiService.consultarDetalhesPagamento(
-      cnpjContribuinte,
-      numeroParcelamento,
-      anoMesParcela,
-    );
+    final detalhesResponse = await pertmeiService.consultarDetalhesPagamento(cnpjContribuinte, numeroParcelamento, anoMesParcela);
     print('Status: ${detalhesResponse.status}');
-    print(
-      'Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (detalhesResponse.status == '200') {
       final detalhesPagamento = detalhesResponse.detalhesPagamento;
       if (detalhesPagamento != null) {
         print('DAS encontrado: ${detalhesPagamento.numeroDas}');
-        print(
-          'Valor pago: R\$ ${detalhesPagamento.valorPagoArrecadacao.toStringAsFixed(2)}',
-        );
+        print('Valor pago: R\$ ${detalhesPagamento.valorPagoArrecadacao.toStringAsFixed(2)}');
         print('Data pagamento: ${detalhesPagamento.dataPagamento}');
       }
     }
@@ -3630,22 +3109,15 @@ Future<void> exemplosPertmei(ApiClient apiClient) async {
     // 5. Emitir DAS
     print('\n5. Emitindo DAS...');
     const parcelaParaEmitir = 202306; // Exemplo da documentação
-    final emitirResponse = await pertmeiService.emitirDas(
-      cnpjContribuinte,
-      parcelaParaEmitir,
-    );
+    final emitirResponse = await pertmeiService.emitirDas(cnpjContribuinte, parcelaParaEmitir);
     print('Status: ${emitirResponse.status}');
-    print(
-      'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (emitirResponse.status == '200') {
       final dasGerado = emitirResponse.dasGerado;
       if (dasGerado != null) {
         print('DAS gerado com sucesso!');
-        print(
-          'Tamanho do PDF (base64): ${dasGerado.docArrecadacaoPdfB64.length} caracteres',
-        );
+        print('Tamanho do PDF (base64): ${dasGerado.docArrecadacaoPdfB64.length} caracteres');
         // Em uma aplicação real, você converteria o base64 para PDF e salvaria/abriria o arquivo
       }
     }
@@ -3655,27 +3127,15 @@ Future<void> exemplosPertmei(ApiClient apiClient) async {
 
     // Teste com CNPJ vazio
     final erroResponse = await pertmeiService.consultarPedidos('');
-    print(
-      'Validação CNPJ vazio: ${erroResponse.status} - ${erroResponse.mensagens.first.texto}',
-    );
+    print('Validação CNPJ vazio: ${erroResponse.status} - ${erroResponse.mensagens.first.texto}');
 
     // Teste com número de parcelamento inválido
-    final erroParcelamento = await pertmeiService.consultarParcelamento(
-      cnpjContribuinte,
-      0,
-    );
-    print(
-      'Validação parcelamento inválido: ${erroParcelamento.status} - ${erroParcelamento.mensagens.first.texto}',
-    );
+    final erroParcelamento = await pertmeiService.consultarParcelamento(cnpjContribuinte, 0);
+    print('Validação parcelamento inválido: ${erroParcelamento.status} - ${erroParcelamento.mensagens.first.texto}');
 
     // Teste com formato de data inválido
-    final erroData = await pertmeiService.emitirDas(
-      cnpjContribuinte,
-      20230,
-    ); // Formato inválido
-    print(
-      'Validação formato data inválido: ${erroData.status} - ${erroData.mensagens.first.texto}',
-    );
+    final erroData = await pertmeiService.emitirDas(cnpjContribuinte, 20230); // Formato inválido
+    print('Validação formato data inválido: ${erroData.status} - ${erroData.mensagens.first.texto}');
 
     print('\n=== Exemplos PERTMEI Concluídos ===');
   } catch (e) {
@@ -3692,10 +3152,7 @@ Future<void> exemplosMit(ApiClient apiClient) async {
   try {
     // 1. Criar Apuração Sem Movimento
     print('\n1. Criando apuração sem movimento...');
-    final responsavelApuracao = ResponsavelApuracao(
-      cpfResponsavel: '12345678901',
-      emailResponsavel: 'responsavel@exemplo.com',
-    );
+    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '12345678901', emailResponsavel: 'responsavel@exemplo.com');
 
     final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
 
@@ -3716,17 +3173,9 @@ Future<void> exemplosMit(ApiClient apiClient) async {
 
     // 2. Criar Apuração Com Movimento
     print('\n2. Criando apuração com movimento...');
-    final debitoIrpj = Debito(
-      idDebito: 1,
-      codigoDebito: '236208',
-      valorDebito: 100.00,
-    );
+    final debitoIrpj = Debito(idDebito: 1, codigoDebito: '236208', valorDebito: 100.00);
 
-    final debitoCsll = Debito(
-      idDebito: 2,
-      codigoDebito: '248408',
-      valorDebito: 220.00,
-    );
+    final debitoCsll = Debito(idDebito: 2, codigoDebito: '248408', valorDebito: 220.00);
 
     final debitos = Debitos(
       irpj: ListaDebitosIrpj(listaDebitos: [debitoIrpj]),
@@ -3774,19 +3223,14 @@ Future<void> exemplosMit(ApiClient apiClient) async {
     // 4. Consultar Apuração
     if (apuracaoSemMovimento.idApuracao != null) {
       print('\n4. Consultando dados da apuração...');
-      final consultaResponse = await mitService.consultarApuracao(
-        contribuinteNumero: cnpjContribuinte,
-        idApuracao: apuracaoSemMovimento.idApuracao!,
-      );
+      final consultaResponse = await mitService.consultarApuracao(contribuinteNumero: cnpjContribuinte, idApuracao: apuracaoSemMovimento.idApuracao!);
 
       print('Status: ${consultaResponse.status}');
       print('Sucesso: ${consultaResponse.sucesso}');
       if (consultaResponse.sucesso) {
         print('Situação: ${consultaResponse.textoSituacao}');
         if (consultaResponse.dadosApuracaoMit != null) {
-          print(
-            'Dados da apuração encontrados: ${consultaResponse.dadosApuracaoMit!.length} registros',
-          );
+          print('Dados da apuração encontrados: ${consultaResponse.dadosApuracaoMit!.length} registros');
         }
       } else {
         print('Erro: ${consultaResponse.mensagemErro}');
@@ -3795,22 +3239,15 @@ Future<void> exemplosMit(ApiClient apiClient) async {
 
     // 5. Listar Apurações por Ano
     print('\n5. Listando apurações por ano...');
-    final listagemResponse = await mitService.listarApuracaoes(
-      contribuinteNumero: cnpjContribuinte,
-      anoApuracao: 2025,
-    );
+    final listagemResponse = await mitService.listarApuracaoes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
 
     print('Status: ${listagemResponse.status}');
     print('Sucesso: ${listagemResponse.sucesso}');
     if (listagemResponse.sucesso) {
-      print(
-        'Apurações encontradas: ${listagemResponse.apuracoes?.length ?? 0}',
-      );
+      print('Apurações encontradas: ${listagemResponse.apuracoes?.length ?? 0}');
       if (listagemResponse.apuracoes != null) {
         for (final apuracao in listagemResponse.apuracoes!) {
-          print(
-            '  - Período: ${apuracao.periodoApuracao}, ID: ${apuracao.idApuracao}, Situação: ${apuracao.situacaoEnum?.descricao}',
-          );
+          print('  - Período: ${apuracao.periodoApuracao}, ID: ${apuracao.idApuracao}, Situação: ${apuracao.situacaoEnum?.descricao}');
         }
       }
     } else {
@@ -3819,11 +3256,7 @@ Future<void> exemplosMit(ApiClient apiClient) async {
 
     // 6. Consultar Apurações por Mês
     print('\n6. Consultando apurações por mês...');
-    final listagemMesResponse = await mitService.consultarApuracaoesPorMes(
-      contribuinteNumero: cnpjContribuinte,
-      anoApuracao: 2025,
-      mesApuracao: 1,
-    );
+    final listagemMesResponse = await mitService.consultarApuracaoesPorMes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025, mesApuracao: 1);
 
     print('Status: ${listagemMesResponse.status}');
     print('Sucesso: ${listagemMesResponse.sucesso}');
@@ -3835,18 +3268,12 @@ Future<void> exemplosMit(ApiClient apiClient) async {
 
     // 7. Consultar Apurações Encerradas
     print('\n7. Consultando apurações encerradas...');
-    final listagemEncerradasResponse = await mitService
-        .consultarApuracaoesEncerradas(
-          contribuinteNumero: cnpjContribuinte,
-          anoApuracao: 2025,
-        );
+    final listagemEncerradasResponse = await mitService.consultarApuracaoesEncerradas(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
 
     print('Status: ${listagemEncerradasResponse.status}');
     print('Sucesso: ${listagemEncerradasResponse.sucesso}');
     if (listagemEncerradasResponse.sucesso) {
-      print(
-        'Apurações encerradas: ${listagemEncerradasResponse.apuracoes?.length ?? 0}',
-      );
+      print('Apurações encerradas: ${listagemEncerradasResponse.apuracoes?.length ?? 0}');
     } else {
       print('Erro: ${listagemEncerradasResponse.mensagemErro}');
     }
@@ -3871,11 +3298,7 @@ Future<void> exemplosMit(ApiClient apiClient) async {
 
     // 9. Exemplo com Eventos Especiais
     print('\n9. Criando apuração com evento especial...');
-    final eventoEspecial = EventoEspecial(
-      idEvento: 1,
-      diaEvento: 15,
-      tipoEvento: TipoEventoEspecial.fusao,
-    );
+    final eventoEspecial = EventoEspecial(idEvento: 1, diaEvento: 15, tipoEvento: TipoEventoEspecial.fusao);
 
     final dadosIniciaisComEvento = DadosIniciais(
       semMovimento: false,
@@ -3964,9 +3387,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     // 2. Consultar parcelamento específico (usando exemplo da documentação)
     print('\n2. Consultando parcelamento específico...');
     try {
-      final parcelamentoResponse = await pertsnService.consultarParcelamento(
-        9102,
-      );
+      final parcelamentoResponse = await pertsnService.consultarParcelamento(9102);
 
       if (parcelamentoResponse.sucesso) {
         print('Status: ${parcelamentoResponse.status}');
@@ -3977,70 +3398,40 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
           print('Parcelamento ${parcelamento.numero}:');
           print('  Situação: ${parcelamento.situacao}');
           print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
-          print(
-            '  Valor total consolidado: R\$ ${parcelamento.valorTotalConsolidado.toStringAsFixed(2)}',
-          );
-          print(
-            '  Valor total entrada: R\$ ${parcelamento.valorTotalEntrada.toStringAsFixed(2)}',
-          );
-          print(
-            '  Quantidade parcelas entrada: ${parcelamento.quantidadeParcelasEntrada}',
-          );
-          print(
-            '  Valor parcela entrada: R\$ ${parcelamento.valorParcelaEntrada.toStringAsFixed(2)}',
-          );
+          print('  Valor total consolidado: R\$ ${parcelamento.valorTotalConsolidado.toStringAsFixed(2)}');
+          print('  Valor total entrada: R\$ ${parcelamento.valorTotalEntrada.toStringAsFixed(2)}');
+          print('  Quantidade parcelas entrada: ${parcelamento.quantidadeParcelasEntrada}');
+          print('  Valor parcela entrada: R\$ ${parcelamento.valorParcelaEntrada.toStringAsFixed(2)}');
 
           if (parcelamento.consolidacaoOriginal != null) {
             print('  Consolidação original:');
-            print(
-              '    Data: ${parcelamento.consolidacaoOriginal!.dataConsolidacaoFormatada}',
-            );
-            print(
-              '    Valor consolidado: R\$ ${parcelamento.consolidacaoOriginal!.valorConsolidadoDaDivida.toStringAsFixed(2)}',
-            );
-            print(
-              '    Detalhes: ${parcelamento.consolidacaoOriginal!.detalhesConsolidacao.length} itens',
-            );
+            print('    Data: ${parcelamento.consolidacaoOriginal!.dataConsolidacaoFormatada}');
+            print('    Valor consolidado: R\$ ${parcelamento.consolidacaoOriginal!.valorConsolidadoDaDivida.toStringAsFixed(2)}');
+            print('    Detalhes: ${parcelamento.consolidacaoOriginal!.detalhesConsolidacao.length} itens');
           }
 
           if (parcelamento.alteracoesDivida.isNotEmpty) {
-            print(
-              '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
-            );
+            print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
             for (final alteracao in parcelamento.alteracoesDivida) {
-              print(
-                '    Total consolidado: R\$ ${alteracao.totalConsolidado.toStringAsFixed(2)}',
-              );
-              print(
-                '    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}',
-              );
-              print(
-                '    Parcela básica: R\$ ${alteracao.parcelaBasica.toStringAsFixed(2)}',
-              );
-              print(
-                '    Data alteração: ${alteracao.dataAlteracaoDividaFormatada}',
-              );
+              print('    Total consolidado: R\$ ${alteracao.totalConsolidado.toStringAsFixed(2)}');
+              print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
+              print('    Parcela básica: R\$ ${alteracao.parcelaBasica.toStringAsFixed(2)}');
+              print('    Data alteração: ${alteracao.dataAlteracaoDividaFormatada}');
             }
           }
 
           if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
-            print(
-              '  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
-            );
+            print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
             for (final pagamento in parcelamento.demonstrativoPagamentos) {
               print('    Mês: ${pagamento.mesDaParcelaFormatado}');
               print('    Vencimento: ${pagamento.vencimentoDoDasFormatado}');
-              print(
-                '    Data arrecadação: ${pagamento.dataDeArrecadacaoFormatada}',
-              );
+              print('    Data arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
               print('    Valor pago: ${pagamento.valorPagoFormatado}');
             }
           }
         }
       } else {
-        print(
-          'Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
-        );
+        print('Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('Erro ao consultar parcelamento: $e');
@@ -4068,15 +3459,9 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
           }
 
           // Mostrar estatísticas
-          print(
-            'Parcelas pendentes: ${parcelasResponse.parcelasPendentes.length}',
-          );
-          print(
-            'Parcelas vencidas: ${parcelasResponse.parcelasVencidas.length}',
-          );
-          print(
-            'Parcelas do mês atual: ${parcelasResponse.parcelasMesAtual.length}',
-          );
+          print('Parcelas pendentes: ${parcelasResponse.parcelasPendentes.length}');
+          print('Parcelas vencidas: ${parcelasResponse.parcelasVencidas.length}');
+          print('Parcelas do mês atual: ${parcelasResponse.parcelasMesAtual.length}');
 
           // Mostrar parcelas por ano
           final parcelasPorAno = parcelasResponse.parcelasPorAno;
@@ -4088,9 +3473,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
           print('Nenhuma parcela encontrada');
         }
       } else {
-        print(
-          'Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
-        );
+        print('Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('Erro ao consultar parcelas: $e');
@@ -4099,10 +3482,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     // 4. Consultar detalhes de pagamento
     print('\n4. Consultando detalhes de pagamento...');
     try {
-      final detalhesResponse = await pertsnService.consultarDetalhesPagamento(
-        9102,
-        201806,
-      );
+      final detalhesResponse = await pertsnService.consultarDetalhesPagamento(9102, 201806);
 
       if (detalhesResponse.sucesso) {
         print('Status: ${detalhesResponse.status}');
@@ -4119,9 +3499,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
 
           if (detalhes.temPagamentosDebitos) {
             print('  Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
-            print(
-              '  Valor total débitos: ${detalhes.valorTotalDebitosPagosFormatado}',
-            );
+            print('  Valor total débitos: ${detalhes.valorTotalDebitosPagosFormatado}');
 
             for (final debito in detalhes.pagamentosDebitos) {
               print('    Período: ${debito.periodoApuracaoFormatado}');
@@ -4131,32 +3509,20 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
               print('    Valor pago: ${debito.valorPagoFormatado}');
 
               if (debito.temDiscriminacaoDebitos) {
-                print(
-                  '      Discriminações: ${debito.quantidadeDiscriminacoes}',
-                );
+                print('      Discriminações: ${debito.quantidadeDiscriminacoes}');
                 for (final discriminacao in debito.discriminacaoDebitos) {
                   print('        ${discriminacao.descricaoResumida}');
-                  print(
-                    '        Valor principal: ${discriminacao.valorPrincipalFormatado}',
-                  );
-                  print(
-                    '        Valor multa: ${discriminacao.valorMultaFormatado}',
-                  );
-                  print(
-                    '        Valor juros: ${discriminacao.valorJurosFormatado}',
-                  );
-                  print(
-                    '        Valor total: ${discriminacao.valorTotalFormatado}',
-                  );
+                  print('        Valor principal: ${discriminacao.valorPrincipalFormatado}');
+                  print('        Valor multa: ${discriminacao.valorMultaFormatado}');
+                  print('        Valor juros: ${discriminacao.valorJurosFormatado}');
+                  print('        Valor total: ${discriminacao.valorTotalFormatado}');
                 }
               }
             }
           }
         }
       } else {
-        print(
-          'Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
-        );
+        print('Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('Erro ao consultar detalhes: $e');
@@ -4207,9 +3573,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     }
 
     // Validar ano/mês da parcela
-    final validacaoAnoMes = pertsnService.validarAnoMesParcela(
-      202513,
-    ); // Mês inválido
+    final validacaoAnoMes = pertsnService.validarAnoMesParcela(202513); // Mês inválido
     if (validacaoAnoMes != null) {
       print('Validação ano/mês inválido: $validacaoAnoMes');
     }
@@ -4227,9 +3591,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     }
 
     // Validar tipo de contribuinte
-    final validacaoTipo = pertsnService.validarTipoContribuinte(
-      1,
-    ); // Tipo inválido para PERTSN
+    final validacaoTipo = pertsnService.validarTipoContribuinte(1); // Tipo inválido para PERTSN
     if (validacaoTipo != null) {
       print('Validação tipo contribuinte: $validacaoTipo');
     }
@@ -4252,10 +3614,7 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     }
 
     // Analisar erro
-    final analysis = pertsnService.analyzeError(
-      '[Aviso-PERTSN-ER_E001]',
-      'Não há parcelamento ativo para o contribuinte.',
-    );
+    final analysis = pertsnService.analyzeError('[Aviso-PERTSN-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
     print('Análise do erro:');
     print('  Resumo: ${analysis.resumo}');
     print('  Ação recomendada: ${analysis.recommendedAction}');
@@ -4294,9 +3653,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
       print('Status: ${responsePedidos.status}');
       print('Mensagem: ${responsePedidos.mensagemPrincipal}');
       print('Tem parcelamentos: ${responsePedidos.temParcelamentos}');
-      print(
-        'Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}',
-      );
+      print('Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}');
 
       final parcelamentos = responsePedidos.dadosParsed?.parcelamentos ?? [];
       for (final parcelamento in parcelamentos) {
@@ -4313,8 +3670,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
     // 2. Consultar parcelamento específico
     print('\n2. Consultando parcelamento específico...');
     try {
-      final responseParcelamento = await parcmeiEspecialService
-          .consultarParcelamento(9001);
+      final responseParcelamento = await parcmeiEspecialService.consultarParcelamento(9001);
 
       if (responseParcelamento.sucesso) {
         print('Status: ${responseParcelamento.status}');
@@ -4325,9 +3681,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
           print('Parcelamento ${parcelamento.numero}:');
           print('  Situação: ${parcelamento.situacao}');
           print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
-          print(
-            '  Valor total consolidado: ${parcelamento.valorTotalConsolidadoFormatado}',
-          );
+          print('  Valor total consolidado: ${parcelamento.valorTotalConsolidadoFormatado}');
           print('  Quantidade de parcelas: ${parcelamento.quantidadeParcelas}');
           print('  Parcela básica: ${parcelamento.parcelaBasicaFormatada}');
 
@@ -4336,44 +3690,28 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
             final consolidacao = parcelamento.consolidacaoOriginal!;
             print('  Consolidação original:');
             print('    Data: ${consolidacao.dataConsolidacaoFormatada}');
-            print(
-              '    Primeira parcela: ${consolidacao.primeiraParcelaFormatada}',
-            );
-            print(
-              '    Detalhes: ${consolidacao.detalhesConsolidacao.length} itens',
-            );
+            print('    Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
+            print('    Detalhes: ${consolidacao.detalhesConsolidacao.length} itens');
           }
 
           // Alterações de dívida
           if (parcelamento.alteracoesDivida.isNotEmpty) {
-            print(
-              '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
-            );
+            print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
             for (final alteracao in parcelamento.alteracoesDivida) {
               print('    Data: ${alteracao.dataAlteracaoDividaFormatada}');
-              print(
-                '    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}',
-              );
+              print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
               print('    Valor: ${alteracao.valorTotalConsolidadoFormatado}');
             }
           }
 
           // Demonstrativo de pagamentos
           if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
-            print(
-              '  Pagamentos realizados: ${parcelamento.demonstrativoPagamentos.length}',
-            );
-            for (final pagamento in parcelamento.demonstrativoPagamentos.take(
-              3,
-            )) {
-              print(
-                '    ${pagamento.mesDaParcelaFormatado}: ${pagamento.valorPagoFormatado}',
-              );
+            print('  Pagamentos realizados: ${parcelamento.demonstrativoPagamentos.length}');
+            for (final pagamento in parcelamento.demonstrativoPagamentos.take(3)) {
+              print('    ${pagamento.mesDaParcelaFormatado}: ${pagamento.valorPagoFormatado}');
             }
             if (parcelamento.demonstrativoPagamentos.length > 3) {
-              print(
-                '    ... e mais ${parcelamento.demonstrativoPagamentos.length - 3} pagamentos',
-              );
+              print('    ... e mais ${parcelamento.demonstrativoPagamentos.length - 3} pagamentos');
             }
           }
         }
@@ -4397,9 +3735,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
 
       final parcelas = responseParcelas.dadosParsed?.listaParcelas ?? [];
       for (final parcela in parcelas.take(5)) {
-        print(
-          '  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}',
-        );
+        print('  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
         print('    Descrição: ${parcela.descricao}');
         print('    Mês atual: ${parcela.isMesAtual}');
         print('    Mês futuro: ${parcela.isMesFuturo}');
@@ -4414,8 +3750,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
     // 4. Consultar detalhes de pagamento
     print('\n4. Consultando detalhes de pagamento...');
     try {
-      final responseDetalhes = await parcmeiEspecialService
-          .consultarDetalhesPagamento(9001, 202111);
+      final responseDetalhes = await parcmeiEspecialService.consultarDetalhesPagamento(9001, 202111);
 
       if (responseDetalhes.sucesso) {
         print('Status: ${responseDetalhes.status}');
@@ -4430,9 +3765,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
           print('  Gerado em: ${detalhes.geradoEm}');
           print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
           print('  Número da parcela: ${detalhes.numeroParcela}');
-          print(
-            '  Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}',
-          );
+          print('  Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
           print('  Data de pagamento: ${detalhes.dataPagamentoFormatada}');
           print('  Banco/Agência: ${detalhes.bancoAgencia}');
           print('  Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
@@ -4453,9 +3786,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
                 print('        Multa: ${discriminacao.multaFormatada}');
                 print('        Juros: ${discriminacao.jurosFormatado}');
                 print('        Total: ${discriminacao.totalFormatado}');
-                print(
-                  '        Ente federado: ${discriminacao.enteFederadoDestino}',
-                );
+                print('        Ente federado: ${discriminacao.enteFederadoDestino}');
                 print('        Tem multa: ${discriminacao.temMulta}');
                 print('        Tem juros: ${discriminacao.temJuros}');
               }
@@ -4509,60 +3840,46 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
     print('\n6. Testando validações...');
 
     // Validar número de parcelamento
-    final validacaoParcelamento = parcmeiEspecialService
-        .validarNumeroParcelamento(9001);
+    final validacaoParcelamento = parcmeiEspecialService.validarNumeroParcelamento(9001);
     print('Validação parcelamento 9001: $validacaoParcelamento');
 
-    final validacaoParcelamentoInvalido = parcmeiEspecialService
-        .validarNumeroParcelamento(-1);
+    final validacaoParcelamentoInvalido = parcmeiEspecialService.validarNumeroParcelamento(-1);
     print('Validação parcelamento -1: $validacaoParcelamentoInvalido');
 
     // Validar ano/mês da parcela
     final validacaoAnoMes = parcmeiEspecialService.validarAnoMesParcela(202111);
     print('Validação ano/mês 202111: $validacaoAnoMes');
 
-    final validacaoAnoMesInvalido = parcmeiEspecialService.validarAnoMesParcela(
-      123,
-    );
+    final validacaoAnoMesInvalido = parcmeiEspecialService.validarAnoMesParcela(123);
     print('Validação ano/mês 123: $validacaoAnoMesInvalido');
 
     // Validar parcela para emissão
-    final validacaoParcela = parcmeiEspecialService.validarParcelaParaEmitir(
-      202107,
-    );
+    final validacaoParcela = parcmeiEspecialService.validarParcelaParaEmitir(202107);
     print('Validação parcela 202107: $validacaoParcela');
 
     // Validar CNPJ
-    final validacaoCnpj = parcmeiEspecialService.validarCnpjContribuinte(
-      '12345678000195',
-    );
+    final validacaoCnpj = parcmeiEspecialService.validarCnpjContribuinte('12345678000195');
     print('Validação CNPJ válido: $validacaoCnpj');
 
-    final validacaoCnpjInvalido = parcmeiEspecialService
-        .validarCnpjContribuinte('123');
+    final validacaoCnpjInvalido = parcmeiEspecialService.validarCnpjContribuinte('123');
     print('Validação CNPJ inválido: $validacaoCnpjInvalido');
 
     // Validar tipo de contribuinte
     final validacaoTipo = parcmeiEspecialService.validarTipoContribuinte(2);
     print('Validação tipo 2: $validacaoTipo');
 
-    final validacaoTipoInvalido = parcmeiEspecialService
-        .validarTipoContribuinte(1);
+    final validacaoTipoInvalido = parcmeiEspecialService.validarTipoContribuinte(1);
     print('Validação tipo 1: $validacaoTipoInvalido');
 
     // 7. Testando análise de erros
     print('\n7. Testando análise de erros...');
 
     // Verificar se erro é conhecido
-    final erroConhecido = parcmeiEspecialService.isKnownError(
-      '[Sucesso-PARCMEI-ESP]',
-    );
+    final erroConhecido = parcmeiEspecialService.isKnownError('[Sucesso-PARCMEI-ESP]');
     print('Erro conhecido: $erroConhecido');
 
     // Obter informações sobre erro
-    final errorInfo = parcmeiEspecialService.getErrorInfo(
-      '[Sucesso-PARCMEI-ESP]',
-    );
+    final errorInfo = parcmeiEspecialService.getErrorInfo('[Sucesso-PARCMEI-ESP]');
     if (errorInfo != null) {
       print('Informações do erro:');
       print('  Código: ${errorInfo.codigo}');
@@ -4579,10 +3896,7 @@ Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
     }
 
     // Analisar erro
-    final analysis = parcmeiEspecialService.analyzeError(
-      '[Sucesso-PARCMEI-ESP]',
-      'Requisição efetuada com sucesso.',
-    );
+    final analysis = parcmeiEspecialService.analyzeError('[Sucesso-PARCMEI-ESP]', 'Requisição efetuada com sucesso.');
     print('Análise do erro:');
     print('  Código: ${analysis.codigo}');
     print('  Mensagem: ${analysis.mensagem}');
@@ -4668,20 +3982,12 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
           print('  Situação: ${parcelamento.situacao}');
           print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
           print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
-          print(
-            '  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}',
-          );
-          print(
-            '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
-          );
-          print(
-            '  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}',
-          );
+          print('  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}');
+          print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+          print('  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}');
         }
       } else {
-        print(
-          'Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
-        );
+        print('Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('Erro na consulta de parcelamento: $e');
@@ -4712,18 +4018,13 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
         print('Nenhuma parcela disponível para impressão');
       }
     } else {
-      print(
-        'Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
-      );
+      print('Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
     }
 
     // 4. Consultar detalhes de pagamento
     print('\n4. Consultando detalhes de pagamento...');
     try {
-      final detalhesResponse = await parcsnService.consultarDetalhesPagamento(
-        1,
-        201612,
-      );
+      final detalhesResponse = await parcsnService.consultarDetalhesPagamento(1, 201612);
 
       if (detalhesResponse.sucesso) {
         print('Status: ${detalhesResponse.status}');
@@ -4748,9 +4049,7 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
           }
         }
       } else {
-        print(
-          'Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
-        );
+        print('Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
       }
     } catch (e) {
       print('Erro na consulta de detalhes: $e');
@@ -4802,9 +4101,7 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
     }
 
     // Validar CNPJ
-    final validacaoCnpj = parcsnService.validarCnpjContribuinte(
-      '12345678901234',
-    );
+    final validacaoCnpj = parcsnService.validarCnpjContribuinte('12345678901234');
     if (validacaoCnpj != null) {
       print('Validação CNPJ (12345678901234): $validacaoCnpj');
     }
@@ -4834,10 +4131,7 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
     }
 
     // Analisar erro
-    final analysis = parcsnService.analyzeError(
-      '[Sucesso-PARCSN]',
-      'Requisição efetuada com sucesso.',
-    );
+    final analysis = parcsnService.analyzeError('[Sucesso-PARCSN]', 'Requisição efetuada com sucesso.');
     print('Análise do erro:');
     print('  Código: ${analysis.codigo}');
     print('  Tipo: ${analysis.tipo}');
@@ -4874,10 +4168,7 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
     print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
     final cpfsExemplo = ['00000000000', '11111111111', '22222222222'];
 
-    final solicitacaoPF = await eventosService.solicitarEventosPF(
-      cpfs: cpfsExemplo,
-      evento: TipoEvento.dctfWeb,
-    );
+    final solicitacaoPF = await eventosService.solicitarEventosPF(cpfs: cpfsExemplo, evento: TipoEvento.dctfWeb);
 
     print('Status: ${solicitacaoPF.status}');
     print('Protocolo: ${solicitacaoPF.dados.protocolo}');
@@ -4890,23 +4181,16 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
 
     // Exemplo 2: Obter eventos de Pessoa Física usando protocolo
     print('\n--- Exemplo 2: Obter Eventos PF ---');
-    await Future.delayed(
-      Duration(milliseconds: solicitacaoPF.dados.tempoEsperaMedioEmMs),
-    );
+    await Future.delayed(Duration(milliseconds: solicitacaoPF.dados.tempoEsperaMedioEmMs));
 
-    final eventosPF = await eventosService.obterEventosPF(
-      protocolo: solicitacaoPF.dados.protocolo,
-      evento: TipoEvento.dctfWeb,
-    );
+    final eventosPF = await eventosService.obterEventosPF(protocolo: solicitacaoPF.dados.protocolo, evento: TipoEvento.dctfWeb);
 
     print('Status: ${eventosPF.status}');
     print('Total de eventos: ${eventosPF.dados.length}');
 
     for (final evento in eventosPF.dados) {
       if (evento.temAtualizacao) {
-        print(
-          'CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}',
-        );
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
       } else if (evento.semAtualizacao) {
         print('CPF ${evento.cpf}: Sem atualizações');
       } else {
@@ -4918,10 +4202,7 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
     print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
     final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222'];
 
-    final solicitacaoPJ = await eventosService.solicitarEventosPJ(
-      cnpjs: cnpjsExemplo,
-      evento: TipoEvento.caixaPostal,
-    );
+    final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
 
     print('Status: ${solicitacaoPJ.status}');
     print('Protocolo: ${solicitacaoPJ.dados.protocolo}');
@@ -4940,9 +4221,7 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
 
     for (final evento in eventosPFConveniencia.dados) {
       if (evento.temAtualizacao) {
-        print(
-          'CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}',
-        );
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
       } else if (evento.semAtualizacao) {
         print('CPF ${evento.cpf}: Sem atualizações');
       } else {
@@ -4962,9 +4241,7 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
 
     for (final evento in eventosPJConveniencia.dados) {
       if (evento.temAtualizacao) {
-        print(
-          'CNPJ ${evento.cnpj}: Última atualização em ${evento.dataFormatada}',
-        );
+        print('CNPJ ${evento.cnpj}: Última atualização em ${evento.dataFormatada}');
       } else if (evento.semAtualizacao) {
         print('CNPJ ${evento.cnpj}: Sem atualizações');
       } else {
@@ -4986,12 +4263,8 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
 
     // Exemplo 8: Validação de limites
     print('\n--- Exemplo 8: Informações sobre Limites ---');
-    print(
-      'Máximo de contribuintes por lote: ${EventosAtualizacaoCommon.maxContribuintesPorLote}',
-    );
-    print(
-      'Máximo de requisições por dia: ${EventosAtualizacaoCommon.maxRequisicoesPorDia}',
-    );
+    print('Máximo de contribuintes por lote: ${EventosAtualizacaoCommon.maxContribuintesPorLote}');
+    print('Máximo de requisições por dia: ${EventosAtualizacaoCommon.maxRequisicoesPorDia}');
     print(
       'Eventos disponíveis: ${EventosAtualizacaoCommon.eventoDCTFWeb}, ${EventosAtualizacaoCommon.eventoCaixaPostal}, ${EventosAtualizacaoCommon.eventoPagamentoWeb}',
     );
@@ -5003,32 +4276,22 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
 }
 
 Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
-  print(
-    '=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===',
-  );
+  print('=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===');
 
   final parcsnEspecialService = ParcsnEspecialService(apiClient);
 
   try {
     print('\n--- 1. Consultar Pedidos de Parcelamento Especial ---');
-    final consultarPedidosResponse = await parcsnEspecialService
-        .consultarPedidos();
+    final consultarPedidosResponse = await parcsnEspecialService.consultarPedidos();
     print('Status: ${consultarPedidosResponse.status}');
-    print(
-      'Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarPedidosResponse.sucesso}');
-    print(
-      'Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}',
-    );
+    print('Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}');
 
     if (consultarPedidosResponse.temParcelamentos) {
-      final parcelamentos =
-          consultarPedidosResponse.dadosParsed?.parcelamentos ?? [];
+      final parcelamentos = consultarPedidosResponse.dadosParsed?.parcelamentos ?? [];
       for (var parcelamento in parcelamentos) {
-        print(
-          '  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}',
-        );
+        print('  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
         print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
         print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
         print('    Ativo: ${parcelamento.isAtivo}');
@@ -5036,12 +4299,9 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
     }
 
     print('\n--- 2. Consultar Parcelamento Específico ---');
-    final consultarParcelamentoResponse = await parcsnEspecialService
-        .consultarParcelamento(9001);
+    final consultarParcelamentoResponse = await parcsnEspecialService.consultarParcelamento(9001);
     print('Status: ${consultarParcelamentoResponse.status}');
-    print(
-      'Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarParcelamentoResponse.sucesso}');
 
     if (consultarParcelamentoResponse.temDadosParcelamento) {
@@ -5058,29 +4318,18 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
         print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelas}');
         print('  Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
         print('  Parcela básica: ${consolidacao.parcelaBasicaFormatada}');
-        print(
-          '  Data da consolidação: ${consolidacao.dataConsolidacaoFormatada}',
-        );
-        print(
-          '  Detalhes: ${consolidacao.detalhesConsolidacao.length} item(s)',
-        );
+        print('  Data da consolidação: ${consolidacao.dataConsolidacaoFormatada}');
+        print('  Detalhes: ${consolidacao.detalhesConsolidacao.length} item(s)');
       }
 
-      print(
-        'Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}',
-      );
-      print(
-        'Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}',
-      );
+      print('Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}');
+      print('Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}');
     }
 
     print('\n--- 3. Consultar Detalhes de Pagamento ---');
-    final consultarDetalhesResponse = await parcsnEspecialService
-        .consultarDetalhesPagamento(9001, 201612);
+    final consultarDetalhesResponse = await parcsnEspecialService.consultarDetalhesPagamento(9001, 201612);
     print('Status: ${consultarDetalhesResponse.status}');
-    print(
-      'Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarDetalhesResponse.sucesso}');
 
     if (consultarDetalhesResponse.temDadosPagamento) {
@@ -5091,9 +4340,7 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
       print('Gerado em: ${detalhes?.geradoEm}');
       print('Número do parcelamento: ${detalhes?.numeroParcelamento}');
       print('Número da parcela: ${detalhes?.numeroParcela}');
-      print(
-        'Data limite para acolhimento: ${detalhes?.dataLimiteAcolhimentoFormatada}',
-      );
+      print('Data limite para acolhimento: ${detalhes?.dataLimiteAcolhimentoFormatada}');
       print('Data do pagamento: ${detalhes?.dataPagamentoFormatada}');
       print('Banco/Agência: ${detalhes?.bancoAgencia}');
       print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
@@ -5107,9 +4354,7 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
         print('    Discriminações: ${pagamento.discriminacoesDebito.length}');
 
         for (var discriminacao in pagamento.discriminacoesDebito) {
-          print(
-            '      * ${discriminacao.tributo}: ${discriminacao.totalFormatado}',
-          );
+          print('      * ${discriminacao.tributo}: ${discriminacao.totalFormatado}');
           print('        Principal: ${discriminacao.principalFormatado}');
           print('        Multa: ${discriminacao.multaFormatada}');
           print('        Juros: ${discriminacao.jurosFormatados}');
@@ -5119,27 +4364,17 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
     }
 
     print('\n--- 4. Consultar Parcelas para Impressão ---');
-    final consultarParcelasResponse = await parcsnEspecialService
-        .consultarParcelas();
+    final consultarParcelasResponse = await parcsnEspecialService.consultarParcelas();
     print('Status: ${consultarParcelasResponse.status}');
-    print(
-      'Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarParcelasResponse.sucesso}');
-    print(
-      'Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}',
-    );
-    print(
-      'Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}',
-    );
+    print('Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}');
+    print('Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}');
 
     if (consultarParcelasResponse.temParcelas) {
-      final parcelas =
-          consultarParcelasResponse.dadosParsed?.listaParcelas ?? [];
+      final parcelas = consultarParcelasResponse.dadosParsed?.listaParcelas ?? [];
       for (var parcela in parcelas) {
-        print(
-          '  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}',
-        );
+        print('  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
         print('    Ano: ${parcela.ano}, Mês: ${parcela.mes}');
         print('    Mês atual: ${parcela.isMesAtual}');
         print('    Mês futuro: ${parcela.isMesFuturo}');
@@ -5150,9 +4385,7 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
     print('\n--- 5. Emitir DAS ---');
     final emitirDasResponse = await parcsnEspecialService.emitirDas(202306);
     print('Status: ${emitirDasResponse.status}');
-    print(
-      'Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${emitirDasResponse.sucesso}');
     print('PDF gerado com sucesso: ${emitirDasResponse.pdfGeradoComSucesso}');
     print('Tamanho do PDF: ${emitirDasResponse.tamanhoPdfFormatado}');
@@ -5164,30 +4397,14 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
     }
 
     print('\n--- 6. Validações ---');
-    print(
-      'Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}',
-    );
-    print(
-      'Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}',
-    );
-    print(
-      'Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}',
-    );
-    print(
-      'Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}',
-    );
-    print(
-      'Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}',
-    );
-    print(
-      'Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}',
-    );
-    print(
-      'Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}',
-    );
-    print(
-      'Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}',
-    );
+    print('Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}');
+    print('Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}');
+    print('Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}');
+    print('Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}');
+    print('Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}');
+    print('Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}');
+    print('Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}');
+    print('Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}');
 
     print('\n--- 7. Análise de Erros ---');
     final avisos = parcsnEspecialService.getAvisos();
@@ -5215,10 +4432,7 @@ Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
     }
 
     // Exemplo de análise de erro
-    final analiseErro = parcsnEspecialService.analyzeError(
-      '[Aviso-PARCSN-ESP-ER_E001]',
-      'Não há parcelamento ativo para o contribuinte.',
-    );
+    final analiseErro = parcsnEspecialService.analyzeError('[Aviso-PARCSN-ESP-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
     print('Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Tipo: ${analiseErro.tipo}');
@@ -5243,15 +4457,11 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
     print('\n--- 1. Consultar Pedidos de Parcelamento ---');
     final pedidosResponse = await parcmeiService.consultarPedidos();
     print('Status: ${pedidosResponse.status}');
-    print(
-      'Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${pedidosResponse.sucesso}');
     print('Mensagem principal: ${pedidosResponse.mensagemPrincipal}');
     print('Tem parcelamentos: ${pedidosResponse.temParcelamentos}');
-    print(
-      'Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}',
-    );
+    print('Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}');
 
     if (pedidosResponse.sucesso && pedidosResponse.temParcelamentos) {
       final parcelamentos = pedidosResponse.dadosParsed?.parcelamentos ?? [];
@@ -5266,20 +4476,14 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
         print('');
       }
 
-      print(
-        'Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}',
-      );
-      print(
-        'Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}',
-      );
+      print('Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}');
+      print('Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}');
     }
 
     print('\n--- 2. Consultar Parcelamento Específico ---');
     final parcelamentoResponse = await parcmeiService.consultarParcelamento(1);
     print('Status: ${parcelamentoResponse.status}');
-    print(
-      'Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${parcelamentoResponse.sucesso}');
     print('Mensagem principal: ${parcelamentoResponse.mensagemPrincipal}');
 
@@ -5292,52 +4496,30 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
         print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
         print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
         print('  Ativo: ${parcelamento.isAtivo}');
-        print(
-          '  Tem alterações de dívida: ${parcelamento.temAlteracoesDivida}',
-        );
+        print('  Tem alterações de dívida: ${parcelamento.temAlteracoesDivida}');
         print('  Tem pagamentos: ${parcelamento.temPagamentos}');
 
         if (parcelamento.consolidacaoOriginal != null) {
           final consolidacao = parcelamento.consolidacaoOriginal!;
           print('  Consolidação original:');
-          print(
-            '    Valor total: ${parcelamentoResponse.valorTotalConsolidadoFormatado}',
-          );
-          print(
-            '    Quantidade de parcelas: ${parcelamentoResponse.quantidadeParcelas}',
-          );
-          print(
-            '    Parcela básica: ${parcelamentoResponse.parcelaBasicaFormatada}',
-          );
-          print(
-            '    Data de consolidação: ${consolidacao.dataConsolidacaoFormatada}',
-          );
-          print(
-            '    Detalhes de consolidação: ${consolidacao.detalhesConsolidacao.length}',
-          );
+          print('    Valor total: ${parcelamentoResponse.valorTotalConsolidadoFormatado}');
+          print('    Quantidade de parcelas: ${parcelamentoResponse.quantidadeParcelas}');
+          print('    Parcela básica: ${parcelamentoResponse.parcelaBasicaFormatada}');
+          print('    Data de consolidação: ${consolidacao.dataConsolidacaoFormatada}');
+          print('    Detalhes de consolidação: ${consolidacao.detalhesConsolidacao.length}');
         }
 
-        print(
-          '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
-        );
-        print(
-          '  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
-        );
-        print(
-          '  Quantidade de pagamentos: ${parcelamentoResponse.quantidadePagamentos}',
-        );
-        print(
-          '  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}',
-        );
+        print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+        print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+        print('  Quantidade de pagamentos: ${parcelamentoResponse.quantidadePagamentos}');
+        print('  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}');
       }
     }
 
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
     final parcelasResponse = await parcmeiService.consultarParcelas();
     print('Status: ${parcelasResponse.status}');
-    print(
-      'Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${parcelasResponse.sucesso}');
     print('Mensagem principal: ${parcelasResponse.mensagemPrincipal}');
     print('Tem parcelas: ${parcelasResponse.temParcelas}');
@@ -5356,36 +4538,23 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
         print('');
       }
 
-      print(
-        'Valor total das parcelas: ${parcelasResponse.valorTotalParcelasFormatado}',
-      );
-      print(
-        'Todas parcelas mesmo valor: ${parcelasResponse.todasParcelasMesmoValor}',
-      );
+      print('Valor total das parcelas: ${parcelasResponse.valorTotalParcelasFormatado}');
+      print('Todas parcelas mesmo valor: ${parcelasResponse.todasParcelasMesmoValor}');
 
       final menorValor = parcelasResponse.parcelaMenorValor;
       final maiorValor = parcelasResponse.parcelaMaiorValor;
       if (menorValor != null) {
-        print(
-          'Menor valor: ${menorValor.valorFormatado} (${menorValor.parcelaFormatada})',
-        );
+        print('Menor valor: ${menorValor.valorFormatado} (${menorValor.parcelaFormatada})');
       }
       if (maiorValor != null) {
-        print(
-          'Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})',
-        );
+        print('Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})');
       }
     }
 
     print('\n--- 4. Consultar Detalhes de Pagamento ---');
-    final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(
-      1,
-      202107,
-    );
+    final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(1, 202107);
     print('Status: ${detalhesResponse.status}');
-    print(
-      'Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${detalhesResponse.sucesso}');
     print('Mensagem principal: ${detalhesResponse.mensagemPrincipal}');
 
@@ -5394,23 +4563,15 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
       if (detalhes != null) {
         print('Detalhes de pagamento:');
         print('  Número do DAS: ${detalhes.numeroDas}');
-        print(
-          '  Data de vencimento: ${detalhesResponse.dataVencimentoFormatada}',
-        );
+        print('  Data de vencimento: ${detalhesResponse.dataVencimentoFormatada}');
         print('  Período DAS gerado: ${detalhesResponse.paDasGeradoFormatado}');
         print('  Gerado em: ${detalhes.geradoEmFormatado}');
         print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
         print('  Número da parcela: ${detalhes.numeroParcela}');
-        print(
-          '  Data limite acolhimento: ${detalhesResponse.dataLimiteAcolhimentoFormatada}',
-        );
-        print(
-          '  Data de pagamento: ${detalhesResponse.dataPagamentoFormatada}',
-        );
+        print('  Data limite acolhimento: ${detalhesResponse.dataLimiteAcolhimentoFormatada}');
+        print('  Data de pagamento: ${detalhesResponse.dataPagamentoFormatada}');
         print('  Banco/Agência: ${detalhes.bancoAgencia}');
-        print(
-          '  Valor pago: ${detalhesResponse.valorPagoArrecadacaoFormatado}',
-        );
+        print('  Valor pago: ${detalhesResponse.valorPagoArrecadacaoFormatado}');
         print('  Pagamento realizado: ${detalhesResponse.pagamentoRealizado}');
         print('  Pagamento em atraso: ${detalhesResponse.pagamentoEmAtraso}');
         print('  Quantidade de débitos: ${detalhesResponse.quantidadeDebitos}');
@@ -5430,28 +4591,20 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
             print('        Ente federado: ${disc.enteFederadoDestino}');
             print('        Tem multa: ${disc.temMulta}');
             print('        Tem juros: ${disc.temJuros}');
-            print(
-              '        % Multa: ${disc.percentualMulta.toStringAsFixed(2)}%',
-            );
-            print(
-              '        % Juros: ${disc.percentualJuros.toStringAsFixed(2)}%',
-            );
+            print('        % Multa: ${disc.percentualMulta.toStringAsFixed(2)}%');
+            print('        % Juros: ${disc.percentualJuros.toStringAsFixed(2)}%');
           }
           print('');
         }
 
-        print(
-          'Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}',
-        );
+        print('Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}');
       }
     }
 
     print('\n--- 5. Emitir DAS ---');
     final emitirResponse = await parcmeiService.emitirDas(202107);
     print('Status: ${emitirResponse.status}');
-    print(
-      'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
-    );
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${emitirResponse.sucesso}');
     print('Mensagem principal: ${emitirResponse.mensagemPrincipal}');
     print('PDF gerado com sucesso: ${emitirResponse.pdfGeradoComSucesso}');
@@ -5484,54 +4637,22 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
     }
 
     print('\n--- 6. Validações ---');
-    print(
-      'Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}',
-    );
-    print(
-      'Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}',
-    );
-    print(
-      'Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}',
-    );
-    print(
-      'Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}',
-    );
-    print(
-      'Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}',
-    );
-    print(
-      'Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}',
-    );
-    print(
-      'Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}',
-    );
-    print(
-      'Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}',
-    );
-    print(
-      'Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}',
-    );
-    print(
-      'Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}',
-    );
-    print(
-      'Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}',
-    );
-    print(
-      'Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}',
-    );
-    print(
-      'Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}',
-    );
-    print(
-      'Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}',
-    );
-    print(
-      'Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}',
-    );
-    print(
-      'Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}',
-    );
+    print('Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}');
+    print('Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}');
+    print('Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}');
+    print('Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}');
+    print('Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}');
+    print('Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}');
+    print('Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}');
+    print('Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}');
+    print('Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}');
+    print('Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}');
+    print('Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}');
+    print('Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}');
+    print('Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}');
+    print('Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}');
+    print('Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}');
+    print('Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}');
 
     print('\n--- 7. Análise de Erros ---');
     final avisos = parcmeiService.getAvisos();
@@ -5559,10 +4680,7 @@ Future<void> exemplosParcmei(ApiClient apiClient) async {
     }
 
     // Exemplo de análise de erro
-    final analiseErro = parcmeiService.analyzeError(
-      '[Sucesso-PARCMEI]',
-      'Requisição efetuada com sucesso.',
-    );
+    final analiseErro = parcmeiService.analyzeError('[Sucesso-PARCMEI]', 'Requisição efetuada com sucesso.');
     print('Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Mensagem: ${analiseErro.mensagem}');

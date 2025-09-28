@@ -110,65 +110,33 @@ export 'src/models/sitfis/sitfis_cache.dart';
 // PARCSN Models
 export 'src/models/parcsn/parcsn_response.dart';
 export 'src/models/parcsn/mensagem.dart' hide Mensagem;
-export 'src/models/parcsn/consultar_pedidos_response.dart'
-    hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcsn/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
 export 'src/models/parcsn/consultar_parcelamento_response.dart'
-    hide
-        ConsultarParcelamentoResponse,
-        ParcelamentoDetalhado,
-        ConsolidacaoOriginal,
-        DetalhesConsolidacao,
-        AlteracaoDivida,
-        DemonstrativoPagamento;
+    hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
 export 'src/models/parcsn/consultar_detalhes_pagamento_response.dart'
-    hide
-        ConsultarDetalhesPagamentoResponse,
-        DetalhesPagamentoData,
-        PagamentoDebito,
-        DiscriminacaoDebito;
-export 'src/models/parcsn/consultar_parcelas_response.dart'
-    hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/parcsn/emitir_das_response.dart'
-    hide EmitirDasResponse, DasData;
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcsn/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
 export 'src/models/parcsn/parcsn_validations.dart';
-export 'src/models/parcsn/parcsn_errors.dart'
-    hide PertsnErrors, PertsnErrorInfo, PertsnErrorAnalysis;
+export 'src/models/parcsn/parcsn_errors.dart' hide PertsnErrors, PertsnErrorInfo, PertsnErrorAnalysis;
 
 // PARCSN ESPECIAL Models
 export 'src/models/parcsn_especial/parcsn_especial_response.dart';
 export 'src/models/parcsn_especial/mensagem.dart' hide Mensagem;
-export 'src/models/parcsn_especial/consultar_pedidos_response.dart'
-    hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcsn_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
 export 'src/models/parcsn_especial/consultar_parcelamento_response.dart'
-    hide
-        ConsultarParcelamentoResponse,
-        ParcelamentoDetalhado,
-        ConsolidacaoOriginal,
-        DetalhesConsolidacao,
-        AlteracaoDivida,
-        DemonstrativoPagamento;
+    hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
 export 'src/models/parcsn_especial/consultar_detalhes_pagamento_response.dart'
-    hide
-        ConsultarDetalhesPagamentoResponse,
-        DetalhesPagamentoData,
-        PagamentoDebito,
-        DiscriminacaoDebito;
-export 'src/models/parcsn_especial/consultar_parcelas_response.dart'
-    hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/parcsn_especial/emitir_das_response.dart'
-    hide EmitirDasResponse, DasData;
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcsn_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcsn_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
 export 'src/models/parcsn_especial/parcsn_especial_validations.dart';
-export 'src/models/parcsn_especial/parcsn_especial_errors.dart'
-    hide
-        ParcsnEspecialErrors,
-        ParcsnEspecialErrorInfo,
-        ParcsnEspecialErrorAnalysis;
+export 'src/models/parcsn_especial/parcsn_especial_errors.dart' hide ParcsnEspecialErrors, ParcsnEspecialErrorInfo, ParcsnEspecialErrorAnalysis;
 
 // PERTSN Models
 export 'src/models/pertsn/pertsn_response.dart';
 export 'src/models/pertsn/mensagem.dart' hide Mensagem;
-export 'src/models/pertsn/consultar_pedidos_response.dart'
-    hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/pertsn/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
 export 'src/models/pertsn/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
@@ -178,16 +146,10 @@ export 'src/models/pertsn/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/pertsn/consultar_parcelas_response.dart'
-    hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/pertsn/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
 export 'src/models/pertsn/consultar_detalhes_pagamento_response.dart'
-    hide
-        ConsultarDetalhesPagamentoResponse,
-        DetalhesPagamentoData,
-        PagamentoDebito,
-        DiscriminacaoDebito;
-export 'src/models/pertsn/emitir_das_response.dart'
-    hide EmitirDasResponse, DasData;
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/pertsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
 export 'src/models/pertsn/pertsn_validations.dart' hide PertsnValidations;
 export 'src/models/pertsn/pertsn_errors.dart';
 
@@ -204,8 +166,7 @@ export 'src/models/relpsn/relpsn_errors.dart';
 // PARCMEI Models
 export 'src/models/parcmei/parcmei_response.dart';
 export 'src/models/parcmei/mensagem.dart' hide Mensagem;
-export 'src/models/parcmei/consultar_pedidos_response.dart'
-    hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcmei/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
 export 'src/models/parcmei/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
@@ -215,24 +176,17 @@ export 'src/models/parcmei/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/parcmei/consultar_parcelas_response.dart'
-    hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcmei/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
 export 'src/models/parcmei/consultar_detalhes_pagamento_response.dart'
-    hide
-        ConsultarDetalhesPagamentoResponse,
-        DetalhesPagamentoData,
-        PagamentoDebito,
-        DiscriminacaoDebito;
-export 'src/models/parcmei/emitir_das_response.dart'
-    hide EmitirDasResponse, DasData;
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcmei/emitir_das_response.dart' hide EmitirDasResponse, DasData;
 export 'src/models/parcmei/parcmei_validations.dart';
 export 'src/models/parcmei/parcmei_errors.dart';
 
 // PARCMEI ESPECIAL Models
 export 'src/models/parcmei_especial/parcmei_especial_response.dart';
 export 'src/models/parcmei_especial/mensagem.dart' hide Mensagem;
-export 'src/models/parcmei_especial/consultar_pedidos_response.dart'
-    hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcmei_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
 export 'src/models/parcmei_especial/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
@@ -242,16 +196,10 @@ export 'src/models/parcmei_especial/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/parcmei_especial/consultar_parcelas_response.dart'
-    hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcmei_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
 export 'src/models/parcmei_especial/consultar_detalhes_pagamento_response.dart'
-    hide
-        ConsultarDetalhesPagamentoResponse,
-        DetalhesPagamentoData,
-        PagamentoDebito,
-        DiscriminacaoDebito;
-export 'src/models/parcmei_especial/emitir_das_response.dart'
-    hide EmitirDasResponse, DasData;
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcmei_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
 export 'src/models/parcmei_especial/parcmei_especial_validations.dart';
 export 'src/models/parcmei_especial/parcmei_especial_errors.dart';
 
@@ -277,13 +225,7 @@ export 'src/models/pertmei/pertmei_response.dart'
 export 'src/models/relpmei/relpmei_base_request.dart';
 export 'src/models/relpmei/relpmei_request.dart';
 export 'src/models/relpmei/relpmei_response.dart'
-    hide
-        ConsultarPedidosResponse,
-        ConsultarParcelamentoResponse,
-        ConsultarDetalhesPagamentoResponse,
-        EmitirDasResponse,
-        Parcelamento,
-        Parcela;
+    hide ConsultarPedidosResponse, ConsultarParcelamentoResponse, ConsultarDetalhesPagamentoResponse, EmitirDasResponse, Parcelamento, Parcela;
 
 // Sicalc Models
 export 'src/models/sicalc/sicalc_response.dart';
