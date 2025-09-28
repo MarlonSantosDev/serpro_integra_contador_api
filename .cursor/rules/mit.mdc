@@ -1,0 +1,1480 @@
+---
+alwaysApply: true
+---
+
+# Documentação API Integra Contador - SERPRO
+
+## Introdução
+
+Este documento compila informações detalhadas sobre a API Integra Contador do SERPRO, com foco no Módulo de Inclusão de Tributos (MIT). As informações foram extraídas da documentação oficial do SERPRO e do manual do MIT. É importante notar que o usuário solicitou informações sobre o "Cursor the AI code Editor", no entanto, os links fornecidos referem-se exclusivamente à API Integra Contador. Não foi encontrada nenhuma informação sobre o "Cursor the AI code Editor" nas fontes disponibilizadas.
+
+
+
+
+
+
+
+# Cenários MIT
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Encerrar Apuração
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "MIT",             "idServico": "ENCAPURACAO314",             "versaoSistema": "1.0",             "dados": "{\"PeriodoApuracao\":{\"MesApuracao\":1,\"AnoApuracao\":2025},\"DadosIniciais\":{\"SemMovimento\":false,\"QualificacaoPj\":1,\"TributacaoLucro\":2,\"VariacoesMonetarias\":1,\"RegimePisCofins\":1,\"ResponsavelApuracao\":{\"CpfResponsavel\":\"00000000000\"}},\"Debitos\":{\"Irpj\":{\"ListaDebitos\":[{\"IdDebito\":1,\"CodigoDebito\":\"236208\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":100.00}]},\"Csll\":{\"ListaDebitos\":[{\"IdDebito\":2,\"CodigoDebito\":\"248408\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":220.00}]},\"PisPasep\":{\"ListaDebitos\":[{\"IdDebito\":3,\"CodigoDebito\":\"067904\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":300.00}]},\"Cofins\":{\"ListaDebito...truncated..."
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o MIT?
+
+O Módulo de Inclusão de Tributos – MIT, é um serviço integrado à Declaração de Débitos e Créditos Tributários Federais - DCTFWeb para recepção de débitos e créditos relativos a tributos administrados pela Receita Federal do Brasil – RFB que ainda não são transmitidos para a DCTFWeb por meio de uma escrituração fiscal específica.
+
+O MIT pode ser preenchido diretamente no Atendimento Virtual (e-CAC) da Receita Federal, acessível pelo endereço https://www.gov.br/receitafederal/pt-br/canais\_atendimento/atendimento-virtual ou por meio de importação de arquivo previamente preparado no ambiente do próprio contribuinte.
+
+O MIT foi desenvolvido no intuito de simplificar o cumprimento de obrigações acessórias, reduzindo a quantidade de declarações e uniformizando o tratamento do crédito tributário.
+
+Prazo: O prazo para a entrega da Declaração de Débitos e Créditos Tributários Federais Previdenciários e de Outras Entidades e Fundos (DCTFWeb) foi alterado. Até 2024, o prazo de entrega era até o dia 15 do mês subsequente ao período de apuração. Agora em 2025, a transmissão da DCTFWeb deve ser feita **até o último dia útil do mês subsequente ao período de apuração**.
+
+Excepcionalmente os débitos e créditos decorrentes do mês de janeiro de 2025 devem ser declarados até 31/03/2025, ou último dia útil de Março de 2025.
+
+## Quem pode utilizar este serviço?
+
+Pessoas jurídicas que estão sujeitas ao recolhimento mensal da DCTF.
+
+Somente poderão enviar a DCTFWeb os contribuintes enquadrados nos grupos específicos definidos pela [Instrução Normativa RFB nº 2005/2021]() e [Instrução Normativa RFB nº 2.237/2024]().
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra DCTFWeb, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema MIT, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## Sumário dos serviços
+
+ATENÇÃO
+
+É essencial a leitura **cuidadosa** da documentação de cada serviço no menu **Documentação > Soluções > Integra-DCTFWeb > MIT > Serviços** para a utilização correta dos mesmos. Verifique também a página [Mensagens]() para um melhor entendimento das informações retornadas pela API.
+
+Lembrando que as apurações após serem encerradas no MIT, terão suas informações transmitidas para a DCTFWeb para integrar, junto com os tributos escriturados no eSocial ou na EFD-Reinf, a declaração mensal de confissão de débitos do contribuinte. No MIT, as apurações podem estar na situação EM EDIÇÃO, ENCERRAMENTO EM CURSO ou ENCERRADA.
+
+*   **Encerrar Apuração:** Este serviço oferece uma solução para o encerramento de uma apuração que não apresente pendências, no Módulo de Inclusão de Tributos do sistema DCTFWeb. Caso haja algum item com pendências, o sistema sinaliza as pendências e impede a criação da apuração.
+*   **Consultar Situação Encerramento:** Este serviço oferece uma solução para a consulta assíncrona do encerramento de uma apuração, no Módulo de Inclusão de Tributos do sistema DCTFWeb.
+*   **Consultar Apuração:** O serviço permite consultar as apurações registradas no sistema, proporcionando acesso rápido e seguro às informações detalhadas. Ao realizar a consulta, o usuário pode visualizar o retorno do JSON contendo os dados da apuração ou das pendências associadas, facilitando a análise e tomada de decisão.
+*   **Consultar Apuração por ano ou mês:** O serviço permite listar todas as apurações MIT por ano ou mês.
+
+# Encerrar Apuração
+
+Este serviço inicia o serviço de encerramento de uma apuração do Módulo Inserção de Tributos do sistema DCTFWeb.
+
+A apuração NÃO será enviada à DCTFWEB no momento da requisição. O envio será feito automaticamente em momento posterior.
+
+Utilize o serviço [Consultar Situação Encerramento]() gratuitamente passando o protocoloEncerramento devolvido neste serviço para consultar o status do envio.
+
+TransmissaoImediata: Indicador de que a DCTFWeb correspondente será transmitida imediatamente após o encerramento da Apuração, sem necessidade de intervenção do usuário, sendo: **false**: Não; **true**: Sim.
+
+# Consultar Situação Encerramento
+
+Este serviço oferece uma solução para a consulta assíncrona do encerramento de uma apuração, no Módulo de Inclusão de Tributos do sistema DCTFWeb.
+
+Identificação no Pedido de Dados
+
+idSistema: MIT  
+idServico: SITUACAOENC315
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| protocoloEncerramento | Protocolo de encerramento da apuração fornecido no serviço [Encerrar Apuração](). | `String` | S |
+
+**_Exemplo objeto "dados":_**
+
+`"Dados": "{\"protocoloEncerramento\":\"2fc4NTscrGXWTl4xbCX9rw==\"}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "MIT",         "idServico": "SITUACAOENC315",         "dados": "{\"protocoloEncerramento\":\"2fc4NTscrGXWTl4xbCX9rw==\"}"     } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+Objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idApuracao | Identificador da apuração. | `Number` |
+| situacaoApuracao | Número de situação da apuração. | `Number` |
+| textoSituacao | Situação da apuração. | `String` |
+| avisosDctf | Mensagens retornadas pela DCTFWeb no momento do encerramento. | `Array` de `String` |
+| dataEncerramento | Data do encerramento no formato AAAAMMDD. | `String` |
+
+**_Exemplo: json retorno_**
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "MIT",         "idServico": "SITUACAOENC315",         "versaoSistema": "1.0",         "dados": "{\"protocoloEncerramento\":\"2fc4NTscrGXWTl4xbCX9rw==\"}"     },     "status": "200",     "responseId": "8f770ff8-6079-4765-b430-c7fd65t7e8c1",     "responseDateTime": "2025-03-27T19:07:02.925Z",     "mensagens": [         {             "codigo": "[Sucesso-MIT]",             "texto": "Requisição efetuada com sucesso."         }     ],     "dados": "{\"idApuracao\":0,\"situacaoApuracao\":3,\"textoSituacao\":\"ENCERRADA\",\"avisosDctf\":null,\"dataEncerramento\":\"20250305\"}" }`
+
+# Consultar apuração
+
+O serviço permite consultar as apurações registradas no sistema, proporcionando acesso rápido e seguro às informações detalhadas. Ao realizar a consulta, o usuário pode visualizar o retorno do JSON contendo os dados da apuração ou das pendências associadas, facilitando a análise e tomada de decisão.
+
+Identificação no Pedido de Dados
+
+idSistema: MIT  
+idServico: CONSAPURACAO316
+
+**_Dados de Entrada_**
+
+Objeto dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| idApuracao | Identificador da apuração fornecido no serviço de encerramento. | `Number` | S |
+
+**_Exemplo objeto "dados":_**
+
+`"dados": "{\"idApuracao\":0}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "MIT",         "idServico": "CONSAPURACAO316",         "dados": "{\"idApuracao\":0}"     } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+Estrutura do objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| situacaoApuracao | Situação da apuração MIT. | `Number` |
+| textoSituacao | Texto informando a situação da apuração do MIT. | `String` |
+| dadosApuracaoMit | Estrutura do arquivo de importação. | `Array` de `Object` _dadosApuracaoMIT_ |
+
+Estrutura do objeto dadosApuracaoMIT:
+
+**Período da Apuração**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
+| PeriodoApuracao | 1 | `Object` | Período da apuração. | S |
+| MesApuracao | 2 | `Number` | Número do mês da apuração. Exemplo: 4. | S |
+| AnoApuracao | 2 | `Number` | Ano da apuração no formato AAAA. Exemplo: 2025. | S |
+
+**Eventos Especiais**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
+| ListaEventosEspeciais | 1 | `Array` | Lista dos eventos especiais da Apuração, informados em ordem cronológica e sem repetição do dia. Quantidade máxima: 5. | N |
+| (sem nome) | 2 | `Object` | Agrupa os dados do evento especial (pode ocorrer mais de uma vez). | Sim, se houver o array _ListaEventosEspeciais_. |
+| IdEvento | 3 | `Number` | Número de identificação do evento especial com 1 dígito. Número único e sequencial: de 1 a 5. Exemplo: 1. | Sim, para cada ocorrência de objeto em _ListaEventosEspeciais_. |
+| DiaEvento | 3 | `Number` | Dia do evento especial. Exemplo: 13. | Sim, para cada ocorrência de objeto em _ListaEventosEspeciais_. |
+| TipoEvento | 3 | `Number` | Tipo do evento especial, sendo: **1:** Extinção; **2:** Fusão; **3:** Cisão Total; **4:** Cisão Parcial; **5:** Incorporação (incorporada); **6:** Incorporação (incorporadora). | Sim, para cada ocorrência de objeto em _ListaEventosEspeciais_. |
+
+**Dados Iniciais**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
+| DadosIniciais | 1 | `Object` | Dados iniciais da apuração. | S |
+| SemMovimento | 2 | `Boolean` | Indicador de apuração sem movimento, sendo: **false**: Não; **true**: Sim. | S |
+| QualificacaoPj | 2 | `Number` | Qualificação da Pessoa Jurídica, sendo:  **1:** PJ em geral;  **2:** Agência de Fomento, Banco ou outra PJ de que trata o § 1° do art. 22 da Lei n° 8.212/1991;  **3:** Cooperativa de Crédito;  **4:** Sociedade Corretora de Seguros;  **5:** Sociedade Seguradora e de Capitalização ou Entidade Aberta de Previdência Complementar com fins lucrativos;  **6:** Entidade Fechada de Previdência Complementar ou Entidade Aberta de Previdência Complementar sem fins lucrativos;  **7:** Sociedade Cooperativa;  **8:** Sociedade Cooperativa de Produção Agropecuária ou de Consumo;  **9:** Autarquia ou Fundação Pública;  **10:** Empresa Pública, Sociedade de Economia Mista ou PJ de que trata o inc. III do art. 34 da Lei n° 10.833/2003;  **11:** Estado, Distrito Federal, Município ou Órgão Público da Administração Direta;  **12:** Mais de uma qualificação durante o mês. | S |
+| TributacaoLucro | 2 | `Number` | Forma de Tributação do Lucro, sendo: **1:** Real Anual; **2:** Real Trimestral; **3:** Presumido; **4:** Arbitrado; **5:** Imune do IRPJ; **6:** Isenta do IRPJ; **7:** Optante pelo Simples Nacional. | Sim, se _SemMovimento_ for _false_ e se _QualificacaoPj_ for diferente de 11. |
+| VariacoesMonetarias | 2 | `Number` | Critério de reconhecimento das variações monetárias, sendo: **1:** Regime de Caixa; **2:** Regime de Competência; **3:** Regime de Caixa - Elevada oscilação da taxa de câmbio. | Sim, se _SemMovimento_ for _false_. |
+| RegimePisCofins | 2 | `Number` | Regime de apuração do PIS/Pasep e/ou da Cofins, sendo: **1:** Não-cumulativa; **2:** Cumulativa; **3:** Não-cumulativa e Cumulativa; **4:** Não se aplica. | Sim, se _SemMovimento_ for _false_ e (se _QualificacaoPj_ for \[9\] ou (se _QualificacaoPj_ for \[1\] e se _TributacaoLucro_ for \[1, 2, 5 ou 6\]) ou (se _QualificacaoPj_ for \[4, 8 ou 10\] e se _TributacaoLucro_ for diferente de \[3, 4, 5 e 7\]) ou (se _QualificacaoPj_ for \[12\] e se _TributacaoLucro_ for diferente de \[7\])). |
+| ResponsavelApuracao | 2 | `Object` | Dados do responsável pelo preenchimento da apuração. | S |
+| CpfResponsavel | 3 | `String (11)` | CPF do responsável com 11 dígitos. Exemplo: "12345678900". | S |
+| TelResponsavel | 3 | `Object` | Dados do telefone/celular do responsável. | N |
+| Ddd | 4 | `String (2)` | DDD do telefone/celular do responsável com 2 dígitos. Exemplo: "31". | Sim, se houver o objeto _TelResponsavel_. |
+| NumTelefone | 4 | `String (9)` | Número do telefone/celular do responsável com 8 ou 9 dígitos. Exemplo: "999999999". | Sim, se houver o objeto _TelResponsavel_. |
+| EmailResponsavel | 3 | `String (60)` | E-mail do responsável. Exemplo: "responsavel@mail.com". | N |
+| RegistroCrc | 3 | `Object` | Dados do registro profissional do responsável no Conselho Regional de Contabilidade. | N |
+| UfRegistro | 4 | `String (2)` | Sigla da unidade federativa do registro provisório ou definitivo originário do responsável, com letras maiúsculas. Exemplo: "SP". | Sim, se houver o objeto _RegistroCrc_. |
+| NumRegistro | 4 | `String (11)` | Número do registro profissional do responsável, podendo incluir sufixo no caso de registro transferido ou secundário, com tamanho de 6 a 11 dígitos. Exemplos: "123456", "SP123456", "123456O3", "123456TMG", "SP123456O3" e "123456O3TMG". | Sim, se houver o objeto _RegistroCrc_. |
+
+**Débitos**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
+| Debitos | 1 | `Object` | Dados dos débitos da Apuração, discriminados por grupo de tributo, os quais devem ser informados na ordem de apresentação desta tabela. Na Apuração com movimento, deve ser informado ao menos um débito. | Sim, se _SemMovimento_ for _false_. |
+| BalancoLucroReal | 2 | `Boolean` | Indicador de que a PJ levantou balanço/balancete de suspensão ou redução no mês, sendo: **false**: Não; **true**: Sim. | Sim, se _TributacaoLucro_ for 1, se não houver objeto na _ListaEventosEspeciais_ com _TipoEvento_ igual a 1, 2, 3 ou 5 e se não houver objeto na _ListaEventosEspeciais_ com _TipoEvento_ igual a 4 ou 6 e _DiaEvento_ igual ao último dia do mês. |
+| Irpj | 2 | `Object` | Dados dos débitos do grupo IRPJ. | Não, mas pode existir somente se houver o objeto _Debitos_ e se _QualificacaoPj_ for diferente de \[11\]. |
+| Csll | 2 | `Object` | Dados dos débitos do grupo CSLL. | Não, mas...11358 bytes truncated..."
+
+# Consultar apuração por ano ou mês
+
+O serviço permite listar todas as apurações MIT por ano ou mês.
+
+Identificação no Pedido de Dados
+
+idSistema: MIT  
+idServico: LISTAAPURACOES317
+
+**_Dados de Entrada_**
+
+Objeto dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| anoApuracao | Ano da apuração para o qual se deseja consultar todas apurações MIT. | `Number` | S |
+| mesApuracao | Mês da apuração. Se este campo for informado serão consultados apenas as apurações referentes a este ano e mês. | `Number` | N |
+| situacaoApuracao | Situação da apuração. | `Number` | N |
+
+**_Exemplo objeto "dados":_**
+
+ `"dados": "{\"mesApuracao\":2,\"anoApuracao\":2025,\"situacaoApuracao\":3}"`
+
+**_Exemplo: conteúdo body json de entrada_**
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "MIT",         "idServico": "LISTAAPURACOES317",         "dados": "{\"mesApuracao\":2,\"anoApuracao\":2025,\"situacaoApuracao\":3}"     } }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Código HTTP retornado no acionamento do serviço. | `String` |
+| mensagens | Mensagens retornadas no acionamento do serviço. É um array de objetos compostos de código e texto da mensagem. | `Array` de `Object` |
+| dados | Estrutura de dados de retorno. | `String` |
+
+Estrutura do objeto dados:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| Apuracoes | Lista as apurações do período consultado. | `Array` de `Object` |
+| periodoApuracao | Período da apuração (AAAAMM). | `String` |
+| idApuracao | Identificador da apuração fornecido no serviço de encerramento (_identEFD_). | `Number` |
+| situacao | Situação da apuração. | `Number` |
+| dataEncerramento | Data de encerramento da apuração (AAAAMMDD). | `String` |
+| eventoEspecial | Existência ou não de evento especial na apuração. | `Boolean` |
+| valorTotalApurado | Valor do total apurado. | `Number` |
+
+**_Exemplo: json retorno_**
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "MIT",         "idServico": "LISTAAPURACOES317",         "versaoSistema": "1.0",         "dados":"{\"mesApuracao\":2,\"anoApuracao\":2025,\"situacaoApuracao\":3}"     },     "status": "200",     "responseId": "8f770ff8-6079-4765-b430-c7fd65t7e8c1",     "responseDateTime": "2025-03-27T19:07:02.925Z",     "mensagens": [         {             "codigo": "[Sucesso-MIT]",             "texto": "Requisição efetuada com sucesso."         }     ],     "dados": "{\"Apuracoes\": [{\"periodoApuracao\":202512,\"idApuracao\":0,\"situacao\":3,\"dataEncerramento\":\"20250218\",\"eventoEspecial\":false,\"valorTotalApurado\":1000.0},{\"periodoApuracao\":202512,\"idApuracao\":1,\"situacao\":3,\"dataEncerramento\":\"20250219\",\"eventoEspecial\":false,\"valorTotalApurado\":1500.0}]}" }`
+
+**_Layout de mensagens_**
+
+Códigos de retorno para o campo _status_ (Status HTTP):
+
+| HTTP Code | HTTP Description | Descrição |
+| --- | --- | --- |
+| 200 | OK | Tudo funcionou como esperado e a validação dos dados foi realizada com sucesso. |
+| 400 | Requisição inválida | Falha: Dados inválidos na execução (_Bad Request_). |
+| 404 | Não Encontrado | Falha: URL não encontrada (_Not Found_). |
+| 500 | Erro no servidor | Erro: Houve um erro interno não previsto (_Internal Server Error_). |
+
+# Mensagens Integra-DCTFWeb: MIT
+
+## Como interpretar o retorno
+
+A cada chamada é retornado um conjunto de mensagens descrevendo o resultado do processamento. A estrutura do identificador das mensagens retornadas é:
+
+\[Tipo-Sistema-Código\]
+
+Sistema será "MIT" e código será alguns dos valores tabelados nesssa página.
+
+Tipo pode ser:
+
+*   **EntradaIncorreta:** Os dados enviados pelo cliente contêm um ou mais erros que impedem o processamento da requisição.
+*   **Sucesso:** A requisição foi processada com sucesso. Isso significa apenas que não houve qualquer erro interno ao processsar a requisição.
+*   **Erro:** Houve um erro interno (i.e. do próprio sistema Integra Contador DCTF) ao tentar processar a requisição.
+*   **Aviso:** Informações complementares. Podem incluir detalhamento de por que uma operação não irá produzir os resultados esperados pelo cliente (por exemplo, acionou a Consulta de XML de declaração sendo que não existe nenhuma declaração na base correspondente aos dados passados na requisição).
+
+**ATENÇÃO:** Algumas mensagens nas tabelas são modelos que irão conter informações complementares de acordo com cada situação. Os locais onde essas informações complementares podem aparecer estão indicados pelo formato **{N}** em negrito.
+
+**Obs:** Parte das mensagens são descrições sumárias de falhas internas do sistema e visam agilizar a depuração, não correspondendo a qualquer erro da parte do usuário. Caso esteja tendo problemas que não consegue solucionar e opte por abrir um chamado de suporte, anexe ao chamado o JSON recebido como resposta do servidor.
+
+### Mensagens específicas dos serviços MIT
+
+| Código | Mensagem | Ação |
+| --- | --- | --- |
+| MSG\_0001 | Houve um erro ao acessar o Integra Contador DCTF - MIT | Tentar em um momento posterior. |
+| MSG\_0002 | O Json contém dados inválidos - **{0}** | Corrigir o campo que está inválido e reenviar a requisição. |
+| MSG\_0003 | O campo **{0}** possui valor inválido ou nulo. | Corrigir o campo que está inválido e reenviar a requisição. |
+| MSG\_0004 | Para apuração sem movimento não é permitido informar o campo **{0}**. | Apuração sem movimento não permite o envio de determinados campos. Corrigir e reenviar a requisição. |
+| MSG\_0005 | Para apuração com movimento é obrigatório informar o campo **{0}**. | Apuração com movimento possui campos obrigatórios. Corrigir e reenviar a requisição. |
+| MSG\_0006 | O campo **{0}** é obrigatório quando **{1}** for **{2}**. | Corrigir e reenviar a requisição. |
+| MSG\_0007 | O campo **{0}** é obrigatório quando **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0008 | O campo **{0}** só pode existir se existir **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0009 | Os valores de **{0}** devem ser uma sequência numérica começando em 1. | Corrigir a sequência e reenviar a requisição. |
+| MSG\_0010 | O campo **{0}** precisa ter valor preenchido. Consulte a documentação para entender a razão. | Determinados campos possuem regras específicas para envio. Corrigir e reenviar a requisição. |
+| MSG\_0011 | O campo **{0}** precisa ter um correspondente em **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0012 | O campo **{0}** do codigoDebito **{1}** possui valor inválido. | Corrigir e reenviar a requisição. |
+| MSG\_0013 | É obrigatório o preenchimento do campo **{0}** para o tributo **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0014 | O campo **{0}** só deve ser preenchido para o(s) tributo(s) **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0015 | A lista **{0}** está vazia. Se não há conteúdo, não deve ser enviada. | Corrigir e reenviar a requisição. |
+| MSG\_0016 | A lista **{0}** só pode ser preenchida se não existir **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0017 | O campo numeroProcesso deve conter 17 (administrativo) ou 20 dígitos (judicial). | Corrigir e reenviar a requisição. |
+| MSG\_0018 | O codigoDebito **{0}** não é permitido. Consulte a documentação para maiores detalhes. | Corrigir e reenviar a requisição. |
+| MSG\_0019 | O campo **{0}** precisa estar entre **{1}** e **{2}**. | Corrigir e reenviar a requisição. |
+| MSG\_0020 | O campo transmissaoImediata só deve ser enviado para apuração sem movimento. | Corrigir e reenviar a requisição. |
+| MSG\_0021 | Campo **{0}** não encontrado na tabela de Orgãos e Municípios. | O campo com o código do Município está inválido. |
+| MSG\_0022 | Não encontrado o **{0}** no cadastro CNPJ. | Corrigir e reenviar a requisição. |
+| MSG\_0023 | Não existe apuração com o número informado: **{0}** | O número da apuração obtido está inválido. |
+| MSG\_0024 | A apuração foi enviada para encerramento na DCTFWEB. Se desejar saber o status do encerramento, utilize a funcionalidade Consultar Situação de Encerramento, passando o conteúdo do campo protocoloEncerramento devolvido nesta requisição. |
+| MSG\_0025 | Não existem apurações para o CNPJ **{0}** e ano **{1}**. |
+| MSG\_0026 | O campo codigoDebito **{0}** não existe no sistema MIT. | Corrigir e reenviar a requisição. |
+| MSG\_0027 | O codigoDebito **{0}** não é permitido no mêsApuracao **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0028 | Existem débitos duplicados. | Corrigir e reenviar a requisição. |
+| MSG\_0029 | O campo **{0}** é obrigatório. | Corrigir e reenviar a requisição. |
+| MSG\_0030 | Não é permitido mais de um eventoSituacaoEspecial para o tipoEvento diferente de 4 ou 6. | Corrigir e reenviar a requisição. |
+| MSG\_0031 | O campo **{0}** não pode ter valor maior que **{1}**. | Corrigir e reenviar a requisição. |
+| MSG\_0032 | O **{0}** não corresponde a uma apuração do contribuinte **{1}**. | O idApuracao enviado não pertence ao contribuinte autenticado. |
+| MSG\_0033 | CNPJ **{0}** não encontrado no cadastro CNPJ. | Corrigir e reenviar a requisição. |
+| MSG\_0034 | São permitidos o total de 5 eventos especiais por apuração. | Corrigir e reenviar a requisição. |
+| MSG\_0035 | O campo **{0}** é incompatível com o valor informado no(s) campo(s) DadosIniciais.QualificacaoPj e/ou DadosIniciais.TributacaoLucro | Corrigir e reenviar a requisição. |
+| MSG\_0036 | Existe uma apuração em encerramento do mesmo CNPJ e PA. Aguarde a conclusão do encerramento antes de enviar uma retificação. | Aguarde mais alguns minutos ou utilize o serviço de consultarSituacaoEncerramento |
+
+# Dados de domínio
+
+| Domínio situacaoApuracao: |
+| --- |
+| **1** = EM\_EDICAO (com pendências): a apuração foi editada na interface Web e apresenta pendências de preenchimento, ou seja, há campo(s) inconsistente(s) ou não preenchido(s). Esse status não é atribuído pelo Integra Contador, sendo exclusivo de edições realizadas na interface Web. |
+| **2** = EM\_EDICAO: a apuração pode ser editada pela interface Web ou reenviada pelo Integra Contador. |
+| **3** = ENCERRADA: a apuração foi enviada para a DCTFWeb e não é passível de alteração dentro do MIT. |
+| **4** = ENCERRAMENTO\_EM\_CURSO: a apuração está em processamento. Aguarde. |
+
+| Domínio tipo: |
+| --- |
+| **2** = CNPJ |
+| **1** = CPF |
+
+| Domínio idServico: |
+| --- |
+| ENCAPURACAO314 |
+| SITUACAOENC315 |
+| CONSAPURACAO316 |
+| LISTAAPURACOES317 |
+
+# Glossário
+
+## Siglas
+
+Principais siglas utilizadas no MIT.
+
+Fonte: [Manual do MIT]()
+
+| Sigla | Descrição |
+| --- | --- |
+| Cide-Combustíveis | Contribuição de Intervenção no Domínio Econômico incidente sobre a importação e a comercialização de petróleo e seus derivados, gás natural e seus derivados e álcool etílico combustível |
+| Cide-Remessas | Contribuição de Intervenção no Domínio Econômico destinada a financiar o Programa de Estímulo à Interação Universidade-Empresa para o Apoio à Inovação |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| Cofins | Contribuição para o Financiamento da Seguridade Social |
+| Condecine | Contribuição para o Desenvolvimento da Indústria Cinematográfica Nacional |
+| Contribuições Diversas | Agrupa os tributos pertecentes aos seguintes grupos: CPMF, CONDECINE, CIDE-COMBUSTÍVEIS, CIDE-REMESSAS E CONTRIBUIÇÃO SOBRE CONCURSOS DE PROGNÓSTICOS |
+| CPSS | Contribuição para o Plano de Seguridade Social do Servidor |
+| CPMF | Contribuição Provisória sobre Movimentação ou Transmissão de Valores e de Créditos e Direitos de Natureza Financeira |
+| CRC | Conselho Regional de Contabilidade |
+| CSLL | Contribuição Social sobre o Lucro Líquido |
+| IN | Instrução Normativa |
+| IOF | Imposto sobre Operações de Crédito, Câmbio e Seguro, ou Relativas a Títulos ou Valores Mobiliários |
+| IPI | Imposto sobre Produtos Industrializados |
+| IRPJ | Imposto sobre a Renda da Pessoa Jurídica |
+| IRRF | Imposto sobre a Renda Retido na Fonte |
+| MIT | Módulo de Inclusão de Tributos |
+| PA | Período de Apuração |
+| PJ | Pessoa Jurídica |
+| PIS/Pasep | Contribuição para os Programas de Integração Social e de Formação do Patrimônio do Servidor Público |
+| RFB | Secretaria da Receita Federal do Brasil |
+| UF CRC | Unidade da Federação do Conselho Regional de Contabilidade |
+
+# Manual do MIT – janeiro/2025
+1. SUMÁRIO
+1. SUMÁRIO ................................................................................................... 2
+2. MÓDULO DE INCLUSÃO DE TRIBUTOS – INFORMAÇÕES INICIAIS ... 3
+2.1 O que deve ser informado no MIT ............................................................ 3
+2.2 Acesso ao Sistema ................................................................................... 5
+2.3 Filtros de Consultas .................................................................................. 7
+2.4 Gerar uma Nova Apuração ....................................................................... 8
+3. NOVA APURAÇÃO – DADOS INICIAIS ..................................................... 8
+3.1 Qualificação da pessoa jurídica ................................................................ 9
+3.2 Forma de Tributação do Lucro ................................................................ 10
+3.3 Critério de Reconhecimento de Variações Monetárias ........................... 10
+3.4 Regime de Apuração (PIS/PASEP – COFINS) ........................................11
+3.5 Responsável pelo Preenchimento da Apuração ..................................... 12
+3.6 Verificação de Pendências ...................................................................... 12
+4. NOVA APURAÇÃO – DÉBITOS ............................................................... 12
+4.1 Periodicidade dos Tributos ...................................................................... 14
+4.2 Tributos com Atributos Adicionais ........................................................... 15
+4.3 Balanço de suspensão ou redução ......................................................... 15
+4.4 Débitos Divisíveis em Quotas ................................................................. 15
+5. NOVA APURAÇÃO – SUSPENSÃO ........................................................ 16
+6. NOVA APURAÇÃO - PENDÊNCIAS ........................................................ 18
+7. NOVA APURAÇÃO - ENCERRAMENTO ................................................. 19
+8. NOVA APURAÇÃO - SITUAÇÕES ESPECÍFICAS .................................. 20
+8.1 Eventos Especiais................................................................................... 20
+8.2 Informação de Ausência de Movimento na DCTFWeb ........................... 22
+8.3 Exportação de Arquivo ............................................................................ 24
+8.4 Retificação da Apuração ......................................................................... 24
+9. IMPORTAÇÃO DE ARQUIVO .................................................................. 25
+9.1 Retificação de Arquivo ............................................................................ 26
+10. REGRAS E TABELAS DE RELACIONAMENTO ..................................... 27
+10.1 Tabela de Códigos de Receita .............................................................. 27
+2
+
+--- PAGE 2 ---
+
+Manual do MIT – janeiro/2025
+2. MÓDULO DE INCLUSÃO DE TRIBUTOS – INFORMAÇÕES INICIAIS
+O Módulo de Inclusão de Tributos – MIT, é um serviço integrado à
+Declaração de Débitos e Créditos Tributários Federais - DCTFWeb para
+recepção de débitos e créditos relativos a tributos administrados pela Receita
+Federal do Brasil – RFB que ainda não são transmitidos para a DCTFWeb por
+meio de uma escrituração fiscal específica.
+O MIT pode ser preenchido diretamente no Atendimento Virtual (e-CAC)
+da Receita Federal, acessível pelo endereço
+https://www.gov.br/receitafederal/pt-br/canais_atendimento/atendimento-virtual
+ou por meio de importação de arquivo previamente preparado no ambiente do
+próprio contribuinte.
+Após o encerramento do MIT, suas informações são transmitidas para a
+DCTFWeb para integrar, junto com os tributos escriturados no eSocial ou na
+EFD-Reinf, a declaração mensal de confissão de débitos do contribuinte.
+O MIT foi desenvolvido no intuito de simplificar o cumprimento de
+obrigações acessórias, reduzindo a quantidade de declarações e uniformizando
+o tratamento do crédito tributário.
+2.1 O que deve ser informado no MIT
+Devem ser informados pelo MIT, a partir do período de apuração igual a
+01/2025, os seguintes tributos:
+I - Imposto sobre a Renda da Pessoa Jurídica - IRPJ;
+II - Imposto sobre a Renda Retido na Fonte - IRRF;
+III - Imposto sobre Produtos Industrializados - IPI;
+IV - Imposto sobre Operações de Crédito, Câmbio e Seguro, ou relativas a
+Títulos ou Valores Mobiliários - IOF;
+V - Contribuição Social sobre o Lucro Líquido - CSLL;
+VI - Contribuição para os Programas de Integração Social e de Formação do
+Patrimônio do Servidor Público - PIS/Pasep;
+VII - Contribuição para o Financiamento da Seguridade Social - Cofins;
+VIII - Contribuição de Intervenção no Domínio Econômico incidente sobre a
+importação e a comercialização de petróleo e seus derivados, gás natural e seus
+derivados e álcool etílico combustível - Cide-Combustíveis;
+IX - Contribuição de Intervenção no Domínio Econômico destinada a financiar o
+Programa de Estímulo à Interação Universidade-Empresa para o Apoio à
+3
+
+--- PAGE 3 ---
+
+Manual do MIT – janeiro/2025
+Inovação - Cide-Remessas;
+X - Contribuição para o Desenvolvimento da Indústria Cinematográfica Nacional
+- Condecine;
+XI - Contribuição social incidente sobre a modalidade lotérica denominada
+aposta de quota fixa;
+XII - Contribuição para o Plano de Seguridade Social do Servidor – CPSS.
+O Imposto de Renda da Pessoa Jurídica (IRPJ), a Contribuição Social
+sobre o Lucro Líquido (CSLL), bem como a Contribuição para o PIS/Pasep e a
+Cofins retidas na fonte, deverão continuar a ser escriturados na EFD-Reinf.
+A Contribuição para o PIS/Pasep incidente sobre a folha de salários deve
+ser apurada no eSocial.
+Os valores de IRRF a serem informados no MIT são apenas aqueles de
+que trata o art. 2º da Instrução Normativa SRF nº 137, de 23 de novembro de
+1998.
+Os valores apurados pelo Regime de Tributação Específica do Futebol -
+TEF, a que está sujeita a Sociedade Anônima do Futebol SAF constituída de
+acordo com o disposto na Lei nº 14.193, de 6 de agosto de 2021, deverão ser
+informados no MIT no grupo "RET/Pagamento Unificado".
+As pessoas jurídicas optantes pelo Simples Nacional que apurarem os
+tributos abaixo elencados, deverão incluí-los no MIT:
+I - Imposto sobre Operações de Crédito, Câmbio e Seguro, ou Relativas a Títulos
+ou Valores Mobiliários - IOF;
+II - Contribuição para o PIS/Pasep, Cofins e IPI incidentes na importação de bens
+e serviços;
+III - Imposto de Renda, relativo aos rendimentos ou ganhos líquidos auferidos
+em aplicações de renda fixa ou variável;
+IV - Imposto de Renda relativo aos ganhos de capital auferidos na alienação de
+bens do ativo permanente;
+V - Contribuição de Intervenção no Domínio Econômico incidente sobre a
+importação e a comercialização de petróleo e seus derivados, gás natural e seus
+derivados e álcool etílico combustível - Cide-Combustíveis;
+VI - Contribuição de Intervenção no Domínio Econômico destinada a financiar o
+Programa de Estímulo à Interação Universidade-Empresa para o Apoio à
+Inovação - Cide-Remessas;
+4
+
+--- PAGE 4 ---
+
+Manual do MIT – janeiro/2025
+VII - Contribuição para o Desenvolvimento da Indústria Cinematográfica Nacional
+- Condecine;
+VIII - contribuição social incidente sobre a modalidade lotérica denominada
+aposta de quota fixa;
+IX - Contribuição Provisória sobre Movimentação ou Transmissão de Valores e
+de Créditos e Direitos de Natureza Financeira – CPMF.
+2.2 Acesso ao Sistema
+O MIT está hospedado no ambiente da DCTFWeb e deve ser acessado
+no Portal e-CAC utilizando a conta GOV.BR.
+No e-CAC, o usuário deve acessar o menu <Declarações e
+Demonstrativos > em seguida <Assinar e Transmitir DCTFWeb>.
+5
+
+--- PAGE 5 ---
+
+Manual do MIT – janeiro/2025
+Ao acessar a tela inicial de sua DCTFWeb, o MIT estará disponível na tela
+inicial no canto superior direito .
+Importante destacar que, em caso de acesso ao MIT por procurador, este
+deve selecionar um único outorgante antes de clicar no botão “Módulo de
+Inclusão de Tributos”.
+Ao acessar o MIT, a tela inicial apresenta a Relação de Apurações mais
+recentes do contribuinte.
+Cada apuração listada na relação é identificada com os seguintes
+atributos:
+6
+
+--- PAGE 6 ---
+
+Manual do MIT – janeiro/2025
+Período: Mês/ano a que se refere a apuração, no formato MMM/AAAA. Também
+mencionado neste manual como Período de Apuração – PA.
+ID da Apuração: Sequencial que identifica a apuração. É gerado pela aplicação
+e será exibido nos relatórios da DCTFWeb.
+Situação: Situação da apuração, que pode estar “Em Edição” ou “Encerrada”.
+Data de Encerramento: Data do encerramento da apuração.
+Evento Especial: Informação acerca da existência ou não de evento de
+reorganização ou extinção societária.
+Total Apurado: Valor total dos débitos incluídos na apuração.
+Ações: Serviços aplicáveis à apuração. São ações customizadas conforme à
+situação da apuração, quais sejam:
+Visualizar Apuração – Visualiza a apuração selecionada. Opção
+disponível apenas para a apuração já encerrada;
+Retificar – Inicia a retificação da apuração selecionada. O sistema abre
+uma cópia da apuração na situação “Em Edição”. Opção disponível para
+apuração encerrada;
+Editar – Edita a apuração na situação “Em Edição”, permitindo a inclusão de
+débitos e créditos;
+Excluir – Exclui a apuração “Em Edição”;
+Baixar XML – Permite baixar o arquivo da apuração encerrada.
+2.3 Filtros de Consultas
+A tela inicial permite ao usuário consultar apurações específicas
+mediante a inserção de dados identificadores (Ano, Mês e Situação).
+7
+
+--- PAGE 7 ---
+
+Manual do MIT – janeiro/2025
+2.4 Gerar uma Nova Apuração
+Por fim, a tela inicial permite ao usuário a inclusão de novas apurações
+que podem ser feitas mediante o preenchimento das informações diretamente
+na aplicação ou por meio da importação de arquivo previamente preparado no
+ambiente do contribuinte, conforme disposto no item 9.
+Para iniciar o preenchimento de uma nova apuração diretamente no Portal
+eCac, acione o botão na tela inicial do MIT. O sistema
+exibirá a tela abaixo para identificação geral da apuração.
+Informe o período de apuração (mês e ano) e acione a opção “Confirmar”.
+Iniciada uma Nova Apuração, os dados nela consignados não podem ser
+editados (Mês; Ano; Evento Especial). Caso os dados estejam errados, a
+apuração que se encontrará na situação “Em Edição” deve ser excluída para que
+uma nova apuração seja aberta.
+3. NOVA APURAÇÃO – DADOS INICIAIS
+Preenchidos os dados da apuração, o sistema exibirá a tela inicial aberta
+na aba “DADOS INICIAIS” do menu de navegação.
+8
+
+--- PAGE 8 ---
+
+Manual do MIT – janeiro/2025
+Nesta tela serão preenchidas as informações gerais da pessoa jurídica,
+quais sejam Qualificação da pessoa Jurídica, Forma de Tributação do Lucro,
+Critério de Reconhecimento das Variações Monetárias, Regime de Apuração
+Pis/Pasep – Cofins, além dos Dados do Responsável pelo Preenchimento da
+Apuração.
+3.1 Qualificação da pessoa jurídica
+O sistema exibe, por padrão, a qualificação da pessoa jurídica como “PJ
+em geral”. Se esta não for a classificação correta, o usuário deve selecionar a
+qualificação apropriada dentre as opções disponíveis. As opções são:
+A opção “Mais de uma qualificação durante o mês” deve ser utilizada nos
+casos em que houve alteração da atividade da pessoa jurídica durante o mês,
+desde que isso implique em alteração da qualificação da pessoa jurídica a ser
+9
+
+--- PAGE 9 ---
+
+Manual do MIT – janeiro/2025
+informada.
+Cada qualificação da pessoa jurídica está relacionada à forma de
+tributação do lucro ou ao regime de apuração do PIS/PASEP e COFINS ou ainda
+às permissões para inclusão de débitos na apuração..
+3.2 Forma de Tributação do Lucro
+Deve ser informada a forma de tributação do lucro da pessoa jurídica. A
+forma de tributação padrão adotada pela aplicação é a “Real Anual”. Não se
+tratando desta forma de tributação, o usuário deve selecionar a informação
+correta dentre as opções disponíveis, quais sejam:
+Cada forma de tributação do lucro está relacionada com a qualificação da
+pessoa jurídica ou com o regime de apuração do PIS/PASEP e COFINS e pode
+definir a permissão de utilização de determinados códigos de receita. Estas
+medidas visam reduzir a ocorrência de erros na identificação dos códigos de
+receitas que devem ser utilizados pela pessoa jurídica.
+3.3 Critério de Reconhecimento de Variações Monetárias
+Esta indicação é restrita aos casos em que a pessoa jurídica queira optar
+pelo critério de reconhecimento das variações monetárias dos direitos de crédito
+e das obrigações do contribuinte, em função da taxa de câmbio, segundo o
+10
+
+--- PAGE 10 ---
+
+Manual do MIT – janeiro/2025
+regime de competência.
+O direito de optar pelo regime de competência somente pode ser exercido
+no mês de janeiro ou no mês do início de atividade ou nos casos de exclusão do
+Simples Nacional ou nas situações de surgimento de nova PJ em razão de fusão
+ou cisão ou, no caso de pessoa jurídica que estava inativa, no mês em que
+retornar à atividade.
+Adotada a opção pelo regime de competência, o direito de sua alteração
+para o regime de caixa, no decorrer do ano-calendário, é restrito aos casos em
+que ocorra elevada oscilação da taxa de câmbio.
+Assim, o Critério de Reconhecimento de Variações Monetárias padrão é
+o Regime de Caixa.
+3.4 Regime de Apuração (PIS/PASEP – COFINS)
+Informar o regime de apuração do PIS/PASEP – COFINS. O regime
+padrão adotado é o “Não Cumulativo”. Não se tratando deste regime padrão, o
+usuário deve selecionar a correta dentre as opções disponíveis, quais sejam:
+A aplicação mantém uma correlação entre a forma de tributação do lucro
+e o regime de apuração do PIS/PASEP – COFINS, evitando erros no
+preenchimento em casos de situações legais pré-determinadas.
+11
+
+--- PAGE 11 ---
+
+Manual do MIT – janeiro/2025
+3.5 Responsável pelo Preenchimento da Apuração
+Informar os dados do responsável pelo preenchimento, considerando:
+I - CPF: CPF existente na base da RFB;
+II - Nome: Preenchido automaticamente pelo sistema;
+III - DDD: Numérico com 2 posições;
+IV - Telefone: Numérico com 8 ou 9 posições;
+V - Correio Eletrônico: Alfanumérico de até 40 posições;
+VI - UF CRC: Selecionar a unidade da federação;
+VII - CRC: Alfanumérico com até 11 posições;
+Apenas o número do CPF do responsável pelo preenchimento é
+obrigatório.
+3.6 Verificação de Pendências
+Preenchidos os Dados Iniciais, o botão na parte
+superior direita permite a identificação de erros no preenchimento da apuração
+e os exibe para correção.
+IMPORTANTE: Esta versão não possui salvando automático. Assim, sempre
+que concluir uma etapa de preenchimento, utilize o botão para
+salvar os itens digitados.
+4. NOVA APURAÇÃO – DÉBITOS
+Na aba “DÉBITOS” serão informados os tributos apurados no PA.
+12
+
+--- PAGE 12 ---
+
+Manual do MIT – janeiro/2025
+A aplicação exibe a lista de tributos que podem ser informados na
+apuração.
+Basta selecionar o tributo que deseja informar e acionar o botão
+.
+A aplicação exibe a tela para seleção do código de receita. Para cada
+tributo a aplicação lista os códigos de receitas elegíveis para serem informados
+pelo contribuinte.
+Para evitar a inclusão de códigos de receita indevidos, a aplicação
+estabelece relacionamentos com as informações preenchidas na aba “DADOS
+INICIAIS”, exibindo apenas os códigos que correspondem aos atributos definidos
+nessa seção.
+Deve-se selecionar o código de receita e informar o valor do débito.
+O usuário pode também iniciar a digitação do nome ou do código de
+receita que o sistema autocompleta a seleção.
+Preenchidos os dados do código de receita, o usuário deve acionar o
+botão para que o tributo seja incluído na apuração.
+13
+
+--- PAGE 13 ---
+
+Manual do MIT – janeiro/2025
+O contribuinte deve fazer este procedimento para cada tributo que tenha
+informação a ser prestada.
+IMPORTANTE: Esta versão não possui salvando automático. Assim, sempre
+que concluir uma etapa de preenchimento, utilize o botão para
+salvar os itens digitados.
+4.1 Periodicidade dos Tributos
+O sistema recupera automaticamente a periodicidade do tributo no
+momento de seleção do código de receita. Entretanto, há casos em que a
+periodicidade deve ser informada pelo usuário, quais sejam:
+I – IRPJ ou CSLL postergado de períodos anteriores – Informar cada trimestre
+ou ano em que houve apuração do tributo postergado.
+
+Manual do MIT – janeiro/2025
+informar débito de IRPJ ou de CSLL passíveis de divisão em quotas poderá
+manifestar o interesse em efetuar a divisão e emitir os DARF na DCTFWeb deste
+PA, após o encerramento do MIT.
+No Manual da DCTFWeb constam as informações necessárias para a
+divisão em quotas e emissão dos documentos de arrecadação.
+5. NOVA APURAÇÃO – SUSPENSÃO
+Caso o contribuinte tenha algum processo judicial ou administrativo que
+suspenda a exigibilidade do crédito tributário, deve informar os dados do
+processo para que o MIT os envie para a DCTFWeb.
+Para iniciar o preenchimento da suspensão acione o botão
+A aplicação exibe a tela da primeira etapa de preenchimento em que são
+exigidos os dados do processo (tipo, motivo da suspensão, número do processo,
+autoria, data da decisão, vara, município e existência de depósito).
+16
+
+--- PAGE 16 ---
+
+Manual do MIT – janeiro/2025
+Ao final do preenchimento acionar o botão .
+Na segunda etapa do preenchimento, são exibidos os códigos de receita
+informados na aba “DÉBITOS”. Selecione na caixa à direita os códigos que
+estejam com a exigibilidade suspensa e em seguida acione o botão
+.
+Na última etapa, a aplicação apresenta a tela para o preenchimento do
+valor suspenso, o qual deve ser maior que zero e menor ou igual ao débito
+informado.
+Após o preenchimento, para concluir a suspensão, acione o botão
+.
+A inclusão da suspensão é concluída e são exibidos os dados principais
+informados.
+17
+
+--- PAGE 17 ---
+
+Manual do MIT – janeiro/2025
+As suspensões informadas no MIT são enviadas para a DCTFWeb após
+o encerramento da apuração e necessitam ser vinculadas na declaração, na
+forma prevista em seu Manual, para que surtam os efeitos necessários.
+A suspensão incluída pode ser visualizada junto ao débito informado na
+aba “DÉBITOS”.
+6. NOVA APURAÇÃO - PENDÊNCIAS
+Antes do encerramento, o usuário pode acionar o botão
+na parte superior direita para identificar erros no
+preenchimento da apuração.
+A verificação de pendências também é acionada, automaticamente,
+quando se seleciona o botão .
+Os erros são exibidos na aba “PENDÊNCIAS” e nas abas em que foram
+identificados. Corrija-os antes de avançar para o encerramento da apuração.
+18
+
+--- PAGE 18 ---
+
+Manual do MIT – janeiro/2025
+7. NOVA APURAÇÃO - ENCERRAMENTO
+Informados os débitos e as suspensões (se houver), basta o contribuinte
+efetuar o encerramento do MIT.
+A aplicação exibe o resumo dos débitos informados por grupo de tributos
+e o total do débito apurado e dos valores suspensos informados na apuração.
+Conferidos os dados informados, basta salvar a apuração e
+em seguida encerrá-la .
+Encerrada a apuração, o sistema gera o identificador da apuração (ID) e
+a envia para a DCTFWeb para compor a declaração em andamento do
+contribuinte.
+19
+
+--- PAGE 19 ---
+
+Manual do MIT – janeiro/2025
+Para acessar a DCTFWeb mensal, basta acionar o botão
+.
+8. NOVA APURAÇÃO - SITUAÇÕES ESPECÍFICAS
+8.1 Eventos Especiais
+Quando houver ocorrido algum evento de reorganização ou extinção
+societária – Evento Especial, o usuário deve, no cadastramento da Nova
+Apuração, acionar a opção .
+Em seguida, selecionar o evento especial ocorrido e informar a data de
+sua ocorrência.
+20
+
+--- PAGE 20 ---
+
+Manual do MIT – janeiro/2025
+Caso tenha ocorrido mais de um evento especial no mês, todos devem
+ser informados utilizando o botão .
+Selecionado o tipo de evento especial, acione o botão para
+criar a apuração.
+Confirmada a abertura da Nova Apuração, a tela de DADOS INICIAIS é
+alimentada com a informação do evento especial.
+Na aba DÉBITOS, a aplicação exibe os períodos correspondentes para
+informação dos débitos.
+No caso de Cisão Parcial ou Incorporação (declaração da incorporadora)
+haverá informação antes e depois do evento especial.
+21
+
+--- PAGE 21 ---
+
+Manual do MIT – janeiro/2025
+O usuário deve navegar em cada um dos períodos, informando todos os
+débitos apurados.
+Nesta primeira versão do MIT, a aba SUSPENSÃO permanecerá
+desabilitada para inclusão de suspensão quando houver evento especial. Caso
+o contribuinte tenha processos que suspendam a exigibilidade de tributos, estes
+devem ser informados diretamente na DCTFWeb, após o encerramento do MIT.
+8.2 Informação de Ausência de Movimento na DCTFWeb
+Quando houver a necessidade de envio de uma DCTFWeb sem
+movimento, esta pode ser elaborada a partir do MIT.
+IMPORTANTE: Não é obrigatória a geração de MIT sem movimento. A
+funcionalidade visa suprir eventual necessidade de geração da DCTFWeb sem
+movimento.
+Para gerar o MIT sem movimento, o usuário deve, após a etapa de
+22
+
+--- PAGE 22 ---
+
+Manual do MIT – janeiro/2025
+identificação da apuração (mês e ano), acionar na aba “DADOS INICIAIS” a
+opção .
+A aplicação gerará mensagem de inabilitação das abas de “DÉBITOS” e
+“SUSPENSÃO” para confirmação.
+Confirme a geração da apuração sem movimento e vá para a aba
+“ENCERRAMENTO”. Salve e em seguida encerre a apuração.
+23
+
+--- PAGE 23 ---
+
+Manual do MIT – janeiro/2025
+Será gerada uma apuração sem movimento que será enviada para a
+DCTFWeb com indicador de transmissão direta da declaração.
+A DCTFWeb sem movimento originada do MIT pode ser transmitida com
+a conta GOV.BR (prata ou ouro) do responsável pelo CNPJ perante a RFB.
+Neste caso, após acessar o portal do eCac com o CPF do responsável
+pelo CNPJ, deve alterar o perfil de acesso para “Responsável Legal do CNPJ
+perante a RFB”.
+8.3 Exportação de Arquivo
+A opção de exportação de arquivo gera um arquivo no
+formato JSON e no mesmo leiaute do arquivo de importação.
+O contribuinte pode internalizar este arquivo em seu ambiente para
+inserção de dados e eventual importação ou ainda para opção de arquivamento
+em ambiente diverso da aplicação da DCTFWeb.
+8.4 Retificação da Apuração
+Caso o contribuinte necessite efetuar a retificação de uma apuração
+encerrada, basta selecioná-la na lista de apurações e acionar o botão .
+Será gerada uma nova apuração na situação “Em Edição” que, após o
+24
+
+--- PAGE 24 ---
+
+Manual do MIT – janeiro/2025
+encerramento, será enviada para a DCTFWeb em substituição à apuração
+anterior.
+Caso já exista uma apuração na situação “Em Edição”, o usuário receberá
+mensagem com esta informação para que ele opte por retomar o preenchimento
+da apuração ou a exclua. A aplicação mantém apenas uma apuração na situação
+“Em Edição” em cada período de apuração.
+Havendo mais de uma apuração encerrada para o mesmo período, a
+aplicação exibe a apuração mais recente em destaque das demais (cor verde do
+ícone).
+9. IMPORTAÇÃO DE ARQUIVO
+Além da digitação das informações diretamente na aplicação, o
+contribuinte tem a opção de transmitir o MIT por meio da importação de um
+arquivo previamente preparado em se ambiente. O leiaute do arquivo de
+importação do MIT está disponível para download no endereço eletrônico
+https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-
+tributaria/declaracoes-e-
+demonstrativos/DCTFWeb/arquivos/mit_leiaute_json_importacao.pdf.
+Para a incluir uma Nova Apuração por meio da importação de arquivo
+previamente preparado, o contribuinte deve acessar o MIT na página inicial de
+sua DCTFWeb e acionar o botão .
+25
+
+--- PAGE 25 ---
+
+Manual do MIT – janeiro/2025
+A aplicação exibirá a tela de seleção do arquivo em formato JSON
+previamente preenchido no ambiente do contribuinte, conforme leiaute
+disponível em mit_leiaute_json_importacao_retificado.pdf.
+Selecionado o arquivo, acione o botão .
+O sistema importará o arquivo e gerará uma apuração na situação “Em
+Edição”. É importante ressaltar que a importação bem-sucedida não finaliza o
+procedimento automaticamente. É necessária a intervenção do usuário para
+encerrar a apuração, permitindo que ela seja enviada para a DCTFWeb. O
+usuário também pode editar a apuração importada antes de seu encerramento.
+Havendo erros no arquivo que impeçam a importação, o usuário receberá
+uma mensagem informando os registros e os erros identificados, os quais devem
+ser corrigidos para uma nova importação.
+Os erros no arquivo que não impeçam a importação serão exibidos na aba
+“PENDÊNCIAS” para as devidas correções.
+9.1 Retificação de Arquivo
+Havendo uma apuração encerrada para determinado período de
+apuração, o envio de novo arquivo de importação será considerado um arquivo
+retificador. Será gerada uma nova apuração na situação “Em Edição” que, após
+o encerramento, será enviada para a DCTFWeb em substituição à apuração
+anterior.
+Caso já exista uma apuração na situação “Em Edição”, o usuário receberá
+mensagem com esta informação para que ele opte por retomar o preenchimento
+da apuração ou a exclua. A aplicação mantém apenas uma apuração na situação
+“Em Edição”.
+26
+
+--- PAGE 26 ---
+
+Manual do MIT – janeiro/2025
+10. REGRAS E TABELAS DE RELACIONAMENTO
+10.1 Tabela de Códigos de Receita
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+1 IRPJ 0220-01 TR
+CEIRA - APURAÇÃO TRIMESTRAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+2 IRPJ 0220-08 TR
+CEIRA - APURAÇÃO TRIMESTRAL - SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+3 IRPJ 0220-10 TR CEIRA - APURAÇAO TRIMESTRAL - IMPOSTO DE RENDA POSTER-
+GADO DE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+4 IRPJ 0220-12 TR CEIRA - APURAÇÃO TRIMESTRAL - DIFERENÇA APURADA PELO
+CANCELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - GANHOS LIQUIDOS EM OPERAÇOES NA BOLSA - LUCRO
+5 IRPJ 0231-01 ME
+PRESUMIDO OU ARBITRADO
+IRPJ - GANHO DE CAPITAL - ALIENAÇÃO DE ATIVOS - ME/EPP
+6 IRPJ 0507-01 ME
+OPTANTE PELO SIMPLES NACIONAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+7 IRPJ 1599-01 TR
+APURAÇÃO TRIMESTRAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+8 IRPJ 1599-10 TR APURAÇAO TRIMESTRAL - IMPOSTO DE RENDA POSTERGADO
+DE PERIODOS DE APURAÇAO ANTERIORES
+9 IRPJ 2089-01 TR IRPJ - LUCRO PRESUMIDO
+IRPJ - LUCRO PRESUMIDO - PJ EXCLUSIVAMENTE PRESTADORA
+DE SERVIÇOS - DIFERENÇA DO IMPOSTO POSTERGADO APU-
+10 IRPJ 2089-02 TR
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RECEITA
+BRUTA
+11 IRPJ 2089-08 TR IRPJ - LUCRO PRESUMIDO - SCP
+IRPJ - PJ EXCLUSIVAMENTE PRESTADORA DE SERVIÇOS - DIFE-
+12 IRPJ 2089-09 TR RENÇA DO IMPOSTO POSTERGADO APURADA NO MÊS EM QUE
+FOR EXCEDIDO O LIMITE DE RECEITA BRUTA - SCP
+IRPJ - LUCRO PRESUMIDO - IMPOSTO DE RENDA POSTERGADO
+13 IRPJ 2089-10 TR
+DE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - LUCRO PRESUMIDO - DIFERENÇA APURADA PELO CAN-
+14 IRPJ 2089-12 TR
+CELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+15 IRPJ 2319-01 ME
+ESTIMATIVA MENSAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+16 IRPJ 2362-01 ME
+CEIRA - ESTIMATIVA MENSAL
+IRPJ - PJ EXCLUSIVAMENTE PRESTADORA DE SERVIÇOS OBRI-
+GADA AO LUCRO REAL - ENTIDADE NÃO FINANCEIRA - DIFE-
+17 IRPJ 2362-02 ME
+RENCA DO IMPOSTO POSTERGADO APURADA NO MÊS EM QUE
+FOR EXCEDIDO O LIMITE DE RB
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+18 IRPJ 2362-08 ME
+CEIRA - ESTIMATIVA MENSAL - SCP
+27
+
+--- PAGE 27 ---
+
+Manual do MIT – janeiro/2025
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - PJ EXCL. PRESTADORA DE SERVIÇOS OBRIGADA AO LU-
+CRO REAL - ENTIDADE NÃO FINANCEIRA - EST. MENSAL - DIF.
+19 IRPJ 2362-09 ME
+DO IR POSTERGADO APURADA NO MÊS EM QUE FOR EXCEDIDO
+O LIMITE DE RB -SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+20 IRPJ 2362-12 ME CEIRA - ESTIMATIVA MENSAL - DIFERENÇA APURADA PELO
+CANCELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+21 IRPJ 2390-01 AN SALDO DECORRENTE DO AJUSTE A SER PAGO EM QUOTA
+ÚNICA
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+22 IRPJ 2390-10 AN IMPOSTO DE RENDA POSTERGADO DE PERIODOS DE APURA-
+ÇAO ANTERIORES
+IRPJ - PJ OBRIGADA LUCRO REAL - ENTIDADE NÃO FINANCEIRA
+23 IRPJ 2430-01 AN - SALDO DECORRENTO DO AJUSTE A SER PAGO EM QUOTA
+ÚNICA
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+24 IRPJ 2430-08 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA - SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+25 IRPJ 2430-10 AN CEIRA - IMPOSTO POSTERGADO DE PERIODOS DE APURAÇAO
+ANTERIORES
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+26 IRPJ 2456-01 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+27 IRPJ 2456-08 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA - SCP
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+28 IRPJ 2456-10 AN CEIRA - IMPOSTO POSTERGADO DE PERÍODOS DE APURAÇÃO
+ANTERIORESDE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - GANHOS LÍQUIDOS EM OPERAÇÕES NA BOLSA - SIMPLES
+29 IRPJ 3225-01 ME
+NACIONAL
+IRPJ - GANHOS LÍQUIDOS EM OPERAÇÕES NA BOLSA - LUCRO
+30 IRPJ 3317-01 ME
+REAL
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+31 IRPJ 3373-01 TR
+CEIRA - APURAÇÃO TRIMESTRAL
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+32 IRPJ 3373-08 TR
+CEIRA - APURAÇÃO TRIMESTRAL - SCP
+IRPJ - PJ OPTANTE PELO LUCRO REAL - APURAÇAO TRIMESTRAL
+33 IRPJ 3373-10 TR - IMPOSTO POSTERGADO DE PERIODOS DE APURAÇAO ANTERI-
+ROES
+IRPJ - PJ OPTANTE PELO LUCRO REAL - APURAÇÃO TRIMESTRAL
+34 IRPJ 3373-12 TR - DIFERENÇA APURADA PELO CANCELAMENTO DA HABILITA-
+ÇÃO NO ROTA 2030
+35 IRPJ 5625-01 TR IRPJ - LUCRO ARBITRADO
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORAS
+DE SERVICOS - DIFERENCA DO IMPOSTO POSTERGADO APU-
+36 IRPJ 5625-02 TR
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RECEITA
+BRUTA
+37 IRPJ 5625-08 TR IRPJ - LUCRO ARBITRADO - SCP
+28
+
+--- PAGE 28 ---
+
+Manual do MIT – janeiro/2025
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORA
+38 IRPJ 5625-09 TR DE SERVIÇOS - DIFERENÇA DO IMPOSTO POSTERGADO APU-
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RB - SCP
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORA
+39 IRPJ 5625-10 TR DE SERVIÇOS - IMPOSTO DE RENDA POSTERGADO DE PERIO-
+DOS DE APURAÇAO ANTERIORES
+IRPJ - LUCRO ARBITRADO - DIFERENÇA APURADA PELO CANCE-
+40 IRPJ 5625-12 TR
+LAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+41 IRPJ 5993-01 ME
+CEIRA - ESTIMATIVA MENSAL
+IRPJ - PJ EXCL. PRESTADORA DE SERV. OPTANTE PELO LUCRO
+REAL - ENT. NÃO FINANCEIRA - ESTIMATIVA MENSAL - DIF. DO
+42 IRPJ 5993-02 ME
+IMP. POSTERGADO APURADA NO MÊS EM QUE FOR EXCEDIDO
+O LIMITE DE RB
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINANA-
+43 IRPJ 5993-08 ME
+CEIRA - ESTIMATIVA MENSAL - SCP
+IRPJ - PJ EXCL. PRESTADORA DE SERVIÇOS OPTANTE PELO L.
+REAL - ENT. NÃO FINANCEIRA
+
+
+
+
+
+
+
+
+# Manual do MIT – janeiro/2025
+
+março do ano seguinte. Entretanto, existindo algum evento especial nos três pri-
+meiros meses do ano, deve haver a apuração dos tributos na data do evento,
+incluindo os de periodicidade anual.
+4.2 Tributos com Atributos Adicionais
+Há tributos ou códigos de receita que têm atributos adicionais aos débitos
+informados, quais sejam:
+I - IPI e CONTRIBUIÇÕES DIVERSAS (exceto código de receita 9197-01) –
+Deve ser identificado o estabelecimento a que se refere o débito (preencher com
+os números após a raiz do CNPJ). O sistema exibirá o município em que o
+estabelecimento está sediado, mediante integração com o cadastro do CNPJ.
+II - RET/PAGAMENTO UNIFICADO (exceto código de receita 6177-01) - Deve
+ser identificado o estabelecimento relativo à incorporação. Preencher com os
+números após a raiz do CNPJ.
+Caso seja um débito vinculado a outro CNPJ raiz (SCP) a aplicação permite a
+inserção do CNPJ completo da incorporação (14 dígitos).
+III - SOCIEDADES EM CONTA DE PARTICIPAÇÃO (SCP) – Os tributos IRPJ,
+CSLL, PIS e a COFINS têm códigos específicos e devem ser atribuídos ao CNPJ
+de cada SCP da qual o declarante seja o sócio ostensivo.
+IV - CÓDIGO DE RECEITA 4028-02 - IOF - OPERAÇÕES COM OURO - ATIVO
+FINANCEIRO – Deve ser identificado o município sede do estabelecimento
+produtor.
+4.3 Balanço de suspensão ou redução
+Para contribuintes com a forma de tributação do lucro igual a “REAL
+ANUAL”, ao selecionar os tributos IRPJ ou CSLL a aplicação exibe a opção de
+marcação da existência de levantamento de balanço/balancete de suspensão ou
+redução no período de apuração.
+Neste caso, quando esta opção não é ativada, há a obrigatoriedade da
+informação de código de receita relativo ao débito decorrente da apuração das
+estimativas mensais desses tributos.
+4.4 Débitos Divisíveis em Quotas
+O contribuinte que, no mês final do período de apuração trimestral,
+15
+
+--- PAGE 15 ---
+
+Manual do MIT – janeiro/2025
+informar débito de IRPJ ou de CSLL passíveis de divisão em quotas poderá
+manifestar o interesse em efetuar a divisão e emitir os DARF na DCTFWeb deste
+PA, após o encerramento do MIT.
+No Manual da DCTFWeb constam as informações necessárias para a
+divisão em quotas e emissão dos documentos de arrecadação.
+5. NOVA APURAÇÃO – SUSPENSÃO
+Caso o contribuinte tenha algum processo judicial ou administrativo que
+suspenda a exigibilidade do crédito tributário, deve informar os dados do
+processo para que o MIT os envie para a DCTFWeb.
+Para iniciar o preenchimento da suspensão acione o botão
+A aplicação exibe a tela da primeira etapa de preenchimento em que são
+exigidos os dados do processo (tipo, motivo da suspensão, número do processo,
+autoria, data da decisão, vara, município e existência de depósito).
+16
+
+--- PAGE 16 ---
+
+Manual do MIT – janeiro/2025
+Ao final do preenchimento acionar o botão .
+Na segunda etapa do preenchimento, são exibidos os códigos de receita
+informados na aba “DÉBITOS”. Selecione na caixa à direita os códigos que
+estejam com a exigibilidade suspensa e em seguida acione o botão
+.
+Na última etapa, a aplicação apresenta a tela para o preenchimento do
+valor suspenso, o qual deve ser maior que zero e menor ou igual ao débito
+informado.
+Após o preenchimento, para concluir a suspensão, acione o botão
+.
+A inclusão da suspensão é concluída e são exibidos os dados principais
+informados.
+17
+
+--- PAGE 17 ---
+
+Manual do MIT – janeiro/2025
+As suspensões informadas no MIT são enviadas para a DCTFWeb após
+o encerramento da apuração e necessitam ser vinculadas na declaração, na
+forma prevista em seu Manual, para que surtam os efeitos necessários.
+A suspensão incluída pode ser visualizada junto ao débito informado na
+aba “DÉBITOS”.
+6. NOVA APURAÇÃO - PENDÊNCIAS
+Antes do encerramento, o usuário pode acionar o botão
+na parte superior direita para identificar erros no
+preenchimento da apuração.
+A verificação de pendências também é acionada, automaticamente,
+quando se seleciona o botão .
+Os erros são exibidos na aba “PENDÊNCIAS” e nas abas em que foram
+identificados. Corrija-os antes de avançar para o encerramento da apuração.
+18
+
+--- PAGE 18 ---
+
+Manual do MIT – janeiro/2025
+7. NOVA APURAÇÃO - ENCERRAMENTO
+Informados os débitos e as suspensões (se houver), basta o contribuinte
+efetuar o encerramento do MIT.
+A aplicação exibe o resumo dos débitos informados por grupo de tributos
+e o total do débito apurado e dos valores suspensos informados na apuração.
+Conferidos os dados informados, basta salvar a apuração e
+em seguida encerrá-la .
+Encerrada a apuração, o sistema gera o identificador da apuração (ID) e
+a envia para a DCTFWeb para compor a declaração em andamento do
+contribuinte.
+19
+
+--- PAGE 19 ---
+
+Manual do MIT – janeiro/2025
+Para acessar a DCTFWeb mensal, basta acionar o botão
+.
+8. NOVA APURAÇÃO - SITUAÇÕES ESPECÍFICAS
+8.1 Eventos Especiais
+Quando houver ocorrido algum evento de reorganização ou extinção
+societária – Evento Especial, o usuário deve, no cadastramento da Nova
+Apuração, acionar a opção .
+Em seguida, selecionar o evento especial ocorrido e informar a data de
+sua ocorrência.
+20
+
+--- PAGE 20 ---
+
+Manual do MIT – janeiro/2025
+Caso tenha ocorrido mais de um evento especial no mês, todos devem
+ser informados utilizando o botão .
+Selecionado o tipo de evento especial, acione o botão para
+criar a apuração.
+Confirmada a abertura da Nova Apuração, a tela de DADOS INICIAIS é
+alimentada com a informação do evento especial.
+Na aba DÉBITOS, a aplicação exibe os períodos correspondentes para
+informação dos débitos.
+No caso de Cisão Parcial ou Incorporação (declaração da incorporadora)
+haverá informação antes e depois do evento especial.
+21
+
+--- PAGE 21 ---
+
+Manual do MIT – janeiro/2025
+O usuário deve navegar em cada um dos períodos, informando todos os
+débitos apurados.
+Nesta primeira versão do MIT, a aba SUSPENSÃO permanecerá
+desabilitada para inclusão de suspensão quando houver evento especial. Caso
+o contribuinte tenha processos que suspendam a exigibilidade de tributos, estes
+devem ser informados diretamente na DCTFWeb, após o encerramento do MIT.
+8.2 Informação de Ausência de Movimento na DCTFWeb
+Quando houver a necessidade de envio de uma DCTFWeb sem
+movimento, esta pode ser elaborada a partir do MIT.
+IMPORTANTE: Não é obrigatória a geração de MIT sem movimento. A
+funcionalidade visa suprir eventual necessidade de geração da DCTFWeb sem
+movimento.
+Para gerar o MIT sem movimento, o usuário deve, após a etapa de
+22
+
+--- PAGE 22 ---
+
+Manual do MIT – janeiro/2025
+identificação da apuração (mês e ano), acionar na aba “DADOS INICIAIS” a
+opção .
+A aplicação gerará mensagem de inabilitação das abas de “DÉBITOS” e
+“SUSPENSÃO” para confirmação.
+Confirme a geração da apuração sem movimento e vá para a aba
+“ENCERRAMENTO”. Salve e em seguida encerre a apuração.
+23
+
+--- PAGE 23 ---
+
+Manual do MIT – janeiro/2025
+Será gerada uma apuração sem movimento que será enviada para a
+DCTFWeb com indicador de transmissão direta da declaração.
+A DCTFWeb sem movimento originada do MIT pode ser transmitida com
+a conta GOV.BR (prata ou ouro) do responsável pelo CNPJ perante a RFB.
+Neste caso, após acessar o portal do eCac com o CPF do responsável
+pelo CNPJ, deve alterar o perfil de acesso para “Responsável Legal do CNPJ
+perante a RFB”.
+8.3 Exportação de Arquivo
+A opção de exportação de arquivo gera um arquivo no
+formato JSON e no mesmo leiaute do arquivo de importação.
+O contribuinte pode internalizar este arquivo em seu ambiente para
+inserção de dados e eventual importação ou ainda para opção de arquivamento
+em ambiente diverso da aplicação da DCTFWeb.
+8.4 Retificação da Apuração
+Caso o contribuinte necessite efetuar a retificação de uma apuração
+encerrada, basta selecioná-la na lista de apurações e acionar o botão .
+Será gerada uma nova apuração na situação “Em Edição” que, após o
+24
+
+--- PAGE 24 ---
+
+Manual do MIT – janeiro/2025
+encerramento, será enviada para a DCTFWeb em substituição à apuração
+anterior.
+Caso já exista uma apuração na situação “Em Edição”, o usuário receberá
+mensagem com esta informação para que ele opte por retomar o preenchimento
+da apuração ou a exclua. A aplicação mantém apenas uma apuração na situação
+“Em Edição” em cada período de apuração.
+Havendo mais de uma apuração encerrada para o mesmo período, a
+aplicação exibe a apuração mais recente em destaque das demais (cor verde do
+ícone).
+9. IMPORTAÇÃO DE ARQUIVO
+Além da digitação das informações diretamente na aplicação, o
+contribuinte tem a opção de transmitir o MIT por meio da importação de um
+arquivo previamente preparado em se ambiente. O leiaute do arquivo de
+importação do MIT está disponível para download no endereço eletrônico
+https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-
+tributaria/declaracoes-e-
+demonstrativos/DCTFWeb/arquivos/mit_leiaute_json_importacao.pdf.
+Para a incluir uma Nova Apuração por meio da importação de arquivo
+previamente preparado, o contribuinte deve acessar o MIT na página inicial de
+sua DCTFWeb e acionar o botão .
+25
+
+--- PAGE 25 ---
+
+Manual do MIT – janeiro/2025
+A aplicação exibirá a tela de seleção do arquivo em formato JSON
+previamente preenchido no ambiente do contribuinte, conforme leiaute
+disponível em mit_leiaute_json_importacao_retificado.pdf.
+Selecionado o arquivo, acione o botão .
+O sistema importará o arquivo e gerará uma apuração na situação “Em
+Edição”. É importante ressaltar que a importação bem-sucedida não finaliza o
+procedimento automaticamente. É necessária a intervenção do usuário para
+encerrar a apuração, permitindo que ela seja enviada para a DCTFWeb. O
+usuário também pode editar a apuração importada antes de seu encerramento.
+Havendo erros no arquivo que impeçam a importação, o usuário receberá
+uma mensagem informando os registros e os erros identificados, os quais devem
+ser corrigidos para uma nova importação.
+Os erros no arquivo que não impeçam a importação serão exibidos na aba
+“PENDÊNCIAS” para as devidas correções.
+9.1 Retificação de Arquivo
+Havendo uma apuração encerrada para determinado período de
+apuração, o envio de novo arquivo de importação será considerado um arquivo
+retificador. Será gerada uma nova apuração na situação “Em Edição” que, após
+o encerramento, será enviada para a DCTFWeb em substituição à apuração
+anterior.
+Caso já exista uma apuração na situação “Em Edição”, o usuário receberá
+mensagem com esta informação para que ele opte por retomar o preenchimento
+da apuração ou a exclua. A aplicação mantém apenas uma apuração na situação
+“Em Edição”.
+26
+
+--- PAGE 26 ---
+
+Manual do MIT – janeiro/2025
+10. REGRAS E TABELAS DE RELACIONAMENTO
+10.1 Tabela de Códigos de Receita
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+1 IRPJ 0220-01 TR
+CEIRA - APURAÇÃO TRIMESTRAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+2 IRPJ 0220-08 TR
+CEIRA - APURAÇÃO TRIMESTRAL - SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+3 IRPJ 0220-10 TR CEIRA - APURAÇAO TRIMESTRAL - IMPOSTO DE RENDA POSTER-
+GADO DE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+4 IRPJ 0220-12 TR CEIRA - APURAÇÃO TRIMESTRAL - DIFERENÇA APURADA PELO
+CANCELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - GANHOS LIQUIDOS EM OPERAÇOES NA BOLSA - LUCRO
+5 IRPJ 0231-01 ME
+PRESUMIDO OU ARBITRADO
+IRPJ - GANHO DE CAPITAL - ALIENAÇÃO DE ATIVOS - ME/EPP
+6 IRPJ 0507-01 ME
+OPTANTE PELO SIMPLES NACIONAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+7 IRPJ 1599-01 TR
+APURAÇÃO TRIMESTRAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+8 IRPJ 1599-10 TR APURAÇAO TRIMESTRAL - IMPOSTO DE RENDA POSTERGADO
+DE PERIODOS DE APURAÇAO ANTERIORES
+9 IRPJ 2089-01 TR IRPJ - LUCRO PRESUMIDO
+IRPJ - LUCRO PRESUMIDO - PJ EXCLUSIVAMENTE PRESTADORA
+DE SERVIÇOS - DIFERENÇA DO IMPOSTO POSTERGADO APU-
+10 IRPJ 2089-02 TR
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RECEITA
+BRUTA
+11 IRPJ 2089-08 TR IRPJ - LUCRO PRESUMIDO - SCP
+IRPJ - PJ EXCLUSIVAMENTE PRESTADORA DE SERVIÇOS - DIFE-
+12 IRPJ 2089-09 TR RENÇA DO IMPOSTO POSTERGADO APURADA NO MÊS EM QUE
+FOR EXCEDIDO O LIMITE DE RECEITA BRUTA - SCP
+IRPJ - LUCRO PRESUMIDO - IMPOSTO DE RENDA POSTERGADO
+13 IRPJ 2089-10 TR
+DE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - LUCRO PRESUMIDO - DIFERENÇA APURADA PELO CAN-
+14 IRPJ 2089-12 TR
+CELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+15 IRPJ 2319-01 ME
+ESTIMATIVA MENSAL
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+16 IRPJ 2362-01 ME
+CEIRA - ESTIMATIVA MENSAL
+IRPJ - PJ EXCLUSIVAMENTE PRESTADORA DE SERVIÇOS OBRI-
+GADA AO LUCRO REAL - ENTIDADE NÃO FINANCEIRA - DIFE-
+17 IRPJ 2362-02 ME
+RENCA DO IMPOSTO POSTERGADO APURADA NO MÊS EM QUE
+FOR EXCEDIDO O LIMITE DE RB
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+18 IRPJ 2362-08 ME
+CEIRA - ESTIMATIVA MENSAL - SCP
+27
+
+--- PAGE 27 ---
+
+Manual do MIT – janeiro/2025
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - PJ EXCL. PRESTADORA DE SERVIÇOS OBRIGADA AO LU-
+CRO REAL - ENTIDADE NÃO FINANCEIRA - EST. MENSAL - DIF.
+19 IRPJ 2362-09 ME
+DO IR POSTERGADO APURADA NO MÊS EM QUE FOR EXCEDIDO
+O LIMITE DE RB -SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+20 IRPJ 2362-12 ME CEIRA - ESTIMATIVA MENSAL - DIFERENÇA APURADA PELO
+CANCELAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+21 IRPJ 2390-01 AN SALDO DECORRENTE DO AJUSTE A SER PAGO EM QUOTA
+ÚNICA
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE FINANCEIRA -
+22 IRPJ 2390-10 AN IMPOSTO DE RENDA POSTERGADO DE PERIODOS DE APURA-
+ÇAO ANTERIORES
+IRPJ - PJ OBRIGADA LUCRO REAL - ENTIDADE NÃO FINANCEIRA
+23 IRPJ 2430-01 AN - SALDO DECORRENTO DO AJUSTE A SER PAGO EM QUOTA
+ÚNICA
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+24 IRPJ 2430-08 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA - SCP
+IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINAN-
+25 IRPJ 2430-10 AN CEIRA - IMPOSTO POSTERGADO DE PERIODOS DE APURAÇAO
+ANTERIORES
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+26 IRPJ 2456-01 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+27 IRPJ 2456-08 AN CEIRA - SALDO DECORRENTE DO AJUSTE A SER PAGO EM
+QUOTA ÚNICA - SCP
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+28 IRPJ 2456-10 AN CEIRA - IMPOSTO POSTERGADO DE PERÍODOS DE APURAÇÃO
+ANTERIORESDE PERIODOS DE APURAÇAO ANTERIORES
+IRPJ - GANHOS LÍQUIDOS EM OPERAÇÕES NA BOLSA - SIMPLES
+29 IRPJ 3225-01 ME
+NACIONAL
+IRPJ - GANHOS LÍQUIDOS EM OPERAÇÕES NA BOLSA - LUCRO
+30 IRPJ 3317-01 ME
+REAL
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+31 IRPJ 3373-01 TR
+CEIRA - APURAÇÃO TRIMESTRAL
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+32 IRPJ 3373-08 TR
+CEIRA - APURAÇÃO TRIMESTRAL - SCP
+IRPJ - PJ OPTANTE PELO LUCRO REAL - APURAÇAO TRIMESTRAL
+33 IRPJ 3373-10 TR - IMPOSTO POSTERGADO DE PERIODOS DE APURAÇAO ANTERI-
+ROES
+IRPJ - PJ OPTANTE PELO LUCRO REAL - APURAÇÃO TRIMESTRAL
+34 IRPJ 3373-12 TR - DIFERENÇA APURADA PELO CANCELAMENTO DA HABILITA-
+ÇÃO NO ROTA 2030
+35 IRPJ 5625-01 TR IRPJ - LUCRO ARBITRADO
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORAS
+DE SERVICOS - DIFERENCA DO IMPOSTO POSTERGADO APU-
+36 IRPJ 5625-02 TR
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RECEITA
+BRUTA
+37 IRPJ 5625-08 TR IRPJ - LUCRO ARBITRADO - SCP
+28
+
+--- PAGE 28 ---
+
+Manual do MIT – janeiro/2025
+Códigos de Receita - MIT
+Item Grupo CR Periodicidade Descrição
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORA
+38 IRPJ 5625-09 TR DE SERVIÇOS - DIFERENÇA DO IMPOSTO POSTERGADO APU-
+RADA NO MÊS EM QUE FOR EXCEDIDO O LIMITE DE RB - SCP
+IRPJ - LUCRO ARBITRADO - PJ EXCLUSIVAMENTE PRESTADORA
+39 IRPJ 5625-10 TR DE SERVIÇOS - IMPOSTO DE RENDA POSTERGADO DE PERIO-
+DOS DE APURAÇAO ANTERIORES
+IRPJ - LUCRO ARBITRADO - DIFERENÇA APURADA PELO CANCE-
+40 IRPJ 5625-12 TR
+LAMENTO DA HABILITAÇÃO NO ROTA 2030
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINAN-
+41 IRPJ 5993-01 ME
+CEIRA - ESTIMATIVA MENSAL
+IRPJ - PJ EXCL. PRESTADORA DE SERV. OPTANTE PELO LUCRO
+REAL - ENT. NÃO FINANCEIRA - ESTIMATIVA MENSAL - DIF. DO
+42 IRPJ 5993-02 ME
+IMP. POSTERGADO APURADA NO MÊS EM QUE FOR EXCEDIDO
+O LIMITE DE RB
+IRPJ - PJ OPTANTE PELO LUCRO REAL - ENTIDADE NÃO FINANA-
+43 IRPJ 5993-08 ME
+CEIRA - ESTIMATIVA MENSAL - SCP
+IRPJ - PJ EXCL. PRESTADORA DE SERVIÇOS OPTANTE PELO L.
+REAL - ENT. NÃO FINANCEIRA
+
+
+

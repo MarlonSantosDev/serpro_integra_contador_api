@@ -1,0 +1,513 @@
+---
+alwaysApply: true
+---
+
+# PERTMEI - Integra Contador
+
+# Cenários PERTMEI
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+## Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PEDIDOSPARC223",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PEDIDOSPARC223",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PERTMEI",          "idServico": "OBTERPARC224",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PERTMEI",          "idServico": "OBTERPARC224",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }'`
+
+## Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+   `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PARCELASPARAGERAR222",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PARCELASPARAGERAR222",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "DETPAGTOPARC225",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9101, \"anoMesParcela\": 201907 }"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "DETPAGTOPARC225",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9101, \"anoMesParcela\": 201907 }"        }     }'`
+
+## Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "GERARDAS221",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202306 }"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "GERARDAS221",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202306 }"        }     }'`
+
+
+
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PERTMEI, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Consultar Pedidos de Parcelamento - Integra Contador
+
+# Consultar todos os pedidos de parcelamento na modalidade PERTMEI para um contribuinte
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PERTMEI para o contribuinte
+
+PedidoDados
+
+idSistema: PERTMEI  
+idServico: PEDIDOSPARC223  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PEDIDOSPARC223",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamentos
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+Objeto [Parcelamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar Parcelamento - Integra Contador
+
+# Consultar um determinado parcelamento na modalidade PERTMEI
+
+Esta consulta retorna informações de um parcelamento específico.
+
+PedidoDados
+
+idSistema: PERTMEI  
+idServico: OBTERPARC224  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PERTMEI",          "idServico": "OBTERPARC224",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamento
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| consolidacoesRestanteDivida | Informações de consolidações do restante da dívida com redução | Lista de [RestanteDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+Objeto [Consolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidadoDaEntrada | Valor total consolidado de entrada | Número |
+| quantidadeParcelasDaEntrada | Quantidade de parcelas | Número |
+| parcelaBasicaDaEntrada | Valor da parcela de entrada | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| valorTotalConsolidadoDaDivida | Valor total consolidado | Número |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+Objeto [DetalhesConsolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+Objeto [RestanteDivida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidadoDivida | Valor total consolidado | Número |
+| parcelasRemanescentes | Quantidade de parcelas remanescentes | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataConfirmacaoConsolidacao | Data consolidação | Número (AAAAMMDD) |
+| detalhesConsolidacao | Detalhes da alteração de dívida | Lista de [DetalhesConsolidacao]() |
+
+Objeto [DemonstrativoPagamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar Detalhes de Pagamento de Parcela - Integra Contador
+
+# Consultar detalhes de pagamento na modalidade PERTMEI
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+PedidoDados
+
+idSistema: PERTMEI  
+idServico: DETPAGTOPARC225  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "DETPAGTOPARC225",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9101, \"anoMesParcela\": 201907 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número |
+| geradoEm | Data de geração do DAS | Texto (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+Objeto [PagamentoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+Objeto [DiscriminacaoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar Parcelas Disponíveis para Impressão - Integra Contador
+
+# Consultar as parcelas disponíveis para impressão de DAS na modalidade PERTMEI
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+PedidoDados
+
+idSistema: PERTMEI  
+idServico: PARCELASPARAGERAR222  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "PARCELASPARAGERAR222",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: listaParcela
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+Objeto [Parcela:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Emitir Documento de Arrecadação - Integra Contador
+
+# Emitir documento de arrecadação na modalidade PERTMEI
+
+PedidoDados
+
+idSistema: PERTMEI  
+idServico: GERARDAS221  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PERTMEI",         "idServico": "GERARDAS221",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202306 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Retorno Consultar Pedidos de Parcelamento - Integra Contador
+
+# Exemplo de Json de retorno
+
+Consultar todos os parcelamentos para a modalidade PERTMEI
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PERTMEI",             "idServico": "PEDIDOSPARC223",             "versaoSistema": "1.0",              "dados": ""         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-PERTMEI]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"parcelamentos\":[{\"numero\":9101,\"dataDoPedido\":20180623,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20181106}]}"     }`
+
+
+
+
+# Retorno Consultar Parcelamento - Integra Contador
+
+# Exemplo de Json de retorno
+
+Consultar um parcelamento específico para a modalidade PERTMEI
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PERTMEI",             "idServico": "OBTERPARC224",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9101}"         },         "status": "200",         "mensagens": [          {           "codigo": "[Sucesso-PERTMEI]",           "texto": "Requisição efetuada com sucesso."          }         ],         "dados": "{\"numero\":9101,\"dataDoPedido\":20180623,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20181106,\"consolidacaoOriginal\":{\"valorTotalConsolidadoDaEntrada\":211.48,\"quantidadeParcelasDaEntrada\":4,\"parcelaBasicaDaEntrada\":52.87,\"dataConsolidacao\":20180623121359,\"valorTotalConsolidadoDaDivida\":4229.59,\"detalhesConsolidacao\":[{\"periodoApuracao\":201208,\"vencimento\":20120920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":31.10,\"valorAtualizado\":55.64},{\"periodoApuracao\":201209,\"vencimento\":20121022,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":31.10,\"valorAtualizado\":55.45},{\"periodoApuracao\":201210,\"vencimento\":20121121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":31.10,\"valorAtualizado\":55.28},{\"periodoApuracao\":201211,\"vencimento\":20121220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":31.10,\"valorAtualizado\":55.11},{\"periodoApuracao\":201212,\"vencimento\":20130121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":31.10,\"valorAtualizado\":54.92},{\"periodoApuracao\":201301,\"vencimento\":20130220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":68.50},{\"periodoApuracao\":201302,\"vencimento\":20130320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":68.28},{\"periodoApuracao\":201303,\"vencimento\":20130422,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":68.05},{\"periodoApuracao\":201304,\"vencimento\":20130520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":67.81},{\"periodoApuracao\":201305,\"vencimento\":20130620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":67.58},{\"periodoApuracao\":201306,\"vencimento\":20130722,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":67.30},{\"periodoApuracao\":201307,\"vencimento\":20130820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":67.02},{\"periodoApuracao\":201308,\"vencimento\":20130920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":66.75},{\"periodoApuracao\":201309,\"vencimento\":20131021,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":66.44},{\"periodoApuracao\":201310,\"vencimento\":20131121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":66.15},{\"periodoApuracao\":201311,\"vencimento\":20131220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":65.84},{\"periodoApuracao\":201312,\"vencimento\":20140120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":38.90,\"valorAtualizado\":65.52},{\"periodoApuracao\":201401,\"vencimento\":20140220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":69.06},{\"periodoApuracao\":201402,\"vencimento\":20140320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":68.75},{\"periodoApuracao\":201403,\"vencimento\":20140422,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":68.41},{\"periodoApuracao\":201404,\"vencimento\":20140520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":68.04},{\"periodoApuracao\":201405,\"vencimento\":20140620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":67.71},{\"periodoApuracao\":201406,\"vencimento\":20140721,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":67.32},{\"periodoApuracao\":201407,\"vencimento\":20140820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":66.96},{\"periodoApuracao\":201408,\"vencimento\":20140922,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":66.59},{\"periodoApuracao\":201409,\"vencimento\":20141020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":66.19},{\"periodoApuracao\":201410,\"vencimento\":20141121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":65.85},{\"periodoApuracao\":201411,\"vencimento\":20141222,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":65.45},{\"periodoApuracao\":201412,\"vencimento\":20150120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":41.20,\"valorAtualizado\":65.06},{\"periodoApuracao\":201501,\"vencimento\":20150220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":69.75},{\"periodoApuracao\":201502,\"vencimento\":20150320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":69.29},{\"periodoApuracao\":201503,\"vencimento\":20150420,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":68.87},{\"periodoApuracao\":201504,\"vencimento\":20150520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":68.43},{\"periodoApuracao\":201505,\"vencimento\":20150622,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":67.96},{\"periodoApuracao\":201506,\"vencimento\":20150720,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":67.43},{\"periodoApuracao\":201507,\"vencimento\":20150820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":66.94},{\"periodoApuracao\":201508,\"vencimento\":20150921,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":66.45},{\"periodoApuracao\":201509,\"vencimento\":20151020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":65.95},{\"periodoApuracao\":201510,\"vencimento\":20151123,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":65.48},{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":64.97},{\"periodoApuracao\":201512,\"vencimento\":20160120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":44.40,\"valorAtualizado\":64.50},{\"periodoApuracao\":201601,\"vencimento\":20160222,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":70.69},{\"periodoApuracao\":201602,\"vencimento\":20160321,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":70.12},{\"periodoApuracao\":201603,\"vencimento\":20160420,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":69.61},{\"periodoApuracao\":201604,\"vencimento\":20160520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":69.06},{\"periodoApuracao\":201605,\"vencimento\":20160620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":68.50},{\"periodoApuracao\":201606,\"vencimento\":20160720,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":67.95},{\"periodoApuracao\":201607,\"vencimento\":20160822,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":67.35},{\"periodoApuracao\":201608,\"vencimento\":20160920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":66.80},{\"periodoApuracao\":201609,\"vencimento\":20161020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\":66.29},{\"periodoApuracao\":201610,\"vencimento\":20161121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":49.00,\"valorAtualizado\...25456 bytes truncated..."     }`
+
+
+
+
+# Retorno Consultar Detalhes de Pagamento de Parcela - Integra Contador
+
+# Exemplo de Json de retorno
+
+Consultar detalhes de pagamento de parcela para a modalidade PERTMEI
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PERTMEI",             "idServico": "DETPAGTOPARC225",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9101, \"anoMesParcela\": 201907 }"         },           "status": "200",           "mensagens": [             {               "codigo": "[Sucesso-PERTMEI]",               "texto": "Requisição efetuada com sucesso."             }           ],           "dados": "{\"numeroDas\":\"07181922816516181\",\"dataVencimento\":20190731,\"paDasGerado\":201907,\"geradoEm\":\"20190816084003\",\"numeroParcelamento\":\"9101\",\"numeroParcela\":\"13\",\"dataLimiteAcolhimento\":20190830,\"pagamentoDebitos\":[{\"paDebito\":201308,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"INSS\",\"principal\":18.95,\"multa\":1.89,\"juros\":2.23,\"total\":23.07,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"ISS\",\"principal\":2.80,\"multa\":0.28,\"juros\":0.33,\"total\":3.41,\"enteFederadoDestino\":\"SAO PAULO\"}]},{\"paDebito\":201309,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"INSS\",\"principal\":20.17,\"multa\":2.02,\"juros\":2.34,\"total\":24.53,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"ISS\",\"principal\":2.98,\"multa\":0.30,\"juros\":0.35,\"total\":3.63,\"enteFederadoDestino\":\"SAO PAULO\"}]}],\"dataPagamento\":20190816,\"bancoAgencia\":\"341/367\",\"valorPagoArrecadacao\":54.64}"     }`
+
+
+
+
+# Retorno Consultar Parcelas Disponíveis para Impressão - Integra Contador
+
+# Exemplo de Json de retorno
+
+Consultar parcelas disponíveis para impressão do DAS na modalidade PERTMEI
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PERTMEI",             "idServico": "PARCELASPARAGERAR222",             "versaoSistema": "1.0",              "dados": ""         },         "status": "200",         "mensagens": [             {               "codigo": "[Sucesso-PERTMEI]",               "texto": "Requisição efetuada com sucesso."             }         ],         "dados": "{\"listaParcelas\":[{\"parcela\":202306,\"valor\":68.13}]}"     }`
+
+
+
+
+# Retorno Emitir Documento de Arrecadação - Integra Contador
+
+# Exemplo de Json de retorno
+
+Emissão de DAS para a modalidade PERTMEI
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PERTMEI",             "idServico": "GERARDAS221",             "versaoSistema": "1.0",              "dados": "{ \"parcelaParaEmitir\": 202306 }"         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-PERTMEI]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"docArrecadacaoPdfB64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8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...174868 bytes truncated..."     }`
+
+
+
+
+# Mensagens - Integra Contador
+
+# Mensagens específicas para o Integra Parcelamento - PERTMEI
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-PERTMEI-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-PERTMEI-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PERTMEI-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-PERTMEI-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-PERTMEI-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-PERTMEI-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-PERTMEI-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaInreta-PERTMEI-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-PERTMEI-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-PERTMEI-ER\_N009\] | Não será possível utilizar o IC para este contribuinte. Utilize o sistema web. | O contribuinte se encontra em um estado que não permite o uso do Integra Contador. Deve ser utilizada a web. |
+| \[Aviso-PERTMEI-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-PERTMEI-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-PERTMEI-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-PERTMEI-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[Aviso-PERTMEI-ER\_N014\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento. |
+| \[Aviso-PERTMEI-ER\_N015\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+| \[EntradaIncorreta-PERTMEI-ER\_N016\] | O Integra Contador Parcelamento possui o limite de {0} parcelas e este parcelamento possui {1} parcelas. Utilize o sistema na WEB para obter a guia. | Não será possível emitir guia para este parcelamento. |

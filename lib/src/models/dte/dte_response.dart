@@ -1,35 +1,141 @@
-class DteResponse {
-  final String type;
-  final String title;
-  final int status;
-  final String detail;
-  final String instance;
+import 'dart:convert';
 
-  DteResponse({
-    required this.type,
-    required this.title,
-    required this.status,
-    required this.detail,
-    required this.instance,
-  });
+/// Resposta do serviço DTE - Domicílio Tributário Eletrônico
+class DteResponse {
+  final int status;
+  final List<MensagemNegocio> mensagens;
+  final String dados;
+  final DteDados? dadosParsed;
+
+  DteResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
 
   factory DteResponse.fromJson(Map<String, dynamic> json) {
+    final dados = json['dados'] as String? ?? '';
+    DteDados? dadosParsed;
+
+    try {
+      if (dados.isNotEmpty) {
+        final dadosJson = jsonDecode(dados) as Map<String, dynamic>;
+        dadosParsed = DteDados.fromJson(dadosJson);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dadosParsed como null
+    }
+
     return DteResponse(
-      type: json['type'] as String,
-      title: json['title'] as String,
       status: json['status'] as int,
-      detail: json['detail'] as String,
-      instance: json['instance'] as String,
+      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      dados: dados,
+      dadosParsed: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'title': title,
-      'status': status,
-      'detail': detail,
-      'instance': instance,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+  }
+
+  /// Indica se a requisição foi bem-sucedida
+  bool get sucesso => status == 200 && mensagens.any((m) => m.codigo.startsWith('Sucesso-DTE'));
+
+  /// Retorna a mensagem principal (primeira mensagem de sucesso ou erro)
+  String get mensagemPrincipal {
+    if (mensagens.isEmpty) return 'Sem mensagens';
+
+    final sucessoMsg = mensagens.firstWhere((m) => m.codigo.startsWith('Sucesso-DTE'), orElse: () => mensagens.first);
+
+    return sucessoMsg.texto;
+  }
+
+  /// Retorna o código da mensagem principal
+  String get codigoMensagem {
+    if (mensagens.isEmpty) return 'SEM_CODIGO';
+    return mensagens.first.codigo;
+  }
+
+  /// Indica se há indicador de enquadramento válido
+  bool get temIndicadorValido => dadosParsed?.indicadorEnquadramento != null;
+
+  /// Retorna a descrição do status de enquadramento
+  String get statusEnquadramentoDescricao => dadosParsed?.statusEnquadramento ?? 'Não disponível';
+
+  /// Indica se o contribuinte é optante DTE
+  bool get isOptanteDte => dadosParsed?.indicadorEnquadramento == 0;
+
+  /// Indica se o contribuinte é optante Simples Nacional
+  bool get isOptanteSimples => dadosParsed?.indicadorEnquadramento == 1;
+
+  /// Indica se o contribuinte é optante DTE e Simples Nacional
+  bool get isOptanteDteESimples => dadosParsed?.indicadorEnquadramento == 2;
+
+  /// Indica se o contribuinte não é optante
+  bool get isNaoOptante => dadosParsed?.indicadorEnquadramento == -1;
+
+  /// Indica se o NI (Número de Identificação) é inválido
+  bool get isNiInvalido => dadosParsed?.indicadorEnquadramento == -2;
+}
+
+/// Dados específicos do DTE
+class DteDados {
+  final int indicadorEnquadramento;
+  final String statusEnquadramento;
+
+  DteDados({required this.indicadorEnquadramento, required this.statusEnquadramento});
+
+  factory DteDados.fromJson(Map<String, dynamic> json) {
+    return DteDados(indicadorEnquadramento: json['indicadorEnquadramento'] as int, statusEnquadramento: json['statusEnquadramento'] as String);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'indicadorEnquadramento': indicadorEnquadramento, 'statusEnquadramento': statusEnquadramento};
+  }
+
+  /// Retorna a descrição do indicador de enquadramento
+  String get indicadorDescricao {
+    switch (indicadorEnquadramento) {
+      case -2:
+        return 'NI inválido';
+      case -1:
+        return 'NI Não optante';
+      case 0:
+        return 'NI Optante DTE';
+      case 1:
+        return 'NI Optante Simples';
+      case 2:
+        return 'NI Optante DTE e Simples';
+      default:
+        return 'Indicador desconhecido ($indicadorEnquadramento)';
+    }
+  }
+
+  /// Indica se o indicador é válido
+  bool get isIndicadorValido => indicadorEnquadramento >= -2 && indicadorEnquadramento <= 2;
+}
+
+/// Mensagem de negócio do DTE
+class MensagemNegocio {
+  final String codigo;
+  final String texto;
+
+  MensagemNegocio({required this.codigo, required this.texto});
+
+  factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
+    return MensagemNegocio(codigo: json['codigo'] as String, texto: json['texto'] as String);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'codigo': codigo, 'texto': texto};
+  }
+
+  /// Indica se é uma mensagem de sucesso
+  bool get isSucesso => codigo.startsWith('Sucesso-DTE');
+
+  /// Indica se é uma mensagem de erro
+  bool get isErro => codigo.startsWith('Erro-DTE');
+
+  /// Retorna o tipo da mensagem
+  String get tipo {
+    if (isSucesso) return 'Sucesso';
+    if (isErro) return 'Erro';
+    return 'Informação';
   }
 }

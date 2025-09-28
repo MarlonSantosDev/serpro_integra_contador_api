@@ -1,0 +1,510 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API SICALC - Integra Contador
+
+## 1. Introdução
+
+O Sicalc foi desenvolvido para auxiliar o contribuinte no cálculo de acréscimos legais e emissão do Darf para pagamento de tributos federais administrados pela Secretaria Especial da Receita Federal do Brasil.
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Sicalc, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema SICALC, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## 2. Serviços
+
+### 2.1. Consolidar e Emitir um DARF
+
+Baseado nos parâmetros de entrada fornecidos pelo chamador, o serviço monta uma chamada para a funcionalidade de consolidação (cálculo da multa e dos juros), gera o documento PDF do DARF a partir do resultado da consolidação e devolve ao chamador o resultado do cálculo, o PDF do DARF e o número do documento.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** CONSOLIDARGERARDARF51
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| uf | Unidade Federativa | texto | SIM | |
+| município | Código do Município | numérico | SIM | Código baseado na Tabela de Órgãos e Municípios da RFB |
+| codigoReceita | Código da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB |
+| codigoReceitaExtensao | Código da Extensão da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB |
+| numeroReferencia | Número de referência utilizado no preenchimento do DARF | numérico | NÃO | |
+| tipoPA | Tipo do período de apuração | texto | NÃO | |
+| dataPA | Data do período de apuração | texto | SIM | |
+| vencimento | Data de vencimento do tributo | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| cota | Número da cota (para os débitos que possuem cotas) | numérico | NÃO | |
+| valorImposto | Valor do Imposto | numérico | SIM | |
+| valorMulta | Valor da multa - Preenchido somente no caso de DARF manual | numérico | NÃO | |
+| valorJuros | Valor dos juros - Preenchido somente no caso de DARF manual | numérico | NÃO | |
+| ganhoCapital | Indicador de ganho de capital | boolean | NÃO | |
+| dataAlienacao | Data da Alienação referente ao Ganho de Capital | boolean | NÃO | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| dataConsolidacao | Data da Consolidação (Data do Pagamento) | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| observacao | Campo observação do DARF | texto | NÃO | |
+| cno | Número do cadastro nacional de obras | numérico | NÃO | |
+| cnpjPrestador | Número do Cadastro Nacional Pessoa Jurídica do prestador | numérico | NÃO | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+No atributo `dados`, será retornado os seguintes objetos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorPrincipalMoedaCorrente | Valor principal calculado | texto |
+| valorTotalConsolidado | Valor total do débito calculado | texto |
+| valorMultaMora | Valor de multa de mora calculada | texto |
+| percentualMultaMora | Percentual de multa de mora calculada | numérico |
+| valorJuros | Valor de juros calculada | texto |
+| percentualJuros | Percentual de juros calculado | numérico |
+| termoInicialJuros | Data no qual começa a incidência de juros no débito | texto |
+| dataArrecadacaoConsolidacao | Data de Arrecadação/Consolidação considerada no resultado de cálculo | texto |
+| dataValidadeCalculo | Data em que o resultado de calculo é válido | texto |
+| darf | Conteúdo binário Base64 contendo o PDF do DARF | base64 |
+| numeroDocumento | Número do documento | numérico |
+
+### 2.2. Consultar Código de Receita Sicalc
+
+Este serviço retorna os dados de apoio de uma receita, como a descrição, o tipo de pessoa, o período de apuração, entre outros.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** CONSULTAAPOIORECEITAS52
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| codigoReceita | Código da Receita | numérico | SIM | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+### 2.3. Consolidar e Emitir o Código de Barras de um DARF Calculado
+
+Este serviço gera o código de barras de um DARF já calculado.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** GERARDARFCODBARRA53
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| numeroDocumento | Número do documento | numérico | SIM | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+## 3. Exemplos de Requisição
+
+### 3.1. DARF de Pessoa Física
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999",
+        "tipo": 1
+    },
+    "contribuinte": {
+        "numero": "99999999999",
+        "tipo": 1
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0190\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+### 3.2. DARF de Pessoa Jurídica
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0220\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"TR\", \"dataPA\": \"04/2021\", \"cota\": \"1\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+### 3.3. DARF de Pessoa Jurídica com QRCode
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+## 4. Mensagens de Negócio
+
+A API pode retornar diversas mensagens de erro, indicando problemas com os dados de entrada ou com o processamento da requisição. A tabela abaixo lista as principais mensagens e suas possíveis causas.
+
+| Código | Mensagem | Ação |
+| --- | --- | --- |
+| \[EntradaIncorreta-SICALC\] | Contribuinte não encontrado. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa jurídica. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa física. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[Erro-SICALC\] | Erro no sistema emissor de darf. | Relatar ao Serpro a indisponibilidade do serviço descrito na mensagem de erro. |
+
+## 5. Dados de Domínio
+
+### 5.1. Tipo do Período de Apuração
+
+| Código | Descrição |
+| --- | --- |
+| AN | anual |
+| TR | trimestral |
+| ME | mensal |
+| QZ | quinzenal |
+| DC | decendial |
+| SM | semanal |
+| DI | diário |
+
+### 5.2. Data do Período de Apuração
+
+| Se o tipo for | Formato |
+| --- | --- |
+| anual | aaaa |
+| trimestral | trimestre/ano (01 a 04) |
+| mensal | mm/aaaa |
+| quinzenal | quinzena/mm/ano (01 ou 02) |
+| decendial | decêndio/mm/ano (01 a 03) |
+| semanal | semana/mm/aaaa (01 a 05) |
+| diário | dd/mm/aaaa |
+
+## 6. Glossário
+
+| Sigla | Descrição |
+| --- | --- |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| CT | Crédito tributário – são as informações básicas do débito do contribuinte |
+| Darf | Documento de Arrecadação de Receitas Federais |
+| PA | Período de Apuração |
+| RFB | Secretaria Especial da Receita Federal do Brasil |
+| UF | Unidade da Federação |
+| Nirf | Número do Imóvel na Receita Federal |
+| Cib | Cadastro Imobiliário Brasileiro |
+
+# Documentação da API SICALC - Integra Contador
+
+## 1. Introdução
+
+O Sicalc foi desenvolvido para auxiliar o contribuinte no cálculo de acréscimos legais e emissão do Darf para pagamento de tributos federais administrados pela Secretaria Especial da Receita Federal do Brasil.
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Sicalc, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema SICALC, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## 2. Serviços
+
+### 2.1. Consolidar e Emitir um DARF
+
+Baseado nos parâmetros de entrada fornecidos pelo chamador, o serviço monta uma chamada para a funcionalidade de consolidação (cálculo da multa e dos juros), gera o documento PDF do DARF a partir do resultado da consolidação e devolve ao chamador o resultado do cálculo, o PDF do DARF e o número do documento.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** CONSOLIDARGERARDARF51
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| uf | Unidade Federativa | texto | SIM | |
+| município | Código do Município | numérico | SIM | Código baseado na Tabela de Órgãos e Municípios da RFB |
+| codigoReceita | Código da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB |
+| codigoReceitaExtensao | Código da Extensão da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB |
+| numeroReferencia | Número de referência utilizado no preenchimento do DARF | numérico | NÃO | |
+| tipoPA | Tipo do período de apuração | texto | NÃO | |
+| dataPA | Data do período de apuração | texto | SIM | |
+| vencimento | Data de vencimento do tributo | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| cota | Número da cota (para os débitos que possuem cotas) | numérico | NÃO | |
+| valorImposto | Valor do Imposto | numérico | SIM | |
+| valorMulta | Valor da multa - Preenchido somente no caso de DARF manual | numérico | NÃO | |
+| valorJuros | Valor dos juros - Preenchido somente no caso de DARF manual | numérico | NÃO | |
+| ganhoCapital | Indicador de ganho de capital | boolean | NÃO | |
+| dataAlienacao | Data da Alienação referente ao Ganho de Capital | boolean | NÃO | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| dataConsolidacao | Data da Consolidação (Data do Pagamento) | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| observacao | Campo observação do DARF | texto | NÃO | |
+| cno | Número do cadastro nacional de obras | numérico | NÃO | |
+| cnpjPrestador | Número do Cadastro Nacional Pessoa Jurídica do prestador | numérico | NÃO | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+No atributo `dados`, será retornado os seguintes objetos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorPrincipalMoedaCorrente | Valor principal calculado | texto |
+| valorTotalConsolidado | Valor total do débito calculado | texto |
+| valorMultaMora | Valor de multa de mora calculada | texto |
+| percentualMultaMora | Percentual de multa de mora calculada | numérico |
+| valorJuros | Valor de juros calculada | texto |
+| percentualJuros | Percentual de juros calculado | numérico |
+| termoInicialJuros | Data no qual começa a incidência de juros no débito | texto |
+| dataArrecadacaoConsolidacao | Data de Arrecadação/Consolidação considerada no resultado de cálculo | texto |
+| dataValidadeCalculo | Data em que o resultado de calculo é válido | texto |
+| darf | Conteúdo binário Base64 contendo o PDF do DARF | base64 |
+| numeroDocumento | Número do documento | numérico |
+
+### 2.2. Consultar Código de Receita Sicalc
+
+Este serviço retorna os dados de apoio de uma receita, como a descrição, o tipo de pessoa, o período de apuração, entre outros.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** CONSULTAAPOIORECEITAS52
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| codigoReceita | Código da Receita | numérico | SIM | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+### 2.3. Consolidar e Emitir o Código de Barras de um DARF Calculado
+
+Este serviço gera o código de barras de um DARF já calculado.
+
+**Identificação no Pedido de Dados:**
+- **idSistema:** SICALC
+- **idServico:** GERARDARFCODBARRA53
+- **versaoSistema:** "2.9"
+
+#### Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| numeroDocumento | Número do documento | numérico | SIM | |
+
+#### Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON) |
+
+## 3. Exemplos de Requisição
+
+### 3.1. DARF de Pessoa Física
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999",
+        "tipo": 1
+    },
+    "contribuinte": {
+        "numero": "99999999999",
+        "tipo": 1
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0190\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+### 3.2. DARF de Pessoa Jurídica
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0220\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"TR\", \"dataPA\": \"04/2021\", \"cota\": \"1\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+### 3.3. DARF de Pessoa Jurídica com QRCode
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSOLIDARGERARDARF51",
+        "versaoSistema": "2.9",
+        "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+    }
+}
+```
+
+## 4. Mensagens de Negócio
+
+A API pode retornar diversas mensagens de erro, indicando problemas com os dados de entrada ou com o processamento da requisição. A tabela abaixo lista as principais mensagens e suas possíveis causas.
+
+| Código | Mensagem | Ação |
+| --- | --- | --- |
+| \[EntradaIncorreta-SICALC\] | Contribuinte não encontrado. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa jurídica. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa física. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[Erro-SICALC\] | Erro no sistema emissor de darf. | Relatar ao Serpro a indisponibilidade do serviço descrito na mensagem de erro. |
+
+## 5. Dados de Domínio
+
+### 5.1. Tipo do Período de Apuração
+
+| Código | Descrição |
+| --- | --- |
+| AN | anual |
+| TR | trimestral |
+| ME | mensal |
+| QZ | quinzenal |
+| DC | decendial |
+| SM | semanal |
+| DI | diário |
+
+### 5.2. Data do Período de Apuração
+
+| Se o tipo for | Formato |
+| --- | --- |
+| anual | aaaa |
+| trimestral | trimestre/ano (01 a 04) |
+| mensal | mm/aaaa |
+| quinzenal | quinzena/mm/ano (01 ou 02) |
+| decendial | decêndio/mm/ano (01 a 03) |
+| semanal | semana/mm/aaaa (01 a 05) |
+| diário | dd/mm/aaaa |
+
+## 6. Glossário
+
+| Sigla | Descrição |
+| --- | --- |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| CT | Crédito tributário – são as informações básicas do débito do contribuinte |
+| Darf | Documento de Arrecadação de Receitas Federais |
+| PA | Período de Apuração |
+| RFB | Secretaria Especial da Receita Federal do Brasil |
+| UF | Unidade da Federação |
+| Nirf | Número do Imóvel na Receita Federal |
+| Cib | Cadastro Imobiliário Brasileiro |
+

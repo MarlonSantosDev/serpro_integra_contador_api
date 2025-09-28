@@ -2,6 +2,8 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
 import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
 import 'package:serpro_integra_contador_api/src/services/autenticaprocurador_service.dart';
+import 'package:serpro_integra_contador_api/src/models/relpmei/relpmei_request.dart';
+import 'package:serpro_integra_contador_api/src/services/relpmei_service.dart';
 
 void main() async {
   // Inicializar o cliente da API
@@ -20,15 +22,21 @@ void main() async {
   // Exemplo de uso dos serviços
   //await exemplosCaixaPostal(apiClient);
   //await exemplosPgmei(apiClient);
-  //await exemplosCcmei(apiClient);
+  await exemplosCcmei(apiClient);
   //await exemplosPgdasd(apiClient);
   await exemplosDctfWeb(apiClient);
-  //await exemplosProcuracoes(apiClient);
-  //await exemplosDte(apiClient);
+  await exemplosProcuracoes(apiClient);
+  await exemplosDte(apiClient);
   //await exemplosSitfis(apiClient);
   //await exemplosDefis(apiClient);
   await exemplosPagtoWeb(apiClient);
   await exemplosAutenticaProcurador(apiClient);
+  await exemplosRelpsn(apiClient);
+  await exemplosPertsn(apiClient);
+  await exemplosSicalc(apiClient);
+  await exemplosRelpmei(apiClient);
+  await exemplosPertmei(apiClient);
+  await exemplosMit(apiClient);
 }
 
 Future<void> exemplosCcmei(ApiClient apiClient) async {
@@ -37,19 +45,69 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
   final ccmeiService = CcmeiService(apiClient);
 
   try {
-    // Emitir CCMEI
-    await ccmeiService.emitirCcmei('00000000000000');
-    print('CCMEI emitido com sucesso');
+    print('\n--- 1. Emitir CCMEI (PDF) ---');
+    final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
+    print('Status: ${emitirResponse.status}');
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('CNPJ: ${emitirResponse.dados.cnpj}');
+    print('PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
+    print('Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
 
-    // Consultar Dados CCMEI
+    print('\n--- 2. Consultar Dados CCMEI ---');
     final consultarResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
-    print('Dados CCMEI consultados: ${consultarResponse.dados.nomeEmpresarial}');
+    print('Status: ${consultarResponse.status}');
+    print('Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('CNPJ: ${consultarResponse.dados.cnpj}');
+    print('Nome Empresarial: ${consultarResponse.dados.nomeEmpresarial}');
+    print('Empresário: ${consultarResponse.dados.empresario.nomeCivil}');
+    print('CPF Empresário: ${consultarResponse.dados.empresario.cpf}');
+    print('Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}');
+    print('Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}');
+    print('Capital Social: R\$ ${consultarResponse.dados.capitalSocial}');
+    print('Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}');
+    print('Bairro: ${consultarResponse.dados.enderecoComercial.bairro}');
+    print('Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}');
+    print('CEP: ${consultarResponse.dados.enderecoComercial.cep}');
+    print('Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
+    print('Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}');
+    print('Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)');
+    for (var periodo in consultarResponse.dados.enquadramento.periodosMei) {
+      print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
+    }
+    print('Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}');
+    print('Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
+    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
+      print(
+        'CNAE Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoCNAE}',
+      );
+    }
+    print('Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}');
+    for (var ocupacao in consultarResponse.dados.atividade.ocupacoesSecundarias) {
+      print('  - ${ocupacao.descricaoOcupacao}');
+      if (ocupacao.codigoCNAE != null) {
+        print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
+      }
+    }
+    print('Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
+    print('QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
 
-    // Consultar Situação Cadastral
-    await ccmeiService.consultarSituacaoCadastral('00000000000');
-    print('Situação cadastral consultada');
+    print('\n--- 3. Consultar Situação Cadastral por CPF ---');
+    final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
+    print('Status: ${situacaoResponse.status}');
+    print('Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('CNPJs encontrados: ${situacaoResponse.dados.length}');
+    for (var situacao in situacaoResponse.dados) {
+      print('  - CNPJ: ${situacao.cnpj}');
+      print('    Situação: ${situacao.situacao}');
+      print('    Enquadrado MEI: ${situacao.enquadradoMei ? 'Sim' : 'Não'}');
+    }
+
+    print('\n✅ Todos os serviços CCMEI executados com sucesso!');
   } catch (e) {
-    print('Erro nos serviços CCMEI: $e');
+    print('❌ Erro nos serviços CCMEI: $e');
+    if (e.toString().contains('status')) {
+      print('Verifique se o CNPJ/CPF informado é válido e se a empresa está cadastrada como MEI.');
+    }
   }
 }
 
@@ -554,16 +612,269 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
 }
 
 Future<void> exemplosProcuracoes(ApiClient apiClient) async {
-  print('=== Exemplos Procurações ===');
+  print('\n=== Exemplos PROCURAÇÕES (Procurações Eletrônicas) ===');
 
   final procuracoesService = ProcuracoesService(apiClient);
 
   try {
-    // Obter Procuração
-    final response = await procuracoesService.obterProcuracao('00000000000000');
-    print('Procurações obtidas: ${response.dadosSaida.procuracoes.length}');
+    // 1. Exemplo básico - Obter procuração entre duas pessoas físicas
+    print('\n--- 1. Obter Procuração PF para PF ---');
+    try {
+      final responsePf = await procuracoesService.obterProcuracaoPf(
+        '99999999999', // CPF do outorgante
+        '88888888888', // CPF do procurador
+      );
+
+      print('Status: ${responsePf.status}');
+      print('Sucesso: ${responsePf.sucesso}');
+      print('Mensagem: ${responsePf.mensagemPrincipal}');
+      print('Código: ${responsePf.codigoMensagem}');
+
+      if (responsePf.sucesso && responsePf.dadosParsed != null) {
+        final procuracoes = responsePf.dadosParsed!;
+        print('Total de procurações encontradas: ${procuracoes.length}');
+
+        for (int i = 0; i < procuracoes.length; i++) {
+          final proc = procuracoes[i];
+          print('\nProcuração ${i + 1}:');
+          print('  Data de expiração: ${proc.dataExpiracaoFormatada}');
+          print('  Quantidade de sistemas: ${proc.nrsistemas}');
+          print('  Sistemas: ${proc.sistemasFormatados}');
+          print('  Está expirada: ${proc.isExpirada ? 'Sim' : 'Não'}');
+          print('  Expira em breve: ${proc.expiraEmBreve ? 'Sim' : 'Não'}');
+        }
+      }
+    } catch (e) {
+      print('Erro ao obter procuração PF: $e');
+    }
+
+    // 2. Exemplo - Obter procuração entre duas pessoas jurídicas
+    print('\n--- 2. Obter Procuração PJ para PJ ---');
+    try {
+      final responsePj = await procuracoesService.obterProcuracaoPj(
+        '99999999999999', // CNPJ do outorgante
+        '88888888888888', // CNPJ do procurador
+      );
+
+      print('Status: ${responsePj.status}');
+      print('Sucesso: ${responsePj.sucesso}');
+      print('Mensagem: ${responsePj.mensagemPrincipal}');
+
+      if (responsePj.sucesso && responsePj.dadosParsed != null) {
+        final procuracoes = responsePj.dadosParsed!;
+        print('Total de procurações encontradas: ${procuracoes.length}');
+
+        for (final proc in procuracoes) {
+          print('  Data de expiração: ${proc.dataExpiracaoFormatada}');
+          print('  Sistemas: ${proc.sistemas.join(', ')}');
+        }
+      }
+    } catch (e) {
+      print('Erro ao obter procuração PJ: $e');
+    }
+
+    // 3. Exemplo - Obter procuração mista (PF para PJ)
+    print('\n--- 3. Obter Procuração Mista (PF para PJ) ---');
+    try {
+      final responseMista = await procuracoesService.obterProcuracaoMista(
+        '99999999999', // CPF do outorgante
+        '88888888888888', // CNPJ do procurador
+        false, // outorgante é PF
+        true, // procurador é PJ
+      );
+
+      print('Status: ${responseMista.status}');
+      print('Sucesso: ${responseMista.sucesso}');
+      print('Mensagem: ${responseMista.mensagemPrincipal}');
+    } catch (e) {
+      print('Erro ao obter procuração mista: $e');
+    }
+
+    // 4. Exemplo - Obter procuração com tipos específicos
+    print('\n--- 4. Obter Procuração com Tipos Específicos ---');
+    try {
+      final responseTipos = await procuracoesService.obterProcuracaoComTipos(
+        '99999999999', // CPF do outorgante
+        '1', // Tipo 1 = CPF
+        '88888888888888', // CNPJ do procurador
+        '2', // Tipo 2 = CNPJ
+      );
+
+      print('Status: ${responseTipos.status}');
+      print('Sucesso: ${responseTipos.sucesso}');
+      print('Mensagem: ${responseTipos.mensagemPrincipal}');
+    } catch (e) {
+      print('Erro ao obter procuração com tipos: $e');
+    }
+
+    // 5. Exemplo - Obter procuração automática (detecta tipos)
+    print('\n--- 5. Obter Procuração Automática (Detecta Tipos) ---');
+    try {
+      final responseAuto = await procuracoesService.obterProcuracao(
+        '99999999999', // CPF do outorgante (detecta automaticamente)
+        '88888888888888', // CNPJ do procurador (detecta automaticamente)
+      );
+
+      print('Status: ${responseAuto.status}');
+      print('Sucesso: ${responseAuto.sucesso}');
+      print('Mensagem: ${responseAuto.mensagemPrincipal}');
+    } catch (e) {
+      print('Erro ao obter procuração automática: $e');
+    }
+
+    // 6. Exemplo - Validação de documentos
+    print('\n--- 6. Validação de Documentos ---');
+
+    // Validar CPF
+    final cpfValido = '12345678901';
+    final cpfInvalido = '123';
+    print('CPF $cpfValido é válido: ${procuracoesService.isCpfValido(cpfValido)}');
+    print('CPF $cpfInvalido é válido: ${procuracoesService.isCpfValido(cpfInvalido)}');
+
+    // Validar CNPJ
+    final cnpjValido = '12345678000195';
+    final cnpjInvalido = '123';
+    print('CNPJ $cnpjValido é válido: ${procuracoesService.isCnpjValido(cnpjValido)}');
+    print('CNPJ $cnpjInvalido é válido: ${procuracoesService.isCnpjValido(cnpjInvalido)}');
+
+    // Detectar tipo de documento
+    print('Tipo do documento $cpfValido: ${procuracoesService.detectarTipoDocumento(cpfValido)} (1=CPF, 2=CNPJ)');
+    print('Tipo do documento $cnpjValido: ${procuracoesService.detectarTipoDocumento(cnpjValido)} (1=CPF, 2=CNPJ)');
+
+    // 7. Exemplo - Formatação de documentos
+    print('\n--- 7. Formatação de Documentos ---');
+
+    final cpfSemFormatacao = '12345678901';
+    final cnpjSemFormatacao = '12345678000195';
+
+    print('CPF sem formatação: $cpfSemFormatacao');
+    print('CPF formatado: ${procuracoesService.formatarCpf(cpfSemFormatacao)}');
+
+    print('CNPJ sem formatação: $cnpjSemFormatacao');
+    print('CNPJ formatado: ${procuracoesService.formatarCnpj(cnpjSemFormatacao)}');
+
+    // 8. Exemplo - Limpeza de documentos
+    print('\n--- 8. Limpeza de Documentos ---');
+
+    final cpfComPontuacao = '123.456.789-01';
+    final cnpjComPontuacao = '12.345.678/0001-95';
+
+    print('CPF com pontuação: $cpfComPontuacao');
+    print('CPF limpo: ${procuracoesService.limparDocumento(cpfComPontuacao)}');
+
+    print('CNPJ com pontuação: $cnpjComPontuacao');
+    print('CNPJ limpo: ${procuracoesService.limparDocumento(cnpjComPontuacao)}');
+
+    // 9. Exemplo - Tratamento de erros
+    print('\n--- 9. Tratamento de Erros ---');
+
+    try {
+      // Tentar com dados inválidos
+      await procuracoesService.obterProcuracaoPf('123', '456'); // CPFs inválidos
+    } catch (e) {
+      print('Erro capturado (esperado): $e');
+    }
+
+    // 10. Exemplo - Análise de procurações
+    print('\n--- 10. Análise de Procurações ---');
+    try {
+      final responseAnalise = await procuracoesService.obterProcuracaoPf('99999999999', '88888888888');
+
+      if (responseAnalise.sucesso && responseAnalise.dadosParsed != null) {
+        final procuracoes = responseAnalise.dadosParsed!;
+
+        print('Análise das procurações:');
+        print('  Total encontradas: ${procuracoes.length}');
+
+        int expiradas = 0;
+        int expiramEmBreve = 0;
+        int ativas = 0;
+
+        for (final proc in procuracoes) {
+          if (proc.isExpirada) {
+            expiradas++;
+          } else if (proc.expiraEmBreve) {
+            expiramEmBreve++;
+          } else {
+            ativas++;
+          }
+        }
+
+        print('  Procurações ativas: $ativas');
+        print('  Procurações que expiram em breve: $expiramEmBreve');
+        print('  Procurações expiradas: $expiradas');
+
+        // Mostrar sistemas únicos
+        final sistemasUnicos = <String>{};
+        for (final proc in procuracoes) {
+          sistemasUnicos.addAll(proc.sistemas);
+        }
+        print('  Sistemas únicos encontrados: ${sistemasUnicos.length}');
+        for (final sistema in sistemasUnicos) {
+          print('    - $sistema');
+        }
+      }
+    } catch (e) {
+      print('Erro na análise: $e');
+    }
+
+    // 11. Exemplo - Método legado (deprecated)
+    print('\n--- 11. Método Legado (Deprecated) ---');
+    try {
+      final responseLegado = await procuracoesService.obterProcuracaoLegado('99999999999999');
+      print('Status legado: ${responseLegado.status}');
+      print('Mensagem legado: ${responseLegado.mensagem}');
+    } catch (e) {
+      print('Erro no método legado: $e');
+    }
+
+    // 12. Exemplo - Diferentes cenários de uso
+    print('\n--- 12. Cenários de Uso ---');
+
+    // Cenário 1: Contador consultando procurações de seu cliente
+    print('Cenário 1: Contador consultando procurações de cliente');
+    try {
+      final responseContador = await procuracoesService.obterProcuracaoPf(
+        '99999999999', // CPF do cliente
+        '88888888888', // CPF do contador
+        contratanteNumero: '77777777777777', // CNPJ da empresa contratante
+        autorPedidoDadosNumero: '88888888888', // CPF do contador como autor
+      );
+      print('  Status: ${responseContador.status}');
+      print('  Sucesso: ${responseContador.sucesso}');
+    } catch (e) {
+      print('  Erro: $e');
+    }
+
+    // Cenário 2: Empresa consultando procurações de seus procuradores
+    print('Cenário 2: Empresa consultando procurações de procuradores');
+    try {
+      final responseEmpresa = await procuracoesService.obterProcuracaoPj(
+        '99999999999999', // CNPJ da empresa
+        '88888888888888', // CNPJ do procurador
+      );
+      print('  Status: ${responseEmpresa.status}');
+      print('  Sucesso: ${responseEmpresa.sucesso}');
+    } catch (e) {
+      print('  Erro: $e');
+    }
+
+    // Cenário 3: Pessoa física consultando suas procurações
+    print('Cenário 3: Pessoa física consultando suas procurações');
+    try {
+      final responsePfConsulta = await procuracoesService.obterProcuracaoPf(
+        '99999999999', // CPF da pessoa
+        '99999999999', // Mesmo CPF (consulta própria)
+      );
+      print('  Status: ${responsePfConsulta.status}');
+      print('  Sucesso: ${responsePfConsulta.sucesso}');
+    } catch (e) {
+      print('  Erro: $e');
+    }
+
+    print('\n=== Exemplos PROCURAÇÕES Concluídos ===');
   } catch (e) {
-    print('Erro no serviço de Procurações: $e');
+    print('Erro geral no serviço de Procurações: $e');
   }
 }
 
@@ -705,16 +1016,284 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 }
 
 Future<void> exemplosDte(ApiClient apiClient) async {
-  print('=== Exemplos DTE ===');
+  print('\n=== Exemplos DTE (Domicílio Tributário Eletrônico) ===');
 
   final dteService = DteService(apiClient);
 
   try {
-    // Declarar
-    final response = await dteService.declarar('00000000000000', '{}');
-    print('Declaração DTE realizada: ${response.status}');
+    // 1. Exemplo básico - Consultar indicador DTE com CNPJ válido
+    print('\n--- 1. Consultar Indicador DTE (CNPJ Válido) ---');
+    try {
+      final response = await dteService.obterIndicadorDte('11111111111111');
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+      print('Código: ${response.codigoMensagem}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador de enquadramento: ${dados.indicadorEnquadramento}');
+        print('Status de enquadramento: ${dados.statusEnquadramento}');
+        print('Descrição do indicador: ${dados.indicadorDescricao}');
+        print('É válido: ${dados.isIndicadorValido}');
+
+        // Análise do enquadramento
+        print('\nAnálise do enquadramento:');
+        print('  - É optante DTE: ${response.isOptanteDte}');
+        print('  - É optante Simples: ${response.isOptanteSimples}');
+        print('  - É optante DTE e Simples: ${response.isOptanteDteESimples}');
+        print('  - Não é optante: ${response.isNaoOptante}');
+        print('  - NI inválido: ${response.isNiInvalido}');
+      }
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 2. Exemplo com CNPJ da documentação (99999999999999)
+    print('\n--- 2. Consultar Indicador DTE (CNPJ da Documentação) ---');
+    try {
+      final response = await dteService.obterIndicadorDte('99999999999999');
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador: ${dados.indicadorEnquadramento}');
+        print('Status: ${dados.statusEnquadramento}');
+        print('Descrição: ${dados.indicadorDescricao}');
+      }
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 3. Exemplo com CNPJ formatado
+    print('\n--- 3. Consultar Indicador DTE (CNPJ Formatado) ---');
+    try {
+      final cnpjFormatado = '12.345.678/0001-95';
+      print('CNPJ formatado: $cnpjFormatado');
+      print('CNPJ limpo: ${dteService.limparCnpj(cnpjFormatado)}');
+
+      final response = await dteService.obterIndicadorDte(cnpjFormatado);
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 4. Validação de CNPJ
+    print('\n--- 4. Validação de CNPJ ---');
+
+    final cnpjsParaTestar = [
+      '11111111111111', // Válido
+      '12.345.678/0001-95', // Válido formatado
+      '12345678000195', // Válido sem formatação
+      '123', // Inválido - muito curto
+      '123456789012345', // Inválido - muito longo
+      '11111111111112', // Inválido - dígito verificador
+      '', // Inválido - vazio
+    ];
+
+    for (final cnpj in cnpjsParaTestar) {
+      final isValid = dteService.validarCnpjDte(cnpj);
+      print('CNPJ "$cnpj" é válido: $isValid');
+
+      if (isValid) {
+        print('  Formatado: ${dteService.formatarCnpj(cnpj)}');
+      }
+    }
+
+    // 5. Tratamento de erros específicos
+    print('\n--- 5. Tratamento de Erros Específicos ---');
+
+    final codigosErro = ['Erro-DTE-04', 'Erro-DTE-05', 'Erro-DTE-991', 'Erro-DTE-992', 'Erro-DTE-993', 'Erro-DTE-994', 'Erro-DTE-995'];
+
+    for (final codigo in codigosErro) {
+      final isKnown = dteService.isErroConhecido(codigo);
+      print('Erro conhecido ($codigo): $isKnown');
+
+      if (isKnown) {
+        final info = dteService.obterInfoErro(codigo);
+        if (info != null) {
+          print('  Tipo: ${info['tipo']}');
+          print('  Descrição: ${info['descricao']}');
+          print('  Ação: ${info['acao']}');
+        }
+      }
+    }
+
+    // 6. Análise de resposta completa
+    print('\n--- 6. Análise de Resposta Completa ---');
+    try {
+      final response = await dteService.obterIndicadorDte('00000000000000');
+
+      final analise = dteService.analisarResposta(response);
+      print('Análise da resposta:');
+      for (final entry in analise.entries) {
+        print('  ${entry.key}: ${entry.value}');
+      }
+    } catch (e) {
+      print('Erro na análise: $e');
+    }
+
+    // 7. Exemplo com diferentes cenários de enquadramento
+    print('\n--- 7. Cenários de Enquadramento ---');
+
+    final cenarios = [
+      {'cnpj': '11111111111111', 'descricao': 'CNPJ de teste 1'},
+      {'cnpj': '22222222222222', 'descricao': 'CNPJ de teste 2'},
+      {'cnpj': '33333333333333', 'descricao': 'CNPJ de teste 3'},
+    ];
+
+    for (final cenario in cenarios) {
+      try {
+        print('\nTestando ${cenario['descricao']}:');
+        final response = await dteService.obterIndicadorDte(cenario['cnpj']!);
+
+        if (response.sucesso && response.dadosParsed != null) {
+          final dados = response.dadosParsed!;
+          print('  Indicador: ${dados.indicadorEnquadramento}');
+          print('  Status: ${dados.statusEnquadramento}');
+          print('  Descrição: ${dados.indicadorDescricao}');
+
+          // Interpretação do resultado
+          if (dados.indicadorEnquadramento == 0) {
+            print('  → Este contribuinte é OPTANTE DTE');
+          } else if (dados.indicadorEnquadramento == 1) {
+            print('  → Este contribuinte é OPTANTE SIMPLES NACIONAL');
+          } else if (dados.indicadorEnquadramento == 2) {
+            print('  → Este contribuinte é OPTANTE DTE E SIMPLES NACIONAL');
+          } else if (dados.indicadorEnquadramento == -1) {
+            print('  → Este contribuinte NÃO É OPTANTE');
+          } else if (dados.indicadorEnquadramento == -2) {
+            print('  → Este NI (Número de Identificação) é INVÁLIDO');
+          }
+        } else {
+          print('  Erro: ${response.mensagemPrincipal}');
+        }
+      } catch (e) {
+        print('  Erro: $e');
+      }
+    }
+
+    // 8. Exemplo de uso prático - Verificação de elegibilidade
+    print('\n--- 8. Verificação de Elegibilidade para DTE ---');
+    try {
+      final cnpjEmpresa = '11111111111111';
+      print('Verificando elegibilidade da empresa $cnpjEmpresa para DTE...');
+
+      final response = await dteService.obterIndicadorDte(cnpjEmpresa);
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+
+        print('\nResultado da verificação:');
+        print('Status: ${dados.statusEnquadramento}');
+
+        if (dados.indicadorEnquadramento == 0 || dados.indicadorEnquadramento == 2) {
+          print('✓ Esta empresa PODE utilizar o DTE');
+          print('✓ Sua Caixa Postal no e-CAC será considerada Domicílio Tributário');
+        } else if (dados.indicadorEnquadramento == 1) {
+          print('⚠ Esta empresa é optante do Simples Nacional');
+          print('⚠ Verifique se pode utilizar o DTE conforme legislação');
+        } else if (dados.indicadorEnquadramento == -1) {
+          print('✗ Esta empresa NÃO é optante');
+          print('✗ Não pode utilizar o DTE');
+        } else if (dados.indicadorEnquadramento == -2) {
+          print('✗ CNPJ inválido');
+          print('✗ Verifique o número do CNPJ');
+        }
+      } else {
+        print('✗ Erro na verificação: ${response.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na verificação de elegibilidade: $e');
+    }
+
+    // 9. Exemplo com dados da documentação oficial
+    print('\n--- 9. Exemplo com Dados da Documentação Oficial ---');
+
+    // Dados do exemplo da documentação
+    final exemploDocumentacao = {'contratante': '11111111111111', 'autorPedidoDados': '11111111111111', 'contribuinte': '99999999999999'};
+
+    print('Dados do exemplo da documentação:');
+    print('Contratante: ${exemploDocumentacao['contratante']}');
+    print('Autor do Pedido: ${exemploDocumentacao['autorPedidoDados']}');
+    print('Contribuinte: ${exemploDocumentacao['contribuinte']}');
+
+    try {
+      final response = await dteService.obterIndicadorDte(exemploDocumentacao['contribuinte']!);
+
+      print('\nResposta do exemplo da documentação:');
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador: ${dados.indicadorEnquadramento}');
+        print('Status: ${dados.statusEnquadramento}');
+
+        // Simular o JSON de retorno da documentação
+        print('\nJSON de retorno (formato da documentação):');
+        print('{');
+        print('  "contratante": {');
+        print('    "numero": "${exemploDocumentacao['contratante']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "autorPedidoDados": {');
+        print('    "numero": "${exemploDocumentacao['autorPedidoDados']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "contribuinte": {');
+        print('    "numero": "${exemploDocumentacao['contribuinte']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "pedidoDados": {');
+        print('    "idSistema": "DTE",');
+        print('    "idServico": "CONSULTASITUACAODTE111",');
+        print('    "versaoSistema": "1.0",');
+        print('    "dados": ""');
+        print('  },');
+        print('  "status": ${response.status},');
+        print('  "dados": "${response.dados}",');
+        print('  "mensagens": [');
+        for (final mensagem in response.mensagens) {
+          print('    {');
+          print('      "codigo": "${mensagem.codigo}",');
+          print('      "texto": "${mensagem.texto}"');
+          print('    }');
+        }
+        print('  ]');
+        print('}');
+      }
+    } catch (e) {
+      print('Erro no exemplo da documentação: $e');
+    }
+
+    // 10. Resumo dos indicadores de enquadramento
+    print('\n--- 10. Resumo dos Indicadores de Enquadramento ---');
+    print('Conforme documentação DTE:');
+    print('  -2: NI inválido');
+    print('  -1: NI Não optante');
+    print('   0: NI Optante DTE');
+    print('   1: NI Optante Simples');
+    print('   2: NI Optante DTE e Simples');
+
+    // Testar todos os indicadores possíveis
+    for (int indicador = -2; indicador <= 2; indicador++) {
+      final descricao = dteService.obterDescricaoIndicador(indicador);
+      final isValid = dteService.isIndicadorValido(indicador);
+      print('Indicador $indicador: $descricao (válido: $isValid)');
+    }
+
+    print('\n=== Exemplos DTE Concluídos ===');
   } catch (e) {
-    print('Erro no serviço DTE: $e');
+    print('Erro geral no serviço DTE: $e');
   }
 }
 
@@ -1239,5 +1818,1622 @@ Future<void> exemplosAutenticaProcurador(ApiClient apiClient) async {
     print('\n=== Exemplos Autenticação de Procurador Concluídos ===');
   } catch (e) {
     print('Erro no serviço de Autenticação de Procurador: $e');
+  }
+}
+
+Future<void> exemplosRelpsn(ApiClient apiClient) async {
+  print('\n=== Exemplos RELPSN (Parcelamento do Simples Nacional) ===');
+
+  final relpsnService = RelpsnService(apiClient);
+
+  try {
+    // 1. Consultar Pedidos de Parcelamento
+    print('\n--- 1. Consultar Pedidos de Parcelamento ---');
+    final pedidosResponse = await relpsnService.consultarPedidos();
+
+    if (pedidosResponse.sucesso) {
+      print('✓ Pedidos consultados com sucesso');
+      print('Status: ${pedidosResponse.status}');
+      print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
+
+      final parcelamentos = pedidosResponse.dadosParsed?.parcelamentos ?? [];
+      print('Total de parcelamentos: ${parcelamentos.length}');
+
+      for (final parcelamento in parcelamentos) {
+        print('  - Parcelamento ${parcelamento.numero}:');
+        print('    Situação: ${parcelamento.situacao}');
+        print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+      }
+    } else {
+      print('✗ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+    }
+
+    // 2. Consultar Parcelamento Específico
+    print('\n--- 2. Consultar Parcelamento Específico ---');
+    const numeroParcelamento = 123456; // Número de exemplo
+
+    try {
+      final parcelamentoResponse = await relpsnService.consultarParcelamento(numeroParcelamento);
+
+      if (parcelamentoResponse.sucesso) {
+        print('✓ Parcelamento consultado com sucesso');
+        final parcelamento = parcelamentoResponse.dadosParsed;
+
+        if (parcelamento != null) {
+          print('Número: ${parcelamento.numero}');
+          print('Situação: ${parcelamento.situacao}');
+          print('Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+
+          // Consolidação original
+          final consolidacao = parcelamento.consolidacaoOriginal;
+          if (consolidacao != null) {
+            print('Consolidação original:');
+            print('  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDaEntrada.toStringAsFixed(2)}');
+            print('  Data: ${consolidacao.dataConsolidacaoFormatada}');
+            print('  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}');
+            print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}');
+            print('  Valor consolidado da dívida: R\$ ${consolidacao.valorConsolidadoDivida.toStringAsFixed(2)}');
+
+            print('  Detalhes da consolidação:');
+            for (final detalhe in consolidacao.detalhesConsolidacao) {
+              print('    - Período: ${detalhe.periodoApuracaoFormatado}');
+              print('      Vencimento: ${detalhe.vencimentoFormatado}');
+              print('      Processo: ${detalhe.numeroProcesso}');
+              print('      Saldo original: R\$ ${detalhe.saldoDevedorOriginal.toStringAsFixed(2)}');
+              print('      Valor atualizado: R\$ ${detalhe.valorAtualizado.toStringAsFixed(2)}');
+            }
+          }
+
+          // Alterações de dívida
+          print('Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+          for (final alteracao in parcelamento.alteracoesDivida) {
+            print('  - Data: ${alteracao.dataAlteracaoDividaFormatada}');
+            print('    Identificador: ${alteracao.identificadorConsolidacaoDescricao}');
+            print('    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}');
+            print('    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}');
+            print('    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}');
+            print('    Demais débitos: R\$ ${alteracao.demaisDebitos.toStringAsFixed(2)}');
+
+            print('    Parcelas da alteração:');
+            for (final parcela in alteracao.parcelasAlteracao) {
+              print('      - Faixa: ${parcela.faixaParcelas}');
+              print('        Parcela inicial: ${parcela.parcelaInicialFormatada}');
+              print('        Vencimento inicial: ${parcela.vencimentoInicialFormatado}');
+              print('        Parcela básica: R\$ ${parcela.parcelaBasica.toStringAsFixed(2)}');
+            }
+          }
+
+          // Demonstrativo de pagamentos
+          print('Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+          for (final pagamento in parcelamento.demonstrativoPagamentos) {
+            print('  - Mês: ${pagamento.mesDaParcelaFormatado}');
+            print('    Vencimento DAS: ${pagamento.vencimentoDoDasFormatado}');
+            print('    Data de arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
+            print('    Valor pago: R\$ ${pagamento.valorPago.toStringAsFixed(2)}');
+          }
+        }
+      } else {
+        print('✗ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('✗ Erro ao consultar parcelamento: $e');
+    }
+
+    // 3. Consultar Parcelas Disponíveis
+    print('\n--- 3. Consultar Parcelas Disponíveis ---');
+
+    try {
+      final parcelasResponse = await relpsnService.consultarParcelas(numeroParcelamento);
+
+      if (parcelasResponse.sucesso) {
+        print('✓ Parcelas consultadas com sucesso');
+        final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
+
+        print('Total de parcelas: ${parcelas.length}');
+        print('Valor total: R\$ ${relpsnService.consultarParcelas(numeroParcelamento).then((r) => r.dadosParsed?.valorTotalParcelas ?? 0.0)}');
+
+        // Parcelas ordenadas
+        final parcelasOrdenadas = parcelasResponse.dadosParsed?.parcelasOrdenadas ?? [];
+        print('Parcelas ordenadas:');
+        for (final parcela in parcelasOrdenadas) {
+          print('  - ${parcela.descricaoCompleta}');
+          print('    Vencida: ${parcela.isVencida ? 'Sim' : 'Não'}');
+          print('    Dias até vencimento: ${parcela.diasAteVencimento}');
+        }
+
+        // Próxima parcela a vencer
+        final proximaParcela = parcelasResponse.dadosParsed?.proximaParcela;
+        if (proximaParcela != null) {
+          print('Próxima parcela a vencer: ${proximaParcela.descricaoCompleta}');
+        }
+      } else {
+        print('✗ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('✗ Erro ao consultar parcelas: $e');
+    }
+
+    // 4. Consultar Detalhes de Pagamento
+    print('\n--- 4. Consultar Detalhes de Pagamento ---');
+    const anoMesParcela = 202401; // Janeiro de 2024
+
+    try {
+      final detalhesResponse = await relpsnService.consultarDetalhesPagamento(numeroParcelamento, anoMesParcela);
+
+      if (detalhesResponse.sucesso) {
+        print('✓ Detalhes de pagamento consultados com sucesso');
+        final detalhes = detalhesResponse.dadosParsed;
+
+        if (detalhes != null) {
+          print('DAS: ${detalhes.numeroDas}');
+          print('Data de vencimento: ${detalhes.dataVencimentoFormatada}');
+          print('PA DAS gerado: ${detalhes.paDasGeradoFormatado}');
+          print('Gerado em: ${detalhes.geradoEmFormatado}');
+          print('Número do parcelamento: ${detalhes.numeroParcelamento}');
+          print('Número da parcela: ${detalhes.numeroParcela}');
+          print('Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
+          print('Data do pagamento: ${detalhes.dataPagamentoFormatada}');
+          print('Banco/Agência: ${detalhes.bancoAgencia}');
+          print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
+
+          print('Total de débitos pagos: R\$ ${detalhes.totalDebitosPagos.toStringAsFixed(2)}');
+          print('Total de tributos pagos: R\$ ${detalhes.totalTributosPagos.toStringAsFixed(2)}');
+
+          print('Pagamentos de débitos:');
+          for (final pagamento in detalhes.pagamentoDebitos) {
+            print('  - PA Débito: ${pagamento.paDebitoFormatado}');
+            print('    Processo: ${pagamento.processo}');
+            print('    Total de débitos: R\$ ${pagamento.totalDebitos.toStringAsFixed(2)}');
+            print('    Total principal: R\$ ${pagamento.totalPrincipal.toStringAsFixed(2)}');
+            print('    Total multa: R\$ ${pagamento.totalMulta.toStringAsFixed(2)}');
+            print('    Total juros: R\$ ${pagamento.totalJuros.toStringAsFixed(2)}');
+
+            print('    Discriminações:');
+            for (final discriminacao in pagamento.discriminacoesDebito) {
+              print('      - ${discriminacao.descricaoCompleta}');
+              print('        Percentual multa: ${discriminacao.percentualMulta.toStringAsFixed(2)}%');
+              print('        Percentual juros: ${discriminacao.percentualJuros.toStringAsFixed(2)}%');
+            }
+          }
+        }
+      } else {
+        print('✗ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('✗ Erro ao consultar detalhes: $e');
+    }
+
+    // 5. Emitir DAS
+    print('\n--- 5. Emitir DAS ---');
+    const parcelaParaEmitir = 202401; // Janeiro de 2024
+
+    try {
+      final dasResponse = await relpsnService.emitirDas(numeroParcelamento, parcelaParaEmitir);
+
+      if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
+        print('✓ DAS emitido com sucesso');
+        print('Tamanho do PDF: ${dasResponse.tamanhoPdfFormatado}');
+        print('PDF disponível: ${dasResponse.dadosParsed?.pdfDisponivel == true ? 'Sim' : 'Não'}');
+
+        final pdfInfo = dasResponse.dadosParsed?.pdfInfo;
+        if (pdfInfo != null) {
+          print('Informações do PDF:');
+          print('  - Disponível: ${pdfInfo['disponivel']}');
+          print('  - Tamanho em caracteres: ${pdfInfo['tamanho_caracteres']}');
+          print('  - Tamanho em bytes: ${pdfInfo['tamanho_bytes_aproximado']}');
+          print('  - Preview: ${pdfInfo['preview']}');
+        }
+      } else {
+        print('✗ Erro ao emitir DAS: ${dasResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('✗ Erro ao emitir DAS: $e');
+    }
+
+    // 6. Validações
+    print('\n--- 6. Validações ---');
+
+    // Validar número do parcelamento
+    final validacaoParcelamento = relpsnService.validarNumeroParcelamento(numeroParcelamento);
+    print('Validação parcelamento: ${validacaoParcelamento ?? 'Válido'}');
+
+    // Validar ano/mês da parcela
+    final validacaoAnoMes = relpsnService.validarAnoMesParcela(anoMesParcela);
+    print('Validação ano/mês: ${validacaoAnoMes ?? 'Válido'}');
+
+    // Validar parcela para emitir
+    final validacaoParcela = relpsnService.validarParcelaParaEmitir(parcelaParaEmitir);
+    print('Validação parcela para emitir: ${validacaoParcela ?? 'Válido'}');
+
+    // Validar prazo de emissão
+    final validacaoPrazo = relpsnService.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    print('Validação prazo de emissão: ${validacaoPrazo ?? 'Válido'}');
+
+    // 7. Tratamento de Erros
+    print('\n--- 7. Tratamento de Erros ---');
+
+    // Verificar se um erro é conhecido
+    const codigoErroExemplo = '[Aviso-RELPSN-ER_E001]';
+    final isKnown = relpsnService.isKnownError(codigoErroExemplo);
+    print('Erro conhecido ($codigoErroExemplo): ${isKnown ? 'Sim' : 'Não'}');
+
+    // Obter informações sobre um erro
+    final errorInfo = relpsnService.getErrorInfo(codigoErroExemplo);
+    if (errorInfo != null) {
+      print('Informações do erro:');
+      print('  - Código: ${errorInfo.codigo}');
+      print('  - Mensagem: ${errorInfo.mensagem}');
+      print('  - Ação: ${errorInfo.acao}');
+      print('  - Tipo: ${errorInfo.tipo}');
+    }
+
+    // Analisar um erro
+    final analysis = relpsnService.analyzeError(codigoErroExemplo, 'Não há parcelamento ativo para o contribuinte.');
+    print('Análise do erro:');
+    print('  - Resumo: ${analysis.summary}');
+    print('  - Ação recomendada: ${analysis.recommendedAction}');
+    print('  - Severidade: ${analysis.severity}');
+    print('  - Pode tentar novamente: ${analysis.canRetry ? 'Sim' : 'Não'}');
+    print('  - Requer ação do usuário: ${analysis.requiresUserAction ? 'Sim' : 'Não'}');
+    print('  - É crítico: ${analysis.isCritical ? 'Sim' : 'Não'}');
+    print('  - É ignorável: ${analysis.isIgnorable ? 'Sim' : 'Não'}');
+    print('  - É erro de validação: ${analysis.isValidationError ? 'Sim' : 'Não'}');
+    print('  - É erro de sistema: ${analysis.isSystemError ? 'Sim' : 'Não'}');
+    print('  - É aviso: ${analysis.isWarning ? 'Sim' : 'Não'}');
+
+    // 8. Listar Erros por Tipo
+    print('\n--- 8. Listar Erros por Tipo ---');
+
+    final avisos = relpsnService.getAvisos();
+    print('Total de avisos: ${avisos.length}');
+    for (final aviso in avisos.take(3)) {
+      // Mostrar apenas os primeiros 3
+      print('  - ${aviso.codigo}: ${aviso.mensagem}');
+    }
+
+    final errosEntrada = relpsnService.getEntradasIncorretas();
+    print('Total de erros de entrada: ${errosEntrada.length}');
+    for (final erro in errosEntrada.take(3)) {
+      // Mostrar apenas os primeiros 3
+      print('  - ${erro.codigo}: ${erro.mensagem}');
+    }
+
+    final erros = relpsnService.getErros();
+    print('Total de erros gerais: ${erros.length}');
+    for (final erro in erros.take(3)) {
+      // Mostrar apenas os primeiros 3
+      print('  - ${erro.codigo}: ${erro.mensagem}');
+    }
+
+    print('\n=== Exemplos RELPSN Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço RELPSN: $e');
+  }
+}
+
+Future<void> exemplosSicalc(ApiClient apiClient) async {
+  print('\n=== Exemplos SICALC (Sistema de Cálculo de Acréscimos Legais) ===');
+
+  final sicalcService = SicalcService(apiClient);
+
+  try {
+    // 1. Consultar Código de Receita
+    print('\n--- 1. Consultando Código de Receita ---');
+    final consultarReceitaResponse = await sicalcService.consultarCodigoReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceita: 190, // IRPF
+    );
+
+    if (consultarReceitaResponse.sucesso) {
+      print('✓ Receita consultada com sucesso');
+      print('Status: ${consultarReceitaResponse.status}');
+      print('Mensagem: ${consultarReceitaResponse.mensagemPrincipal}');
+
+      final dados = consultarReceitaResponse.dados;
+      if (dados != null) {
+        print('Código da receita: ${dados.codigoReceita}');
+        print('Descrição: ${dados.descricaoReceita}');
+        print('Tipo de pessoa: ${dados.tipoPessoaFormatado}');
+        print('Período de apuração: ${dados.tipoPeriodoFormatado}');
+        print('Ativa: ${dados.ativa}');
+        print('Vigente: ${dados.isVigente}');
+        if (dados.observacoes != null) {
+          print('Observações: ${dados.observacoes}');
+        }
+      }
+    } else {
+      print('✗ Erro ao consultar receita: ${consultarReceitaResponse.mensagemPrincipal}');
+    }
+
+    // 2. Gerar DARF para Pessoa Física (IRPF)
+    print('\n--- 2. Gerando DARF para Pessoa Física (IRPF) ---');
+    final darfPfResponse = await sicalcService.gerarDarfPessoaFisica(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      dataPA: '12/2023',
+      vencimento: '2024-01-31T00:00:00',
+      valorImposto: 1000.00,
+      dataConsolidacao: '2024-02-15T00:00:00',
+      observacao: 'DARF calculado via SICALC',
+    );
+
+    if (darfPfResponse.sucesso) {
+      print('✓ DARF gerado com sucesso');
+      print('Status: ${darfPfResponse.status}');
+      print('Mensagem: ${darfPfResponse.mensagemPrincipal}');
+      print('Tem PDF: ${darfPfResponse.temPdf}');
+      print('Tamanho do PDF: ${darfPfResponse.tamanhoPdfFormatado}');
+
+      final dados = darfPfResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor principal: ${dados.valorPrincipalFormatado}');
+        print('Valor total consolidado: ${dados.valorTotalFormatado}');
+        print('Valor multa: ${dados.valorMultaFormatado}');
+        print('Percentual multa: ${dados.percentualMultaMora}%');
+        print('Valor juros: ${dados.valorJurosFormatado}');
+        print('Percentual juros: ${dados.percentualJuros}%');
+        print('Data de consolidação: ${dados.dataArrecadacaoConsolidacao}');
+        print('Data de validade: ${dados.dataValidadeCalculo}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF PF: ${darfPfResponse.mensagemPrincipal}');
+    }
+
+    // 3. Gerar DARF para Pessoa Jurídica (IRPJ)
+    print('\n--- 3. Gerando DARF para Pessoa Jurídica (IRPJ) ---');
+    final darfPjResponse = await sicalcService.gerarDarfPessoaJuridica(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      dataPA: '04/2023',
+      vencimento: '2023-05-31T00:00:00',
+      valorImposto: 5000.00,
+      dataConsolidacao: '2023-06-15T00:00:00',
+      observacao: 'DARF trimestral PJ',
+    );
+
+    if (darfPjResponse.sucesso) {
+      print('✓ DARF PJ gerado com sucesso');
+      print('Status: ${darfPjResponse.status}');
+      print('Tem PDF: ${darfPjResponse.temPdf}');
+
+      final dados = darfPjResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF PJ: ${darfPjResponse.mensagemPrincipal}');
+    }
+
+    // 4. Gerar DARF para PIS/PASEP
+    print('\n--- 4. Gerando DARF para PIS/PASEP ---');
+    final darfPisResponse = await sicalcService.gerarDarfPisPasep(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      dataPA: '01/2024',
+      vencimento: '2024-02-15T00:00:00',
+      valorImposto: 500.00,
+      dataConsolidacao: '2024-02-20T00:00:00',
+      observacao: 'DARF PIS/PASEP mensal',
+    );
+
+    if (darfPisResponse.sucesso) {
+      print('✓ DARF PIS/PASEP gerado com sucesso');
+      print('Status: ${darfPisResponse.status}');
+      print('Tem PDF: ${darfPisResponse.temPdf}');
+
+      final dados = darfPisResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF PIS/PASEP: ${darfPisResponse.mensagemPrincipal}');
+    }
+
+    // 5. Gerar DARF para COFINS
+    print('\n--- 5. Gerando DARF para COFINS ---');
+    final darfCofinsResponse = await sicalcService.gerarDarfCofins(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      dataPA: '01/2024',
+      vencimento: '2024-02-15T00:00:00',
+      valorImposto: 1000.00,
+      dataConsolidacao: '2024-02-20T00:00:00',
+      observacao: 'DARF COFINS mensal',
+    );
+
+    if (darfCofinsResponse.sucesso) {
+      print('✓ DARF COFINS gerado com sucesso');
+      print('Status: ${darfCofinsResponse.status}');
+      print('Tem PDF: ${darfCofinsResponse.temPdf}');
+
+      final dados = darfCofinsResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF COFINS: ${darfCofinsResponse.mensagemPrincipal}');
+    }
+
+    // 6. Gerar código de barras para DARF já calculado
+    print('\n--- 6. Gerando Código de Barras para DARF ---');
+    if (darfPfResponse.sucesso && darfPfResponse.dados != null) {
+      final codigoBarrasResponse = await sicalcService.gerarCodigoBarrasDarf(
+        contribuinteNumero: '00000000000',
+        numeroDocumento: darfPfResponse.dados!.numeroDocumento,
+      );
+
+      if (codigoBarrasResponse.sucesso) {
+        print('✓ Código de barras gerado com sucesso');
+        print('Status: ${codigoBarrasResponse.status}');
+        print('Tem código de barras: ${codigoBarrasResponse.temCodigoBarras}');
+        print('Tamanho: ${codigoBarrasResponse.tamanhoCodigoBarrasFormatado}');
+
+        final dados = codigoBarrasResponse.dados;
+        if (dados != null) {
+          print('Número do documento: ${dados.numeroDocumento}');
+          print('Tem linha digitável: ${dados.temLinhaDigitavel}');
+          print('Tem QR Code: ${dados.temQrCode}');
+          print('Data de geração: ${dados.dataGeracaoFormatada}');
+          print('Data de validade: ${dados.dataValidadeFormatada}');
+          print('Válido: ${dados.isValido}');
+
+          final info = dados.infoCodigoBarras;
+          print('Informações do código de barras:');
+          print('  - Disponível: ${info['disponivel']}');
+          print('  - Tamanho: ${info['tamanho_bytes_aproximado']} bytes');
+          print('  - Tem linha digitável: ${info['tem_linha_digitavel']}');
+          print('  - Tem QR Code: ${info['tem_qr_code']}');
+          print('  - Preview: ${info['preview']}');
+        }
+      } else {
+        print('✗ Erro ao gerar código de barras: ${codigoBarrasResponse.mensagemPrincipal}');
+      }
+    }
+
+    // 7. Fluxo completo: Gerar DARF e código de barras
+    print('\n--- 7. Fluxo Completo: DARF + Código de Barras ---');
+    final fluxoCompletoResponse = await sicalcService.gerarDarfECodigoBarras(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 190,
+      codigoReceitaExtensao: 1,
+      dataPA: '02/2024',
+      vencimento: '2024-03-31T00:00:00',
+      valorImposto: 1500.00,
+      dataConsolidacao: '2024-04-05T00:00:00',
+      observacao: 'Fluxo completo SICALC',
+    );
+
+    if (fluxoCompletoResponse.sucesso) {
+      print('✓ Fluxo completo executado com sucesso');
+      print('Status: ${fluxoCompletoResponse.status}');
+      print('Tem código de barras: ${fluxoCompletoResponse.temCodigoBarras}');
+
+      final dados = fluxoCompletoResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Tem linha digitável: ${dados.temLinhaDigitavel}');
+        print('Tem QR Code: ${dados.temQrCode}');
+      }
+    } else {
+      print('✗ Erro no fluxo completo: ${fluxoCompletoResponse.mensagemPrincipal}');
+    }
+
+    // 8. Consultar informações detalhadas de receita
+    print('\n--- 8. Consultando Informações Detalhadas de Receita ---');
+    final infoReceita = await sicalcService.obterInfoReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceita: 1162, // PIS/PASEP
+    );
+
+    if (infoReceita != null) {
+      print('✓ Informações da receita obtidas');
+      print('Código: ${infoReceita['codigoReceita']}');
+      print('Descrição: ${infoReceita['descricaoReceita']}');
+      print('Tipo de pessoa: ${infoReceita['tipoPessoa']}');
+      print('Período de apuração: ${infoReceita['tipoPeriodoApuracao']}');
+      print('Ativa: ${infoReceita['ativa']}');
+      print('Vigente: ${infoReceita['vigente']}');
+      print('Compatível com contribuinte: ${infoReceita['compativelComContribuinte']}');
+      if (infoReceita['observacoes'] != null) {
+        print('Observações: ${infoReceita['observacoes']}');
+      }
+    } else {
+      print('✗ Não foi possível obter informações da receita');
+    }
+
+    // 9. Validar compatibilidade de receita
+    print('\n--- 9. Validando Compatibilidade de Receita ---');
+    final isCompatible = await sicalcService.validarCompatibilidadeReceita(
+      contribuinteNumero: '00000000000',
+      codigoReceita: 190, // IRPF
+    );
+
+    print('Receita 190 (IRPF) é compatível com CPF: $isCompatible');
+
+    final isCompatiblePJ = await sicalcService.validarCompatibilidadeReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceita: 220, // IRPJ
+    );
+
+    print('Receita 220 (IRPJ) é compatível com CNPJ: $isCompatiblePJ');
+
+    // 10. Exemplo com DARF manual (com multa e juros pré-calculados)
+    print('\n--- 10. Exemplo com DARF Manual (Multa e Juros Pré-calculados) ---');
+    final darfManualResponse = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 190,
+      codigoReceitaExtensao: 1,
+      dataPA: '03/2024',
+      vencimento: '2024-04-30T00:00:00',
+      valorImposto: 2000.00,
+      dataConsolidacao: '2024-05-10T00:00:00',
+      valorMulta: 100.00, // Multa pré-calculada
+      valorJuros: 50.00, // Juros pré-calculados
+      observacao: 'DARF manual com multa e juros',
+    );
+
+    if (darfManualResponse.sucesso) {
+      print('✓ DARF manual gerado com sucesso');
+      print('Status: ${darfManualResponse.status}');
+      print('Tem PDF: ${darfManualResponse.temPdf}');
+
+      final dados = darfManualResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor principal: ${dados.valorPrincipalFormatado}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+        print('Valor multa: ${dados.valorMultaFormatado}');
+        print('Valor juros: ${dados.valorJurosFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF manual: ${darfManualResponse.mensagemPrincipal}');
+    }
+
+    // 11. Exemplo com DARF de ganho de capital
+    print('\n--- 11. Exemplo com DARF de Ganho de Capital ---');
+    final darfGanhoCapitalResponse = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 190,
+      codigoReceitaExtensao: 1,
+      dataPA: '04/2024',
+      vencimento: '2024-05-31T00:00:00',
+      valorImposto: 5000.00,
+      dataConsolidacao: '2024-06-15T00:00:00',
+      ganhoCapital: true,
+      dataAlienacao: '2024-04-15T00:00:00',
+      observacao: 'DARF ganho de capital',
+    );
+
+    if (darfGanhoCapitalResponse.sucesso) {
+      print('✓ DARF ganho de capital gerado com sucesso');
+      print('Status: ${darfGanhoCapitalResponse.status}');
+      print('Tem PDF: ${darfGanhoCapitalResponse.temPdf}');
+
+      final dados = darfGanhoCapitalResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF ganho de capital: ${darfGanhoCapitalResponse.mensagemPrincipal}');
+    }
+
+    // 12. Exemplo com DARF com cota
+    print('\n--- 12. Exemplo com DARF com Cota ---');
+    final darfCotaResponse = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 220,
+      codigoReceitaExtensao: 1,
+      dataPA: '01/2024',
+      vencimento: '2024-02-29T00:00:00',
+      valorImposto: 3000.00,
+      dataConsolidacao: '2024-03-10T00:00:00',
+      cota: 1,
+      observacao: 'DARF com cota',
+    );
+
+    if (darfCotaResponse.sucesso) {
+      print('✓ DARF com cota gerado com sucesso');
+      print('Status: ${darfCotaResponse.status}');
+      print('Tem PDF: ${darfCotaResponse.temPdf}');
+
+      final dados = darfCotaResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF com cota: ${darfCotaResponse.mensagemPrincipal}');
+    }
+
+    // 13. Exemplo com DARF com CNO (Cadastro Nacional de Obras)
+    print('\n--- 13. Exemplo com DARF com CNO ---');
+    final darfCnoResponse = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 1162,
+      codigoReceitaExtensao: 1,
+      dataPA: '01/2024',
+      vencimento: '2024-02-15T00:00:00',
+      valorImposto: 800.00,
+      dataConsolidacao: '2024-02-20T00:00:00',
+      cno: 12345,
+      observacao: 'DARF com CNO',
+    );
+
+    if (darfCnoResponse.sucesso) {
+      print('✓ DARF com CNO gerado com sucesso');
+      print('Status: ${darfCnoResponse.status}');
+      print('Tem PDF: ${darfCnoResponse.temPdf}');
+
+      final dados = darfCnoResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF com CNO: ${darfCnoResponse.mensagemPrincipal}');
+    }
+
+    // 14. Exemplo com DARF com CNPJ do prestador
+    print('\n--- 14. Exemplo com DARF com CNPJ do Prestador ---');
+    final darfCnpjPrestadorResponse = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 1165,
+      codigoReceitaExtensao: 1,
+      dataPA: '01/2024',
+      vencimento: '2024-02-15T00:00:00',
+      valorImposto: 1200.00,
+      dataConsolidacao: '2024-02-20T00:00:00',
+      cnpjPrestador: 12345678000199,
+      observacao: 'DARF com CNPJ do prestador',
+    );
+
+    if (darfCnpjPrestadorResponse.sucesso) {
+      print('✓ DARF com CNPJ do prestador gerado com sucesso');
+      print('Status: ${darfCnpjPrestadorResponse.status}');
+      print('Tem PDF: ${darfCnpjPrestadorResponse.temPdf}');
+
+      final dados = darfCnpjPrestadorResponse.dados;
+      if (dados != null) {
+        print('Número do documento: ${dados.numeroDocumento}');
+        print('Valor total: ${dados.valorTotalFormatado}');
+      }
+    } else {
+      print('✗ Erro ao gerar DARF com CNPJ do prestador: ${darfCnpjPrestadorResponse.mensagemPrincipal}');
+    }
+
+    // 15. Exemplo com diferentes tipos de período de apuração
+    print('\n--- 15. Exemplo com Diferentes Tipos de Período de Apuração ---');
+
+    // Mensal
+    print('Testando período mensal...');
+    final darfMensal = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 1162,
+      codigoReceitaExtensao: 1,
+      dataPA: '01/2024',
+      vencimento: '2024-02-15T00:00:00',
+      valorImposto: 500.00,
+      dataConsolidacao: '2024-02-20T00:00:00',
+      tipoPA: 'ME',
+      observacao: 'DARF mensal',
+    );
+    print('DARF mensal: ${darfMensal.sucesso ? 'Sucesso' : 'Erro'}');
+
+    // Trimestral
+    print('Testando período trimestral...');
+    final darfTrimestral = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000100',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 1164,
+      codigoReceitaExtensao: 1,
+      dataPA: '01/2024',
+      vencimento: '2024-04-30T00:00:00',
+      valorImposto: 2000.00,
+      dataConsolidacao: '2024-05-10T00:00:00',
+      tipoPA: 'TR',
+      observacao: 'DARF trimestral',
+    );
+    print('DARF trimestral: ${darfTrimestral.sucesso ? 'Sucesso' : 'Erro'}');
+
+    // Anual
+    print('Testando período anual...');
+    final darfAnual = await sicalcService.consolidarEGerarDarf(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: 190,
+      codigoReceitaExtensao: 1,
+      dataPA: '2023',
+      vencimento: '2024-03-31T00:00:00',
+      valorImposto: 10000.00,
+      dataConsolidacao: '2024-04-15T00:00:00',
+      tipoPA: 'AN',
+      observacao: 'DARF anual',
+    );
+    print('DARF anual: ${darfAnual.sucesso ? 'Sucesso' : 'Erro'}');
+
+    print('\n=== Exemplos SICALC Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço SICALC: $e');
+  }
+}
+
+Future<void> exemplosRelpmei(ApiClient apiClient) async {
+  print('\n=== Exemplos RELPMEI ===');
+
+  final relpmeiService = RelpmeiService(apiClient);
+
+  try {
+    // Exemplo 1: Consultar Pedidos de Parcelamento
+    print('\n--- Consultando Pedidos de Parcelamento ---');
+    final consultarPedidosRequest = ConsultarPedidosRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta de pedidos RELPMEI'),
+      cpfCnpj: '12345678901', // CPF de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+      vencimento: '2024-01-31',
+      valor: '1000.00',
+      observacoes: 'Parcelamento de débitos',
+      tipoParcelamento: 'NORMAL',
+      numeroParcelas: '12',
+      valorParcela: '83.33',
+      dataVencimento: '2024-01-31',
+      codigoBarras: '12345678901234567890123456789012345678901234',
+      linhaDigitavel: '12345678901234567890123456789012345678901234',
+      dataPagamento: '2024-01-15',
+      valorPago: '1000.00',
+      formaPagamento: 'BOLETO',
+      banco: '001',
+      agencia: '1234',
+      conta: '12345678',
+      numeroDocumento: '123456789',
+      dataEmissao: '2024-01-15',
+    );
+
+    final consultarPedidosResponse = await relpmeiService.consultarPedidos(consultarPedidosRequest);
+    print('Consulta de pedidos: ${consultarPedidosResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    if (consultarPedidosResponse.sucesso) {
+      print('Pedidos encontrados: ${consultarPedidosResponse.pedidos?.length ?? 0}');
+    } else {
+      print('Erro: ${consultarPedidosResponse.mensagem}');
+      print('Código: ${consultarPedidosResponse.codigoErro}');
+      print('Detalhes: ${consultarPedidosResponse.detalhesErro}');
+    }
+
+    // Exemplo 2: Consultar Parcelamentos Existentes
+    print('\n--- Consultando Parcelamentos Existentes ---');
+    final consultarParcelamentoRequest = ConsultarParcelamentoRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PARCELAMENTOS', dados: 'Consulta de parcelamentos RELPMEI'),
+      cpfCnpj: '12345678901', // CPF de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+      vencimento: '2024-01-31',
+      valor: '1000.00',
+      observacoes: 'Parcelamento de débitos',
+      tipoParcelamento: 'NORMAL',
+      numeroParcelas: '12',
+      valorParcela: '83.33',
+      dataVencimento: '2024-01-31',
+      codigoBarras: '12345678901234567890123456789012345678901234',
+      linhaDigitavel: '12345678901234567890123456789012345678901234',
+      dataPagamento: '2024-01-15',
+      valorPago: '1000.00',
+      formaPagamento: 'BOLETO',
+      banco: '001',
+      agencia: '1234',
+      conta: '12345678',
+      numeroDocumento: '123456789',
+      dataEmissao: '2024-01-15',
+    );
+
+    final consultarParcelamentoResponse = await relpmeiService.consultarParcelamento(consultarParcelamentoRequest);
+    print('Consulta de parcelamentos: ${consultarParcelamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    if (consultarParcelamentoResponse.sucesso) {
+      print('Parcelamentos encontrados: ${consultarParcelamentoResponse.parcelamentos?.length ?? 0}');
+    } else {
+      print('Erro: ${consultarParcelamentoResponse.mensagem}');
+      print('Código: ${consultarParcelamentoResponse.codigoErro}');
+      print('Detalhes: ${consultarParcelamentoResponse.detalhesErro}');
+    }
+
+    // Exemplo 3: Consultar Parcelas para Impressão
+    print('\n--- Consultando Parcelas para Impressão ---');
+    final consultarParcelasImpressaoRequest = ConsultarParcelasImpressaoRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PARCELAS_IMPRESSAO', dados: 'Consulta de parcelas para impressão RELPMEI'),
+      cpfCnpj: '12345678901', // CPF de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+      vencimento: '2024-01-31',
+      valor: '1000.00',
+      observacoes: 'Parcelas para impressão',
+      tipoParcelamento: 'NORMAL',
+      numeroParcelas: '12',
+      valorParcela: '83.33',
+      dataVencimento: '2024-01-31',
+      codigoBarras: '12345678901234567890123456789012345678901234',
+      linhaDigitavel: '12345678901234567890123456789012345678901234',
+      dataPagamento: '2024-01-15',
+      valorPago: '1000.00',
+      formaPagamento: 'BOLETO',
+      banco: '001',
+      agencia: '1234',
+      conta: '12345678',
+      numeroDocumento: '123456789',
+      dataEmissao: '2024-01-15',
+    );
+
+    final consultarParcelasImpressaoResponse = await relpmeiService.consultarParcelasImpressao(consultarParcelasImpressaoRequest);
+    print('Consulta de parcelas para impressão: ${consultarParcelasImpressaoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    if (consultarParcelasImpressaoResponse.sucesso) {
+      print('Parcelas para impressão encontradas: ${consultarParcelasImpressaoResponse.parcelas?.length ?? 0}');
+    } else {
+      print('Erro: ${consultarParcelasImpressaoResponse.mensagem}');
+      print('Código: ${consultarParcelasImpressaoResponse.codigoErro}');
+      print('Detalhes: ${consultarParcelasImpressaoResponse.detalhesErro}');
+    }
+
+    // Exemplo 4: Consultar Detalhes de Pagamento
+    print('\n--- Consultando Detalhes de Pagamento ---');
+    final consultarDetalhesPagamentoRequest = ConsultarDetalhesPagamentoRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_DETALHES_PAGAMENTO', dados: 'Consulta de detalhes de pagamento RELPMEI'),
+      cpfCnpj: '12345678901', // CPF de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+      vencimento: '2024-01-31',
+      valor: '1000.00',
+      observacoes: 'Detalhes de pagamento',
+      tipoParcelamento: 'NORMAL',
+      numeroParcelas: '12',
+      valorParcela: '83.33',
+      dataVencimento: '2024-01-31',
+      codigoBarras: '12345678901234567890123456789012345678901234',
+      linhaDigitavel: '12345678901234567890123456789012345678901234',
+      dataPagamento: '2024-01-15',
+      valorPago: '1000.00',
+      formaPagamento: 'BOLETO',
+      banco: '001',
+      agencia: '1234',
+      conta: '12345678',
+      numeroDocumento: '123456789',
+      dataEmissao: '2024-01-15',
+    );
+
+    final consultarDetalhesPagamentoResponse = await relpmeiService.consultarDetalhesPagamento(consultarDetalhesPagamentoRequest);
+    print('Consulta de detalhes de pagamento: ${consultarDetalhesPagamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    if (consultarDetalhesPagamentoResponse.sucesso) {
+      print('Detalhes de pagamento encontrados: ${consultarDetalhesPagamentoResponse.detalhes?.length ?? 0}');
+    } else {
+      print('Erro: ${consultarDetalhesPagamentoResponse.mensagem}');
+      print('Código: ${consultarDetalhesPagamentoResponse.codigoErro}');
+      print('Detalhes: ${consultarDetalhesPagamentoResponse.detalhesErro}');
+    }
+
+    // Exemplo 5: Emitir DAS
+    print('\n--- Emitindo DAS ---');
+    final emitirDasRequest = EmitirDasRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'EMITIR_DAS', dados: 'Emissão de DAS RELPMEI'),
+      cpfCnpj: '12345678901', // CPF de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+      vencimento: '2024-01-31',
+      valor: '1000.00',
+      observacoes: 'Emissão de DAS',
+      tipoParcelamento: 'NORMAL',
+      numeroParcelas: '12',
+      valorParcela: '83.33',
+      dataVencimento: '2024-01-31',
+      codigoBarras: '12345678901234567890123456789012345678901234',
+      linhaDigitavel: '12345678901234567890123456789012345678901234',
+      dataPagamento: '2024-01-15',
+      valorPago: '1000.00',
+      formaPagamento: 'BOLETO',
+      banco: '001',
+      agencia: '1234',
+      conta: '12345678',
+      numeroDocumento: '123456789',
+      dataEmissao: '2024-01-15',
+    );
+
+    final emitirDasResponse = await relpmeiService.emitirDas(emitirDasRequest);
+    print('Emissão de DAS: ${emitirDasResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    if (emitirDasResponse.sucesso) {
+      print('DAS emitido: ${emitirDasResponse.das?.numeroDas ?? 'N/A'}');
+      print('Valor: ${emitirDasResponse.das?.valor ?? 'N/A'}');
+      print('Vencimento: ${emitirDasResponse.das?.dataVencimento ?? 'N/A'}');
+    } else {
+      print('Erro: ${emitirDasResponse.mensagem}');
+      print('Código: ${emitirDasResponse.codigoErro}');
+      print('Detalhes: ${emitirDasResponse.detalhesErro}');
+    }
+
+    // Exemplo 6: Teste de validação com CPF/CNPJ inválido
+    print('\n--- Teste de Validação com CPF/CNPJ Inválido ---');
+    final requestInvalido = ConsultarPedidosRequest(
+      contribuinteNumero: '',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Teste de validação'),
+      cpfCnpj: '', // CPF vazio para testar validação
+    );
+
+    final responseInvalido = await relpmeiService.consultarPedidos(requestInvalido);
+    print('Validação de CPF vazio: ${responseInvalido.sucesso ? 'Sucesso' : 'Erro'}');
+    if (!responseInvalido.sucesso) {
+      print('Erro esperado: ${responseInvalido.mensagem}');
+      print('Código: ${responseInvalido.codigoErro}');
+    }
+
+    // Exemplo 7: Teste com CNPJ
+    print('\n--- Teste com CNPJ ---');
+    final requestCnpj = ConsultarPedidosRequest(
+      contribuinteNumero: '12345678000195',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta com CNPJ'),
+      cpfCnpj: '12345678000195', // CNPJ de exemplo
+      inscricaoEstadual: '123456789',
+      codigoReceita: '1001',
+      referencia: '202401',
+    );
+
+    final responseCnpj = await relpmeiService.consultarPedidos(requestCnpj);
+    print('Consulta com CNPJ: ${responseCnpj.sucesso ? 'Sucesso' : 'Erro'}');
+    if (responseCnpj.sucesso) {
+      print('Pedidos encontrados: ${responseCnpj.pedidos?.length ?? 0}');
+    } else {
+      print('Erro: ${responseCnpj.mensagem}');
+    }
+
+    // Exemplo 8: Teste com dados mínimos
+    print('\n--- Teste com Dados Mínimos ---');
+    final requestMinimo = ConsultarPedidosRequest(
+      contribuinteNumero: '12345678901',
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'CONSULTAR_PEDIDOS', dados: 'Consulta com dados mínimos'),
+      cpfCnpj: '12345678901', // Apenas CPF obrigatório
+    );
+
+    final responseMinimo = await relpmeiService.consultarPedidos(requestMinimo);
+    print('Consulta com dados mínimos: ${responseMinimo.sucesso ? 'Sucesso' : 'Erro'}');
+    if (responseMinimo.sucesso) {
+      print('Pedidos encontrados: ${responseMinimo.pedidos?.length ?? 0}');
+    } else {
+      print('Erro: ${responseMinimo.mensagem}');
+    }
+
+    print('\n=== Exemplos RELPMEI Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço RELPMEI: $e');
+  }
+}
+
+Future<void> exemplosPertmei(ApiClient apiClient) async {
+  print('\n=== Exemplos PERTMEI ===');
+
+  final pertmeiService = PertmeiService(apiClient);
+  const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
+
+  try {
+    // 1. Consultar Pedidos de Parcelamento
+    print('\n1. Consultando pedidos de parcelamento...');
+    final pedidosResponse = await pertmeiService.consultarPedidos(cnpjContribuinte);
+    print('Status: ${pedidosResponse.status}');
+    print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+
+    if (pedidosResponse.status == '200') {
+      final parcelamentos = pedidosResponse.parcelamentos;
+      print('Parcelamentos encontrados: ${parcelamentos.length}');
+      for (final parcelamento in parcelamentos) {
+        print('  - Número: ${parcelamento.numero}, Situação: ${parcelamento.situacao}');
+      }
+    }
+
+    // 2. Consultar Parcelamento Específico
+    print('\n2. Consultando parcelamento específico...');
+    const numeroParcelamento = 9001; // Número de exemplo da documentação
+    final parcelamentoResponse = await pertmeiService.consultarParcelamento(cnpjContribuinte, numeroParcelamento);
+    print('Status: ${parcelamentoResponse.status}');
+    print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+
+    if (parcelamentoResponse.status == '200') {
+      final parcelamentoDetalhado = parcelamentoResponse.parcelamentoDetalhado;
+      if (parcelamentoDetalhado != null) {
+        print('Parcelamento encontrado: ${parcelamentoDetalhado.numero}');
+        print('Situação: ${parcelamentoDetalhado.situacao}');
+        print('Consolidação original: ${parcelamentoDetalhado.consolidacaoOriginal?.valorTotalConsolidadoDaDivida ?? 0.0}');
+      }
+    }
+
+    // 3. Consultar Parcelas para Impressão
+    print('\n3. Consultando parcelas para impressão...');
+    final parcelasResponse = await pertmeiService.consultarParcelasParaImpressao(cnpjContribuinte);
+    print('Status: ${parcelasResponse.status}');
+    print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+
+    if (parcelasResponse.status == '200') {
+      final parcelas = parcelasResponse.parcelas;
+      print('Parcelas disponíveis: ${parcelas.length}');
+      for (final parcela in parcelas) {
+        print('  - Parcela: ${parcela.parcela}, Valor: R\$ ${parcela.valor.toStringAsFixed(2)}');
+      }
+    }
+
+    // 4. Consultar Detalhes de Pagamento
+    print('\n4. Consultando detalhes de pagamento...');
+    const anoMesParcela = 201907; // Exemplo da documentação
+    final detalhesResponse = await pertmeiService.consultarDetalhesPagamento(cnpjContribuinte, numeroParcelamento, anoMesParcela);
+    print('Status: ${detalhesResponse.status}');
+    print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+
+    if (detalhesResponse.status == '200') {
+      final detalhesPagamento = detalhesResponse.detalhesPagamento;
+      if (detalhesPagamento != null) {
+        print('DAS encontrado: ${detalhesPagamento.numeroDas}');
+        print('Valor pago: R\$ ${detalhesPagamento.valorPagoArrecadacao.toStringAsFixed(2)}');
+        print('Data pagamento: ${detalhesPagamento.dataPagamento}');
+      }
+    }
+
+    // 5. Emitir DAS
+    print('\n5. Emitindo DAS...');
+    const parcelaParaEmitir = 202306; // Exemplo da documentação
+    final emitirResponse = await pertmeiService.emitirDas(cnpjContribuinte, parcelaParaEmitir);
+    print('Status: ${emitirResponse.status}');
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+
+    if (emitirResponse.status == '200') {
+      final dasGerado = emitirResponse.dasGerado;
+      if (dasGerado != null) {
+        print('DAS gerado com sucesso!');
+        print('Tamanho do PDF (base64): ${dasGerado.docArrecadacaoPdfB64.length} caracteres');
+        // Em uma aplicação real, você converteria o base64 para PDF e salvaria/abriria o arquivo
+      }
+    }
+
+    // Exemplos de validação de erro
+    print('\n6. Testando validações...');
+
+    // Teste com CNPJ vazio
+    final erroResponse = await pertmeiService.consultarPedidos('');
+    print('Validação CNPJ vazio: ${erroResponse.status} - ${erroResponse.mensagens.first.texto}');
+
+    // Teste com número de parcelamento inválido
+    final erroParcelamento = await pertmeiService.consultarParcelamento(cnpjContribuinte, 0);
+    print('Validação parcelamento inválido: ${erroParcelamento.status} - ${erroParcelamento.mensagens.first.texto}');
+
+    // Teste com formato de data inválido
+    final erroData = await pertmeiService.emitirDas(cnpjContribuinte, 20230); // Formato inválido
+    print('Validação formato data inválido: ${erroData.status} - ${erroData.mensagens.first.texto}');
+
+    print('\n=== Exemplos PERTMEI Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço PERTMEI: $e');
+  }
+}
+
+Future<void> exemplosMit(ApiClient apiClient) async {
+  print('\n=== Exemplos MIT (Módulo de Inclusão de Tributos) ===');
+
+  final mitService = MitService(apiClient);
+  const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
+
+  try {
+    // 1. Criar Apuração Sem Movimento
+    print('\n1. Criando apuração sem movimento...');
+    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '12345678901', emailResponsavel: 'responsavel@exemplo.com');
+
+    final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
+
+    final apuracaoSemMovimento = await mitService.criarApuracaoSemMovimento(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      responsavelApuracao: responsavelApuracao,
+    );
+
+    print('Status: ${apuracaoSemMovimento.status}');
+    print('Sucesso: ${apuracaoSemMovimento.sucesso}');
+    if (apuracaoSemMovimento.sucesso) {
+      print('Protocolo: ${apuracaoSemMovimento.protocoloEncerramento}');
+      print('ID Apuração: ${apuracaoSemMovimento.idApuracao}');
+    } else {
+      print('Erro: ${apuracaoSemMovimento.mensagemErro}');
+    }
+
+    // 2. Criar Apuração Com Movimento
+    print('\n2. Criando apuração com movimento...');
+    final debitoIrpj = Debito(idDebito: 1, codigoDebito: '236208', valorDebito: 100.00);
+
+    final debitoCsll = Debito(idDebito: 2, codigoDebito: '248408', valorDebito: 220.00);
+
+    final debitos = Debitos(
+      irpj: ListaDebitosIrpj(listaDebitos: [debitoIrpj]),
+      csll: ListaDebitosCsll(listaDebitos: [debitoCsll]),
+    );
+
+    final apuracaoComMovimento = await mitService.criarApuracaoComMovimento(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      responsavelApuracao: responsavelApuracao,
+      debitos: debitos,
+    );
+
+    print('Status: ${apuracaoComMovimento.status}');
+    print('Sucesso: ${apuracaoComMovimento.sucesso}');
+    if (apuracaoComMovimento.sucesso) {
+      print('Protocolo: ${apuracaoComMovimento.protocoloEncerramento}');
+      print('ID Apuração: ${apuracaoComMovimento.idApuracao}');
+    } else {
+      print('Erro: ${apuracaoComMovimento.mensagemErro}');
+    }
+
+    // 3. Consultar Situação de Encerramento
+    if (apuracaoSemMovimento.protocoloEncerramento != null) {
+      print('\n3. Consultando situação de encerramento...');
+      final situacaoResponse = await mitService.consultarSituacaoEncerramento(
+        contribuinteNumero: cnpjContribuinte,
+        protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
+      );
+
+      print('Status: ${situacaoResponse.status}');
+      print('Sucesso: ${situacaoResponse.sucesso}');
+      if (situacaoResponse.sucesso) {
+        print('ID Apuração: ${situacaoResponse.idApuracao}');
+        print('Situação: ${situacaoResponse.textoSituacao}');
+        print('Data Encerramento: ${situacaoResponse.dataEncerramento}');
+        if (situacaoResponse.avisosDctf != null) {
+          print('Avisos DCTF: ${situacaoResponse.avisosDctf!.join(', ')}');
+        }
+      } else {
+        print('Erro: ${situacaoResponse.mensagemErro}');
+      }
+    }
+
+    // 4. Consultar Apuração
+    if (apuracaoSemMovimento.idApuracao != null) {
+      print('\n4. Consultando dados da apuração...');
+      final consultaResponse = await mitService.consultarApuracao(contribuinteNumero: cnpjContribuinte, idApuracao: apuracaoSemMovimento.idApuracao!);
+
+      print('Status: ${consultaResponse.status}');
+      print('Sucesso: ${consultaResponse.sucesso}');
+      if (consultaResponse.sucesso) {
+        print('Situação: ${consultaResponse.textoSituacao}');
+        if (consultaResponse.dadosApuracaoMit != null) {
+          print('Dados da apuração encontrados: ${consultaResponse.dadosApuracaoMit!.length} registros');
+        }
+      } else {
+        print('Erro: ${consultaResponse.mensagemErro}');
+      }
+    }
+
+    // 5. Listar Apurações por Ano
+    print('\n5. Listando apurações por ano...');
+    final listagemResponse = await mitService.listarApuracaoes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
+
+    print('Status: ${listagemResponse.status}');
+    print('Sucesso: ${listagemResponse.sucesso}');
+    if (listagemResponse.sucesso) {
+      print('Apurações encontradas: ${listagemResponse.apuracoes?.length ?? 0}');
+      if (listagemResponse.apuracoes != null) {
+        for (final apuracao in listagemResponse.apuracoes!) {
+          print('  - Período: ${apuracao.periodoApuracao}, ID: ${apuracao.idApuracao}, Situação: ${apuracao.situacaoEnum?.descricao}');
+        }
+      }
+    } else {
+      print('Erro: ${listagemResponse.mensagemErro}');
+    }
+
+    // 6. Consultar Apurações por Mês
+    print('\n6. Consultando apurações por mês...');
+    final listagemMesResponse = await mitService.consultarApuracaoesPorMes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025, mesApuracao: 1);
+
+    print('Status: ${listagemMesResponse.status}');
+    print('Sucesso: ${listagemMesResponse.sucesso}');
+    if (listagemMesResponse.sucesso) {
+      print('Apurações do mês: ${listagemMesResponse.apuracoes?.length ?? 0}');
+    } else {
+      print('Erro: ${listagemMesResponse.mensagemErro}');
+    }
+
+    // 7. Consultar Apurações Encerradas
+    print('\n7. Consultando apurações encerradas...');
+    final listagemEncerradasResponse = await mitService.consultarApuracaoesEncerradas(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
+
+    print('Status: ${listagemEncerradasResponse.status}');
+    print('Sucesso: ${listagemEncerradasResponse.sucesso}');
+    if (listagemEncerradasResponse.sucesso) {
+      print('Apurações encerradas: ${listagemEncerradasResponse.apuracoes?.length ?? 0}');
+    } else {
+      print('Erro: ${listagemEncerradasResponse.mensagemErro}');
+    }
+
+    // 8. Aguardar Encerramento (exemplo com timeout curto)
+    if (apuracaoSemMovimento.protocoloEncerramento != null) {
+      print('\n8. Aguardando encerramento (timeout de 60 segundos)...');
+      try {
+        final aguardarResponse = await mitService.aguardarEncerramento(
+          contribuinteNumero: cnpjContribuinte,
+          protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
+          timeoutSegundos: 60,
+          intervaloConsulta: 10,
+        );
+
+        print('Status final: ${aguardarResponse.status}');
+        print('Situação final: ${aguardarResponse.textoSituacao}');
+      } catch (e) {
+        print('Timeout ou erro ao aguardar encerramento: $e');
+      }
+    }
+
+    // 9. Exemplo com Eventos Especiais
+    print('\n9. Criando apuração com evento especial...');
+    final eventoEspecial = EventoEspecial(idEvento: 1, diaEvento: 15, tipoEvento: TipoEventoEspecial.fusao);
+
+    final dadosIniciaisComEvento = DadosIniciais(
+      semMovimento: false,
+      qualificacaoPj: QualificacaoPj.pjEmGeral,
+      tributacaoLucro: TributacaoLucro.realAnual,
+      variacoesMonetarias: VariacoesMonetarias.regimeCaixa,
+      regimePisCofins: RegimePisCofins.naoCumulativa,
+      responsavelApuracao: responsavelApuracao,
+    );
+
+    final apuracaoComEvento = await mitService.encerrarApuracao(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      dadosIniciais: dadosIniciaisComEvento,
+      debitos: debitos,
+      listaEventosEspeciais: [eventoEspecial],
+    );
+
+    print('Status: ${apuracaoComEvento.status}');
+    print('Sucesso: ${apuracaoComEvento.sucesso}');
+    if (apuracaoComEvento.sucesso) {
+      print('Protocolo: ${apuracaoComEvento.protocoloEncerramento}');
+    } else {
+      print('Erro: ${apuracaoComEvento.mensagemErro}');
+    }
+
+    // 10. Exemplo de Validação com Dados Inválidos
+    print('\n10. Testando validação com dados inválidos...');
+    try {
+      PeriodoApuracao(
+        mesApuracao: 13, // Mês inválido
+        anoApuracao: 2025,
+      );
+    } catch (e) {
+      print('Validação de mês inválido: $e');
+    }
+
+    try {
+      Debito(
+        idDebito: 0, // ID inválido
+        codigoDebito: '236208',
+        valorDebito: -100.00, // Valor negativo
+      );
+    } catch (e) {
+      print('Validação de débito inválido: $e');
+    }
+
+    print('\n=== Exemplos MIT Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço MIT: $e');
+  }
+}
+
+Future<void> exemplosPertsn(ApiClient apiClient) async {
+  print('=== Exemplos PERTSN ===');
+
+  final pertsnService = PertsnService(apiClient);
+
+  try {
+    // 1. Consultar pedidos de parcelamento
+    print('\n1. Consultando pedidos de parcelamento...');
+    final pedidosResponse = await pertsnService.consultarPedidos();
+
+    if (pedidosResponse.sucesso) {
+      print('Status: ${pedidosResponse.status}');
+      print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
+
+      if (pedidosResponse.temParcelamentos) {
+        final parcelamentos = pedidosResponse.dadosParsed!.parcelamentos;
+        print('Quantidade de parcelamentos: ${parcelamentos.length}');
+
+        for (final parcelamento in parcelamentos) {
+          print('Parcelamento ${parcelamento.numero}:');
+          print('  Situação: ${parcelamento.situacao}');
+          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+          print('  Ativo: ${parcelamento.isAtivo}');
+        }
+      } else {
+        print('Nenhum parcelamento encontrado');
+      }
+    } else {
+      print('Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+    }
+
+    // 2. Consultar parcelamento específico (usando exemplo da documentação)
+    print('\n2. Consultando parcelamento específico...');
+    try {
+      final parcelamentoResponse = await pertsnService.consultarParcelamento(9102);
+
+      if (parcelamentoResponse.sucesso) {
+        print('Status: ${parcelamentoResponse.status}');
+        print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
+
+        final parcelamento = parcelamentoResponse.dadosParsed;
+        if (parcelamento != null) {
+          print('Parcelamento ${parcelamento.numero}:');
+          print('  Situação: ${parcelamento.situacao}');
+          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('  Valor total consolidado: R\$ ${parcelamento.valorTotalConsolidado.toStringAsFixed(2)}');
+          print('  Valor total entrada: R\$ ${parcelamento.valorTotalEntrada.toStringAsFixed(2)}');
+          print('  Quantidade parcelas entrada: ${parcelamento.quantidadeParcelasEntrada}');
+          print('  Valor parcela entrada: R\$ ${parcelamento.valorParcelaEntrada.toStringAsFixed(2)}');
+
+          if (parcelamento.consolidacaoOriginal != null) {
+            print('  Consolidação original:');
+            print('    Data: ${parcelamento.consolidacaoOriginal!.dataConsolidacaoFormatada}');
+            print('    Valor consolidado: R\$ ${parcelamento.consolidacaoOriginal!.valorConsolidadoDaDivida.toStringAsFixed(2)}');
+            print('    Detalhes: ${parcelamento.consolidacaoOriginal!.detalhesConsolidacao.length} itens');
+          }
+
+          if (parcelamento.alteracoesDivida.isNotEmpty) {
+            print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+            for (final alteracao in parcelamento.alteracoesDivida) {
+              print('    Total consolidado: R\$ ${alteracao.totalConsolidado.toStringAsFixed(2)}');
+              print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
+              print('    Parcela básica: R\$ ${alteracao.parcelaBasica.toStringAsFixed(2)}');
+              print('    Data alteração: ${alteracao.dataAlteracaoDividaFormatada}');
+            }
+          }
+
+          if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
+            print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+            for (final pagamento in parcelamento.demonstrativoPagamentos) {
+              print('    Mês: ${pagamento.mesDaParcelaFormatado}');
+              print('    Vencimento: ${pagamento.vencimentoDoDasFormatado}');
+              print('    Data arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
+              print('    Valor pago: ${pagamento.valorPagoFormatado}');
+            }
+          }
+        }
+      } else {
+        print('Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro ao consultar parcelamento: $e');
+    }
+
+    // 3. Consultar parcelas para impressão
+    print('\n3. Consultando parcelas para impressão...');
+    try {
+      final parcelasResponse = await pertsnService.consultarParcelas();
+
+      if (parcelasResponse.sucesso) {
+        print('Status: ${parcelasResponse.status}');
+        print('Mensagem: ${parcelasResponse.mensagemPrincipal}');
+
+        if (parcelasResponse.temParcelas) {
+          final parcelas = parcelasResponse.dadosParsed!.listaParcelas;
+          print('Quantidade de parcelas: ${parcelas.length}');
+          print('Valor total: ${parcelasResponse.valorTotalParcelasFormatado}');
+
+          // Mostrar algumas parcelas
+          final parcelasParaMostrar = parcelas.take(5).toList();
+          print('Primeiras 5 parcelas:');
+          for (final parcela in parcelasParaMostrar) {
+            print('  ${parcela.descricaoCompleta}: ${parcela.valorFormatado}');
+          }
+
+          // Mostrar estatísticas
+          print('Parcelas pendentes: ${parcelasResponse.parcelasPendentes.length}');
+          print('Parcelas vencidas: ${parcelasResponse.parcelasVencidas.length}');
+          print('Parcelas do mês atual: ${parcelasResponse.parcelasMesAtual.length}');
+
+          // Mostrar parcelas por ano
+          final parcelasPorAno = parcelasResponse.parcelasPorAno;
+          print('Parcelas por ano:');
+          for (final entry in parcelasPorAno.entries) {
+            print('  ${entry.key}: ${entry.value.length} parcelas');
+          }
+        } else {
+          print('Nenhuma parcela encontrada');
+        }
+      } else {
+        print('Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro ao consultar parcelas: $e');
+    }
+
+    // 4. Consultar detalhes de pagamento
+    print('\n4. Consultando detalhes de pagamento...');
+    try {
+      final detalhesResponse = await pertsnService.consultarDetalhesPagamento(9102, 201806);
+
+      if (detalhesResponse.sucesso) {
+        print('Status: ${detalhesResponse.status}');
+        print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
+
+        final detalhes = detalhesResponse.dadosParsed;
+        if (detalhes != null) {
+          print('Detalhes do pagamento:');
+          print('  Número DAS: ${detalhes.numeroDas}');
+          print('  Código de barras: ${detalhes.codigoBarras}');
+          print('  Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
+          print('  Data arrecadação: ${detalhes.dataArrecadacaoFormatada}');
+          print('  Banco/Agência: ${detalhes.bancoAgencia}');
+
+          if (detalhes.temPagamentosDebitos) {
+            print('  Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
+            print('  Valor total débitos: ${detalhes.valorTotalDebitosPagosFormatado}');
+
+            for (final debito in detalhes.pagamentosDebitos) {
+              print('    Período: ${debito.periodoApuracaoFormatado}');
+              print('    Vencimento: ${debito.vencimentoFormatado}');
+              print('    Tributo: ${debito.tributo}');
+              print('    Ente federado: ${debito.enteFederado}');
+              print('    Valor pago: ${debito.valorPagoFormatado}');
+
+              if (debito.temDiscriminacaoDebitos) {
+                print('      Discriminações: ${debito.quantidadeDiscriminacoes}');
+                for (final discriminacao in debito.discriminacaoDebitos) {
+                  print('        ${discriminacao.descricaoResumida}');
+                  print('        Valor principal: ${discriminacao.valorPrincipalFormatado}');
+                  print('        Valor multa: ${discriminacao.valorMultaFormatado}');
+                  print('        Valor juros: ${discriminacao.valorJurosFormatado}');
+                  print('        Valor total: ${discriminacao.valorTotalFormatado}');
+                }
+              }
+            }
+          }
+        }
+      } else {
+        print('Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro ao consultar detalhes: $e');
+    }
+
+    // 5. Emitir DAS
+    print('\n5. Emitindo DAS...');
+    try {
+      final dasResponse = await pertsnService.emitirDas(202301);
+
+      if (dasResponse.sucesso) {
+        print('Status: ${dasResponse.status}');
+        print('Mensagem: ${dasResponse.mensagemPrincipal}');
+
+        if (dasResponse.pdfGeradoComSucesso) {
+          print('PDF gerado com sucesso!');
+          print('Tamanho: ${dasResponse.tamanhoPdfFormatado}');
+          print('Info: ${dasResponse.infoPdf}');
+
+          final pdfBase64 = dasResponse.pdfBase64;
+          if (pdfBase64 != null) {
+            print('PDF Base64 disponível: ${pdfBase64.length} caracteres');
+
+            final dadosParsed = dasResponse.dadosParsed;
+            if (dadosParsed != null) {
+              print('Nome sugerido: ${dadosParsed.nomeArquivoSugerido}');
+              print('Tipo MIME: ${dadosParsed.tipoMime}');
+              print('PDF válido: ${dadosParsed.isPdfValido}');
+            }
+          }
+        } else {
+          print('PDF não foi gerado');
+        }
+      } else {
+        print('Erro ao emitir DAS: ${dasResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro ao emitir DAS: $e');
+    }
+
+    // 6. Exemplos de validações
+    print('\n6. Testando validações...');
+
+    // Validar número de parcelamento
+    final validacaoParcelamento = pertsnService.validarNumeroParcelamento(0);
+    if (validacaoParcelamento != null) {
+      print('Validação parcelamento inválido: $validacaoParcelamento');
+    }
+
+    // Validar ano/mês da parcela
+    final validacaoAnoMes = pertsnService.validarAnoMesParcela(202513); // Mês inválido
+    if (validacaoAnoMes != null) {
+      print('Validação ano/mês inválido: $validacaoAnoMes');
+    }
+
+    // Validar parcela para emitir
+    final validacaoParcela = pertsnService.validarParcelaParaEmitir(202501);
+    if (validacaoParcela != null) {
+      print('Validação parcela futura: $validacaoParcela');
+    }
+
+    // Validar CNPJ
+    final validacaoCnpj = pertsnService.validarCnpjContribuinte('123');
+    if (validacaoCnpj != null) {
+      print('Validação CNPJ inválido: $validacaoCnpj');
+    }
+
+    // Validar tipo de contribuinte
+    final validacaoTipo = pertsnService.validarTipoContribuinte(1); // Tipo inválido para PERTSN
+    if (validacaoTipo != null) {
+      print('Validação tipo contribuinte: $validacaoTipo');
+    }
+
+    // 7. Exemplos de análise de erros
+    print('\n7. Testando análise de erros...');
+
+    // Verificar se erro é conhecido
+    final erroConhecido = pertsnService.isKnownError('[Aviso-PERTSN-ER_E001]');
+    print('Erro conhecido: $erroConhecido');
+
+    // Obter informações sobre erro
+    final errorInfo = pertsnService.getErrorInfo('[Aviso-PERTSN-ER_E001]');
+    if (errorInfo != null) {
+      print('Informações do erro:');
+      print('  Código: ${errorInfo.codigo}');
+      print('  Tipo: ${errorInfo.tipo}');
+      print('  Mensagem: ${errorInfo.mensagem}');
+      print('  Ação: ${errorInfo.acao}');
+    }
+
+    // Analisar erro
+    final analysis = pertsnService.analyzeError('[Aviso-PERTSN-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
+    print('Análise do erro:');
+    print('  Resumo: ${analysis.resumo}');
+    print('  Ação recomendada: ${analysis.recommendedAction}');
+    print('  Conhecido: ${analysis.isKnown}');
+
+    // Obter listas de erros
+    final avisos = pertsnService.getAvisos();
+    print('Avisos disponíveis: ${avisos.length}');
+
+    final errosEntrada = pertsnService.getEntradasIncorretas();
+    print('Erros de entrada incorreta: ${errosEntrada.length}');
+
+    final erros = pertsnService.getErros();
+    print('Erros gerais: ${erros.length}');
+
+    final sucessos = pertsnService.getSucessos();
+    print('Sucessos: ${sucessos.length}');
+
+    print('\n=== Exemplos PERTSN Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos PERTSN: $e');
   }
 }

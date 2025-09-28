@@ -1,0 +1,647 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API Integra Contador - CCMEI (Certificado de Condição de Microempreendedor Individual)
+
+Este documento consolida informações sobre a API Integra Contador do SERPRO, focando nos serviços relacionados ao Certificado de Condição de Microempreendedor Individual (CCMEI), e complementa com detalhes do Manual do PGMEI da Receita Federal.
+
+## 1. Cenários CCMEI (API Trial)
+
+A chamada da API Trial é destinada apenas para demonstração. As APIs e seus respectivos endpoints para consumo em produção são disponibilizadas na seção de Referência da API. O parâmetro `jwt_token` no header não é obrigatório na API Trial, mas é mandatório em produção. Mais detalhes sobre `jwt_token` podem ser encontrados na seção de Autenticação da API.
+
+### 1.1. Consulta dos dados do Certificado de Condição MEI
+
+Este serviço permite consultar os dados atualizados do CCMEI a partir do CNPJ informado.
+
+**Headers (Trial):**
+
+| Header | Valor |
+|---|---|
+| `jwt_token` | vazio (não precisa preencher) |
+| `autenticar_procurador_token` | vazio (não precisa preencher) |
+
+**Exemplo de `body` JSON de entrada:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "CCMEI",
+        "idServico": "DADOSCCMEI122",
+        "versaoSistema": "1.0",
+        "dados": ""
+    }
+}
+```
+
+**Exemplo de `curl`:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "CCMEI",
+            "idServico": "DADOSCCMEI122",
+            "versaoSistema": "1.0",
+            "dados": ""
+        }
+    }'
+```
+
+### 1.2. Consulta da situação cadastral dos CNPJ MEI vinculados ao CPF
+
+Este serviço permite consultar os CNPJs (que tenham sido MEI), com respectiva situação cadastral, a partir do CPF de um contribuinte.
+
+**Headers (Trial):**
+
+| Header | Valor |
+|---|---|
+| `jwt_token` | vazio (não precisa preencher) |
+| `autenticar_procurador_token` | vazio (não precisa preencher) |
+
+**Exemplo de `body` JSON de entrada:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "CCMEI",
+        "idServico": "CCMEISITCADASTRAL123",
+        "versaoSistema": "1.0",
+        "dados": ""
+    }
+}
+```
+
+**Exemplo de `curl`:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "CCMEI",
+            "idServico": "CCMEISITCADASTRAL123",
+            "versaoSistema": "1.0",
+            "dados": ""
+        }
+    }'
+```
+
+### 1.3. Emissão do Certificado de Condição de MEI em formato PDF
+
+Este serviço permite a emissão do PDF CCMEI para um contribuinte MEI.
+
+**Headers (Trial):**
+
+| Header | Valor |
+|---|---|
+| `jwt_token` | vazio (não precisa preencher) |
+| `autenticar_procurador_token` | vazio (não precisa preencher) |
+
+**Exemplo de `body` JSON de entrada:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "cpfCnpj": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "CCMEI",
+        "idServico": "EMITIRCCMEI121",
+        "dados": ""
+    }
+}
+```
+
+**Exemplo de `curl`:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "cpfCnpj": "00000000000000",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000000",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "CCMEI",
+            "idServico": "EMITIRCCMEI121",
+            "dados": ""
+        }
+    }'
+```
+
+## 2. Introdução ao Integra CCMEI
+
+O Certificado da Condição do Microempreendedor Individual (CCMEI) é o documento que certifica a abertura da empresa e comprova a inscrição no CNPJ e na Junta Comercial do Estado.
+
+Para utilizar os serviços do Integra CCMEI, é necessário fazer uma chamada à API por meio do Integra Contador, que gerencia o envio e recebimento dos dados. A requisição deve ser feita via método `POST`, com um `body` em formato `JSON`, contendo informações do Contratante, Autor do Pedido de Dados, Contribuinte e Pedido de Dados.
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema CCMEI, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## 3. Serviços da API Integra CCMEI
+
+### 3.1. Emissão do Certificado de Condição de MEI
+
+Este serviço permite a emissão do PDF CCMEI para um contribuinte MEI.
+
+**Identificação no Pedido de Dados:**
+*   `idSistema`: `CCMEI`
+*   `idServico`: `EMITIRCCMEI121`
+
+**Dados de Entrada:** Não se aplica (o `body` JSON já contém as informações necessárias).
+
+**Dados de Saída:** São retornados os dados com o CNPJ e o PDF gerado.
+
+| Campo | Descrição | Tipo |
+|---|---|---|
+| `status` | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Array de String |
+| `dados` | Estrutura de dados de retorno. | String (String escapada: Object [dados]()) |
+
+**Estrutura do campo `dados`:**
+
+| Campo | Descrição | Tipo |
+|---|---|---|
+| `cnpj` | Número do CNPJ sem formatação | String |
+| `pdf` | PDF do DAS no formato Texto Base 64 | String |
+
+**Exemplo de `payload` JSON de saída:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "dados": "",
+        "idServico": "EMITIRCCMEI121",
+        "idSistema": "CCMEI"
+    },
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-CCMEI-SUC-00010]",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "status": "200",
+    "dados": "[{\"cnpj\":\"00000000000000\"\"pdf\":\"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
+(Content truncated due to size limit. Use page ranges or line ranges to read remaining content)
+
+
+
+### 3.2. Consulta os dados do Certificado de Condição MEI
+
+Este serviço consulta os dados atualizados do CCMEI, a partir do CNPJ informado.
+
+**Identificação no Pedido de Dados:**
+*   `idSistema`: `CCMEI`
+*   `idServico`: `DADOSCCMEI122`
+
+**Dados de Entrada:** Não se aplica.
+
+**Dados de Saída:** São retornados os dados do CCMEI.
+
+| Campo | Descrição | Tipo |
+|---|---|---|
+| `status` | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Array de String |
+| `dados` | Estrutura de dados de retorno. | String (String escapada: Array de Object Debito) |
+
+**Objeto: Dados**
+
+| Campo | Descrição | Tipo |
+|---|---|---|
+| `cnpj` | Número do CNPJ sem formatação | String |
+| `empresario` | Informações do empresário | Object [Empresario]() |
+| `dataInicioAtividades` | Data de início das atividades no formato YYYY-MM-DD | String |
+| `nomeEmpresarial` | Nome empresarial | String |
+| `capitalSocial` | Capital social do CNPJ | Number |
+| `situacaoCadastralVigente` | Situação cadastral do CNPJ | String |
+| `dataInicioSituacaoCadastral` | Data da atual situação cadastral no formato YYYY-MM-DD | String |
+| `enderecoComercial` | Endereço comercial | Object [EnderecoComercial]() |
+| `enquadramento` | Períodos de enquadramento como MEI | Object [Enquadramento]() |
+| `atividade` | Atividade exercida pelo CNPJ | Object [Atividade]() |
+| `termoCienciaDispensa` | Termo assinalado como ciência da dispensa de alvará | Object [termoCienciaDispensa]() |
+| `qrcode` | Qrcode para emissão do CCMEI no formato Texto Base 64 | String |
+
+**Objeto: Empresario**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `nomeCivil` | nome civil do empresário | String | SIM |
+| `nomeSocial` | nome social do empresário | String | NÃO |
+| `cpf` | CPF do empresário | String | SIM |
+
+**Objeto: EnderecoComercial**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `cep` | CEP do endereço comercial | Number | SIM |
+| `logradouro` | Logradouro | String | NÃO |
+| `numero` | Número do logradouro | String | SIM |
+| `complemento` | Complemento do logradouro | String | NÃO |
+| `bairro` | Bairro | String | SIM |
+| `municipio` | Município | String | SIM |
+| `uf` | UF | String | SIM |
+
+**Objeto: Enquadramento**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `PeriodosMei` | Períodos de enquadramento | Object [periodosMei]() | SIM |
+| `situacao` | Enquadrado ou não | String | SIM |
+| `optanteMei` | Optante como MEI ou não | Boolean | SIM |
+
+**Objeto: PeriodosMei**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `indice` | Índice de ordenação | Number | SIM |
+| `dataInicio` | Data de início do enquadramento no formato YYYY-MM-DD | String |
+| `dataFim` | Data de final do enquadramento no formato YYYY-MM-DD | String |
+
+**Objeto: Atividade**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `formasAtuacao` | Lista de formas de atuação | Array de String | SIM |
+| `ocupacaoPrincipal` | Ocupação principal exercida pelo CNPJ | Object [ocupacaoPrincipal]() | SIM |
+| `ocupacoesSecundarias` | Ocupações secundárias exercidas pelo CNPJ | Array de Object [ocupacoesSecundarias]() | SIM |
+| `optanteMei` | Optante como MEI ou não | Boolean | SIM |
+
+**Objeto: OcupacaoPrincipal / OcupacoesSecundarias**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `descricaoOcupacao` | Descrição da ocupação | String | SIM |
+| `codigoCNAE` | Código da CNAE exercida | String |
+| `descricaoCNAE` | Descrição da CNAE exercida | String |
+
+**Objeto: TermoCienciaDispensa**
+
+| Campo | Descrição | Tipo | Obrigatório |
+|---|---|---|---|
+| `titulo` | Título da solicitação de dispensa de Alvará e licenciamento | String | SIM |
+| `texto` | Texto da solicitação de dispensa de Alvará e licenciamento | String |
+
+**Exemplo de `payload` JSON de saída:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "CCMEI",
+        "idServico": "DADOSCCMEI122",
+        "versaoSistema": "1.0",
+        "dados": ""
+    },
+    "status": "200",
+    "mensagens": [
+        {
+            "codigo": "Sucesso-CCMEI-SUC-00020",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "dados": "{\"cnpj\":\"00000000000000\",\"empresario\":{\"nomeCivil\":\"AQUI VAI O NOME CIVIL\",\"nomeSocial\":null,\"cpf\":\"99999999999\"},\"dataInicioAtividades\":\"2020-01-01\",\"nomeEmpresarial\":\"AQUI VAI O NOME EMPRESARIAL\",\"capitalSocial\":1000.00,\"situacaoCadastralVigente\":\"ATIVA\",\"dataInicioSituacaoCadastral\":\"2020-01-01\",\"enderecoComercial\":{\"cep\":\"99999999\",\"logradouro\":\"AQUI VAI O NOME DO LOGRADOURO\",\"numero\":\"999\",\"complemento\":\"\",\"bairro\":\"AQUI VAI O BAIRRO\",\"municipio\":\"NOME DO MUNICIPIO\",\"uf\":\"UF\"},\"enquadramento\":{\"periodosMei\":[{\"indice\":1,\"dataInicio\":\"2020-01-01T00:00:00\",\"dataFim\":null}],\"situacao\":\"Enquadrado na condição de MEI\",\"optanteMei\":true},\"atividade\":{\"formasAtuacao\":[\"Estabelecimento fixo\",\"Internet\"],\"ocupacaoPrincipal\":{\"descricaoOcupacao\":\"AQUI VAI A DESCRICAO DA OCUPACAO\",\"codigoCNAE\":\"9999-9/99\",\"descricaoCNAE\":\"DESCRICAO DA CNAE\"},\"ocupacoesSecundarias\":[{\"descricaoOcupacao\":\"DESCRICAO DA OCUPACAO\",\"codigoCNAE\":\"9999999\",\"descricaoCNAE\":\"DESCRICAO DA CNAE\"}]},\"termoCienciaDispensa\":{\"titulo\":\"Termo de Ciência e Responsabilidade com Efeito de Dispensa de Alvará e Licença de Funcionamento\",\"texto\":\"Declaro, sob as penas da Lei, que conheço e atendo os requisitos legais exigidos pelo Estado e pela Prefeitura do Município para emissão do Alvará de Licença e Funcionamento, compreendidos os aspectos sanitários, ambientais, tributários, de segurança pública, uso e ocupação do solo, atividades domiciliares e restrições ao uso de espaços públicos. O não-atendimento a esses requisitos acarretará o cancelamento deste Alvará de Licença e Funcionamento Provisório.\"},\"qrCode\":null}"
+}
+```
+
+### 3.3. Consulta a situação cadastral dos CNPJ MEI vinculados ao CPF
+
+Este serviço permite consultar os CNPJs (que tenham sido MEI), com respectiva situação cadastral, a partir do CPF de um contribuinte.
+
+**Identificação no Pedido de Dados:**
+*   `idSistema`: `CCMEI`
+*   `idServico`: `CCMEISITCADASTRAL123`
+
+**Dados de Entrada:** Não se aplica.
+
+**Dados de Saída:** O retorno é a confirmação que os benefícios foram inseridos com sucesso.
+
+| Campo | Descrição | Tipo |
+|---|---|---|
+| `status` | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Array de String |
+| `dados` | Estrutura de dados de retorno. | String (String escapada: Array de Object [dados]()) |
+
+**Estrutura do campo `dados`:**
+
+| Campo | Descrição | Tipo |
+|---|---|---|---|
+| `cnpj` | Número do CNPJ sem formatação | String |
+| `situacao` | Atual situação cadastral do CNPJ | String |
+| `enquadradoMei` | Atual situação de enquadramento MEI | Boolean |
+
+**Exemplo de `payload` JSON de saída:**
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "CCMEI",
+        "idServico": "CCMEISITCADASTRAL123",
+        "versaoSistema": "1.0",
+        "dados": ""
+    },
+    "status": "200",
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-CCMEI-SUC-00010]",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "dados": "[{\"cnpj\":\"00000000000000\",\"situacao\":\"BAIXADA\",\"enquadradoMei\":true},{\"cnpj\":\"11111111111111\",\"situacao\":\"ATIVA\",\"enquadradoMei\":true}]]"
+}
+```
+
+## 4. Mensagens de Negócio da API Integra CCMEI
+
+### 4.1. Mensagens de sucesso
+
+| Códigos | Mensagem | Ação |
+|---|---|---|
+| `[SUCESSO-CCMEI-SUC-00010]` | Requisição efetuada com sucesso. | Consultar situação cadastral dos CNPJs |
+| `[SUCESSO-CCMEI-SUC-00020]` | Requisição efetuada com sucesso. | Consultar dados do CCMEI |
+| `[SUCESSO-CCMEI-SUC-00030]` | Requisição efetuada com sucesso. | Emitir CCMEI |
+
+### 4.2. Mensagens de entrada incorreta
+
+| Códigos | Mensagem | Ação |
+|---|---|---|
+| `[EntradaIncorreta-CCMEI-CRT-0001]` | Tipo (indicador de CPF ou CNPJ) não informado | Informar se o Tipo é 1 (CPF) OU 2 (CNPJ) |
+| `[EntradaIncorreta-CCMEI-CRT-0005]` | Tipo (indicador de CPF ou CNPJ) diferente de 1 e 2 | Informar o Tipo correto sendo 1 (CPF) OU 2 (CNPJ) |
+| `[EntradaIncorreta-CCMEI-CRT-0010]` | CPF não informado. | Informar o CPF |
+| `[EntradaIncorreta-CCMEI-CRT-0020]` | CPF inválido. | Informar o CPF correto |
+| `[EntradaIncorreta-CCMEI-CRT-0030]` | CNPJ não informado. | Informar o CNPJ |
+| `[EntradaIncorreta-CCMEI-CRT-0035]` | CNPJ inválido. | Informar o CNPJ correto |
+| `[EntradaIncorreta-CCMEI-CRT-0040]` | Id do sistema não informado. | Informar o Id do sistema |
+| `[EntradaIncorreta-CCMEI-CRT-0045]` | Id do sistema inválido. | Informar o Id do sistema correto |
+| `[EntradaIncorreta-CCMEI-CRT-0050]` | Id do serviço não informado. | Informar o Id do serviço |
+| `[EntradaIncorreta-CCMEI-CRT-0055]` | Id do serviço inválido. | Informar o Id do serviço correto |
+| `[EntradaIncorreta-CCMEI-CRT-0060]` | CPF do responsável não informado. | Informar o CPF do responsável |
+| `[EntradaIncorreta-CCMEI-CRT-0065]` | CPF do responsável inválido. | Informar o CPF do responsável correto |
+| `[EntradaIncorreta-CCMEI-CRT-5010]` | Informado tipo 2(CNPJ) para a consulta CCMEISITCADASTRAL123. O correto é tipo 1(CPF). | Informar o CPF |
+| `[EntradaIncorreta-CCMEI-CRT-5020]` | Informado tipo 1(CPF) para a consulta DADOSCCMEI122. O correto é tipo 2(CNPJ). | Informar o CNPJ |
+| `[EntradaIncorreta-CCMEI-CRT-5030]` | Informado tipo 1(CPF) para a consulta DADOSCCMEI122. O correto é tipo 2(CNPJ). | Informar o CNPJ |
+
+### 4.3. Mensagens de aviso
+
+| Códigos | Mensagem | Ação |
+|---|---|---|
+| `[Aviso-CCMEI-BSN-0010]` | Este CNPJ está na situação baixada. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0020]` | Este CNPJ não possui mais a condição de MEI. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0030]` | Não foram encontrados períodos de enquadramento como MEI para o CNPJ pesquisado. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0040]` | Este CNPJ não está em situação ativa. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0050]` | Para a emissão do CCMEI é preciso atualizar as Ocupações exercidas. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0060]` | A atualização efetuada hoje no cadastro MEI ainda não foi totalmente processada. Por favor aguarde um momento e tente a emissão do CCMEI mais tarde. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0080]` | Não foi possível recuperar dados do MEI no Simples Nacional, por favor tente mais tarde. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0090]` | CPF informado não tem empresas MEI. | Não é permitida a emissão do CCMEI |
+| `[Aviso-CCMEI-BSN-0100]` | O CPF pesquisado não possui nenhuma empresa MEI | Não é permitida a emissão do CCMEI |
+
+### 4.4. Mensagens de erro
+
+| Códigos | Mensagem | Ação |
+|---|---|---|
+| `[Erro-CCMEI-ERRO-0500]` | Ocorreu um erro Interno na aplicação. Caso persista, favor entrar em contato. | Comunicar o erro ao administrador do sistema |
+
+## 5. Glossário
+
+### Siglas
+
+Principais siglas utilizadas no PGMEI:
+
+| Sigla | Descrição |
+|---|---|
+| CCMEI | Certificado da Condição do Microempreendedor Individual |
+| CNAE | Classificação Nacional de Atividades Econômicas |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| MEI | Micro Empreendedor Individual |
+| RFB | Receita Federal do Brasil |
+| UF | Unidade da Federação |
+
+## 6. Manual do PGMEI (Programa Gerador do DAS para o MEI)
+
+### 6.1. Introdução
+
+O PGMEI é um sistema eletrônico que permite realizar a apuração, gerar o Documento de Arrecadação do Simples Nacional (DAS) para o Microempreendedor Individual (MEI) e consultar pendências e extratos.
+
+O acesso ao PGMEI é feito exclusivamente pelo Portal do Simples Nacional na internet: [www8.receita.fazenda.gov.br/SimplesNacional](www8.receita.fazenda.gov.br/SimplesNacional).
+
+O programa possui duas versões:
+*   **PGMEI - Programa Gerador do DAS para o MEI:** Permite realizar a apuração mensal (inclusive retificação) e gerar o DAS. Não exige código de acesso.
+*   **PGMEI - Programa Gerador do DAS para o MEI (versão completa):** Permite realizar a apuração mensal (inclusive retificação), gerar o DAS e consultar pendências e extratos. Esta versão exige código de acesso ou certificado digital.
+
+### 6.2. A Quem se Destina
+
+O programa se destina aos MEI optantes pelo Sistema de Recolhimento em Valores Fixos Mensais dos Tributos abrangidos pelo Simples Nacional (SIMEI), conforme disposto na Resolução CGSN nº 140, de 22 de maio de 2018.
+
+### 6.3. Tributos Abrangidos pelo SIMEI
+
+O SIMEI implica o recolhimento mensal, por meio de DAS, dos seguintes impostos e contribuições:
+
+| Tributo | Descrição |
+|---|---|
+| **INSS** | Contribuição para a Seguridade Social, relativa à pessoa do empresário, na qualidade de contribuinte individual. |
+| **ICMS** | Imposto sobre operações relativas à circulação de mercadorias e sobre prestações de serviços de transporte interestadual e intermunicipal e de comunicação (se for contribuinte). |
+| **ISS** | Imposto sobre serviços de qualquer natureza (se for contribuinte). |
+
+*   **INSS:** Períodos de apuração (PA) 07/2009 a 04/2011, equivalente a 11% do salário-mínimo. A partir do PA 05/2011, reduzida para 5% do salário-mínimo. A partir de abril de 2022, para o transportador autônomo de cargas, 12% do limite mínimo mensal do salário de contribuição.
+*   **ICMS/ISS:** Caso seja contribuinte desses tributos, conforme Anexo XI da Resolução CGSN nº 140/2018.
+
+O valor devido mensalmente é determinado na geração do primeiro DAS para o ano, de acordo com o cadastro CNPJ, e permanece o mesmo durante todo o ano-calendário. Alterações de atividade ou endereço só terão efeito no DAS do ano seguinte.
+
+### 6.4. Quando Utilizar
+
+O programa deve ser utilizado para:
+*   Realizar a apuração mensal ou retificá-la.
+*   Gerar o DAS para o recolhimento dos valores fixos mensais.
+*   Consultar pendências (omissão de declaração, atraso no recolhimento de parcelamento e débitos de SIMEI em cobrança na RFB).
+*   Consultar DAS emitidos.
+*   Consultar os extratos das apurações mensais.
+
+**ATENÇÃO:**
+*   Mesmo sem faturamento ou inativo, o MEI deve gerar e pagar os DAS mensalmente.
+*   O recolhimento deve ser efetuado até o dia 20 do mês subsequente ao período de apuração. Se o dia 20 não for dia útil, o vencimento é prorrogado para o próximo dia útil.
+*   Valores não pagos no vencimento estarão sujeitos a encargos legais; um novo DAS deve ser gerado no PGMEI.
+*   Os valores são devidos desde o mês da abertura da empresa até o mês da baixa, mesmo que esta ocorra no primeiro dia do mês.
+
+### 6.5. Conceitos Preliminares
+
+*   **Empresário Individual:** Quem exerce profissionalmente atividade econômica organizada para a produção ou circulação de bens ou serviços (art. 966 da Lei 10.406/2002).
+*   **Microempreendedor Individual (MEI):** Empresário individual que atenda, cumulativamente, às seguintes condições:
+    *   Receita bruta acumulada nos anos-calendário anterior e em curso de até R$ 36.000,00 (até 31/12/2011); até R$ 60.000,00 (2012-2017); até R$ 81.000,00 (a partir de 01/01/2018); e até R$ 251.600,00 para o transportador autônomo de cargas MEI (a partir de 01/01/2022) ou seu limite proporcional para o ano de início de atividade.
+    *   Seja optante pelo Simples Nacional e Simei.
+    *   Exerça atividades constantes do Anexo único da Resolução CGSN nº 58/2009 (até 31/12/2011), do Anexo XIII da Resolução CGSN nº 94/2011 (01/01/2012 a 31/07/2018); e a partir de 01/08/2018, do Anexo XI da Resolução CGSN nº 140/2018.
+    *   Possua um único estabelecimento.
+    *   Não participe de outra empresa como titular, sócio ou administrador.
+    *   Não contrate mais de um empregado, observado o disposto no art. 105 da Resolução CGSN nº 140/2018.
+*   **MEI Transportador Autônomo de Cargas:** Transportador autônomo de cargas inscrito como MEI, com ocupação profissional exclusiva de transporte rodoviário de cargas (tabela B do Anexo X, da Resolução CGSN nº 140/2018). Inclui transporte municipal, intermunicipal, interestadual, internacional e de produtos perigosos, e mudanças.
+
+### 6.6. Acesso ao PGMEI
+
+O acesso ao PGMEI pode ser feito por meio do endereço [www8.receita.fazenda.gov.br/simplesnacional](www8.receita.fazenda.gov.br/simplesnacional). Para a versão completa, é necessário login com CNPJ, CPF do responsável e Código de Acesso (gerado em [http://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/GeraCodigo.aspx](http://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/GeraCodigo.aspx)).
+
+### 6.7. Menu do PGMEI
+
+Os menus disponíveis no PGMEI são:
+*   Início
+*   Emitir Guia de Pagamento (DAS)
+*   Consulta Extrato/Pendências (apenas na versão completa)
+*   Ajuda
+*   Sair
+
+### 6.8. Emitir Guia de Pagamento (DAS)
+
+Para apurar e gerar o DAS:
+1.  Acesse “Emitir Guia de Pagamento (DAS)”.
+2.  Selecione o ano-calendário e clique em OK.
+3.  Marque o período de apuração (PA) e clique em “Apurar/Gerar DAS”.
+4.  Clique em “Imprimir/Visualizar PDF” para visualizar e imprimir o DAS.
+
+**Tela Inicial:** Permite apuração ou retificação de um PA e geração do DAS. Se houver pendência de DASN-Simei de anos anteriores, o usuário deve primeiro regularizar as apurações e declarações omissas.
+
+**Tela Resumo do DAS a ser Gerado:** Após selecionar o ano, o PGMEI resume os valores devidos e os DAS a serem gerados, com multas e juros. Permite selecionar um, alguns ou todos os PAs do ano. Exibe campos como Período de Apuração (PA), Apurado (Sim/Não), Situação (Liquidado, Devedor, A Vencer, Dívida Ativa, Não Optante), Benefício INSS (para salário-maternidade, auxílio-doença ou auxílio-reclusão que abranja o mês inteiro) e Resumo do DAS (principal, multa, juros, total, vencimento e acolhimento).
+
+**ATENÇÃO:** A indicação indevida de benefício previdenciário configura declaração falsa, com consequências fiscais e penais.
+
+### 6.9. Saldo Devedor de INSS Inferior a R$10,00
+
+Até 10/08/2023, diferenças de recolhimento a menor eram acumuladas em PAs posteriores do mesmo ano-calendário até atingir R$ 10,00. A partir de 11/08/2023, o PGMEI foi atualizado para não restringir o acúmulo de diferenças devidas ao próprio ano-calendário, permitindo o acúmulo em PAs posteriores, devedores, independente do ano.
+
+O valor do DAS é composto por INSS, ICMS e/ou ISS. O INSS corresponde a 5% ou 12% (dependendo da ocupação) sobre o salário-mínimo vigente.
+
+
+
+## 7. Referências
+
+[1] SERPRO. **Cenários CCMEI**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_ccmei/). Acesso em: 27 set. 2025.
+
+[2] SERPRO. **Introdução - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/). Acesso em: 27 set. 2025.
+
+[3] SERPRO. **Emitir CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/emitir_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/emitir_ccmei/). Acesso em: 27 set. 2025.
+
+[4] SERPRO. **Consultar dados CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/consultar_dados_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/consultar_dados_ccmei/). Acesso em: 27 set. 2025.
+
+[5] SERPRO. **Consultar situação cadastral CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/consultar_situacao_cadastral_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/servicos/consultar_situacao_cadastral_ccmei/). Acesso em: 27 set. 2025.
+
+[6] SERPRO. **Retorno Emitir CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_emitir_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_emitir_ccmei/). Acesso em: 27 set. 2025.
+
+[7] SERPRO. **Retorno Consultar dados CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_consultar_dados_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_consultar_dados_ccmei/). Acesso em: 27 set. 2025.
+
+[8] SERPRO. **Retorno Consultar situação cadastral CCMEI - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_consultar_situacao_cadastral_ccmei/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/exemplos/retorno_consultar_situacao_cadastral_ccmei/). Acesso em: 27 set. 2025.
+
+[9] SERPRO. **Mensagens - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/mensagens/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/mensagens/). Acesso em: 27 set. 2025.
+
+[10] SERPRO. **Glossário - Integra Contador**. Disponível em: [https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/glossario/](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-mei/ccmei/glossario/). Acesso em: 27 set. 2025.
+
+[11] RECEITA FEDERAL. **MANUAL PGMEI 2018**. Disponível em: [https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/MANUAL_PGMEI_2018.pdf](https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/MANUAL_PGMEI_2018.pdf). Acesso em: 27 set. 2025.

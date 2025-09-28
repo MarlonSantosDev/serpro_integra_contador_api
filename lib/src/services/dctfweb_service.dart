@@ -61,20 +61,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'GERARGUIA31',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIA31', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('GERARGUIA31');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -112,20 +103,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSRECIBO32',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSRECIBO32', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSRECIBO32');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -163,20 +145,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSDECCOMPLETA33',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSDECCOMPLETA33', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSDECCOMPLETA33');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -217,20 +190,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSXMLDECLARACAO38',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSXMLDECLARACAO38', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('CONSXMLDECLARACAO38');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return ConsultarXmlResponse.fromJson(response);
   }
 
@@ -274,20 +238,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'TRANSDECLARACAO310',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'TRANSDECLARACAO310', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('TRANSDECLARACAO310');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return TransmitirDeclaracaoDctfResponse.fromJson(response);
   }
 
@@ -325,20 +280,11 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'GERARGUIAANDAMENTO313',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIAANDAMENTO313', dados: dctfRequest.toDadosJson()),
     );
 
     final endpoint = DctfWebUtils.obterEndpoint('GERARGUIAANDAMENTO313');
-    final response = await _apiClient.post(
-      endpoint,
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -402,9 +348,7 @@ class DctfWebService {
   }) async {
     return gerarDocumentoArrecadacao(
       contribuinteNumero: contribuinteNumero,
-      categoria: isPessoaFisica
-          ? CategoriaDctf.pf13Salario
-          : CategoriaDctf.geral13Salario,
+      categoria: isPessoaFisica ? CategoriaDctf.pf13Salario : CategoriaDctf.geral13Salario,
       anoPA: anoPA,
       numeroReciboEntrega: numeroReciboEntrega,
       dataAcolhimentoProposta: dataAcolhimentoProposta,
@@ -444,9 +388,7 @@ class DctfWebService {
     );
 
     if (!xmlResponse.sucesso || xmlResponse.xmlBase64 == null) {
-      throw Exception(
-        'Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}',
-      );
+      throw Exception('Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}');
     }
 
     // 2. Assinar XML externamente

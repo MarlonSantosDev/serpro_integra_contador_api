@@ -1,0 +1,182 @@
+---
+alwaysApply: true
+---
+
+# DTE - Integra Contador
+
+# Cenários DTE
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Obter indicador DTE
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "11111111111111",     "tipo": 2   },   "autorPedidoDados": {     "numero": "11111111111111",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999999",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DTE",     "idServico": "CONSULTASITUACAODTE111",     "versaoSistema": "1.0",     "dados": ""   } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{   "contratante": {     "numero": "11111111111111",     "tipo": 2   },   "autorPedidoDados": {     "numero": "11111111111111",     "tipo": 2   },   "contribuinte": {     "numero": "99999999999999",     "tipo": 2   },   "pedidoDados": {     "idSistema": "DTE",     "idServico": "CONSULTASITUACAODTE111",     "versaoSistema": "1.0",     "dados": ""   } }'`
+
+
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o IC-DTE?
+
+O Sistema Integra Contador DTE (IC-DTE) disponibiliza um serviço de consulta à situação do contribuinte quanto à adesão ao DTE - Domicílio Tributário Eletrônico, no Caixa Postal do Simples Nacional e no e-CAC, a partir de uma API (Application Programming Interface).
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte da mensagem e haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra CaixaPostal, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema DTE, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+# Obter indicador DTE - Integra Contador
+
+# Obter Indicador DTE
+
+Obtém informação que indica se há adesão ao DTE de um contribuinte.
+
+Em cada chamada do serviço, serão informados os dados a respeito do autor da consulta e do contribuinte. Haverá um retorno on-line, indicando o sucesso ou falha da consulta.
+
+PedidoDados
+
+idSistema: DTE  
+idServico: CONSULTASITUACAODTE111  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+Não tem informação a ser preenchida no campo "dados", o campo deve ser enviado vazio (ex.: "dados":"")
+
+| Campo | Descrição | Tipo | Domínio | Obrigatório |
+| --- | --- | --- | --- | --- |
+| \-- | \-- | \-- | \-- | \-- |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "DTE",         "idServico": "CONSULTASITUACAODTE111",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: Dados) |
+
+Objeto: Dados
+
+| Campo | Descrição | Tipo | Domínio |
+| --- | --- | --- | --- |
+| indicadorEnquadramento | Indicador de enquadramento do NI consultado. | Number (1) | \-2: NI inválido. -1: NI Não optante. 0: NI Optante DTE. 1: NI Optante Simples. 2: NI Optante DTE e Simples. |
+| statusEnquadramento | Texto do status de enquadramento do NI consultado. | String (300) | \-- |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [lista de Obter Indicador DTE]()
+
+
+
+# Mensagens - Integra Contador
+
+# Mensagens de negócio
+
+## Mensagens Obter indicador DTE
+
+| Códigos | Mensagem |
+| --- | --- |
+| Sucesso-DTE-00 | Requisição CPF efetuada com sucesso. |
+| Sucesso-DTE-01 | Requisição CNPJ efetuada com sucesso. |
+| Erro-DTE-04 | CPF(9 digitos) inválido. |
+| Erro-DTE-05 | CNPJ(8 digitos) inválido |
+
+## Mensagens de Exceção
+
+| Códigos | Mensagem |
+| --- | --- |
+| Erro-DTE-991 | Serviço informado não é um dos serviços disponibilizados pelo sistema. |
+| Erro-DTE-992 | Serviço informado ({0}) inválido. |
+| Erro-DTE-993 | Não foi possível converter retorno do serviço acionado do DTE. |
+| Erro-DTE-994 | Campo informado ({0}) inválido. |
+| Erro-DTE-995 | Erro ao conectar com o serviço DTE. |
+
+
+
+# Retorno Obter indicador DTE - Integra Contador
+
+# Exemplo de Json de retorno
+
+Obter Indicador DTE
+
+## Json de retorno completo
+
+   `{       "contratante": {         "numero": "99999999999",         "tipo": 1       },       "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },       "pedidoDados": {         "idSistema": "DTE",         "idServico": "CONSULTASITUACAODTE111",         "versaoSistema": "1.0",         "dados": ""       },       "status": 200,       "dados": "{\"indicadorEnquadramento\":0,\"statusEnquadramento\":\"CNPJ Optante DTE\"}",       "mensagens": [         {           "codigo": "Sucesso-DTE-00",           "texto": "Requisição efetuada com sucesso."         }       ]     }`
+
+## Json do campo "dados"
+
+Nesse exemplo o json está formatado e sem o scaped string. O exemplo completo é demonstrado acima.
+
+  `{       "codigo": "00",       "conteudo": [{         "indicadorEnquadramento": 0,         "indicadorEnquadramento": "CNPJ Optante DTE"       }]   }`
+
+
+
+# Dados de domínio
+
+Os domínios do indicador de enquadramento com respectivo status.
+
+| Indicador | Descrição |
+| --- | --- |
+| -2 | NI inválido |
+| -1 | NI Não optante |
+| 0 | NI Optante DTE |
+| 1 | NI Optante Simples |
+| 2 | NI Optante DTE e Simples |
+
+
+
+# Glossário - Integra Contador
+
+# Glossário
+
+## Siglas
+
+Principais siglas utilizadas no IC-DTE.
+
+Fonte: \[Glossário DTE\]
+
+| Sigla | Descrição |
+| --- | --- |
+| Autoridade Certificadora | Autoridade Certificadora (AC) é a entidade responsável por emitir certificados digitais. Estes certificados podem ser emitidos para diversos tipos de entidades, tais como: pessoa, computador, departamento de uma instituição, instituição, etc. |
+| Cookie | Um cookie é uma informação que um servidor web pode armazenar temporariamente junto a um browser. |
+| DTE (Domicílio Tributário Eletrônico) | A Receita Federal colocou à disposição dos contribuintes a opção pelo Domicílio Tributário Eletrônico (DTE). A adesão ao DTE permite que sua Caixa Postal no e-CAC também seja considerada seu Domicílio Tributário perante a Administração Tributária Federal. |
+| ICP-Brasil | Infra-estrutura de chaves públicas brasileira: é um conjunto de técnicas, práticas e procedimentos, a ser implementado pelas organizações governamentais e privadas brasileiras com o objetivo de estabelecer os fundamentos técnicos e metodológicos de um sistema de certificação digital baseado em chave pública. |
+| NI | Número de Identificação (NI), usado para representar CPF e CNPJ. |
+| UA | Unidade de Atendimento das Regiões Fiscais da Receita Federal. |

@@ -1,0 +1,356 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API Integra Contador - SERPRO
+
+## Cenários PERTSN
+
+### IMPORTANTE
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/pertsn/servicos/exemplos/retorno_emite_das/).
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_pertsn/).
+
+### Consultar pedidos
+
+**Headers:**
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{       
+    "contratante": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "autorPedidoDados": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "contribuinte": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },                
+    "pedidoDados": {         
+        "idSistema": "PERTSN",         
+        "idServico": "PEDIDOSPARC183",         
+        "versaoSistema": "1.0",         
+        "dados": ""       
+    }     
+}
+```
+
+**Exemplo de Retorno:**
+
+```json
+{         
+    "contratante": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "autorPedidoDados": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "contribuinte": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "pedidoDados": {             
+        "idSistema": "PERTSN",             
+        "idServico": "PEDIDOSPARC183",             
+        "versaoSistema": "1.0",              
+        "dados": ""         
+    },        
+    "status": "200",        
+    "mensagens": [         
+        {           
+            "codigo": "[Sucesso-PERTSN]",           
+            "texto": "Requisição efetuada com sucesso."         
+        }        
+    ] ,        
+    "dados": "{\"parcelamentos\":[{\"numero\":9102,\"dataDoPedido\":20180619,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20230831}]}"     
+}
+```
+
+### Consultar Parcelamento
+
+**Headers:**
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{       
+    "contratante": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "autorPedidoDados": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "contribuinte": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },                
+    "pedidoDados": {          
+        "idSistema": "PERTSN",          
+        "idServico": "OBTERPARC184",          
+        "versaoSistema": "1.0",              
+        "dados": "{ \"numeroParcelamento\": 9102}"        
+    }     
+}
+```
+
+**Exemplo de Retorno:**
+
+```json
+{         
+    "contratante": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "autorPedidoDados": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "contribuinte": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "pedidoDados": {             
+        "idSistema": "PERTSN",             
+        "idServico": "OBTERPARC184",             
+        "versaoSistema": "1.0",              
+        "dados": "{ \"numeroParcelamento\": 9102}"         
+    },         
+    "status": "200",         
+    "mensagens": [          
+        {           
+            "codigo": "[Sucesso-PERTSN]",           
+            "texto": "Requisição efetuada com sucesso."          
+        }         
+    ],         
+    "dados": "{\"numero\":9102,\"dataDoPedido\":20180619,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20230831,\"consolidacaoOriginal\":{\"valorTotalConsolidadoDaEntrada\":2687.15,\"quantidadeParcelasDeEntrada\":5,\"parcelaDeEntrada\":537.43,\"dataConsolidacao\":20180619155825,\"valorConsolidadoDaDivida\":53742.95,\"detalhesConsolidacao\":[{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":3156.80,\"valorAtualizado\":4619.91},{\"periodoApuracao\":201607,\"vencimento\":20160822,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":3343.62,\"valorAtualizado\":4596.40},{\"periodoApuracao\":201612,\"vencimento\":20170120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":4338.52,\"valorAtualizado\":5729.41},{\"periodoApuracao\":201707,\"vencimento\":20170821,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":5419.66,\"valorAtualizado\":6829.25},{\"periodoApuracao\":201708,\"vencimento\":20170921,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":7767.86,\"valorAtualizado\":9738.50},{\"periodoApuracao\":201709,\"vencimento\":20171020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":8037.84,\"valorAtualizado\":10025.52},{\"periodoApuracao\":201710,\"vencimento\":20171120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":5347.95,\"valorAtualizado\":6639.95},{\"periodoApuracao\":201711,\"vencimento\":20171220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":4500.95,\"valorAtualizado\":5564.01}]},\"alteracoesDivida\":[{\"totalConsolidado\":45089.04,\"parcelasRemanescentes\":145,\"parcelaBasica\":310.96,\"dataAlteracaoDivida\":202308311053,\"valorConsolidadoPrincipal\":40435.47,\"detalhesAlteracaoDivida\":[{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":1679.07,\"valorAtualizado\":1935.42},{\"periodoApuracao\":201607,\"vencimento\":20160822,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":3343.62,\"valorAtualizado\":3794.66},{\"periodoApuracao\":201612,\"vencimento\":20170120,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":4338.52,\"valorAtualizado\":4876.91},{\"periodoApuracao\":201707,\"vencimento\":20170821,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":5419.66,\"valorAtualizado\":6026.62},{\"periodoApuracao\":201708,\"vencimento\":20170921,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":7767.86,\"valorAtualizado\":8627.74},{\"periodoApuracao\":201709,\"vencimento\":20171020,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":8037.84,\"valorAtualizado\":8917.15},{\"periodoApuracao\":201710,\"vencimento\":20171120,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":5347.95,\"valorAtualizado\":5927.11},{\"periodoApuracao\":201711,\"vencimento\":20171220,\"numeroProcesso\":\"12376094286201915\",\"saldoDevedorOriginal\":4500.95,\"valorAtualizado\":4983.43}]}],\"demonstrativoPagamentos\":[{\"mesDaParcela\":201806,\"vencimentoDoDas\":20180629,\"dataDeArrecadacao\":20180629,\"valorPago\":537.43},{\"mesDaParcela\":201807,\"vencimentoDoDas\":20180731,\"dataDeArrecadacao\":20180731,\"valorPago\":542.80},{\"mesDaParcela\":201808,\"vencimentoDoDas\":20180831,\"dataDeArrecadacao\":20180829,\"valorPago\":545.70},{\"mesDaParcela\":201809,\"vencimentoDoDas\":20180928,\"dataDeArrecadacao\":20180928,\"valorPago\":548.76}]}"     
+}
+```
+
+### Consultar Parcelas para Impressão
+
+**Headers:**
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{       
+    "contratante": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "autorPedidoDados": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "contribuinte": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },                
+    "pedidoDados": {         
+        "idSistema": "PERTSN",         
+        "idServico": "PARCELASPARAGERAR182",         
+        "versaoSistema": "1.0",         
+        "dados": ""       
+    }     
+}
+```
+
+**Exemplo de Retorno:**
+
+```json
+{         
+    "contratante": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "autorPedidoDados": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "contribuinte": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "pedidoDados": {             
+        "idSistema": "PERTSN",             
+        "idServico": "PARCELASPARAGERAR182",             
+        "versaoSistema": "1.0",              
+        "dados": ""         
+    },         
+    "status": "200",         
+    "mensagens": [             
+        {               
+            "codigo": "[Sucesso-PERTSN]",               
+            "texto": "Requisição efetuada com sucesso."             
+        }         
+    ],         
+    "dados": "{\"listaParcelas\":[{\"parcela\":201811,\"valor\":429.71},{\"parcela\":201812,\"valor\":429.71},{\"parcela\":201901,\"valor\":429.71},{\"parcela\":201902,\"valor\":429.71},{\"parcela\":201903,\"valor\":429.71},{\"parcela\":201904,\"valor\":429.71},{\"parcela\":201905,\"valor\":429.71},{\"parcela\":201906,\"valor\":429.71},{\"parcela\":201907,\"valor\":429.71},{\"parcela\":201908,\"valor\":429.71},{\"parcela\":201909,\"valor\":429.71},{\"parcela\":201910,\"valor\":429.71},{\"parcela\":201911,\"valor\":429.71},{\"parcela\":201912,\"valor\":429.71},{\"parcela\":202001,\"valor\":429.71},{\"parcela\":202002,\"valor\":429.71},{\"parcela\":202003,\"valor\":429.71},{\"parcela\":202004,\"valor\":429.71},{\"parcela\":202005,\"valor\":429.71},{\"parcela\":202006,\"valor\":429.71},{\"parcela\":202007,\"valor\":429.71},{\"parcela\":202008,\"valor\":429.71},{\"parcela\":202009,\"valor\":429.71},{\"parcela\":202010,\"valor\":429.71},{\"parcela\":202011,\"valor\":429.71},{\"parcela\":202012,\"valor\":429.71},{\"parcela\":202101,\"valor\":429.71},{\"parcela\":202102,\"valor\":429.71},{\"parcela\":202103,\"valor\":429.71},{\"parcela\":202104,\"valor\":429.71},{\"parcela\":202105,\"valor\":429.71},{\"parcela\":202106,\"valor\":429.71},{\"parcela\":202107,\"valor\":429.71},{\"parcela\":202108,\"valor\":429.71},{\"parcela\":202109,\"valor\":429.71},{\"parcela\":202110,\"valor\":429.71},{\"parcela\":202111,\"valor\":429.71},{\"parcela\":202112,\"valor\":429.71},{\"parcela\":202201,\"valor\":429.71},{\"parcela\":202202,\"valor\":429.71},{\"parcela\":202203,\"valor\":429.71},{\"parcela\":202204,\"valor\":429.71},{\"parcela\":202205,\"valor\":429.71},{\"parcela\":202206,\"valor\":429.71},{\"parcela\":202207,\"valor\":429.71},{\"parcela\":202208,\"valor\":429.71},{\"parcela\":202209,\"valor\":429.71},{\"parcela\":202210,\"valor\":429.71},{\"parcela\":202211,\"valor\":429.71},{\"parcela\":202212,\"valor\":429.71},{\"parcela\":202301,\"valor\":429.71},{\"parcela\":202302,\"valor\":429.71},{\"parcela\":202303,\"valor\":429.71},{\"parcela\":202304,\"valor\":429.71},{\"parcela\":202305,\"valor\":429.71},{\"parcela\":202306,\"valor\":429.71},{\"parcela\":202307,\"valor\":429.71},{\"parcela\":202308,\"valor\":429.71},{\"parcela\":202309,\"valor\":429.71},{\"parcela\":202310,\"valor\":429.71}]}"     
+}
+```
+
+### Consultar Detalhes de Pagamento
+
+**Headers:**
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{       
+    "contratante": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "autorPedidoDados": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "contribuinte": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },                
+    "pedidoDados": {         
+        "idSistema": "PERTSN",         
+        "idServico": "DETPAGTOPARC185",         
+        "versaoSistema": "1.0",          
+        "dados": "{ \"numeroParcelamento\": 9102, \"anoMesParcela\": 201806 }"        
+    }     
+}
+```
+
+### Emitir DAS
+
+**Headers:**
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{       
+    "contratante": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "autorPedidoDados": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },       
+    "contribuinte": {         
+        "numero": "00000000000000",         
+        "tipo": 2       
+    },                
+    "pedidoDados": {         
+        "idSistema": "PERTSN",         
+        "idServico": "GERARDAS181",         
+        "versaoSistema": "1.0",          
+        "dados": "{ \"parcelaParaEmitir\": 202301 }"        
+    } 
+}
+```
+
+**Exemplo de Retorno:**
+
+```json
+{         
+    "contratante": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "autorPedidoDados": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "contribuinte": {             
+        "numero": "00000000000000",             
+        "tipo": 2         
+    },         
+    "pedidoDados": {             
+        "idSistema": "PERTSN",             
+        "idServico": "GERARDAS181",             
+        "versaoSistema": "1.0",              
+        "dados": "{ \"parcelaParaEmitir\": 202301 }"         
+    },       
+    "status": "200",       
+    "mensagens": [         
+        {           
+            "codigo": "[Sucesso-PERTSN]",           
+            "texto": "Requisição efetuada com sucesso."         
+        }       
+    ],       
+    "dados": "{\"docArrecadacaoPdfB64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8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WFtCmVuZG9iago2MCAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDUgMCBSCi9SZXNvdXJjZXMgMyAwIFIKL0NvbnRlbnRzIDI2IDAgUgovTWVkaWFCb3ggWzAgMCA1OTUuMjggODQxLjg5XQovQ3JvcEJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9CbGVlZEJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UcmltQm94IFswIDAgNTk1LjI4IDg0MS44OV0KL0FydEJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9Bbm5vdHMgWzEzIDAgUiAxNCAwIFIgMTUgMCBSIDE2IDAgUiAxNyAwIFIgMTggMCBSIDE5IDAgUiAyMCAwIFIgMjEgMCBSIDIyIDAgUiAyMyAwIFIgMjQgMCBSIDI1IDAgUiAyNyAwIFIgMjggMCBSIDI5IDAgUiAzMCAwIFIgMzEgMCBSIDMyIDAgUiAzMyAwIFIgMzQgMCBSIDM1IDAgUiAzNiAwIFIgMzcgMCBSIDM4IDAgUiAzOSAwIFIgNDAgMCBSIDQxIDAgUiA0MiAwIFIgNDMgMCBSIDQ0IDAgUiA0NSAwIFIgNDYgMCBSIDQ3IDAgUiA0OCAwIFIgNDkgMCBSIDUwIDAgUiA1MSAwIFIgNTIgMCBSIDUzIDAgUiA1NCAwIFIgNTUgMCBSIDU2IDAgUiA1NyAwIFIgNTggMCBSIDU5IDAgUl0KPj4KZW5kb2JqCjYxIDAgb2JqCjw8Ci9Ob25TdHJ1Y3QgdHJ1ZQovRGlyZWN0aW9uIC9MMlIKL0Rpc3BsYXlEb2NUaXRsZSB0cnVlCi9DZW50ZXJXaW5kb3cgdHJ1ZQovRml0V2luZG93IHRydWUKPj4KZW5kb2JqCjYyIDAgb2JqCjw8Ci9TaWdGbGFncyAzCi9GaWVsZHMgW10KPj4KZW5kb2JqCjYzIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovQ291bnQgMQovS2lkcyBbNjAgMCBSXQo+PgplbmRvYmoKNDQgMCBvYmoKPDwKL05hbWVzIFsoVGV4dEZpZWxkMSkgOCAwIFJdCj4+CmVuZG9iago2NSAwIG9iago8PAovRm9udCA4IDAgUgovUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0KPj4KZW5kb2JqCjY2IDAgb2JqCjw8Ci9IZSA5IDAgUgo+PgplbmRvYmoKNjcgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCj4+CmVuZG9iagp4cmVmCjAgNjggCmYgMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDE1MjY0IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAxNTY2MiAwMDAwIG4gCjAwMDAwMTU1OTAgMDAwMDAgbiAKMDAwMDAxNTUwNyAwMDAwMCBuIAowMDAwMDE1MzY2IDAwMDAwIG4gCjAwMDAwMTU0NDAgMDAwMDAgbiAKMDAwMDAxNTcyNCAwMDAwMCBuIAowMDAwMDE1NzgxIDAwMDAwIG4gCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDIyNCAwMDAwMCBuIAowMDAwMDAwMzE5IDAwMDAwIG4gCjAwMDAwMDA0MTQgMDAwMDAgbiAKMDAwMDAwMDUwOSAwMDAwMCBuIAowMDAwMDAwNjA0IDAwMDAwIG4gCjAwMDAwMDA2OTkgMDAwMDAgbiAKMDAwMDAwNzk0IDAwMDAwIG4gCjAwMDAwMDA4ODkgMDAwMDAgbiAKMDAwMDAwOTg0IDAwMDAwIG4gCjAwMDAwMTA3OSAwMDAwMCBuIAowMDAwMDExNzQgMDAwMDAgbiAKMDAwMDAwMTI2OSAwMDAwMCBuIAowMDAwMDAxMzY0IDAwMDAwIG4gCjAwMDAwMDE0NTkgMDAwMDAgbiAKMDAwMDAwMTU1OSAwMDAwMCBuIAowMDAwMDAyOTYxIDAwMDAwIG4gCjAwMDAwMDMwNTYgMDAwMDAgbiAKMDAwMDAwMzE1MSAwMDAwMCBuIAowMDAwMDAzMjQ2IDAwMDAwIG4gCjAwMDAwMDMzNDEgMDAwMDAgbiAKMDAwMDAwMzQzNiAwMDAwMCBuIAowMDAwMDAzNTMxIDAwMDAwIG4gCjAwMDAwMDM2MzAgMDAwMDAgbiAKMDAwMDAwMzcyOSAwMDAwMCBuIAowMDAwMDM4MjQgMDAwMDAgbiAKMDAwMDAwMzkyMyAwMDAwMCBuIAowMDAwMDA0MDIyIDAwMDAwIG4gCjAwMDAwMDQxMjEgMDAwMDAgbiAKMDAwMDAwNDIyMCAwMDAwMCBuIAowMDAwMDA0MzE5IDAwMDAwIG4gCjAwMDAwMDQ0MTggMDAwMDAgbiAKMDAwMDAwNDUxNyAwMDAwMCBuIAowMDAwMDA0NjE2IDAwMDAwIG4gCjAwMDAwMDQ3MTUgMDAwMDAgbiAKMDAwMDAwNDgxNCAwMDAwMCBuIAowMDAwMDA0OTExIDAwMDAwIG4gCjAwMDAwMDUwMDggMDAwMDAgbiAKMDAwMDAwNTEwNSAwMDAwMCBuIAowMDAwMDA1MjAyIDAwMDAwIG4gCjAwMDAwMDUyOTkgMDAwMDAgbiAKMDAwMDAwNTM5NiAwMDAwMCBuIAowMDAwMDAwNTQ5MyAwMDAwMCBuIAowMDAwMDAwNTU5MCAwMDAwMCBuIAowMDAwMDAwNTY4NyAwMDAwMCBuIAowMDAwMDAwNTc4NCAwMDAwMCBuIAowMDAwMDAwNTg4MSAwMDAwMCBuIAowMDAwMDAwNTk3OCAwMDAwMCBuIAowMDAwMDA2MDc1IDAwMDAwIG4gCjAwMDAwMDYxNzIgMDAwMDAgbiAKMDAwMDA2MjY5IDAwMDAwIG4gCjAwMDAwMDYzNDMgMDAwMDAgbiAKMDAwMDA2NDE3IDAwMDAwIG4gCjAwMDAwNjQ3NCAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDY4Ci9Sb290IDIgMCBSCi9JbmZvIDEwIDAgUgovSUQgWzw1YjE5YjEwYjI3M2Q0YjY4YjY4YjY4YjY4YjY4YjY4Pl0KPj4Kc3RhcnR4cmVmCjE1ODQzCiUlRU9GJT0K## Introdução - Integra Contador
+
+### O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PERTSN, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## Mensagens - Integra Contador
+
+### Mensagens específicas para o Integra Parcelamento - PERTSN
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-PERTSN-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-PERTSN-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PERTSN-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-PERTSN-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-PERTSN-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-PERTSN-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-PERTSN-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaIncorreta-PERTSN-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-PERTSN-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-PERTSN-ER\_N009\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento passado no parâmetro |
+| \[Aviso-PERTSN-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-PERTSN-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-PERTSN-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-PERTSN-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[EntradaIncorreta-PERTSN-ER\_N014\] | Não será possível utilizar o IC para este contribuinte. Utilize o sistema web. | A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador. |
+| \[Aviso-PERTSN-ER\_N015\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+| \[EntradaIncorreta-PERTSN-ER\_N016\] | O Integra Contador Parcelamento possui o limite de {0} parcelas e este parcelamento possui {1} parcelas. Utilize o sistema na WEB para obter a guia. | Não será possível emitir guia para este parcelamento. |

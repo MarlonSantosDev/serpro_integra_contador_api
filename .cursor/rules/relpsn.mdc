@@ -1,0 +1,1006 @@
+---
+alwaysApply: true
+---
+
+
+# Cenários RELPSN
+
+
+
+
+# Cenários RELPSN
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+## Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }'`
+
+## Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGERAR192",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGERAR192",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }'`
+
+## Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        }     }'`
+
+
+
+# Introdução
+
+## O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema RELPSN, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+# Consultar todos os pedidos de parcelamento na modalidade RELPSN para um contribuinte
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PARCSN ESPECIAL para o contribuinte
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: PEDIDOSPARC193  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamentos
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+Objeto [Parcelamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Parcelamento - Integra Contador
+
+# Consultar um determinado parcelamento na modalidade RELPSN
+
+Esta consulta retorna informações de um parcelamento específico.
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: OBTERPARC194  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamento
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| alteracoesDivida | Informações de alterações de dívida | Lista de [AlteracaoDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+Objeto [Consolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidadoDaEntrada | Valor total consolidado | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| parcelaDeEntrada | Valor da parcela básica de entrada | Número |
+| quantidadeParcelasDeEntrada | Quantidade de parcelas | Número |
+| valorConsolidadoDivida | Valor consolidado | Número |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+Objeto [DetalhesConsolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+Objeto [AlteracaoDivida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| dataAlteracaoDivida | Data da alteração de dívida | Número (AAAAMMDDHHMM) |
+| identificadorConsolidacao | 1=Consolidação do restante da dívida; 2=Reconsolidação por alteração de débitos no sistema de cobrança. | Número |
+| saldoDevedorOriginalSemReducoes | Saldo devedor original sem reduções | Número |
+| valorRemanescenteComReducoes | Valor remanescente com reduções | Número |
+| partePrevidenciaria | Valor dos débitos previdenciários | Número |
+| demaisDebitos | Valor dos demais débitos (exceto previdenciários) | Número |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+| parcelasAlteracao | Detalhes de alteração de parcela | Lista de [ParcelaAlteracao]() |
+
+Objeto [ParcelaAlteracao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| faixaParcelas | Faixa do número de parcelas. | Texto |
+| parcelaInicial | Data da parcela inicial | Número (AAAAMM) |
+| vencimentoInicial | Data de vencimento inicial | Número (AAAAMMDD) |
+| parcelaBasica | Valor da parcela básica | Número |
+
+Objeto [DemonstrativoPagamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Detalhes de Pagamento de Parcela - Integra Contador
+
+# Consultar detalhes de pagamento na modalidade RELPSN
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: DETPAGTOPARC195  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número (AAAAMM) |
+| geradoEm | Data de geração do DAS | Número (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+Objeto [PagamentoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+Objeto [DiscriminacaoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Parcelas Disponíveis para Impressão - Integra Contador
+
+# Consultar as parcelas disponíveis para impressão de DAS na modalidade RELPSN
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: PARCELASPARAGERAR192  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGER192",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: listaParcela
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+Objeto [Parcela:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Emitir Documento de Arrecadação - Integra Contador
+
+# Emitir documento de arrecadação na modalidade RELPSN
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: GERARDAS191  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Exemplo de Json de retorno - Consultar Pedidos de Parcelamento
+
+Consultar todos os parcelamentos para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "PEDIDOSPARC173",             "versaoSistema": "1.0",              "dados": ""         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"parcelamentos\":[{\"numero\":9131,\"dataDoPedido\":20220530,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20230823}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Parcelamento
+
+Consultar um parcelamento específico para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "OBTERPARC194",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"         },         "status": "200",         "mensagens": [          {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."          }         ],          "dados": "{\"numero\":9131,\"dataDoPedido\":20220520,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20220526,\"consolidacaoOriginal\":{\"valorTotalConsolidadoDeEntrada\":2801.51,\"quantidadeParcelasDeEntrada\":8,\"parcelaDeEntrada\":350.19,\"dataConsolidacao\":20220520164440,\"valorConsolidadoDivida\":22412.08,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":10380.29,\"valorAtualizado\":14176.31},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":8235.77}]},\"alteracoesDivida\":[{\"dataAlteracaoDivida\":202301201627,\"identificadorConsolidacao\":1,\"saldoDevedorOriginalSemReducoes\":14452.77,\"valorRemanescenteComReducoes\":20810.71,\"partePrevidenciaria\":9031.79,\"demaisDebitos\":11778.92,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":8310.30,\"valorAtualizado\":12054.06},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":8756.65}],\"parcelasAlteracao\":[{\"faixaParcelas\":\"1ª a 12ª\",\"parcelaInicial\":202301,\"vencimentoInicial\":20230131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"13ª a 24ª\",\"parcelaInicial\":202401,\"vencimentoInicial\":20240131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"25ª a 36ª\",\"parcelaInicial\":202501,\"vencimentoInicial\":20250131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"37ª a 60ª\",\"parcelaInicial\":202601,\"vencimentoInicial\":20260131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"61ª a 69ª\",\"parcelaInicial\":202801,\"vencimentoInicial\":20280131,\"parcelaBasica\":312.30}]},{\"dataAlteracaoDivida\":202301271246,\"identificadorConsolidacao\":2,\"saldoDevedorOriginalSemReducoes\":14452.77,\"valorRemanescenteComReducoes\":16247.78,\"partePrevidenciaria\":7051.49,\"demaisDebitos\":9196.29,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":8310.30,\"valorAtualizado\":9373.16},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":6874.62}],\"parcelasAlteracao\":[{\"faixaParcelas\":\"1ª a 12ª\",\"parcelaInicial\":202301,\"vencimentoInicial\":20230131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"13ª a 24ª\",\"parcelaInicial\":202401,\"vencimentoInicial\":20240131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"25ª a 36ª\",\"parcelaInicial\":202501,\"vencimentoInicial\":20250131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"37ª a 54ª\",\"parcelaInicial\":202601,\"vencimentoInicial\":20260131,\"parcelaBasica\":302.65}]}],\"demonstrativoPagamentos\":[{\"mesDaParcela\":202205,\"vencimentoDoDas\":20220524,\"dataDeArrecadacao\":20220523,\"valorPago\":350.19},{\"mesDaParcela\":202206,\"vencimentoDoDas\":20220630,\"dataDeArrecadacao\":20220629,\"valorPago\":353.69},{\"mesDaParcela\":202207,\"vencimentoDoDas\":20220729,\"dataDeArrecadacao\":20220729,\"valorPago\":357.26},{\"mesDaParcela\":202208,\"vencimentoDoDas\":20220831,\"dataDeArrecadacao\":20220830,\"valorPago\":360.87},{\"mesDaParcela\":202209,\"vencimentoDoDas\":20220930,\"dataDeArrecadacao\":20220930,\"valorPago\":364.96},{\"mesDaParcela\":202210,\"vencimentoDoDas\":20221031,\"dataDeArrecadacao\":20221031,\"valorPago\":368.71},{\"mesDaParcela\":202211,\"vencimentoDoDas\":20221130,\"dataDeArrecadacao\":20221130,\"valorPago\":372.28},{\"mesDaParcela\":202212,\"vencimentoDoDas\":20221229,\"dataDeArrecadacao\":20221229,\"valorPago\":375.85},{\"mesDaParcela\":202301,\"vencimentoDoDas\":20230131,\"dataDeArrecadacao\":20230131,\"valorPago\":325.34},{\"mesDaParcela\":202302,\"vencimentoDoDas\":20230228,\"dataDeArrecadacao\":20230228,\"valorPago\":328.70},{\"mesDaParcela\":202303,\"vencimentoDoDas\":20230331,\"dataDeArrecadacao\":20230331,\"valorPago\":331.46},{\"mesDaParcela\":202304,\"vencimentoDoDas\":20230428,\"dataDeArrecadacao\":20230428,\"valorPago\":334.97},{\"mesDaParcela\":202305,\"vencimentoDoDas\":20230531,\"dataDeArrecadacao\":20230531,\"valorPago\":337.73},{\"mesDaParcela\":202306,\
+
+
+vencimentoDoDas\":20230630,\"dataDeArrecadacao\":20230630,\"valorPago\":341.09},{\"mesDaParcela\":202307,\"vencimentoDoDas\":20230731,\"dataDeArrecadacao\":20230731,\"valorPago\":344.30},{\"mesDaParcela\":202308,\"vencimentoDoDas\":20230831,\"dataDeArrecadacao\":20230830,\"valorPago\":347.51},{\"mesDaParcela\":202309,\"vencimentoDoDas\":20230929,\"dataDeArrecadacao\":20230929,\"valorPago\":350.93},{\"mesDaParcela\":202310,\"vencimentoDoDas\":20231031,\"dataDeArrecadacao\":20231031,\"valorPago\":353.84}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Detalhes de Pagamento de Parcela
+
+Consultar detalhes de pagamento de parcela para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "DETPAGTOPARC195",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 202308 }"         },           "status": "200",           "mensagens": [             {               "codigo": "[Sucesso-RELPSN]",               "texto": "Requisição efetuada com sucesso."             }           ],           "dados": "{\"numeroDas\":\"00000000000000000\",\"dataVencimento\":20231229,\"paDasGerado\":201806,\"geradoEm\":\"20161213125856\",\"numeroParcelamento\":\"0001\",\"numeroParcela\":\"11\",\"dataLimiteAcolhimento\":20161229,\"pagamentoDebitos\":[{\"paDebito\":201512,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"IRPJ\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"CSLL\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"COFINS\",\"principal\":53.05,\"multa\":10.61,\"juros\":6.38,\"total\":70.04,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"PIS\",\"principal\":12.63,\"multa\":2.53,\"juros\":1.52,\"total\":16.68,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"INSS\",\"principal\":152.58,\"multa\":30.52,\"juros\":18.34,\"total\":201.44,\"enteFederadoDestino\":\"União\"}]}],\"dataPagamento\":20161228,\"bancoAgencia\":\"0/49\",\"valorPagoArrecadacao\":334.84}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Parcelas Disponíveis para Impressão
+
+Consultar parcelas disponíveis para impressão do DAS na modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "PARCELASPARAGERAR192",             "versaoSistema": "1.0",              "dados": ""         },         "status": "200",         "mensagens": [             {               "codigo": "[Sucesso-RELPSN]",               "texto": "Requisição efetuada com sucesso."             }         ],         "dados": "{\"listaParcelas\":[{\"parcela\":\"202308\",\"valor\":788.26},{\"parcela\":\"202309\",\"valor\":788.26},{\"parcela\":\"202310\",\"valor\":788.26}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Emitir Documento de Arrecadação
+
+Emissão de DAS para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "GERARDAS191",             "versaoSistema": "1.0",              "dados": "{ \"parcelaParaEmitir\": 202308 }"         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"docArrecadacaoPdfB64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8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...176925 bytes truncated...
+
+
+
+# Mensagens específicas para o Integra Parcelamento - RELPSN
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-RELPSN-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-RELPSN-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-RELPSN-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-RELPSN-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-RELPSN-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-RELPSN-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-RELPSN-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaIncorreta-RELPSN-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-RELPSN-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-RELPSN-ER\_N009\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento passado no parâmetro |
+| \[Aviso-RELPSN-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-RELPSN-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-RELPSN-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-RELPSN-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[EntradaIncorreta-RELPSN-ER\_N014\] | Não será possível utilizar o IC para este contribuinte. Utilize o sistema web. | A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador. |
+| \[Aviso-RELPSN-ER\_N015\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+| \[EntradaIncorreta-RELPSN-ER\_N016\] | O Integra Contador Parcelamento possui o limite de {0} parcelas e este parcelamento possui {1} parcelas. Utilize o sistema na WEB para obter a guia. | Não será possível emitir guia para este parcelamento. |
+
+
+# Cenários RELPSN
+
+
+
+
+# Cenários RELPSN
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+## Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }'`
+
+## Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGERAR192",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGERAR192",         "versaoSistema": "1.0",         "dados": ""       }     }'`
+
+## Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }'`
+
+## Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        }     }'`
+
+
+
+# Introdução
+
+## O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema RELPSN, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+# Consultar todos os pedidos de parcelamento na modalidade RELPSN para um contribuinte
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PARCSN ESPECIAL para o contribuinte
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: PEDIDOSPARC193  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PEDIDOSPARC193",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamentos
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+Objeto [Parcelamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Parcelamento - Integra Contador
+
+# Consultar um determinado parcelamento na modalidade RELPSN
+
+Esta consulta retorna informações de um parcelamento específico.
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: OBTERPARC194  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "RELPSN",          "idServico": "OBTERPARC174",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamento
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| alteracoesDivida | Informações de alterações de dívida | Lista de [AlteracaoDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+Objeto [Consolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidadoDaEntrada | Valor total consolidado | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| parcelaDeEntrada | Valor da parcela básica de entrada | Número |
+| quantidadeParcelasDeEntrada | Quantidade de parcelas | Número |
+| valorConsolidadoDivida | Valor consolidado | Número |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+Objeto [DetalhesConsolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+Objeto [AlteracaoDivida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| dataAlteracaoDivida | Data da alteração de dívida | Número (AAAAMMDDHHMM) |
+| identificadorConsolidacao | 1=Consolidação do restante da dívida; 2=Reconsolidação por alteração de débitos no sistema de cobrança. | Número |
+| saldoDevedorOriginalSemReducoes | Saldo devedor original sem reduções | Número |
+| valorRemanescenteComReducoes | Valor remanescente com reduções | Número |
+| partePrevidenciaria | Valor dos débitos previdenciários | Número |
+| demaisDebitos | Valor dos demais débitos (exceto previdenciários) | Número |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+| parcelasAlteracao | Detalhes de alteração de parcela | Lista de [ParcelaAlteracao]() |
+
+Objeto [ParcelaAlteracao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| faixaParcelas | Faixa do número de parcelas. | Texto |
+| parcelaInicial | Data da parcela inicial | Número (AAAAMM) |
+| vencimentoInicial | Data de vencimento inicial | Número (AAAAMMDD) |
+| parcelaBasica | Valor da parcela básica | Número |
+
+Objeto [DemonstrativoPagamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Detalhes de Pagamento de Parcela - Integra Contador
+
+# Consultar detalhes de pagamento na modalidade RELPSN
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: DETPAGTOPARC195  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "DETPAGTOPARC195",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 201806 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número (AAAAMM) |
+| geradoEm | Data de geração do DAS | Número (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+Objeto [PagamentoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+Objeto [DiscriminacaoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Consultar Parcelas Disponíveis para Impressão - Integra Contador
+
+# Consultar as parcelas disponíveis para impressão de DAS na modalidade RELPSN
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: PARCELASPARAGERAR192  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "PARCELASPARAGER192",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: listaParcela
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+Objeto [Parcela:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Emitir Documento de Arrecadação - Integra Contador
+
+# Emitir documento de arrecadação na modalidade RELPSN
+
+PedidoDados
+
+idSistema: RELPSN  
+idServico: GERARDAS191  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "RELPSN",         "idServico": "GERARDAS191",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202308 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+# Exemplo de Json de retorno - Consultar Pedidos de Parcelamento
+
+Consultar todos os parcelamentos para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "PEDIDOSPARC173",             "versaoSistema": "1.0",              "dados": ""         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"parcelamentos\":[{\"numero\":9131,\"dataDoPedido\":20220530,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20230823}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Parcelamento
+
+Consultar um parcelamento específico para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "OBTERPARC194",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131}"         },         "status": "200",         "mensagens": [          {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."          }         ],          "dados": "{\"numero\":9131,\"dataDoPedido\":20220520,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20220526,\"consolidacaoOriginal\":{\"valorTotalConsolidadoDeEntrada\":2801.51,\"quantidadeParcelasDeEntrada\":8,\"parcelaDeEntrada\":350.19,\"dataConsolidacao\":20220520164440,\"valorConsolidadoDivida\":22412.08,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":10380.29,\"valorAtualizado\":14176.31},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":8235.77}]},\"alteracoesDivida\":[{\"dataAlteracaoDivida\":202301201627,\"identificadorConsolidacao\":1,\"saldoDevedorOriginalSemReducoes\":14452.77,\"valorRemanescenteComReducoes\":20810.71,\"partePrevidenciaria\":9031.79,\"demaisDebitos\":11778.92,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":8310.30,\"valorAtualizado\":12054.06},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":8756.65}],\"parcelasAlteracao\":[{\"faixaParcelas\":\"1ª a 12ª\",\"parcelaInicial\":202301,\"vencimentoInicial\":20230131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"13ª a 24ª\",\"parcelaInicial\":202401,\"vencimentoInicial\":20240131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"25ª a 36ª\",\"parcelaInicial\":202501,\"vencimentoInicial\":20250131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"37ª a 60ª\",\"parcelaInicial\":202601,\"vencimentoInicial\":20260131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"61ª a 69ª\",\"parcelaInicial\":202801,\"vencimentoInicial\":20280131,\"parcelaBasica\":312.30}]},{\"dataAlteracaoDivida\":202301271246,\"identificadorConsolidacao\":2,\"saldoDevedorOriginalSemReducoes\":14452.77,\"valorRemanescenteComReducoes\":16247.78,\"partePrevidenciaria\":7051.49,\"demaisDebitos\":9196.29,\"detalhesConsolidacao\":[{\"periodoApuracao\":201812,\"vencimento\":20190121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":8310.30,\"valorAtualizado\":9373.16},{\"periodoApuracao\":201905,\"vencimento\":20190621,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":6142.47,\"valorAtualizado\":6874.62}],\"parcelasAlteracao\":[{\"faixaParcelas\":\"1ª a 12ª\",\"parcelaInicial\":202301,\"vencimentoInicial\":20230131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"13ª a 24ª\",\"parcelaInicial\":202401,\"vencimentoInicial\":20240131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"25ª a 36ª\",\"parcelaInicial\":202501,\"vencimentoInicial\":20250131,\"parcelaBasica\":300.00},{\"faixaParcelas\":\"37ª a 54ª\",\"parcelaInicial\":202601,\"vencimentoInicial\":20260131,\"parcelaBasica\":302.65}]}],\"demonstrativoPagamentos\":[{\"mesDaParcela\":202205,\"vencimentoDoDas\":20220524,\"dataDeArrecadacao\":20220523,\"valorPago\":350.19},{\"mesDaParcela\":202206,\"vencimentoDoDas\":20220630,\"dataDeArrecadacao\":20220629,\"valorPago\":353.69},{\"mesDaParcela\":202207,\"vencimentoDoDas\":20220729,\"dataDeArrecadacao\":20220729,\"valorPago\":357.26},{\"mesDaParcela\":202208,\"vencimentoDoDas\":20220831,\"dataDeArrecadacao\":20220830,\"valorPago\":360.87},{\"mesDaParcela\":202209,\"vencimentoDoDas\":20220930,\"dataDeArrecadacao\":20220930,\"valorPago\":364.96},{\"mesDaParcela\":202210,\"vencimentoDoDas\":20221031,\"dataDeArrecadacao\":20221031,\"valorPago\":368.71},{\"mesDaParcela\":202211,\"vencimentoDoDas\":20221130,\"dataDeArrecadacao\":20221130,\"valorPago\":372.28},{\"mesDaParcela\":202212,\"vencimentoDoDas\":20221229,\"dataDeArrecadacao\":20221229,\"valorPago\":375.85},{\"mesDaParcela\":202301,\"vencimentoDoDas\":20230131,\"dataDeArrecadacao\":20230131,\"valorPago\":325.34},{\"mesDaParcela\":202302,\"vencimentoDoDas\":20230228,\"dataDeArrecadacao\":20230228,\"valorPago\":328.70},{\"mesDaParcela\":202303,\"vencimentoDoDas\":20230331,\"dataDeArrecadacao\":20230331,\"valorPago\":331.46},{\"mesDaParcela\":202304,\"vencimentoDoDas\":20230428,\"dataDeArrecadacao\":20230428,\"valorPago\":334.97},{\"mesDaParcela\":202305,\"vencimentoDoDas\":20230531,\"dataDeArrecadacao\":20230531,\"valorPago\":337.73},{\"mesDaParcela\":202306,\
+
+
+vencimentoDoDas\":20230630,\"dataDeArrecadacao\":20230630,\"valorPago\":341.09},{\"mesDaParcela\":202307,\"vencimentoDoDas\":20230731,\"dataDeArrecadacao\":20230731,\"valorPago\":344.30},{\"mesDaParcela\":202308,\"vencimentoDoDas\":20230831,\"dataDeArrecadacao\":20230830,\"valorPago\":347.51},{\"mesDaParcela\":202309,\"vencimentoDoDas\":20230929,\"dataDeArrecadacao\":20230929,\"valorPago\":350.93},{\"mesDaParcela\":202310,\"vencimentoDoDas\":20231031,\"dataDeArrecadacao\":20231031,\"valorPago\":353.84}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Detalhes de Pagamento de Parcela
+
+Consultar detalhes de pagamento de parcela para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "DETPAGTOPARC195",             "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9131, \"anoMesParcela\": 202308 }"         },           "status": "200",           "mensagens": [             {               "codigo": "[Sucesso-RELPSN]",               "texto": "Requisição efetuada com sucesso."             }           ],           "dados": "{\"numeroDas\":\"00000000000000000\",\"dataVencimento\":20231229,\"paDasGerado\":201806,\"geradoEm\":\"20161213125856\",\"numeroParcelamento\":\"0001\",\"numeroParcela\":\"11\",\"dataLimiteAcolhimento\":20161229,\"pagamentoDebitos\":[{\"paDebito\":201512,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"IRPJ\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"CSLL\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"COFINS\",\"principal\":53.05,\"multa\":10.61,\"juros\":6.38,\"total\":70.04,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"PIS\",\"principal\":12.63,\"multa\":2.53,\"juros\":1.52,\"total\":16.68,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"INSS\",\"principal\":152.58,\"multa\":30.52,\"juros\":18.34,\"total\":201.44,\"enteFederadoDestino\":\"União\"}]}],\"dataPagamento\":20161228,\"bancoAgencia\":\"0/49\",\"valorPagoArrecadacao\":334.84}"     }`
+
+
+
+# Exemplo de Json de retorno - Consultar Parcelas Disponíveis para Impressão
+
+Consultar parcelas disponíveis para impressão do DAS na modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "PARCELASPARAGERAR192",             "versaoSistema": "1.0",              "dados": ""         },         "status": "200",         "mensagens": [             {               "codigo": "[Sucesso-RELPSN]",               "texto": "Requisição efetuada com sucesso."             }         ],         "dados": "{\"listaParcelas\":[{\"parcela\":\"202308\",\"valor\":788.26},{\"parcela\":\"202309\",\"valor\":788.26},{\"parcela\":\"202310\",\"valor\":788.26}]}"     }`
+
+
+
+# Exemplo de Json de retorno - Emitir Documento de Arrecadação
+
+Emissão de DAS para a modalidade RELPSN
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "RELPSN",             "idServico": "GERARDAS191",             "versaoSistema": "1.0",              "dados": "{ \"parcelaParaEmitir\": 202308 }"         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-RELPSN]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"docArrecadacaoPdfB64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8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...176925 bytes truncated...
+
+
+
+# Mensagens específicas para o Integra Parcelamento - RELPSN
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-RELPSN-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-RELPSN-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-RELPSN-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-RELPSN-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-RELPSN-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-RELPSN-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-RELPSN-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaIncorreta-RELPSN-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-RELPSN-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-RELPSN-ER\_N009\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento passado no parâmetro |
+| \[Aviso-RELPSN-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-RELPSN-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-RELPSN-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-RELPSN-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[EntradaIncorreta-RELPSN-ER\_N014\] | Não será possível utilizar o IC para este contribuinte. Utilize o sistema web. | A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador. |
+| \[Aviso-RELPSN-ER\_N015\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+| \[EntradaIncorreta-RELPSN-ER\_N016\] | O Integra Contador Parcelamento possui o limite de {0} parcelas e este parcelamento possui {1} parcelas. Utilize o sistema na WEB para obter a guia. | Não será possível emitir guia para este parcelamento. |
+
