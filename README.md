@@ -68,78 +68,220 @@ await apiClient.authenticate(
 
 **⚠️ Importante**: A implementação atual da autenticação é simplificada. Para uso em produção, será necessário implementar suporte a mTLS (Mutual TLS) com certificados digitais, que não é suportado nativamente pelo pacote `http` do Dart.
 
-## Uso Básico
+## Guia de Configuração e Utilização
 
-### Exemplo: Transmitir Declaração DEFIS
+### Configuração Inicial
+
+Todos os serviços seguem o mesmo padrão de configuração:
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
-void main() async {
-  // 1. Configurar cliente
-  final apiClient = ApiClient();
-  await apiClient.authenticate(/* credenciais */);
-  
-  // 2. Criar serviço
-  final defisService = DefisService(apiClient);
-  
-  // 3. Preparar dados da declaração
-  final declaracao = TransmitirDeclaracaoRequest(
-    ano: 2024,
-    inatividade: 2,
-    empresa: Empresa(
-      ganhoCapital: 0.0,
-      qtdEmpregadoInicial: 1,
-      qtdEmpregadoFinal: 1,
-      // ... outros campos obrigatórios
-    ),
-  );
-  
-  // 4. Transmitir declaração
-  try {
-    final response = await defisService.transmitirDeclaracao(
-      '00000000000000', // CNPJ Contratante
-      2,
-      '11111111111111', // CNPJ/CPF Autor
-      2, 
-      '00123456000100', // CNPJ Contribuinte
-      2,
-      declaracao,
-    );
-    
-    print('Sucesso! ID DEFIS: ${response.dados.idDefis}');
-  } catch (e) {
-    print('Erro: $e');
-  }
+// 1. Configurar cliente de API
+final apiClient = ApiClient();
+await apiClient.authenticate(
+  'seu_consumer_key',
+  'seu_consumer_secret', 
+  'caminho/para/certificado.p12',
+  'senha_do_certificado',
+);
+
+// 2. Criar instância do serviço desejado
+final service = NomeDoService(apiClient);
+```
+
+### Como Utilizar Cada Serviço
+
+#### 🏢 DEFIS - Declaração de Informações Socioeconômicas e Fiscais
+```dart
+final defisService = DefisService(apiClient);
+
+// Transmitir declaração DEFIS
+final response = await defisService.transmitirDeclaracao(
+  '00000000000000', // CNPJ Contratante
+  declaracaoData,
+);
+```
+**📖 [Documentação Completa](doc/defis_service.md)**
+
+#### 📊 PGDASD - Programa Gerador do DAS do Simples Nacional
+```dart
+final pgdasdService = PgdasdService(apiClient);
+
+// Entregar declaração mensal
+final response = await pgdasdService.entregarDeclaracaoSimples(
+  cnpj: '00000000000000',
+  periodoApuracao: 202401,
+  declaracao: declaracao,
+  transmitir: true,
+);
+
+// Gerar DAS
+final dasResponse = await pgdasdService.gerarDasSimples(
+  cnpj: '00000000000000',
+  periodoApuracao: '202401',
+);
+```
+**📖 [Documentação Completa](doc/pgdasd_service.md)**
+
+#### 📋 DCTFWeb - Declaração de Débitos e Créditos Tributários Federais
+```dart
+final dctfWebService = DctfWebService(apiClient);
+
+// Gerar DARF
+final response = await dctfWebService.gerarDarfGeralMensal(
+  contribuinteNumero: '00000000000000',
+  anoPA: '2024',
+  mesPA: '01',
+);
+
+// Consultar XML e transmitir declaração
+final response = await dctfWebService.consultarXmlETransmitir(
+  contribuinteNumero: '00000000000000',
+  categoria: CategoriaDctf.geralMensal,
+  anoPA: '2024',
+  mesPA: '01',
+  assinadorXml: (xmlBase64) async {
+    // Implementar assinatura digital
+    return await assinarXmlDigitalmente(xmlBase64);
+  },
+);
+```
+**📖 [Documentação Completa](doc/dctfweb_service.md)**
+
+#### 🏪 PGMEI - Programa Gerador do DAS do MEI
+```dart
+final pgmeiService = PgmeiService(apiClient);
+
+// Gerar DAS PDF
+final response = await pgmeiService.gerarDas('00000000000000', '202401');
+
+// Gerar DAS com código de barras
+final codigoBarrasResponse = await pgmeiService.gerarDasCodigoDeBarras(
+  '00000000000000', 
+  '202401',
+);
+```
+**📖 [Documentação Completa](doc/pgmei_service.md)**
+
+#### 📜 CCMEI - Certificado da Condição de MEI
+```dart
+final ccmeiService = CcmeiService(apiClient);
+
+// Emitir CCMEI
+final response = await ccmeiService.emitirCcmei('00000000000000');
+
+// Consultar dados do MEI
+final dadosResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
+```
+**📖 [Documentação Completa](doc/ccmei_service.md)**
+
+#### 💰 PARCMEI - Parcelamento do MEI
+```dart
+final parcmeiService = ParcmeiService(apiClient);
+
+// Consultar pedidos de parcelamento
+final pedidosResponse = await parcmeiService.consultarPedidos();
+
+// Emitir DAS para parcela
+final dasResponse = await parcmeiService.emitirDas(202107);
+```
+**📖 [Documentação Completa](doc/parcmei_service.md)**
+
+#### 🧮 SICALC - Sistema de Cálculos Tributários
+```dart
+final sicalcService = SicalcService(apiClient);
+
+// Gerar DARF IRPF
+final response = await sicalcService.gerarDarfPessoaFisica(
+  contribuinteNumero: '00000000000',
+  uf: 'SP',
+  municipio: 3550308,
+  dataPA: '20240101',
+  vencimento: '20240215',
+  valorImposto: 1000.0,
+  dataConsolidacao: '20240215',
+);
+```
+**📖 [Documentação Completa](doc/sicalc_service.md)**
+
+#### 📬 Caixa Postal - Consulta de Mensagens da RFB
+```dart
+final caixaPostalService = CaixaPostalService(apiClient);
+
+// Verificar mensagens novas
+final temNovas = await caixaPostalService.temMensagensNovas('00000000000000');
+
+// Listar mensagens não lidas
+final mensagensResponse = await caixaPostalService.listarMensagensNaoLidas('00000000000000');
+```
+**📖 [Documentação Completa](doc/caixa_postal_service.md)**
+
+#### 📋 Procurações - Gestão de Procurações Eletrônicas
+```dart
+final procuracoesService = ProcuracoesService(apiClient);
+
+// Obter procuração PJ
+final response = await procuracoesService.obterProcuracaoPj(
+  '00000000000000', // CNPJ Outorgante
+  '00000000000000', // CNPJ Procurador
+);
+
+// Validar e formatar documentos
+final cpfValido = procuracoesService.isCpfValido('00000000000');
+final cpfFormatado = procuracoesService.formatarCpf('00000000000');
+```
+**📖 [Documentação Completa](doc/procuracoes_service.md)**
+
+#### 📊 SITFIS - Situação Fiscal do Contribuinte
+```dart
+final sitfisService = SitfisService(apiClient);
+
+// Obter relatório completo
+final response = await sitfisService.obterRelatorioCompleto(
+  '00000000000000',
+  maxTentativas: 5,
+  callbackProgresso: (etapa, tempoEspera) {
+    print('$etapa');
+    if (tempoEspera != null) {
+      print('Aguardando ${tempoEspera}ms...');
+    }
+  },
+);
+
+// Salvar PDF
+if (response.isSuccess && response.hasPdf) {
+  await sitfisService.salvarPdfEmArquivo(response, 'relatorio_sitfis.pdf');
 }
 ```
+**📖 [Documentação Completa](doc/sitfis_service.md)**
 
 ## Serviços Disponíveis
 
 ### Integra-SN (Simples Nacional)
 
-| Serviço | Classe | Descrição |
-|---------|--------|-----------|
-| DEFIS | `DefisService` | Declaração de Informações Socioeconômicas e Fiscais |
-| PGDASD | `PgdasdService` | Programa Gerador do DAS do Simples Nacional |
-| Regime de Apuração | `RegimeApuracaoService` | Opção pelo Regime de Apuração de Receitas |
+| Serviço | Classe | Descrição | Documentação |
+|---------|--------|-----------|--------------|
+| DEFIS | `DefisService` | Declaração de Informações Socioeconômicas e Fiscais | [📖 DEFIS](doc/defis_service.md) |
+| PGDASD | `PgdasdService` | Programa Gerador do DAS do Simples Nacional | [📖 PGDASD](doc/pgdasd_service.md) |
+| DCTFWeb | `DctfWebService` | Declaração de Débitos e Créditos Tributários Federais | [📖 DCTFWeb](doc/dctfweb_service.md) |
 
 ### Integra-MEI
 
-| Serviço | Classe | Descrição |
-|---------|--------|-----------|
-| PGMEI | `PgmeiService` | Programa Gerador do DAS do MEI |
-| CCMEI | `CcmeiService` | Certificado da Condição de MEI |
+| Serviço | Classe | Descrição | Documentação |
+|---------|--------|-----------|--------------|
+| PGMEI | `PgmeiService` | Programa Gerador do DAS do MEI | [📖 PGMEI](doc/pgmei_service.md) |
+| CCMEI | `CcmeiService` | Certificado da Condição de MEI | [📖 CCMEI](doc/ccmei_service.md) |
+| PARCMEI | `ParcmeiService` | Parcelamento do MEI | [📖 PARCMEI](doc/parcmei_service.md) |
 
 ### Outros Serviços
 
-- **DCTFWeb**: Declaração de Débitos e Créditos Tributários Federais
-- **Procurações**: Gestão de procurações eletrônicas
-- **Sicalc**: Sistema de Cálculos Tributários
-- **CaixaPostal**: Consulta de mensagens da RFB
-- **PagamentoWeb**: Comprovantes de pagamento
-- **SITFIS**: Situação Fiscal do contribuinte
-- **Parcelamentos**: Gestão de parcelamentos tributários
+| Serviço | Classe | Descrição | Documentação |
+|---------|--------|-----------|--------------|
+| SICALC | `SicalcService` | Sistema de Cálculos Tributários | [📖 SICALC](doc/sicalc_service.md) |
+| Caixa Postal | `CaixaPostalService` | Consulta de mensagens da RFB | [📖 Caixa Postal](doc/caixa_postal_service.md) |
+| Procurações | `ProcuracoesService` | Gestão de procurações eletrônicas | [📖 Procurações](doc/procuracoes_service.md) |
+| SITFIS | `SitfisService` | Situação Fiscal do contribuinte | [📖 SITFIS](doc/sitfis_service.md) |
 
 ## Dados de Teste
 
@@ -159,9 +301,25 @@ final requestTeste = BaseRequest(
 );
 ```
 
-## Documentação
+## Documentação Detalhada
 
-- [Documentação do Serviço DEFIS](doc/defis_service.md)
+### Serviços Principais
+- [📖 DEFIS - Declaração de Informações Socioeconômicas e Fiscais](doc/defis_service.md)
+- [📖 PGDASD - Programa Gerador do DAS do Simples Nacional](doc/pgdasd_service.md)
+- [📖 DCTFWeb - Declaração de Débitos e Créditos Tributários Federais](doc/dctfweb_service.md)
+
+### Serviços MEI
+- [📖 PGMEI - Programa Gerador do DAS do MEI](doc/pgmei_service.md)
+- [📖 CCMEI - Certificado da Condição de MEI](doc/ccmei_service.md)
+- [📖 PARCMEI - Parcelamento do MEI](doc/parcmei_service.md)
+
+### Serviços Auxiliares
+- [📖 SICALC - Sistema de Cálculos Tributários](doc/sicalc_service.md)
+- [📖 Caixa Postal - Consulta de Mensagens da RFB](doc/caixa_postal_service.md)
+- [📖 Procurações - Gestão de Procurações Eletrônicas](doc/procuracoes_service.md)
+- [📖 SITFIS - Situação Fiscal do Contribuinte](doc/sitfis_service.md)
+
+### Recursos Adicionais
 - [Exemplos de Uso](example/)
 - [Testes](test/)
 
@@ -209,5 +367,3 @@ Para dúvidas sobre a API do SERPRO, consulte:
 Para questões específicas deste package, abra uma issue no repositório.
 
 ---
-
-**Desenvolvido por AI** 🤖
