@@ -538,7 +538,6 @@ final requestTeste = BaseRequest(
 
 ### Recursos Adicionais
 - [Exemplos de Uso](example/)
-- [Testes](test/)
 
 ## Estrutura do Projeto
 
@@ -552,8 +551,7 @@ lib/
 │   │   └── ...         # Outros serviços
 │   └── services/       # Classes de serviço
 ├── doc/                # Documentação detalhada
-├── example/            # Exemplos de uso
-└── test/               # Testes unitários
+└── example/            # Exemplos de uso
 ```
 
 ## Limitações Conhecidas
@@ -573,7 +571,10 @@ Contribuições são bem-vindas! Por favor:
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a licença MIT.
+
+**Desenvolvedor:** Marlon Santos
+**E-mail:** marlon-20-12@hotmail.com
 
 ## Suporte
 
