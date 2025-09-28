@@ -5,4 +5,4 @@ texto
 .vscode
 .idea
 pubspec.lock
-assistant\prompt.txt
+/assistant/prompt.txt
