@@ -53,7 +53,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 1. Verificar se há mensagens novas
     try {
       print('\n--- Verificando mensagens novas ---');
-      final temNovas = await caixaPostalService.temMensagensNovas('99999999999999');
+      final temNovas = await caixaPostalService.temMensagensNovas(
+        '99999999999',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
       print('📬 Tem mensagens novas: $temNovas');
     } catch (e) {
       print('❌ Erro ao verificar mensagens novas: $e');
@@ -62,7 +66,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 2. Obter indicador detalhado de mensagens novas
     try {
       print('\n--- Indicador de mensagens novas ---');
-      final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
+      final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens(
+        '99999999999',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
       print('✅ Status HTTP: ${indicadorResponse.status}');
       if (indicadorResponse.dadosParsed != null) {
         final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
@@ -78,7 +86,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 3. Listar todas as mensagens
     try {
       print('\n--- Listando todas as mensagens ---');
-      listaResponse = await caixaPostalService.listarTodasMensagens('99999999999');
+      listaResponse = await caixaPostalService.listarTodasMensagens(
+        '99999999999999',
+        contratanteNumero: '99999999999999',
+        autorPedidoDadosNumero: '99999999999999',
+      );
       print('✅ Status HTTP: ${listaResponse.status}');
       if (listaResponse.dadosParsed != null && listaResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = listaResponse.dadosParsed!.conteudo.first;
@@ -107,7 +119,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 4. Listar apenas mensagens não lidas
     try {
       print('\n--- Listando mensagens não lidas ---');
-      final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
+      final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas(
+        '99999999999999',
+        contratanteNumero: '99999999999999',
+        autorPedidoDadosNumero: '99999999999999',
+      );
       if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
         print('📬 Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
@@ -119,7 +135,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 5. Listar apenas mensagens lidas
     try {
       print('\n--- Listando mensagens lidas ---');
-      final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999');
+      final lidasResponse = await caixaPostalService.listarMensagensLidas(
+        '99999999999999',
+        contratanteNumero: '99999999999999',
+        autorPedidoDadosNumero: '99999999999999',
+      );
       if (lidasResponse.dadosParsed != null && lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = lidasResponse.dadosParsed!.conteudo.first;
         print('👁️ Mensagens lidas: ${conteudo.quantidadeMensagensInt}');
@@ -131,7 +151,11 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     // 6. Listar mensagens favoritas
     try {
       print('\n--- Listando mensagens favoritas ---');
-      final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999');
+      final favoritasResponse = await caixaPostalService.listarMensagensFavoritas(
+        '99999999999999',
+        contratanteNumero: '99999999999999',
+        autorPedidoDadosNumero: '99999999999999',
+      );
       if (favoritasResponse.dadosParsed != null && favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
         final conteudo = favoritasResponse.dadosParsed!.conteudo.first;
         print('⭐ Mensagens favoritas: ${conteudo.quantidadeMensagensInt}');
@@ -148,7 +172,12 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
         final primeiraMsg = listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
         print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
 
-        final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
+        final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
+          '99999999999999',
+          contratanteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          primeiraMsg.isn,
+        );
 
         if (detalhesResponse.dadosParsed != null && detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
           final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
@@ -184,7 +213,12 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
         print('\n--- Exemplo de paginação ---');
         final proximaPagina = listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
 
-        final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999', ponteiroPagina: proximaPagina);
+        final paginaResponse = await caixaPostalService.listarMensagensComPaginacao(
+          '99999999999999',
+          contratanteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          ponteiroPagina: proximaPagina,
+        );
 
         if (paginaResponse.dadosParsed != null && paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
           final conteudo = paginaResponse.dadosParsed!.conteudo.first;
@@ -199,7 +233,9 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     try {
       print('\n--- Exemplo com filtros específicos ---');
       final filtradaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-        '99999999999',
+        '99999999999999',
+        contratanteNumero: '99999999999999',
+        autorPedidoDadosNumero: '99999999999999',
         statusLeitura: 0, // Todas as mensagens
         indicadorFavorito: null, // Sem filtro de favorita
         indicadorPagina: 0, // Página inicial

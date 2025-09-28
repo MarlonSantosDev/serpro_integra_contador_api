@@ -8,12 +8,7 @@ class IndicadorMensagensResponse {
   final String dados;
   final DadosIndicadorMensagens? dadosParsed;
 
-  IndicadorMensagensResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-    this.dadosParsed,
-  });
+  IndicadorMensagensResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
 
   factory IndicadorMensagensResponse.fromJson(Map<String, dynamic> json) {
     final dados = json['dados'].toString();
@@ -28,20 +23,14 @@ class IndicadorMensagensResponse {
 
     return IndicadorMensagensResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
-          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
       dados: dados,
       dadosParsed: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 }
 
@@ -55,20 +44,12 @@ class DadosIndicadorMensagens {
   factory DadosIndicadorMensagens.fromJson(Map<String, dynamic> json) {
     return DadosIndicadorMensagens(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
-          .map(
-            (e) =>
-                ConteudoIndicadorMensagens.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => ConteudoIndicadorMensagens.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'codigo': codigo,
-      'conteudo': conteudo.map((e) => e.toJson()).toList(),
-    };
+    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -79,10 +60,7 @@ class ConteudoIndicadorMensagens {
   ConteudoIndicadorMensagens({required this.indicadorMensagensNovas});
 
   factory ConteudoIndicadorMensagens.fromJson(Map<String, dynamic> json) {
-    return ConteudoIndicadorMensagens(
-      indicadorMensagensNovas:
-          json['indicadorMensagensNovas']?.toString() ?? '0',
-    );
+    return ConteudoIndicadorMensagens(indicadorMensagensNovas: json['indicadorMensagensNovas']?.toString() ?? '0');
   }
 
   Map<String, dynamic> toJson() {

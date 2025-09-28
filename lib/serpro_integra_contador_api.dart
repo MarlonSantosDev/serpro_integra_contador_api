@@ -24,6 +24,9 @@
 /// - Tratamento de erros padronizado
 /// - Suporte completo a procurações eletrônicas
 /// - Modelos de dados type-safe para todas as operações
+/// - **Flexibilidade de contratante e autor do pedido**: Todos os serviços suportam
+///   parâmetros opcionais `contratanteNumero` e `autorPedidoDadosNumero` para
+///   permitir diferentes contextos de uso em uma única requisição
 ///
 /// ## Exemplo de Uso:
 /// ```dart
@@ -43,10 +46,19 @@
 ///     autorPedidoDadosNumero: '12345678000100',
 ///   );
 ///
-///   // Usar serviços
+///   // Usar serviços com valores padrão da autenticação
 ///   final ccmeiService = CcmeiService(apiClient);
 ///   final response = await ccmeiService.emitirCcmei('12345678000100');
 ///   print('CCMEI emitido: ${response.dados.pdf.isNotEmpty}');
+///
+///   // Usar serviços com valores específicos para esta requisição
+///   final sicalcService = SicalcService(apiClient);
+///   final darfResponse = await sicalcService.consolidarEGerarDarf(
+///     contribuinteNumero: '12345678000100',
+///     contratanteNumero: '98765432000100', // Valor específico
+///     autorPedidoDadosNumero: '11122233344', // Valor específico
+///     // ... outros parâmetros
+///   );
 /// }
 /// ```
 library serpro_integra_contador_api;

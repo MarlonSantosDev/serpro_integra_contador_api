@@ -9,7 +9,7 @@ class PgmeiService {
 
   PgmeiService(this._apiClient);
 
-  Future<GerarDasResponse> gerarDas(String cnpj, String periodoApuracao) async {
+  Future<GerarDasResponse> gerarDas(String cnpj, String periodoApuracao, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validatePeriodo(periodoApuracao);
@@ -24,14 +24,16 @@ class PgmeiService {
       ),
     );
 
-    final response = await _apiClient.post('/Emitir', request);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarDasResponse.fromJson(response);
   }
 
   Future<GerarDasResponse> gerarDasCodigoDeBarras(
     String cnpj,
-    String periodoApuracao,
-  ) async {
+    String periodoApuracao, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validatePeriodo(periodoApuracao);
@@ -46,14 +48,16 @@ class PgmeiService {
       ),
     );
 
-    final response = await _apiClient.post('/Emitir', request);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarDasResponse.fromJson(response);
   }
 
   Future<GerarDasResponse> atualizarBeneficio(
     String cnpj,
-    String periodoApuracao,
-  ) async {
+    String periodoApuracao, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validatePeriodo(periodoApuracao);
@@ -68,26 +72,26 @@ class PgmeiService {
       ),
     );
 
-    final response = await _apiClient.post('/Emitir', request);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarDasResponse.fromJson(response);
   }
 
-  Future<GerarDasResponse> consultarDividaAtiva(String cnpj, String ano) async {
+  Future<GerarDasResponse> consultarDividaAtiva(String cnpj, String ano, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validateAno(ano);
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGMEI',
-        idServico: 'DIVIDAATIVA24',
-        versaoSistema: '1.0',
-        dados: jsonEncode({'anoCalendario': ano}),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'DIVIDAATIVA24', versaoSistema: '1.0', dados: jsonEncode({'anoCalendario': ano})),
     );
 
-    final response = await _apiClient.post('/Consultar', request);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return GerarDasResponse.fromJson(response);
   }
 }

@@ -26,12 +26,8 @@ class SitfisService {
   /// [contribuinteNumero] - CPF ou CNPJ do contribuinte (apenas números)
   ///
   /// Retorna [SolicitarProtocoloResponse] com o protocolo e tempo de espera
-  Future<SolicitarProtocoloResponse> solicitarProtocoloRelatorio(
-    String contribuinteNumero,
-  ) async {
-    final request = SolicitarProtocoloRequest(
-      contribuinteNumero: contribuinteNumero,
-    );
+  Future<SolicitarProtocoloResponse> solicitarProtocoloRelatorio(String contribuinteNumero) async {
+    final request = SolicitarProtocoloRequest(contribuinteNumero: contribuinteNumero);
 
     final response = await _apiClient.post('/Apoiar', request);
     return SolicitarProtocoloResponse.fromJson(response);
@@ -46,14 +42,8 @@ class SitfisService {
   /// [protocoloRelatorio] - Protocolo obtido na solicitação anterior
   ///
   /// Retorna [EmitirRelatorioResponse] com o PDF do relatório ou tempo de espera
-  Future<EmitirRelatorioResponse> emitirRelatorioSituacaoFiscal(
-    String contribuinteNumero,
-    String protocoloRelatorio,
-  ) async {
-    final request = EmitirRelatorioRequest(
-      contribuinteNumero: contribuinteNumero,
-      protocoloRelatorio: protocoloRelatorio,
-    );
+  Future<EmitirRelatorioResponse> emitirRelatorioSituacaoFiscal(String contribuinteNumero, String protocoloRelatorio) async {
+    final request = EmitirRelatorioRequest(contribuinteNumero: contribuinteNumero, protocoloRelatorio: protocoloRelatorio);
 
     final response = await _apiClient.post('/Emitir', request);
     return EmitirRelatorioResponse.fromJson(response);
@@ -68,10 +58,7 @@ class SitfisService {
   /// [cache] - Cache existente (opcional)
   ///
   /// Retorna [SolicitarProtocoloResponse] ou null se usar cache válido
-  Future<SolicitarProtocoloResponse?> solicitarProtocoloComCache(
-    String contribuinteNumero, {
-    SitfisCache? cache,
-  }) async {
+  Future<SolicitarProtocoloResponse?> solicitarProtocoloComCache(String contribuinteNumero, {SitfisCache? cache}) async {
     // Se há cache válido, retorna null para indicar que deve usar o cache
     if (cache != null && cache.isValid) {
       return null;
@@ -102,10 +89,7 @@ class SitfisService {
     while (tentativa < maxTentativas) {
       tentativa++;
 
-      final response = await emitirRelatorioSituacaoFiscal(
-        contribuinteNumero,
-        protocoloRelatorio,
-      );
+      final response = await emitirRelatorioSituacaoFiscal(contribuinteNumero, protocoloRelatorio);
 
       // Se obteve sucesso, retorna
       if (response.isSuccess && response.hasPdf) {
@@ -131,10 +115,7 @@ class SitfisService {
     }
 
     // Se esgotou as tentativas, retorna a última resposta
-    return await emitirRelatorioSituacaoFiscal(
-      contribuinteNumero,
-      protocoloRelatorio,
-    );
+    return await emitirRelatorioSituacaoFiscal(contribuinteNumero, protocoloRelatorio);
   }
 
   /// Fluxo completo: solicita protocolo e emite relatório
@@ -154,14 +135,10 @@ class SitfisService {
   }) async {
     // 1. Solicitar protocolo
     callbackProgresso?.call('Solicitando protocolo...', null);
-    final protocoloResponse = await solicitarProtocoloRelatorio(
-      contribuinteNumero,
-    );
+    final protocoloResponse = await solicitarProtocoloRelatorio(contribuinteNumero);
 
     if (!protocoloResponse.isSuccess || !protocoloResponse.hasProtocolo) {
-      throw Exception(
-        'Falha ao obter protocolo: ${protocoloResponse.mensagens.map((m) => m.texto).join(', ')}',
-      );
+      throw Exception('Falha ao obter protocolo: ${protocoloResponse.mensagens.map((m) => m.texto).join(', ')}');
     }
 
     final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
@@ -180,10 +157,7 @@ class SitfisService {
       protocolo,
       maxTentativas: maxTentativas,
       callbackProgresso: (tentativa, tempoEspera) {
-        callbackProgresso?.call(
-          'Tentativa $tentativa - Aguardando...',
-          tempoEspera,
-        );
+        callbackProgresso?.call('Tentativa $tentativa - Aguardando...', tempoEspera);
       },
     );
   }
@@ -194,10 +168,7 @@ class SitfisService {
   /// [caminhoArquivo] - Caminho onde salvar o arquivo
   ///
   /// Retorna true se salvou com sucesso
-  Future<bool> salvarPdfEmArquivo(
-    EmitirRelatorioResponse response,
-    String caminhoArquivo,
-  ) async {
+  Future<bool> salvarPdfEmArquivo(EmitirRelatorioResponse response, String caminhoArquivo) async {
     if (!response.hasPdf) {
       return false;
     }

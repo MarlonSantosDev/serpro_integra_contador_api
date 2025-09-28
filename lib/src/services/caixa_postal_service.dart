@@ -19,6 +19,8 @@ class CaixaPostalService {
   /// [indicadorFavorito] - Filtro por favorita: 0=Não favorita, 1=Favorita
   /// [indicadorPagina] - Página: 0=Inicial (mais recentes), 1=Não-inicial
   /// [ponteiroPagina] - Ponteiro para página (necessário se indicadorPagina=1)
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ListaMensagensResponse> obterListaMensagensPorContribuinte(
     String contribuinte, {
     String? cnpjReferencia,
@@ -26,6 +28,8 @@ class CaixaPostalService {
     int? indicadorFavorito,
     int indicadorPagina = 0,
     String? ponteiroPagina,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final dadosMap = <String, dynamic>{'statusLeitura': statusLeitura.toString(), 'indicadorPagina': indicadorPagina.toString()};
 
@@ -48,7 +52,12 @@ class CaixaPostalService {
       pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGCONTRIBUINTE61', versaoSistema: '1.0', dados: jsonEncode(dadosMap)),
     );
 
-    final response = await _apiClient.post('/Consultar', request);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ListaMensagensResponse.fromJson(response);
   }
 
@@ -56,53 +65,96 @@ class CaixaPostalService {
   ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
   /// [isn] - Identificador único da mensagem
-  Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(String contribuinte, String isn) async {
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(
+    String contribuinte,
+    String isn, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
       pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGDETALHAMENTO62', versaoSistema: '1.0', dados: jsonEncode({'isn': isn})),
     );
 
-    final response = await _apiClient.post('/Consultar', request);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return DetalhesMensagemResponse.fromJson(response);
   }
 
   /// Obtém o indicador de mensagens novas para um contribuinte
   ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna:
   /// - 0: Contribuinte não possui mensagens novas
   /// - 1: Contribuinte possui uma mensagem nova
   /// - 2: Contribuinte possui mensagens novas
-  Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(String contribuinte) async {
+  Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(
+    String contribuinte, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
       pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'INNOVAMSG63', versaoSistema: '1.0', dados: ''),
     );
-    final response = await _apiClient.post('/Monitorar', request);
+    final response = await _apiClient.post(
+      '/Monitorar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return IndicadorMensagensResponse.fromJson(response);
   }
 
   // Métodos de conveniência com nomes mais simples
 
   /// Alias para obterListaMensagensPorContribuinte - obtém todas as mensagens
-  Future<ListaMensagensResponse> listarTodasMensagens(String contribuinte) {
-    return obterListaMensagensPorContribuinte(contribuinte, statusLeitura: 0);
+  Future<ListaMensagensResponse> listarTodasMensagens(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
+    return obterListaMensagensPorContribuinte(
+      contribuinte,
+      statusLeitura: 0,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Obtém apenas mensagens não lidas
-  Future<ListaMensagensResponse> listarMensagensNaoLidas(String contribuinte) {
-    return obterListaMensagensPorContribuinte(contribuinte, statusLeitura: 2);
+  Future<ListaMensagensResponse> listarMensagensNaoLidas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
+    return obterListaMensagensPorContribuinte(
+      contribuinte,
+      statusLeitura: 2,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Obtém apenas mensagens lidas
-  Future<ListaMensagensResponse> listarMensagensLidas(String contribuinte) {
-    return obterListaMensagensPorContribuinte(contribuinte, statusLeitura: 1);
+  Future<ListaMensagensResponse> listarMensagensLidas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
+    return obterListaMensagensPorContribuinte(
+      contribuinte,
+      statusLeitura: 1,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Obtém apenas mensagens favoritas
-  Future<ListaMensagensResponse> listarMensagensFavoritas(String contribuinte) {
-    return obterListaMensagensPorContribuinte(contribuinte, indicadorFavorito: 1);
+  Future<ListaMensagensResponse> listarMensagensFavoritas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
+    return obterListaMensagensPorContribuinte(
+      contribuinte,
+      indicadorFavorito: 1,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Obtém mensagens com paginação
@@ -111,6 +163,8 @@ class CaixaPostalService {
     required String ponteiroPagina,
     int statusLeitura = 0,
     int? indicadorFavorito,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) {
     return obterListaMensagensPorContribuinte(
       contribuinte,
@@ -118,12 +172,18 @@ class CaixaPostalService {
       indicadorFavorito: indicadorFavorito,
       indicadorPagina: 1,
       ponteiroPagina: ponteiroPagina,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
   /// Verifica se há mensagens novas (método de conveniência)
-  Future<bool> temMensagensNovas(String contribuinte) async {
-    final response = await obterIndicadorNovasMensagens(contribuinte);
+  Future<bool> temMensagensNovas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+    final response = await obterIndicadorNovasMensagens(
+      contribuinte,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return response.dadosParsed?.conteudo.isNotEmpty == true && response.dadosParsed!.conteudo.first.temMensagensNovas;
   }
 }

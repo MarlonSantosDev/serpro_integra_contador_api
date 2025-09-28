@@ -1,8 +1,8 @@
 Terminal para o Cursor:
 Com base nos arquivos mdc faça todos os serviço de @ARQUIVO 
 segundo o padrão do projeto de forma organizada. 
-Caso tenha duvida faça peguntas. 
-Antes de seguir faça um resumo de como será feito é oq você endenu para eu conformar ou ajustea antes de seguir.
+Caso tenha duvida faça preguntas. 
+Antes de seguir faça um resumo de como será feito é oq você entendeu para eu conformar ou ajuste antes de seguir.  
 Apos tudo add todos os métodos criado para teste no arquivo de exemplo main.dart
 
 Terminal para manus:
