@@ -19,26 +19,26 @@ void main() async {
   );
   // Exemplo de uso dos serviços
   await exemplosCaixaPostal(apiClient);
-  await exemplosPgmei(apiClient);
-  await exemplosCcmei(apiClient);
-  await exemplosPgdasd(apiClient);
-  await exemplosDctfWeb(apiClient);
-  await exemplosProcuracoes(apiClient);
-  await exemplosDte(apiClient);
-  await exemplosSitfis(apiClient);
-  await exemplosDefis(apiClient);
-  await exemplosPagtoWeb(apiClient);
-  await exemplosAutenticaProcurador(apiClient);
-  await exemplosRelpsn(apiClient);
-  await exemplosPertsn(apiClient);
-  await exemplosParcmeiEspecial(apiClient);
-  await exemplosParcmei(apiClient);
-  await exemplosSicalc(apiClient);
-  await exemplosRelpmei(apiClient);
-  await exemplosPertmei(apiClient);
-  await exemplosParcsnEspecial(apiClient);
-  await exemplosMit(apiClient);
-  await exemplosEventosAtualizacao(apiClient);
+  // await exemplosPgmei(apiClient);
+  // await exemplosCcmei(apiClient);
+  // await exemplosPgdasd(apiClient);
+  // await exemplosDctfWeb(apiClient);
+  // await exemplosProcuracoes(apiClient);
+  // await exemplosDte(apiClient);
+  // await exemplosSitfis(apiClient);
+  // await exemplosDefis(apiClient);
+  // await exemplosPagtoWeb(apiClient);
+  // await exemplosAutenticaProcurador(apiClient);
+  // await exemplosRelpsn(apiClient);
+  // await exemplosPertsn(apiClient);
+  // await exemplosParcmeiEspecial(apiClient);
+  // await exemplosParcmei(apiClient);
+  // await exemplosSicalc(apiClient);
+  // await exemplosRelpmei(apiClient);
+  // await exemplosPertmei(apiClient);
+  // await exemplosParcsnEspecial(apiClient);
+  // await exemplosMit(apiClient);
+  // await exemplosEventosAtualizacao(apiClient);
 }
 
 Future<void> exemplosCcmei(ApiClient apiClient) async {
@@ -877,20 +877,28 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
 
   try {
     // 1. Verificar se há mensagens novas
-    print('\n--- Verificando mensagens novas ---');
-    final temNovas = await caixaPostalService.temMensagensNovas('99999999999');
-    print('Tem mensagens novas: $temNovas');
+    try {
+      print('\n--- Verificando mensagens novas ---');
+      final temNovas = await caixaPostalService.temMensagensNovas('99999999999');
+      print('Tem mensagens novas: $temNovas');
+    } catch (e) {
+      print('Erro ao verificar mensagens novas: $e');
+    }
 
     // 2. Obter indicador detalhado de mensagens novas
-    print('\n--- Indicador de mensagens novas ---');
-    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
-    print('Status HTTP: ${indicadorResponse.status}');
-    if (indicadorResponse.dadosParsed != null) {
-      final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
-      print('Indicador: ${conteudo.indicadorMensagensNovas}');
-      print('Status: ${conteudo.statusMensagensNovas}');
-      print('Descrição: ${conteudo.descricaoStatus}');
-      print('Tem mensagens novas: ${conteudo.temMensagensNovas}');
+    try {
+      print('\n--- Indicador de mensagens novas ---');
+      final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
+      print('Status HTTP: ${indicadorResponse.status}');
+      if (indicadorResponse.dadosParsed != null) {
+        final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
+        print('Indicador: ${conteudo.indicadorMensagensNovas}');
+        print('Status: ${conteudo.statusMensagensNovas}');
+        print('Descrição: ${conteudo.descricaoStatus}');
+        print('Tem mensagens novas: ${conteudo.temMensagensNovas}');
+      }
+    } catch (e) {
+      print('Erro ao obter indicador de mensagens novas: $e');
     }
 
     // 3. Listar todas as mensagens
@@ -919,11 +927,15 @@ Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
     }
 
     // 4. Listar apenas mensagens não lidas
-    print('\n--- Listando mensagens não lidas ---');
-    final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
-    if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
-      final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
-      print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
+    try {
+      print('\n--- Listando mensagens não lidas ---');
+      final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
+      if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
+        print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
+      }
+    } catch (e) {
+      print('Erro ao listar todas as mensagens: $e');
     }
 
     // 5. Listar apenas mensagens lidas
