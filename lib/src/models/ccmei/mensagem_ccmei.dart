@@ -5,10 +5,7 @@ class MensagemCcmei {
   MensagemCcmei({required this.codigo, required this.texto});
 
   factory MensagemCcmei.fromJson(Map<String, dynamic> json) {
-    return MensagemCcmei(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return MensagemCcmei(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

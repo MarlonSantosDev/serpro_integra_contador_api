@@ -1,34 +1,23 @@
 import 'mensagem_ccmei.dart';
+import 'dart:convert';
 
 class ConsultarDadosCcmeiResponse {
   final int status;
   final List<MensagemCcmei> mensagens;
   final ConsultarDadosCcmeiDados dados;
 
-  ConsultarDadosCcmeiResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarDadosCcmeiResponse({required this.status, required this.mensagens, required this.dados});
 
   factory ConsultarDadosCcmeiResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDadosCcmeiResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>)
-          .map((e) => MensagemCcmei.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      dados: ConsultarDadosCcmeiDados.fromJson(
-        json['dados'] as Map<String, dynamic>,
-      ),
+      mensagens: (json['mensagens'] as List).map((e) => MensagemCcmei.fromJson(e)).toList(),
+      dados: ConsultarDadosCcmeiDados.fromJson(jsonDecode(json['dados'])),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados.toJson(),
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.toJson()};
   }
 }
 
@@ -64,25 +53,16 @@ class ConsultarDadosCcmeiDados {
   factory ConsultarDadosCcmeiDados.fromJson(Map<String, dynamic> json) {
     return ConsultarDadosCcmeiDados(
       cnpj: json['cnpj'].toString(),
-      empresario: Empresario.fromJson(
-        json['empresario'] as Map<String, dynamic>,
-      ),
+      empresario: Empresario.fromJson(json['empresario']),
       dataInicioAtividades: json['dataInicioAtividades'].toString(),
       nomeEmpresarial: json['nomeEmpresarial'].toString(),
-      capitalSocial: (num.parse(json['capitalSocial'].toString())).toDouble(),
+      capitalSocial: double.parse(json['capitalSocial'].toString()),
       situacaoCadastralVigente: json['situacaoCadastralVigente'].toString(),
-      dataInicioSituacaoCadastral: json['dataInicioSituacaoCadastral']
-          .toString(),
-      enderecoComercial: EnderecoComercial.fromJson(
-        json['enderecoComercial'] as Map<String, dynamic>,
-      ),
-      enquadramento: Enquadramento.fromJson(
-        json['enquadramento'] as Map<String, dynamic>,
-      ),
-      atividade: Atividade.fromJson(json['atividade'] as Map<String, dynamic>),
-      termoCienciaDispensa: TermoCienciaDispensa.fromJson(
-        json['termoCienciaDispensa'] as Map<String, dynamic>,
-      ),
+      dataInicioSituacaoCadastral: json['dataInicioSituacaoCadastral'].toString(),
+      enderecoComercial: EnderecoComercial.fromJson(json['enderecoComercial']),
+      enquadramento: Enquadramento.fromJson(json['enquadramento']),
+      atividade: Atividade.fromJson(json['atividade']),
+      termoCienciaDispensa: TermoCienciaDispensa.fromJson(json['termoCienciaDispensa']),
       qrcode: json['qrcode']?.toString(),
     );
   }
@@ -113,11 +93,7 @@ class Empresario {
   Empresario({required this.nomeCivil, this.nomeSocial, required this.cpf});
 
   factory Empresario.fromJson(Map<String, dynamic> json) {
-    return Empresario(
-      nomeCivil: json['nomeCivil'].toString(),
-      nomeSocial: json['nomeSocial']?.toString(),
-      cpf: json['cpf'].toString(),
-    );
+    return Empresario(nomeCivil: json['nomeCivil'].toString(), nomeSocial: json['nomeSocial']?.toString(), cpf: json['cpf'].toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -157,15 +133,7 @@ class EnderecoComercial {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'cep': cep,
-      'logradouro': logradouro,
-      'numero': numero,
-      'complemento': complemento,
-      'bairro': bairro,
-      'municipio': municipio,
-      'uf': uf,
-    };
+    return {'cep': cep, 'logradouro': logradouro, 'numero': numero, 'complemento': complemento, 'bairro': bairro, 'municipio': municipio, 'uf': uf};
   }
 }
 
@@ -174,28 +142,18 @@ class Enquadramento {
   final String situacao;
   final bool optanteMei;
 
-  Enquadramento({
-    required this.periodosMei,
-    required this.situacao,
-    required this.optanteMei,
-  });
+  Enquadramento({required this.periodosMei, required this.situacao, required this.optanteMei});
 
   factory Enquadramento.fromJson(Map<String, dynamic> json) {
     return Enquadramento(
-      periodosMei: (json['periodosMei'] as List<dynamic>)
-          .map((e) => PeriodosMei.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      periodosMei: (json['periodosMei'] as List).map((e) => PeriodosMei.fromJson(e)).toList(),
       situacao: json['situacao'].toString(),
-      optanteMei: json['optanteMei'] as bool,
+      optanteMei: json['optanteMei'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'periodosMei': periodosMei.map((e) => e.toJson()).toList(),
-      'situacao': situacao,
-      'optanteMei': optanteMei,
-    };
+    return {'periodosMei': periodosMei.map((e) => e.toJson()).toList(), 'situacao': situacao, 'optanteMei': optanteMei};
   }
 }
 
@@ -207,11 +165,7 @@ class PeriodosMei {
   PeriodosMei({required this.indice, required this.dataInicio, this.dataFim});
 
   factory PeriodosMei.fromJson(Map<String, dynamic> json) {
-    return PeriodosMei(
-      indice: int.parse(json['indice'].toString()),
-      dataInicio: json['dataInicio'].toString(),
-      dataFim: json['dataFim']?.toString(),
-    );
+    return PeriodosMei(indice: int.parse(json['indice'].toString()), dataInicio: json['dataInicio'].toString(), dataFim: json['dataFim']?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -225,25 +179,14 @@ class Atividade {
   final List<Ocupacao> ocupacoesSecundarias;
   final bool optanteMei;
 
-  Atividade({
-    required this.formasAtuacao,
-    required this.ocupacaoPrincipal,
-    required this.ocupacoesSecundarias,
-    required this.optanteMei,
-  });
+  Atividade({required this.formasAtuacao, required this.ocupacaoPrincipal, required this.ocupacoesSecundarias, required this.optanteMei});
 
   factory Atividade.fromJson(Map<String, dynamic> json) {
     return Atividade(
-      formasAtuacao: (json['formasAtuacao'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      ocupacaoPrincipal: Ocupacao.fromJson(
-        json['ocupacaoPrincipal'] as Map<String, dynamic>,
-      ),
-      ocupacoesSecundarias: (json['ocupacoesSecundarias'] as List<dynamic>)
-          .map((e) => Ocupacao.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      optanteMei: json['optanteMei'] as bool,
+      formasAtuacao: (json['formasAtuacao'] as List).map((e) => e.toString()).toList(),
+      ocupacaoPrincipal: Ocupacao.fromJson(json['ocupacaoPrincipal']),
+      ocupacoesSecundarias: (json['ocupacoesSecundarias'] as List).map((e) => Ocupacao.fromJson(e)).toList(),
+      optanteMei: json['optanteMei'] == null ? false : json['optanteMei'],
     );
   }
 
@@ -251,9 +194,7 @@ class Atividade {
     return {
       'formasAtuacao': formasAtuacao,
       'ocupacaoPrincipal': ocupacaoPrincipal.toJson(),
-      'ocupacoesSecundarias': ocupacoesSecundarias
-          .map((e) => e.toJson())
-          .toList(),
+      'ocupacoesSecundarias': ocupacoesSecundarias.map((e) => e.toJson()).toList(),
       'optanteMei': optanteMei,
     };
   }
@@ -264,11 +205,7 @@ class Ocupacao {
   final String? codigoCNAE;
   final String? descricaoCNAE;
 
-  Ocupacao({
-    required this.descricaoOcupacao,
-    this.codigoCNAE,
-    this.descricaoCNAE,
-  });
+  Ocupacao({required this.descricaoOcupacao, this.codigoCNAE, this.descricaoCNAE});
 
   factory Ocupacao.fromJson(Map<String, dynamic> json) {
     return Ocupacao(
@@ -279,11 +216,7 @@ class Ocupacao {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'descricaoOcupacao': descricaoOcupacao,
-      'codigoCNAE': codigoCNAE,
-      'descricaoCNAE': descricaoCNAE,
-    };
+    return {'descricaoOcupacao': descricaoOcupacao, 'codigoCNAE': codigoCNAE, 'descricaoCNAE': descricaoCNAE};
   }
 }
 
@@ -294,10 +227,7 @@ class TermoCienciaDispensa {
   TermoCienciaDispensa({required this.titulo, required this.texto});
 
   factory TermoCienciaDispensa.fromJson(Map<String, dynamic> json) {
-    return TermoCienciaDispensa(
-      titulo: json['titulo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return TermoCienciaDispensa(titulo: json['titulo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {

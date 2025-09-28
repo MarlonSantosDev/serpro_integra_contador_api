@@ -100,7 +100,7 @@ class CcmeiService {
     String? autorPedidoDadosNumero,
   }) async {
     // Validar formato do CPF antes de fazer a requisição
-    ValidationUtils.validateCPF(cpf);
+    //ValidationUtils.validateCPF(cpf);
 
     // Criar requisição para consulta de situação cadastral
     final request = BaseRequest(

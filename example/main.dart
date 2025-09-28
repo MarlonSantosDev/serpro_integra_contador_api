@@ -270,6 +270,7 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
 
   try {
     // 1. Emitir CCMEI (PDF)
+    /*
     try {
       print('\n--- 1. Emitir CCMEI (PDF) ---');
       final emitirResponse = await ccmeiService.emitirCcmei(
@@ -285,6 +286,7 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     } catch (e) {
       print('❌ Erro ao emitir CCMEI: $e');
     }
+    await Future.delayed(Duration(seconds: 10));
 
     // 2. Consultar Dados CCMEI
     try {
@@ -332,6 +334,8 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
     } catch (e) {
       print('❌ Erro ao consultar dados CCMEI: $e');
     }
+    await Future.delayed(Duration(seconds: 10));
+    */
 
     // 3. Consultar Situação Cadastral por CPF
     try {
