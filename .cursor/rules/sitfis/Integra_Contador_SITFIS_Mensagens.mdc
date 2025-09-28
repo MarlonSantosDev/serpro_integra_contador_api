@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+
+# Mensagens - Integra Contador
+
+# Mensagens específicas para o Integra Sitfis
+
+Mensagens do serviço [Solicitar protocolo do relatório de situação fiscal]():
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Sucesso-Sitfis-SC01\] | A requisição foi efetuada com sucesso. | HTTP STATUS: 200 |
+| \[Aviso-Sitfis-AV01\] | Obtenha o relatório no serviço /emitir. | HTTP STATUS: 200 |
+| \[Aviso-Sitfis-AV02\] | O limite de solicitações em processamento foi atingido. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação. | Acionar novamente o serviço após o tempo informado. HTTP STATUS: 200 |
+| \[EntradaIncorreta-Sitfis-EI01\] | Requisição inválida. | Verificar no JSON de entrada se os parâmetros de entrada (contratante, autorPedidoDados, e contribuinte) foram informados corretamente. |
+| \[EntradaIncorreta-Sitfis-EI02\] | Requisição inválida. Versão Inexistente. | Verificar no JSON de entrada se a versão foi informada corretamente. |
+| \[EntradaIncorreta-Sitfis-EI03\] | Requisição inválida. Versão Descontinuada. | Verificar no JSON de entrada se a versão foi informada corretamente. |
+| \[Erro-Sitfis-ER01\] | URL não encontrada. | Verificar se a URL foi informada corretamente. HTTP STATUS: 404 |
+| \[Erro-Sitfis-ER02\] | Erro ao solicitar o protocolo do relatório. Tente novamente mais tarde. | Acionar novamente o serviço para recuperar o protocolo. HTTP STATUS: 500 |
+| \[Erro-Sitfis-ER04\] | Erro ao processar a requisição. Tente novamente mais tarde. | HTTP STATUS: 500 |
+| \[Erro-Sitfis-ER05\] | Erro ao processar a requisição. Inicie uma nova solicitação /apoiar. | HTTP STATUS: 500 |
+| \[Sucesso-Sitfis-SC01\] | A requisição foi efetuada com sucesso. | HTTP STATUS: 503 |
+| \[Aviso-Sitfis-AV03\] | Não foi possível concluir a ação para o contribuinte informado. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação. | HTTP STATUS: 503 |
+
+Mensagens do serviço [Emitir relatório de situação fiscal]():
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Sucesso-Sitfis-SC01\] | A requisição foi efetuada com sucesso. | HTTP STATUS: 200 |
+| \[Sucesso-Sitfis-SC02\] | A emissão relatório de situação fiscal está em processamento. | Aguardar o tempo informado no campo tempoEspera para fazer uma nova solicitação. HTTP STATUS: 202 |
+| \[EntradaIncorreta-Sitfis-EI01\] | Requisição inválida. | Verificar no JSON de entrada se os parâmetros de entrada (contratante, autorPedidoDados, e contribuinte) foram informados corretamente. |
+| \[EntradaIncorreta-Sitfis-EI01\] | Requisição inválida. | O #campo# recebido no serviço /emitir é diferente do #campo# utilizado no serviço /apoiar |
+| \[EntradaIncorreta-Sitfis-EI02\] | Requisição inválida. Versão Inexistente. | Verificar no JSON de entrada se a versão foi informada corretamente. |
+| \[EntradaIncorreta-Sitfis-EI03\] | Requisição inválida. Versão Descontinuada. | Verificar no JSON de entrada se a versão foi informada corretamente. |
+| \[Erro-Sitfis-ER01\] | URL não encontrada. | Verificar se a URL foi informada corretamente. HTTP STATUS: 404 |
+| \[Erro-Sitfis-ER03\] | Erro ao obter o relatório. Tente novamente mais tarde. | Tentar acionar novamente o serviço para recuperar o relatóerio após um tempo. HTTP STATUS: 500 |
+| \[Erro-Sitfis-ER04\] | Erro ao processar a requisição. Tente novamente mais tarde. | HTTP STATUS: 500 |
+| \[Erro-Sitfis-ER05\] | Erro ao processar a requisição. Inicie uma nova solicitação /apoiar. | HTTP STATUS: 500 |

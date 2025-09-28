@@ -11,7 +11,6 @@ class ApiClient {
   AuthenticationModel? _authModel;
   CacheModel? _procuradorCache;
 
-  // TODO: Implementar lógica de autenticação com certificado digital
   Future<void> authenticate({
     required String consumerKey,
     required String consumerSecret,

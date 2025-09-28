@@ -1,0 +1,43 @@
+---
+alwaysApply: true
+---
+
+# Cache - Integra Contador
+
+# Cache do protocolo do relatório de situação fiscal no serviço /apoiar
+
+Todo protocolo do relatório de situação fiscal válido é armazenado em um mecanismo interno de cache.
+
+Quando o cliente envia um protocolo de relatório, que ainda não foi utilizado para emitir o relatório de situação fiscal, utilizando o serviço /emitir, o Sitfis responde com o `status code 304 (not modified)` como uma resposta de sucesso.
+
+Essa resposta ao cliente, se faz necessária para comunicar que não houve modificação da requisição anterior, que o protocolo do relatório ainda está válido e deve ser utilizado para emissão do relatório, sendo utilizado nas chamadas do serviço /emitir da API.
+
+Atenção
+
+É importante a aplicação cliente utilizar esse recurso de cache.
+
+Esse mecanismo é seguro e ajuda a otimizar o ambiente computacional.
+
+## Status Code
+
+`304 - Not Modified`
+
+## Tempo de Expiração
+
+O protocolo do relatório é válido apenas na data de solicitação do relatório.
+
+A data e hora está configurada com o fuso horário `(UTC/GMT -03:00) America/Sao_Paulo` dos servidores do Serpro.
+
+A aplicação cliente pode utilizar os headers abaixo para recuperar o protocolo do relatório.
+
+| Header | Descrição |
+| --- | --- |
+| `cache-control` | Nome do mecanismo de cache. |
+| `ETag` | Contém o protocolo do relatório `protocoloRelatorio` em cache. |
+| `expires` | Data e hora da expiração do protocolo do relatório. |
+
+`cache-control: integra_sitfis_solicitar_relatorio  ETag: "protocoloRelatorio:+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj=="  expires: Thu, 22 Jun 2023 02:23:59 GMT`
+
+## Response Body (no content)
+
+`No content` significa que não é enviado um json com conteúdo de resposta.

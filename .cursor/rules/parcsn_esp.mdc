@@ -1,0 +1,1772 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API Integra Contador - PARCSN-ESP
+
+
+
+
+## Cenários PARCSN-ESP
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+### Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados": ""
+       }
+     }'
+```
+
+### Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }'
+```
+
+### Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+   ```json
+   {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+   ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados": ""
+       }
+     }'
+```
+
+### Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }'
+```
+
+### Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+}
+```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+     }'
+```
+
+
+
+
+## Introdução - PARCSN-ESP
+
+### O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PARCSN-ESP, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+## Consultar Pedidos de Parcelamento
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PARCSN ESPECIAL para o contribuinte
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: PEDIDOSPARC173
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: parcelamentos**
+
+| Campo | Descrição | Tipo |
+| --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+**Objeto [Parcelamento:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+
+
+
+## Consultar Parcelamento
+
+Esta consulta retorna informações de um parcelamento específico.
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: OBTERPARC174
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: parcelamento**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| alteracoesDivida | Informações de alterações de dívida | Lista de [AlteracaoDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+**Objeto [Consolidacao:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| quantidadeParcelas | Quantidade de parcelas | Número |
+| primeiraParcela | Valor da primeira parcela | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+**Objeto [DetalhesConsolidacao:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+**Objeto [AlteracaoDivida:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| parcelasRemanescentes | Número de parcelas remanescentes | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataAlteracaoDivida | Data da alteração de dívida | Número (AAAAMMDD) |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+**Objeto [DemonstrativoPagamento:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+
+
+
+## Consultar Detalhes de Pagamento
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: DETPAGTOPARC175
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: dados**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número (AAAAMM) |
+| geradoEm | Data de geração do DAS | Texto (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+**Objeto [PagamentoDebito:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+**Objeto [DiscriminacaoDebito:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+
+
+
+## Consultar Parcelas para Impressão
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: PARCELASPARAGERAR172
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: listaParcela**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+**Objeto [Parcela:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+
+
+
+## Emitir Documento de Arrecadação
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: GERARDAS171
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+}
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: dados**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+
+
+
+## Exemplo de Retorno - Consultar Pedidos de Parcelamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "PEDIDOSPARC173",
+             "versaoSistema": "1.0",
+              "dados": ""
+         },
+       "status": "200",
+       "mensagens": [
+         {
+           "codigo": "[Sucesso-PARCSN-ESP]",
+           "texto": "Requisição efetuada com sucesso."
+         }
+       ],
+       "dados": "{\"parcelamentos\":[{\"numero\":9001,\"dataDoPedido\":20161222,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20161227}]}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Parcelamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "OBTERPARC174",
+             "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+         },
+         "status": "200",
+         "mensagens": [
+          {
+           "codigo": "[Sucesso-PARCSN-ESP]",
+           "texto": "Requisição efetuada com sucesso."
+          }
+         ],
+         "dados": "{\"numero\":9001,\"dataDoPedido\":20160211,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20170125,\"consolidacaoOriginal\":{\"valorTotalConsolidado\":5127.39,\"quantidadeParcelas\":17,\"primeiraParcela\":301.61,\"parcelaBasica\":301.61,\"dataConsolidacao\":20160211124844,\"detalhesConsolidacao\":[{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":2296.80,\"valorAtualizado\":2803.42},{\"periodoApuracao\":201512,\"vencimento\":20160120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":1920.68,\"valorAtualizado\":2323.97}]},\"alteracoesDivida\":[],\"demonstrativoPagamentos\":[{\"mesDaParcela\":201602,\"vencimentoDoDas\":20160215,\"dataDeArrecadacao\":20160212,\"valorPago\":301.61},{\"mesDaParcela\":201603,\"vencimentoDoDas\":20160331,\"dataDeArrecadacao\":20160318,\"valorPago\":304.62},{\"mesDaParcela\":201604,\"vencimentoDoDas\":20160429,\"dataDeArrecadacao\":20160428,\"valorPago\":308.12},{\"mesDaParcela\":201605,\"vencimentoDoDas\":20160531,\"dataDeArrecadacao\":20160630,\"valorPago\":314.66},{\"mesDaParcela\":201606,\"vencimentoDoDas\":20160630,\"dataDeArrecadacao\":20160630,\"valorPago\":314.66},{\"mesDaParcela\":201607,\"vencimentoDoDas\":20160729,\"dataDeArrecadacao\":20160728,\"valorPago\":318.16},{\"mesDaParcela\":201608,\"vencimentoDoDas\":20160831,\"dataDeArrecadacao\":20160816,\"valorPago\":321.51},{\"mesDaParcela\":201609,\"vencimentoDoDas\":20160930,\"dataDeArrecadacao\":20160928,\"valorPago\":325.19},{\"mesDaParcela\":201610,\"vencimentoDoDas\":20161031,\"dataDeArrecadacao\":20161028,\"valorPago\":328.54},{\"mesDaParcela\":201611,\"vencimentoDoDas\":20161130,\"dataDeArrecadacao\":20161125,\"valorPago\":331.71},{\"mesDaParcela\":201612,\"vencimentoDoDas\":20161229,\"dataDeArrecadacao\":20161228,\"valorPago\":334.84}]}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Detalhes de Pagamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "DETPAGTOPARC175",
+             "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+         },
+           "status": "200",
+           "mensagens": [
+             {
+               "codigo": "[Sucesso-PARCSN-ESP]",
+               "texto": "Requisição efetuada com sucesso."
+             }
+           ],
+           "dados": "{\"numeroDas\":\"00000000000000000\",\"dataVencimento\":20161229,\"paDasGerado\":201612,\"geradoEm\":\"20161213125856\",\"numeroParcelamento\":\"0001\",\"numeroParcela\":\"11\",\"dataLimiteAcolhimento\":20161229,\"pagamentoDebitos\":[{\"paDebito\":201512,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"IRPJ\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"CSLL\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"COFINS\",\"principal\":53.05,\"multa\":10.61,\"juros\":6.38,\"total\":70.04,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"PIS\",\"principal\":12.63,\"multa\":2.53,\"juros\":1.52,\"total\":16.68,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"INSS\",\"principal\":152.58,\"multa\":30.52,\"juros\":18.34,\"total\":201.44,\"enteFederadoDestino\":\"União\"}]}],\"dataPagamento\":20161228,\"bancoAgencia\":\"0/49\",\"valorPagoArrecadacao\":334.84}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Parcelas para Impressão
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "PARCELASPARAGERAR172",
+             "versaoSistema": "1.0",
+              "dados": ""
+         },
+         "status": "200",
+         "mensagens": [
+             {
+               "codigo": "[Sucesso-PARCSN-ESP]",
+               "texto": "Requisição efetuada com sucesso."
+             }
+         ],
+         "dados": "{\"listaParcelas\":[{\"parcela\":202211,\"valor\":3469.73},{\"parcela\":202212,\"valor\":3469.73},{\"parcela\":202301,\"valor\":3469.73},{\"parcela\":202302,\"valor\":3469.73},{\"parcela\":202303,\"valor\":3469.73},{\"parcela\":202304,\"valor\":3469.73},{\"parcela\":202305,\"valor\":3469.73},{\"parcela\":202306,\"valor\":3469.73},{\"parcela\":202307,\"valor\":3469.73},{\"parcela\":202308,\"valor\":3469.73},{\"parcela\":202309,\"valor\":3469.73},{\"parcela\":202310,\"valor\":3469.73}]}"
+     }
+```
+
+
+
+
+## Mensagens específicas para o Integra Parcelamento - PARCSN ESPECIAL
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-PARCSN-ESP-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-PARCSN-ESP-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-PARCSN-ESP-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-PARCSN-ESP-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-PARCSN-ESP-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-PARCSN-ESP-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-PARCSN-ESP-ER\_N009\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento passado no parâmetro |
+| \[Aviso-PARCSN-ESP-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-PARCSN-ESP-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-PARCSN-ESP-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-PARCSN-ESP-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[Aviso-PARCSN-ESP-ER\_N014\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+
+
+
+# Documentação da API Integra Contador - PARCSN-ESP
+
+
+
+
+## Cenários PARCSN-ESP
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+### Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados": ""
+       }
+     }'
+```
+
+### Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }'
+```
+
+### Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+   ```json
+   {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+   ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados": ""
+       }
+     }'
+```
+
+### Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+    ```json
+    {       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }
+    ```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }'
+```
+
+### Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+}
+```
+
+Curl:
+
+```bash
+curl -X 'POST' \
+   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+   -H 'accept: text/plain' \
+   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+   -H 'Content-Type: application/json' \
+   -d '{
+       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+     }'
+```
+
+
+
+
+## Introdução - PARCSN-ESP
+
+### O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PARCSN-ESP, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+## Consultar Pedidos de Parcelamento
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PARCSN ESPECIAL para o contribuinte
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: PEDIDOSPARC173
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PEDIDOSPARC173",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: parcelamentos**
+
+| Campo | Descrição | Tipo |
+| --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+**Objeto [Parcelamento:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+
+
+
+## Consultar Parcelamento
+
+Esta consulta retorna informações de um parcelamento específico.
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: OBTERPARC174
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+          "idSistema": "PARCSN-ESP",
+          "idServico": "OBTERPARC174",
+          "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+        }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: parcelamento**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| alteracoesDivida | Informações de alterações de dívida | Lista de [AlteracaoDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+**Objeto [Consolidacao:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| quantidadeParcelas | Quantidade de parcelas | Número |
+| primeiraParcela | Valor da primeira parcela | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+**Objeto [DetalhesConsolidacao:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+**Objeto [AlteracaoDivida:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| parcelasRemanescentes | Número de parcelas remanescentes | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataAlteracaoDivida | Data da alteração de dívida | Número (AAAAMMDD) |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+**Objeto [DemonstrativoPagamento:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+
+
+
+## Consultar Detalhes de Pagamento
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: DETPAGTOPARC175
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "DETPAGTOPARC175",
+         "versaoSistema": "1.0",
+          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+        }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: dados**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número (AAAAMM) |
+| geradoEm | Data de geração do DAS | Texto (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+**Objeto [PagamentoDebito:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+**Objeto [DiscriminacaoDebito:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+
+
+
+## Consultar Parcelas para Impressão
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: PARCELASPARAGERAR172
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "PARCELASPARAGERAR172",
+         "versaoSistema": "1.0",
+         "dados":""
+       }
+     }
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: listaParcela**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+**Objeto [Parcela:]()**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+
+
+
+## Emitir Documento de Arrecadação
+
+**PedidoDados**
+
+*   `idSistema`: PARCSN-ESP
+*   `idServico`: GERARDAS171
+*   `versaoSistema`: "1.0"
+
+**Dados de Entrada**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**Exemplo: conteúdo body json de entrada**
+
+```json
+{       "contratante": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "autorPedidoDados": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "contribuinte": {
+         "numero": "00000000000000",
+         "tipo": 2
+       },
+       "pedidoDados": {
+         "idSistema": "PARCSN-ESP",
+         "idServico": "GERARDAS171",
+         "versaoSistema": "1.0",
+          "dados": "{ \"parcelaParaEmitir\": 202306 }"
+        }
+}
+```
+
+**Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+**Objeto: dados**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+
+
+
+## Exemplo de Retorno - Consultar Pedidos de Parcelamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "PEDIDOSPARC173",
+             "versaoSistema": "1.0",
+              "dados": ""
+         },
+       "status": "200",
+       "mensagens": [
+         {
+           "codigo": "[Sucesso-PARCSN-ESP]",
+           "texto": "Requisição efetuada com sucesso."
+         }
+       ],
+       "dados": "{\"parcelamentos\":[{\"numero\":9001,\"dataDoPedido\":20161222,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20161227}]}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Parcelamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "OBTERPARC174",
+             "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001}"
+         },
+         "status": "200",
+         "mensagens": [
+          {
+           "codigo": "[Sucesso-PARCSN-ESP]",
+           "texto": "Requisição efetuada com sucesso."
+          }
+         ],
+         "dados": "{\"numero\":9001,\"dataDoPedido\":20160211,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20170125,\"consolidacaoOriginal\":{\"valorTotalConsolidado\":5127.39,\"quantidadeParcelas\":17,\"primeiraParcela\":301.61,\"parcelaBasica\":301.61,\"dataConsolidacao\":20160211124844,\"detalhesConsolidacao\":[{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":2296.80,\"valorAtualizado\":2803.42},{\"periodoApuracao\":201512,\"vencimento\":20160120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":1920.68,\"valorAtualizado\":2323.97}]},\"alteracoesDivida\":[],\"demonstrativoPagamentos\":[{\"mesDaParcela\":201602,\"vencimentoDoDas\":20160215,\"dataDeArrecadacao\":20160212,\"valorPago\":301.61},{\"mesDaParcela\":201603,\"vencimentoDoDas\":20160331,\"dataDeArrecadacao\":20160318,\"valorPago\":304.62},{\"mesDaParcela\":201604,\"vencimentoDoDas\":20160429,\"dataDeArrecadacao\":20160428,\"valorPago\":308.12},{\"mesDaParcela\":201605,\"vencimentoDoDas\":20160531,\"dataDeArrecadacao\":20160630,\"valorPago\":314.66},{\"mesDaParcela\":201606,\"vencimentoDoDas\":20160630,\"dataDeArrecadacao\":20160630,\"valorPago\":314.66},{\"mesDaParcela\":201607,\"vencimentoDoDas\":20160729,\"dataDeArrecadacao\":20160728,\"valorPago\":318.16},{\"mesDaParcela\":201608,\"vencimentoDoDas\":20160831,\"dataDeArrecadacao\":20160816,\"valorPago\":321.51},{\"mesDaParcela\":201609,\"vencimentoDoDas\":20160930,\"dataDeArrecadacao\":20160928,\"valorPago\":325.19},{\"mesDaParcela\":201610,\"vencimentoDoDas\":20161031,\"dataDeArrecadacao\":20161028,\"valorPago\":328.54},{\"mesDaParcela\":201611,\"vencimentoDoDas\":20161130,\"dataDeArrecadacao\":20161125,\"valorPago\":331.71},{\"mesDaParcela\":201612,\"vencimentoDoDas\":20161229,\"dataDeArrecadacao\":20161228,\"valorPago\":334.84}]}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Detalhes de Pagamento
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "DETPAGTOPARC175",
+             "versaoSistema": "1.0",
+              "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 201612 }"
+         },
+           "status": "200",
+           "mensagens": [
+             {
+               "codigo": "[Sucesso-PARCSN-ESP]",
+               "texto": "Requisição efetuada com sucesso."
+             }
+           ],
+           "dados": "{\"numeroDas\":\"00000000000000000\",\"dataVencimento\":20161229,\"paDasGerado\":201612,\"geradoEm\":\"20161213125856\",\"numeroParcelamento\":\"0001\",\"numeroParcela\":\"11\",\"dataLimiteAcolhimento\":20161229,\"pagamentoDebitos\":[{\"paDebito\":201512,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"IRPJ\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"CSLL\",\"principal\":17.68,\"multa\":3.54,\"juros\":2.12,\"total\":23.34,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"COFINS\",\"principal\":53.05,\"multa\":10.61,\"juros\":6.38,\"total\":70.04,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"PIS\",\"principal\":12.63,\"multa\":2.53,\"juros\":1.52,\"total\":16.68,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"INSS\",\"principal\":152.58,\"multa\":30.52,\"juros\":18.34,\"total\":201.44,\"enteFederadoDestino\":\"União\"}]}],\"dataPagamento\":20161228,\"bancoAgencia\":\"0/49\",\"valorPagoArrecadacao\":334.84}"
+     }
+```
+
+
+
+
+## Exemplo de Retorno - Consultar Parcelas para Impressão
+
+```json
+{         "contratante": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "autorPedidoDados": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "contribuinte": {
+             "numero": "00000000000000",
+             "tipo": 2
+         },
+         "pedidoDados": {
+             "idSistema": "PARCSN-ESP",
+             "idServico": "PARCELASPARAGERAR172",
+             "versaoSistema": "1.0",
+              "dados": ""
+         },
+         "status": "200",
+         "mensagens": [
+             {
+               "codigo": "[Sucesso-PARCSN-ESP]",
+               "texto": "Requisição efetuada com sucesso."
+             }
+         ],
+         "dados": "{\"listaParcelas\":[{\"parcela\":202211,\"valor\":3469.73},{\"parcela\":202212,\"valor\":3469.73},{\"parcela\":202301,\"valor\":3469.73},{\"parcela\":202302,\"valor\":3469.73},{\"parcela\":202303,\"valor\":3469.73},{\"parcela\":202304,\"valor\":3469.73},{\"parcela\":202305,\"valor\":3469.73},{\"parcela\":202306,\"valor\":3469.73},{\"parcela\":202307,\"valor\":3469.73},{\"parcela\":202308,\"valor\":3469.73},{\"parcela\":202309,\"valor\":3469.73},{\"parcela\":202310,\"valor\":3469.73}]}"
+     }
+```
+
+
+
+
+## Mensagens específicas para o Integra Parcelamento - PARCSN ESPECIAL
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Aviso-PARCSN-ESP-ER\_E001\] | Não há parcelamento ativo para o contribuinte. | O número do parcelamento informado não está ativo ou não existe. |
+| \[Erro-PARCSN-ESP-ER\_N001\] | Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N002\] | Parâmetro de entrada inválido: {}. | Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema. |
+| \[Aviso-PARCSN-ESP-ER\_N003\] | Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado. | Não há parcela disponível. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N004\] | Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac. | Quando há reconsolidação, deve ser utilizada a versão web. |
+| \[Aviso-PARCSN-ESP-ER\_N005\] | O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}. | Reenviar a partir do dia indicado. |
+| \[Aviso-PARCSN-ESP-ER\_N006\] | A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível. | Foi solicitada uma parcela que não está disponível para o parcelamento solicitado. |
+| \[EntradaIncorreta-PARCSN-ESP-ER\_N007\] | Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição. | Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros. |
+| \[Aviso-PARCSN-ESP-ER\_N008\] | Não foram encontradas parcelas para emissão. | Não há parcelas para o parcelamento solicitado. |
+| \[Aviso-PARCSN-ESP-ER\_N009\] | Não existe parcelamento para o numeroParcelamento informado. | Verificar o número do parcelamento passado no parâmetro |
+| \[Aviso-PARCSN-ESP-ER\_N010\] | A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}. | Foi passada uma parcela que não existe ou não possui pagamento. |
+| \[Aviso-PARCSN-ESP-ER\_N011\] | Não existe parcelamento com o número informado. | Reenviar corrigindo o parâmetro. |
+| \[Aviso-PARCSN-ESP-ER\_N012\] | Não existe pagamento para o anoMesParcela e numeroParcelamento informados. | Não existe pagamento para a parcela informada. |
+| \[Aviso-PARCSN-ESP-ER\_N013\] | Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais. | Aguardar o pagamento. |
+| \[Aviso-PARCSN-ESP-ER\_N014\] | Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela. | Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada. |
+
+
+

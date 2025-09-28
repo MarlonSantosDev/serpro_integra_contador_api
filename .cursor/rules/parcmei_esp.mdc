@@ -1,0 +1,452 @@
+---
+alwaysApply: true
+---
+# PARCMEI-ESP - Integra Contador
+
+## Cenários PARCMEI-ESP
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+### Consultar pedidos
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PEDIDOSPARC213",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PEDIDOSPARC213",         "versaoSistema": "1.0",         "dados": ""       }     }\'`
+
+### Consultar Parcelamento
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+            `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PARCMEI-ESP",          "idServico": "OBTERPARC214",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PARCMEI-ESP",          "idServico": "OBTERPARC214",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }\'`
+
+### Consultar Parcelas para Impressão
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+   `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PARCELASPARAGERAR212",         "versaoSistema": "1.0",         "dados": ""       }     }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PARCELASPARAGERAR212",         "versaoSistema": "1.0",         "dados": ""       }     }\'`
+
+### Consultar Detalhes de Pagamento
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "DETPAGTOPARC215",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 202111 }"        } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "DETPAGTOPARC215",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 202111 }"        }     }\'`
+
+### Emitir DAS
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "GERARDAS211",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202107 }"        } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "GERARDAS211",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202107 }"        }     }\'`
+
+
+
+
+# Introdução
+
+## O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PARCMEI-ESP, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+# Consultar todos os pedidos de parcelamento na modalidade PARCMEI ESPECIAL para um contribuinte
+
+Esta consulta retorna uma lista contendo todos os parcelamentos do tipo PARCMEI-ESP para o contribuinte
+
+PedidoDados
+
+idSistema: PARCMEI-ESP  
+idServico: PEDIDOSPARC213  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PEDIDOSPARC213",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamentos
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcelamentos | Lista dos parcelamentos | Lista de [Parcelamento]() |
+
+Objeto [Parcelamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação do parcelamento | Número (AAAAMMDD) |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar um determinado parcelamento na modalidade PARCMEI ESPECIAL
+
+Esta consulta retorna informações de um parcelamento específico.
+
+PedidoDados
+
+idSistema: PARCMEI-ESP  
+idServico: OBTERPARC214  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {          "idSistema": "PARCMEI-ESP",          "idServico": "OBTERPARC214",          "versaoSistema": "1.0",              "dados": "{ \"numeroParcelamento\": 9001}"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: parcelamento
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numero | Número do parcelamento | Número |
+| dataDoPedido | Data do pedido do parcelamento | Número (AAAAMMDD) |
+| situacao | Situação do parcelamento | Texto |
+| dataDaSituacao | Data da situação | Número (AAAAMMDD) |
+| consolidacaoOriginal | Informações de consolidação | [ConsolidacaoOriginal]() |
+| alteracoesDivida | Informações de alterações de dívida | Lista de [AlteracaoDivida]() |
+| demonstrativoPagamentos | Informações simplificadas de pagamentos | Lista de [DemonstrativoPagamento]() |
+
+Objeto [Consolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| quantidadeParcelas | Quantidade de parcelas | Número |
+| primeiraParcela | Valor da primeira parcela | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataConsolidacao | Data da consolidação | Número (AAAAMMDDHHMMSS) |
+| detalhesConsolidacao | Detalhes da consolidação | Lista de [DetalhesConsolidacao]() |
+
+Objeto [DetalhesConsolidacao:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor original | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+Objeto [AlteracaoDivida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorTotalConsolidado | Valor total consolidado | Número |
+| parcelasRemanescentes | Quantidade de parcelas remanescentes | Número |
+| parcelaBasica | Valor da parcela básica | Número |
+| dataAlteracaoDivida | Data de alteração de dívida | Número (AAAAMMDD) |
+| detalhesAlteracaoDivida | Detalhes da alteração de dívida | Lista de [DetalhesAlteracaoDivida]() |
+
+Objeto [DetalhesAlteracaoDivida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período inicial | Número (AAAAMM) |
+| vencimento | Data de vencimento | Número (AAAAMMDD) |
+| numeroProcesso | Número do processo | Texto |
+| saldoDevedorOriginal | Valor do saldo devedor | Número |
+| valorAtualizado | Valor atualizado | Número |
+
+Objeto [DemonstrativoPagamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| mesDaParcela | Mês da Parcela | Número (AAAAMM) |
+| vencimentoDoDas | Data de vencimento do DAS | Número (AAAAMMDD) |
+| dataDeArrecadacao | Data de arrecadação do DAS | Número (AAAAMMDD) |
+| valorPago | Valor pago | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar detalhes de pagamento na modalidade PARCMEI ESPECIAL
+
+Esta consulta retorna informações detalhadas de pagamento de uma parcela
+
+PedidoDados
+
+idSistema: PARCMEI-ESP  
+idServico: DETPAGTOPARC215  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroParcelamento | Número do parcelamento que se deseja consultar mais informações | Número | SIM |
+| anoMesParcela | Mês da parcela paga (AAAAMM) | Número | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "DETPAGTOPARC215",         "versaoSistema": "1.0",          "dados": "{ \"numeroParcelamento\": 9001, \"anoMesParcela\": 202111 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS pago | Texto |
+| dataVencimento | Data de vencimento do DAS | Número (AAAAMMDD) |
+| paDasGerado | Período de apuração do DAS Gerado | Número (AAAAMM) |
+| geradoEm | Data de geração do DAS | Texto (AAAAMMDDHHMMSS) |
+| numeroParcelamento | Número do parcelamento | Texto |
+| numeroParcela | Número da parcela | Texto |
+| dataLimiteAcolhimento | Data limite para acolhimento | Número (AAAAMMDD) |
+| pagamentoDebitos | Detalhes dos débitos | Lista de [PagamentoDebito]() |
+| dataPagamento | Data do pagamento | Número (AAAAMMDD) |
+| bancoAgencia | Banco/agência do pagamento | Texto |
+| valorPagoArrecadacao | Valor arrecadado | Número |
+
+Objeto [PagamentoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| paDebito | Período de apuração do débito | Número (AAAAMM) |
+| processo | Número do processo | Texto |
+| discriminacoesDebito | Detalhes dos débitos | Lista de [DiscriminacaoDebito]() |
+
+Objeto [DiscriminacaoDebito:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tributo | Nome do tributo | Texto |
+| principal | Valor do principal | Número |
+| multa | Valor da multa | Número |
+| juros | Valor dos juros | Número |
+| total | Valor total | Número |
+| enteFederadoDestino | Discriminação do ente do destino | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Consultar as parcelas disponíveis para impressão de DAS na modalidade PARCMEI ESPECIAL
+
+Esta consulta retorna uma lista contendo os números das parcelas disponíveis para geração do DAS.
+
+PedidoDados
+
+idSistema: PARCMEI-ESP  
+idServico: PARCELASPARAGERAR212  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não há necessidade de parâmetro de entrada para este serviço. Serão consultadas todas as parcelas para o parcelamento ativo do contribuinte.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "PARCELASPARAGERAR212",         "versaoSistema": "1.0",         "dados":""       }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: listaParcela
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| listaParcela | Informações da parcela | Lista de [Parcela]() |
+
+Objeto [Parcela:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| parcela | Número da parcela | Número (AAAAMM) |
+| valor | Valor da parcela | Número |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Emitir documento de arrecadação na modalidade PARCMEI ESPECIAL
+
+PedidoDados
+
+idSistema: PARCMEI-ESP  
+idServico: GERARDAS211  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Campo: dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| parcelaParaEmitir | Ano e mês da parcela para emitir o DAS | Número (AAAAMM) | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "00000000000000",         "tipo": 2       },                "pedidoDados": {         "idSistema": "PARCMEI-ESP",         "idServico": "GERARDAS211",         "versaoSistema": "1.0",          "dados": "{ \"parcelaParaEmitir\": 202107 }"        }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+Objeto: dados
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| docArrecadacaoPdfB64 | PDF DAS em formato base 64 | Texto |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: clique [aqui]()
+
+
+
+
+# Exemplo de Json de retorno - Consultar Pedidos de Parcelamento
+
+Consultar todos os parcelamentos para a modalidade PARCMEI ESPECIAL
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PARCMEI-ESP",             "idServico": "PEDIDOSPARC213",             "versaoSistema": "1.0",              "dados": ""         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-PARCMEI-ESP]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"parcelamentos\":[{\"numero\":9001,\"dataDoPedido\":20171002,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20171007}]}"     }`
+
+
+mento\":9001,\"dataDoPedido\":20171002,\"situacao\":\"Em parcelamento\",\"dataDaSituacao\":20171007,\"consolidacaoOriginal\":{\"valorTotalConsolidado\":3524.16,\"quantidadeParcelas\":70,\"primeiraParcela\":50.35,\"parcelaBasica\":50.35,\"dataConsolidacao\":20171002112724,\"detalhesConsolidacao\":[{\"periodoApuracao\":201105,\"vencimento\":20110620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":52.71},{\"periodoApuracao\":201106,\"vencimento\":20110720,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":52.44},{\"periodoApuracao\":201107,\"vencimento\":20110822,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":52.14},{\"periodoApuracao\":201108,\"vencimento\":20110920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":51.87},{\"periodoApuracao\":201109,\"vencimento\":20111020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":51.62},{\"periodoApuracao\":201110,\"vencimento\":20111121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":51.38},{\"periodoApuracao\":201111,\"vencimento\":20111220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":51.13},{\"periodoApuracao\":201112,\"vencimento\":20120120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":28.25,\"valorAtualizado\":50.88},{\"periodoApuracao\":201201,\"vencimento\":20120222,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":57.57},{\"periodoApuracao\":201202,\"vencimento\":20120320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":57.30},{\"periodoApuracao\":201203,\"vencimento\":20120420,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":57.07},{\"periodoApuracao\":201204,\"vencimento\":20120521,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":56.84},{\"periodoApuracao\":201205,\
+
+
+\"vencimento\":20120620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":56.63},{\"periodoApuracao\":201206,\"vencimento\":20120720,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":56.41},{\"periodoApuracao\":201207,\"vencimento\":20120820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":56.20},{\"periodoApuracao\":201208,\"vencimento\":20120920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":56.02},{\"periodoApuracao\":201209,\"vencimento\":20121022,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":55.82},{\"periodoApuracao\":201210,\"vencimento\":20121120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":55.65},{\"periodoApuracao\":201211,\"vencimento\":20121220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":55.47},{\"periodoApuracao\":201212,\"vencimento\":20130121,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":32.10,\"valorAtualizado\":55.28},{\"periodoApuracao\":201301,\"vencimento\":20130220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":59.93},{\"periodoApuracao\":201302,\"vencimento\":20130320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":59.74},{\"periodoApuracao\":201303,\"vencimento\":20130422,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":59.53},{\"periodoApuracao\":201304,\"vencimento\":20130520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":59.31},{\"periodoApuracao\":201305,\"vencimento\":20130620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":59.10},{\"periodoApuracao\":201306,\"vencimento\":20130722,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":58.85},{\"periodoApuracao\":201307,\"vencimento\":20130820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":58.60},{\"periodoApuracao\":201308,\"vencimento\":20130920,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":58.36},{\"periodoApuracao\":201309,\"vencimento\":20131021,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":58.07},{\"periodoApuracao\":201310,\"vencimento\":20131120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":57.82},{\"periodoApuracao\":201311,\"vencimento\":20131220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":57.54},{\"periodoApuracao\":201312,\"vencimento\":20140120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":34.90,\"valorAtualizado\":57.25},{\"periodoApuracao\":201401,\"vencimento\":20140220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":60.73},{\"periodoApuracao\":201402,\"vencimento\":20140320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":60.44},{\"periodoApuracao\":201403,\"vencimento\":20140422,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":60.14},{\"periodoApuracao\":201404,\"vencimento\":20140520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":59.81},{\"periodoApuracao\":201405,\"vencimento\":20140620,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":59.52},{\"periodoApuracao\":201406,\"vencimento\":20140721,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":59.16},{\"periodoApuracao\":201407,\"vencimento\":20140820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":58.84},{\"periodoApuracao\":201408,\"vencimento\":20140922,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":58.50},{\"periodoApuracao\":201409,\"vencimento\":20141020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":58.14},{\"periodoApuracao\":201410,\"vencimento\":20141120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":57.83},{\"periodoApuracao\":201411,\"vencimento\":20141222,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":57.47},{\"periodoApuracao\":201412,\"vencimento\":20150120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":37.20,\"valorAtualizado\":57.12},{\"periodoApuracao\":201501,\"vencimento\":20150220,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":61.70},{\"periodoApuracao\":201502,\"vencimento\":20150320,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":61.28},{\"periodoApuracao\":201503,\"vencimento\":20150420,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":60.90},{\"periodoApuracao\":201504,\"vencimento\":20150520,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":60.50},{\"periodoApuracao\":201505,\"vencimento\":20150622,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":60.07},{\"periodoApuracao\":201506,\"vencimento\":20150720,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":59.59},{\"periodoApuracao\":201507,\"vencimento\":20150820,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":59.14},{\"periodoApuracao\":201508,\"vencimento\":20150922,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":58.70},{\"periodoApuracao\":201509,\"vencimento\":20151020,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":58.29},{\"periodoApuracao\":201510,\"vencimento\":20151120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":57.87},{\"periodoApuracao\":201511,\"vencimento\":20151221,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":57.42},{\"periodoApuracao\":201512,\"vencimento\":20160120,\"numeroProcesso\":\"\",\"saldoDevedorOriginal\":40.40,\"valorAtualizado\":56.98}],\"alteracoesDivida\":[],\"demonstrativoPagamentos\":[{\"mesDaParcela\":201710,\"vencimentoDoDas\":20171031,\"dataDeArrecadacao\":20171002,\"valorPago\":50.35},{\"mesDaParcela\":201711,\"vencimentoDoDas\":20171130,\"dataDeArrecadacao\":20171101,\"valorPago\":50.35},{\"mesDaParcela\":201712,\"vencimentoDoDas\":20171229,\"dataDeArrecadacao\":20171201,\"valorPago\":50.35},{\"mesDaParcela\":201801,\"vencimentoDoDas\":20180131,\"dataDeArrecadacao\":20180102,\"valorPago\":50.35},{\"mesDaParcela\":201802,\"vencimentoDoDas\":20180228,\"dataDeArrecadacao\":20180201,\"valorPago\":50.35},{\"mesDaParcela\":201803,\"vencimentoDoDas\":20180330,\"dataDeArrecadacao\":20180301,\"valorPago\":50.35},{\"mesDaParcela\":201804,\"vencimentoDoDas\":20180430,\"dataDeArrecadacao\":20180402,\"valorPago\":50.35},{\"mesDaParcela\":201805,\"vencimentoDoDas\":20180531,\"dataDeArrecadacao\":20180502,\"valorPago\":50.35},{\"mesDaParcela\":201806,\"vencimentoDoDas\":20180629,\"dataDeArrecadacao\":20180601,\"valorPago\":50.35},{\"mesDaParcela\":201807,\"vencimentoDoDas\":20180731,\"dataDeArrecadacao\":20180702,\"valorPago\":50.35},{\"mesDaParcela\":201808,\"vencimentoDoDas\":20180831,\"dataDeArrecadacao\":20180801,\"valorPago\":50.35},{\"mesDaParcela\":201809,\"vencimentoDoDas\":20180928,\"dataDeArrecadacao\":20180903,\"valorPago\":50.35},{\"mesDaParcela\":201810,\"vencimentoDoDas\":20181031,\"dataDeArrecadacao\":20181001,\"valorPago\":50.35},{\"mesDaParcela\":201811,\"vencimentoDoDas\":20181130,\"dataDeArrecadacao\":20181101,\"valorPago\":50.35},{\"mesDaParcela\":201812,\"vencimentoDoDas\":20181228,\"dataDeArrecadacao\":20181203,\"valorPago\":50.35},{\"mesDaParcela\":201901,\"vencimentoDoDas\":20190131,\"dataDeArrecadacao\":20190102,\"valorPago\":50.35},{\"mesDaParcela\":201902,\"vencimentoDoDas\":20190228,\"dataDeArrecadacao\":20190201,\"valorPago\":50.35},{\"mesDaParcela\":201903,\"vencimentoDoDas\":20190329,\"dataDeArrecadacao\":20190301,\"valorPago\":50.35},{\"mesDaParcela\":201904,\"vencimentoDoDas\":20190430,\"dataDeArrecadacao\":20190401,\"valorPago\":50.35},{\"mesDaParcela\":201905,\"vencimentoDoDas\":20190531,\"dataDeArrecadacao\":20190502,\"valorPago\":50.35},{\"mesDaParcela\":201906,\"vencimentoDoDas\":20190628,\"dataDeArrecadacao\":20190603,\"valorPago\":50.35},{\"mesDaParcela\":201907,\"vencimentoDoDas\":20190731,\"dataDeArrecadacao\":20190701,\"valorPago\":50.35},{\"mesDaParcela\":201908,\"vencimentoDoDas\":20190830,\"dataDeArrecadacao\":20190801,\"valorPago\":50.35},{\"mesDaParcela\":201909,\"vencimentoDoDas\":20190930,\"dataDeArrecadacao\":20190902,\"valorPago\":50.35},{\"mesDaParcela\":201910,\"vencimentoDoDas\":20191031,\"dataDeArrecadacao\":20191001,\"valorPago\":50.35},{\"mesDaParcela\":201911,\"vencimentoDoDas\":20191129,\"dataDeArrecadacao\":20191101,\"valorPago\":50.35},{\"mesDaParcela\":201912,\"vencimentoDoDas\":20191230,\"dataDeArrecadacao\":20191202,\"valorPago\":50.35},{\"mesDaParcela\":202001,\"vencimentoDoDas\":20200131,\"dataDeArrecadacao\":20200102,\"valorPago\":50.35},{\"mesDaParcela\":202002,\"vencimentoDoDas\":20200228,\"dataDeArrecadacao\":20200203,\"valorPago\":50.35},{\"mesDaParcela\":202003,\"vencimentoDoDas\":20200331,\"dataDeArrecadacao\":20200302,\"valorPago\":50.35},{\"mesDaParcela\":202004,\"vencimentoDoDas\":20200430,\"dataDeArrecadacao\":20200401,\"valorPago\":50.35},{\"mesDaParcela\":202005,\"vencimentoDoDas\":20200529,\"dataDeArrecadacao\":20200504,\"valorPago\":50.35},{\"mesDaParcela\":202006,\"vencimentoDoDas\":20200630,\"dataDeArrecadacao\":20200601,\"valorPago\":50.35},{\"mesDaParcela\":202007,\"vencimentoDoDas\":20200731,\"dataDeArrecadacao\":20200701,\"valorPago\":50.35},{\"mesDaParcela\":202008,\"vencimentoDoDas\":20200831,\"dataDeArrecadacao\":20200803,\"valorPago\":50.35},{\"mesDaParcela\":202009,\"vencimentoDoDas\":20200930,\"dataDeArrecadacao\":20200901,\"valorPago\":50.35},{\"mesDaParcela\":202010,\"vencimentoDoDas\":20201030,\"dataDeArrecadacao\":20201001,\"valorPago\":50.35},{\"mesDaParcela\":202011,\"vencimentoDoDas\":20201130,\"dataDeArrecadacao\":20201103,\"valorPago\":50.35},{\"mesDaParcela\":202012,\"vencimentoDoDas\":20201230,\"dataDeArrecadacao\":20201201,\"valorPago\":50.35},{\"mesDaParcela\":202101,\"vencimentoDoDas\":20210129,\"dataDeArrecadacao\":20210104,\"valorPago\":50.35},{\"mesDaParcela\":202102,\"vencimentoDoDas\":20210226,\"dataDeArrecadacao\":20210201,\"valorPago\":50.35},{\"mesDaParcela\":202103,\"vencimentoDoDas\":20210331,\"dataDeArrecadacao\":20210301,\"valorPago\":50.35},{\"mesDaParcela\":202104,\"vencimentoDoDas\":20210430,\"dataDeArrecadacao\":20210401,\"valorPago\":50.35},{\"mesDaParcela\":202105,\"vencimentoDoDas\":20210531,\"dataDeArrecadacao\":20210503,\"valorPago\":50.35},{\"mesDaParcela\":202106,\"vencimentoDoDas\":20210630,\"dataDeArrecadacao\":20210601,\"valorPago\":50.35},{\"mesDaParcela\":202107,\"vencimentoDoDas\":20210730,\"dataDeArrecadacao\":20210701,\"valorPago\":50.35},{\"mesDaParcela\":202108,\"vencimentoDoDas\":20210831,\"dataDeArrecadacao\":20210802,\"valorPago\":50.35},{\"mesDaParcela\":202109,\"vencimentoDoDas\":20210930,\"dataDeArrecadacao\":20210901,\"valorPago\":50.35},{\"mesDaParcela\":202110,\"vencimentoDoDas\":20211029,\"dataDeArrecadacao\":20211001,\"valorPago\":50.35},{\"mesDaParcela\":202111,\"vencimentoDoDas\":20211130,\"dataDeArrecadacao\":20211101,\"valorPago\":50.35},{\"mesDaParcela\":202112,\"vencimentoDoDas\":20211230,\"dataDeArrecadacao\":20211201,\"valorPago\":50.35},{\"mesDaParcela\":202201,\"vencimentoDoDas\":20220131,\"dataDeArrecadacao\":20220103,\"valorPago\":50.35},{\"mesDaParcela\":202202,\"vencimentoDoDas\":20220228,\"dataDeArrecadacao\":20220201,\"valorPago\":50.35},{\"mesDaParcela\":202203,\"vencimentoDoDas\":20220331,\"dataDeArrecadacao\":20220301,\"valorPago\":50.35},{\"mesDaParcela\":202204,\"vencimentoDoDas\":20220429,\"dataDeArrecadacao\":20220401,\"valorPago\":50.35},{\"mesDaParcela\":202205,\"vencimentoDoDas\":20220531,\"dataDeArrecadacao\":20220502,\"valorPago\":50.35},{\"mesDaParcela\":202206,\"vencimentoDoDas\":20220630,\"dataDeArrecadacao\":20220601,\"valorPago\":50.35},{\"mesDaParcela\":202207,\"vencimentoDoDas\":20220729,\"dataDeArrecadacao\":20220701,\"valorPago\":50.35},{\"mesDaParcela\":202208,\"vencimentoDoDas\":20220831,\"dataDeArrecadacao\":20220801,\"valorPago\":50.35},{\"mesDaParcela\":202209,\"vencimentoDoDas\":20220930,\"dataDeArrecadacao\":20220901,\"valorPago\":50.35},{\"mesDaParcela\":202210,\"vencimentoDoDas\":20221031,\"dataDeArrecadacao\":20221003,\"valorPago\":50.35},{\"mesDaParcela\":202211,\"vencimentoDoDas\":20221130,\"dataDeArrecadacao\":20221101,\"valorPago\":50.35},{\"mesDaParcela\":202212,\"vencimentoDoDas\":20221229,\"dataDeArrecadacao\":20221201,\"valorPago\":50.35},{\"mesDaParcela\":202301,\"vencimentoDoDas\":20230131,\"dataDeArrecadacao\":20230102,\"valorPago\":50.35},{\"mesDaParcela\":202302,\"vencimentoDoDas\":20230228,\"dataDeArrecadacao\":20230201,\"valorPago\":50.35},{\"mesDaParcela\":202303,\"vencimentoDoDas\":20230331,\"dataDeArrecadacao\":20230301,\"valorPago\":50.35},{\"mesDaParcela\":202304,\"vencimentoDoDas\":20230428,\"dataDeArrecadacao\":20230403,\"valorPago\":50.35},{\"mesDaParcela\":202305,\"vencimentoDoDas\":20230531,\"dataDeArrecadacao\":20230502,\"valorPago\":50.35},{\"mesDaParcela\":202306,\"vencimentoDoDas\":20230630,\"dataDeArrecadacao\":20230601,\"valorPago\":50.35},{\"mesDaParcela\":202307,\"vencimentoDoDas\":20230731,\"dataDeArrecadacao\":20230703,\"valorPago\":50.35},{\"mesDaParcela\":202308,\"vencimentoDoDas\":20230831,\"dataDeArrecadacao\":20230801,\"valorPago\":50.35},{\"mesDaParcela\":202309,\"vencimentoDoDas\":20230929,\"dataDeArrecadacao\":20230901,\"valorPago\":50.35},{\"mesDaParcela\":202310,\"vencimentoDoDas\":20231031,\"dataDeArrecadacao\":20231002,\"valorPago\":50.35},{\"mesDaParcela\":202311,\"vencimentoDoDas\":20231130,\"dataDeArrecadacao\":20231101,\"valorPago\":50.35},{\"mesDaParcela\":202312,\"vencimentoDoDas\":20231228,\"dataDeArrecadacao\":20231201,\"valorPago\":50.35},{\"mesDaParcela\":202401,\"vencimentoDoDas\":20240131,\"dataDeArrecadacao\":20240102,\"valorPago\":50.35},{\"mesDaParcela\":202402,\"vencimentoDoDas\":20240229,\"dataDeArrecadacao\":20240201,\"valorPago\":50.35},{\"mesDaParcela\":202403,\"vencimentoDoDas\":20240328,\"dataDeArrecadacao\":20240301,\"valorPago\":50.35},{\"mesDaParcela\":202404,\"vencimentoDoDas\":20240430,\"dataDeArrecadacao\":20240401,\"valorPago\":50.35},{\"mesDaParcela\":202405,\"vencimentoDoDas\":20240531,\"dataDeArrecadacao\":20240502,\"valorPago\":50.35},{\"mesDaParcela\":202406,\"vencimentoDoDas\":20240628,\"dataDeArrecadacao\":20240603,\"valorPago\":50.35},{\"mesDaParcela\":202407,\"vencimentoDoDas\":20240731,\"dataDeArrecadacao\":20240701,\"valorPago\":50.35},{\"mesDaParcela\":202408,\"vencimentoDoDas\":20240830,\"dataDeArrecadacao\":20240801,\"valorPago\":50.35},{\"mesDaParcela\":202409,\"vencimentoDoDas\":20240930,\"dataDeArrecadacao\":20240902,\"valorPago\":50.35},{\"mesDaParcela\":202410,\"vencimentoDoDas\":20241031,\"dataDeArrecadacao\":20241001,\"valorPago\":50.35},{\"mesDaParcela\":202411,\"vencimentoDoDas\":20241129,\"dataDeArrecadacao\":20241101,\"valorPago\":50.35},{\"mesDaParcela\":202412,\"vencimentoDoDas\":20241230,\"dataDeArrecadacao\":20241202,\"valorPago\":50.35}],\"mensagens\":[]}"     }`
+
+
+30,\"paDasGerado\":202111,\"geradoEm\":\"20211130180801\",\"numeroParcelamento\":\"9001\",\"numeroParcela\":\"50\",\"dataLimiteAcolhimento\":20211130,\"pagamentoDebitos\":[{\"paDebito\":201502,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"INSS\",\"principal\":29.25,\"multa\":5.85,\"juros\":14.97,\"total\":50.07,\"enteFederadoDestino\":\"União\"}]},{\"paDebito\":201503,\"processo\":\"\",\"discriminacoesDebito\":[{\"tributo\":\"INSS\",\"principal\":5.88,\"multa\":1.18,\"juros\":2.96,\"total\":10.02,\"enteFederadoDestino\":\"União\"},{\"tributo\":\"ICMS\",\"principal\":0.15,\"multa\":0.03,\"juros\":0.07,\"total\":0.25,\"enteFederadoDestino\":\"MG\"}]}],\"dataPagamento\":20211130,\"bancoAgencia\":\"104/3988\",\"valorPagoArrecadacao\":60.34}"     }`
+
+
+{\"parcela\":202203,\"valor\":71.71},{\"parcela\":202204,\"valor\":71.71},{\"parcela\":202205,\"valor\":71.71},{\"parcela\":202206,\"valor\":71.71},{\"parcela\":202207,\"valor\":71.71},{\"parcela\":202208,\"valor\":71.71},{\"parcela\":202209,\"valor\":71.71},{\"parcela\":202210,\"valor\":71.71},{\"parcela\":202211,\"valor\":71.71},{\"parcela\":202212,\"valor\":71.71},{\"parcela\":202301,\"valor\":16.14}]}"     }`
+
+
+
+
+# Exemplo de Json de retorno - Emitir Documento de Arrecadação
+
+Emissão de DAS para a modalidade PARCMEI ESPECIAL
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "PARCMEI-ESP",             "idServico": "GERARDAS211",             "versaoSistema": "1.0",              "dados": "{ \"parcelaParaEmitir\": 202301 }"         },       "status": "200",       "mensagens": [         {           "codigo": "[Sucesso-PARCMEI-ESP]",           "texto": "Requisição efetuada com sucesso."         }       ],       "dados": "{\"docArrecadacaoPdfB64\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovTmFtZXMgNCAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDUgMCBSCi9WaWV3ZXJQcmVmZXJlbmNlcyA2IDAgUgovQWNyb0Zvcm0gNyAwIFIKL1ZlcnNpb24gLzEjMkU1Cj4+CmVuZG9iagoxMyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQ0KeJwr5AIAAO4AfA0KZW5kc3RyZWFtCmVuZG9iagoyMiAwIG9iago8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..."`

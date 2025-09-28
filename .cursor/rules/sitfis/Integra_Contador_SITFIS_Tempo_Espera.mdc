@@ -1,0 +1,48 @@
+---
+alwaysApply: true
+---
+# Tempo de espera - Integra Contador
+
+# Tempo de espera para relatório de situação fiscal em processamento
+
+A emissão do relatório de situação fiscal pode se manter em processamento.
+
+Quando o cliente recebe um protoco de relatório, utilizando o serviço /apoiar, e o processamento ainda não foi finalizado para emitir o relatório de situação fiscal, é informado um tempo de espera em milissegundos (ms).
+
+**ATENÇÃO**
+
+Para realizar uma tentativa de emissão deve-se aguardar o tempo de espera estipulado.
+
+Caso a solicitação, utilizando o serviço /emitir, seja feita após o tempo de espera e análise ainda esteja em processamento, é enviado o status code 204 com o seguinte eTag header abaixo:
+
+## Status Code 204
+
+`204 - No Content`
+
+A aplicação cliente pode utilizar os headers abaixo para verificar o tempo de espera que deve aguardar antes de realizar uma nova solicitação.
+
+| Header | Descrição |
+| --- | --- |
+| `ETag` | Contém o novo tempo de espera `tempoEspera` que deve ser aguardado antes de uma nova tentativa de emissão em milissegundos (ms). |
+
+`ETag: "tempoEspera:4000"`
+
+### Response Body (no content)
+
+`No content` significa que não é enviado um json com conteúdo de resposta.
+
+## Status Code 202
+
+`202 - Accept`
+
+Caso a nova solicitação, utilizando o serviço /emitir, seja feita durante o tempo de espera e a análise ainda esteja em processamento, é enviado o `status code 202` como uma resposta de sucesso.
+
+Essa resposta ao cliente, se faz necessária para comunicar que não houve modificação da requisição anterior, que não houve mudança na resposta de tentativa de emissão e a solicitação ainda se encontra em processamento.
+
+### Json de retorno completo status 202
+
+   `{      "contratante": {       "numero": "00000000000000",       "tipo": 2      },      "autorPedidoDados": {       "numero": "00000000000000",       "tipo": 2      },      "contribuinte": {       "numero": "99999999999",       "tipo": 1      },      "pedidoDados": {       "idSistema": "SITFIS",       "idServico": "RELATORIOSITFIS92",       "versaoSistema": "2.0",       "dados": "{ \"protocoloRelatorio\": \"+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj==\" }"      },      "status": 202,      "dados": "{\"tempoEspera\":4000}",      "mensagens":       [        {        "codigo": "[Sucesso-Sitfis-SC02]",        "texto": "A emissão relatório de situação fiscal está em processamento."        }       ]     }`
+
+**ATENÇÃO**
+
+Quando o cliente envia um protocolo de relatório, utilizando o serviço /emitir, e o processamento ainda não foi finalizado para emitir o relatório de situação fiscal, é enviado um novo tempo de espera. Deve-se novamente aguardar o tempo de espera estipulado para realizar uma nova tentativa.

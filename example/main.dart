@@ -2,8 +2,6 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
 import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
 import 'package:serpro_integra_contador_api/src/services/autenticaprocurador_service.dart';
-import 'package:serpro_integra_contador_api/src/models/relpmei/relpmei_request.dart';
-import 'package:serpro_integra_contador_api/src/services/relpmei_service.dart';
 
 void main() async {
   // Inicializar o cliente da API
@@ -20,23 +18,27 @@ void main() async {
   );
 
   // Exemplo de uso dos serviços
-  //await exemplosCaixaPostal(apiClient);
-  //await exemplosPgmei(apiClient);
+  await exemplosCaixaPostal(apiClient);
+  await exemplosPgmei(apiClient);
   await exemplosCcmei(apiClient);
-  //await exemplosPgdasd(apiClient);
+  await exemplosPgdasd(apiClient);
   await exemplosDctfWeb(apiClient);
   await exemplosProcuracoes(apiClient);
   await exemplosDte(apiClient);
-  //await exemplosSitfis(apiClient);
+  await exemplosSitfis(apiClient);
   //await exemplosDefis(apiClient);
   await exemplosPagtoWeb(apiClient);
   await exemplosAutenticaProcurador(apiClient);
   await exemplosRelpsn(apiClient);
   await exemplosPertsn(apiClient);
+  await exemplosParcmeiEspecial(apiClient);
+  await exemplosParcmei(apiClient);
   await exemplosSicalc(apiClient);
   await exemplosRelpmei(apiClient);
   await exemplosPertmei(apiClient);
+  await exemplosParcsnEspecial(apiClient);
   await exemplosMit(apiClient);
+  await exemplosEventosAtualizacao(apiClient);
 }
 
 Future<void> exemplosCcmei(ApiClient apiClient) async {
@@ -1303,16 +1305,128 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
   final sitfisService = SitfisService(apiClient);
 
   try {
-    // Solicitar Protocolo
-    await sitfisService.solicitarProtocolo('00000000000');
-    print('Protocolo solicitado');
+    print('\n--- 1. Solicitar Protocolo do Relatório ---');
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio('99999999999');
+    print('Status: ${protocoloResponse.status}');
+    print('Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
-    // Simular protocolo para exemplo
-    final protocolo = 'exemplo_protocolo';
+    if (protocoloResponse.isSuccess) {
+      print('Sucesso: ${protocoloResponse.isSuccess}');
+      print('Tem protocolo: ${protocoloResponse.hasProtocolo}');
+      print('Tem tempo de espera: ${protocoloResponse.hasTempoEspera}');
 
-    // Emitir Relatório
-    await sitfisService.emitirRelatorio('00000000000', protocolo);
-    print('Relatório SITFIS emitido');
+      if (protocoloResponse.hasProtocolo) {
+        print('Protocolo: ${protocoloResponse.dados!.protocoloRelatorio!.substring(0, 20)}...');
+      }
+
+      if (protocoloResponse.hasTempoEspera) {
+        final tempoEspera = protocoloResponse.dados!.tempoEspera!;
+        print('Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)');
+      }
+    }
+
+    print('\n--- 2. Emitir Relatório (se protocolo disponível) ---');
+    if (protocoloResponse.hasProtocolo) {
+      final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
+
+      // Se há tempo de espera, aguarda antes de emitir
+      if (protocoloResponse.hasTempoEspera) {
+        final tempoEspera = protocoloResponse.dados!.tempoEspera!;
+        print('Aguardando ${tempoEspera}ms antes de emitir...');
+        await Future.delayed(Duration(milliseconds: tempoEspera));
+      }
+
+      final emitirResponse = await sitfisService.emitirRelatorioSituacaoFiscal('99999999999', protocolo);
+      print('Status: ${emitirResponse.status}');
+      print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('Sucesso: ${emitirResponse.isSuccess}');
+      print('Em processamento: ${emitirResponse.isProcessing}');
+      print('Tem PDF: ${emitirResponse.hasPdf}');
+      print('Tem tempo de espera: ${emitirResponse.hasTempoEspera}');
+
+      if (emitirResponse.hasPdf) {
+        final infoPdf = sitfisService.obterInformacoesPdf(emitirResponse);
+        print('Informações do PDF:');
+        print('  - Disponível: ${infoPdf['disponivel']}');
+        print('  - Tamanho: ${infoPdf['tamanhoKB']} KB (${infoPdf['tamanhoMB']} MB)');
+        print('  - Tamanho Base64: ${infoPdf['tamanhoBase64']} caracteres');
+
+        // Salvar PDF em arquivo (opcional)
+        final sucessoSalvamento = await sitfisService.salvarPdfEmArquivo(
+          emitirResponse,
+          'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+
+      if (emitirResponse.hasTempoEspera) {
+        final tempoEspera = emitirResponse.dados!.tempoEspera!;
+        print('Novo tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)');
+      }
+    }
+
+    print('\n--- 3. Fluxo Completo com Retry Automático ---');
+    try {
+      final relatorioCompleto = await sitfisService.obterRelatorioCompleto(
+        '99999999999',
+        maxTentativas: 3,
+        callbackProgresso: (etapa, tempoEspera) {
+          print('Progresso: $etapa');
+          if (tempoEspera != null) {
+            print('  Tempo de espera: ${tempoEspera}ms');
+          }
+        },
+      );
+
+      print('Relatório completo obtido!');
+      print('Status final: ${relatorioCompleto.status}');
+      print('PDF disponível: ${relatorioCompleto.hasPdf}');
+
+      if (relatorioCompleto.hasPdf) {
+        final infoPdf = sitfisService.obterInformacoesPdf(relatorioCompleto);
+        print('Tamanho do PDF: ${infoPdf['tamanhoKB']} KB');
+      }
+    } catch (e) {
+      print('Erro no fluxo completo: $e');
+    }
+
+    print('\n--- 4. Exemplo com Cache (simulado) ---');
+    // Simular cache válido
+    final cacheSimulado = SitfisCache(
+      protocoloRelatorio: 'protocolo_cache_exemplo',
+      dataExpiracao: DateTime.now().add(Duration(hours: 1)),
+      etag: '"protocoloRelatorio:protocolo_cache_exemplo"',
+      cacheControl: 'integra_sitfis_solicitar_relatorio',
+    );
+
+    print('Cache válido: ${cacheSimulado.isValid}');
+    print('Tempo restante: ${cacheSimulado.tempoRestanteEmSegundos}s');
+
+    final protocoloComCache = await sitfisService.solicitarProtocoloComCache('99999999999', cache: cacheSimulado);
+
+    if (protocoloComCache == null) {
+      print('Usando cache existente - não fez nova solicitação');
+    } else {
+      print('Nova solicitação feita - cache inválido');
+    }
+
+    print('\n--- 5. Exemplo com Emissão com Retry ---');
+    if (protocoloResponse.hasProtocolo) {
+      final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
+
+      final relatorioComRetry = await sitfisService.emitirRelatorioComRetry(
+        '99999999999',
+        protocolo,
+        maxTentativas: 2,
+        callbackProgresso: (tentativa, tempoEspera) {
+          print('Tentativa $tentativa - Aguardando ${tempoEspera}ms...');
+        },
+      );
+
+      print('Relatório com retry obtido!');
+      print('Status: ${relatorioComRetry.status}');
+      print('PDF disponível: ${relatorioComRetry.hasPdf}');
+    }
   } catch (e) {
     print('Erro no serviço SITFIS: $e');
   }
@@ -3435,5 +3549,1063 @@ Future<void> exemplosPertsn(ApiClient apiClient) async {
     print('\n=== Exemplos PERTSN Concluídos ===');
   } catch (e) {
     print('Erro nos exemplos PERTSN: $e');
+  }
+}
+
+Future<void> exemplosParcmeiEspecial(ApiClient apiClient) async {
+  print('=== Exemplos PARCMEI-ESP ===');
+
+  final parcmeiEspecialService = ParcmeiEspecialService(apiClient);
+
+  try {
+    // 1. Consultar pedidos de parcelamento
+    print('\n1. Consultando pedidos de parcelamento PARCMEI-ESP...');
+    final responsePedidos = await parcmeiEspecialService.consultarPedidos();
+
+    if (responsePedidos.sucesso) {
+      print('Status: ${responsePedidos.status}');
+      print('Mensagem: ${responsePedidos.mensagemPrincipal}');
+      print('Tem parcelamentos: ${responsePedidos.temParcelamentos}');
+      print('Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}');
+
+      final parcelamentos = responsePedidos.dadosParsed?.parcelamentos ?? [];
+      for (final parcelamento in parcelamentos) {
+        print('  Parcelamento ${parcelamento.numero}:');
+        print('    Situação: ${parcelamento.situacao}');
+        print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+        print('    Ativo: ${parcelamento.isAtivo}');
+      }
+    } else {
+      print('Erro: ${responsePedidos.mensagemPrincipal}');
+    }
+
+    // 2. Consultar parcelamento específico
+    print('\n2. Consultando parcelamento específico...');
+    try {
+      final responseParcelamento = await parcmeiEspecialService.consultarParcelamento(9001);
+
+      if (responseParcelamento.sucesso) {
+        print('Status: ${responseParcelamento.status}');
+        print('Mensagem: ${responseParcelamento.mensagemPrincipal}');
+
+        final parcelamento = responseParcelamento.dadosParsed;
+        if (parcelamento != null) {
+          print('Parcelamento ${parcelamento.numero}:');
+          print('  Situação: ${parcelamento.situacao}');
+          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('  Valor total consolidado: ${parcelamento.valorTotalConsolidadoFormatado}');
+          print('  Quantidade de parcelas: ${parcelamento.quantidadeParcelas}');
+          print('  Parcela básica: ${parcelamento.parcelaBasicaFormatada}');
+
+          // Consolidação original
+          if (parcelamento.consolidacaoOriginal != null) {
+            final consolidacao = parcelamento.consolidacaoOriginal!;
+            print('  Consolidação original:');
+            print('    Data: ${consolidacao.dataConsolidacaoFormatada}');
+            print('    Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
+            print('    Detalhes: ${consolidacao.detalhesConsolidacao.length} itens');
+          }
+
+          // Alterações de dívida
+          if (parcelamento.alteracoesDivida.isNotEmpty) {
+            print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+            for (final alteracao in parcelamento.alteracoesDivida) {
+              print('    Data: ${alteracao.dataAlteracaoDividaFormatada}');
+              print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
+              print('    Valor: ${alteracao.valorTotalConsolidadoFormatado}');
+            }
+          }
+
+          // Demonstrativo de pagamentos
+          if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
+            print('  Pagamentos realizados: ${parcelamento.demonstrativoPagamentos.length}');
+            for (final pagamento in parcelamento.demonstrativoPagamentos.take(3)) {
+              print('    ${pagamento.mesDaParcelaFormatado}: ${pagamento.valorPagoFormatado}');
+            }
+            if (parcelamento.demonstrativoPagamentos.length > 3) {
+              print('    ... e mais ${parcelamento.demonstrativoPagamentos.length - 3} pagamentos');
+            }
+          }
+        }
+      } else {
+        print('Erro: ${responseParcelamento.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na consulta do parcelamento: $e');
+    }
+
+    // 3. Consultar parcelas disponíveis para impressão
+    print('\n3. Consultando parcelas disponíveis para impressão...');
+    final responseParcelas = await parcmeiEspecialService.consultarParcelas();
+
+    if (responseParcelas.sucesso) {
+      print('Status: ${responseParcelas.status}');
+      print('Mensagem: ${responseParcelas.mensagemPrincipal}');
+      print('Tem parcelas: ${responseParcelas.temParcelas}');
+      print('Quantidade de parcelas: ${responseParcelas.quantidadeParcelas}');
+      print('Valor total: ${responseParcelas.valorTotalParcelasFormatado}');
+
+      final parcelas = responseParcelas.dadosParsed?.listaParcelas ?? [];
+      for (final parcela in parcelas.take(5)) {
+        print('  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+        print('    Descrição: ${parcela.descricao}');
+        print('    Mês atual: ${parcela.isMesAtual}');
+        print('    Mês futuro: ${parcela.isMesFuturo}');
+      }
+      if (parcelas.length > 5) {
+        print('  ... e mais ${parcelas.length - 5} parcelas');
+      }
+    } else {
+      print('Erro: ${responseParcelas.mensagemPrincipal}');
+    }
+
+    // 4. Consultar detalhes de pagamento
+    print('\n4. Consultando detalhes de pagamento...');
+    try {
+      final responseDetalhes = await parcmeiEspecialService.consultarDetalhesPagamento(9001, 202111);
+
+      if (responseDetalhes.sucesso) {
+        print('Status: ${responseDetalhes.status}');
+        print('Mensagem: ${responseDetalhes.mensagemPrincipal}');
+
+        final detalhes = responseDetalhes.dadosParsed;
+        if (detalhes != null) {
+          print('Detalhes do pagamento:');
+          print('  DAS: ${detalhes.numeroDas}');
+          print('  Data de vencimento: ${detalhes.dataVencimentoFormatada}');
+          print('  Período de apuração: ${detalhes.paDasGeradoFormatado}');
+          print('  Gerado em: ${detalhes.geradoEm}');
+          print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
+          print('  Número da parcela: ${detalhes.numeroParcela}');
+          print('  Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
+          print('  Data de pagamento: ${detalhes.dataPagamentoFormatada}');
+          print('  Banco/Agência: ${detalhes.bancoAgencia}');
+          print('  Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
+          print('  Pago: ${detalhes.isPago}');
+          print('  Dentro do prazo: ${detalhes.isDentroPrazoAcolhimento}');
+
+          // Detalhes dos débitos pagos
+          if (detalhes.pagamentoDebitos.isNotEmpty) {
+            print('  Débitos pagos: ${detalhes.pagamentoDebitos.length}');
+            for (final debito in detalhes.pagamentoDebitos) {
+              print('    Período: ${debito.paDebitoFormatado}');
+              print('    Processo: ${debito.processo}');
+              print('    Valor total: ${debito.valorTotalFormatado}');
+
+              for (final discriminacao in debito.discriminacoesDebito) {
+                print('      ${discriminacao.tributo}:');
+                print('        Principal: ${discriminacao.principalFormatado}');
+                print('        Multa: ${discriminacao.multaFormatada}');
+                print('        Juros: ${discriminacao.jurosFormatado}');
+                print('        Total: ${discriminacao.totalFormatado}');
+                print('        Ente federado: ${discriminacao.enteFederadoDestino}');
+                print('        Tem multa: ${discriminacao.temMulta}');
+                print('        Tem juros: ${discriminacao.temJuros}');
+              }
+            }
+          }
+        }
+      } else {
+        print('Erro: ${responseDetalhes.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na consulta dos detalhes: $e');
+    }
+
+    // 5. Emitir DAS
+    print('\n5. Emitindo DAS...');
+    try {
+      final responseDas = await parcmeiEspecialService.emitirDas(202107);
+
+      if (responseDas.sucesso) {
+        print('Status: ${responseDas.status}');
+        print('Mensagem: ${responseDas.mensagemPrincipal}');
+        print('PDF gerado com sucesso: ${responseDas.pdfGeradoComSucesso}');
+        print('Tem PDF disponível: ${responseDas.temPdfDisponivel}');
+        print('PDF válido: ${responseDas.pdfValido}');
+        print('Tamanho do PDF: ${responseDas.tamanhoPdfFormatado}');
+
+        final dadosDas = responseDas.dadosParsed;
+        if (dadosDas != null) {
+          print('Dados do DAS:');
+          print('  Tem PDF: ${dadosDas.temPdf}');
+          print('  Tamanho: ${dadosDas.tamanhoFormatado}');
+          print('  Base64 válido: ${dadosDas.isBase64Valido}');
+          print('  Nome sugerido: ${dadosDas.nomeArquivoSugerido}');
+          print('  MIME type: ${dadosDas.mimeType}');
+          print('  Extensão: ${dadosDas.extensao}');
+
+          // Simular conversão para bytes
+          final pdfBytes = dadosDas.pdfBytes;
+          if (pdfBytes != null) {
+            print('  PDF convertido para bytes: ${pdfBytes.length} bytes');
+          }
+        }
+      } else {
+        print('Erro: ${responseDas.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na emissão do DAS: $e');
+    }
+
+    // 6. Testando validações
+    print('\n6. Testando validações...');
+
+    // Validar número de parcelamento
+    final validacaoParcelamento = parcmeiEspecialService.validarNumeroParcelamento(9001);
+    print('Validação parcelamento 9001: $validacaoParcelamento');
+
+    final validacaoParcelamentoInvalido = parcmeiEspecialService.validarNumeroParcelamento(-1);
+    print('Validação parcelamento -1: $validacaoParcelamentoInvalido');
+
+    // Validar ano/mês da parcela
+    final validacaoAnoMes = parcmeiEspecialService.validarAnoMesParcela(202111);
+    print('Validação ano/mês 202111: $validacaoAnoMes');
+
+    final validacaoAnoMesInvalido = parcmeiEspecialService.validarAnoMesParcela(123);
+    print('Validação ano/mês 123: $validacaoAnoMesInvalido');
+
+    // Validar parcela para emissão
+    final validacaoParcela = parcmeiEspecialService.validarParcelaParaEmitir(202107);
+    print('Validação parcela 202107: $validacaoParcela');
+
+    // Validar CNPJ
+    final validacaoCnpj = parcmeiEspecialService.validarCnpjContribuinte('12345678000195');
+    print('Validação CNPJ válido: $validacaoCnpj');
+
+    final validacaoCnpjInvalido = parcmeiEspecialService.validarCnpjContribuinte('123');
+    print('Validação CNPJ inválido: $validacaoCnpjInvalido');
+
+    // Validar tipo de contribuinte
+    final validacaoTipo = parcmeiEspecialService.validarTipoContribuinte(2);
+    print('Validação tipo 2: $validacaoTipo');
+
+    final validacaoTipoInvalido = parcmeiEspecialService.validarTipoContribuinte(1);
+    print('Validação tipo 1: $validacaoTipoInvalido');
+
+    // 7. Testando análise de erros
+    print('\n7. Testando análise de erros...');
+
+    // Verificar se erro é conhecido
+    final erroConhecido = parcmeiEspecialService.isKnownError('[Sucesso-PARCMEI-ESP]');
+    print('Erro conhecido: $erroConhecido');
+
+    // Obter informações sobre erro
+    final errorInfo = parcmeiEspecialService.getErrorInfo('[Sucesso-PARCMEI-ESP]');
+    if (errorInfo != null) {
+      print('Informações do erro:');
+      print('  Código: ${errorInfo.codigo}');
+      print('  Tipo: ${errorInfo.tipo}');
+      print('  Categoria: ${errorInfo.categoria}');
+      print('  Detalhes: ${errorInfo.detalhes}');
+      print('  Solução: ${errorInfo.solucao}');
+      print('  Crítico: ${errorInfo.isCritico}');
+      print('  Validação: ${errorInfo.isValidacao}');
+      print('  Aviso: ${errorInfo.isAviso}');
+      print('  Sucesso: ${errorInfo.isSucesso}');
+      print('  Requer ação: ${errorInfo.requerAcaoUsuario}');
+      print('  Temporário: ${errorInfo.isTemporario}');
+    }
+
+    // Analisar erro
+    final analysis = parcmeiEspecialService.analyzeError('[Sucesso-PARCMEI-ESP]', 'Requisição efetuada com sucesso.');
+    print('Análise do erro:');
+    print('  Código: ${analysis.codigo}');
+    print('  Mensagem: ${analysis.mensagem}');
+    print('  Tipo: ${analysis.tipo}');
+    print('  Categoria: ${analysis.categoria}');
+    print('  Solução: ${analysis.solucao}');
+    print('  Detalhes: ${analysis.detalhes}');
+    print('  Crítico: ${analysis.isCritico}');
+    print('  Validação: ${analysis.isValidacao}');
+    print('  Aviso: ${analysis.isAviso}');
+    print('  Sucesso: ${analysis.isSucesso}');
+    print('  Requer ação: ${analysis.requerAcaoUsuario}');
+    print('  Temporário: ${analysis.isTemporario}');
+    print('  Pode ser ignorado: ${analysis.podeSerIgnorado}');
+    print('  Deve ser reportado: ${analysis.deveSerReportado}');
+    print('  Prioridade: ${analysis.prioridade}');
+    print('  Cor: ${analysis.cor}');
+    print('  Ícone: ${analysis.icone}');
+
+    // Obter listas de erros
+    final avisos = parcmeiEspecialService.getAvisos();
+    print('Avisos disponíveis: ${avisos.length}');
+
+    final errosEntrada = parcmeiEspecialService.getEntradasIncorretas();
+    print('Erros de entrada incorreta: ${errosEntrada.length}');
+
+    final erros = parcmeiEspecialService.getErros();
+    print('Erros gerais: ${erros.length}');
+
+    final sucessos = parcmeiEspecialService.getSucessos();
+    print('Sucessos: ${sucessos.length}');
+
+    print('\n=== Exemplos PARCMEI-ESP Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos PARCMEI-ESP: $e');
+  }
+}
+
+Future<void> exemplosParcsn(ApiClient apiClient) async {
+  print('=== Exemplos PARCSN ===');
+
+  final parcsnService = ParcsnService(apiClient);
+
+  try {
+    // 1. Consultar pedidos de parcelamento
+    print('\n1. Consultando pedidos de parcelamento...');
+    final pedidosResponse = await parcsnService.consultarPedidos();
+
+    if (pedidosResponse.sucesso) {
+      print('Status: ${pedidosResponse.status}');
+      print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
+
+      if (pedidosResponse.temParcelamentos) {
+        final parcelamentos = pedidosResponse.dadosParsed!.parcelamentos;
+        print('Quantidade de parcelamentos: ${parcelamentos.length}');
+
+        for (final parcelamento in parcelamentos) {
+          print('Parcelamento ${parcelamento.numero}:');
+          print('  Situação: ${parcelamento.situacao}');
+          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+          print('  Ativo: ${parcelamento.isAtivo}');
+        }
+      } else {
+        print('Nenhum parcelamento encontrado');
+      }
+    } else {
+      print('Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+    }
+
+    // 2. Consultar parcelamento específico
+    print('\n2. Consultando parcelamento específico...');
+    try {
+      final parcelamentoResponse = await parcsnService.consultarParcelamento(1);
+
+      if (parcelamentoResponse.sucesso) {
+        print('Status: ${parcelamentoResponse.status}');
+        print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
+
+        final parcelamento = parcelamentoResponse.dadosParsed;
+        if (parcelamento != null) {
+          print('Parcelamento ${parcelamento.numero}:');
+          print('  Situação: ${parcelamento.situacao}');
+          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+          print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+          print('  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}');
+          print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+          print('  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}');
+        }
+      } else {
+        print('Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na consulta de parcelamento: $e');
+    }
+
+    // 3. Consultar parcelas disponíveis para impressão
+    print('\n3. Consultando parcelas disponíveis para impressão...');
+    final parcelasResponse = await parcsnService.consultarParcelas();
+
+    if (parcelasResponse.sucesso) {
+      print('Status: ${parcelasResponse.status}');
+      print('Mensagem: ${parcelasResponse.mensagemPrincipal}');
+
+      if (parcelasResponse.temParcelas) {
+        final parcelas = parcelasResponse.dadosParsed!.listaParcelas;
+        print('Quantidade de parcelas: ${parcelas.length}');
+        print('Valor total: ${parcelasResponse.valorTotalParcelasFormatado}');
+
+        for (final parcela in parcelas) {
+          print('Parcela ${parcela.parcelaFormatada}:');
+          print('  Valor: ${parcela.valorFormatado}');
+          print('  Vencimento: ${parcela.dataVencimentoFormatada}');
+          print('  Situação: ${parcela.situacao}');
+          print('  Vencida: ${parcela.isVencida}');
+          print('  Dias de atraso: ${parcela.diasAtraso}');
+        }
+      } else {
+        print('Nenhuma parcela disponível para impressão');
+      }
+    } else {
+      print('Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+    }
+
+    // 4. Consultar detalhes de pagamento
+    print('\n4. Consultando detalhes de pagamento...');
+    try {
+      final detalhesResponse = await parcsnService.consultarDetalhesPagamento(1, 201612);
+
+      if (detalhesResponse.sucesso) {
+        print('Status: ${detalhesResponse.status}');
+        print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
+
+        final detalhes = detalhesResponse.dadosParsed;
+        if (detalhes != null) {
+          print('DAS: ${detalhes.numeroDas}');
+          print('Código de barras: ${detalhes.codigoBarras}');
+          print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
+          print('Data de pagamento: ${detalhes.dataPagamentoFormatada}');
+          print('Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
+
+          for (final debito in detalhes.pagamentosDebitos) {
+            print('Débito ${debito.competencia}:');
+            print('  Tipo: ${debito.tipoDebito}');
+            print('  Valor total: ${debito.valorTotalFormatado}');
+            print('  Valor principal: ${debito.valorPrincipalFormatado}');
+            print('  Multa: ${debito.valorMultaFormatado}');
+            print('  Juros: ${debito.valorJurosFormatado}');
+            print('  Discriminações: ${debito.discriminacoes.length}');
+          }
+        }
+      } else {
+        print('Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na consulta de detalhes: $e');
+    }
+
+    // 5. Emitir DAS
+    print('\n5. Emitindo DAS...');
+    try {
+      final dasResponse = await parcsnService.emitirDas(202306);
+
+      if (dasResponse.sucesso) {
+        print('Status: ${dasResponse.status}');
+        print('Mensagem: ${dasResponse.mensagemPrincipal}');
+
+        if (dasResponse.pdfGeradoComSucesso) {
+          final dasData = dasResponse.dadosParsed;
+          if (dasData != null) {
+            print('DAS emitido com sucesso!');
+            print('Número do DAS: ${dasData.numeroDas}');
+            print('Código de barras: ${dasData.codigoBarras}');
+            print('Valor: ${dasData.valorFormatado}');
+            print('Vencimento: ${dasData.dataVencimentoFormatada}');
+            print('Tamanho do PDF: ${dasData.tamanhoPdfFormatado}');
+            print('PDF disponível: ${dasData.temPdf}');
+          }
+        } else {
+          print('PDF não foi gerado');
+        }
+      } else {
+        print('Erro ao emitir DAS: ${dasResponse.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na emissão do DAS: $e');
+    }
+
+    // 6. Exemplos de validações
+    print('\n6. Testando validações...');
+
+    // Validar número de parcelamento
+    final validacaoParcelamento = parcsnService.validarNumeroParcelamento(0);
+    if (validacaoParcelamento != null) {
+      print('Validação parcelamento (0): $validacaoParcelamento');
+    }
+
+    // Validar ano/mês
+    final validacaoAnoMes = parcsnService.validarAnoMesParcela(202313);
+    if (validacaoAnoMes != null) {
+      print('Validação ano/mês (202313): $validacaoAnoMes');
+    }
+
+    // Validar CNPJ
+    final validacaoCnpj = parcsnService.validarCnpjContribuinte('12345678901234');
+    if (validacaoCnpj != null) {
+      print('Validação CNPJ (12345678901234): $validacaoCnpj');
+    }
+
+    // Validar tipo de contribuinte
+    final validacaoTipo = parcsnService.validarTipoContribuinte(1);
+    if (validacaoTipo != null) {
+      print('Validação tipo (1): $validacaoTipo');
+    }
+
+    // 7. Exemplos de tratamento de erros
+    print('\n7. Testando tratamento de erros...');
+
+    // Verificar se erro é conhecido
+    final erroConhecido = parcsnService.isKnownError('[Sucesso-PARCSN]');
+    print('Erro conhecido ([Sucesso-PARCSN]): $erroConhecido');
+
+    // Obter informações sobre erro
+    final errorInfo = parcsnService.getErrorInfo('[Sucesso-PARCSN]');
+    if (errorInfo != null) {
+      print('Informações do erro:');
+      print('  Código: ${errorInfo.codigo}');
+      print('  Tipo: ${errorInfo.tipo}');
+      print('  Categoria: ${errorInfo.categoria}');
+      print('  Descrição: ${errorInfo.descricao}');
+      print('  Solução: ${errorInfo.solucao}');
+    }
+
+    // Analisar erro
+    final analysis = parcsnService.analyzeError('[Sucesso-PARCSN]', 'Requisição efetuada com sucesso.');
+    print('Análise do erro:');
+    print('  Código: ${analysis.codigo}');
+    print('  Tipo: ${analysis.tipo}');
+    print('  Categoria: ${analysis.categoria}');
+    print('  Conhecido: ${analysis.isConhecido}');
+    print('  É sucesso: ${analysis.isSucesso}');
+
+    // Obter listas de erros
+    final avisos = parcsnService.getAvisos();
+    print('Avisos disponíveis: ${avisos.length}');
+
+    final errosEntrada = parcsnService.getEntradasIncorretas();
+    print('Erros de entrada incorreta: ${errosEntrada.length}');
+
+    final erros = parcsnService.getErros();
+    print('Erros gerais: ${erros.length}');
+
+    final sucessos = parcsnService.getSucessos();
+    print('Sucessos: ${sucessos.length}');
+
+    print('\n=== Exemplos PARCSN Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos PARCSN: $e');
+  }
+}
+
+Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
+  print('\n=== Exemplos Eventos de Atualização ===');
+
+  try {
+    final eventosService = EventosAtualizacaoService(apiClient);
+
+    // Exemplo 1: Solicitar eventos de Pessoa Física (DCTFWeb)
+    print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
+    final cpfsExemplo = ['00000000000', '11111111111', '22222222222'];
+
+    final solicitacaoPF = await eventosService.solicitarEventosPF(cpfs: cpfsExemplo, evento: TipoEvento.dctfWeb);
+
+    print('Status: ${solicitacaoPF.status}');
+    print('Protocolo: ${solicitacaoPF.dados.protocolo}');
+    print('Tempo espera médio: ${solicitacaoPF.dados.tempoEsperaMedioEmMs}ms');
+    print('Tempo limite: ${solicitacaoPF.dados.tempoLimiteEmMin}min');
+
+    for (final mensagem in solicitacaoPF.mensagens) {
+      print('Mensagem: ${mensagem.codigo} - ${mensagem.texto}');
+    }
+
+    // Exemplo 2: Obter eventos de Pessoa Física usando protocolo
+    print('\n--- Exemplo 2: Obter Eventos PF ---');
+    await Future.delayed(Duration(milliseconds: solicitacaoPF.dados.tempoEsperaMedioEmMs));
+
+    final eventosPF = await eventosService.obterEventosPF(protocolo: solicitacaoPF.dados.protocolo, evento: TipoEvento.dctfWeb);
+
+    print('Status: ${eventosPF.status}');
+    print('Total de eventos: ${eventosPF.dados.length}');
+
+    for (final evento in eventosPF.dados) {
+      if (evento.temAtualizacao) {
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CPF ${evento.cpf}: Sem atualizações');
+      } else {
+        print('CPF ${evento.cpf}: Sem dados');
+      }
+    }
+
+    // Exemplo 3: Solicitar eventos de Pessoa Jurídica (CaixaPostal)
+    print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
+    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222'];
+
+    final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
+
+    print('Status: ${solicitacaoPJ.status}');
+    print('Protocolo: ${solicitacaoPJ.dados.protocolo}');
+    print('Tempo espera médio: ${solicitacaoPJ.dados.tempoEsperaMedioEmMs}ms');
+    print('Tempo limite: ${solicitacaoPJ.dados.tempoLimiteEmMin}min');
+
+    // Exemplo 4: Método de conveniência - Solicitar e obter eventos PF automaticamente
+    print('\n--- Exemplo 4: Método de Conveniência PF ---');
+    final eventosPFConveniencia = await eventosService.solicitarEObterEventosPF(
+      cpfs: ['33333333333', '44444444444'],
+      evento: TipoEvento.pagamentoWeb,
+    );
+
+    print('Status: ${eventosPFConveniencia.status}');
+    print('Total de eventos: ${eventosPFConveniencia.dados.length}');
+
+    for (final evento in eventosPFConveniencia.dados) {
+      if (evento.temAtualizacao) {
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CPF ${evento.cpf}: Sem atualizações');
+      } else {
+        print('CPF ${evento.cpf}: Sem dados');
+      }
+    }
+
+    // Exemplo 5: Método de conveniência - Solicitar e obter eventos PJ automaticamente
+    print('\n--- Exemplo 5: Método de Conveniência PJ ---');
+    final eventosPJConveniencia = await eventosService.solicitarEObterEventosPJ(
+      cnpjs: ['33333333333333', '44444444444444'],
+      evento: TipoEvento.dctfWeb,
+    );
+
+    print('Status: ${eventosPJConveniencia.status}');
+    print('Total de eventos: ${eventosPJConveniencia.dados.length}');
+
+    for (final evento in eventosPJConveniencia.dados) {
+      if (evento.temAtualizacao) {
+        print('CNPJ ${evento.cnpj}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CNPJ ${evento.cnpj}: Sem atualizações');
+      } else {
+        print('CNPJ ${evento.cnpj}: Sem dados');
+      }
+    }
+
+    // Exemplo 6: Demonstração dos tipos de eventos disponíveis
+    print('\n--- Exemplo 6: Tipos de Eventos Disponíveis ---');
+    for (final tipo in TipoEvento.values) {
+      print('Evento ${tipo.codigo}: ${tipo.sistema}');
+    }
+
+    // Exemplo 7: Demonstração dos tipos de contribuinte
+    print('\n--- Exemplo 7: Tipos de Contribuinte ---');
+    for (final tipo in TipoContribuinte.values) {
+      print('Tipo ${tipo.codigo}: ${tipo.descricao}');
+    }
+
+    // Exemplo 8: Validação de limites
+    print('\n--- Exemplo 8: Informações sobre Limites ---');
+    print('Máximo de contribuintes por lote: ${EventosAtualizacaoCommon.maxContribuintesPorLote}');
+    print('Máximo de requisições por dia: ${EventosAtualizacaoCommon.maxRequisicoesPorDia}');
+    print(
+      'Eventos disponíveis: ${EventosAtualizacaoCommon.eventoDCTFWeb}, ${EventosAtualizacaoCommon.eventoCaixaPostal}, ${EventosAtualizacaoCommon.eventoPagamentoWeb}',
+    );
+
+    print('\n=== Exemplos Eventos de Atualização Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos de Eventos de Atualização: $e');
+  }
+}
+
+Future<void> exemplosParcsnEspecial(ApiClient apiClient) async {
+  print('=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===');
+
+  final parcsnEspecialService = ParcsnEspecialService(apiClient);
+
+  try {
+    print('\n--- 1. Consultar Pedidos de Parcelamento Especial ---');
+    final consultarPedidosResponse = await parcsnEspecialService.consultarPedidos();
+    print('Status: ${consultarPedidosResponse.status}');
+    print('Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${consultarPedidosResponse.sucesso}');
+    print('Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}');
+
+    if (consultarPedidosResponse.temParcelamentos) {
+      final parcelamentos = consultarPedidosResponse.dadosParsed?.parcelamentos ?? [];
+      for (var parcelamento in parcelamentos) {
+        print('  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
+        print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+        print('    Ativo: ${parcelamento.isAtivo}');
+      }
+    }
+
+    print('\n--- 2. Consultar Parcelamento Específico ---');
+    final consultarParcelamentoResponse = await parcsnEspecialService.consultarParcelamento(9001);
+    print('Status: ${consultarParcelamentoResponse.status}');
+    print('Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${consultarParcelamentoResponse.sucesso}');
+
+    if (consultarParcelamentoResponse.temDadosParcelamento) {
+      final parcelamento = consultarParcelamentoResponse.dadosParsed;
+      print('Número: ${parcelamento?.numero}');
+      print('Situação: ${parcelamento?.situacao}');
+      print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
+      print('Data da situação: ${parcelamento?.dataDaSituacaoFormatada}');
+
+      if (parcelamento?.consolidacaoOriginal != null) {
+        final consolidacao = parcelamento!.consolidacaoOriginal!;
+        print('Consolidação Original:');
+        print('  Valor total: ${consolidacao.valorTotalConsolidadoFormatado}');
+        print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelas}');
+        print('  Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
+        print('  Parcela básica: ${consolidacao.parcelaBasicaFormatada}');
+        print('  Data da consolidação: ${consolidacao.dataConsolidacaoFormatada}');
+        print('  Detalhes: ${consolidacao.detalhesConsolidacao.length} item(s)');
+      }
+
+      print('Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}');
+      print('Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}');
+    }
+
+    print('\n--- 3. Consultar Detalhes de Pagamento ---');
+    final consultarDetalhesResponse = await parcsnEspecialService.consultarDetalhesPagamento(9001, 201612);
+    print('Status: ${consultarDetalhesResponse.status}');
+    print('Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${consultarDetalhesResponse.sucesso}');
+
+    if (consultarDetalhesResponse.temDadosPagamento) {
+      final detalhes = consultarDetalhesResponse.dadosParsed;
+      print('Número do DAS: ${detalhes?.numeroDas}');
+      print('Data de vencimento: ${detalhes?.dataVencimentoFormatada}');
+      print('Período de apuração: ${detalhes?.paDasGeradoFormatado}');
+      print('Gerado em: ${detalhes?.geradoEm}');
+      print('Número do parcelamento: ${detalhes?.numeroParcelamento}');
+      print('Número da parcela: ${detalhes?.numeroParcela}');
+      print('Data limite para acolhimento: ${detalhes?.dataLimiteAcolhimentoFormatada}');
+      print('Data do pagamento: ${detalhes?.dataPagamentoFormatada}');
+      print('Banco/Agência: ${detalhes?.bancoAgencia}');
+      print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
+      print('Pago: ${detalhes?.isPago}');
+
+      print('Pagamento de débitos: ${detalhes?.pagamentoDebitos.length ?? 0}');
+      for (var pagamento in detalhes?.pagamentoDebitos ?? []) {
+        print('  - Período: ${pagamento.paDebitoFormatado}');
+        print('    Processo: ${pagamento.processo}');
+        print('    Valor total: ${pagamento.valorTotalDebitosFormatado}');
+        print('    Discriminações: ${pagamento.discriminacoesDebito.length}');
+
+        for (var discriminacao in pagamento.discriminacoesDebito) {
+          print('      * ${discriminacao.tributo}: ${discriminacao.totalFormatado}');
+          print('        Principal: ${discriminacao.principalFormatado}');
+          print('        Multa: ${discriminacao.multaFormatada}');
+          print('        Juros: ${discriminacao.jurosFormatados}');
+          print('        Destino: ${discriminacao.enteFederadoDestino}');
+        }
+      }
+    }
+
+    print('\n--- 4. Consultar Parcelas para Impressão ---');
+    final consultarParcelasResponse = await parcsnEspecialService.consultarParcelas();
+    print('Status: ${consultarParcelasResponse.status}');
+    print('Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${consultarParcelasResponse.sucesso}');
+    print('Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}');
+    print('Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}');
+
+    if (consultarParcelasResponse.temParcelas) {
+      final parcelas = consultarParcelasResponse.dadosParsed?.listaParcelas ?? [];
+      for (var parcela in parcelas) {
+        print('  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+        print('    Ano: ${parcela.ano}, Mês: ${parcela.mes}');
+        print('    Mês atual: ${parcela.isMesAtual}');
+        print('    Mês futuro: ${parcela.isMesFuturo}');
+        print('    Mês passado: ${parcela.isMesPassado}');
+      }
+    }
+
+    print('\n--- 5. Emitir DAS ---');
+    final emitirDasResponse = await parcsnEspecialService.emitirDas(202306);
+    print('Status: ${emitirDasResponse.status}');
+    print('Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${emitirDasResponse.sucesso}');
+    print('PDF gerado com sucesso: ${emitirDasResponse.pdfGeradoComSucesso}');
+    print('Tamanho do PDF: ${emitirDasResponse.tamanhoPdfFormatado}');
+
+    if (emitirDasResponse.pdfGeradoComSucesso) {
+      final pdfBytes = emitirDasResponse.pdfBytes;
+      print('PDF em bytes: ${pdfBytes?.length ?? 0} bytes');
+      print('PDF válido: ${pdfBytes != null}');
+    }
+
+    print('\n--- 6. Validações ---');
+    print('Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}');
+    print('Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}');
+    print('Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}');
+    print('Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}');
+    print('Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}');
+    print('Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}');
+    print('Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}');
+    print('Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}');
+
+    print('\n--- 7. Análise de Erros ---');
+    final avisos = parcsnEspecialService.getAvisos();
+    print('Avisos disponíveis: ${avisos.length}');
+    for (var aviso in avisos.take(3)) {
+      print('  - ${aviso.codigo}: ${aviso.descricao}');
+    }
+
+    final entradasIncorretas = parcsnEspecialService.getEntradasIncorretas();
+    print('Entradas incorretas disponíveis: ${entradasIncorretas.length}');
+    for (var entrada in entradasIncorretas.take(3)) {
+      print('  - ${entrada.codigo}: ${entrada.descricao}');
+    }
+
+    final erros = parcsnEspecialService.getErros();
+    print('Erros disponíveis: ${erros.length}');
+    for (var erro in erros.take(3)) {
+      print('  - ${erro.codigo}: ${erro.descricao}');
+    }
+
+    final sucessos = parcsnEspecialService.getSucessos();
+    print('Sucessos disponíveis: ${sucessos.length}');
+    for (var sucesso in sucessos.take(3)) {
+      print('  - ${sucesso.codigo}: ${sucesso.descricao}');
+    }
+
+    // Exemplo de análise de erro
+    final analiseErro = parcsnEspecialService.analyzeError('[Aviso-PARCSN-ESP-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
+    print('Análise de erro:');
+    print('  Código: ${analiseErro.codigo}');
+    print('  Tipo: ${analiseErro.tipo}');
+    print('  Categoria: ${analiseErro.categoria}');
+    print('  Conhecido: ${analiseErro.isConhecido}');
+    print('  Crítico: ${analiseErro.isCritico}');
+    print('  Permite retry: ${analiseErro.permiteRetry}');
+    print('  Ação recomendada: ${analiseErro.acaoRecomendada}');
+
+    print('\n=== Exemplos PARCSN-ESP Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos do PARCSN-ESP: $e');
+  }
+}
+
+Future<void> exemplosParcmei(ApiClient apiClient) async {
+  print('\n=== Exemplos PARCMEI ===');
+
+  final parcmeiService = ParcmeiService(apiClient);
+
+  try {
+    print('\n--- 1. Consultar Pedidos de Parcelamento ---');
+    final pedidosResponse = await parcmeiService.consultarPedidos();
+    print('Status: ${pedidosResponse.status}');
+    print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${pedidosResponse.sucesso}');
+    print('Mensagem principal: ${pedidosResponse.mensagemPrincipal}');
+    print('Tem parcelamentos: ${pedidosResponse.temParcelamentos}');
+    print('Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}');
+
+    if (pedidosResponse.sucesso && pedidosResponse.temParcelamentos) {
+      final parcelamentos = pedidosResponse.dadosParsed?.parcelamentos ?? [];
+      print('Parcelamentos encontrados:');
+      for (var parcelamento in parcelamentos.take(3)) {
+        print('  - Número: ${parcelamento.numero}');
+        print('    Situação: ${parcelamento.situacao}');
+        print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+        print('    Ativo: ${parcelamento.isAtivo}');
+        print('    Encerrado: ${parcelamento.isEncerrado}');
+        print('');
+      }
+
+      print('Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}');
+      print('Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}');
+    }
+
+    print('\n--- 2. Consultar Parcelamento Específico ---');
+    final parcelamentoResponse = await parcmeiService.consultarParcelamento(1);
+    print('Status: ${parcelamentoResponse.status}');
+    print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${parcelamentoResponse.sucesso}');
+    print('Mensagem principal: ${parcelamentoResponse.mensagemPrincipal}');
+
+    if (parcelamentoResponse.sucesso) {
+      final parcelamento = parcelamentoResponse.dadosParsed;
+      if (parcelamento != null) {
+        print('Parcelamento detalhado:');
+        print('  Número: ${parcelamento.numero}');
+        print('  Situação: ${parcelamento.situacao}');
+        print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+        print('  Ativo: ${parcelamento.isAtivo}');
+        print('  Tem alterações de dívida: ${parcelamento.temAlteracoesDivida}');
+        print('  Tem pagamentos: ${parcelamento.temPagamentos}');
+
+        if (parcelamento.consolidacaoOriginal != null) {
+          final consolidacao = parcelamento.consolidacaoOriginal!;
+          print('  Consolidação original:');
+          print('    Valor total: ${parcelamentoResponse.valorTotalConsolidadoFormatado}');
+          print('    Quantidade de parcelas: ${parcelamentoResponse.quantidadeParcelas}');
+          print('    Parcela básica: ${parcelamentoResponse.parcelaBasicaFormatada}');
+          print('    Data de consolidação: ${consolidacao.dataConsolidacaoFormatada}');
+          print('    Detalhes de consolidação: ${consolidacao.detalhesConsolidacao.length}');
+        }
+
+        print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+        print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+        print('  Quantidade de pagamentos: ${parcelamentoResponse.quantidadePagamentos}');
+        print('  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}');
+      }
+    }
+
+    print('\n--- 3. Consultar Parcelas Disponíveis ---');
+    final parcelasResponse = await parcmeiService.consultarParcelas();
+    print('Status: ${parcelasResponse.status}');
+    print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${parcelasResponse.sucesso}');
+    print('Mensagem principal: ${parcelasResponse.mensagemPrincipal}');
+    print('Tem parcelas: ${parcelasResponse.temParcelas}');
+    print('Quantidade de parcelas: ${parcelasResponse.quantidadeParcelas}');
+
+    if (parcelasResponse.sucesso && parcelasResponse.temParcelas) {
+      final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
+      print('Parcelas disponíveis:');
+      for (var parcela in parcelas.take(5)) {
+        print('  - Parcela: ${parcela.parcelaFormatada}');
+        print('    Valor: ${parcela.valorFormatado}');
+        print('    Ano: ${parcela.ano}');
+        print('    Mês: ${parcela.nomeMes}');
+        print('    Descrição: ${parcela.descricaoCompleta}');
+        print('    Ano atual: ${parcela.isAnoAtual}');
+        print('');
+      }
+
+      print('Valor total das parcelas: ${parcelasResponse.valorTotalParcelasFormatado}');
+      print('Todas parcelas mesmo valor: ${parcelasResponse.todasParcelasMesmoValor}');
+
+      final menorValor = parcelasResponse.parcelaMenorValor;
+      final maiorValor = parcelasResponse.parcelaMaiorValor;
+      if (menorValor != null) {
+        print('Menor valor: ${menorValor.valorFormatado} (${menorValor.parcelaFormatada})');
+      }
+      if (maiorValor != null) {
+        print('Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})');
+      }
+    }
+
+    print('\n--- 4. Consultar Detalhes de Pagamento ---');
+    final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(1, 202107);
+    print('Status: ${detalhesResponse.status}');
+    print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${detalhesResponse.sucesso}');
+    print('Mensagem principal: ${detalhesResponse.mensagemPrincipal}');
+
+    if (detalhesResponse.sucesso) {
+      final detalhes = detalhesResponse.dadosParsed;
+      if (detalhes != null) {
+        print('Detalhes de pagamento:');
+        print('  Número do DAS: ${detalhes.numeroDas}');
+        print('  Data de vencimento: ${detalhesResponse.dataVencimentoFormatada}');
+        print('  Período DAS gerado: ${detalhesResponse.paDasGeradoFormatado}');
+        print('  Gerado em: ${detalhes.geradoEmFormatado}');
+        print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
+        print('  Número da parcela: ${detalhes.numeroParcela}');
+        print('  Data limite acolhimento: ${detalhesResponse.dataLimiteAcolhimentoFormatada}');
+        print('  Data de pagamento: ${detalhesResponse.dataPagamentoFormatada}');
+        print('  Banco/Agência: ${detalhes.bancoAgencia}');
+        print('  Valor pago: ${detalhesResponse.valorPagoArrecadacaoFormatado}');
+        print('  Pagamento realizado: ${detalhesResponse.pagamentoRealizado}');
+        print('  Pagamento em atraso: ${detalhesResponse.pagamentoEmAtraso}');
+        print('  Quantidade de débitos: ${detalhesResponse.quantidadeDebitos}');
+
+        print('  Débitos pagos:');
+        for (var debito in detalhes.pagamentoDebitos.take(3)) {
+          print('    Período: ${debito.paDebitoFormatado}');
+          print('    Processo: ${debito.processo}');
+          print('    Valor total: ${debito.valorTotalDebitoFormatado}');
+          print('    Discriminações:');
+          for (var disc in debito.discriminacoesDebito) {
+            print('      - Tributo: ${disc.tributo}');
+            print('        Principal: ${disc.principalFormatado}');
+            print('        Multa: ${disc.multaFormatada}');
+            print('        Juros: ${disc.jurosFormatados}');
+            print('        Total: ${disc.totalFormatado}');
+            print('        Ente federado: ${disc.enteFederadoDestino}');
+            print('        Tem multa: ${disc.temMulta}');
+            print('        Tem juros: ${disc.temJuros}');
+            print('        % Multa: ${disc.percentualMulta.toStringAsFixed(2)}%');
+            print('        % Juros: ${disc.percentualJuros.toStringAsFixed(2)}%');
+          }
+          print('');
+        }
+
+        print('Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}');
+      }
+    }
+
+    print('\n--- 5. Emitir DAS ---');
+    final emitirResponse = await parcmeiService.emitirDas(202107);
+    print('Status: ${emitirResponse.status}');
+    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Sucesso: ${emitirResponse.sucesso}');
+    print('Mensagem principal: ${emitirResponse.mensagemPrincipal}');
+    print('PDF gerado com sucesso: ${emitirResponse.pdfGeradoComSucesso}');
+
+    if (emitirResponse.sucesso && emitirResponse.pdfGeradoComSucesso) {
+      final dados = emitirResponse.dadosParsed;
+      if (dados != null) {
+        print('Dados do DAS:');
+        print('  Tem PDF: ${dados.temPdf}');
+        print('  Tamanho Base64: ${dados.tamanhoBase64} caracteres');
+        print('  Tamanho estimado PDF: ${dados.tamanhoEstimadoPdf} bytes');
+        print('  Base64 válido: ${dados.base64Valido}');
+        print('  Parece PDF válido: ${dados.parecePdfValido}');
+        print('  Preview Base64: ${dados.base64Preview}');
+      }
+
+      final pdfBytes = emitirResponse.pdfBytes;
+      print('PDF bytes: ${pdfBytes != null ? 'Disponível' : 'Não disponível'}');
+      print('Tamanho PDF: ${emitirResponse.tamanhoPdfFormatado}');
+      print('PDF válido: ${emitirResponse.pdfValido}');
+      print('Hash do PDF: ${emitirResponse.pdfHash}');
+
+      final pdfInfo = emitirResponse.pdfInfo;
+      if (pdfInfo != null) {
+        print('Informações do PDF:');
+        pdfInfo.forEach((key, value) {
+          print('  $key: $value');
+        });
+      }
+    }
+
+    print('\n--- 6. Validações ---');
+    print('Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}');
+    print('Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}');
+    print('Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}');
+    print('Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}');
+    print('Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}');
+    print('Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}');
+    print('Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}');
+    print('Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}');
+    print('Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}');
+    print('Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}');
+    print('Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}');
+    print('Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}');
+    print('Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}');
+    print('Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}');
+    print('Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}');
+    print('Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}');
+
+    print('\n--- 7. Análise de Erros ---');
+    final avisos = parcmeiService.getAvisos();
+    print('Avisos disponíveis: ${avisos.length}');
+    for (var aviso in avisos.take(3)) {
+      print('  - ${aviso.codigo}: ${aviso.descricao}');
+    }
+
+    final entradasIncorretas = parcmeiService.getEntradasIncorretas();
+    print('Entradas incorretas disponíveis: ${entradasIncorretas.length}');
+    for (var entrada in entradasIncorretas.take(3)) {
+      print('  - ${entrada.codigo}: ${entrada.descricao}');
+    }
+
+    final erros = parcmeiService.getErros();
+    print('Erros disponíveis: ${erros.length}');
+    for (var erro in erros.take(3)) {
+      print('  - ${erro.codigo}: ${erro.descricao}');
+    }
+
+    final sucessos = parcmeiService.getSucessos();
+    print('Sucessos disponíveis: ${sucessos.length}');
+    for (var sucesso in sucessos.take(3)) {
+      print('  - ${sucesso.codigo}: ${sucesso.descricao}');
+    }
+
+    // Exemplo de análise de erro
+    final analiseErro = parcmeiService.analyzeError('[Sucesso-PARCMEI]', 'Requisição efetuada com sucesso.');
+    print('Análise de erro:');
+    print('  Código: ${analiseErro.codigo}');
+    print('  Mensagem: ${analiseErro.mensagem}');
+    print('  Categoria: ${analiseErro.categoria}');
+    print('  Conhecido: ${analiseErro.isKnownError}');
+    print('  Sucesso: ${analiseErro.isSucesso}');
+    print('  Erro: ${analiseErro.isErro}');
+    print('  Aviso: ${analiseErro.isAviso}');
+    print('  Solução: ${analiseErro.solucao ?? 'N/A'}');
+
+    print('\n=== Exemplos PARCMEI Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos do PARCMEI: $e');
   }
 }

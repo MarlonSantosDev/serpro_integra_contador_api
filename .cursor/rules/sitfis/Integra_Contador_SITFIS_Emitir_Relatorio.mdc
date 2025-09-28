@@ -1,0 +1,48 @@
+---
+alwaysApply: true
+---
+
+# Emitir relatório de situação fiscal - Integra Contador
+
+# Emitir Relatório de Situação Fiscal
+
+Essa funcionalidade permite emitir o relatório de situação fiscal.
+
+Identificação no Pedido de Dados
+
+idSistema: SITFIS  
+idServico: RELATORIOSITFIS92  
+versaoSistema: "2.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| protocoloRelatorio | Protocolo retornado no serviço [apoiar](), que deve ser utilizado para recuperar o relatório de situação fiscal. | Texto | SIM |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{       "contratante": {         "numero": "00000000000000",         "tipo": 2       },       "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2       },       "contribuinte": {         "numero": "99999999999",         "tipo": 1       },                "pedidoDados": {         "idSistema": "SITFIS",         "idServico": "RELATORIOSITFIS92",         "versaoSistema": "2.0",         "dados": "{ \"protocoloRelatorio\": \"+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj==\" }"       }     }`
+
+**_Dados de Saída_**
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Número(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | Lista de Texto |
+| dados | Estrutura de dados de retorno. | Texto (SCAPED Texto JSON) |
+
+No atributo dados, será retornado com os seguintes campos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Documento PDF do relatório de situação fiscal. Este campo é retornado quando o status é 200. | Texto (base64) |
+| tempoEspera | Tempo de espera estimado para acionar o serviço para obter o relatório. Este campo é retornado quando o status é 202. | Inteiro |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [retorno emitir relatório]()

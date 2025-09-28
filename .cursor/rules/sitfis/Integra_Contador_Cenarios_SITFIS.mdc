@@ -1,0 +1,47 @@
+---
+alwaysApply: true
+---
+
+# SITFIS - Integra Contador
+
+# Cenários SITFIS
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
+
+Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
+
+## Solicitar protocolo do relatório de situação fiscal
+
+Este exemplo simula um pedido de protocolo do Relatório de Situação Fiscal.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "99999999999",       "tipo": 1    },    "pedidoDados": {      "idSistema": "SITFIS",      "idServico": "SOLICITARPROTOCOLO91",      "versaoSistema": "1.0",      "dados": ""    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Apoiar\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },    "contribuinte": {      "numero": "99999999999",       "tipo": 1    },    "pedidoDados": {      "idSistema": "SITFIS",      "idServico": "SOLICITARPROTOCOLO91",      "versaoSistema": "1.0",      "dados": ""    }   }\'`
+
+## Emitir Relatório de Situação Fiscal
+
+De posse de um protocolo é simulado a emissão de um Relatório de Situação Fiscal.
+
+| header | valor |
+| --- | --- |
+| jwt\_token | vazio (não precisa preencher) |
+| autenticar\_procurador\_token | vazio (não precisa preencher) |
+
+Body:
+
+`{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },   "contribuinte": {     "numero": "99999999999",     "tipo": 1    },   "pedidoDados": {     "idSistema": "SITFIS",     "idServico": "RELATORIOSITFIS92",     "versaoSistema": "1.0",     "dados": "{ \"protocoloRelatorio\": \"+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj==\" }"    } }`
+
+Curl:
+
+`curl -X \'POST\' \   \'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir\' \   -H \'accept: text/plain\' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H \'Content-Type: application/json\' \   -d \'{   "contratante": {     "numero": "00000000000000",     "tipo": 2   },   "autorPedidoDados": {     "numero": "00000000000000",     "tipo": 2    },   "contribuinte": {     "numero": "99999999999",     "tipo": 1    },   "pedidoDados": {     "idSistema": "SITFIS",     "idServico": "RELATORIOSITFIS92",     "versaoSistema": "1.0",     "dados": "{ \"protocoloRelatorio\": \"+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj==\" }"       }   }\'`

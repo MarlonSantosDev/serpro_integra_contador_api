@@ -1,0 +1,241 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API Integra Contador - PARCSN
+
+## Visão Geral
+
+A API Integra Contador, através da solução Integra Parcelamento, permite a interação com o sistema de Parcelamentos do Simples Nacional (PARCSN). Esta documentação detalha os serviços disponíveis, os dados de entrada e saída, e exemplos de requisições e respostas.
+
+### O que é o Integra Parcelamento?
+
+É uma solução integrada ao sistema de Parcelamentos do Simples Nacional e MEI. Os sistemas de parcelamento permitem a realização de parcelamento ou reparcelamento de débitos apurados pelo Simples Nacional que estejam vencidos e em cobrança na Receita Federal do Brasil.
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Parcelamento, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PARCSN, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+## Cenários de Demonstração (Trial)
+
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas na seção de Referência da API. Na chamada da API Trial o parâmetro do tipo header `jwt_token` não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório.
+
+## Serviços Disponíveis
+
+### 1. Consultar Pedidos de Parcelamento
+
+Consulta todos os pedidos de parcelamento na modalidade PARCSN ORDINÁRIO para um contribuinte.
+
+**Detalhes da Requisição:**
+
+*   `idSistema`: `PARCSN`
+*   `idServico`: `PEDIDOSPARC163`
+*   `versaoSistema`: `1.0`
+
+**Exemplo de Corpo da Requisição:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PARCSN",
+    "idServico": "PEDIDOSPARC163",
+    "versaoSistema": "1.0",
+    "dados": ""
+  }
+}
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "status": "200",
+  "mensagens": [
+    {
+      "codigo": "[Sucesso-PARCSN]",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ],
+  "dados": "{\"parcelamentos\":[{\"numero\":1,\"dataDoPedido\":20160211,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20170125},{\"numero\":2,\"dataDoPedido\":20170126,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20180108},{\"numero\":3,\"dataDoPedido\":20180109,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20180625},{\"numero\":4,\"dataDoPedido\":20190102,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20220511},{\"numero\":5,\"dataDoPedido\":20220929,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20230117},{\"numero\":6,\"dataDoPedido\":20230131,\"situacao\":\"Encerrado a Pedido do Contribuinte\",\"dataDaSituacao\":20230209}]}"
+}
+```
+
+### 2. Consultar Parcelamento
+
+Consulta um determinado parcelamento na modalidade PARCSN ORDINÁRIO.
+
+**Detalhes da Requisição:**
+
+*   `idSistema`: `PARCSN`
+*   `idServico`: `OBTERPARC164`
+*   `versaoSistema`: `1.0`
+
+**Exemplo de Corpo da Requisição:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PARCSN",
+    "idServico": "OBTERPARC164",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroParcelamento\": 1}"
+  }
+}
+```
+
+### 3. Consultar Detalhes de Pagamento de Parcela
+
+Consulta detalhes de pagamento na modalidade PARCSN ORDINÁRIO.
+
+**Detalhes da Requisição:**
+
+*   `idSistema`: `PARCSN`
+*   `idServico`: `DETPAGTOPARC165`
+*   `versaoSistema`: `1.0`
+
+**Exemplo de Corpo da Requisição:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PARCSN",
+    "idServico": "DETPAGTOPARC165",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroParcelamento\": 1, \"anoMesParcela\": 201612 }"
+  }
+}
+```
+
+### 4. Consultar Parcelas Disponíveis para Impressão
+
+Consulta as parcelas disponíveis para impressão de DAS na modalidade PARCSN ORDINÁRIO.
+
+**Detalhes da Requisição:**
+
+*   `idSistema`: `PARCSN`
+*   `idServico`: `PARCELASPARAGERAR162`
+*   `versaoSistema`: `1.0`
+
+**Exemplo de Corpo da Requisição:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PARCSN",
+    "idServico": "PARCELASPARAGERAR162",
+    "versaoSistema": "1.0",
+    "dados": ""
+  }
+}
+```
+
+### 5. Emitir Documento de Arrecadação (DAS)
+
+Emite o Documento de Arrecadação do Simples Nacional (DAS) na modalidade PARCSN ORDINÁRIO.
+
+**Detalhes da Requisição:**
+
+*   `idSistema`: `PARCSN`
+*   `idServico`: `GERARDAS161`
+*   `versaoSistema`: `1.0`
+
+**Exemplo de Corpo da Requisição:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PARCSN",
+    "idServico": "GERARDAS161",
+    "versaoSistema": "1.0",
+    "dados": "{ \"parcelaParaEmitir\": 202306 }"
+  }
+}
+```
+
+## Referências
+
+*   [Cenários de Demonstração PARCSN](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_parcsn/)
+*   [Introdução ao Integra Parcelamento PARCSN](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/)
+*   [Serviço: Consultar Pedidos de Parcelamento](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/consulta_pedidos/)
+*   [Serviço: Consultar Parcelamento](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/consulta_parcelamento/)
+*   [Serviço: Consultar Detalhes de Pagamento de Parcela](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/consulta_detalhe_pagamento/)
+*   [Serviço: Consultar Parcelas Disponíveis para Impressão](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/consulta_parcelas_impressao/)
+*   [Serviço: Emitir Documento de Arrecadação](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/emite_das/)
+*   [Exemplo de Retorno: Consultar Pedidos de Parcelamento](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/exemplos/retorno_consulta_pedidos/)
+*   [Exemplo de Retorno: Consultar Parcelamento](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/exemplos/retorno_consulta_parcelamento/)
+*   [Exemplo de Retorno: Consultar Detalhes de Pagamento de Parcela](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/exemplos/retorno_consulta_detalhe_pagamento/)
+*   [Exemplo de Retorno: Consultar Parcelas Disponíveis para Impressão](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/exemplos/retorno_consulta_parcelas_impressao/)
+*   [Exemplo de Retorno: Emitir Documento de Arrecadação](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-parcelamento/parcsn/servicos/exemplos/retorno_emite_das/)

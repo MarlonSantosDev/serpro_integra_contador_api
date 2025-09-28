@@ -1,0 +1,259 @@
+---
+alwaysApply: true
+---
+
+# Glossário - Integra Contador
+
+Integra Contador
+
+*   [Introdução]()
+*   [Como contratar]()
+*   Guias rápidos
+    
+    Guias rápidos
+    
+    *   [Como autenticar na API]()
+    *   [Como usar a demonstração da API]()
+    *   Cenários de demonstração
+        
+        Cenários de demonstração
+        
+        *   [AUTENTICAPROCURADOR]()
+        *   [CAIXAPOSTAL]()
+        *   [CCMEI]()
+        *   [DCTFWEB]()
+        *   [DEFIS]()
+        *   [DTE]()
+        *   [EVENTOSATUALIZACAO]()
+        *   [MIT]()
+        *   [PAGTOWEB]()
+        *   [PARCMEI-ESP]()
+        *   [PARCMEI]()
+        *   [PARCSN-ESP]()
+        *   [PARCSN]()
+        *   [PERTMEI]()
+        *   [PERTSN]()
+        *   [PGDASD]()
+        *   [PGMEI]()
+        *   [PROCURACOES]()
+        *   [REGIMEAPURACAO]()
+        *   [RELPMEI]()
+        *   [RELPSN]()
+        *   [SICALC]()
+        *   [SITFIS]()
+        
+    *   Modelos de autenticação
+        
+        Modelos de autenticação
+        
+        *   [Dotnet]()
+        *   [Python]()
+        
+    
+*   [Demonstração]()
+*   [Api Reference]()
+*   Documentação
+    
+    Documentação
+    
+    *   [Integra Contador]()
+    *   [Catálogo de Serviços]()
+    *   [Serviços x Procurações]()
+    *   [Códigos de retorno]()
+    *   [Mensagens do Gerenciador]()
+    *   [Identificador opcional de Requisições]()
+    *   Soluções
+        
+        Soluções
+        
+        *   [Visão geral]()
+        *   Integra-SN
+            
+            Integra-SN
+            
+            *   [Contexto]()
+            *   DEFIS
+                
+                DEFIS
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   Transmitir declaração
+                        
+                        Transmitir declaração
+                        
+                        *   [Entrada]()
+                        *   [Saida]()
+                        
+                    *   [Consultar declarações]()
+                    *   [Consultar última declaração e recibo]()
+                    *   [Consultar declaração e recibo]()
+                    
+                *   Exemplos
+                    
+                    Exemplos
+                    
+                    *   [Retorno Transmitir declaração]()
+                    *   [Retorno Consultar declarações]()
+                    *   [Retorno Consultar última declaração e recibo]()
+                    *   [Retorno Consultar declaração e recibo]()
+                    
+                *   [Regra da Informação Opcional]()
+                *   [Mensagens]()
+                *   [Dados de domínio]()
+                *   [Changelog]()
+                
+            *   PGDAS-D
+                
+                PGDAS-D
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   Entregar declaração mensal
+                        
+                        Entregar declaração mensal
+                        
+                        *   [Entrada]()
+                        *   [Saída]()
+                        
+                    *   [Gerar DAS]()
+                    *   [Consultar declaração por ano]()
+                    *   [Consultar última declaração recibo]()
+                    *   [Consultar declaração recibo]()
+                    *   [Consultar extrato do DAS]()
+                    *   [Gerar DAS cobrança]()
+                    *   [Gerar DAS de processo]()
+                    *   [Gerar DAS avulso]()
+                    
+                *   Exemplos
+                    
+                    Exemplos
+                    
+                    *   [Retorno Entregar declaração mensal]()
+                    *   [Retorno Gerar DAS]()
+                    *   [Retorno Consultar declaração por ano]()
+                    *   [Retorno Consultar última declaração recibo]()
+                    *   [Retorno Consultar declaração recibo]()
+                    *   [Retorno Consultar extrato do DAS]()
+                    *   [Retorno Gerar DAS Cobrança]()
+                    *   [Retorno Gerar DAS de Processo]()
+                    *   [Retorno Gerar DAS Avulso]()
+                    
+                *   [Mensagens]()
+                *   [Dados de domínio]()
+                *   [Glossário]()
+                *   [Changelog]()
+                
+            *   REGIMEAPURACAO
+                
+                REGIMEAPURACAO
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   [Efetuar opção regime]()
+                    *   [Consultar opção regime]()
+                    *   [Consultar anos-calendários]()
+                    *   [Consultar resolução]()
+                    
+                *   Exemplos
+                    
+                    Exemplos
+                    
+                    *   [Retorno Efetuar opção regime]()
+                    *   [Retorno Consultar opção regime]()
+                    *   [Retorno Consultar anos-calendários]()
+                    *   [Retorno Consultar resolução]()
+                    
+                *   [Mensagens]()
+                *   [Dados de domínio]()
+                *   [Glossário]()
+                *   [Changelog]()
+                
+            
+        *   Integra-MEI
+            
+            Integra-MEI
+            
+            *   [Contexto]()
+            *   PGMEI
+                
+                PGMEI
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   [Gerar DAS]()
+                    *   [Gerar DAS código de barras]()
+                    *   [Atualizar benefício]()
+                    *   [Consultar dívida ativa]()
+                    
+                *   Exemplos
+                    
+                    Exemplos
+                    
+                    *   [Retorno Gerar DAS]()
+                    *   [Retorno Gerar DAS código de barras]()
+                    *   [Retorno Atualizar benefício]()
+                    *   [Retorno Consultar dívida ativa]()
+                    
+                *   [Mensagens]()
+                *   [Dados de domínio]()
+                *   [Glossário]()
+                *   [Changelog]()
+                
+            *   CCMEI
+                
+                CCMEI
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   [Emitir CCMEI]()
+                    *   [Consultar dados CCMEI]()
+                    *   [Consultar situação cadastral CCMEI]()
+                    
+                *   Exemplos
+                    
+                    Exemplos
+                    
+                    *   [Retorno Emitir CCMEI]()
+                    *   [Retorno Consultar dados CCMEI]()
+                    *   [Retorno Consultar situação cadastral CCMEI]()
+                    
+                *   [Mensagens]()
+                *   [Glossário]()
+                *   [Changelog]()
+                
+            
+        *   Integra-DCTFWeb
+            
+            Integra-DCTFWeb
+            
+            *   [Contexto]()
+            *   DCTFWEB
+                
+                DCTFWEB
+                
+                *   [Introdução]()
+                *   Serviços
+                    
+                    Serviços
+                    
+                    *   [Gerar Documento de Arrecadação]()
+                    *   [Consultar Recibo Transmissão]()
+                    *   [Consultar Relatório Declaração Completa]()
+                    *   [Consultar o XML da Declaração]()
+                    *   [Transmitir Declar...20017 bytes truncated...

@@ -56,7 +56,6 @@ class AssinaturaDigitalModel {
         return false;
       }
 
-      // TODO: Implementar validação real do certificado ICP-Brasil
       // Aqui seria feita a validação da cadeia de certificação
       // e verificação se é um certificado válido ICP-Brasil
 
@@ -69,7 +68,6 @@ class AssinaturaDigitalModel {
   /// Assina o XML conforme padrão XMLDSig
   Future<String> assinarXml(String xml) async {
     try {
-      // TODO: Implementar assinatura digital real
       // Esta é uma implementação simulada para demonstração
 
       // Em produção, aqui seria feita a assinatura real usando:

@@ -8,7 +8,6 @@ class AssinaturaDigitalUtils {
   /// Valida certificado digital ICP-Brasil
   static Future<bool> validarCertificadoICPBrasil({required String certificadoPath, required String senha}) async {
     try {
-      // TODO: Implementar validação real do certificado ICP-Brasil
       // Esta é uma implementação simulada para demonstração
 
       final file = File(certificadoPath);
@@ -40,7 +39,6 @@ class AssinaturaDigitalUtils {
   /// Extrai informações do certificado
   static Future<Map<String, dynamic>> extrairInfoCertificado({required String certificadoPath, required String senha}) async {
     try {
-      // TODO: Implementar extração real de informações do certificado
       // Esta é uma implementação simulada
 
       final file = File(certificadoPath);
@@ -69,7 +67,6 @@ class AssinaturaDigitalUtils {
     ConfiguracaoAssinatura? configuracao,
   }) async {
     try {
-      // TODO: Implementar assinatura digital real
       // Esta é uma implementação simulada para demonstração
 
       final config =
@@ -95,7 +92,6 @@ class AssinaturaDigitalUtils {
   /// Verifica assinatura digital
   static Future<bool> verificarAssinatura({required String xmlAssinado, required String certificadoPath}) async {
     try {
-      // TODO: Implementar verificação real de assinatura
       // Esta é uma implementação simulada
 
       if (!xmlAssinado.contains('<Signature')) {
@@ -279,7 +275,6 @@ class AssinaturaDigitalUtils {
 
   /// Gera hash SHA-256 de uma string
   static String gerarHashSha256(String input) {
-    // TODO: Implementar hash SHA-256 real
     // Esta é uma implementação simulada
     final bytes = utf8.encode(input);
     final hash = bytes.fold(0, (prev, element) => prev + element);

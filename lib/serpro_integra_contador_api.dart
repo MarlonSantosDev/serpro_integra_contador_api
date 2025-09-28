@@ -53,14 +53,39 @@ export 'src/models/caixa_postal/indicador_mensagens_response.dart';
 // DTE Models
 export 'src/models/dte/dte_response.dart' hide MensagemNegocio;
 
-// PagamentoWEB Models
-export 'src/models/pagamentoweb/pagamentoweb_response.dart';
+// SITFIS Models
+export 'src/models/sitfis/solicitar_protocolo_request.dart';
+export 'src/models/sitfis/solicitar_protocolo_response.dart';
+export 'src/models/sitfis/emitir_relatorio_request.dart';
+export 'src/models/sitfis/emitir_relatorio_response.dart';
+export 'src/models/sitfis/sitfis_mensagens.dart';
+export 'src/models/sitfis/sitfis_cache.dart';
 
 // PARCSN Models
 export 'src/models/parcsn/parcsn_response.dart';
+export 'src/models/parcsn/mensagem.dart' hide Mensagem;
+export 'src/models/parcsn/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcsn/consultar_parcelamento_response.dart'
+    hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
+export 'src/models/parcsn/consultar_detalhes_pagamento_response.dart'
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcsn/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/models/parcsn/parcsn_validations.dart';
+export 'src/models/parcsn/parcsn_errors.dart' hide PertsnErrors, PertsnErrorInfo, PertsnErrorAnalysis;
 
 // PARCSN ESPECIAL Models
 export 'src/models/parcsn_especial/parcsn_especial_response.dart';
+export 'src/models/parcsn_especial/mensagem.dart' hide Mensagem;
+export 'src/models/parcsn_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcsn_especial/consultar_parcelamento_response.dart'
+    hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
+export 'src/models/parcsn_especial/consultar_detalhes_pagamento_response.dart'
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcsn_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcsn_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/models/parcsn_especial/parcsn_especial_validations.dart';
+export 'src/models/parcsn_especial/parcsn_especial_errors.dart' hide ParcsnEspecialErrors, ParcsnEspecialErrorInfo, ParcsnEspecialErrorAnalysis;
 
 // PERTSN Models
 export 'src/models/pertsn/pertsn_response.dart';
@@ -79,7 +104,7 @@ export 'src/models/pertsn/consultar_parcelas_response.dart' hide ConsultarParcel
 export 'src/models/pertsn/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
 export 'src/models/pertsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/pertsn/pertsn_validations.dart';
+export 'src/models/pertsn/pertsn_validations.dart' hide PertsnValidations;
 export 'src/models/pertsn/pertsn_errors.dart';
 
 // RELPSN Models
@@ -94,9 +119,43 @@ export 'src/models/relpsn/relpsn_errors.dart';
 
 // PARCMEI Models
 export 'src/models/parcmei/parcmei_response.dart';
+export 'src/models/parcmei/mensagem.dart' hide Mensagem;
+export 'src/models/parcmei/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcmei/consultar_parcelamento_response.dart'
+    hide
+        ConsultarParcelamentoResponse,
+        ParcelamentoDetalhado,
+        ConsolidacaoOriginal,
+        DetalhesConsolidacao,
+        AlteracaoDivida,
+        DetalhesAlteracaoDivida,
+        DemonstrativoPagamento;
+export 'src/models/parcmei/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcmei/consultar_detalhes_pagamento_response.dart'
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcmei/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/models/parcmei/parcmei_validations.dart';
+export 'src/models/parcmei/parcmei_errors.dart';
 
 // PARCMEI ESPECIAL Models
 export 'src/models/parcmei_especial/parcmei_especial_response.dart';
+export 'src/models/parcmei_especial/mensagem.dart' hide Mensagem;
+export 'src/models/parcmei_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/models/parcmei_especial/consultar_parcelamento_response.dart'
+    hide
+        ConsultarParcelamentoResponse,
+        ParcelamentoDetalhado,
+        ConsolidacaoOriginal,
+        DetalhesConsolidacao,
+        AlteracaoDivida,
+        DetalhesAlteracaoDivida,
+        DemonstrativoPagamento;
+export 'src/models/parcmei_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/models/parcmei_especial/consultar_detalhes_pagamento_response.dart'
+    hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
+export 'src/models/parcmei_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/models/parcmei_especial/parcmei_especial_validations.dart';
+export 'src/models/parcmei_especial/parcmei_especial_errors.dart';
 
 // PERTMEI Models
 export 'src/models/pertmei/pertmei_response.dart'
@@ -135,9 +194,6 @@ export 'src/models/sicalc/gerar_codigo_barras_response.dart';
 export 'src/models/pagtoweb/pagtoweb_request.dart';
 export 'src/models/pagtoweb/pagtoweb_response.dart' hide MensagemNegocio;
 
-// SITFIS Models
-export 'src/models/sitfis/sitfis_response.dart';
-
 // DEFIS Models
 export 'src/models/defis/transmitir_declaracao_request.dart';
 export 'src/models/defis/transmitir_declaracao_response.dart';
@@ -148,6 +204,18 @@ export 'src/models/mit/mit_enums.dart' hide TipoDocumento;
 export 'src/models/mit/mit_request.dart';
 export 'src/models/mit/mit_response.dart';
 
+// Eventos Atualização Models
+export 'src/models/eventos_atualizacao/eventos_atualizacao_common.dart';
+export 'src/models/eventos_atualizacao/mensagem_eventos_atualizacao.dart';
+export 'src/models/eventos_atualizacao/solicitar_eventos_pf_request.dart';
+export 'src/models/eventos_atualizacao/solicitar_eventos_pf_response.dart';
+export 'src/models/eventos_atualizacao/obter_eventos_pf_request.dart';
+export 'src/models/eventos_atualizacao/obter_eventos_pf_response.dart';
+export 'src/models/eventos_atualizacao/solicitar_eventos_pj_request.dart';
+export 'src/models/eventos_atualizacao/solicitar_eventos_pj_response.dart';
+export 'src/models/eventos_atualizacao/obter_eventos_pj_request.dart';
+export 'src/models/eventos_atualizacao/obter_eventos_pj_response.dart';
+
 // Services
 export 'src/services/ccmei_service.dart';
 export 'src/services/pgdasd_service.dart';
@@ -156,7 +224,6 @@ export 'src/services/dctfweb_service.dart';
 export 'src/services/procuracoes_service.dart';
 export 'src/services/caixa_postal_service.dart';
 export 'src/services/dte_service.dart';
-export 'src/services/pagamentoweb_service.dart';
 export 'src/services/parcsn_service.dart';
 export 'src/services/parcsn_especial_service.dart';
 export 'src/services/pertsn_service.dart';
@@ -170,3 +237,4 @@ export 'src/services/pagtoweb_service.dart';
 export 'src/services/sitfis_service.dart';
 export 'src/services/defis_service.dart';
 export 'src/services/mit_service.dart';
+export 'src/services/eventos_atualizacao_service.dart';

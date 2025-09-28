@@ -1,0 +1,1198 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API Integra Contador - Eventos de Última Atualização
+
+## Introdução
+
+O serviço **Eventos de Última Atualização** da API Integra Contador do SERPRO é uma solução de monitoramento para clientes que adquiriram acesso através da loja SERPRO. Ele é projetado para trabalhar com eventos, onde sistemas de negócio atuam como produtores e comunicam atualizações ao Integra Contador. A principal função é sinalizar a ocorrência de atualizações relacionadas a tópicos específicos, permitindo que o cliente saiba a última data de atualização de um evento para um determinado contribuinte. Esses eventos ficam disponíveis por um prazo máximo de 60 dias.
+
+## Cenários de Uso (Trial)
+
+A API Trial é destinada apenas para demonstração. Em um contexto de produção real, o parâmetro `jwt_token` no header é obrigatório para autenticação. Na versão Trial, este parâmetro não é necessário.
+
+### Solicitar Eventos de Pessoa Física (PF)
+
+Simulação de solicitação de eventos para monitorar um lote de contribuintes (PF) para o evento `E0301` (DCTFWeb).
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000,11111111111,22222222222,33333333333",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "SOLICEVENTOSPF131",
+        "versaoSistema": "1.0",
+        "dados": "{\"evento\": \"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000,11111111111,22222222222,33333333333",
+            "tipo": 3
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "SOLICEVENTOSPF131",
+            "versaoSistema": "1.0",
+            "dados": "{\"evento\": \"E0301\"}"
+        }
+    }'
+```
+
+### Obter Eventos de Pessoa Física (PF)
+
+Simulação para obter as datas da última atualização de cada contribuinte PF, utilizando um protocolo.
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPF133",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "",
+            "tipo": 3
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "OBTEREVENTOSPF133",
+            "versaoSistema": "1.0",
+            "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+        }
+    }'
+```
+
+### Solicitar Eventos de Pessoa Jurídica (PJ)
+
+Simulação de solicitação de eventos para monitorar um lote de contribuintes (PJ) para o evento `E0301` (DCTFWeb).
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000,11111111111111,22222222222222,33333333333333",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "SOLICEVENTOSPJ132",
+        "versaoSistema": "1.0",
+        "dados": "{\"evento\": \"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000000,11111111111111,22222222222222,33333333333333",
+            "tipo": 4
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "SOLICEVENTOSPJ132",
+            "versaoSistema": "1.0",
+            "dados": "{\"evento\": \"E0301\"}"
+        }
+    }'
+```
+
+### Obter Eventos de Pessoa Jurídica (PJ)
+
+Simulação para obter as datas da última atualização de cada contribuinte PJ, utilizando um protocolo.
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPJ134",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "",
+            "tipo": 4
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "OBTEREVENTOSPJ134",
+            "versaoSistema": "1.0",
+            "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+        }
+    }'
+```
+
+## Como Funciona o Uso via Integra Contador
+
+Para utilizar os serviços de consulta `EVENTOSATUALIZACAO`, é necessário usar a API Integra Contador. A estrutura básica de entrada para as requisições POST deve conter os dados do `Contratante`, `Autor do pedido de dados`, `Contribuinte` e `Pedido de dados`, fornecidos em formato JSON no corpo da requisição.
+
+A consulta é assíncrona e em lote, com serviços separados para solicitar e obter eventos, tanto para Pessoa Física (PF) quanto para Pessoa Jurídica (PJ).
+
+> Este serviço garante a exibição das datas de atualização do evento mais recente, limitado aos últimos 60 dias. Após esse período, a data não será mais exibida se o dado não tiver sofrido alterações.
+> 
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 3 (Lista de Pessoa Física) e 4 (Lista de Pessoa Jurídica).
+
+Ao solicitar eventos (PF ou PJ), a API retorna um número de protocolo e uma estimativa de tempo para a obtenção dos eventos. O `Contratante` é o próprio `Autor do pedido de dados`. O objeto `Contribuinte` recebe uma indicação de Tipo (3 para PF, 4 para PJ) e o lote de números de inscrição. O `pedidoDados` contém o identificador do evento solicitado.
+
+**IMPORTANTE:** É mandatório que o `Autor do Pedido de Dados` tenha procuração eletrônica do Portal eCAC para cada `Contribuinte`. A consulta só é permitida se houver procuração ativa para o sistema de negócio monitorado. Para processamento em lote, as procurações verificadas devem estar vigentes até o dia anterior (D-1).
+
+### Sincronismo das Atualizações
+
+As atualizações nas bases produtoras de eventos ocorrem em um tempo médio de 15 minutos. A disponibilidade da data do evento pode levar até 15 minutos para ser sincronizada e disponibilizada após uma atualização na base de dados.
+
+## Mapa dos Eventos de Atualização
+
+A seguir, são descritos os eventos disponibilizados e seus respectivos produtores.
+
+### Produtor de Eventos: Integra-DCTFWeb
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 3.01 | Integra-DCTFWeb | DCTFWEB | E0301 | PJ ou PF |
+
+O evento `E0301` (Declaração) é produzido pela DCTF Previdenciária quando há movimento de recebimento de apuração ou entrega de declaração (e.g., recebimento de REINF, e-Social, SERO, ou transmissão da declaração). Somente operações que geram o evento de transmissão são monitoradas. Consultas e alterações que não geram transmissão não são monitoráveis. Este evento pode ocorrer em declarações dos tipos: GERAL MENSAL, 13º SALÁRIO, AFERIÇÃO, ESPETÁCULO DESPORTIVO, RECLAMATÓRIA TRABALHISTA. A indicação da data da última atualização ocorre sempre que há uma transmissão de declaração original ou retificadora.
+
+### Produtor de Eventos: Integra-CaixaPostal
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 6.01 | Integra-CaixaPostal | CAIXAPOSTAL | E0601 | PJ ou PF |
+
+O evento `E0601` é gerado e atualizado com a data do evento quando há o envio de uma nova mensagem para um contribuinte na Caixa Postal.
+
+### Produtor de Eventos: Integra-Pagamento
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 7.01 | Integra-Pagamento | PAGTOWEB | E0701 | PJ ou PF |
+
+O Integra Contador é notificado pelo evento `E0701` sempre que houver um dos seguintes eventos relacionados a pagamentos de um contribuinte:
+
+*   Entrada de novo documento na base de pagamentos da Receita Federal;
+*   Alteração de campos retificáveis de um pagamento;
+*   Cancelamento ou 'Desfaz Cancelamento' de um pagamento;
+*   Bloqueio de parte ou total do saldo do pagamento pelo usuário da Receita Federal (Bloqueio de Pagamentos Online).
+
+> (\*) Alterações de saldo devido a alocações e restituições (não registradas no Bloqueio de Pagamentos Online) não são notificadas.
+
+## Serviços
+
+### Solicitar Eventos PF (SOLICEVENTOSPF131)
+
+Permite solicitar os últimos eventos de atualização de Pessoa Física. O lote de números de inscrição (CPF) deve ser informado no campo `numero` com o `tipo` 3 do objeto `contribuinte`. A lista suporta de 1 a 1000 CPFs (11 dígitos, separados por vírgula).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `SOLICEVENTOSPF131`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Estrutura de dados de retorno (Matriz de Eventos) | `String` escapada `Object` |
+
+**Objeto Protocolo (exemplo de `dados` de saída):**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação | `String` (36 bytes) |
+| `TempoEsperaMedioEmMs` | Tempo médio de espera em milissegundos para processamento do lote | `Number` |
+| `TempoLimiteEmMin` | Tempo máximo em minutos que o protocolo ficará disponível | `Number` |
+
+**Exemplo de JSON de saída do protocolo:**
+
+```json
+{
+    "protocolo": "a65f3455-fa91-419b-b0ad-c4ac50695abf",
+    "TempoEsperaMedioEmMs": 277,
+    "TempoLimiteEmMin": 5
+}
+```
+
+### Obter Eventos PF (OBTEREVENTOSPF133)
+
+Esta consulta deve ser acionada com o protocolo retornado pela solicitação de eventos, após o tempo de espera estimado. Permite obter os últimos eventos de atualização de Pessoa Física.
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `OBTEREVENTOSPF133`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação de eventos | `String` | SIM |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Matriz de eventos com os números de inscrição e datas de atualização | `String` escapada `Object` |
+
+**Exemplo de JSON de saída (`dados`):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPF133",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+    },
+    "status": 200,
+    "dados": "[[\"00000000000\",\"\"],[\"11111111111\",\"230327\"], [\"22222222222\",\"230328\"], [\"33333333333\",\"x\"]]",
+    "responseId": "565f3455-fa91-419b-b0ad-c4ac50695abf",
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-EVENTOSATUALIZACAO]",
+            "texto": "Requisição efetuada com sucesso."
+        },
+        {
+            "codigo": "[Aviso-EVENTOSATUALIZACAO-001]",
+            "texto": "195 requisições restantes para consultas de eventos do tipo E0301 para PF."
+        }
+    ]
+}
+```
+
+### Solicitar Eventos PJ (SOLICEVENTOSPJ132)
+
+Permite solicitar os últimos eventos de atualização de Pessoa Jurídica. O lote de números de inscrição (CNPJ) deve ser informado no campo `numero` com o `tipo` 4 do objeto `contribuinte`. A lista suporta de 1 a 1000 CNPJs (14 dígitos, separados por vírgula).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `SOLICEVENTOSPJ132`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Estrutura de dados de retorno (Matriz de Eventos) | `String` escapada `Object` |
+
+**Objeto Protocolo (exemplo de `dados` de saída):**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação | `String` (36 bytes) |
+| `TempoEsperaMedioEmMs` | Tempo médio de espera em milissegundos para processamento do lote | `Number` |
+| `TempoLimiteEmMin` | Tempo máximo em minutos que o protocolo ficará disponível | `Number` |
+
+**Exemplo de JSON de saída do protocolo:**
+
+```json
+{
+    "protocolo": "q90n3455-fa91-419c-c0ad-a4ms50215acl",
+    "TempoEsperaMedioEmMs": 277,
+    "TempoLimiteEmMin": 5
+}
+```
+
+### Obter Eventos PJ (OBTEREVENTOSPJ134)
+
+Esta consulta deve ser acionada com o protocolo retornado pela solicitação de eventos, após o tempo de espera estimado. Permite obter os últimos eventos de atualização de Pessoa Jurídica.
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `OBTEREVENTOSPJ134`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação de eventos | `String` | SIM |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Matriz de eventos com os números de inscrição e datas de atualização | `String` escapada `Object` |
+
+**Exemplo de JSON de saída (`dados`):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPJ134",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+    },
+    "status": 200,
+    "dados": "[[\"00000000000000\",\"\"],[\"11111111111111\",\"230327\"], [\"22222222222222\",\"230328\"], [\"33333333333333\",\"x\"]]",
+    "responseId": "565f3455-fa91-419b-b0ad-c4ac50695abf",
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-EVENTOSATUALIZACAO]",
+            "texto": "Requisição efetuada com sucesso."
+        },
+        {
+            "codigo": "[Aviso-EVENTOSATUALIZACAO-001]",
+            "texto": "195 requisições restantes para consultas de eventos do tipo E0301 para PF."
+        }
+    ]
+}
+```
+
+## Mensagens de Negócio
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| `[Sucesso-EVENTOSATUALIZACAO-001]` | Requisição efetuada com sucesso. | HTTP STATUS: 200 |
+| `[EntradaIncorreta-EVENTOSATUALIZACAO-002]` | Parâmetros de entrada inválidos. | Verifique os dados de entrada informados. HTTP STATUS: 400 |
+| `[Erro-EVENTOSATUALIZACAO-003]` | Erro ao realizar consulta. | Verifique os dados de entrada informados. HTTP STATUS: 500. Verifique a mensagem e tente novamente; caso persista, abra um acionamento. |
+| `[Aviso-EVENTOSATUALIZACAO-004]` | O Contratante atingiu o limite máximo diário de requisições na consulta de eventos do tipo `{eventId}` para `{pessoa física ou jurídica}`. | HTTP STATUS: 429. O Contratante atingiu o limite diário de requisições. Tente novamente em uma nova data. |
+| `[Aviso-EVENTOSATUALIZACAO-005]` | `{quantidade}` requisições restantes para consultas de eventos do tipo `{eventId}` para `{pessoa}`. | HTTP STATUS: 200 ou 400. Nenhuma ação esperada; o cliente pode usar este aviso para controlar a quantidade de requisições disponíveis. |
+| `[EntradaIncorreta-EVENTOSATUALIZACAO-006]` | Não foram encontrados dados para o protocolo informado `{0}` do evento `{1}`. | Verifique os dados de entrada informados. HTTP STATUS: 400 |
+
+## Limites
+
+Os limites existem para manter o ambiente estável e disponível, garantindo o uso sustentável do serviço.
+
+**Limites Atuais:**
+
+*   **Requisições por evento (diariamente):**
+    *   Eventos de PF: 1.000 requisições por dia.
+    *   Eventos de PJ: 1.000 requisições por dia.
+*   **Lote máximo de contribuintes:**
+    *   1.000 contribuintes distintos por requisição.
+
+**Controle de Limites:** A cada resposta, uma mensagem de aviso (`[Aviso-EVENTOSATUALIZACAO-005]`) exibe o saldo de requisições restantes.
+
+**Atingimento do Limite:** Ao atingir o limite diário, a mensagem `[Aviso-EVENTOSATUALIZACAO-004]` com `HTTP STATUS 429` impedirá novas requisições. Os limites são liberados no dia seguinte.
+
+**Ajustes nos Limites:** Os valores podem ser ajustados com base na análise técnica de performance e monitoramento do serviço.
+
+## Dados de Domínio
+
+| Código | Descrição |
+| --- | --- |
+| `E0301` | Identificação do evento do sistema DCTFWEB |
+| `E0601` | Identificação do evento do sistema CAIXAPOSTAL |
+| `E0701` | Identificação do evento do sistema PAGTOWEB |
+
+## Glossário
+
+| Termos | Descrição |
+| --- | --- |
+| **Orientado a evento** | Arquitetura utilizada na comunicação entre serviços desacoplados, sinalizando a última data de atualização. |
+| **PF** | Pessoa Física |
+| **PJ** | Pessoa Jurídica |
+| **Protocolo** | Identificador exclusivo para obter os eventos solicitados. |
+| **Produtor de eventos** | Sistema de negócio que gerou o evento. |
+| **Tempo de espera** | Tempo definido pelo processamento assíncrono para determinar quando o cliente pode voltar para obter os eventos solicitados em lote. Determinado em minutos. |
+
+## Referências
+
+*   [Cenários Trial - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_eventosatualizacao/)
+*   [Introdução - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/)
+*   [Mapa de Eventos - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/mapa_dos_eventos/)
+*   [Solicitar Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/solicitar_eventos_pf/)
+*   [Obter Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/obter_eventos_pf/)
+*   [Solicitar Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/solicitar_eventos_pj/)
+*   [Obter Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/obter_eventos_pj/)
+*   [Exemplo Retorno Solicitar Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_solicitar_eventos_pf/)
+*   [Exemplo Retorno Obter Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_obter_eventos_pf/)
+*   [Exemplo Retorno Solicitar Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_solicitar_eventos_pj/)
+*   [Exemplo Retorno Obter Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_obter_eventos_pj/)
+*   [Mensagens - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/mensagens/)
+*   [Limites - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/limites/)
+*   [Dados de Domínio - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/dados_de_dominio/)
+*   [Glossário - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/glossario/)
+
+# Documentação da API Integra Contador - Eventos de Última Atualização
+
+## Introdução
+
+O serviço **Eventos de Última Atualização** da API Integra Contador do SERPRO é uma solução de monitoramento para clientes que adquiriram acesso através da loja SERPRO. Ele é projetado para trabalhar com eventos, onde sistemas de negócio atuam como produtores e comunicam atualizações ao Integra Contador. A principal função é sinalizar a ocorrência de atualizações relacionadas a tópicos específicos, permitindo que o cliente saiba a última data de atualização de um evento para um determinado contribuinte. Esses eventos ficam disponíveis por um prazo máximo de 60 dias.
+
+## Cenários de Uso (Trial)
+
+A API Trial é destinada apenas para demonstração. Em um contexto de produção real, o parâmetro `jwt_token` no header é obrigatório para autenticação. Na versão Trial, este parâmetro não é necessário.
+
+### Solicitar Eventos de Pessoa Física (PF)
+
+Simulação de solicitação de eventos para monitorar um lote de contribuintes (PF) para o evento `E0301` (DCTFWeb).
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000,11111111111,22222222222,33333333333",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "SOLICEVENTOSPF131",
+        "versaoSistema": "1.0",
+        "dados": "{\"evento\": \"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000,11111111111,22222222222,33333333333",
+            "tipo": 3
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "SOLICEVENTOSPF131",
+            "versaoSistema": "1.0",
+            "dados": "{\"evento\": \"E0301\"}"
+        }
+    }'
+```
+
+### Obter Eventos de Pessoa Física (PF)
+
+Simulação para obter as datas da última atualização de cada contribuinte PF, utilizando um protocolo.
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPF133",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "",
+            "tipo": 3
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "OBTEREVENTOSPF133",
+            "versaoSistema": "1.0",
+            "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+        }
+    }'
+```
+
+### Solicitar Eventos de Pessoa Jurídica (PJ)
+
+Simulação de solicitação de eventos para monitorar um lote de contribuintes (PJ) para o evento `E0301` (DCTFWeb).
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000000,11111111111111,22222222222222,33333333333333",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "SOLICEVENTOSPJ132",
+        "versaoSistema": "1.0",
+        "dados": "{\"evento\": \"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000000,11111111111111,22222222222222,33333333333333",
+            "tipo": 4
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "SOLICEVENTOSPJ132",
+            "versaoSistema": "1.0",
+            "dados": "{\"evento\": \"E0301\"}"
+        }
+    }'
+```
+
+### Obter Eventos de Pessoa Jurídica (PJ)
+
+Simulação para obter as datas da última atualização de cada contribuinte PJ, utilizando um protocolo.
+
+| Header | Valor |
+| --- | --- |
+| `jwt_token` | Vazio (não precisa preencher) |
+| `autenticar_procurador_token` | Vazio (não precisa preencher) |
+
+**Exemplo de Body (JSON):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPJ134",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+    }
+}
+```
+
+**Exemplo de cURL:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Monitorar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "",
+            "tipo": 4
+        },
+        "pedidoDados": {
+            "idSistema": "EVENTOSATUALIZACAO",
+            "idServico": "OBTEREVENTOSPJ134",
+            "versaoSistema": "1.0",
+            "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+        }
+    }'
+```
+
+## Como Funciona o Uso via Integra Contador
+
+Para utilizar os serviços de consulta `EVENTOSATUALIZACAO`, é necessário usar a API Integra Contador. A estrutura básica de entrada para as requisições POST deve conter os dados do `Contratante`, `Autor do pedido de dados`, `Contribuinte` e `Pedido de dados`, fornecidos em formato JSON no corpo da requisição.
+
+A consulta é assíncrona e em lote, com serviços separados para solicitar e obter eventos, tanto para Pessoa Física (PF) quanto para Pessoa Jurídica (PJ).
+
+> Este serviço garante a exibição das datas de atualização do evento mais recente, limitado aos últimos 60 dias. Após esse período, a data não será mais exibida se o dado não tiver sofrido alterações.
+> 
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 3 (Lista de Pessoa Física) e 4 (Lista de Pessoa Jurídica).
+
+Ao solicitar eventos (PF ou PJ), a API retorna um número de protocolo e uma estimativa de tempo para a obtenção dos eventos. O `Contratante` é o próprio `Autor do pedido de dados`. O objeto `Contribuinte` recebe uma indicação de Tipo (3 para PF, 4 para PJ) e o lote de números de inscrição. O `pedidoDados` contém o identificador do evento solicitado.
+
+**IMPORTANTE:** É mandatório que o `Autor do Pedido de Dados` tenha procuração eletrônica do Portal eCAC para cada `Contribuinte`. A consulta só é permitida se houver procuração ativa para o sistema de negócio monitorado. Para processamento em lote, as procurações verificadas devem estar vigentes até o dia anterior (D-1).
+
+### Sincronismo das Atualizações
+
+As atualizações nas bases produtoras de eventos ocorrem em um tempo médio de 15 minutos. A disponibilidade da data do evento pode levar até 15 minutos para ser sincronizada e disponibilizada após uma atualização na base de dados.
+
+## Mapa dos Eventos de Atualização
+
+A seguir, são descritos os eventos disponibilizados e seus respectivos produtores.
+
+### Produtor de Eventos: Integra-DCTFWeb
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 3.01 | Integra-DCTFWeb | DCTFWEB | E0301 | PJ ou PF |
+
+O evento `E0301` (Declaração) é produzido pela DCTF Previdenciária quando há movimento de recebimento de apuração ou entrega de declaração (e.g., recebimento de REINF, e-Social, SERO, ou transmissão da declaração). Somente operações que geram o evento de transmissão são monitoradas. Consultas e alterações que não geram transmissão não são monitoráveis. Este evento pode ocorrer em declarações dos tipos: GERAL MENSAL, 13º SALÁRIO, AFERIÇÃO, ESPETÁCULO DESPORTIVO, RECLAMATÓRIA TRABALHISTA. A indicação da data da última atualização ocorre sempre que há uma transmissão de declaração original ou retificadora.
+
+### Produtor de Eventos: Integra-CaixaPostal
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 6.01 | Integra-CaixaPostal | CAIXAPOSTAL | E0601 | PJ ou PF |
+
+O evento `E0601` é gerado e atualizado com a data do evento quando há o envio de uma nova mensagem para um contribuinte na Caixa Postal.
+
+### Produtor de Eventos: Integra-Pagamento
+
+| # | Solução | IdSistema | IdEvento | Tipo |
+| --- | --- | --- | --- | --- |
+| 7.01 | Integra-Pagamento | PAGTOWEB | E0701 | PJ ou PF |
+
+O Integra Contador é notificado pelo evento `E0701` sempre que houver um dos seguintes eventos relacionados a pagamentos de um contribuinte:
+
+*   Entrada de novo documento na base de pagamentos da Receita Federal;
+*   Alteração de campos retificáveis de um pagamento;
+*   Cancelamento ou 'Desfaz Cancelamento' de um pagamento;
+*   Bloqueio de parte ou total do saldo do pagamento pelo usuário da Receita Federal (Bloqueio de Pagamentos Online).
+
+> (\*) Alterações de saldo devido a alocações e restituições (não registradas no Bloqueio de Pagamentos Online) não são notificadas.
+
+## Serviços
+
+### Solicitar Eventos PF (SOLICEVENTOSPF131)
+
+Permite solicitar os últimos eventos de atualização de Pessoa Física. O lote de números de inscrição (CPF) deve ser informado no campo `numero` com o `tipo` 3 do objeto `contribuinte`. A lista suporta de 1 a 1000 CPFs (11 dígitos, separados por vírgula).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `SOLICEVENTOSPF131`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Estrutura de dados de retorno (Matriz de Eventos) | `String` escapada `Object` |
+
+**Objeto Protocolo (exemplo de `dados` de saída):**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação | `String` (36 bytes) |
+| `TempoEsperaMedioEmMs` | Tempo médio de espera em milissegundos para processamento do lote | `Number` |
+| `TempoLimiteEmMin` | Tempo máximo em minutos que o protocolo ficará disponível | `Number` |
+
+**Exemplo de JSON de saída do protocolo:**
+
+```json
+{
+    "protocolo": "a65f3455-fa91-419b-b0ad-c4ac50695abf",
+    "TempoEsperaMedioEmMs": 277,
+    "TempoLimiteEmMin": 5
+}
+```
+
+### Obter Eventos PF (OBTEREVENTOSPF133)
+
+Esta consulta deve ser acionada com o protocolo retornado pela solicitação de eventos, após o tempo de espera estimado. Permite obter os últimos eventos de atualização de Pessoa Física.
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `OBTEREVENTOSPF133`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação de eventos | `String` | SIM |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Matriz de eventos com os números de inscrição e datas de atualização | `String` escapada `Object` |
+
+**Exemplo de JSON de saída (`dados`):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 3
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPF133",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"a65f3455-fa91-419b-b0ad-c4ac50695abf\", \"evento\":\"E0301\"}"
+    },
+    "status": 200,
+    "dados": "[[\"00000000000\",\"\"],[\"11111111111\",\"230327\"], [\"22222222222\",\"230328\"], [\"33333333333\",\"x\"]]",
+    "responseId": "565f3455-fa91-419b-b0ad-c4ac50695abf",
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-EVENTOSATUALIZACAO]",
+            "texto": "Requisição efetuada com sucesso."
+        },
+        {
+            "codigo": "[Aviso-EVENTOSATUALIZACAO-001]",
+            "texto": "195 requisições restantes para consultas de eventos do tipo E0301 para PF."
+        }
+    ]
+}
+```
+
+### Solicitar Eventos PJ (SOLICEVENTOSPJ132)
+
+Permite solicitar os últimos eventos de atualização de Pessoa Jurídica. O lote de números de inscrição (CNPJ) deve ser informado no campo `numero` com o `tipo` 4 do objeto `contribuinte`. A lista suporta de 1 a 1000 CNPJs (14 dígitos, separados por vírgula).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `SOLICEVENTOSPJ132`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Estrutura de dados de retorno (Matriz de Eventos) | `String` escapada `Object` |
+
+**Objeto Protocolo (exemplo de `dados` de saída):**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação | `String` (36 bytes) |
+| `TempoEsperaMedioEmMs` | Tempo médio de espera em milissegundos para processamento do lote | `Number` |
+| `TempoLimiteEmMin` | Tempo máximo em minutos que o protocolo ficará disponível | `Number` |
+
+**Exemplo de JSON de saída do protocolo:**
+
+```json
+{
+    "protocolo": "q90n3455-fa91-419c-c0ad-a4ms50215acl",
+    "TempoEsperaMedioEmMs": 277,
+    "TempoLimiteEmMin": 5
+}
+```
+
+### Obter Eventos PJ (OBTEREVENTOSPJ134)
+
+Esta consulta deve ser acionada com o protocolo retornado pela solicitação de eventos, após o tempo de espera estimado. Permite obter os últimos eventos de atualização de Pessoa Jurídica.
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: `EVENTOSATUALIZACAO`
+*   `idServico`: `OBTEREVENTOSPJ134`
+*   `versaoSistema`: `1.0`
+
+**Dados de Entrada (`dados`):**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| `protocolo` | Identificador exclusivo da solicitação de eventos | `String` | SIM |
+| `evento` | Valor de identificação do evento | `String` | SIM |
+
+**Dados de Saída:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| `status` | Status HTTP retornado | `Number` |
+| `mensagens` | Array de mensagens explicativas (Código e texto) | `Array` |
+| `dados` | Matriz de eventos com os números de inscrição e datas de atualização | `String` escapada `Object` |
+
+**Exemplo de JSON de saída (`dados`):**
+
+```json
+{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "",
+        "tipo": 4
+    },
+    "pedidoDados": {
+        "idSistema": "EVENTOSATUALIZACAO",
+        "idServico": "OBTEREVENTOSPJ134",
+        "versaoSistema": "1.0",
+        "dados": "{\"protocolo\":\"q90n3455-fa91-419c-c0ad-a4ms50215acl\", \"evento\":\"E0301\"}"
+    },
+    "status": 200,
+    "dados": "[[\"00000000000000\",\"\"],[\"11111111111111\",\"230327\"], [\"22222222222222\",\"230328\"], [\"33333333333333\",\"x\"]]",
+    "responseId": "565f3455-fa91-419b-b0ad-c4ac50695abf",
+    "mensagens": [
+        {
+            "codigo": "[Sucesso-EVENTOSATUALIZACAO]",
+            "texto": "Requisição efetuada com sucesso."
+        },
+        {
+            "codigo": "[Aviso-EVENTOSATUALIZACAO-001]",
+            "texto": "195 requisições restantes para consultas de eventos do tipo E0301 para PF."
+        }
+    ]
+}
+```
+
+## Mensagens de Negócio
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| `[Sucesso-EVENTOSATUALIZACAO-001]` | Requisição efetuada com sucesso. | HTTP STATUS: 200 |
+| `[EntradaIncorreta-EVENTOSATUALIZACAO-002]` | Parâmetros de entrada inválidos. | Verifique os dados de entrada informados. HTTP STATUS: 400 |
+| `[Erro-EVENTOSATUALIZACAO-003]` | Erro ao realizar consulta. | Verifique os dados de entrada informados. HTTP STATUS: 500. Verifique a mensagem e tente novamente; caso persista, abra um acionamento. |
+| `[Aviso-EVENTOSATUALIZACAO-004]` | O Contratante atingiu o limite máximo diário de requisições na consulta de eventos do tipo `{eventId}` para `{pessoa física ou jurídica}`. | HTTP STATUS: 429. O Contratante atingiu o limite diário de requisições. Tente novamente em uma nova data. |
+| `[Aviso-EVENTOSATUALIZACAO-005]` | `{quantidade}` requisições restantes para consultas de eventos do tipo `{eventId}` para `{pessoa}`. | HTTP STATUS: 200 ou 400. Nenhuma ação esperada; o cliente pode usar este aviso para controlar a quantidade de requisições disponíveis. |
+| `[EntradaIncorreta-EVENTOSATUALIZACAO-006]` | Não foram encontrados dados para o protocolo informado `{0}` do evento `{1}`. | Verifique os dados de entrada informados. HTTP STATUS: 400 |
+
+## Limites
+
+Os limites existem para manter o ambiente estável e disponível, garantindo o uso sustentável do serviço.
+
+**Limites Atuais:**
+
+*   **Requisições por evento (diariamente):**
+    *   Eventos de PF: 1.000 requisições por dia.
+    *   Eventos de PJ: 1.000 requisições por dia.
+*   **Lote máximo de contribuintes:**
+    *   1.000 contribuintes distintos por requisição.
+
+**Controle de Limites:** A cada resposta, uma mensagem de aviso (`[Aviso-EVENTOSATUALIZACAO-005]`) exibe o saldo de requisições restantes.
+
+**Atingimento do Limite:** Ao atingir o limite diário, a mensagem `[Aviso-EVENTOSATUALIZACAO-004]` com `HTTP STATUS 429` impedirá novas requisições. Os limites são liberados no dia seguinte.
+
+**Ajustes nos Limites:** Os valores podem ser ajustados com base na análise técnica de performance e monitoramento do serviço.
+
+## Dados de Domínio
+
+| Código | Descrição |
+| --- | --- |
+| `E0301` | Identificação do evento do sistema DCTFWEB |
+| `E0601` | Identificação do evento do sistema CAIXAPOSTAL |
+| `E0701` | Identificação do evento do sistema PAGTOWEB |
+
+## Glossário
+
+| Termos | Descrição |
+| --- | --- |
+| **Orientado a evento** | Arquitetura utilizada na comunicação entre serviços desacoplados, sinalizando a última data de atualização. |
+| **PF** | Pessoa Física |
+| **PJ** | Pessoa Jurídica |
+| **Protocolo** | Identificador exclusivo para obter os eventos solicitados. |
+| **Produtor de eventos** | Sistema de negócio que gerou o evento. |
+| **Tempo de espera** | Tempo definido pelo processamento assíncrono para determinar quando o cliente pode voltar para obter os eventos solicitados em lote. Determinado em minutos. |
+
+## Referências
+
+*   [Cenários Trial - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_eventosatualizacao/)
+*   [Introdução - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/)
+*   [Mapa de Eventos - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/mapa_dos_eventos/)
+*   [Solicitar Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/solicitar_eventos_pf/)
+*   [Obter Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/obter_eventos_pf/)
+*   [Solicitar Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/solicitar_eventos_pj/)
+*   [Obter Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/servicos/obter_eventos_pj/)
+*   [Exemplo Retorno Solicitar Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_solicitar_eventos_pf/)
+*   [Exemplo Retorno Obter Eventos PF](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_obter_eventos_pf/)
+*   [Exemplo Retorno Solicitar Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_solicitar_eventos_pj/)
+*   [Exemplo Retorno Obter Eventos PJ](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/exemplos/retorno_monitorar_obter_eventos_pj/)
+*   [Mensagens - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/mensagens/)
+*   [Limites - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/limites/)
+*   [Dados de Domínio - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/dados_de_dominio/)
+*   [Glossário - Eventos de Atualização](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/eventosatualizacao/glossario/)
+

@@ -1,0 +1,632 @@
+---
+alwaysApply: true
+---
+## 3. Serviços - Efetuar Opção pelo Regime de Apuração
+
+### Descrição
+Efetuar a opção pelo regime de apuração que deve ser feito anualmente pelas empresas optantes pelo Simples Nacional.
+
+### Identificação do Serviço
+- **idSistema**: REGIMEAPURACAO
+- **idServico**: EFETUAROPCAOREGIME101
+- **versaoSistema**: "1.0"
+
+### Dados de Entrada
+
+#### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| `anoOpcao` | Ano Opção | Number | SIM |
+| `tipoRegime` | Tipo da opção (ver dados de domínio) | Number | SIM |
+| `descritivoRegime` | Descritivo do Regime. Este campo é para reforçar a escolha do campo tipoRegime | String | SIM |
+| `deAcordoResolucao` | Este campo deve ser enviado como True para ser efetivada a opção | Boolean | SIM |
+
+#### Exemplo: Conteúdo Body JSON de Entrada
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "EFETUAROPCAOREGIME101",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoOpcao\": 2023, \"tipoRegime\": 1, \"descritivoRegime\": \"CAIXA\", \"deAcordoResolucao\": true }"
+  }
+}
+```
+
+### Dados de Saída
+
+#### Estrutura de Resposta
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `status` | Status HTTP retornado no acionamento do serviço | Number |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio | Array |
+| `dados` | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto RegimeApuracao | String |
+
+#### Objeto: RegimeApuracao
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `cnpjMatriz` | CNPJ da matriz | Number |
+| `anoCalendario` | Ano Calendário solicitado | Number |
+| `regimeEscolhido` | Texto com o regime escolhido: "COMPETENCIA" ou "CAIXA" | String |
+| `dataHoraOpcao` | Data e horário da opção no formato AAAAMMDDHHMMSS | Number |
+| `demonstrativoPdf` | Demonstrativo de opção de Regime em formato base 64 | String |
+| `textoResolucao` | Texto da resolução (no caso de regime de CAIXA) em formato base 64 | String |
+
+### Características Importantes
+
+1. **Periodicidade**: A opção deve ser feita anualmente
+2. **Público-alvo**: Empresas optantes pelo Simples Nacional
+3. **Confirmação obrigatória**: O campo `deAcordoResolucao` deve ser `true` para efetivar a opção
+4. **Documentos gerados**: O serviço retorna demonstrativo em PDF e texto da resolução (quando aplicável)
+
+---
+
+## 4. Serviços - Consultar Opção pelo Regime de Apuração
+
+### Descrição
+Consultar a opção pelo regime de apuração de receitas a partir de um ano calendário.
+
+### Identificação do Serviço
+- **idSistema**: REGIMEAPURACAO
+- **idServico**: CONSULTAROPCAOREGIME103
+- **versaoSistema**: "1.0"
+
+### Dados de Entrada
+
+#### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| `anoCalendario` | Ano Opção | Number | SIM |
+
+#### Exemplo: Conteúdo Body JSON de Entrada
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTAROPCAOREGIME103",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": 2023 }"
+  }
+}
+```
+
+### Dados de Saída
+
+#### Estrutura de Resposta
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `status` | Status HTTP retornado no acionamento do serviço | Number |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio | Array |
+| `dados` | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto RegimeApuracao | String |
+
+#### Objeto: RegimeApuracao
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `cnpjMatriz` | CNPJ da matriz | Number |
+| `anoCalendario` | Ano Calendário solicitado | Number |
+| `regimeEscolhido` | Texto com o regime escolhido: "COMPETENCIA" ou "CAIXA" | String |
+| `dataHoraOpcao` | Data e horário da opção no formato AAAAMMDDHHMMSS | Number |
+| `demonstrativoPdf` | Demonstrativo de opção de Regime em formato base 64 | String |
+| `textoResolucao` | Texto da resolução (no caso de regime de CAIXA) em formato base 64 | String |
+
+### Características Importantes
+
+1. **Finalidade**: Consulta informações sobre opção de regime já efetuada
+2. **Parâmetro principal**: Ano calendário para consulta
+3. **Retorno**: Mesma estrutura do serviço "Efetuar Opção", incluindo documentos em base64
+
+---
+
+## 5. Serviços - Consultar Anos Calendários
+
+### Descrição
+Consultar todas as opções pelo Regime de Apuração de Receitas efetivadas.
+
+### Identificação do Serviço
+- **idSistema**: REGIMEAPURACAO
+- **idServico**: CONSULTARANOSCALENDARIOS102
+- **versaoSistema**: "1.0"
+
+### Dados de Entrada
+
+Este serviço **não requer parâmetros de entrada** no campo dados. Serão consultados todos os anos.
+
+#### Exemplo: Conteúdo Body JSON de Entrada
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTARANOSCALENDARIOS102",
+    "versaoSistema": "1.0",
+    "dados": ""
+  }
+}
+```
+
+### Dados de Saída
+
+#### Estrutura de Resposta
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `status` | Status HTTP retornado no acionamento do serviço | Number |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio | Array |
+| `dados` | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto RegimeApuracao | String |
+
+#### Objeto: RegimeApuracao
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `anoCalendario` | Ano Calendário | Number |
+| `regimeApurado` | Texto com o regime efetivado: "COMPETENCIA" ou "CAIXA" | String |
+
+### Características Importantes
+
+1. **Finalidade**: Lista todos os anos calendários com opções efetivadas
+2. **Simplicidade**: Não requer parâmetros específicos
+3. **Retorno**: Lista resumida com ano e regime escolhido para cada período
+4. **Utilidade**: Permite verificar histórico de opções de regime da empresa
+
+---
+
+## 6. Serviços - Consultar Resolução para o Regime de Caixa
+
+### Descrição
+Consultar a resolução para o regime de Caixa.
+
+### Identificação do Serviço
+- **idSistema**: REGIMEAPURACAO
+- **idServico**: CONSULTARRESOLUCAO104
+- **versaoSistema**: "1.0"
+
+### Dados de Entrada
+
+#### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| `anoCalendario` | Ano | Number | SIM |
+
+#### Exemplo: Conteúdo Body JSON de Entrada
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTARRESOLUCAO104",
+    "versaoSistema": "1.0",
+    "dados": "{\"anoCalendario\":2021}"
+  }
+}
+```
+
+### Dados de Saída
+
+#### Estrutura de Resposta
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `status` | Status HTTP retornado no acionamento do serviço | Number |
+| `mensagens` | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio | Array |
+| `dados` | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto RegimeApuracao | String |
+
+#### Objeto: RegimeApuracao
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| `textoResolucao` | Texto fixo da resolução pelo Regime de Caixa em base 64 | String |
+
+### Características Importantes
+
+1. **Finalidade**: Obter texto da resolução específica para regime de caixa
+2. **Aplicabilidade**: Específico para regime de caixa
+3. **Formato**: Retorna texto em base64 para decodificação
+4. **Parâmetro**: Requer ano calendário específico
+
+---
+
+## 7. Exemplos - Retorno Efetuar Opção Regime
+
+### Exemplo de JSON de Retorno
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "EFETUAROPCAOREGIME101",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": \"2023\" }"
+  },
+  "status": 200,
+  "dados": "{\"cnpjMatriz\":\"00000000000000\",\"anoCalendario\":2023,\"regimeEscolhido\":\"CAIXA\",\"dataHoraOpcao\":20221220025818,\"demonstrativoPdf\":\"JVBERi0xLjcKJYGBgYEKCjYgMCBvYmoKPDwKL1R5cGUgL1hPYmplY3QKL1N1YnR5cGUgL0ltYWdlCi9XaWR0aCAxNDAKL0hlaWdodCAzMwovTWFzayBbIDIzOCAyMzggXQovQ29sb3JTcGFjZSBbIC9JbmRleGVkIC9EZXZpY2VSR0IgMjU1IChcMDMwXDAyMlwwMjD5+Pg/OjglYWBcMjEzXDIxMFwyMDdcMDM2XDAzMVwwMjekoqH8/Pz19fXX1tYiXDAzNFwwMzIzLiyxr65MR0Xk4+O+vLxYVFN+e3r6+fn9/f0mIFwwMzbx8fFcMDM0XDAyNlwwMjQhXDAzM1wwMzFcMDMyXDAyNFwwMjIlXDAzN1wwMzX6+vr09PSkoVwyNDBcMDMxXDAyM1wwMjH29vZcMjMxXDIyNlwyMjVcMDMzXDAyNVwwMjP7+/s0Ly1cMDM1XDAzMFwwMjZWUVBkYF+3tbTz8/MvXCknXDIxN1wyMTRcMjEzenZ1V1JRwcC/QDs5fXp5qaemJiFcMDM37ezs2NfXXDAzNVwwMjdcMDI1XDIxMVwyMDZcMjA14+Li9/f3o1wyNDBcMjM3cGxrbWloXDIyMVwyMTdcMjE2PTg2y8rKvbu7XDIyNlwyMjNcMjIy2tnZ3d3ceHVzY19e7+7uR0JBNTAuOjU0IFwwMzJcMDMwODMxMi0r7u3tI1wwMzVcMDMzYFxcW1wpJCJbV1XT0dGlo6J7d3bb2to2MS9cMjIwXDIxNlwyMTXo6Ojp6elcKCMhXDIxNlwyMTNcMjEyVE9O397eXDIxNVwyMTJcMjExTUlHJyIg6urpzMvLXDIwMlwxNzd+1tXVtbOy1NPTPjk3ube3S0ZEQTw6bGhnLlwoJkRAPuXk5ColI9XU1M3My9nY2Ofn51wyMDZcMjAyXDIwMeHg4ElEQ6elpFwyMjNcMjIwXDIxN+vr6lVQT+Df309LSW5qaUhDQjkzMjArXCny8vJiXl1dWVdSTUxpZWNcMjAwfXysqalfWlns6+u6uLhTTk1GQUCvra1cMjI0XDIyMVwyMjBcMjA3XDIwM1wyMDJybm1DPjyqqKfe3t60srFcMjMyXDIzMFwyMjd8eHdcMDM3XDAzMVwwMjfFxMPCwcA7NjVXU1JcMjA1XDIwMlwyMDB3dHJcMjA0XDIwMVwyMDCwrq1cMjE0XDIx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...618198 bytes truncated...\",\"textoResolucao\":\"\"}"
+  "mensagens": [
+    {
+      "codigo": "Sucesso-REGIME-MSG_ISN_054",
+      "texto": "Opção pelo regime de apuração de receitas realizada com sucesso."
+    }
+  ]
+}
+```
+
+### Análise do Retorno
+
+#### Campos Principais
+
+1. **Status**: 200 (sucesso)
+2. **Dados**: String JSON escapada contendo:
+   - `cnpjMatriz`: CNPJ da empresa matriz
+   - `anoCalendario`: Ano da opção (2023)
+   - `regimeEscolhido`: "CAIXA" (regime escolhido)
+   - `dataHoraOpcao`: Data/hora no formato AAAAMMDDHHMMSS (20221220025818)
+   - `demonstrativoPdf`: PDF em base64 (truncado no exemplo)
+   - `textoResolucao`: Texto da resolução (vazio neste caso)
+
+#### Mensagens de Sucesso
+
+- **Código**: "Sucesso-REGIME-MSG_ISN_054"
+- **Texto**: "Opção pelo regime de apuração de receitas realizada com sucesso."
+
+### Observações Importantes
+
+1. **PDF em Base64**: O demonstrativo é retornado como string base64 que deve ser decodificada
+2. **Data/Hora**: Formato específico AAAAMMDDHHMMSS
+3. **Regime**: Pode ser "CAIXA" ou "COMPETENCIA"
+4. **Resolução**: Campo `textoResolucao` pode estar vazio dependendo do regime
+
+---
+
+## 8. Exemplos - Retorno Consultar Opção Regime
+
+### Exemplo de JSON de Retorno
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTAROPCAOREGIME103 ",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": \"2023\" }"
+  },
+  "status": 200,
+  "dados": "{\"cnpjMatriz\":\"00000000000000\",\"anoCalendario\":2023,\"regimeEscolhido\":\"CAIXA\",\"dataHoraOpcao\":20221220025818,\"demonstrativoPdf\":\"JVBERi0xLjcKJYGBgYEKCjYgMCBvYmoKPDwKL1R5cGUgL1hPYmplY3QKL1N1YnR5cGUgL0ltYWdlCi9XaWR0aCAxNDAKL0hlaWdodCAzMwovTWFzayBbIDIzOCAyMzggXQovQ29sb3JTcGFjZSBbIC9JbmRleGVkIC9EZXZpY2VSR0IgMjU1IChcMDMwXDAyMlwwMjD5+Pg/OjhlYWBcMjEzXDIxMFwyMDdcMDM2XDAzMVwwMjekoqH8/Pz19fXX1tYiXDAzNFwwMzIzLiyxr65MR0Xk4+O+vLxYVFN+e3r6+fn9/f0mIFwwMzbx8fFcMDM0XDAyNlwwMjQhXDAzM1wwMzFcMDMyXDAyNFwwMjIlXDAzN1wwMzX6+vr09PSkoVwyNDBcMDMxXDAyM1wwMjH29vZcMjMxXDIyNlwyMjVcMDMzXDAyNVwwMjP7+/s0Ly1cMDM1XDAzMFwwMjZWUVBkYF+3tbTz8/MvXCknXDIxN1wyMTRcMjEzenZ1V1JRwcC/QDs5fXp5qaemJiFcMDM37ezs2NfXXDAzNVwwMjdcMDI1XDIxMVwyMDZcMjA14+Li9/f3o1wyNDBcMjM3cGxrbWloXDIyMVwyMTdcMjE2PTg2y8rKvbu7XDIyNlwyMjNcMjIy2tnZ3d3ceHVzY19e7+7uR0JBNTAuOjU0IFwwMzJcMDMwODMxMi0r7u3tI1wwMzVcMDMzYFxcW1wpJCJbV1XT0dGlo6J7d3bb2to2MS9cMjIwXDIxNlwyMTXo6Ojp6elcKCMhXDIxNlwyMTNcMjEyVE9O397eXDIxNVwyMTJcMjExTUlHJyIg6urpzMvLXDIwMlwxNzd+1tXVtbOy1NPTPjk3ube3S0ZEQTw6bGhnLlwoJkRAPuXk5ColI9XU1M3My9nY2Ofn51wyMDZcMjAyXDIwMeHg4ElEQ6elpFwyMjNcMjIwXDIxN+vr6lVQT+Df309LSW5qaUhDQjkzMjArXCny8vJiXl1dWVdSTUxpZWNcMjAwfXysqalfWlns6+u6uLhTTk1GQUCvra1cMjI0XDIyMVwyMjBcMjA3XDIwM1wyMDJybm1DPjyqqKfe3t60srFcMjMyXDIzMFwyMjd8eHdcMDM3XDAzMVwwMjfFxMPCwcA7NjVXU1JcMjA1XDIwMlwyMDB3dHJcMjA0XDIwMVwyMDCwrq1cMjE0XDIx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...618198 bytes truncated...\",\"textoResolucao\":\"\"}",
+  "mensagens": [
+    {
+      "codigo": "Sucesso-REGIME",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ]
+}
+```
+
+### Análise do Retorno
+
+#### Campos Principais
+
+1. **Status**: 200 (sucesso)
+2. **Dados**: String JSON escapada contendo:
+   - `cnpjMatriz`: CNPJ da empresa matriz
+   - `anoCalendario`: Ano da opção (2023)
+   - `regimeEscolhido`: "CAIXA" (regime escolhido)
+   - `dataHoraOpcao`: Data/hora no formato AAAAMMDDHHMMSS (20221220025818)
+   - `demonstrativoPdf`: PDF em base64 (truncado no exemplo)
+   - `textoResolucao`: Texto da resolução (vazio neste caso)
+
+#### Mensagens de Sucesso
+
+- **Código**: "Sucesso-REGIME"
+- **Texto**: "Requisição efetuada com sucesso."
+
+### Observações Importantes
+
+1. **PDF em Base64**: O demonstrativo é retornado como string base64 que deve ser decodificada
+2. **Data/Hora**: Formato específico AAAAMMDDHHMMSS
+3. **Regime**: Pode ser "CAIXA" ou "COMPETENCIA"
+4. **Resolução**: Campo `textoResolucao` pode estar vazio dependendo do regime
+
+---
+
+## 9. Exemplos - Retorno Consultar Anos-Calendários
+
+### Exemplo de JSON de Retorno
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTARANOSCALENDARIOS102",
+    "versaoSistema": "1.0",
+    "dados": ""
+  },
+  "status": 200,
+  "dados": "[{\"anoCalendario\":2023,\"regimeApurado\":\"CAIXA\"},{\"anoCalendario\":2017,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2016,\"regimeApurado\":\"CAIXA\"},{\"anoCalendario\":2015,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2014,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2013,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2012,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2011,\"regimeApurado\":\"COMPETENCIA\"},{\"anoCalendario\":2010,\"regimeApurado\":\"COMPETENCIA\"}]",
+  "mensagens": [
+    {
+      "codigo": "[Sucesso-REGIME]",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ]
+}
+```
+
+### Análise do Retorno
+
+#### Campos Principais
+
+1.  **Status**: 200 (sucesso)
+2.  **Dados**: String JSON escapada contendo um array de objetos, cada um com:
+    *   `anoCalendario`: Ano da opção
+    *   `regimeApurado`: "CAIXA" ou "COMPETENCIA"
+
+#### Mensagens de Sucesso
+
+*   **Código**: "[Sucesso-REGIME]"
+*   **Texto**: "Requisição efetuada com sucesso."
+
+### Observações Importantes
+
+1.  **Estrutura de Array**: O campo `dados` contém um array de objetos, representando o histórico de opções de regime.
+2.  **Múltiplos Anos**: O exemplo mostra o retorno para vários anos, de 2010 a 2023.
+3.  **Regimes Variados**: O histórico pode conter tanto o regime de "CAIXA" quanto o de "COMPETENCIA" para diferentes anos.
+
+---
+
+## 10. Exemplos - Retorno Consultar Resolução
+
+### Exemplo de JSON de Retorno
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "REGIMEAPURACAO",
+    "idServico": "CONSULTARRESOLUCAO104 ",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": \"2021\" }"
+  },
+  "status": 200,
+  "dados": "{\"textoResolucao\":\"Resolução CGSN nº 140, de 22 de maio de 2018. Dispõe sobre o Simples Nacional e dá outras providências. O Comitê Gestor do Simples Nacional (CGSN), no uso das competências que lhe conferem a Lei Complementar nº 123, de 14 de dezembro de 2006, o Decreto nº 6.038, de 7 de fevereiro de 2007, e o Regimento Interno aprovado pela Resolução CGSN nº 1, de 19 de março de 2007, resolve: Seção IV: Do Cálculo dos Tributos Devidos. Subseção I. Da Base de Cálculo. Art. 16. A base de cálculo para a determinação do valor devido mensalmente pela ME ou EPP optante pelo Simples Nacional será a receita bruta total mensal auferida (Regime de Competência) ou recebida (Regime de Caixa), conforme opção feita pelo contribuinte. (Lei Complementar nº 123, de 2006, art. 18, caput e § 3º) § 1º O regime de reconhecimento da receita bruta será irretratável para todo o ano-calendário. (Lei Complementar nº 123, de 2006, art. 18, § 3º). § 2º Na hipótese de a ME ou EPP possuir filiais, deverá ser considerado o somatório das receitas brutas de todos os estabelecimentos. (Lei Complementar nº 123, de 2006, art. 18, caput).§ 3º Para os efeitos do disposto neste artigo: I – a receita bruta auferida ou recebida será segregada na forma do art. 25; e (Lei Complementar nº 123, de 2006, art. 18, §§ 4º e 4º-A) II - considera-se separadamente, em bases distintas, as receitas brutas auferidas ou recebidas no mercado interno e aquelas decorrentes de exportação para o exterior. (Lei Complementar nº 123, de 2006, art. 3º, § 15) Art. 17. Na hipótese de devolução de mercadoria vendida por ME ou EPP optante pelo Simples Nacional, em período de apuração posterior ao da venda, deverá ser observado o seguinte: (Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 3º, § 1º). I - o valor da mercadoria devolvida deve ser deduzido da receita bruta total, no período de apuração do mês da devolução, segregada pelas regras vigentes no Simples Nacional nesse mês; e II - caso o valor da mercadoria devolvida seja superior ao da receita bruta total ou das receitas segregadas relativas ao mês da devolução, o saldo remanescente deverá ser deduzido nos meses subsequentes, até ser integralmente deduzido. Parágrafo único. Para a optante pelo Simples Nacional tributada com base no critério de apuração de receitas pelo Regime de Caixa, o valor a ser deduzido limita-se ao valor efetivamente devolvido ao adquirente. (Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 3º, § 1º). Art. 18. Na hipótese de cancelamento de documento fiscal, nas situações autorizadas pelo respectivo ente federado, o valor do documento cancelado deverá ser deduzido no período de apuração no qual tenha havido a tributação originária, quando o cancelamento se der em período posterior. § 1º Para a optante pelo Simples Nacional tributada com base no critério de apuração de receitas pelo Regime de Caixa, o valor a ser deduzido limita-se ao valor efetivamente devolvido ao adquirente ou tomador.(Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 3º, § 1º). § 2º Na hipótese de nova emissão de documento fiscal em substituição ao cancelado, o valor correspondente deve ser oferecido à tributação no período de apuração relativo ao da operação ou prestação originária.(Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 3º, § 1º) Art. 19. A opção pelo regime de reconhecimento de receita bruta de que trata o § 1º do art. 16 deverá ser registrada em aplicativo disponibilizado no Portal do Simples Nacional, quando da apuração dos valores devidos: (Lei Complementar nº 123, de 2006, art. 18, § 3º). I - relativos ao mês de novembro de cada ano-calendário, com efeitos para o ano-calendário subsequente, na hipótese de ME ou EPP já optante pelo Simples Nacional; II - relativos ao mês de dezembro, com efeitos para o ano-calendário subsequente, na hipótese de ME ou EPP em início de atividade, com efeitos da opção pelo Simples Nacional no mês de dezembro; e III - relativos ao mês de início dos efeitos da opção pelo Simples Nacional, nas demais hipóteses, com efeitos para o próprio ano-calendário. Parágrafo único. A opção pelo Regime de Caixa servirá exclusivamente para a apuração da base de cálculo mensal, e o Regime de Competência deve ser aplicado para as demais finalidades, especialmente, para determinação dos limites e sublimites e da alíquota a ser aplicada sobre a receita bruta recebida no mês.(Lei Complementar nº 123, de 2006, art. 18, § 3º). Art. 20. Para a ME ou EPP optante pelo Regime de Caixa: (Lei Complementar nº 123, de 2006, art. 18, § 3º); I - nas prestações de serviços ou operações com mercadorias com valores a receber a prazo, a parcela não vencida deverá obrigatoriamente integrar a base de cálculo dos tributos abrangidos pelo Simples Nacional até o último mês do ano-calendário subsequente àquele em que tenha ocorrido a respectiva prestação de serviço ou operação com mercadorias; II - a receita auferida e ainda não recebida deverá integrar a base de cálculo dos tributos abrangidos pelo Simples Nacional, na hipótese de: a) encerramento de atividade, no mês em que ocorrer o evento; b) retorno ao Regime de Competência, no último mês de vigência do Regime de Caixa; e c) exclusão do Simples Nacional, no mês anterior ao dos efeitos da exclusão; III - o registro dos valores a receber deverá ser mantido nos termos do art. 77; e IV - na hipótese do impedimento de que trata o art. 12, e havendo a continuidade do Regime de Caixa, a receita auferida e ainda não recebida deverá integrar a base de cálculo do ICMS e do ISS do mês anterior ao dos efeitos do impedimento e seu recolhimento deve ser feito diretamente ao respectivo ente federado, na forma por ele estabelecida, observados os arts. 21 a 24. Seção VIII. Das Obrigações Acessórias. Subseção III. Do Registro dos Valores a Receber no Regime de Caixa. Art. 77. A optante pelo Regime de Caixa deverá manter registro dos valores a receber, no modelo constante do Anexo XI, no qual constarão, no mínimo, as seguintes informações, relativas a cada prestação de serviço ou operação com mercadorias a prazo: (Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 18, § 3º; art. 26, § 4º). I - número e data de emissão de cada documento fiscal; II - valor da operação ou prestação; III - quantidade e valor de cada parcela, bem como a data dos respectivos vencimentos; IV - data de recebimento e o valor recebido; V - saldo a receber; VI - créditos considerados não mais cobráveis. § 1º Na hipótese de haver mais de um documento fiscal referente a uma mesma prestação de serviço ou operação com mercadoria, estes deverão ser registrados conjuntamente. (Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º; art. 18, § 3º; art. 26, § 4º) § 2º A adoção do Regime de Caixa pela ME ou EPP não a desobriga de manter em boa ordem e guarda os documentos e livros previstos nesta Resolução, inclusive com a discriminação completa de toda a sua movimentação financeira e bancária, constante do Livro Caixa, observado o disposto no § 3º do art. 61. (Lei Complementar nº 123, de 2006, art. 2º, inciso I e § 6º)\"}
+  "mensagens": [
+    {
+      "codigo": "[Sucesso-REGIME]",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ]
+}
+```
+
+### Análise do Retorno
+
+#### Campos Principais
+
+1.  **Status**: 200 (sucesso)
+2.  **Dados**: String JSON escapada contendo:
+    *   `textoResolucao`: O texto completo da Resolução CGSN nº 140, de 22 de maio de 2018, que dispõe sobre o Simples Nacional.
+
+#### Mensagens de Sucesso
+
+*   **Código**: "[Sucesso-REGIME]"
+*   **Texto**: "Requisição efetuada com sucesso."
+
+### Observações Importantes
+
+1.  **Conteúdo Legal**: O retorno deste serviço é o texto integral da resolução que regulamenta o regime de apuração, fornecendo a base legal para a opção.
+2.  **Formato**: O texto é retornado como uma string dentro de um objeto JSON.
+
+---
+
+## 11. Mensagens - Integra Simples Nacional - REGIME
+
+### Mensagens Específicas
+
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| `[Erro-REGIME-MSG_ISN_001]` | Erro ao utilizar o Integra Contador SN. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_049]` | O campo _descritivoRegime_ deve ter uma das duas entradas: COMPETENCIA ou CAIXA. | Deve ser enviado o texto para o regime escolhido |
+| `[EntradaIncorreta-REGIME-MSG_ISN_050]` | O campo _anoOpcao_ é anterior ao ano de abertura da empresa. | O campo _anoOpcao_ passado não é válido de acordo com a data de abertura. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_051]` | O campo _deAcordoResolucao_ está ausente ou false. Não será efetivada a opção de regime até que ele seja enviado como true. | Reenviar o valor como true. |
+| `[Aviso-REGIME-MSG_ISN_052]` | Opção pelo regime de apuração de receitas já realizada. | A opção já foi realizada. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_053]` | O campo descritivoRegime está como {0} mas o tipoRegime está como {1}. | O valor enviado no descritivoRegime não está coerente com o campo tipoRegime |
+| `[Sucesso-REGIME-MSG_ISN_054]` | Opção pelo regime de apuração de receitas realizada com sucesso. | A opção foi efetivada. |
+| `[Aviso-REGIME-MSG_I_055]` | Não foram encontradas opções efetivadas para este CNPJ. | A consulta não achou opções para este CNPJ |
+| `[EntradaIncorreta-REGIME-MSG_ISN_056]` | Ano Calendário deve estar entre {0} e {1}. | O parâmetro anoCalendario está fora dos limites de acordo com a regra do Sistema. |
+| `[Aviso-REGIME-MSG_ISN_057]` | Não foi encontrada opção de regime para o ano informado. | O ano consultado não possui regime efetivado. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_058]` | Não foi informado o parâmetro {0}. | Um parâmetro necessário não foi enviado. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_059]` | Campo _anoOpcao_ deve ter 4 dígitos numéricos e estar entre {0} e {1}. | Parâmetro enviado incorretamente. |
+| `[EntradaIncorreta-REGIME-MSG_ISN_060]` | O campo _tipoRegime_ deve ser 0 ou 1. | Parâmetro enviado incorretamente. |
+
+---
+
+
+## 12. Dados de Domínio
+
+### Tipos de Regime
+
+| Código | Descrição   |
+|--------|-------------|
+| 0      | Competência |
+| 1      | Caixa       |
+
+---
+
+
+## 13. Glossário
+
+### Siglas
+
+Principais siglas utilizadas no PGDAS-D 2018/REGIME.
+
+Fonte: [Manual do PGDAS-D 2018](https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/MANUAL_PGDAS-D_2018_V4.pdf)
+
+| Sigla | Descrição |
+| --- | --- |
+| CGSN | Comitê Gestor do Simples Nacional |
+| CNAE | Classificação Nacional de Atividades Econômicas |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| Cofins | Contribuição para o Financiamento da Seguridade Social |
+| CPF | Cadastro de Pessoa Física |
+| CPP | Contribuição Patronal Previdenciária para a Seguridade Social |
+| CSLL | Contribuição Social sobre o Lucro Líquido |
+| DAS | Documento de Arrecadação do Simples Nacional |
+| DF | Distrito Federal |
+| EPP | Empresa de Pequeno Porte |
+| FS12 | Folha de Salários, incluindo encargos, acumulada da empresa nos 12 meses anteriores ao PA |
+| ICMS | Imposto sobre Operações Relativas à Circulação de Mercadorias e sobre Prestação de Serviços de Transporte Interestaduais e Intermunicipais e de Comunicação |
+| IN | Instrução Normativa |
+| INSS | Instituto Nacional do Seguro Social |
+| IPI | Imposto sobre Produtos Industrializados |
+| IRPJ | Imposto sobre a Renda da Pessoa Jurídica |
+| ISS | Imposto Sobre Serviços |
+| ME | Microempresa |
+| PA | Período de Apuração |
+| PGDAS-D | Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório |
+| PIS | Programa de Integração Social |
+| PJ | Pessoa Jurídica |
+| r | (Fator) Relação entre a FS12 e a RBT12 |
+| RBA | Receita Bruta Acumulada no ano-calendário corrente (mercado interno + mercado externo) |
+| RBA int | Receita Bruta Acumulada no ano-calendário corrente no mercado interno |
+| RBA ext | Receita Bruta Acumulada no ano-calendário corrente no mercado externo |
+| RBAA | Receita Bruta Acumulada no ano-calendário anterior (mercado interno + mercado externo) |
+| RBAA int | Receita Bruta Acumulada no ano-calendário anterior no mercado interno |
+| RBAA ext | Receita Bruta Acumulada no ano-calendário anterior no mercado externo |
+| RPA | Receita Bruta Total do PA |
+| RPA int | Receita Bruta Total do PA no mercado interno |
+| RPA ext | Receita Bruta Total do PA no mercado externo |
+| RBT12 | Receita Bruta Acumulada da empresa nos 12 meses anteriores ao PA (mercado interno + mercado externo) |
+| RBT12 int | Receita bruta acumulada nos doze meses anteriores ao PA no mercado interno |
+| RBT12 ext | Receita bruta acumulada nos doze meses anteriores ao PA no mercado externo |
+| RBT12 int prop | Receita bruta acumulada nos doze meses anteriores ao PA no mercado interno proporcionalizada |
+| RBT12 ext prop | Receita bruta acumulada nos doze meses anteriores ao PA no mercado externo proporcionalizada |
+| RFB | Secretaria da Receita Federal do Brasil |
+| SE | Secretaria Executiva |
+| Selic | Sistema Especial de Liquidação e Custódia (juros) |
+| SPE | Sociedade de Propósito Específico |
+| UF | Unidade da Federação |
+
+---
+
+
+## 14. Manual PGDAS-D e DEFIS (Receita Federal)
+
+### Informações Relevantes
+
+O **Manual do PGDAS-D e DEFIS**, em sua versão de 17 de junho de 2025, fornece informações cruciais para a correta utilização do sistema, incluindo:
+
+*   **Opção pelo Regime de Apuração**: Detalha como e quando o contribuinte pode optar pelo regime de caixa ou competência.
+*   **Declaração Mensal**: Explica os prazos, multas e procedimentos para a declaração das receitas.
+*   **Cálculo do Valor Devido**: Apresenta as regras para o cálculo dos tributos, incluindo a aplicação do fator "r" e as regras para empresas em início de atividade.
+*   **Sublimites**: Descreve os efeitos do impedimento de recolher o ICMS e o ISS na forma do Simples Nacional.
+
+### Opção pelo Regime de Apuração das Receitas
+
+O contribuinte, ao acessar o PGDAS-D, deve selecionar o regime de apuração de receitas (Caixa ou Competência) que será utilizado para o ano-calendário. A opção é irretratável para todo o ano-calendário.
+
+*   **Regime de Competência**: A receita bruta é reconhecida no momento da operação, independentemente do recebimento.
+*   **Regime de Caixa**: A receita bruta é reconhecida no momento do recebimento dos valores.
+
+Para mais detalhes, consulte o item 5 do manual.
+
+---

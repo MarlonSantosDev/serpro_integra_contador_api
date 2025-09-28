@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+# Retorno Solicitar relatório de situação fiscal - Integra Contador
+
+# Exemplo de Json de retorno
+
+Solicitar o relatório de situação fiscal.
+
+## Json de retorno completo
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "SITFIS",             "idServico": "SOLICITARPROTOCOLO91",             "versaoSistema": "2.0",             "dados": ""         },         "status": 200,         "dados": "{\"protocoloRelatorio\":\"+S7N6c04XNZUVzmxWT7SzpkZA4xeDQC9Z2T2GBJ5usn8LyouyWXbsy6mKsLy7/EImRkDjF4NAL25KiSXOLjnzAaZu/FC+G1pYOtTMYqokKYYr/yZ6aqUiCuWPfujDQ2/udwgU+Dyh56GSe28B5Ev25jDnzpvVJPhiebO5hpy1YESP5gnEhaP3bocCiZZrYG26F8avRRBJhRTsfv3Rvop+bxvYJZsVym270eO8oZTDIr3OJj==\", \"tempoEspera\":30}",         "mensagens":           [{             "codigo": "[Sucesso-Sitfis-SC01]",             "texto": "A requisição foi efetuada com sucesso"         }]     }`

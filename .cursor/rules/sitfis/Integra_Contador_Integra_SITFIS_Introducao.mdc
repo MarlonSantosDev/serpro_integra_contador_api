@@ -1,0 +1,48 @@
+---
+alwaysApply: true
+---
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o Integra SITFIS?
+
+É uma solução integrada ao sistema Situação Fiscal que é um sistema que fornece um relatório de situação Fiscal do contribuintes Pessoa Jurídica e Pessoa Física, no âmbito da Receita Federal do Brasil e Procuradoria-Geral da Fazenda Nacional, conforme [Portaria RFB/PGFN n° 1.751, de 02/10/2014]().
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra SITFIS, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema SITFIS, garantindo a integridade e a confidencialidade das informações transmitidas.
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o Integra SITFIS?
+
+É uma solução integrada ao sistema Situação Fiscal que é um sistema que fornece um relatório de situação Fiscal do contribuintes Pessoa Jurídica e Pessoa Física, no âmbito da Receita Federal do Brasil e Procuradoria-Geral da Fazenda Nacional, conforme [Portaria RFB/PGFN n° 1.751, de 02/10/2014]().
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra SITFIS, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema SITFIS, garantindo a integridade e a confidencialidade das informações transmitidas.
