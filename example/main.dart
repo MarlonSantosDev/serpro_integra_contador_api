@@ -41,72 +41,263 @@ void main() async {
   // await exemplosEventosAtualizacao(apiClient);
 }
 
+Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
+  print('=== Exemplos Caixa Postal ===');
+
+  final caixaPostalService = CaixaPostalService(apiClient);
+
+  // Declarar listaResponse no escopo principal para ser usado em outras seções
+  dynamic listaResponse;
+
+  try {
+    // 1. Verificar se há mensagens novas
+    try {
+      print('\n--- Verificando mensagens novas ---');
+      final temNovas = await caixaPostalService.temMensagensNovas('99999999999999');
+      print('📬 Tem mensagens novas: $temNovas');
+    } catch (e) {
+      print('❌ Erro ao verificar mensagens novas: $e');
+    }
+
+    // 2. Obter indicador detalhado de mensagens novas
+    try {
+      print('\n--- Indicador de mensagens novas ---');
+      final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
+      print('✅ Status HTTP: ${indicadorResponse.status}');
+      if (indicadorResponse.dadosParsed != null) {
+        final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
+        print('📊 Indicador: ${conteudo.indicadorMensagensNovas}');
+        print('📈 Status: ${conteudo.statusMensagensNovas}');
+        print('📝 Descrição: ${conteudo.descricaoStatus}');
+        print('📬 Tem mensagens novas: ${conteudo.temMensagensNovas}');
+      }
+    } catch (e) {
+      print('❌ Erro ao obter indicador de mensagens novas: $e');
+    }
+
+    // 3. Listar todas as mensagens
+    try {
+      print('\n--- Listando todas as mensagens ---');
+      listaResponse = await caixaPostalService.listarTodasMensagens('99999999999');
+      print('✅ Status HTTP: ${listaResponse.status}');
+      if (listaResponse.dadosParsed != null && listaResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = listaResponse.dadosParsed!.conteudo.first;
+        print('📊 Quantidade de mensagens: ${conteudo.quantidadeMensagensInt}');
+        print('📄 É última página: ${conteudo.isUltimaPagina}');
+        print('➡️ Ponteiro próxima página: ${conteudo.ponteiroProximaPagina}');
+
+        // Exibir primeiras 3 mensagens
+        final mensagens = conteudo.listaMensagens.take(3);
+        for (var i = 0; i < mensagens.length; i++) {
+          final msg = mensagens.elementAt(i);
+          print('\n📧 Mensagem ${i + 1}:');
+          print('  🆔 ISN: ${msg.isn}');
+          print('  📝 Assunto: ${msg.assuntoProcessado}');
+          print('  📅 Data envio: ${MessageUtils.formatarData(msg.dataEnvio)}');
+          print('  👁️ Foi lida: ${msg.foiLida}');
+          print('  ⭐ É favorita: ${msg.isFavorita}');
+          print('  📈 Relevância: ${MessageUtils.obterDescricaoRelevancia(msg.relevancia)}');
+          print('  📍 Origem: ${msg.descricaoOrigem}');
+        }
+      }
+    } catch (e) {
+      print("❌ Erro ao listar todas as mensagens: $e");
+    }
+
+    // 4. Listar apenas mensagens não lidas
+    try {
+      print('\n--- Listando mensagens não lidas ---');
+      final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
+      if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
+        print('📬 Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
+      }
+    } catch (e) {
+      print('❌ Erro ao listar todas as mensagens: $e');
+    }
+
+    // 5. Listar apenas mensagens lidas
+    try {
+      print('\n--- Listando mensagens lidas ---');
+      final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999');
+      if (lidasResponse.dadosParsed != null && lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = lidasResponse.dadosParsed!.conteudo.first;
+        print('👁️ Mensagens lidas: ${conteudo.quantidadeMensagensInt}');
+      }
+    } catch (e) {
+      print("❌ Erro ao listar mensagens lidas: $e");
+    }
+
+    // 6. Listar mensagens favoritas
+    try {
+      print('\n--- Listando mensagens favoritas ---');
+      final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999');
+      if (favoritasResponse.dadosParsed != null && favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = favoritasResponse.dadosParsed!.conteudo.first;
+        print('⭐ Mensagens favoritas: ${conteudo.quantidadeMensagensInt}');
+      }
+    } catch (e) {
+      print("❌ Erro ao listar mensagens favoritas: $e");
+    }
+
+    // 7. Obter detalhes de uma mensagem específica (usando ISN da primeira mensagem)
+    try {
+      if (listaResponse.dadosParsed != null &&
+          listaResponse.dadosParsed!.conteudo.isNotEmpty &&
+          listaResponse.dadosParsed!.conteudo.first.listaMensagens.isNotEmpty) {
+        final primeiraMsg = listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
+        print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
+
+        final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
+
+        if (detalhesResponse.dadosParsed != null && detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
+          final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
+          print('📝 Assunto processado: ${detalhe.assuntoProcessado}');
+          print('📅 Data de envio: ${MessageUtils.formatarData(detalhe.dataEnvio)}');
+          print('⏰ Data de expiração: ${MessageUtils.formatarData(detalhe.dataExpiracao)}');
+          print('⭐ É favorita: ${detalhe.isFavorita}');
+
+          // Corpo da mensagem processado
+          final corpoProcessado = detalhe.corpoProcessado;
+          final corpoLimpo = MessageUtils.removerTagsHtml(corpoProcessado);
+          print('📄 Corpo (primeiros 200 caracteres):');
+          print('${corpoLimpo.length > 200 ? corpoLimpo.substring(0, 200) + '...' : corpoLimpo}');
+
+          // Mostrar variáveis se existirem
+          if (detalhe.variaveis.isNotEmpty) {
+            print('\n🔧 Variáveis da mensagem:');
+            for (var i = 0; i < detalhe.variaveis.length; i++) {
+              print('  ++${i + 1}++: ${detalhe.variaveis[i]}');
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print("❌ Erro ao obter detalhes da mensagem específica: $e");
+    }
+
+    // 8. Exemplo de paginação (se houver mais páginas)
+    try {
+      if (listaResponse.dadosParsed != null &&
+          listaResponse.dadosParsed!.conteudo.isNotEmpty &&
+          !listaResponse.dadosParsed!.conteudo.first.isUltimaPagina) {
+        print('\n--- Exemplo de paginação ---');
+        final proximaPagina = listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
+
+        final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999', ponteiroPagina: proximaPagina);
+
+        if (paginaResponse.dadosParsed != null && paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
+          final conteudo = paginaResponse.dadosParsed!.conteudo.first;
+          print('📄 Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}');
+        }
+      }
+    } catch (e) {
+      print("❌ Erro ao listar paginação: $e");
+    }
+
+    // 9. Exemplo usando filtros específicos
+    try {
+      print('\n--- Exemplo com filtros específicos ---');
+      final filtradaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
+        '99999999999',
+        statusLeitura: 0, // Todas as mensagens
+        indicadorFavorito: null, // Sem filtro de favorita
+        indicadorPagina: 0, // Página inicial
+      );
+
+      if (filtradaResponse.dadosParsed != null && filtradaResponse.dadosParsed!.conteudo.isNotEmpty) {
+        final conteudo = filtradaResponse.dadosParsed!.conteudo.first;
+        print('🔍 Mensagens com filtros específicos: ${conteudo.quantidadeMensagensInt}');
+      }
+    } catch (e) {
+      print("❌ Erro ao listar mensagens com filtros específicos: $e");
+    }
+  } catch (e) {
+    print('💥 Erro no serviço da Caixa Postal: $e');
+  }
+}
+
 Future<void> exemplosCcmei(ApiClient apiClient) async {
   print('=== Exemplos CCMEI ===');
 
   final ccmeiService = CcmeiService(apiClient);
 
   try {
-    print('\n--- 1. Emitir CCMEI (PDF) ---');
-    final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
-    print('Status: ${emitirResponse.status}');
-    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('CNPJ: ${emitirResponse.dados.cnpj}');
-    print('PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
-    print('Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
+    // 1. Emitir CCMEI (PDF)
+    try {
+      print('\n--- 1. Emitir CCMEI (PDF) ---');
+      final emitirResponse = await ccmeiService.emitirCcmei('00000000000000');
+      print('✅ Status: ${emitirResponse.status}');
+      print('📋 Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('🏢 CNPJ: ${emitirResponse.dados.cnpj}');
+      print('📄 PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
+      print('📏 Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
+    } catch (e) {
+      print('❌ Erro ao emitir CCMEI: $e');
+    }
 
-    print('\n--- 2. Consultar Dados CCMEI ---');
-    final consultarResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
-    print('Status: ${consultarResponse.status}');
-    print('Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('CNPJ: ${consultarResponse.dados.cnpj}');
-    print('Nome Empresarial: ${consultarResponse.dados.nomeEmpresarial}');
-    print('Empresário: ${consultarResponse.dados.empresario.nomeCivil}');
-    print('CPF Empresário: ${consultarResponse.dados.empresario.cpf}');
-    print('Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}');
-    print('Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}');
-    print('Capital Social: R\$ ${consultarResponse.dados.capitalSocial}');
-    print('Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}');
-    print('Bairro: ${consultarResponse.dados.enderecoComercial.bairro}');
-    print('Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}');
-    print('CEP: ${consultarResponse.dados.enderecoComercial.cep}');
-    print('Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
-    print('Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}');
-    print('Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)');
-    for (var periodo in consultarResponse.dados.enquadramento.periodosMei) {
-      print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
-    }
-    print('Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}');
-    print('Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
-    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
-      print(
-        'CNAE Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoCNAE}',
-      );
-    }
-    print('Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}');
-    for (var ocupacao in consultarResponse.dados.atividade.ocupacoesSecundarias) {
-      print('  - ${ocupacao.descricaoOcupacao}');
-      if (ocupacao.codigoCNAE != null) {
-        print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
+    // 2. Consultar Dados CCMEI
+    try {
+      print('\n--- 2. Consultar Dados CCMEI ---');
+      final consultarResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
+      print('✅ Status: ${consultarResponse.status}');
+      print('📋 Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('🏢 CNPJ: ${consultarResponse.dados.cnpj}');
+      print('📝 Nome Empresarial: ${consultarResponse.dados.nomeEmpresarial}');
+      print('👤 Empresário: ${consultarResponse.dados.empresario.nomeCivil}');
+      print('🆔 CPF Empresário: ${consultarResponse.dados.empresario.cpf}');
+      print('📅 Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}');
+      print('📊 Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}');
+      print('💰 Capital Social: R\$ ${consultarResponse.dados.capitalSocial}');
+      print('📍 Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}');
+      print('🏘️ Bairro: ${consultarResponse.dados.enderecoComercial.bairro}');
+      print('🏙️ Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}');
+      print('📮 CEP: ${consultarResponse.dados.enderecoComercial.cep}');
+      print('🏪 Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
+      print('📈 Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}');
+      print('📅 Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)');
+      for (var periodo in consultarResponse.dados.enquadramento.periodosMei) {
+        print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
       }
+      print('💼 Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}');
+      print('🎯 Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
+      if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
+        print(
+          '🏷️ CNAE Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoCNAE}',
+        );
+      }
+      print('📋 Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}');
+      for (var ocupacao in consultarResponse.dados.atividade.ocupacoesSecundarias) {
+        print('  - ${ocupacao.descricaoOcupacao}');
+        if (ocupacao.codigoCNAE != null) {
+          print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
+        }
+      }
+      print('📄 Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
+      print('📱 QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
+    } catch (e) {
+      print('❌ Erro ao consultar dados CCMEI: $e');
     }
-    print('Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
-    print('QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
 
-    print('\n--- 3. Consultar Situação Cadastral por CPF ---');
-    final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
-    print('Status: ${situacaoResponse.status}');
-    print('Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('CNPJs encontrados: ${situacaoResponse.dados.length}');
-    for (var situacao in situacaoResponse.dados) {
-      print('  - CNPJ: ${situacao.cnpj}');
-      print('    Situação: ${situacao.situacao}');
-      print('    Enquadrado MEI: ${situacao.enquadradoMei ? 'Sim' : 'Não'}');
+    // 3. Consultar Situação Cadastral por CPF
+    try {
+      print('\n--- 3. Consultar Situação Cadastral por CPF ---');
+      final situacaoResponse = await ccmeiService.consultarSituacaoCadastral('00000000000');
+      print('✅ Status: ${situacaoResponse.status}');
+      print('📋 Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('🔍 CNPJs encontrados: ${situacaoResponse.dados.length}');
+      for (var situacao in situacaoResponse.dados) {
+        print('  - CNPJ: ${situacao.cnpj}');
+        print('    Situação: ${situacao.situacao}');
+        print('    Enquadrado MEI: ${situacao.enquadradoMei ? 'Sim' : 'Não'}');
+      }
+    } catch (e) {
+      print('❌ Erro ao consultar situação cadastral: $e');
     }
 
-    print('\n✅ Todos os serviços CCMEI executados com sucesso!');
+    print('\n🎉 Todos os serviços CCMEI executados com sucesso!');
   } catch (e) {
-    print('❌ Erro nos serviços CCMEI: $e');
+    print('💥 Erro geral nos serviços CCMEI: $e');
     if (e.toString().contains('status')) {
       print('Verifique se o CNPJ/CPF informado é válido e se a empresa está cadastrada como MEI.');
     }
@@ -117,50 +308,66 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   print('=== Exemplos PGMEI ===');
 
   final pgmeiService = PgmeiService(apiClient);
-  try {
-    // Gerar DAS
-    final response = await pgmeiService.gerarDas('00000000000100', '202310');
-    print('DAS gerado com sucesso Padrao');
 
-    if (response.dados.isNotEmpty) {
-      final das = response.dados.first;
-      print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
-    }
-  } catch (e) {
-    print('Erro no serviço PGMEI: .... $e');
-  }
   try {
-    final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '202310');
-    print('DAS gerado com sucesso Codigo de Barras');
+    // 1. Gerar DAS Padrão
+    try {
+      print('\n--- 1. Gerar DAS Padrão ---');
+      final response = await pgmeiService.gerarDas('00000000000100', '202310');
+      print('✅ DAS gerado com sucesso Padrão');
 
-    if (response.dados.isNotEmpty) {
-      final das = response.dados.first;
-      print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+      if (response.dados.isNotEmpty) {
+        final das = response.dados.first;
+        print('💰 Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+      }
+    } catch (e) {
+      print('❌ Erro ao gerar DAS padrão: $e');
     }
-  } catch (e) {
-    print('Erro no serviço PGMEI: .... $e');
-  }
-  try {
-    final response = await pgmeiService.atualizarBeneficio('00000000000100', '202310');
-    print('DAS gerado com sucesso Atualizar Beneficio');
 
-    if (response.dados.isNotEmpty) {
-      //final das = response.dados.first;
-      print("response: ${response.dados.first.toJson()}");
-    }
-  } catch (e) {
-    print('Erro no serviço PGMEI: Atualizar Beneficio: $e');
-  }
-  try {
-    final response = await pgmeiService.consultarDividaAtiva('00000000000100', '2020');
-    print('DAS gerado com sucesso Consultar Divida Ativa');
+    // 2. Gerar DAS com Código de Barras
+    try {
+      print('\n--- 2. Gerar DAS com Código de Barras ---');
+      final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '202310');
+      print('✅ DAS gerado com sucesso Código de Barras');
 
-    if (response.dados.isNotEmpty) {
-      final das = response.dados.first;
-      print('Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+      if (response.dados.isNotEmpty) {
+        final das = response.dados.first;
+        print('💰 Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+      }
+    } catch (e) {
+      print('❌ Erro ao gerar DAS com código de barras: $e');
     }
+
+    // 3. Atualizar Benefício
+    try {
+      print('\n--- 3. Atualizar Benefício ---');
+      final response = await pgmeiService.atualizarBeneficio('00000000000100', '202310');
+      print('✅ Benefício atualizado com sucesso');
+
+      if (response.dados.isNotEmpty) {
+        print("📋 Response: ${response.dados.first.toJson()}");
+      }
+    } catch (e) {
+      print('❌ Erro ao atualizar benefício: $e');
+    }
+
+    // 4. Consultar Dívida Ativa
+    try {
+      print('\n--- 4. Consultar Dívida Ativa ---');
+      final response = await pgmeiService.consultarDividaAtiva('00000000000100', '2020');
+      print('✅ Consulta de dívida ativa realizada com sucesso');
+
+      if (response.dados.isNotEmpty) {
+        final das = response.dados.first;
+        print('💰 Valor total do DAS: R\$ ${das.detalhamento.valores.total}');
+      }
+    } catch (e) {
+      print('❌ Erro ao consultar dívida ativa: $e');
+    }
+
+    print('\n🎉 Todos os serviços PGMEI executados com sucesso!');
   } catch (e) {
-    print('Erro no serviço PGMEI: .... $e');
+    print('💥 Erro geral nos serviços PGMEI: $e');
   }
 }
 
@@ -171,264 +378,310 @@ Future<void> exemplosPgdasd(ApiClient apiClient) async {
 
   try {
     // 1. Entregar Declaração Mensal (TRANSDECLARACAO11)
-    print('\n--- Entregando Declaração Mensal ---');
+    try {
+      print('\n--- 1. Entregando Declaração Mensal ---');
 
-    // Criar declaração de exemplo com dados reais conforme documentação
-    final declaracao = pgdasd_models.Declaracao(
-      tipoDeclaracao: 1, // Original
-      receitaPaCompetenciaInterno: 50000.00,
-      receitaPaCompetenciaExterno: 10000.00,
-      estabelecimentos: [
-        pgdasd_models.Estabelecimento(
-          cnpjCompleto: '00000000000100',
-          atividades: [
-            pgdasd_models.Atividade(
-              idAtividade: 1,
-              valorAtividade: 60000.00,
-              receitasAtividade: [
-                pgdasd_models.ReceitaAtividade(
-                  valor: 60000.00,
-                  isencoes: [pgdasd_models.Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
-                  reducoes: [pgdasd_models.Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
+      // Criar declaração de exemplo com dados reais conforme documentação
+      final declaracao = pgdasd_models.Declaracao(
+        tipoDeclaracao: 1, // Original
+        receitaPaCompetenciaInterno: 50000.00,
+        receitaPaCompetenciaExterno: 10000.00,
+        estabelecimentos: [
+          pgdasd_models.Estabelecimento(
+            cnpjCompleto: '00000000000100',
+            atividades: [
+              pgdasd_models.Atividade(
+                idAtividade: 1,
+                valorAtividade: 60000.00,
+                receitasAtividade: [
+                  pgdasd_models.ReceitaAtividade(
+                    valor: 60000.00,
+                    isencoes: [pgdasd_models.Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
+                    reducoes: [pgdasd_models.Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
 
-    final entregarResponse = await pgdasdService.entregarDeclaracaoSimples(
-      cnpj: '00000000000100',
-      periodoApuracao: 202101,
-      declaracao: declaracao,
-      transmitir: true,
-      compararValores: true,
-      valoresParaComparacao: [
-        pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
-        pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
-      ],
-    );
+      final entregarResponse = await pgdasdService.entregarDeclaracaoSimples(
+        cnpj: '00000000000100',
+        periodoApuracao: 202101,
+        declaracao: declaracao,
+        transmitir: true,
+        compararValores: true,
+        valoresParaComparacao: [
+          pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
+          pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
+        ],
+      );
 
-    print('Status: ${entregarResponse.status}');
-    print('Sucesso: ${entregarResponse.sucesso}');
+      print('✅ Status: ${entregarResponse.status}');
+      print('✅ Sucesso: ${entregarResponse.sucesso}');
 
-    if (entregarResponse.dadosParsed != null) {
-      final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
-      print('ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
-      print('Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
-      print('Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}');
-      print('Tem MAED: ${declaracaoTransmitida.temMaed}');
+      if (entregarResponse.dadosParsed != null) {
+        final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
+        print('🆔 ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
+        print('📅 Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
+        print('💰 Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}');
+        print('📋 Tem MAED: ${declaracaoTransmitida.temMaed}');
+      }
+    } catch (e) {
+      print('❌ Erro ao entregar declaração mensal: $e');
     }
 
     // 2. Gerar DAS (GERARDAS12)
-    print('\n--- Gerando DAS ---');
+    try {
+      print('\n--- 2. Gerando DAS ---');
 
-    final gerarDasResponse = await pgdasdService.gerarDasSimples(
-      cnpj: '00000000000100',
-      periodoApuracao: '202101',
-      dataConsolidacao: '20220831', // Data futura para consolidação
-    );
+      final gerarDasResponse = await pgdasdService.gerarDasSimples(
+        cnpj: '00000000000100',
+        periodoApuracao: '202101',
+        dataConsolidacao: '20220831', // Data futura para consolidação
+      );
 
-    print('Status: ${gerarDasResponse.status}');
-    print('Sucesso: ${gerarDasResponse.sucesso}');
+      print('✅ Status: ${gerarDasResponse.status}');
+      print('✅ Sucesso: ${gerarDasResponse.sucesso}');
 
-    if (gerarDasResponse.dadosParsed != null) {
-      final das = gerarDasResponse.dadosParsed!.first;
-      print('CNPJ: ${das.cnpjCompleto}');
-      print('Período: ${das.detalhamento.periodoApuracao}');
-      print('Número Documento: ${das.detalhamento.numeroDocumento}');
-      print('Data Vencimento: ${das.detalhamento.dataVencimento}');
-      print('Valor Total: R\$ ${das.detalhamento.valores.total}');
-      print('PDF disponível: ${das.pdf.isNotEmpty}');
+      if (gerarDasResponse.dadosParsed != null) {
+        final das = gerarDasResponse.dadosParsed!.first;
+        print('🏢 CNPJ: ${das.cnpjCompleto}');
+        print('📅 Período: ${das.detalhamento.periodoApuracao}');
+        print('📄 Número Documento: ${das.detalhamento.numeroDocumento}');
+        print('📅 Data Vencimento: ${das.detalhamento.dataVencimento}');
+        print('💰 Valor Total: R\$ ${das.detalhamento.valores.total}');
+        print('📄 PDF disponível: ${das.pdf.isNotEmpty}');
+      }
+    } catch (e) {
+      print('❌ Erro ao gerar DAS: $e');
     }
 
     // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
-    print('\n--- Consultando Declarações por Ano ---');
+    try {
+      print('\n--- 3. Consultando Declarações por Ano ---');
 
-    final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(cnpj: '00000000000000', anoCalendario: '2018');
+      final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(cnpj: '00000000000000', anoCalendario: '2018');
 
-    print('Status: ${consultarAnoResponse.status}');
-    print('Sucesso: ${consultarAnoResponse.sucesso}');
+      print('✅ Status: ${consultarAnoResponse.status}');
+      print('✅ Sucesso: ${consultarAnoResponse.sucesso}');
 
-    if (consultarAnoResponse.dadosParsed != null) {
-      final declaracoes = consultarAnoResponse.dadosParsed!;
-      print('Ano Calendário: ${declaracoes.anoCalendario}');
-      print('Períodos encontrados: ${declaracoes.listaPeriodos.length}');
+      if (consultarAnoResponse.dadosParsed != null) {
+        final declaracoes = consultarAnoResponse.dadosParsed!;
+        print('📅 Ano Calendário: ${declaracoes.anoCalendario}');
+        print('🔍 Períodos encontrados: ${declaracoes.listaPeriodos.length}');
 
-      for (final periodo in declaracoes.listaPeriodos.take(3)) {
-        print('\nPeríodo ${periodo.periodoApuracao}:');
-        print('  Operações: ${periodo.operacoes.length}');
+        for (final periodo in declaracoes.listaPeriodos.take(3)) {
+          print('\n📅 Período ${periodo.periodoApuracao}:');
+          print('  🔧 Operações: ${periodo.operacoes.length}');
 
-        for (final operacao in periodo.operacoes.take(2)) {
-          print('    ${operacao.tipoOperacao}');
-          if (operacao.isDeclaracao) {
-            print('      Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
-            print('      Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}');
-          }
-          if (operacao.isDas) {
-            print('      DAS: ${operacao.indiceDas!.numeroDas}');
-            print('      Pago: ${operacao.indiceDas!.foiPago}');
+          for (final operacao in periodo.operacoes.take(2)) {
+            print('    ${operacao.tipoOperacao}');
+            if (operacao.isDeclaracao) {
+              print('      📄 Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
+              print('      🔍 Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}');
+            }
+            if (operacao.isDas) {
+              print('      💰 DAS: ${operacao.indiceDas!.numeroDas}');
+              print('      ✅ Pago: ${operacao.indiceDas!.foiPago}');
+            }
           }
         }
       }
+    } catch (e) {
+      print('❌ Erro ao consultar declarações por ano: $e');
     }
 
     // 4. Consultar Declarações por Período (CONSDECLARACAO13)
-    print('\n--- Consultando Declarações por Período ---');
+    try {
+      print('\n--- 4. Consultando Declarações por Período ---');
 
-    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+      final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
 
-    print('Status: ${consultarPeriodoResponse.status}');
-    print('Sucesso: ${consultarPeriodoResponse.sucesso}');
+      print('✅ Status: ${consultarPeriodoResponse.status}');
+      print('✅ Sucesso: ${consultarPeriodoResponse.sucesso}');
+    } catch (e) {
+      print('❌ Erro ao consultar declarações por período: $e');
+    }
 
     // 5. Consultar Última Declaração (CONSULTIMADECREC14)
-    print('\n--- Consultando Última Declaração ---');
+    try {
+      print('\n--- 5. Consultando Última Declaração ---');
 
-    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+      final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
 
-    print('Status: ${ultimaDeclaracaoResponse.status}');
-    print('Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
+      print('✅ Status: ${ultimaDeclaracaoResponse.status}');
+      print('✅ Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
 
-    if (ultimaDeclaracaoResponse.dadosParsed != null) {
-      final declaracao = ultimaDeclaracaoResponse.dadosParsed!;
-      print('Número Declaração: ${declaracao.numeroDeclaracao}');
-      print('Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
-      print('Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
-      print('Tem MAED: ${declaracao.temMaed}');
+      if (ultimaDeclaracaoResponse.dadosParsed != null) {
+        final declaracao = ultimaDeclaracaoResponse.dadosParsed!;
+        print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
+        print('📄 Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
+        print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
+        print('📋 Tem MAED: ${declaracao.temMaed}');
 
-      if (declaracao.temMaed) {
-        print('  Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
-        print('  DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
+        if (declaracao.temMaed) {
+          print('  📋 Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
+          print('  💰 DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
+        }
       }
+    } catch (e) {
+      print('❌ Erro ao consultar última declaração: $e');
     }
 
     // 6. Consultar Declaração por Número (CONSDECREC15)
-    print('\n--- Consultando Declaração por Número ---');
+    try {
+      print('\n--- 6. Consultando Declaração por Número ---');
 
-    final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
-      cnpj: '00000000000000',
-      numeroDeclaracao: '00000000201801001',
-    );
+      final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
+        cnpj: '00000000000000',
+        numeroDeclaracao: '00000000201801001',
+      );
 
-    print('Status: ${declaracaoNumeroResponse.status}');
-    print('Sucesso: ${declaracaoNumeroResponse.sucesso}');
+      print('✅ Status: ${declaracaoNumeroResponse.status}');
+      print('✅ Sucesso: ${declaracaoNumeroResponse.sucesso}');
+    } catch (e) {
+      print('❌ Erro ao consultar declaração por número: $e');
+    }
 
     // 7. Consultar Extrato do DAS (CONSEXTRATO16)
-    print('\n--- Consultando Extrato do DAS ---');
+    try {
+      print('\n--- 7. Consultando Extrato do DAS ---');
 
-    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(cnpj: '00000000000000', numeroDas: '07202136999997159');
+      final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(cnpj: '00000000000000', numeroDas: '07202136999997159');
 
-    print('Status: ${extratoDasResponse.status}');
-    print('Sucesso: ${extratoDasResponse.sucesso}');
+      print('✅ Status: ${extratoDasResponse.status}');
+      print('✅ Sucesso: ${extratoDasResponse.sucesso}');
 
-    if (extratoDasResponse.dadosParsed != null) {
-      final extrato = extratoDasResponse.dadosParsed!;
-      print('Número DAS: ${extrato.numeroDas}');
-      print('CNPJ: ${extrato.cnpjCompleto}');
-      print('Período: ${extrato.periodoApuracao}');
-      print('Data Vencimento: ${extrato.dataVencimento}');
-      print('Valor Total: R\$ ${extrato.valorTotal}');
-      print('Status Pagamento: ${extrato.statusPagamento}');
-      print('Foi Pago: ${extrato.foiPago}');
-      print('Está Vencido: ${extrato.estaVencido}');
-      print('Composição: ${extrato.composicao.length} tributos');
+      if (extratoDasResponse.dadosParsed != null) {
+        final extrato = extratoDasResponse.dadosParsed!;
+        print('💰 Número DAS: ${extrato.numeroDas}');
+        print('🏢 CNPJ: ${extrato.cnpjCompleto}');
+        print('📅 Período: ${extrato.periodoApuracao}');
+        print('📅 Data Vencimento: ${extrato.dataVencimento}');
+        print('💰 Valor Total: R\$ ${extrato.valorTotal}');
+        print('📊 Status Pagamento: ${extrato.statusPagamento}');
+        print('✅ Foi Pago: ${extrato.foiPago}');
+        print('⏰ Está Vencido: ${extrato.estaVencido}');
+        print('📋 Composição: ${extrato.composicao.length} tributos');
 
-      for (final composicao in extrato.composicao.take(3)) {
-        print('  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)');
+        for (final composicao in extrato.composicao.take(3)) {
+          print('  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)');
+        }
       }
+    } catch (e) {
+      print('❌ Erro ao consultar extrato do DAS: $e');
     }
 
     // 8. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
-    print('\n--- Exemplo com Declaração Complexa ---');
+    try {
+      print('\n--- 8. Exemplo com Declaração Complexa ---');
 
-    final declaracaoComplexa = pgdasd_models.Declaracao(
-      tipoDeclaracao: 1, // Original
-      receitaPaCompetenciaInterno: 100000.00,
-      receitaPaCompetenciaExterno: 20000.00,
-      receitasBrutasAnteriores: [
-        pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
-        pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
-      ],
-      folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
-      estabelecimentos: [
-        pgdasd_models.Estabelecimento(
-          cnpjCompleto: '00000000000100',
-          atividades: [
-            pgdasd_models.Atividade(
-              idAtividade: 1,
-              valorAtividade: 120000.00,
-              receitasAtividade: [
-                pgdasd_models.ReceitaAtividade(
-                  valor: 120000.00,
-                  qualificacoesTributarias: [
-                    pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
-                    pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
-                  ],
-                  exigibilidadesSuspensas: [
-                    pgdasd_models.ExigibilidadeSuspensa(
-                      codTributo: 1,
-                      numeroProcesso: 123456789,
-                      uf: 'SP',
-                      vara: '1ª Vara Federal',
-                      existeDeposito: true,
-                      motivo: 1,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
+      final declaracaoComplexa = pgdasd_models.Declaracao(
+        tipoDeclaracao: 1, // Original
+        receitaPaCompetenciaInterno: 100000.00,
+        receitaPaCompetenciaExterno: 20000.00,
+        receitasBrutasAnteriores: [
+          pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
+          pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
+        ],
+        folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
+        estabelecimentos: [
+          pgdasd_models.Estabelecimento(
+            cnpjCompleto: '00000000000100',
+            atividades: [
+              pgdasd_models.Atividade(
+                idAtividade: 1,
+                valorAtividade: 120000.00,
+                receitasAtividade: [
+                  pgdasd_models.ReceitaAtividade(
+                    valor: 120000.00,
+                    qualificacoesTributarias: [
+                      pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
+                      pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
+                    ],
+                    exigibilidadesSuspensas: [
+                      pgdasd_models.ExigibilidadeSuspensa(
+                        codTributo: 1,
+                        numeroProcesso: 123456789,
+                        uf: 'SP',
+                        vara: '1ª Vara Federal',
+                        existeDeposito: true,
+                        motivo: 1,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
 
-    print('Declaração complexa criada com:');
-    print('- Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
-    print('- Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
-    print('- Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
-    print('- Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
-    print(
-      '- Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
-    );
-    print(
-      '- Exigibilidades suspensas: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.exigibilidadesSuspensas!.length}',
-    );
+      print('✅ Declaração complexa criada com:');
+      print('📅 - Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
+      print('💰 - Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
+      print('🏢 - Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
+      print('💼 - Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
+      print(
+        '🏷️ - Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
+      );
+      print(
+        '⚖️ - Exigibilidades suspensas: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.exigibilidadesSuspensas!.length}',
+      );
+    } catch (e) {
+      print('❌ Erro ao criar declaração complexa: $e');
+    }
 
     // 9. Exemplo de validação de dados
-    print('\n--- Exemplo de Validação de Dados ---');
-
-    // CNPJ inválido
     try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '123', // CNPJ inválido
-        pa: 202101,
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: declaracao,
-      );
-      print('CNPJ inválido detectado: ${!requestInvalido.isCnpjValido}');
+      print('\n--- 9. Exemplo de Validação de Dados ---');
+
+      // CNPJ inválido
+      try {
+        final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
+          cnpjCompleto: '123', // CNPJ inválido
+          pa: 202101,
+          indicadorTransmissao: true,
+          indicadorComparacao: false,
+          declaracao: pgdasd_models.Declaracao(
+            tipoDeclaracao: 1,
+            receitaPaCompetenciaInterno: 50000.00,
+            receitaPaCompetenciaExterno: 10000.00,
+            estabelecimentos: [],
+          ),
+        );
+        print('❌ CNPJ inválido detectado: ${!requestInvalido.isCnpjValido}');
+      } catch (e) {
+        print('⚠️ Erro esperado na validação: $e');
+      }
+
+      // Período inválido
+      try {
+        final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
+          cnpjCompleto: '00000000000100',
+          pa: 201701, // Período anterior a 2018
+          indicadorTransmissao: true,
+          indicadorComparacao: false,
+          declaracao: pgdasd_models.Declaracao(
+            tipoDeclaracao: 1,
+            receitaPaCompetenciaInterno: 50000.00,
+            receitaPaCompetenciaExterno: 10000.00,
+            estabelecimentos: [],
+          ),
+        );
+        print('❌ Período inválido detectado: ${!requestInvalido.isPaValido}');
+      } catch (e) {
+        print('⚠️ Erro esperado na validação: $e');
+      }
     } catch (e) {
-      print('Erro esperado na validação: $e');
+      print('❌ Erro na validação de dados: $e');
     }
 
-    // Período inválido
-    try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '00000000000100',
-        pa: 201701, // Período anterior a 2018
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: declaracao,
-      );
-      print('Período inválido detectado: ${!requestInvalido.isPaValido}');
-    } catch (e) {
-      print('Erro esperado na validação: $e');
-    }
-
-    print('\n=== Exemplos PGDASD Concluídos ===');
+    print('\n🎉 Todos os serviços PGDASD executados com sucesso!');
   } catch (e) {
-    print('Erro no serviço PGDASD: $e');
+    print('💥 Erro geral no serviço PGDASD: $e');
   }
 }
 
@@ -438,150 +691,81 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
   final dctfWebService = DctfWebService(apiClient);
 
   try {
-    /*
-    // 1. Consultar XML de uma declaração (Geral Mensal)
-    print('\n--- Consultando XML da declaração ---');
-    final xmlResponse = await dctfWebService.consultarXmlDeclaracao(
-      contribuinteNumero: '00000000000',
-      categoria: CategoriaDctf.pfMensal,
-      anoPA: '2022',
-      mesPA: '06',
-      contratanteNumero: '00000000000',
-      autorPedidoDadosNumero: '00000000000',
-    );
-
-    print('Status: ${xmlResponse.status}');
-    print('XML disponível: ${xmlResponse.xmlBase64 != null}');
-
-    if (xmlResponse.xmlBase64 != null) {
-      print('Tamanho do XML: ${xmlResponse.xmlBase64!.length} caracteres');
-    }
-
-    // Exibir mensagens
-    for (final msg in xmlResponse.mensagens) {
-      print('${msg.tipo}: ${msg.texto}');
-    }
-
-    // 2. Gerar documento de arrecadação para declaração ATIVA
-    print('\n--- Gerando documento de arrecadação (DARF) ---');
-    final darfResponse = await dctfWebService.gerarDocumentoArrecadacao(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.geralMensal,
-      anoPA: '2027',
-      mesPA: '11',
-      contratanteNumero: '00000000000000',
-      autorPedidoDadosNumero: '00000000000000',
-    );
-
-    print('Status: ${darfResponse.status}');
-    print('DARF disponível: ${darfResponse.pdfBase64 != null}');
-
-    if (darfResponse.pdfBase64 != null) {
-      print('Tamanho do PDF: ${darfResponse.tamanhoPdfBytes} bytes');
-    }
-
-    // 3. Gerar documento de arrecadação para declaração EM ANDAMENTO
-    print('\n--- Gerando DARF para declaração em andamento ---');
-    final darfAndamentoResponse = await dctfWebService.gerarDocumentoArrecadacaoAndamento(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.geralMensal,
-      anoPA: '2025',
-      mesPA: '01',
-      idsSistemaOrigem: [SistemaOrigem.mit], // Apenas receitas do MIT
-      contratanteNumero: '00000000000000',
-      autorPedidoDadosNumero: '00000000000000',
-    );
-
-    print('Status: ${darfAndamentoResponse.status}');
-    print('DARF em andamento disponível: ${darfAndamentoResponse.pdfBase64 != null}');
-
-    // 4. Consultar recibo de transmissão
-    print('\n--- Consultando recibo de transmissão ---');
-    final reciboResponse = await dctfWebService.consultarReciboTransmissao(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.geralMensal,
-      anoPA: '2027',
-      mesPA: '11',
-      contratanteNumero: '00000000000000',
-      autorPedidoDadosNumero: '00000000000000',
-    );
-
-    print('Status: ${reciboResponse.status}');
-    print('Recibo disponível: ${reciboResponse.pdfBase64 != null}');
-
-    // 5. Consultar declaração completa
-    print('\n--- Consultando declaração completa ---');
-    final declaracaoResponse = await dctfWebService.consultarDeclaracaoCompleta(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.geralMensal,
-      anoPA: '2027',
-      mesPA: '11',
-      contratanteNumero: '00000000000000',
-      autorPedidoDadosNumero: '00000000000000',
-    );
-
-    print('Status: ${declaracaoResponse.status}');
-    print('Declaração completa disponível: ${declaracaoResponse.pdfBase64 != null}');
-*/
-    // 6. Exemplo de métodos de conveniência
-    print('\n--- Métodos de conveniência ---');
-
-    // DARF Geral Mensal
-    final darfGeralResponse = await dctfWebService.gerarDarfGeralMensal(
-      contribuinteNumero: '00000000000000',
-      anoPA: '2027',
-      mesPA: '11',
-      idsSistemaOrigem: [SistemaOrigem.esocial, SistemaOrigem.mit],
-    );
-    print('DARF Geral Mensal: ${darfGeralResponse.sucesso}');
-
-    // DARF Pessoa Física Mensal
-    final darfPfResponse = await dctfWebService.gerarDarfPfMensal(contribuinteNumero: '00000000000', anoPA: '2022', mesPA: '06');
-    print('DARF PF Mensal: ${darfPfResponse.sucesso}');
-
-    // DARF 13º Salário
-    final darf13Response = await dctfWebService.gerarDarf13Salario(contribuinteNumero: '00000000000000', anoPA: '2022', isPessoaFisica: false);
-    print('DARF 13º Salário: ${darf13Response.sucesso}');
-
-    // 7. Exemplo com categoria específica - Espetáculo Desportivo
-    print('\n--- Exemplo Espetáculo Desportivo ---');
-    final espetaculoResponse = await dctfWebService.consultarXmlDeclaracao(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.espetaculoDesportivo,
-      anoPA: '2022',
-      mesPA: '05',
-      diaPA: '14', // Dia obrigatório para espetáculo desportivo
-    );
-    print('XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
-
-    // 8. Exemplo com categoria Aferição
-    print('\n--- Exemplo Aferição ---');
-    final afericaoResponse = await dctfWebService.consultarXmlDeclaracao(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.afericao,
-      anoPA: '2022',
-      mesPA: '03',
-      cnoAfericao: 28151, // CNO obrigatório para aferição
-    );
-    print('XML Aferição: ${afericaoResponse.sucesso}');
-
-    // 9. Exemplo com categoria Reclamatória Trabalhista
-    print('\n--- Exemplo Reclamatória Trabalhista ---');
-    final reclamatoriaResponse = await dctfWebService.consultarReciboTransmissao(
-      contribuinteNumero: '00000000000000',
-      categoria: CategoriaDctf.reclamatoriaTrabalhista,
-      anoPA: '2022',
-      mesPA: '12',
-      numProcReclamatoria: '00365354520004013400', // Processo obrigatório
-    );
-    print('Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
-
-    // 10. Exemplo de transmissão completa (simulada)
-    print('\n--- Exemplo de fluxo completo (simulado) ---');
-    print('ATENÇÃO: Este exemplo simula a assinatura digital.');
-    print('Em produção, você deve implementar a assinatura real com certificado digital.');
-
+    // 1. Métodos de conveniência
     try {
+      print('\n--- 1. Métodos de conveniência ---');
+
+      // DARF Geral Mensal
+      final darfGeralResponse = await dctfWebService.gerarDarfGeralMensal(
+        contribuinteNumero: '00000000000000',
+        anoPA: '2027',
+        mesPA: '11',
+        idsSistemaOrigem: [SistemaOrigem.esocial, SistemaOrigem.mit],
+      );
+      print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
+
+      // DARF Pessoa Física Mensal
+      final darfPfResponse = await dctfWebService.gerarDarfPfMensal(contribuinteNumero: '00000000000', anoPA: '2022', mesPA: '06');
+      print('✅ DARF PF Mensal: ${darfPfResponse.sucesso}');
+
+      // DARF 13º Salário
+      final darf13Response = await dctfWebService.gerarDarf13Salario(contribuinteNumero: '00000000000000', anoPA: '2022', isPessoaFisica: false);
+      print('✅ DARF 13º Salário: ${darf13Response.sucesso}');
+    } catch (e) {
+      print('❌ Erro nos métodos de conveniência: $e');
+    }
+
+    // 2. Exemplo com categoria específica - Espetáculo Desportivo
+    try {
+      print('\n--- 2. Exemplo Espetáculo Desportivo ---');
+      final espetaculoResponse = await dctfWebService.consultarXmlDeclaracao(
+        contribuinteNumero: '00000000000000',
+        categoria: CategoriaDctf.espetaculoDesportivo,
+        anoPA: '2022',
+        mesPA: '05',
+        diaPA: '14', // Dia obrigatório para espetáculo desportivo
+      );
+      print('✅ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
+    } catch (e) {
+      print('❌ Erro no exemplo espetáculo desportivo: $e');
+    }
+
+    // 3. Exemplo com categoria Aferição
+    try {
+      print('\n--- 3. Exemplo Aferição ---');
+      final afericaoResponse = await dctfWebService.consultarXmlDeclaracao(
+        contribuinteNumero: '00000000000000',
+        categoria: CategoriaDctf.afericao,
+        anoPA: '2022',
+        mesPA: '03',
+        cnoAfericao: 28151, // CNO obrigatório para aferição
+      );
+      print('✅ XML Aferição: ${afericaoResponse.sucesso}');
+    } catch (e) {
+      print('❌ Erro no exemplo aferição: $e');
+    }
+
+    // 4. Exemplo com categoria Reclamatória Trabalhista
+    try {
+      print('\n--- 4. Exemplo Reclamatória Trabalhista ---');
+      final reclamatoriaResponse = await dctfWebService.consultarReciboTransmissao(
+        contribuinteNumero: '00000000000000',
+        categoria: CategoriaDctf.reclamatoriaTrabalhista,
+        anoPA: '2022',
+        mesPA: '12',
+        numProcReclamatoria: '00365354520004013400', // Processo obrigatório
+      );
+      print('✅ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
+    } catch (e) {
+      print('❌ Erro no exemplo reclamatória trabalhista: $e');
+    }
+
+    // 5. Exemplo de transmissão completa (simulada)
+    try {
+      print('\n--- 5. Exemplo de fluxo completo (simulado) ---');
+      print('⚠️ ATENÇÃO: Este exemplo simula a assinatura digital.');
+      print('⚠️ Em produção, você deve implementar a assinatura real com certificado digital.');
+
       final transmissaoResponse = await dctfWebService.consultarXmlETransmitir(
         contribuinteNumero: '00000000000',
         categoria: CategoriaDctf.pfMensal,
@@ -589,7 +773,7 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
         mesPA: '06',
         assinadorXml: (xmlBase64) async {
           // SIMULAÇÃO: Em produção, aqui você faria a assinatura digital real
-          print('Simulando assinatura digital do XML...');
+          print('🔐 Simulando assinatura digital do XML...');
 
           // Esta é apenas uma simulação - NÃO USE EM PRODUÇÃO
           // Você deve implementar a assinatura digital real com seu certificado
@@ -597,19 +781,21 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
         },
       );
 
-      print('Transmissão simulada: ${transmissaoResponse.status}');
-      print('Tem MAED: ${transmissaoResponse.temMaed}');
+      print('✅ Transmissão simulada: ${transmissaoResponse.status}');
+      print('📋 Tem MAED: ${transmissaoResponse.temMaed}');
 
       if (transmissaoResponse.infoTransmissao != null) {
         final info = transmissaoResponse.infoTransmissao!;
-        print('Número do recibo: ${info.numeroRecibo}');
-        print('Data transmissão: ${info.dataTransmissao}');
+        print('📄 Número do recibo: ${info.numeroRecibo}');
+        print('📅 Data transmissão: ${info.dataTransmissao}');
       }
     } catch (e) {
-      print('Erro na transmissão simulada (esperado): $e');
+      print('⚠️ Erro na transmissão simulada (esperado): $e');
     }
+
+    print('\n🎉 Todos os serviços DCTFWeb executados com sucesso!');
   } catch (e) {
-    print('Erro no serviço DCTFWeb: $e');
+    print('💥 Erro geral no serviço DCTFWeb: $e');
   }
 }
 
@@ -867,155 +1053,6 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     print('\n=== Exemplos PROCURAÇÕES Concluídos ===');
   } catch (e) {
     print('Erro geral no serviço de Procurações: $e');
-  }
-}
-
-Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
-  print('=== Exemplos Caixa Postal ===');
-
-  final caixaPostalService = CaixaPostalService(apiClient);
-
-  try {
-    // 1. Verificar se há mensagens novas
-    try {
-      print('\n--- Verificando mensagens novas ---');
-      final temNovas = await caixaPostalService.temMensagensNovas('99999999999');
-      print('Tem mensagens novas: $temNovas');
-    } catch (e) {
-      print('Erro ao verificar mensagens novas: $e');
-    }
-
-    // 2. Obter indicador detalhado de mensagens novas
-    try {
-      print('\n--- Indicador de mensagens novas ---');
-      final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens('99999999999');
-      print('Status HTTP: ${indicadorResponse.status}');
-      if (indicadorResponse.dadosParsed != null) {
-        final conteudo = indicadorResponse.dadosParsed!.conteudo.first;
-        print('Indicador: ${conteudo.indicadorMensagensNovas}');
-        print('Status: ${conteudo.statusMensagensNovas}');
-        print('Descrição: ${conteudo.descricaoStatus}');
-        print('Tem mensagens novas: ${conteudo.temMensagensNovas}');
-      }
-    } catch (e) {
-      print('Erro ao obter indicador de mensagens novas: $e');
-    }
-
-    // 3. Listar todas as mensagens
-    print('\n--- Listando todas as mensagens ---');
-    final listaResponse = await caixaPostalService.listarTodasMensagens('99999999999');
-    print('Status HTTP: ${listaResponse.status}');
-    if (listaResponse.dadosParsed != null && listaResponse.dadosParsed!.conteudo.isNotEmpty) {
-      final conteudo = listaResponse.dadosParsed!.conteudo.first;
-      print('Quantidade de mensagens: ${conteudo.quantidadeMensagensInt}');
-      print('É última página: ${conteudo.isUltimaPagina}');
-      print('Ponteiro próxima página: ${conteudo.ponteiroProximaPagina}');
-
-      // Exibir primeiras 3 mensagens
-      final mensagens = conteudo.listaMensagens.take(3);
-      for (var i = 0; i < mensagens.length; i++) {
-        final msg = mensagens.elementAt(i);
-        print('\nMensagem ${i + 1}:');
-        print('  ISN: ${msg.isn}');
-        print('  Assunto: ${msg.assuntoProcessado}');
-        print('  Data envio: ${MessageUtils.formatarData(msg.dataEnvio)}');
-        print('  Foi lida: ${msg.foiLida}');
-        print('  É favorita: ${msg.isFavorita}');
-        print('  Relevância: ${MessageUtils.obterDescricaoRelevancia(msg.relevancia)}');
-        print('  Origem: ${msg.descricaoOrigem}');
-      }
-    }
-
-    // 4. Listar apenas mensagens não lidas
-    try {
-      print('\n--- Listando mensagens não lidas ---');
-      final naoLidasResponse = await caixaPostalService.listarMensagensNaoLidas('99999999999');
-      if (naoLidasResponse.dadosParsed != null && naoLidasResponse.dadosParsed!.conteudo.isNotEmpty) {
-        final conteudo = naoLidasResponse.dadosParsed!.conteudo.first;
-        print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
-      }
-    } catch (e) {
-      print('Erro ao listar todas as mensagens: $e');
-    }
-
-    // 5. Listar apenas mensagens lidas
-    print('\n--- Listando mensagens lidas ---');
-    final lidasResponse = await caixaPostalService.listarMensagensLidas('99999999999');
-    if (lidasResponse.dadosParsed != null && lidasResponse.dadosParsed!.conteudo.isNotEmpty) {
-      final conteudo = lidasResponse.dadosParsed!.conteudo.first;
-      print('Mensagens lidas: ${conteudo.quantidadeMensagensInt}');
-    }
-
-    // 6. Listar mensagens favoritas
-    print('\n--- Listando mensagens favoritas ---');
-    final favoritasResponse = await caixaPostalService.listarMensagensFavoritas('99999999999');
-    if (favoritasResponse.dadosParsed != null && favoritasResponse.dadosParsed!.conteudo.isNotEmpty) {
-      final conteudo = favoritasResponse.dadosParsed!.conteudo.first;
-      print('Mensagens favoritas: ${conteudo.quantidadeMensagensInt}');
-    }
-
-    // 7. Obter detalhes de uma mensagem específica (usando ISN da primeira mensagem)
-    if (listaResponse.dadosParsed != null &&
-        listaResponse.dadosParsed!.conteudo.isNotEmpty &&
-        listaResponse.dadosParsed!.conteudo.first.listaMensagens.isNotEmpty) {
-      final primeiraMsg = listaResponse.dadosParsed!.conteudo.first.listaMensagens.first;
-      print('\n--- Detalhes da mensagem ISN: ${primeiraMsg.isn} ---');
-
-      final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica('99999999999', primeiraMsg.isn);
-
-      if (detalhesResponse.dadosParsed != null && detalhesResponse.dadosParsed!.conteudo.isNotEmpty) {
-        final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
-        print('Assunto processado: ${detalhe.assuntoProcessado}');
-        print('Data de envio: ${MessageUtils.formatarData(detalhe.dataEnvio)}');
-        print('Data de expiração: ${MessageUtils.formatarData(detalhe.dataExpiracao)}');
-        print('É favorita: ${detalhe.isFavorita}');
-
-        // Corpo da mensagem processado
-        final corpoProcessado = detalhe.corpoProcessado;
-        final corpoLimpo = MessageUtils.removerTagsHtml(corpoProcessado);
-        print('Corpo (primeiros 200 caracteres):');
-        print('${corpoLimpo.length > 200 ? corpoLimpo.substring(0, 200) + '...' : corpoLimpo}');
-
-        // Mostrar variáveis se existirem
-        if (detalhe.variaveis.isNotEmpty) {
-          print('\nVariáveis da mensagem:');
-          for (var i = 0; i < detalhe.variaveis.length; i++) {
-            print('  ++${i + 1}++: ${detalhe.variaveis[i]}');
-          }
-        }
-      }
-    }
-
-    // 8. Exemplo de paginação (se houver mais páginas)
-    if (listaResponse.dadosParsed != null &&
-        listaResponse.dadosParsed!.conteudo.isNotEmpty &&
-        !listaResponse.dadosParsed!.conteudo.first.isUltimaPagina) {
-      print('\n--- Exemplo de paginação ---');
-      final proximaPagina = listaResponse.dadosParsed!.conteudo.first.ponteiroProximaPagina;
-
-      final paginaResponse = await caixaPostalService.listarMensagensComPaginacao('99999999999', ponteiroPagina: proximaPagina);
-
-      if (paginaResponse.dadosParsed != null && paginaResponse.dadosParsed!.conteudo.isNotEmpty) {
-        final conteudo = paginaResponse.dadosParsed!.conteudo.first;
-        print('Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}');
-      }
-    }
-
-    // 9. Exemplo usando filtros específicos
-    print('\n--- Exemplo com filtros específicos ---');
-    final filtradaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-      '99999999999',
-      statusLeitura: 0, // Todas as mensagens
-      indicadorFavorito: null, // Sem filtro de favorita
-      indicadorPagina: 0, // Página inicial
-    );
-
-    if (filtradaResponse.dadosParsed != null && filtradaResponse.dadosParsed!.conteudo.isNotEmpty) {
-      final conteudo = filtradaResponse.dadosParsed!.conteudo.first;
-      print('Mensagens com filtros específicos: ${conteudo.quantidadeMensagensInt}');
-    }
-  } catch (e) {
-    print('Erro no serviço da Caixa Postal: $e');
   }
 }
 
