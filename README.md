@@ -12,7 +12,13 @@ Este package oferece uma interface Dart/Flutter para interagir com todos os serv
 - **PGDASD** - Programa Gerador do DAS do Simples Nacional  
 - **PGMEI** - Programa Gerador do DAS do MEI
 - **CCMEI** - Certificado da Condição de Microempreendedor Individual
-- **Regime de Apuração** - Opção pelo Regime de Apuração de Receitas
+- **DCTFWeb** - Declaração de Débitos e Créditos Tributários Federais
+- **MIT** - Módulo de Inclusão de Tributos
+- **DTE** - Domicílio Tributário Eletrônico
+- **PagtoWeb** - Sistema de Pagamentos Web
+- **Eventos Atualização** - Monitoramento de Atualizações
+- **Autentica Procurador** - Autenticação de Procuradores
+- **Parcelamentos** - PARCMEI, PARCSN, PERTMEI, PERTSN, RELPMEI, RELPSN
 - E muitos outros serviços
 
 ## Características
@@ -256,6 +262,105 @@ if (response.isSuccess && response.hasPdf) {
 ```
 **📖 [Documentação Completa](doc/sitfis_service.md)**
 
+#### 🔐 Autentica Procurador - Autenticação de Procuradores
+```dart
+final autenticaProcuradorService = AutenticaProcuradorService(apiClient);
+
+// Criar termo de autorização
+final termo = await autenticaProcuradorService.criarTermoComDataAtual(
+  contratanteNumero: '12345678000195',
+  contratanteNome: 'Empresa Exemplo LTDA',
+  autorPedidoDadosNumero: '98765432000100',
+  autorPedidoDadosNome: 'Contador Exemplo',
+);
+
+// Assinar termo digitalmente
+final xmlAssinado = await autenticaProcuradorService.assinarTermoDigital(termo);
+
+// Autenticar procurador
+final response = await autenticaProcuradorService.autenticarProcurador(
+  xmlAssinado: xmlAssinado,
+  contratanteNumero: '12345678000195',
+  autorPedidoDadosNumero: '98765432000100',
+);
+```
+**📖 [Documentação Completa](doc/autenticaprocurador_service.md)**
+
+#### 🏠 DTE - Domicílio Tributário Eletrônico
+```dart
+final dteService = DteService(apiClient);
+
+// Consultar indicador DTE
+final response = await dteService.obterIndicadorDte('12345678000195');
+if (response.sucesso) {
+  print('Status: ${response.statusEnquadramentoDescricao}');
+  print('É optante DTE: ${response.isOptanteDte}');
+}
+```
+**📖 [Documentação Completa](doc/dte_service.md)**
+
+#### 📈 MIT - Módulo de Inclusão de Tributos
+```dart
+final mitService = MitService(apiClient);
+
+// Criar apuração sem movimento
+final response = await mitService.criarApuracaoSemMovimento(
+  contribuinteNumero: '12345678000195',
+  periodoApuracao: PeriodoApuracao(ano: 2024, mes: 1),
+  responsavelApuracao: ResponsavelApuracao(
+    nome: 'João Silva',
+    cpf: '12345678901',
+  ),
+);
+
+// Aguardar encerramento
+final situacao = await mitService.aguardarEncerramento(
+  contribuinteNumero: '12345678000195',
+  protocoloEncerramento: response.dados.protocoloEncerramento,
+);
+```
+**📖 [Documentação Completa](doc/mit_service.md)**
+
+#### 💳 PagtoWeb - Sistema de Pagamentos Web
+```dart
+final pagtoWebService = PagtoWebService(apiClient);
+
+// Consultar pagamentos por data
+final response = await pagtoWebService.consultarPagamentosPorData(
+  contribuinteNumero: '12345678000195',
+  dataInicial: '2024-01-01',
+  dataFinal: '2024-01-31',
+);
+
+// Emitir comprovante
+final comprovante = await pagtoWebService.emitirComprovante(
+  contribuinteNumero: '12345678000195',
+  numeroDocumento: 'DOC123456',
+);
+```
+**📖 [Documentação Completa](doc/pagtoweb_service.md)**
+
+#### 📊 Eventos Atualização - Monitoramento de Atualizações
+```dart
+final eventosService = EventosAtualizacaoService(apiClient);
+
+// Solicitar e obter eventos PF
+final response = await eventosService.solicitarEObterEventosPF(
+  cpfs: ['12345678901'],
+  evento: TipoEvento.dctfweb,
+);
+
+// Monitorar múltiplos sistemas
+final sistemas = [TipoEvento.dctfweb, TipoEvento.caixaPostal, TipoEvento.pagamentoWeb];
+for (final sistema in sistemas) {
+  final eventos = await eventosService.solicitarEObterEventosPJ(
+    cnpjs: ['12345678000195'],
+    evento: sistema,
+  );
+}
+```
+**📖 [Documentação Completa](doc/eventos_atualizacao_service.md)**
+
 ## Serviços Disponíveis
 
 ### Integra-SN (Simples Nacional)
@@ -265,6 +370,8 @@ if (response.isSuccess && response.hasPdf) {
 | DEFIS | `DefisService` | Declaração de Informações Socioeconômicas e Fiscais | [📖 DEFIS](doc/defis_service.md) |
 | PGDASD | `PgdasdService` | Programa Gerador do DAS do Simples Nacional | [📖 PGDASD](doc/pgdasd_service.md) |
 | DCTFWeb | `DctfWebService` | Declaração de Débitos e Créditos Tributários Federais | [📖 DCTFWeb](doc/dctfweb_service.md) |
+| MIT | `MitService` | Módulo de Inclusão de Tributos | [📖 MIT](doc/mit_service.md) |
+| DTE | `DteService` | Domicílio Tributário Eletrônico | [📖 DTE](doc/dte_service.md) |
 
 ### Integra-MEI
 
@@ -273,8 +380,20 @@ if (response.isSuccess && response.hasPdf) {
 | PGMEI | `PgmeiService` | Programa Gerador do DAS do MEI | [📖 PGMEI](doc/pgmei_service.md) |
 | CCMEI | `CcmeiService` | Certificado da Condição de MEI | [📖 CCMEI](doc/ccmei_service.md) |
 | PARCMEI | `ParcmeiService` | Parcelamento do MEI | [📖 PARCMEI](doc/parcmei_service.md) |
+| PARCMEI-ESP | `ParcmeiEspecialService` | Parcelamento Especial do MEI | [📖 PARCMEI-ESP](doc/parcmei_especial_service.md) |
+| PERTMEI | `PertmeiService` | Parcelamento Especial de Regularização Tributária para MEI | [📖 PERTMEI](doc/pertmei_service.md) |
+| RELPMEI | `RelpmeiService` | Parcelamento do MEI (Receita Federal) | [📖 RELPMEI](doc/relpmei_service.md) |
 
-### Outros Serviços
+### Parcelamentos e Regularizações
+
+| Serviço | Classe | Descrição | Documentação |
+|---------|--------|-----------|--------------|
+| PARCSN | `ParcsnService` | Parcelamento do Simples Nacional | [📖 PARCSN](doc/parcsn_service.md) |
+| PARCSN-ESP | `ParcsnEspecialService` | Parcelamento Especial do Simples Nacional | [📖 PARCSN-ESP](doc/parcsn_especial_service.md) |
+| PERTSN | `PertsnService` | Parcelamento do Simples Nacional | [📖 PERTSN](doc/pertsn_service.md) |
+| RELPSN | `RelpsnService` | Parcelamento do Simples Nacional (Receita Federal) | [📖 RELPSN](doc/relpsn_service.md) |
+
+### Serviços Auxiliares
 
 | Serviço | Classe | Descrição | Documentação |
 |---------|--------|-----------|--------------|
@@ -282,6 +401,9 @@ if (response.isSuccess && response.hasPdf) {
 | Caixa Postal | `CaixaPostalService` | Consulta de mensagens da RFB | [📖 Caixa Postal](doc/caixa_postal_service.md) |
 | Procurações | `ProcuracoesService` | Gestão de procurações eletrônicas | [📖 Procurações](doc/procuracoes_service.md) |
 | SITFIS | `SitfisService` | Situação Fiscal do contribuinte | [📖 SITFIS](doc/sitfis_service.md) |
+| PagtoWeb | `PagtoWebService` | Sistema de Pagamentos Web | [📖 PagtoWeb](doc/pagtoweb_service.md) |
+| Eventos Atualização | `EventosAtualizacaoService` | Monitoramento de Atualizações | [📖 Eventos](doc/eventos_atualizacao_service.md) |
+| Autentica Procurador | `AutenticaProcuradorService` | Autenticação de Procuradores | [📖 Autentica Procurador](doc/autenticaprocurador_service.md) |
 
 ## Dados de Teste
 
@@ -305,21 +427,35 @@ final requestTeste = BaseRequest(
 
 ## Documentação Detalhada
 
-### Serviços Principais
+### Serviços Principais (Simples Nacional)
 - [📖 DEFIS - Declaração de Informações Socioeconômicas e Fiscais](doc/defis_service.md)
 - [📖 PGDASD - Programa Gerador do DAS do Simples Nacional](doc/pgdasd_service.md)
 - [📖 DCTFWeb - Declaração de Débitos e Créditos Tributários Federais](doc/dctfweb_service.md)
+- [📖 MIT - Módulo de Inclusão de Tributos](doc/mit_service.md)
+- [📖 DTE - Domicílio Tributário Eletrônico](doc/dte_service.md)
 
 ### Serviços MEI
 - [📖 PGMEI - Programa Gerador do DAS do MEI](doc/pgmei_service.md)
 - [📖 CCMEI - Certificado da Condição de MEI](doc/ccmei_service.md)
 - [📖 PARCMEI - Parcelamento do MEI](doc/parcmei_service.md)
+- [📖 PARCMEI-ESP - Parcelamento Especial do MEI](doc/parcmei_especial_service.md)
+- [📖 PERTMEI - Parcelamento Especial de Regularização Tributária para MEI](doc/pertmei_service.md)
+- [📖 RELPMEI - Parcelamento do MEI (Receita Federal)](doc/relpmei_service.md)
+
+### Parcelamentos e Regularizações
+- [📖 PARCSN - Parcelamento do Simples Nacional](doc/parcsn_service.md)
+- [📖 PARCSN-ESP - Parcelamento Especial do Simples Nacional](doc/parcsn_especial_service.md)
+- [📖 PERTSN - Parcelamento do Simples Nacional](doc/pertsn_service.md)
+- [📖 RELPSN - Parcelamento do Simples Nacional (Receita Federal)](doc/relpsn_service.md)
 
 ### Serviços Auxiliares
 - [📖 SICALC - Sistema de Cálculos Tributários](doc/sicalc_service.md)
 - [📖 Caixa Postal - Consulta de Mensagens da RFB](doc/caixa_postal_service.md)
 - [📖 Procurações - Gestão de Procurações Eletrônicas](doc/procuracoes_service.md)
 - [📖 SITFIS - Situação Fiscal do Contribuinte](doc/sitfis_service.md)
+- [📖 PagtoWeb - Sistema de Pagamentos Web](doc/pagtoweb_service.md)
+- [📖 Eventos Atualização - Monitoramento de Atualizações](doc/eventos_atualizacao_service.md)
+- [📖 Autentica Procurador - Autenticação de Procuradores](doc/autenticaprocurador_service.md)
 
 ### Recursos Adicionais
 - [Exemplos de Uso](example/)
@@ -345,7 +481,7 @@ lib/
 
 1. **Certificado Digital**: A implementação atual não suporta mTLS com certificados digitais nativamente
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
-3. **Cobertura de Serviços**: Implementação inicial focada no DEFIS, outros serviços em desenvolvimento
+3. **Documentação**: Alguns serviços de parcelamento ainda estão em desenvolvimento de documentação
 
 ## Contribuição
 
