@@ -22,7 +22,11 @@ class CacheModel {
   });
 
   /// Cria cache a partir de headers HTTP
-  factory CacheModel.fromHeaders({required Map<String, String> headers, required String contratanteNumero, required String autorPedidoDadosNumero}) {
+  factory CacheModel.fromHeaders({
+    required Map<String, String> headers,
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+  }) {
     final etag = headers['etag'] ?? '';
     final expires = headers['expires'] ?? '';
 
@@ -113,7 +117,11 @@ class CacheModel {
 
   /// Obtém headers para requisições
   Map<String, String> get headersParaRequisicao {
-    return {'autenticar_procurador_token': token, 'cache-control': 'termo_autorizacao', 'etag': '"autenticar_procurador_token:$token"'};
+    return {
+      'autenticar_procurador_token': token,
+      'cache-control': 'termo_autorizacao',
+      'etag': '"autenticar_procurador_token:$token"',
+    };
   }
 
   /// Salva cache em arquivo
@@ -253,7 +261,10 @@ class CacheManager {
       final diretorio = Directory(_diretorioCache);
       if (!await diretorio.exists()) return;
 
-      final arquivos = await diretorio.list().where((entity) => entity is File && entity.path.endsWith('.json')).toList();
+      final arquivos = await diretorio
+          .list()
+          .where((entity) => entity is File && entity.path.endsWith('.json'))
+          .toList();
 
       for (final arquivo in arquivos) {
         final cache = await CacheModel.carregarDeArquivo(arquivo.path);
@@ -268,7 +279,10 @@ class CacheManager {
   }
 
   /// Gera chave única para cache
-  static String gerarChaveCache({required String contratanteNumero, required String autorPedidoDadosNumero}) {
+  static String gerarChaveCache({
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+  }) {
     return '${contratanteNumero}_$autorPedidoDadosNumero';
   }
 
@@ -282,7 +296,9 @@ class CacheManager {
       'total_caches': total,
       'caches_validos': validos,
       'caches_expirados': expirados,
-      'taxa_validos': total > 0 ? (validos / total * 100).toStringAsFixed(1) : '0.0',
+      'taxa_validos': total > 0
+          ? (validos / total * 100).toStringAsFixed(1)
+          : '0.0',
     };
   }
 }

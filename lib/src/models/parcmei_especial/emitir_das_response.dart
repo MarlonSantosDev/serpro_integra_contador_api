@@ -5,18 +5,28 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -87,7 +97,10 @@ class EmitirDasResponse {
     if (dadosParsed?.docArrecadacaoPdfB64.isNotEmpty == true) {
       try {
         // Converte Base64 para bytes
-        return Uri.dataFromString(dadosParsed!.docArrecadacaoPdfB64, mimeType: 'application/pdf').data?.contentAsBytes();
+        return Uri.dataFromString(
+          dadosParsed!.docArrecadacaoPdfB64,
+          mimeType: 'application/pdf',
+        ).data?.contentAsBytes();
       } catch (e) {
         return null;
       }
@@ -101,7 +114,10 @@ class EmitirDasResponse {
     if (dadosParsed?.docArrecadacaoPdfB64.isNotEmpty == true) {
       try {
         // Verifica se é um Base64 válido
-        Uri.dataFromString(dadosParsed!.docArrecadacaoPdfB64, mimeType: 'application/pdf');
+        Uri.dataFromString(
+          dadosParsed!.docArrecadacaoPdfB64,
+          mimeType: 'application/pdf',
+        );
         return true;
       } catch (e) {
         return false;
@@ -117,7 +133,9 @@ class DasData {
   DasData({required this.docArrecadacaoPdfB64});
 
   factory DasData.fromJson(Map<String, dynamic> json) {
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64']?.toString() ?? '');
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -157,7 +175,10 @@ class DasData {
     if (docArrecadacaoPdfB64.isEmpty) return null;
 
     try {
-      return Uri.dataFromString(docArrecadacaoPdfB64, mimeType: 'application/pdf').data?.contentAsBytes();
+      return Uri.dataFromString(
+        docArrecadacaoPdfB64,
+        mimeType: 'application/pdf',
+      ).data?.contentAsBytes();
     } catch (e) {
       return null;
     }

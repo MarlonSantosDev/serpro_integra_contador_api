@@ -21,7 +21,10 @@ class ProcuracoesService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final requestData = ObterProcuracaoRequest.fromDocuments(outorgante: outorgante, outorgado: outorgado);
+    final requestData = ObterProcuracaoRequest.fromDocuments(
+      outorgante: outorgante,
+      outorgado: outorgado,
+    );
 
     // Validar dados antes de enviar
     final erros = requestData.validate();
@@ -31,7 +34,12 @@ class ProcuracoesService {
 
     final request = BaseRequest(
       contribuinteNumero: outorgante,
-      pedidoDados: PedidoDados(idSistema: 'PROCURACOES', idServico: 'OBTERPROCURACAO41', versaoSistema: '1', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PROCURACOES',
+        idServico: 'OBTERPROCURACAO41',
+        versaoSistema: '1',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -72,7 +80,12 @@ class ProcuracoesService {
 
     final request = BaseRequest(
       contribuinteNumero: outorgante,
-      pedidoDados: PedidoDados(idSistema: 'PROCURACOES', idServico: 'OBTERPROCURACAO41', versaoSistema: '1', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PROCURACOES',
+        idServico: 'OBTERPROCURACAO41',
+        versaoSistema: '1',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(

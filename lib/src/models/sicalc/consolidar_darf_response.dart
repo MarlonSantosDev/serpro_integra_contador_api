@@ -6,7 +6,11 @@ class ConsolidarDarfResponse {
   final List<String> mensagens;
   final ConsolidarDarfDados? dados;
 
-  ConsolidarDarfResponse({required this.status, required this.mensagens, this.dados});
+  ConsolidarDarfResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ConsolidarDarfResponse.fromJson(Map<String, dynamic> json) {
     ConsolidarDarfDados? dadosParsed;
@@ -15,10 +19,13 @@ class ConsolidarDarfResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
+          final dadosJson =
+              jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = ConsolidarDarfDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
-          dadosParsed = ConsolidarDarfDados.fromJson(json['dados'] as Map<String, dynamic>);
+          dadosParsed = ConsolidarDarfDados.fromJson(
+            json['dados'] as Map<String, dynamic>,
+          );
         }
       } catch (e) {
         // Se falhar o parse, dadosParsed fica null
@@ -27,7 +34,11 @@ class ConsolidarDarfResponse {
 
     return ConsolidarDarfResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       dados: dadosParsed,
     );
   }
@@ -95,14 +106,20 @@ class ConsolidarDarfDados {
 
   factory ConsolidarDarfDados.fromJson(Map<String, dynamic> json) {
     return ConsolidarDarfDados(
-      valorPrincipalMoedaCorrente: json['valorPrincipalMoedaCorrente']?.toString() ?? '',
+      valorPrincipalMoedaCorrente:
+          json['valorPrincipalMoedaCorrente']?.toString() ?? '',
       valorTotalConsolidado: json['valorTotalConsolidado']?.toString() ?? '',
       valorMultaMora: json['valorMultaMora']?.toString() ?? '',
-      percentualMultaMora: (num.parse(json['percentualMultaMora'].toString())).toDouble(),
+      percentualMultaMora: (num.parse(
+        json['percentualMultaMora'].toString(),
+      )).toDouble(),
       valorJuros: json['valorJuros']?.toString() ?? '',
-      percentualJuros: (num.parse(json['percentualJuros'].toString())).toDouble(),
+      percentualJuros: (num.parse(
+        json['percentualJuros'].toString(),
+      )).toDouble(),
       termoInicialJuros: json['termoInicialJuros']?.toString() ?? '',
-      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao']?.toString() ?? '',
+      dataArrecadacaoConsolidacao:
+          json['dataArrecadacaoConsolidacao']?.toString() ?? '',
       dataValidadeCalculo: json['dataValidadeCalculo']?.toString() ?? '',
       darf: json['darf']?.toString(),
       numeroDocumento: int.parse(json['numeroDocumento'].toString()),
@@ -172,7 +189,8 @@ class ConsolidarDarfDados {
   }
 
   /// Retorna valor principal formatado
-  String get valorPrincipalFormatado => formatarValor(valorPrincipalMoedaCorrente);
+  String get valorPrincipalFormatado =>
+      formatarValor(valorPrincipalMoedaCorrente);
 
   /// Retorna valor total formatado
   String get valorTotalFormatado => formatarValor(valorTotalConsolidado);

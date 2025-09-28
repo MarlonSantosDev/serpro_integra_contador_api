@@ -6,7 +6,13 @@ class RelpmeiResponse {
   final String? detalhesErro;
   final Map<String, dynamic>? dados;
 
-  RelpmeiResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.dados});
+  RelpmeiResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.dados,
+  });
 
   factory RelpmeiResponse.fromJson(Map<String, dynamic> json) {
     return RelpmeiResponse(
@@ -19,7 +25,13 @@ class RelpmeiResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'sucesso': sucesso, 'mensagem': mensagem, 'codigoErro': codigoErro, 'detalhesErro': detalhesErro, 'dados': dados};
+    return {
+      'sucesso': sucesso,
+      'mensagem': mensagem,
+      'codigoErro': codigoErro,
+      'detalhesErro': detalhesErro,
+      'dados': dados,
+    };
   }
 }
 
@@ -31,7 +43,13 @@ class ConsultarPedidosResponse {
   final String? detalhesErro;
   final List<Pedido>? pedidos;
 
-  ConsultarPedidosResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.pedidos});
+  ConsultarPedidosResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.pedidos,
+  });
 
   factory ConsultarPedidosResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarPedidosResponse(
@@ -39,7 +57,11 @@ class ConsultarPedidosResponse {
       mensagem: json['mensagem']?.toString(),
       codigoErro: json['codigoErro']?.toString(),
       detalhesErro: json['detalhesErro']?.toString(),
-      pedidos: json['pedidos'] != null ? (json['pedidos'] as List).map((e) => Pedido.fromJson(e as Map<String, dynamic>)).toList() : null,
+      pedidos: json['pedidos'] != null
+          ? (json['pedidos'] as List)
+                .map((e) => Pedido.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : null,
     );
   }
 
@@ -62,7 +84,13 @@ class ConsultarParcelamentoResponse {
   final String? detalhesErro;
   final List<Parcelamento>? parcelamentos;
 
-  ConsultarParcelamentoResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.parcelamentos});
+  ConsultarParcelamentoResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.parcelamentos,
+  });
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelamentoResponse(
@@ -71,7 +99,9 @@ class ConsultarParcelamentoResponse {
       codigoErro: json['codigoErro']?.toString(),
       detalhesErro: json['detalhesErro']?.toString(),
       parcelamentos: json['parcelamentos'] != null
-          ? (json['parcelamentos'] as List).map((e) => Parcelamento.fromJson(e as Map<String, dynamic>)).toList()
+          ? (json['parcelamentos'] as List)
+                .map((e) => Parcelamento.fromJson(e as Map<String, dynamic>))
+                .toList()
           : null,
     );
   }
@@ -95,16 +125,28 @@ class ConsultarParcelasImpressaoResponse {
   final String? detalhesErro;
   final List<ParcelaImpressao>? parcelas;
 
-  ConsultarParcelasImpressaoResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.parcelas});
+  ConsultarParcelasImpressaoResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.parcelas,
+  });
 
-  factory ConsultarParcelasImpressaoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarParcelasImpressaoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarParcelasImpressaoResponse(
       sucesso: json['sucesso'] as bool? ?? false,
       mensagem: json['mensagem']?.toString(),
       codigoErro: json['codigoErro']?.toString(),
       detalhesErro: json['detalhesErro']?.toString(),
       parcelas: json['parcelas'] != null
-          ? (json['parcelas'] as List).map((e) => ParcelaImpressao.fromJson(e as Map<String, dynamic>)).toList()
+          ? (json['parcelas'] as List)
+                .map(
+                  (e) => ParcelaImpressao.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : null,
     );
   }
@@ -128,16 +170,28 @@ class ConsultarDetalhesPagamentoResponse {
   final String? detalhesErro;
   final List<DetalhePagamento>? detalhes;
 
-  ConsultarDetalhesPagamentoResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.detalhes});
+  ConsultarDetalhesPagamentoResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.detalhes,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarDetalhesPagamentoResponse(
       sucesso: json['sucesso'] as bool? ?? false,
       mensagem: json['mensagem']?.toString(),
       codigoErro: json['codigoErro']?.toString(),
       detalhesErro: json['detalhesErro']?.toString(),
       detalhes: json['detalhes'] != null
-          ? (json['detalhes'] as List).map((e) => DetalhePagamento.fromJson(e as Map<String, dynamic>)).toList()
+          ? (json['detalhes'] as List)
+                .map(
+                  (e) => DetalhePagamento.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : null,
     );
   }
@@ -161,7 +215,13 @@ class EmitirDasResponse {
   final String? detalhesErro;
   final Das? das;
 
-  EmitirDasResponse({required this.sucesso, this.mensagem, this.codigoErro, this.detalhesErro, this.das});
+  EmitirDasResponse({
+    required this.sucesso,
+    this.mensagem,
+    this.codigoErro,
+    this.detalhesErro,
+    this.das,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
@@ -169,12 +229,20 @@ class EmitirDasResponse {
       mensagem: json['mensagem']?.toString(),
       codigoErro: json['codigoErro']?.toString(),
       detalhesErro: json['detalhesErro']?.toString(),
-      das: json['das'] != null ? Das.fromJson(json['das'] as Map<String, dynamic>) : null,
+      das: json['das'] != null
+          ? Das.fromJson(json['das'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'sucesso': sucesso, 'mensagem': mensagem, 'codigoErro': codigoErro, 'detalhesErro': detalhesErro, 'das': das?.toJson()};
+    return {
+      'sucesso': sucesso,
+      'mensagem': mensagem,
+      'codigoErro': codigoErro,
+      'detalhesErro': detalhesErro,
+      'das': das?.toJson(),
+    };
   }
 }
 
@@ -387,7 +455,11 @@ class Parcelamento {
       dataStatus: json['dataStatus']?.toString(),
       usuarioStatus: json['usuarioStatus']?.toString(),
       observacoesStatus: json['observacoesStatus']?.toString(),
-      parcelas: json['parcelas'] != null ? (json['parcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList() : null,
+      parcelas: json['parcelas'] != null
+          ? (json['parcelas'] as List)
+                .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : null,
     );
   }
 

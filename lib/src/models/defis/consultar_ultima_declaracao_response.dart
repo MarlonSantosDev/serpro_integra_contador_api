@@ -6,18 +6,30 @@ class ConsultarUltimaDeclaracaoResponse {
   final List<MensagemDefis> mensagens;
   final UltimaDeclaracao dados;
 
-  ConsultarUltimaDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarUltimaDeclaracaoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
-  factory ConsultarUltimaDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarUltimaDeclaracaoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarUltimaDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>)
+          .map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: UltimaDeclaracao.fromJson(json['dados'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados.toJson(),
+    };
   }
 }
 

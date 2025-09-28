@@ -44,7 +44,9 @@ class PertsnErrors {
 
   /// Obtém todos os erros de entrada incorreta do PERTSN
   static List<PertsnErrorInfo> getEntradasIncorretas() {
-    return _errors.values.where((error) => error.tipo == 'Entrada Incorreta').toList();
+    return _errors.values
+        .where((error) => error.tipo == 'Entrada Incorreta')
+        .toList();
   }
 
   /// Obtém todos os erros gerais do PERTSN
@@ -74,14 +76,16 @@ class PertsnErrors {
     '[Erro-PERTSN-ER_N001]': PertsnErrorInfo(
       codigo: '[Erro-PERTSN-ER_N001]',
       tipo: 'Erro',
-      mensagem: 'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
+      mensagem:
+          'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
       acao: 'Erro interno. Efetuar nova tentativa.',
     ),
     '[EntradaIncorreta-PERTSN-ER_N002]': PertsnErrorInfo(
       codigo: '[EntradaIncorreta-PERTSN-ER_N002]',
       tipo: 'Entrada Incorreta',
       mensagem: 'Parâmetro de entrada inválido: {}.',
-      acao: 'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
+      acao:
+          'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
     ),
     '[Aviso-PERTSN-ER_N003]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N003]',
@@ -100,7 +104,8 @@ class PertsnErrors {
     '[Aviso-PERTSN-ER_N005]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N005]',
       tipo: 'Aviso',
-      mensagem: 'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
+      mensagem:
+          'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
       acao: 'Reenviar a partir do dia indicado.',
     ),
     '[Aviso-PERTSN-ER_N006]': PertsnErrorInfo(
@@ -108,13 +113,16 @@ class PertsnErrors {
       tipo: 'Aviso',
       mensagem:
           'A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível.',
-      acao: 'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
+      acao:
+          'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
     ),
     '[EntradaIncorreta-PERTSN-ER_N007]': PertsnErrorInfo(
       codigo: '[EntradaIncorreta-PERTSN-ER_N007]',
       tipo: 'Entrada Incorreta',
-      mensagem: 'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
-      acao: 'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
+      mensagem:
+          'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
+      acao:
+          'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
     ),
     '[Aviso-PERTSN-ER_N008]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N008]',
@@ -131,7 +139,8 @@ class PertsnErrors {
     '[Aviso-PERTSN-ER_N010]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N010]',
       tipo: 'Aviso',
-      mensagem: 'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
+      mensagem:
+          'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
       acao: 'Foi passada uma parcela que não existe ou não possui pagamento.',
     ),
     '[Aviso-PERTSN-ER_N011]': PertsnErrorInfo(
@@ -143,7 +152,8 @@ class PertsnErrors {
     '[Aviso-PERTSN-ER_N012]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N012]',
       tipo: 'Aviso',
-      mensagem: 'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
+      mensagem:
+          'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
       acao: 'Não existe pagamento para a parcela informada.',
     ),
     '[Aviso-PERTSN-ER_N013]': PertsnErrorInfo(
@@ -156,14 +166,18 @@ class PertsnErrors {
     '[EntradaIncorreta-PERTSN-ER_N014]': PertsnErrorInfo(
       codigo: '[EntradaIncorreta-PERTSN-ER_N014]',
       tipo: 'Entrada Incorreta',
-      mensagem: 'Não será possível utilizar o IC para este contribuinte. Utilize o sistema web.',
-      acao: 'A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador.',
+      mensagem:
+          'Não será possível utilizar o IC para este contribuinte. Utilize o sistema web.',
+      acao:
+          'A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador.',
     ),
     '[Aviso-PERTSN-ER_N015]': PertsnErrorInfo(
       codigo: '[Aviso-PERTSN-ER_N015]',
       tipo: 'Aviso',
-      mensagem: 'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
-      acao: 'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
+      mensagem:
+          'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
+      acao:
+          'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
     ),
     '[EntradaIncorreta-PERTSN-ER_N016]': PertsnErrorInfo(
       codigo: '[EntradaIncorreta-PERTSN-ER_N016]',
@@ -182,7 +196,12 @@ class PertsnErrorInfo {
   final String mensagem;
   final String acao;
 
-  PertsnErrorInfo({required this.codigo, required this.tipo, required this.mensagem, required this.acao});
+  PertsnErrorInfo({
+    required this.codigo,
+    required this.tipo,
+    required this.mensagem,
+    required this.acao,
+  });
 
   /// Verifica se é um erro de sucesso
   bool get isSucesso => tipo == 'Sucesso';

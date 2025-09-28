@@ -4,8 +4,12 @@ class ConsultarDeclaracaoEspecificaRequest {
 
   ConsultarDeclaracaoEspecificaRequest({required this.idDefis});
 
-  factory ConsultarDeclaracaoEspecificaRequest.fromJson(Map<String, dynamic> json) {
-    return ConsultarDeclaracaoEspecificaRequest(idDefis: int.parse(json['idDefis'].toString()));
+  factory ConsultarDeclaracaoEspecificaRequest.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return ConsultarDeclaracaoEspecificaRequest(
+      idDefis: int.parse(json['idDefis'].toString()),
+    );
   }
 
   Map<String, dynamic> toJson() {

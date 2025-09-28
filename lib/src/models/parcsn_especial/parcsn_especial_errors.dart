@@ -1,7 +1,10 @@
 /// Tratamento de erros específicos do sistema PARCSN-ESP (Parcelamento Especial do Simples Nacional)
 class ParcsnEspecialErrors {
   /// Analisa um erro específico do PARCSN-ESP e retorna informações detalhadas
-  static ParcsnEspecialErrorAnalysis analyzeError(String codigo, String mensagem) {
+  static ParcsnEspecialErrorAnalysis analyzeError(
+    String codigo,
+    String mensagem,
+  ) {
     final errorInfo = getErrorInfo(codigo);
 
     return ParcsnEspecialErrorAnalysis(
@@ -9,7 +12,8 @@ class ParcsnEspecialErrors {
       mensagem: mensagem,
       tipo: errorInfo?.tipo ?? ParcsnEspecialErrorType.desconhecido,
       categoria: errorInfo?.categoria ?? ParcsnEspecialErrorCategory.outros,
-      acaoRecomendada: errorInfo?.acaoRecomendada ?? 'Verifique os dados e tente novamente.',
+      acaoRecomendada:
+          errorInfo?.acaoRecomendada ?? 'Verifique os dados e tente novamente.',
       isConhecido: errorInfo != null,
     );
   }
@@ -26,22 +30,30 @@ class ParcsnEspecialErrors {
 
   /// Obtém todos os erros de aviso do PARCSN-ESP
   static List<ParcsnEspecialErrorInfo> getAvisos() {
-    return _errors.values.where((e) => e.tipo == ParcsnEspecialErrorType.aviso).toList();
+    return _errors.values
+        .where((e) => e.tipo == ParcsnEspecialErrorType.aviso)
+        .toList();
   }
 
   /// Obtém todos os erros de entrada incorreta do PARCSN-ESP
   static List<ParcsnEspecialErrorInfo> getEntradasIncorretas() {
-    return _errors.values.where((e) => e.tipo == ParcsnEspecialErrorType.entradaIncorreta).toList();
+    return _errors.values
+        .where((e) => e.tipo == ParcsnEspecialErrorType.entradaIncorreta)
+        .toList();
   }
 
   /// Obtém todos os erros gerais do PARCSN-ESP
   static List<ParcsnEspecialErrorInfo> getErros() {
-    return _errors.values.where((e) => e.tipo == ParcsnEspecialErrorType.erro).toList();
+    return _errors.values
+        .where((e) => e.tipo == ParcsnEspecialErrorType.erro)
+        .toList();
   }
 
   /// Obtém todos os sucessos do PARCSN-ESP
   static List<ParcsnEspecialErrorInfo> getSucessos() {
-    return _errors.values.where((e) => e.tipo == ParcsnEspecialErrorType.sucesso).toList();
+    return _errors.values
+        .where((e) => e.tipo == ParcsnEspecialErrorType.sucesso)
+        .toList();
   }
 
   /// Mapa de erros conhecidos do PARCSN-ESP
@@ -61,7 +73,8 @@ class ParcsnEspecialErrors {
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.parcelamento,
       descricao: 'Não há parcelamento ativo para o contribuinte.',
-      acaoRecomendada: 'O número do parcelamento informado não está ativo ou não existe.',
+      acaoRecomendada:
+          'O número do parcelamento informado não está ativo ou não existe.',
     ),
 
     '[Aviso-PARCSN-ESP-ER_N003]': ParcsnEspecialErrorInfo(
@@ -77,7 +90,8 @@ class ParcsnEspecialErrors {
       codigo: '[Aviso-PARCSN-ESP-ER_N005]',
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.emissao,
-      descricao: 'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
+      descricao:
+          'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
       acaoRecomendada: 'Reenviar a partir do dia indicado.',
     ),
 
@@ -87,7 +101,8 @@ class ParcsnEspecialErrors {
       categoria: ParcsnEspecialErrorCategory.emissao,
       descricao:
           'A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível.',
-      acaoRecomendada: 'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
+      acaoRecomendada:
+          'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
     ),
 
     '[Aviso-PARCSN-ESP-ER_N008]': ParcsnEspecialErrorInfo(
@@ -103,15 +118,18 @@ class ParcsnEspecialErrors {
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.parcelamento,
       descricao: 'Não existe parcelamento para o numeroParcelamento informado.',
-      acaoRecomendada: 'Verificar o número do parcelamento passado no parâmetro.',
+      acaoRecomendada:
+          'Verificar o número do parcelamento passado no parâmetro.',
     ),
 
     '[Aviso-PARCSN-ESP-ER_N010]': ParcsnEspecialErrorInfo(
       codigo: '[Aviso-PARCSN-ESP-ER_N010]',
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.pagamento,
-      descricao: 'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
-      acaoRecomendada: 'Foi passada uma parcela que não existe ou não possui pagamento.',
+      descricao:
+          'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
+      acaoRecomendada:
+          'Foi passada uma parcela que não existe ou não possui pagamento.',
     ),
 
     '[Aviso-PARCSN-ESP-ER_N011]': ParcsnEspecialErrorInfo(
@@ -126,7 +144,8 @@ class ParcsnEspecialErrors {
       codigo: '[Aviso-PARCSN-ESP-ER_N012]',
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.pagamento,
-      descricao: 'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
+      descricao:
+          'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
       acaoRecomendada: 'Não existe pagamento para a parcela informada.',
     ),
 
@@ -143,8 +162,10 @@ class ParcsnEspecialErrors {
       codigo: '[Aviso-PARCSN-ESP-ER_N014]',
       tipo: ParcsnEspecialErrorType.aviso,
       categoria: ParcsnEspecialErrorCategory.emissao,
-      descricao: 'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
-      acaoRecomendada: 'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
+      descricao:
+          'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
+      acaoRecomendada:
+          'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
     ),
 
     // Erros de entrada incorreta
@@ -153,7 +174,8 @@ class ParcsnEspecialErrors {
       tipo: ParcsnEspecialErrorType.entradaIncorreta,
       categoria: ParcsnEspecialErrorCategory.validacao,
       descricao: 'Parâmetro de entrada inválido: {}.',
-      acaoRecomendada: 'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
+      acaoRecomendada:
+          'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
     ),
 
     '[EntradaIncorreta-PARCSN-ESP-ER_N004]': ParcsnEspecialErrorInfo(
@@ -162,15 +184,18 @@ class ParcsnEspecialErrors {
       categoria: ParcsnEspecialErrorCategory.parcelamento,
       descricao:
           'Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac.',
-      acaoRecomendada: 'Quando há reconsolidação, deve ser utilizada a versão web.',
+      acaoRecomendada:
+          'Quando há reconsolidação, deve ser utilizada a versão web.',
     ),
 
     '[EntradaIncorreta-PARCSN-ESP-ER_N007]': ParcsnEspecialErrorInfo(
       codigo: '[EntradaIncorreta-PARCSN-ESP-ER_N007]',
       tipo: ParcsnEspecialErrorType.entradaIncorreta,
       categoria: ParcsnEspecialErrorCategory.validacao,
-      descricao: 'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
-      acaoRecomendada: 'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
+      descricao:
+          'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
+      acaoRecomendada:
+          'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
     ),
 
     // Erros gerais
@@ -178,17 +203,32 @@ class ParcsnEspecialErrors {
       codigo: '[Erro-PARCSN-ESP-ER_N001]',
       tipo: ParcsnEspecialErrorType.erro,
       categoria: ParcsnEspecialErrorCategory.sistema,
-      descricao: 'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
+      descricao:
+          'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
       acaoRecomendada: 'Erro interno. Efetuar nova tentativa.',
     ),
   };
 }
 
 /// Tipos de erro do PARCSN-ESP
-enum ParcsnEspecialErrorType { sucesso, aviso, entradaIncorreta, erro, desconhecido }
+enum ParcsnEspecialErrorType {
+  sucesso,
+  aviso,
+  entradaIncorreta,
+  erro,
+  desconhecido,
+}
 
 /// Categorias de erro do PARCSN-ESP
-enum ParcsnEspecialErrorCategory { operacao, parcelamento, pagamento, emissao, validacao, sistema, outros }
+enum ParcsnEspecialErrorCategory {
+  operacao,
+  parcelamento,
+  pagamento,
+  emissao,
+  validacao,
+  sistema,
+  outros,
+}
 
 /// Informações sobre um erro específico do PARCSN-ESP
 class ParcsnEspecialErrorInfo {
@@ -213,7 +253,8 @@ class ParcsnEspecialErrorInfo {
   bool get isAviso => tipo == ParcsnEspecialErrorType.aviso;
 
   /// Verifica se é um erro de entrada incorreta
-  bool get isEntradaIncorreta => tipo == ParcsnEspecialErrorType.entradaIncorreta;
+  bool get isEntradaIncorreta =>
+      tipo == ParcsnEspecialErrorType.entradaIncorreta;
 
   /// Verifica se é um erro geral
   bool get isErro => tipo == ParcsnEspecialErrorType.erro;
@@ -252,7 +293,8 @@ class ParcsnEspecialErrorAnalysis {
   bool get isAviso => tipo == ParcsnEspecialErrorType.aviso;
 
   /// Verifica se é um erro de entrada incorreta
-  bool get isEntradaIncorreta => tipo == ParcsnEspecialErrorType.entradaIncorreta;
+  bool get isEntradaIncorreta =>
+      tipo == ParcsnEspecialErrorType.entradaIncorreta;
 
   /// Verifica se é um erro geral
   bool get isErro => tipo == ParcsnEspecialErrorType.erro;
@@ -261,10 +303,14 @@ class ParcsnEspecialErrorAnalysis {
   bool get isDesconhecido => tipo == ParcsnEspecialErrorType.desconhecido;
 
   /// Verifica se é um erro crítico que impede a operação
-  bool get isCritico => tipo == ParcsnEspecialErrorType.erro || tipo == ParcsnEspecialErrorType.entradaIncorreta;
+  bool get isCritico =>
+      tipo == ParcsnEspecialErrorType.erro ||
+      tipo == ParcsnEspecialErrorType.entradaIncorreta;
 
   /// Verifica se é um erro que permite retry
-  bool get permiteRetry => tipo == ParcsnEspecialErrorType.erro && categoria == ParcsnEspecialErrorCategory.sistema;
+  bool get permiteRetry =>
+      tipo == ParcsnEspecialErrorType.erro &&
+      categoria == ParcsnEspecialErrorCategory.sistema;
 
   @override
   String toString() {

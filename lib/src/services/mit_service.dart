@@ -55,7 +55,12 @@ class MitService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'ENCAPURACAO314', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'ENCAPURACAO314',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = _obterEndpoint('ENCAPURACAO314');
@@ -84,11 +89,18 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = ConsultarSituacaoEncerramentoRequest(protocoloEncerramento: protocoloEncerramento);
+    final request = ConsultarSituacaoEncerramentoRequest(
+      protocoloEncerramento: protocoloEncerramento,
+    );
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'SITUACAOENC315', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'SITUACAOENC315',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = _obterEndpoint('SITUACAOENC315');
@@ -121,7 +133,12 @@ class MitService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'CONSAPURACAO316', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'CONSAPURACAO316',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = _obterEndpoint('CONSAPURACAO316');
@@ -153,11 +170,20 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = ListarApuracaoesRequest(anoApuracao: anoApuracao, mesApuracao: mesApuracao, situacaoApuracao: situacaoApuracao);
+    final request = ListarApuracaoesRequest(
+      anoApuracao: anoApuracao,
+      mesApuracao: mesApuracao,
+      situacaoApuracao: situacaoApuracao,
+    );
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'LISTAAPURACOES317', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'LISTAAPURACOES317',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = _obterEndpoint('LISTAAPURACOES317');
@@ -190,7 +216,11 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final dadosIniciais = DadosIniciais(semMovimento: true, qualificacaoPj: QualificacaoPj.pjEmGeral, responsavelApuracao: responsavelApuracao);
+    final dadosIniciais = DadosIniciais(
+      semMovimento: true,
+      qualificacaoPj: QualificacaoPj.pjEmGeral,
+      responsavelApuracao: responsavelApuracao,
+    );
 
     return encerrarApuracao(
       contribuinteNumero: contribuinteNumero,
@@ -344,12 +374,17 @@ class MitService {
   String _obterEndpoint(String idServico) {
     // URLs base dos serviços MIT
     const endpoints = {
-      'ENCAPURACAO314': 'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/encerrar-apuracao',
-      'SITUACAOENC315': 'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/consultar-situacao-encerramento',
-      'CONSAPURACAO316': 'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/consultar-apuracao',
-      'LISTAAPURACOES317': 'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/listar-apuracoes',
+      'ENCAPURACAO314':
+          'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/encerrar-apuracao',
+      'SITUACAOENC315':
+          'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/consultar-situacao-encerramento',
+      'CONSAPURACAO316':
+          'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/consultar-apuracao',
+      'LISTAAPURACOES317':
+          'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/listar-apuracoes',
     };
 
-    return endpoints[idServico] ?? 'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/$idServico';
+    return endpoints[idServico] ??
+        'https://apigateway.serpro.gov.br/integra-contador-dctfweb-trial/v1/mit/$idServico';
   }
 }

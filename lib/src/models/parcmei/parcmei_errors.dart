@@ -4,7 +4,12 @@ class ParcmeiErrorInfo {
   final String categoria;
   final String? solucao;
 
-  ParcmeiErrorInfo({required this.codigo, required this.descricao, required this.categoria, this.solucao});
+  ParcmeiErrorInfo({
+    required this.codigo,
+    required this.descricao,
+    required this.categoria,
+    this.solucao,
+  });
 }
 
 class ParcmeiErrorAnalysis {
@@ -14,7 +19,13 @@ class ParcmeiErrorAnalysis {
   final String categoria;
   final String? solucao;
 
-  ParcmeiErrorAnalysis({required this.codigo, required this.mensagem, this.errorInfo, required this.categoria, this.solucao});
+  ParcmeiErrorAnalysis({
+    required this.codigo,
+    required this.mensagem,
+    this.errorInfo,
+    required this.categoria,
+    this.solucao,
+  });
 
   bool get isKnownError => errorInfo != null;
   bool get isSucesso => categoria == 'Sucesso';
@@ -26,7 +37,11 @@ class ParcmeiErrorAnalysis {
 class ParcmeiErrors {
   static final Map<String, ParcmeiErrorInfo> _errors = {
     // Sucessos
-    '[Sucesso-PARCMEI]': ParcmeiErrorInfo(codigo: '[Sucesso-PARCMEI]', descricao: 'Requisição efetuada com sucesso.', categoria: 'Sucesso'),
+    '[Sucesso-PARCMEI]': ParcmeiErrorInfo(
+      codigo: '[Sucesso-PARCMEI]',
+      descricao: 'Requisição efetuada com sucesso.',
+      categoria: 'Sucesso',
+    ),
 
     // Erros de entrada incorreta
     '[ERRO-ENTRADA-INCORRETA-001]': ParcmeiErrorInfo(
@@ -148,12 +163,18 @@ class ParcmeiErrors {
     } else if (mensagem.toLowerCase().contains('não encontrado')) {
       categoria = 'Erro';
       solucao = 'Verifique se os dados informados estão corretos.';
-    } else if (mensagem.toLowerCase().contains('indisponível') || mensagem.toLowerCase().contains('timeout')) {
+    } else if (mensagem.toLowerCase().contains('indisponível') ||
+        mensagem.toLowerCase().contains('timeout')) {
       categoria = 'Erro';
       solucao = 'Tente novamente em alguns minutos.';
     }
 
-    return ParcmeiErrorAnalysis(codigo: codigo, mensagem: mensagem, categoria: categoria, solucao: solucao);
+    return ParcmeiErrorAnalysis(
+      codigo: codigo,
+      mensagem: mensagem,
+      categoria: categoria,
+      solucao: solucao,
+    );
   }
 
   static bool isKnownError(String codigo) {
@@ -169,7 +190,9 @@ class ParcmeiErrors {
   }
 
   static List<ParcmeiErrorInfo> getEntradasIncorretas() {
-    return _errors.values.where((error) => error.categoria == 'Entrada Incorreta').toList();
+    return _errors.values
+        .where((error) => error.categoria == 'Entrada Incorreta')
+        .toList();
   }
 
   static List<ParcmeiErrorInfo> getErros() {
@@ -177,7 +200,9 @@ class ParcmeiErrors {
   }
 
   static List<ParcmeiErrorInfo> getSucessos() {
-    return _errors.values.where((error) => error.categoria == 'Sucesso').toList();
+    return _errors.values
+        .where((error) => error.categoria == 'Sucesso')
+        .toList();
   }
 
   static List<ParcmeiErrorInfo> getAllErrors() {

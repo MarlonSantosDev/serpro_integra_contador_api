@@ -8,7 +8,12 @@ class ObterEventosPJResponse {
   final List<EventoAtualizacaoPJ> dados;
   final String? responseId;
 
-  ObterEventosPJResponse({required this.status, required this.mensagens, required this.dados, this.responseId});
+  ObterEventosPJResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+    this.responseId,
+  });
 
   factory ObterEventosPJResponse.fromJson(Map<String, dynamic> json) {
     // Parse dos dados que vêm como string JSON escapada
@@ -18,7 +23,9 @@ class ObterEventosPJResponse {
       if (dadosString.isNotEmpty) {
         try {
           final dadosList = jsonDecode(dadosString) as List<dynamic>;
-          eventos = dadosList.map((e) => EventoAtualizacaoPJ.fromJson(e as List<dynamic>)).toList();
+          eventos = dadosList
+              .map((e) => EventoAtualizacaoPJ.fromJson(e as List<dynamic>))
+              .toList();
         } catch (e) {
           // Se não conseguir fazer parse, cria lista vazia
           eventos = [];
@@ -28,7 +35,12 @@ class ObterEventosPJResponse {
 
     return ObterEventosPJResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>)
+          .map(
+            (e) =>
+                MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
       dados: eventos,
       responseId: json['responseId']?.toString(),
     );
@@ -54,7 +66,10 @@ class EventoAtualizacaoPJ {
   factory EventoAtualizacaoPJ.fromJson(List<dynamic> json) {
     return EventoAtualizacaoPJ(
       cnpj: json[0] as String,
-      dataAtualizacao: json.length > 1 && json[1] != null && json[1] != '' && json[1] != 'x' ? json[1] as String : null,
+      dataAtualizacao:
+          json.length > 1 && json[1] != null && json[1] != '' && json[1] != 'x'
+          ? json[1] as String
+          : null,
     );
   }
 
@@ -63,7 +78,8 @@ class EventoAtualizacaoPJ {
   }
 
   /// Verifica se há data de atualização disponível
-  bool get temAtualizacao => dataAtualizacao != null && dataAtualizacao!.isNotEmpty;
+  bool get temAtualizacao =>
+      dataAtualizacao != null && dataAtualizacao!.isNotEmpty;
 
   /// Verifica se o contribuinte não tem atualizações (marcado com 'x')
   bool get semAtualizacao => dataAtualizacao == 'x';

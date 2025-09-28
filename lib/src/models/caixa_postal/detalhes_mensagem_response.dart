@@ -147,7 +147,8 @@ class DetalheMensagemCompleta {
       enquadramento: json['enquadramento']?.toString() ?? '',
       dataAcessoExterno: json['dataAcessoExterno']?.toString() ?? '',
       horaAcessoExterno: json['horaAcessoExterno']?.toString() ?? '',
-      tipoAutenticacaoUsuario: json['tipoAutenticacaoUsuario']?.toString() ?? '',
+      tipoAutenticacaoUsuario:
+          json['tipoAutenticacaoUsuario']?.toString() ?? '',
       codigoAcesso: json['codigoAcesso']?.toString() ?? '',
       numeroSerieCertificadoDigital:
           json['numeroSerieCertificadoDigital']?.toString() ?? '',

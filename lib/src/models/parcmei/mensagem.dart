@@ -5,7 +5,10 @@ class Mensagem {
   Mensagem({required this.codigo, required this.texto});
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return Mensagem(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -13,7 +16,8 @@ class Mensagem {
   }
 
   /// Verifica se é uma mensagem de sucesso
-  bool get isSucesso => codigo.contains('Sucesso') || codigo.contains('SUCESSO');
+  bool get isSucesso =>
+      codigo.contains('Sucesso') || codigo.contains('SUCESSO');
 
   /// Verifica se é uma mensagem de erro
   bool get isErro => codigo.contains('ERRO') || codigo.contains('Erro');

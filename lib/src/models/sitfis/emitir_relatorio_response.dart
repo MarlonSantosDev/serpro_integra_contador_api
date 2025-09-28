@@ -7,18 +7,32 @@ class EmitirRelatorioResponse {
   final List<SitfisMensagem> mensagens;
   final EmitirRelatorioDados? dados;
 
-  EmitirRelatorioResponse({required this.status, required this.mensagens, this.dados});
+  EmitirRelatorioResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirRelatorioResponse.fromJson(Map<String, dynamic> json) {
     return EmitirRelatorioResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] != null ? EmitirRelatorioDados.fromJson(json['dados'].toString()) : null,
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      dados: json['dados'] != null
+          ? EmitirRelatorioDados.fromJson(json['dados'].toString())
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados?.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados?.toJson(),
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -44,7 +58,10 @@ class EmitirRelatorioDados {
   factory EmitirRelatorioDados.fromJson(String jsonString) {
     try {
       final Map<String, dynamic> json = _parseJsonString(jsonString);
-      return EmitirRelatorioDados(pdf: json['pdf']?.toString(), tempoEspera: int.parse(json['tempoEspera'].toString()));
+      return EmitirRelatorioDados(
+        pdf: json['pdf']?.toString(),
+        tempoEspera: int.parse(json['tempoEspera'].toString()),
+      );
     } catch (e) {
       return EmitirRelatorioDados();
     }
@@ -55,10 +72,12 @@ class EmitirRelatorioDados {
   }
 
   /// Converte tempo de espera de milissegundos para segundos
-  int? get tempoEsperaEmSegundos => tempoEspera != null ? tempoEspera! ~/ 1000 : null;
+  int? get tempoEsperaEmSegundos =>
+      tempoEspera != null ? tempoEspera! ~/ 1000 : null;
 
   /// Converte tempo de espera de milissegundos para minutos
-  double? get tempoEsperaEmMinutos => tempoEspera != null ? tempoEspera! / 60000 : null;
+  double? get tempoEsperaEmMinutos =>
+      tempoEspera != null ? tempoEspera! / 60000 : null;
 
   /// Tamanho do PDF em bytes (aproximado)
   int? get pdfSizeInBytes {

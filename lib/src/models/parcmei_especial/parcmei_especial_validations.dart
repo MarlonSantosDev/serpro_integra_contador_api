@@ -344,7 +344,13 @@ class ParcmeiEspecialValidations {
       return 'Situação do parcelamento é obrigatória';
     }
 
-    final situacoesValidas = ['Em parcelamento', 'Parcelamento encerrado', 'Parcelamento cancelado', 'Parcelamento suspenso', 'Aguardando pagamento'];
+    final situacoesValidas = [
+      'Em parcelamento',
+      'Parcelamento encerrado',
+      'Parcelamento cancelado',
+      'Parcelamento suspenso',
+      'Aguardando pagamento',
+    ];
 
     if (!situacoesValidas.contains(situacao)) {
       return 'Situação do parcelamento inválida';
@@ -402,7 +408,13 @@ class ParcmeiEspecialValidations {
       return 'Serviço é obrigatório';
     }
 
-    final servicosValidos = ['PEDIDOSPARC213', 'OBTERPARC214', 'PARCELASPARAGERAR212', 'DETPAGTOPARC215', 'GERARDAS211'];
+    final servicosValidos = [
+      'PEDIDOSPARC213',
+      'OBTERPARC214',
+      'PARCELASPARAGERAR212',
+      'DETPAGTOPARC215',
+      'GERARDAS211',
+    ];
 
     if (!servicosValidos.contains(servico)) {
       return 'Serviço inválido para PARCMEI-ESP';

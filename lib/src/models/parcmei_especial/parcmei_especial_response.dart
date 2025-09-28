@@ -4,7 +4,11 @@ class ParcmeiEspecialResponse {
   final List<dynamic> mensagens;
   final String dados;
 
-  ParcmeiEspecialResponse({required this.status, required this.mensagens, required this.dados});
+  ParcmeiEspecialResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ParcmeiEspecialResponse.fromJson(Map<String, dynamic> json) {
     return ParcmeiEspecialResponse(

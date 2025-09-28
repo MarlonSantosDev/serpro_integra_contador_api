@@ -6,7 +6,10 @@ class Mensagem {
   Mensagem({required this.codigo, required this.texto});
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

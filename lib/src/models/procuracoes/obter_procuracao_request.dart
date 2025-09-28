@@ -7,10 +7,18 @@ class ObterProcuracaoRequest {
   final String outorgado;
   final String tipoOutorgado;
 
-  ObterProcuracaoRequest({required this.outorgante, required this.tipoOutorgante, required this.outorgado, required this.tipoOutorgado});
+  ObterProcuracaoRequest({
+    required this.outorgante,
+    required this.tipoOutorgante,
+    required this.outorgado,
+    required this.tipoOutorgado,
+  });
 
   /// Cria request a partir de CPF/CNPJ
-  factory ObterProcuracaoRequest.fromDocuments({required String outorgante, required String outorgado}) {
+  factory ObterProcuracaoRequest.fromDocuments({
+    required String outorgante,
+    required String outorgado,
+  }) {
     return ObterProcuracaoRequest(
       outorgante: outorgante,
       tipoOutorgante: _detectDocumentType(outorgante),
@@ -67,13 +75,23 @@ class ObterProcuracaoRequest {
 
   /// Converte para JSON string para envio na API
   String toJsonString() {
-    final data = {'outorgante': outorgante, 'tipoOutorgante': tipoOutorgante, 'outorgado': outorgado, 'tipoOutorgado': tipoOutorgado};
+    final data = {
+      'outorgante': outorgante,
+      'tipoOutorgante': tipoOutorgante,
+      'outorgado': outorgado,
+      'tipoOutorgado': tipoOutorgado,
+    };
     return jsonEncode(data);
   }
 
   /// Converte para Map
   Map<String, dynamic> toJson() {
-    return {'outorgante': outorgante, 'tipoOutorgante': tipoOutorgante, 'outorgado': outorgado, 'tipoOutorgado': tipoOutorgado};
+    return {
+      'outorgante': outorgante,
+      'tipoOutorgante': tipoOutorgante,
+      'outorgado': outorgado,
+      'tipoOutorgado': tipoOutorgado,
+    };
   }
 
   /// Cria a partir de JSON

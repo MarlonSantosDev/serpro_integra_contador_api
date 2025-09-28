@@ -20,7 +20,9 @@ class RelpmeiService {
   /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
   ///
   /// Retorna lista de pedidos encontrados ou erro detalhado
-  Future<ConsultarPedidosResponse> consultarPedidos(ConsultarPedidosRequest request) async {
+  Future<ConsultarPedidosResponse> consultarPedidos(
+    ConsultarPedidosRequest request,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (request.cpfCnpj?.isEmpty ?? true) {
@@ -60,7 +62,9 @@ class RelpmeiService {
   /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
   ///
   /// Retorna lista de parcelamentos encontrados ou erro detalhado
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(ConsultarParcelamentoRequest request) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    ConsultarParcelamentoRequest request,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (request.cpfCnpj?.isEmpty ?? true) {
@@ -100,7 +104,9 @@ class RelpmeiService {
   /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
   ///
   /// Retorna lista de parcelas para impressão ou erro detalhado
-  Future<ConsultarParcelasImpressaoResponse> consultarParcelasImpressao(ConsultarParcelasImpressaoRequest request) async {
+  Future<ConsultarParcelasImpressaoResponse> consultarParcelasImpressao(
+    ConsultarParcelasImpressaoRequest request,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (request.cpfCnpj?.isEmpty ?? true) {
@@ -113,7 +119,10 @@ class RelpmeiService {
       }
 
       // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post('/relpmei/parcelas-impressao', request);
+      final response = await _apiClient.post(
+        '/relpmei/parcelas-impressao',
+        request,
+      );
 
       if (response['status'] == 200) {
         return ConsultarParcelasImpressaoResponse.fromJson(response);
@@ -140,7 +149,9 @@ class RelpmeiService {
   /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
   ///
   /// Retorna lista de detalhes de pagamento ou erro detalhado
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(ConsultarDetalhesPagamentoRequest request) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    ConsultarDetalhesPagamentoRequest request,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (request.cpfCnpj?.isEmpty ?? true) {
@@ -153,7 +164,10 @@ class RelpmeiService {
       }
 
       // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post('/relpmei/detalhes-pagamento', request);
+      final response = await _apiClient.post(
+        '/relpmei/detalhes-pagamento',
+        request,
+      );
 
       if (response['status'] == 200) {
         return ConsultarDetalhesPagamentoResponse.fromJson(response);
@@ -206,7 +220,12 @@ class RelpmeiService {
         );
       }
     } catch (e) {
-      return EmitirDasResponse(sucesso: false, mensagem: 'Erro interno na emissão de DAS', codigoErro: 'INTERNAL_ERROR', detalhesErro: e.toString());
+      return EmitirDasResponse(
+        sucesso: false,
+        mensagem: 'Erro interno na emissão de DAS',
+        codigoErro: 'INTERNAL_ERROR',
+        detalhesErro: e.toString(),
+      );
     }
   }
 }

@@ -28,7 +28,10 @@ class PgmeiService {
     return GerarDasResponse.fromJson(response);
   }
 
-  Future<GerarDasResponse> gerarDasCodigoDeBarras(String cnpj, String periodoApuracao) async {
+  Future<GerarDasResponse> gerarDasCodigoDeBarras(
+    String cnpj,
+    String periodoApuracao,
+  ) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validatePeriodo(periodoApuracao);
@@ -47,7 +50,10 @@ class PgmeiService {
     return GerarDasResponse.fromJson(response);
   }
 
-  Future<GerarDasResponse> atualizarBeneficio(String cnpj, String periodoApuracao) async {
+  Future<GerarDasResponse> atualizarBeneficio(
+    String cnpj,
+    String periodoApuracao,
+  ) async {
     // Validações
     ValidationUtils.validateCNPJ(cnpj);
     ValidationUtils.validatePeriodo(periodoApuracao);
@@ -73,7 +79,12 @@ class PgmeiService {
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'DIVIDAATIVA24', versaoSistema: '1.0', dados: jsonEncode({'anoCalendario': ano})),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'DIVIDAATIVA24',
+        versaoSistema: '1.0',
+        dados: jsonEncode({'anoCalendario': ano}),
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);

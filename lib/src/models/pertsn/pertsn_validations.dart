@@ -344,7 +344,13 @@ class PertsnValidations {
       return 'Situação do parcelamento é obrigatória';
     }
 
-    final situacoesValidas = ['Em parcelamento', 'Parcelamento encerrado', 'Parcelamento cancelado', 'Parcelamento suspenso', 'Aguardando pagamento'];
+    final situacoesValidas = [
+      'Em parcelamento',
+      'Parcelamento encerrado',
+      'Parcelamento cancelado',
+      'Parcelamento suspenso',
+      'Aguardando pagamento',
+    ];
 
     if (!situacoesValidas.contains(situacao)) {
       return 'Situação do parcelamento inválida';
@@ -443,7 +449,13 @@ class PertsnValidations {
       return 'Serviço é obrigatório';
     }
 
-    final servicosValidos = ['PEDIDOSPARC183', 'OBTERPARC184', 'PARCELASPARAGERAR182', 'DETPAGTOPARC185', 'GERARDAS181'];
+    final servicosValidos = [
+      'PEDIDOSPARC183',
+      'OBTERPARC184',
+      'PARCELASPARAGERAR182',
+      'DETPAGTOPARC185',
+      'GERARDAS181',
+    ];
 
     if (!servicosValidos.contains(servico)) {
       return 'Serviço inválido para PERTSN';

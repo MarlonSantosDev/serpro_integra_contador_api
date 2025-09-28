@@ -5,18 +5,30 @@ class ConsultarDetalhesPagamentoResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarDetalhesPagamentoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarDetalhesPagamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -64,10 +76,14 @@ class DetalhesPagamentoData {
     return DetalhesPagamentoData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),
-      valorPagoArrecadacao: double.parse(json['valorPagoArrecadacao'].toString()),
+      valorPagoArrecadacao: double.parse(
+        json['valorPagoArrecadacao'].toString(),
+      ),
       dataArrecadacao: int.parse(json['dataArrecadacao'].toString()),
       bancoAgencia: json['bancoAgencia'].toString(),
-      pagamentosDebitos: (json['pagamentosDebitos'] as List? ?? []).map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList(),
+      pagamentosDebitos: (json['pagamentosDebitos'] as List? ?? [])
+          .map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -158,7 +174,9 @@ class PagamentoDebito {
       'tributo': tributo,
       'enteFederado': enteFederado,
       'valorPago': valorPago,
-      'discriminacaoDebitos': discriminacaoDebitos.map((e) => e.toJson()).toList(),
+      'discriminacaoDebitos': discriminacaoDebitos
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 

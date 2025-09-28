@@ -32,7 +32,9 @@ class RelpmeiRequest extends RelpmeiBaseRequest {
   factory RelpmeiRequest.fromJson(Map<String, dynamic> json) {
     return RelpmeiRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj']?.toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),
@@ -89,7 +91,9 @@ class ConsultarPedidosRequest extends RelpmeiBaseRequest {
   factory ConsultarPedidosRequest.fromJson(Map<String, dynamic> json) {
     return ConsultarPedidosRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj'].toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),
@@ -174,7 +178,9 @@ class ConsultarParcelamentoRequest extends RelpmeiBaseRequest {
   factory ConsultarParcelamentoRequest.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelamentoRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj'].toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),
@@ -256,10 +262,14 @@ class ConsultarParcelasImpressaoRequest extends RelpmeiBaseRequest {
     super.dataEmissao,
   });
 
-  factory ConsultarParcelasImpressaoRequest.fromJson(Map<String, dynamic> json) {
+  factory ConsultarParcelasImpressaoRequest.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarParcelasImpressaoRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj'].toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),
@@ -341,10 +351,14 @@ class ConsultarDetalhesPagamentoRequest extends RelpmeiBaseRequest {
     super.dataEmissao,
   });
 
-  factory ConsultarDetalhesPagamentoRequest.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoRequest.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarDetalhesPagamentoRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj'].toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),
@@ -429,7 +443,9 @@ class EmitirDasRequest extends RelpmeiBaseRequest {
   factory EmitirDasRequest.fromJson(Map<String, dynamic> json) {
     return EmitirDasRequest(
       contribuinteNumero: json['contribuinteNumero'].toString(),
-      pedidoDados: PedidoDados.fromJson(json['pedidoDados'] as Map<String, dynamic>),
+      pedidoDados: PedidoDados.fromJson(
+        json['pedidoDados'] as Map<String, dynamic>,
+      ),
       cpfCnpj: json['cpfCnpj'].toString(),
       inscricaoEstadual: json['inscricaoEstadual']?.toString(),
       codigoReceita: json['codigoReceita']?.toString(),

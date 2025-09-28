@@ -121,7 +121,10 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = EmitirComprovanteRequest(contribuinteNumero: contribuinteNumero, numeroDocumento: numeroDocumento);
+    final request = EmitirComprovanteRequest(
+      contribuinteNumero: contribuinteNumero,
+      numeroDocumento: numeroDocumento,
+    );
 
     final response = await _apiClient.post(
       '/Consultar',

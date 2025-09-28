@@ -6,18 +6,28 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -48,7 +58,8 @@ class EmitirDasResponse {
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
     final dadosParsed = this.dadosParsed;
-    return dadosParsed?.docArrecadacaoPdfB64 != null && dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
+    return dadosParsed?.docArrecadacaoPdfB64 != null &&
+        dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Tamanho do PDF em bytes
@@ -138,7 +149,8 @@ class DasData {
   });
 
   factory DasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
     return DasData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),

@@ -21,7 +21,10 @@ class ObterEventosPJRequest {
 
   /// Valida se o protocolo tem formato válido (UUID)
   bool _isValidProtocol(String protocolo) {
-    final uuidRegex = RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', caseSensitive: false);
+    final uuidRegex = RegExp(
+      r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+      caseSensitive: false,
+    );
     return uuidRegex.hasMatch(protocolo);
   }
 

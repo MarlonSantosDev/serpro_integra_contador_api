@@ -184,10 +184,12 @@ class Declaracao {
   factory Declaracao.fromJson(Map<String, dynamic> json) {
     return Declaracao(
       tipoDeclaracao: int.parse(json['tipoDeclaracao'].toString()),
-      receitaPaCompetenciaInterno: (num.parse(json['receitaPaCompetenciaInterno'].toString()))
-          .toDouble(),
-      receitaPaCompetenciaExterno: (num.parse(json['receitaPaCompetenciaExterno'].toString()))
-          .toDouble(),
+      receitaPaCompetenciaInterno: (num.parse(
+        json['receitaPaCompetenciaInterno'].toString(),
+      )).toDouble(),
+      receitaPaCompetenciaExterno: (num.parse(
+        json['receitaPaCompetenciaExterno'].toString(),
+      )).toDouble(),
       receitaPaCaixaInterno: json['receitaPaCaixaInterno'] != null
           ? (num.parse(json['receitaPaCaixaInterno'].toString())).toDouble()
           : null,
@@ -610,7 +612,9 @@ class Reducao {
     return Reducao(
       codTributo: int.parse(json['codTributo'].toString()),
       valor: (num.parse(json['valor'].toString())).toDouble(),
-      percentualReducao: (num.parse(json['percentualReducao'].toString())).toDouble(),
+      percentualReducao: (num.parse(
+        json['percentualReducao'].toString(),
+      )).toDouble(),
       identificador: int.parse(json['identificador'].toString()),
     );
   }

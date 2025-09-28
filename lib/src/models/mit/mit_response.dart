@@ -8,7 +8,12 @@ class MitResponse {
   final String? responseDateTime;
   final List<MensagemMit> mensagens;
 
-  MitResponse({required this.status, this.responseId, this.responseDateTime, required this.mensagens});
+  MitResponse({
+    required this.status,
+    this.responseId,
+    this.responseDateTime,
+    required this.mensagens,
+  });
 
   factory MitResponse.fromJson(Map<String, dynamic> json) {
     final mensagens = <MensagemMit>[];
@@ -26,10 +31,16 @@ class MitResponse {
     );
   }
 
-  MitResponse._internal({required this.status, this.responseId, this.responseDateTime, required this.mensagens});
+  MitResponse._internal({
+    required this.status,
+    this.responseId,
+    this.responseDateTime,
+    required this.mensagens,
+  });
 
   bool get sucesso => status == '200';
-  String? get mensagemErro => mensagens.isNotEmpty ? mensagens.first.texto : null;
+  String? get mensagemErro =>
+      mensagens.isNotEmpty ? mensagens.first.texto : null;
 }
 
 /// Response para encerrar apuração MIT
@@ -94,7 +105,9 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
     this.dataEncerramento,
   });
 
-  factory ConsultarSituacaoEncerramentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarSituacaoEncerramentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     final baseResponse = MitResponse.fromJson(json);
 
     int? idApuracao;
@@ -133,7 +146,9 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
     );
   }
 
-  SituacaoApuracao? get situacaoEnum => situacaoApuracao != null ? SituacaoApuracao.fromCodigo(situacaoApuracao!) : null;
+  SituacaoApuracao? get situacaoEnum => situacaoApuracao != null
+      ? SituacaoApuracao.fromCodigo(situacaoApuracao!)
+      : null;
 }
 
 /// Response para consultar apuração
@@ -167,7 +182,9 @@ class ConsultarApuracaoResponse extends MitResponse {
         textoSituacao = dados['textoSituacao'] as String?;
 
         if (dados['dadosApuracaoMit'] != null) {
-          dadosApuracaoMit = (dados['dadosApuracaoMit'] as List).map((item) => DadosApuracaoMit.fromJson(item)).toList();
+          dadosApuracaoMit = (dados['dadosApuracaoMit'] as List)
+              .map((item) => DadosApuracaoMit.fromJson(item))
+              .toList();
         }
       } catch (e) {
         // Se não conseguir decodificar, mantém null
@@ -185,14 +202,22 @@ class ConsultarApuracaoResponse extends MitResponse {
     );
   }
 
-  SituacaoApuracao? get situacaoEnum => situacaoApuracao != null ? SituacaoApuracao.fromCodigo(situacaoApuracao!) : null;
+  SituacaoApuracao? get situacaoEnum => situacaoApuracao != null
+      ? SituacaoApuracao.fromCodigo(situacaoApuracao!)
+      : null;
 }
 
 /// Response para listar apurações
 class ListarApuracaoesResponse extends MitResponse {
   final List<ApuracaoResumo>? apuracoes;
 
-  ListarApuracaoesResponse({required super.status, super.responseId, super.responseDateTime, required super.mensagens, this.apuracoes});
+  ListarApuracaoesResponse({
+    required super.status,
+    super.responseId,
+    super.responseDateTime,
+    required super.mensagens,
+    this.apuracoes,
+  });
 
   factory ListarApuracaoesResponse.fromJson(Map<String, dynamic> json) {
     final baseResponse = MitResponse.fromJson(json);
@@ -205,7 +230,9 @@ class ListarApuracaoesResponse extends MitResponse {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
 
         if (dados['Apuracoes'] != null) {
-          apuracoes = (dados['Apuracoes'] as List).map((item) => ApuracaoResumo.fromJson(item)).toList();
+          apuracoes = (dados['Apuracoes'] as List)
+              .map((item) => ApuracaoResumo.fromJson(item))
+              .toList();
         }
       } catch (e) {
         // Se não conseguir decodificar, mantém null
@@ -230,7 +257,10 @@ class MensagemMit {
   MensagemMit({required this.codigo, required this.texto});
 
   factory MensagemMit.fromJson(Map<String, dynamic> json) {
-    return MensagemMit(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return MensagemMit(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -245,16 +275,29 @@ class DadosApuracaoMit {
   final DadosIniciaisResponse? dadosIniciais;
   final DebitosResponse? debitos;
 
-  DadosApuracaoMit({this.periodoApuracao, this.listaEventosEspeciais, this.dadosIniciais, this.debitos});
+  DadosApuracaoMit({
+    this.periodoApuracao,
+    this.listaEventosEspeciais,
+    this.dadosIniciais,
+    this.debitos,
+  });
 
   factory DadosApuracaoMit.fromJson(Map<String, dynamic> json) {
     return DadosApuracaoMit(
-      periodoApuracao: json['PeriodoApuracao'] != null ? PeriodoApuracaoResponse.fromJson(json['PeriodoApuracao']) : null,
-      listaEventosEspeciais: json['ListaEventosEspeciais'] != null
-          ? (json['ListaEventosEspeciais'] as List).map((item) => EventoEspecialResponse.fromJson(item)).toList()
+      periodoApuracao: json['PeriodoApuracao'] != null
+          ? PeriodoApuracaoResponse.fromJson(json['PeriodoApuracao'])
           : null,
-      dadosIniciais: json['DadosIniciais'] != null ? DadosIniciaisResponse.fromJson(json['DadosIniciais']) : null,
-      debitos: json['Debitos'] != null ? DebitosResponse.fromJson(json['Debitos']) : null,
+      listaEventosEspeciais: json['ListaEventosEspeciais'] != null
+          ? (json['ListaEventosEspeciais'] as List)
+                .map((item) => EventoEspecialResponse.fromJson(item))
+                .toList()
+          : null,
+      dadosIniciais: json['DadosIniciais'] != null
+          ? DadosIniciaisResponse.fromJson(json['DadosIniciais'])
+          : null,
+      debitos: json['Debitos'] != null
+          ? DebitosResponse.fromJson(json['Debitos'])
+          : null,
     );
   }
 }
@@ -268,7 +311,14 @@ class ApuracaoResumo {
   final bool? eventoEspecial;
   final double? valorTotalApurado;
 
-  ApuracaoResumo({this.periodoApuracao, this.idApuracao, this.situacao, this.dataEncerramento, this.eventoEspecial, this.valorTotalApurado});
+  ApuracaoResumo({
+    this.periodoApuracao,
+    this.idApuracao,
+    this.situacao,
+    this.dataEncerramento,
+    this.eventoEspecial,
+    this.valorTotalApurado,
+  });
 
   factory ApuracaoResumo.fromJson(Map<String, dynamic> json) {
     return ApuracaoResumo(
@@ -277,11 +327,14 @@ class ApuracaoResumo {
       situacao: int.parse(json['situacao'].toString()),
       dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
-      valorTotalApurado: (num.parse(json['valorTotalApurado'].toString())).toDouble(),
+      valorTotalApurado: (num.parse(
+        json['valorTotalApurado'].toString(),
+      )).toDouble(),
     );
   }
 
-  SituacaoApuracao? get situacaoEnum => situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
+  SituacaoApuracao? get situacaoEnum =>
+      situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
 }
 
 /// Período da apuração (response)
@@ -292,7 +345,10 @@ class PeriodoApuracaoResponse {
   PeriodoApuracaoResponse({this.mesApuracao, this.anoApuracao});
 
   factory PeriodoApuracaoResponse.fromJson(Map<String, dynamic> json) {
-    return PeriodoApuracaoResponse(mesApuracao: int.parse(json['MesApuracao'].toString()), anoApuracao: int.parse(json['AnoApuracao'].toString()));
+    return PeriodoApuracaoResponse(
+      mesApuracao: int.parse(json['MesApuracao'].toString()),
+      anoApuracao: int.parse(json['AnoApuracao'].toString()),
+    );
   }
 }
 
@@ -312,7 +368,8 @@ class EventoEspecialResponse {
     );
   }
 
-  TipoEventoEspecial? get tipoEventoEnum => tipoEvento != null ? TipoEventoEspecial.fromCodigo(tipoEvento!) : null;
+  TipoEventoEspecial? get tipoEventoEnum =>
+      tipoEvento != null ? TipoEventoEspecial.fromCodigo(tipoEvento!) : null;
 }
 
 /// Dados iniciais (response)
@@ -340,17 +397,28 @@ class DadosIniciaisResponse {
       tributacaoLucro: int.parse(json['TributacaoLucro'].toString()),
       variacoesMonetarias: int.parse(json['VariacoesMonetarias'].toString()),
       regimePisCofins: int.parse(json['RegimePisCofins'].toString()),
-      responsavelApuracao: json['ResponsavelApuracao'] != null ? ResponsavelApuracaoResponse.fromJson(json['ResponsavelApuracao']) : null,
+      responsavelApuracao: json['ResponsavelApuracao'] != null
+          ? ResponsavelApuracaoResponse.fromJson(json['ResponsavelApuracao'])
+          : null,
     );
   }
 
-  QualificacaoPj? get qualificacaoPjEnum => qualificacaoPj != null ? QualificacaoPj.fromCodigo(qualificacaoPj!) : null;
+  QualificacaoPj? get qualificacaoPjEnum => qualificacaoPj != null
+      ? QualificacaoPj.fromCodigo(qualificacaoPj!)
+      : null;
 
-  TributacaoLucro? get tributacaoLucroEnum => tributacaoLucro != null ? TributacaoLucro.fromCodigo(tributacaoLucro!) : null;
+  TributacaoLucro? get tributacaoLucroEnum => tributacaoLucro != null
+      ? TributacaoLucro.fromCodigo(tributacaoLucro!)
+      : null;
 
-  VariacoesMonetarias? get variacoesMonetariasEnum => variacoesMonetarias != null ? VariacoesMonetarias.fromCodigo(variacoesMonetarias!) : null;
+  VariacoesMonetarias? get variacoesMonetariasEnum =>
+      variacoesMonetarias != null
+      ? VariacoesMonetarias.fromCodigo(variacoesMonetarias!)
+      : null;
 
-  RegimePisCofins? get regimePisCofinsEnum => regimePisCofins != null ? RegimePisCofins.fromCodigo(regimePisCofins!) : null;
+  RegimePisCofins? get regimePisCofinsEnum => regimePisCofins != null
+      ? RegimePisCofins.fromCodigo(regimePisCofins!)
+      : null;
 }
 
 /// Responsável pela apuração (response)
@@ -360,14 +428,23 @@ class ResponsavelApuracaoResponse {
   final String? emailResponsavel;
   final RegistroCrcResponse? registroCrc;
 
-  ResponsavelApuracaoResponse({this.cpfResponsavel, this.telResponsavel, this.emailResponsavel, this.registroCrc});
+  ResponsavelApuracaoResponse({
+    this.cpfResponsavel,
+    this.telResponsavel,
+    this.emailResponsavel,
+    this.registroCrc,
+  });
 
   factory ResponsavelApuracaoResponse.fromJson(Map<String, dynamic> json) {
     return ResponsavelApuracaoResponse(
       cpfResponsavel: json['CpfResponsavel']?.toString(),
-      telResponsavel: json['TelResponsavel'] != null ? TelefoneResponsavelResponse.fromJson(json['TelResponsavel']) : null,
+      telResponsavel: json['TelResponsavel'] != null
+          ? TelefoneResponsavelResponse.fromJson(json['TelResponsavel'])
+          : null,
       emailResponsavel: json['EmailResponsavel']?.toString(),
-      registroCrc: json['RegistroCrc'] != null ? RegistroCrcResponse.fromJson(json['RegistroCrc']) : null,
+      registroCrc: json['RegistroCrc'] != null
+          ? RegistroCrcResponse.fromJson(json['RegistroCrc'])
+          : null,
     );
   }
 }
@@ -380,7 +457,10 @@ class TelefoneResponsavelResponse {
   TelefoneResponsavelResponse({this.ddd, this.numTelefone});
 
   factory TelefoneResponsavelResponse.fromJson(Map<String, dynamic> json) {
-    return TelefoneResponsavelResponse(ddd: json['Ddd']?.toString(), numTelefone: json['NumTelefone']?.toString());
+    return TelefoneResponsavelResponse(
+      ddd: json['Ddd']?.toString(),
+      numTelefone: json['NumTelefone']?.toString(),
+    );
   }
 }
 
@@ -392,7 +472,10 @@ class RegistroCrcResponse {
   RegistroCrcResponse({this.ufRegistro, this.numRegistro});
 
   factory RegistroCrcResponse.fromJson(Map<String, dynamic> json) {
-    return RegistroCrcResponse(ufRegistro: json['UfRegistro']?.toString(), numRegistro: json['NumRegistro']?.toString());
+    return RegistroCrcResponse(
+      ufRegistro: json['UfRegistro']?.toString(),
+      numRegistro: json['NumRegistro']?.toString(),
+    );
   }
 }
 
@@ -445,10 +528,13 @@ class DebitosResponse {
       cideCombustiveis: json['CideCombustiveis'] as Map<String, dynamic>?,
       cideRemessas: json['CideRemessas'] as Map<String, dynamic>?,
       condecine: json['Condecine'] as Map<String, dynamic>?,
-      contribuicaoConcursoPrognosticos: json['ContribuicaoConcursoPrognosticos'] as Map<String, dynamic>?,
+      contribuicaoConcursoPrognosticos:
+          json['ContribuicaoConcursoPrognosticos'] as Map<String, dynamic>?,
       cpss: json['Cpss'] as Map<String, dynamic>?,
-      retPagamentoUnificado: json['RetPagamentoUnificado'] as Map<String, dynamic>?,
-      contribuicoesDiversas: json['ContribuicoesDiversas'] as Map<String, dynamic>?,
+      retPagamentoUnificado:
+          json['RetPagamentoUnificado'] as Map<String, dynamic>?,
+      contribuicoesDiversas:
+          json['ContribuicoesDiversas'] as Map<String, dynamic>?,
     );
   }
 }

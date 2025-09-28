@@ -15,7 +15,8 @@ class MensagemNegocio {
   bool get isAcessoNegado => codigo.contains('[AcessoNegado-PROCURACOES]');
 
   /// Indica se é um erro de entrada incorreta
-  bool get isEntradaIncorreta => codigo.contains('[EntrataIncorreta-PROCURACOES]');
+  bool get isEntradaIncorreta =>
+      codigo.contains('[EntrataIncorreta-PROCURACOES]');
 
   /// Indica se é um erro geral
   bool get isErro => codigo.contains('[Erro-PROCURACOES]');
@@ -31,7 +32,10 @@ class MensagemNegocio {
   }
 
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return MensagemNegocio(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

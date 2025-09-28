@@ -39,16 +39,34 @@ enum TipoDocumento {
 /// Qualificação da Pessoa Jurídica
 enum QualificacaoPj {
   pjEmGeral(1, 'PJ em geral'),
-  agenciaFomentoBanco(2, 'Agência de Fomento, Banco ou outra PJ de que trata o § 1° do art. 22 da Lei n° 8.212/1991'),
+  agenciaFomentoBanco(
+    2,
+    'Agência de Fomento, Banco ou outra PJ de que trata o § 1° do art. 22 da Lei n° 8.212/1991',
+  ),
   cooperativaCredito(3, 'Cooperativa de Crédito'),
   sociedadeCorretoraSeguros(4, 'Sociedade Corretora de Seguros'),
-  sociedadeSeguradora(5, 'Sociedade Seguradora e de Capitalização ou Entidade Aberta de Previdência Complementar com fins lucrativos'),
-  entidadeFechadaPrevidencia(6, 'Entidade Fechada de Previdência Complementar ou Entidade Aberta de Previdência Complementar sem fins lucrativos'),
+  sociedadeSeguradora(
+    5,
+    'Sociedade Seguradora e de Capitalização ou Entidade Aberta de Previdência Complementar com fins lucrativos',
+  ),
+  entidadeFechadaPrevidencia(
+    6,
+    'Entidade Fechada de Previdência Complementar ou Entidade Aberta de Previdência Complementar sem fins lucrativos',
+  ),
   sociedadeCooperativa(7, 'Sociedade Cooperativa'),
-  sociedadeCooperativaAgropecuaria(8, 'Sociedade Cooperativa de Produção Agropecuária ou de Consumo'),
+  sociedadeCooperativaAgropecuaria(
+    8,
+    'Sociedade Cooperativa de Produção Agropecuária ou de Consumo',
+  ),
   autarquiaFundacaoPublica(9, 'Autarquia ou Fundação Pública'),
-  empresaPublica(10, 'Empresa Pública, Sociedade de Economia Mista ou PJ de que trata o inc. III do art. 34 da Lei n° 10.833/2003'),
-  estadoMunicipio(11, 'Estado, Distrito Federal, Município ou Órgão Público da Administração Direta'),
+  empresaPublica(
+    10,
+    'Empresa Pública, Sociedade de Economia Mista ou PJ de que trata o inc. III do art. 34 da Lei n° 10.833/2003',
+  ),
+  estadoMunicipio(
+    11,
+    'Estado, Distrito Federal, Município ou Órgão Público da Administração Direta',
+  ),
   maisDeUmaQualificacao(12, 'Mais de uma qualificação durante o mês');
 
   const QualificacaoPj(this.codigo, this.descricao);
@@ -89,7 +107,10 @@ enum TributacaoLucro {
 enum VariacoesMonetarias {
   regimeCaixa(1, 'Regime de Caixa'),
   regimeCompetencia(2, 'Regime de Competência'),
-  regimeCaixaElevadaOscilacao(3, 'Regime de Caixa - Elevada oscilação da taxa de câmbio');
+  regimeCaixaElevadaOscilacao(
+    3,
+    'Regime de Caixa - Elevada oscilação da taxa de câmbio',
+  );
 
   const VariacoesMonetarias(this.codigo, this.descricao);
   final int codigo;

@@ -5,7 +5,10 @@ class Mensagem {
   Mensagem({required this.codigo, required this.texto});
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return Mensagem(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -22,7 +25,8 @@ class Mensagem {
   bool get isAviso => codigo.contains('Aviso') || codigo.contains('Atenção');
 
   /// Verifica se é uma mensagem de informação
-  bool get isInformacao => codigo.contains('Info') || codigo.contains('Informação');
+  bool get isInformacao =>
+      codigo.contains('Info') || codigo.contains('Informação');
 
   @override
   String toString() {

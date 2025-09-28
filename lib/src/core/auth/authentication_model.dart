@@ -20,7 +20,9 @@ class AuthenticationModel {
     required this.contratanteNumero,
     required this.autorPedidoDadosNumero,
   }) : contratanteTipo = DocumentUtils.detectDocumentType(contratanteNumero),
-       autorPedidoDadosTipo = DocumentUtils.detectDocumentType(autorPedidoDadosNumero);
+       autorPedidoDadosTipo = DocumentUtils.detectDocumentType(
+         autorPedidoDadosNumero,
+       );
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
     return AuthenticationModel(

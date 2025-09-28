@@ -155,15 +155,21 @@ class ConsolidarDarfRequest {
 
     // Validar formato de datas ISO 8601
     if (!_isValidIsoDate(vencimento)) {
-      erros.add('Data de vencimento deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)');
+      erros.add(
+        'Data de vencimento deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)',
+      );
     }
 
     if (!_isValidIsoDate(dataConsolidacao)) {
-      erros.add('Data de consolidação deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)');
+      erros.add(
+        'Data de consolidação deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)',
+      );
     }
 
     if (dataAlienacao != null && !_isValidIsoDate(dataAlienacao!)) {
-      erros.add('Data de alienação deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)');
+      erros.add(
+        'Data de alienação deve estar no formato ISO 8601 (aaaa-mm-ddThh:mm:ss)',
+      );
     }
 
     return erros;
@@ -204,7 +210,8 @@ class ConsolidarDarfRequest {
       uf: uf ?? this.uf,
       municipio: municipio ?? this.municipio,
       codigoReceita: codigoReceita ?? this.codigoReceita,
-      codigoReceitaExtensao: codigoReceitaExtensao ?? this.codigoReceitaExtensao,
+      codigoReceitaExtensao:
+          codigoReceitaExtensao ?? this.codigoReceitaExtensao,
       numeroReferencia: numeroReferencia ?? this.numeroReferencia,
       tipoPA: tipoPA ?? this.tipoPA,
       dataPA: dataPA ?? this.dataPA,

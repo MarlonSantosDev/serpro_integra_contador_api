@@ -7,7 +7,12 @@ class DteResponse {
   final String dados;
   final DteDados? dadosParsed;
 
-  DteResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  DteResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+    this.dadosParsed,
+  });
 
   factory DteResponse.fromJson(Map<String, dynamic> json) {
     final dados = json['dados']?.toString() ?? '';
@@ -24,24 +29,36 @@ class DteResponse {
 
     return DteResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       dados: dados,
       dadosParsed: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Indica se a requisição foi bem-sucedida
-  bool get sucesso => status == 200 && mensagens.any((m) => m.codigo.startsWith('Sucesso-DTE'));
+  bool get sucesso =>
+      status == 200 && mensagens.any((m) => m.codigo.startsWith('Sucesso-DTE'));
 
   /// Retorna a mensagem principal (primeira mensagem de sucesso ou erro)
   String get mensagemPrincipal {
     if (mensagens.isEmpty) return 'Sem mensagens';
 
-    final sucessoMsg = mensagens.firstWhere((m) => m.codigo.startsWith('Sucesso-DTE'), orElse: () => mensagens.first);
+    final sucessoMsg = mensagens.firstWhere(
+      (m) => m.codigo.startsWith('Sucesso-DTE'),
+      orElse: () => mensagens.first,
+    );
 
     return sucessoMsg.texto;
   }
@@ -56,7 +73,8 @@ class DteResponse {
   bool get temIndicadorValido => dadosParsed?.indicadorEnquadramento != null;
 
   /// Retorna a descrição do status de enquadramento
-  String get statusEnquadramentoDescricao => dadosParsed?.statusEnquadramento ?? 'Não disponível';
+  String get statusEnquadramentoDescricao =>
+      dadosParsed?.statusEnquadramento ?? 'Não disponível';
 
   /// Indica se o contribuinte é optante DTE
   bool get isOptanteDte => dadosParsed?.indicadorEnquadramento == 0;
@@ -79,14 +97,25 @@ class DteDados {
   final int indicadorEnquadramento;
   final String statusEnquadramento;
 
-  DteDados({required this.indicadorEnquadramento, required this.statusEnquadramento});
+  DteDados({
+    required this.indicadorEnquadramento,
+    required this.statusEnquadramento,
+  });
 
   factory DteDados.fromJson(Map<String, dynamic> json) {
-    return DteDados(indicadorEnquadramento: int.parse(json['indicadorEnquadramento'].toString()), statusEnquadramento: json['statusEnquadramento'].toString());
+    return DteDados(
+      indicadorEnquadramento: int.parse(
+        json['indicadorEnquadramento'].toString(),
+      ),
+      statusEnquadramento: json['statusEnquadramento'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'indicadorEnquadramento': indicadorEnquadramento, 'statusEnquadramento': statusEnquadramento};
+    return {
+      'indicadorEnquadramento': indicadorEnquadramento,
+      'statusEnquadramento': statusEnquadramento,
+    };
   }
 
   /// Retorna a descrição do indicador de enquadramento
@@ -108,7 +137,8 @@ class DteDados {
   }
 
   /// Indica se o indicador é válido
-  bool get isIndicadorValido => indicadorEnquadramento >= -2 && indicadorEnquadramento <= 2;
+  bool get isIndicadorValido =>
+      indicadorEnquadramento >= -2 && indicadorEnquadramento <= 2;
 }
 
 /// Mensagem de negócio do DTE
@@ -119,7 +149,10 @@ class MensagemNegocio {
   MensagemNegocio({required this.codigo, required this.texto});
 
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return MensagemNegocio(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

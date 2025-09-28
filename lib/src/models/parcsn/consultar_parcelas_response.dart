@@ -6,18 +6,28 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -70,7 +80,10 @@ class ConsultarParcelasResponse {
   double get valorTotalParcelas {
     final dadosParsed = this.dadosParsed;
     if (dadosParsed == null) return 0.0;
-    return dadosParsed.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
+    return dadosParsed.listaParcelas.fold(
+      0.0,
+      (sum, parcela) => sum + parcela.valor,
+    );
   }
 
   /// Valor total formatado como moeda brasileira
@@ -90,8 +103,13 @@ class ListaParcelasData {
   ListaParcelasData({required this.listaParcelas});
 
   factory ListaParcelasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
-    return ListaParcelasData(listaParcelas: (json['listaParcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList());
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
+    return ListaParcelasData(
+      listaParcelas: (json['listaParcelas'] as List)
+          .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -106,7 +124,13 @@ class Parcela {
   final int dataVencimento;
   final String situacao;
 
-  Parcela({required this.parcela, required this.numeroParcelamento, required this.valor, required this.dataVencimento, required this.situacao});
+  Parcela({
+    required this.parcela,
+    required this.numeroParcelamento,
+    required this.valor,
+    required this.dataVencimento,
+    required this.situacao,
+  });
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
     return Parcela(
@@ -119,7 +143,13 @@ class Parcela {
   }
 
   Map<String, dynamic> toJson() {
-    return {'parcela': parcela, 'numeroParcelamento': numeroParcelamento, 'valor': valor, 'dataVencimento': dataVencimento, 'situacao': situacao};
+    return {
+      'parcela': parcela,
+      'numeroParcelamento': numeroParcelamento,
+      'valor': valor,
+      'dataVencimento': dataVencimento,
+      'situacao': situacao,
+    };
   }
 
   /// Valor formatado como moeda brasileira
@@ -156,7 +186,9 @@ class Parcela {
   bool get isEmDia => !isVencida;
 
   /// Verifica se a parcela está paga
-  bool get isPaga => situacao.toLowerCase().contains('pago') || situacao.toLowerCase().contains('quitado');
+  bool get isPaga =>
+      situacao.toLowerCase().contains('pago') ||
+      situacao.toLowerCase().contains('quitado');
 
   /// Verifica se a parcela está pendente
   bool get isPendente => !isPaga;

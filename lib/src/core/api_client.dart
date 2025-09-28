@@ -18,7 +18,8 @@ import 'package:serpro_integra_contador_api/src/models/autenticaprocurador/cache
 /// implementar suporte nativo ou usar pacotes específicos como flutter_client_ssl.
 class ApiClient {
   /// URL base para ambiente de demonstração/teste
-  final String _baseUrlDemo = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  final String _baseUrlDemo =
+      'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
 
   /// URL base para ambiente de produção (comentada para evitar uso acidental)
   //final String _baseUrlProd = 'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
@@ -106,20 +107,26 @@ class ApiClient {
   }) async {
     // Verificar se o cliente foi autenticado antes de fazer requisições
     if (_authModel == null) {
-      throw Exception('Cliente não autenticado. Chame o método authenticate primeiro.');
+      throw Exception(
+        'Cliente não autenticado. Chame o método authenticate primeiro.',
+      );
     }
 
     // Usar dados customizados se fornecidos, senão usar os dados padrão da autenticação
     // Isso permite flexibilidade para diferentes cenários de uso
-    final finalContratanteNumero = contratanteNumero ?? _authModel!.contratanteNumero;
-    final finalAutorPedidoDadosNumero = autorPedidoDadosNumero ?? _authModel!.autorPedidoDadosNumero;
+    final finalContratanteNumero =
+        contratanteNumero ?? _authModel!.contratanteNumero;
+    final finalAutorPedidoDadosNumero =
+        autorPedidoDadosNumero ?? _authModel!.autorPedidoDadosNumero;
 
     // Cria o JSON completo usando os dados de autenticação (padrão ou customizados)
     final requestBody = request.toJsonWithAuth(
       contratanteNumero: finalContratanteNumero,
       contratanteTipo: DocumentUtils.detectDocumentType(finalContratanteNumero),
       autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
-      autorPedidoDadosTipo: DocumentUtils.detectDocumentType(finalAutorPedidoDadosNumero),
+      autorPedidoDadosTipo: DocumentUtils.detectDocumentType(
+        finalAutorPedidoDadosNumero,
+      ),
     );
 
     // Preparar headers obrigatórios para autenticação com a API
@@ -135,15 +142,21 @@ class ApiClient {
     }
 
     // Executar requisição HTTP POST para o endpoint da API
-    final response = await http.post(Uri.parse('$_baseUrlDemo$endpoint'), headers: headers, body: json.encode(requestBody));
+    final response = await http.post(
+      Uri.parse('$_baseUrlDemo$endpoint'),
+      headers: headers,
+      body: json.encode(requestBody),
+    );
 
     // Verificar se a requisição foi bem-sucedida (status 2xx)
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
       // Verificar se a API retornou um erro de negócio (mesmo com status HTTP 200)
       // A API do SERPRO pode retornar status 200 mas com código de erro nas mensagens
-      if (responseBody.isNotEmpty && responseBody['mensagens'][0]['codigo'] == "ERRO") {
+      if (responseBody.isNotEmpty &&
+          responseBody['mensagens'][0]['codigo'] == "ERRO") {
         // Reformatar resposta de erro para facilitar tratamento
         responseBody = {
           "rota": endpoint,
@@ -157,7 +170,9 @@ class ApiClient {
       return responseBody;
     } else {
       // Lançar exceção com detalhes do erro HTTP para facilitar depuração
-      throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
+      throw Exception(
+        'Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}',
+      );
     }
   }
 
@@ -178,7 +193,9 @@ class ApiClient {
   }) async {
     // Verificar se o cliente principal foi autenticado primeiro
     if (_authModel == null) {
-      throw Exception('Cliente não autenticado. Chame o método authenticate primeiro.');
+      throw Exception(
+        'Cliente não autenticado. Chame o método authenticate primeiro.',
+      );
     }
 
     // Preparar corpo da requisição com o termo de autorização
@@ -187,12 +204,17 @@ class ApiClient {
     // Executar requisição para autenticar procurador
     final response = await http.post(
       Uri.parse('$_baseUrlDemo/AutenticarProcurador'),
-      headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer ${_authModel!.accessToken}',
+        'jwt_token': _authModel!.jwtToken,
+        'Content-Type': 'application/json',
+      },
       body: json.encode(requestBody),
     );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
       // Salvar token de procurador em cache se autenticação foi bem-sucedida
       // Isso evita reautenticações desnecessárias durante a sessão
@@ -207,7 +229,9 @@ class ApiClient {
 
       return responseBody;
     } else {
-      throw Exception('Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
+      throw Exception(
+        'Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}',
+      );
     }
   }
 
@@ -227,11 +251,17 @@ class ApiClient {
   /// [token]: Token de procurador válido
   /// [contratanteNumero]: CNPJ da empresa contratante
   /// [autorPedidoDadosNumero]: CPF/CNPJ do procurador
-  void setProcuradorToken(String token, {required String contratanteNumero, required String autorPedidoDadosNumero}) {
+  void setProcuradorToken(
+    String token, {
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+  }) {
     _procuradorCache = CacheModel(
       token: token,
       dataCriacao: DateTime.now(),
-      dataExpiracao: DateTime.now().add(const Duration(hours: 24)), // Token válido por 24 horas
+      dataExpiracao: DateTime.now().add(
+        const Duration(hours: 24),
+      ), // Token válido por 24 horas
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
@@ -251,7 +281,9 @@ class ApiClient {
     if (_procuradorCache == null) return null;
 
     return {
-      'token': _procuradorCache!.token.substring(0, 8) + '...', // Apenas primeiros 8 caracteres por segurança
+      'token':
+          _procuradorCache!.token.substring(0, 8) +
+          '...', // Apenas primeiros 8 caracteres por segurança
       'is_valido': _procuradorCache!.isTokenValido,
       'expira_em_breve': _procuradorCache!.expiraEmBreve,
       'tempo_restante_horas': _procuradorCache!.tempoRestante.inHours,

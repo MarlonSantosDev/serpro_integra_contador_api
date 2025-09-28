@@ -371,7 +371,13 @@ class RelpsnValidations {
       return 'Situação do parcelamento é obrigatória';
     }
 
-    final situacoesValidas = ['Em parcelamento', 'Parcelamento encerrado', 'Parcelamento cancelado', 'Parcelamento suspenso', 'Aguardando pagamento'];
+    final situacoesValidas = [
+      'Em parcelamento',
+      'Parcelamento encerrado',
+      'Parcelamento cancelado',
+      'Parcelamento suspenso',
+      'Aguardando pagamento',
+    ];
 
     if (!situacoesValidas.contains(situacao)) {
       return 'Situação do parcelamento inválida';

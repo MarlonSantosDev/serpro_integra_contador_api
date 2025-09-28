@@ -90,10 +90,13 @@ class SicalcUtils {
       case 'SM': // semanal - semana/mm/aaaa (01 a 05)
         return RegExp(r'^(0[1-5])/(0[1-9]|1[0-2])/\d{4}$').hasMatch(dataPA);
       case 'DI': // diário - dd/mm/aaaa
-        return RegExp(r'^(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/\d{4}$').hasMatch(dataPA);
+        return RegExp(
+          r'^(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/\d{4}$',
+        ).hasMatch(dataPA);
       default:
         // Se não especificado, aceita qualquer formato válido
-        return RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(dataPA) || RegExp(r'^\d{4}$').hasMatch(dataPA);
+        return RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(dataPA) ||
+            RegExp(r'^\d{4}$').hasMatch(dataPA);
     }
   }
 
@@ -217,13 +220,18 @@ class SicalcUtils {
   }
 
   /// Valida compatibilidade entre código de receita e tipo de pessoa
-  static bool validarCompatibilidadeReceitaTipoPessoa(int codigoReceita, int tipoPessoa) {
+  static bool validarCompatibilidadeReceitaTipoPessoa(
+    int codigoReceita,
+    int tipoPessoa,
+  ) {
     if (tipoPessoa == 1) {
       // Pessoa Física
-      return isReceitaCompatiblePessoaFisica(codigoReceita) || isReceitaCompatibleAmbos(codigoReceita);
+      return isReceitaCompatiblePessoaFisica(codigoReceita) ||
+          isReceitaCompatibleAmbos(codigoReceita);
     } else if (tipoPessoa == 2) {
       // Pessoa Jurídica
-      return isReceitaCompatiblePessoaJuridica(codigoReceita) || isReceitaCompatibleAmbos(codigoReceita);
+      return isReceitaCompatiblePessoaJuridica(codigoReceita) ||
+          isReceitaCompatibleAmbos(codigoReceita);
     }
     return false;
   }
@@ -232,9 +240,12 @@ class SicalcUtils {
   static const Map<String, String> mensagensErroComuns = {
     '[EntradaIncorreta-SICALC]': 'Dados de entrada incorretos',
     '[Erro-SICALC]': 'Erro interno do sistema SICALC',
-    'Contribuinte não encontrado': 'Verificar número de identificação do contribuinte',
-    'A receita não permite o uso por pessoa jurídica': 'Código de receita incompatível com pessoa jurídica',
-    'A receita não permite o uso por pessoa física': 'Código de receita incompatível com pessoa física',
+    'Contribuinte não encontrado':
+        'Verificar número de identificação do contribuinte',
+    'A receita não permite o uso por pessoa jurídica':
+        'Código de receita incompatível com pessoa jurídica',
+    'A receita não permite o uso por pessoa física':
+        'Código de receita incompatível com pessoa física',
     'Erro no sistema emissor de darf': 'Indisponibilidade do serviço SICALC',
   };
 
@@ -324,7 +335,9 @@ class SicalcUtils {
     }
 
     if (!isValidCodigoReceitaExtensao(codigoReceitaExtensao)) {
-      erros.add('Código da extensão da receita inválido: $codigoReceitaExtensao');
+      erros.add(
+        'Código da extensão da receita inválido: $codigoReceitaExtensao',
+      );
     }
 
     if (!isValidTipoPA(tipoPA)) {
@@ -378,7 +391,9 @@ class SicalcUtils {
 
     // Validação de compatibilidade
     if (!validarCompatibilidadeReceitaTipoPessoa(codigoReceita, tipoPessoa)) {
-      erros.add('Código de receita $codigoReceita não é compatível com tipo de pessoa $tipoPessoa');
+      erros.add(
+        'Código de receita $codigoReceita não é compatível com tipo de pessoa $tipoPessoa',
+      );
     }
 
     return erros;

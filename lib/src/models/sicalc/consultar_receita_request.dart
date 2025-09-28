@@ -6,7 +6,9 @@ class ConsultarReceitaRequest {
 
   /// Converte para JSON string para ser usado no campo 'dados' do PedidoDados
   String toDadosJson() {
-    final Map<String, dynamic> dados = {'codigoReceita': codigoReceita.toString()};
+    final Map<String, dynamic> dados = {
+      'codigoReceita': codigoReceita.toString(),
+    };
 
     return _mapToJsonString(dados);
   }
@@ -44,7 +46,9 @@ class ConsultarReceitaRequest {
 
   /// Cria uma cópia com novos valores
   ConsultarReceitaRequest copyWith({int? codigoReceita}) {
-    return ConsultarReceitaRequest(codigoReceita: codigoReceita ?? this.codigoReceita);
+    return ConsultarReceitaRequest(
+      codigoReceita: codigoReceita ?? this.codigoReceita,
+    );
   }
 
   @override

@@ -32,7 +32,9 @@ class PertsnErrors {
 
   /// Obtém todos os erros de entrada incorreta do PARCSN
   static List<PertsnErrorInfo> getEntradasIncorretas() {
-    return _erros.values.where((e) => e.categoria == PertsnErrorCategory.entradaIncorreta).toList();
+    return _erros.values
+        .where((e) => e.categoria == PertsnErrorCategory.entradaIncorreta)
+        .toList();
   }
 
   /// Obtém todos os erros gerais do PARCSN
@@ -42,7 +44,9 @@ class PertsnErrors {
 
   /// Obtém todos os sucessos do PARCSN
   static List<PertsnErrorInfo> getSucessos() {
-    return _erros.values.where((e) => e.tipo == PertsnErrorType.sucesso).toList();
+    return _erros.values
+        .where((e) => e.tipo == PertsnErrorType.sucesso)
+        .toList();
   }
 
   /// Mapa de erros conhecidos do PARCSN
@@ -62,7 +66,8 @@ class PertsnErrors {
       tipo: PertsnErrorType.aviso,
       categoria: PertsnErrorCategory.aviso,
       descricao: 'Nenhum parcelamento encontrado para o contribuinte',
-      solucao: 'Verifique se o CNPJ está correto e se possui parcelamentos ativos',
+      solucao:
+          'Verifique se o CNPJ está correto e se possui parcelamentos ativos',
     ),
 
     '[Aviso-PARCSN-002]': PertsnErrorInfo(
@@ -136,7 +141,8 @@ class PertsnErrors {
       tipo: PertsnErrorType.erro,
       categoria: PertsnErrorCategory.sistema,
       descricao: 'Erro interno do sistema PARCSN',
-      solucao: 'Tente novamente em alguns minutos. Se o erro persistir, entre em contato com o suporte',
+      solucao:
+          'Tente novamente em alguns minutos. Se o erro persistir, entre em contato com o suporte',
     ),
 
     '[Erro-PARCSN-101]': PertsnErrorInfo(
@@ -160,7 +166,8 @@ class PertsnErrors {
       tipo: PertsnErrorType.erro,
       categoria: PertsnErrorCategory.sistema,
       descricao: 'Erro na geração do PDF do DAS',
-      solucao: 'Tente novamente. Se o erro persistir, entre em contato com o suporte',
+      solucao:
+          'Tente novamente. Se o erro persistir, entre em contato com o suporte',
     ),
 
     // Erros de autenticação
@@ -194,7 +201,8 @@ class PertsnErrors {
       tipo: PertsnErrorType.erro,
       categoria: PertsnErrorCategory.negocio,
       descricao: 'Contribuinte não possui parcelamentos ativos',
-      solucao: 'Verifique se o contribuinte possui parcelamentos no sistema PARCSN',
+      solucao:
+          'Verifique se o contribuinte possui parcelamentos no sistema PARCSN',
     ),
 
     '[Erro-PARCSN-301]': PertsnErrorInfo(
@@ -244,7 +252,8 @@ class PertsnErrorAnalysis {
   });
 
   /// Verifica se é um erro crítico que impede a operação
-  bool get isErroCritico => tipo == PertsnErrorType.erro && categoria == PertsnErrorCategory.sistema;
+  bool get isErroCritico =>
+      tipo == PertsnErrorType.erro && categoria == PertsnErrorCategory.sistema;
 
   /// Verifica se é um erro de entrada que pode ser corrigido pelo usuário
   bool get isErroEntrada => categoria == PertsnErrorCategory.entradaIncorreta;
@@ -269,7 +278,13 @@ class PertsnErrorInfo {
   final String descricao;
   final String solucao;
 
-  PertsnErrorInfo({required this.codigo, required this.tipo, required this.categoria, required this.descricao, required this.solucao});
+  PertsnErrorInfo({
+    required this.codigo,
+    required this.tipo,
+    required this.categoria,
+    required this.descricao,
+    required this.solucao,
+  });
 
   @override
   String toString() {
@@ -281,4 +296,12 @@ class PertsnErrorInfo {
 enum PertsnErrorType { sucesso, aviso, erro, desconhecido }
 
 /// Categorias de erro do PARCSN
-enum PertsnErrorCategory { sucesso, aviso, entradaIncorreta, sistema, autenticacao, negocio, outros }
+enum PertsnErrorCategory {
+  sucesso,
+  aviso,
+  entradaIncorreta,
+  sistema,
+  autenticacao,
+  negocio,
+  outros,
+}

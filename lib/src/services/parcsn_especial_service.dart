@@ -37,8 +37,14 @@ class ParcsnEspecialService {
   /// ```
   Future<ConsultarPedidosResponse> consultarPedidos() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCSN-ESP', idServico: 'PEDIDOSPARC173', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCSN-ESP',
+        idServico: 'PEDIDOSPARC173',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -63,15 +69,20 @@ class ParcsnEspecialService {
   ///   print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
   /// }
   /// ```
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    int numeroParcelamento,
+  ) async {
     // Validação do parâmetro
-    final validacao = ParcsnEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacao = ParcsnEspecialValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacao != null) {
       throw ArgumentError(validacao);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN-ESP',
         idServico: 'OBTERPARC174',
@@ -103,25 +114,33 @@ class ParcsnEspecialService {
   ///   print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
   /// }
   /// ```
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     // Validação dos parâmetros
-    final validacaoParcelamento = ParcsnEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacaoParcelamento =
+        ParcsnEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
     if (validacaoParcelamento != null) {
       throw ArgumentError(validacaoParcelamento);
     }
 
-    final validacaoAnoMes = ParcsnEspecialValidations.validarAnoMesParcela(anoMesParcela);
+    final validacaoAnoMes = ParcsnEspecialValidations.validarAnoMesParcela(
+      anoMesParcela,
+    );
     if (validacaoAnoMes != null) {
       throw ArgumentError(validacaoAnoMes);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN-ESP',
         idServico: 'DETPAGTOPARC175',
         versaoSistema: '1.0',
-        dados: '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
+        dados:
+            '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
       ),
     );
 
@@ -145,8 +164,14 @@ class ParcsnEspecialService {
   /// ```
   Future<ConsultarParcelasResponse> consultarParcelas() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCSN-ESP', idServico: 'PARCELASPARAGERAR172', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCSN-ESP',
+        idServico: 'PARCELASPARAGERAR172',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -170,19 +195,24 @@ class ParcsnEspecialService {
   /// ```
   Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir) async {
     // Validação dos parâmetros
-    final validacaoParcela = ParcsnEspecialValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    final validacaoParcela = ParcsnEspecialValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
     if (validacaoParcela != null) {
       throw ArgumentError(validacaoParcela);
     }
 
     // Validação adicional: prazo para emissão
-    final validacaoPrazo = ParcsnEspecialValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    final validacaoPrazo = ParcsnEspecialValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
     if (validacaoPrazo != null) {
       throw ArgumentError(validacaoPrazo);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN-ESP',
         idServico: 'GERARDAS171',
@@ -232,7 +262,9 @@ class ParcsnEspecialService {
 
   /// Valida um número de parcelamento
   String? validarNumeroParcelamento(int? numeroParcelamento) {
-    return ParcsnEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    return ParcsnEspecialValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
   }
 
   /// Valida um ano/mês de parcela
@@ -242,12 +274,16 @@ class ParcsnEspecialService {
 
   /// Valida uma parcela para emissão
   String? validarParcelaParaEmitir(int? parcelaParaEmitir) {
-    return ParcsnEspecialValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    return ParcsnEspecialValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida o prazo para emissão de uma parcela
   String? validarPrazoEmissaoParcela(int parcelaParaEmitir) {
-    return ParcsnEspecialValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    return ParcsnEspecialValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida o CNPJ do contribuinte

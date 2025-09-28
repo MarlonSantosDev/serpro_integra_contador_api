@@ -44,9 +44,18 @@ class BaseRequest {
     required int autorPedidoDadosTipo,
   }) {
     return {
-      'contratante': {'numero': DocumentUtils.cleanDocumentNumber(contratanteNumero), 'tipo': contratanteTipo},
-      'autorPedidoDados': {'numero': DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero), 'tipo': autorPedidoDadosTipo},
-      'contribuinte': {'numero': DocumentUtils.cleanDocumentNumber(contribuinteNumero), 'tipo': contribuinteTipo},
+      'contratante': {
+        'numero': DocumentUtils.cleanDocumentNumber(contratanteNumero),
+        'tipo': contratanteTipo,
+      },
+      'autorPedidoDados': {
+        'numero': DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero),
+        'tipo': autorPedidoDadosTipo,
+      },
+      'contribuinte': {
+        'numero': DocumentUtils.cleanDocumentNumber(contribuinteNumero),
+        'tipo': contribuinteTipo,
+      },
       'pedidoDados': pedidoDados.toJson(),
     };
   }
@@ -78,7 +87,12 @@ class PedidoDados {
   /// [idServico]: ID do serviço específico
   /// [versaoSistema]: Versão do sistema (opcional)
   /// [dados]: Dados específicos do pedido
-  PedidoDados({required this.idSistema, required this.idServico, this.versaoSistema, required this.dados});
+  PedidoDados({
+    required this.idSistema,
+    required this.idServico,
+    this.versaoSistema,
+    required this.dados,
+  });
 
   /// Cria PedidoDados a partir de JSON (para deserialização)
   factory PedidoDados.fromJson(Map<String, dynamic> json) {
@@ -92,6 +106,11 @@ class PedidoDados {
 
   /// Converte PedidoDados para JSON (para serialização)
   Map<String, dynamic> toJson() {
-    return {'idSistema': idSistema, 'idServico': idServico, 'versaoSistema': versaoSistema ?? '1.0', 'dados': dados};
+    return {
+      'idSistema': idSistema,
+      'idServico': idServico,
+      'versaoSistema': versaoSistema ?? '1.0',
+      'dados': dados,
+    };
   }
 }

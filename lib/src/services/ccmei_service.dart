@@ -83,7 +83,9 @@ class CcmeiService {
   /// Retorna: ConsultarSituacaoCadastralCcmeiResponse com lista de CNPJs vinculados ao CPF
   /// Útil para encontrar todos os CNPJs de um empresário MEI
   /// Lança exceção se o CPF for inválido ou houver erro na API
-  Future<ConsultarSituacaoCadastralCcmeiResponse> consultarSituacaoCadastral(String cpf) async {
+  Future<ConsultarSituacaoCadastralCcmeiResponse> consultarSituacaoCadastral(
+    String cpf,
+  ) async {
     // Validar formato do CPF antes de fazer a requisição
     ValidationUtils.validateCPF(cpf);
 
@@ -92,7 +94,8 @@ class CcmeiService {
       contribuinteNumero: cpf,
       pedidoDados: PedidoDados(
         idSistema: 'CCMEI',
-        idServico: 'CCMEISITCADASTRAL123', // ID específico para consulta de situação
+        idServico:
+            'CCMEISITCADASTRAL123', // ID específico para consulta de situação
         versaoSistema: '1.0',
         dados: '',
       ),

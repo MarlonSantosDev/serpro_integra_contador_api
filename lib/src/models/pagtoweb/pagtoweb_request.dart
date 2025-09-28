@@ -2,8 +2,10 @@ import '../base/base_request.dart';
 
 /// Classe base para requests do PAGTOWEB
 abstract class PagtoWebRequest extends BaseRequest {
-  PagtoWebRequest({required String contribuinteNumero, required PedidoDados pedidoDados})
-    : super(contribuinteNumero: contribuinteNumero, pedidoDados: pedidoDados);
+  PagtoWebRequest({
+    required String contribuinteNumero,
+    required PedidoDados pedidoDados,
+  }) : super(contribuinteNumero: contribuinteNumero, pedidoDados: pedidoDados);
 }
 
 /// Request para consultar pagamentos (PAGAMENTOS71)
@@ -95,7 +97,8 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null &&
+        codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
@@ -188,7 +191,8 @@ class ContarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null &&
+        codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
@@ -200,16 +204,18 @@ class ContarPagamentosRequest extends PagtoWebRequest {
 class EmitirComprovanteRequest extends PagtoWebRequest {
   final String numeroDocumento;
 
-  EmitirComprovanteRequest({required String contribuinteNumero, required this.numeroDocumento})
-    : super(
-        contribuinteNumero: contribuinteNumero,
-        pedidoDados: PedidoDados(
-          idSistema: 'PAGTOWEB',
-          idServico: 'EMITECOMPROVANTEPAGAMENTO72',
-          versaoSistema: '1.0',
-          dados: _mapToJsonString({'numeroDocumento': numeroDocumento}),
-        ),
-      );
+  EmitirComprovanteRequest({
+    required String contribuinteNumero,
+    required this.numeroDocumento,
+  }) : super(
+         contribuinteNumero: contribuinteNumero,
+         pedidoDados: PedidoDados(
+           idSistema: 'PAGTOWEB',
+           idServico: 'EMITECOMPROVANTEPAGAMENTO72',
+           versaoSistema: '1.0',
+           dados: _mapToJsonString({'numeroDocumento': numeroDocumento}),
+         ),
+       );
 }
 
 /// Utilitário para converter Map para JSON String

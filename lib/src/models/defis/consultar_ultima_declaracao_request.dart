@@ -5,7 +5,9 @@ class ConsultarUltimaDeclaracaoRequest {
   ConsultarUltimaDeclaracaoRequest({required this.ano});
 
   factory ConsultarUltimaDeclaracaoRequest.fromJson(Map<String, dynamic> json) {
-    return ConsultarUltimaDeclaracaoRequest(ano: int.parse(json['ano'].toString()));
+    return ConsultarUltimaDeclaracaoRequest(
+      ano: int.parse(json['ano'].toString()),
+    );
   }
 
   Map<String, dynamic> toJson() {

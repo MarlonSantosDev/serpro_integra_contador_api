@@ -10,14 +10,16 @@ class RelpsnErrors {
     ),
     '[Erro-RELPSN-ER_N001]': RelpsnErrorInfo(
       codigo: '[Erro-RELPSN-ER_N001]',
-      mensagem: 'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
+      mensagem:
+          'Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.',
       acao: 'Erro interno. Efetuar nova tentativa.',
       tipo: RelpsnErrorType.erro,
     ),
     '[EntradaIncorreta-RELPSN-ER_N002]': RelpsnErrorInfo(
       codigo: '[EntradaIncorreta-RELPSN-ER_N002]',
       mensagem: 'Parâmetro de entrada inválido: {}.',
-      acao: 'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
+      acao:
+          'Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.',
       tipo: RelpsnErrorType.entradaIncorreta,
     ),
     '[Aviso-RELPSN-ER_N003]': RelpsnErrorInfo(
@@ -36,7 +38,8 @@ class RelpsnErrors {
     ),
     '[Aviso-RELPSN-ER_N005]': RelpsnErrorInfo(
       codigo: '[Aviso-RELPSN-ER_N005]',
-      mensagem: 'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
+      mensagem:
+          'O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.',
       acao: 'Reenviar a partir do dia indicado.',
       tipo: RelpsnErrorType.aviso,
     ),
@@ -44,13 +47,16 @@ class RelpsnErrors {
       codigo: '[Aviso-RELPSN-ER_N006]',
       mensagem:
           'A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível.',
-      acao: 'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
+      acao:
+          'Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.',
       tipo: RelpsnErrorType.aviso,
     ),
     '[EntradaIncorreta-RELPSN-ER_N007]': RelpsnErrorInfo(
       codigo: '[EntradaIncorreta-RELPSN-ER_N007]',
-      mensagem: 'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
-      acao: 'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
+      mensagem:
+          'Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.',
+      acao:
+          'Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.',
       tipo: RelpsnErrorType.entradaIncorreta,
     ),
     '[Aviso-RELPSN-ER_N008]': RelpsnErrorInfo(
@@ -67,7 +73,8 @@ class RelpsnErrors {
     ),
     '[Aviso-RELPSN-ER_N010]': RelpsnErrorInfo(
       codigo: '[Aviso-RELPSN-ER_N010]',
-      mensagem: 'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
+      mensagem:
+          'A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.',
       acao: 'Foi passada uma parcela que não existe ou não possui pagamento.',
       tipo: RelpsnErrorType.aviso,
     ),
@@ -79,7 +86,8 @@ class RelpsnErrors {
     ),
     '[Aviso-RELPSN-ER_N012]': RelpsnErrorInfo(
       codigo: '[Aviso-RELPSN-ER_N012]',
-      mensagem: 'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
+      mensagem:
+          'Não existe pagamento para o anoMesParcela e numeroParcelamento informados.',
       acao: 'Não existe pagamento para a parcela informada.',
       tipo: RelpsnErrorType.aviso,
     ),
@@ -92,14 +100,18 @@ class RelpsnErrors {
     ),
     '[EntradaIncorreta-RELPSN-ER_N014]': RelpsnErrorInfo(
       codigo: '[EntradaIncorreta-RELPSN-ER_N014]',
-      mensagem: 'Não será possível utilizar o IC para este contribuinte. Utilize o sistema web.',
-      acao: 'A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador.',
+      mensagem:
+          'Não será possível utilizar o IC para este contribuinte. Utilize o sistema web.',
+      acao:
+          'A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador.',
       tipo: RelpsnErrorType.entradaIncorreta,
     ),
     '[Aviso-RELPSN-ER_N015]': RelpsnErrorInfo(
       codigo: '[Aviso-RELPSN-ER_N015]',
-      mensagem: 'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
-      acao: 'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
+      mensagem:
+          'Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.',
+      acao:
+          'Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.',
       tipo: RelpsnErrorType.aviso,
     ),
     '[EntradaIncorreta-RELPSN-ER_N016]': RelpsnErrorInfo(
@@ -212,7 +224,12 @@ class RelpsnErrorInfo {
   final String acao;
   final RelpsnErrorType tipo;
 
-  const RelpsnErrorInfo({required this.codigo, required this.mensagem, required this.acao, required this.tipo});
+  const RelpsnErrorInfo({
+    required this.codigo,
+    required this.mensagem,
+    required this.acao,
+    required this.tipo,
+  });
 }
 
 /// Tipos de erro do RELPSN

@@ -5,18 +5,32 @@ class ConsultarDetalhesPagamentoResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarDetalhesPagamentoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarDetalhesPagamentoResponse(
       status: json['status']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List?)
+              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       dados: json['dados']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -149,16 +163,27 @@ class DetalhesPagamentoData {
 
       return DetalhesPagamentoData(
         numeroDas: json['numeroDas']?.toString() ?? '',
-        dataVencimento: int.tryParse(json['dataVencimento']?.toString() ?? '0') ?? 0,
+        dataVencimento:
+            int.tryParse(json['dataVencimento']?.toString() ?? '0') ?? 0,
         paDasGerado: int.tryParse(json['paDasGerado']?.toString() ?? '0') ?? 0,
         geradoEm: json['geradoEm']?.toString() ?? '',
         numeroParcelamento: json['numeroParcelamento']?.toString() ?? '',
         numeroParcela: json['numeroParcela']?.toString() ?? '',
-        dataLimiteAcolhimento: int.tryParse(json['dataLimiteAcolhimento']?.toString() ?? '0') ?? 0,
-        pagamentoDebitos: (json['pagamentoDebitos'] as List?)?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-        dataPagamento: int.tryParse(json['dataPagamento']?.toString() ?? '0') ?? 0,
+        dataLimiteAcolhimento:
+            int.tryParse(json['dataLimiteAcolhimento']?.toString() ?? '0') ?? 0,
+        pagamentoDebitos:
+            (json['pagamentoDebitos'] as List?)
+                ?.map(
+                  (e) => PagamentoDebito.fromJson(e as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        dataPagamento:
+            int.tryParse(json['dataPagamento']?.toString() ?? '0') ?? 0,
         bancoAgencia: json['bancoAgencia']?.toString() ?? '',
-        valorPagoArrecadacao: double.tryParse(json['valorPagoArrecadacao']?.toString() ?? '0') ?? 0.0,
+        valorPagoArrecadacao:
+            double.tryParse(json['valorPagoArrecadacao']?.toString() ?? '0') ??
+            0.0,
       );
     } catch (e) {
       return DetalhesPagamentoData(
@@ -205,7 +230,12 @@ class DetalhesPagamentoData {
   String get valorTotalDebitosFormatado {
     final total = pagamentoDebitos.fold<double>(
       0.0,
-      (sum, debito) => sum + debito.discriminacoesDebito.fold<double>(0.0, (debitoSum, discriminacao) => debitoSum + discriminacao.total),
+      (sum, debito) =>
+          sum +
+          debito.discriminacoesDebito.fold<double>(
+            0.0,
+            (debitoSum, discriminacao) => debitoSum + discriminacao.total,
+          ),
     );
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
@@ -216,19 +246,34 @@ class PagamentoDebito {
   final String processo;
   final List<DiscriminacaoDebito> discriminacoesDebito;
 
-  PagamentoDebito({required this.paDebito, required this.processo, required this.discriminacoesDebito});
+  PagamentoDebito({
+    required this.paDebito,
+    required this.processo,
+    required this.discriminacoesDebito,
+  });
 
   factory PagamentoDebito.fromJson(Map<String, dynamic> json) {
     return PagamentoDebito(
       paDebito: int.tryParse(json['paDebito']?.toString() ?? '0') ?? 0,
       processo: json['processo']?.toString() ?? '',
       discriminacoesDebito:
-          (json['discriminacoesDebito'] as List?)?.map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['discriminacoesDebito'] as List?)
+              ?.map(
+                (e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'paDebito': paDebito, 'processo': processo, 'discriminacoesDebito': discriminacoesDebito.map((e) => e.toJson()).toList()};
+    return {
+      'paDebito': paDebito,
+      'processo': processo,
+      'discriminacoesDebito': discriminacoesDebito
+          .map((e) => e.toJson())
+          .toList(),
+    };
   }
 
   /// Formata o período de apuração do débito (AAAAMM)
@@ -242,7 +287,10 @@ class PagamentoDebito {
 
   /// Valor total do débito formatado
   String get valorTotalDebitoFormatado {
-    final total = discriminacoesDebito.fold<double>(0.0, (sum, disc) => sum + disc.total);
+    final total = discriminacoesDebito.fold<double>(
+      0.0,
+      (sum, disc) => sum + disc.total,
+    );
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 }
@@ -276,7 +324,14 @@ class DiscriminacaoDebito {
   }
 
   Map<String, dynamic> toJson() {
-    return {'tributo': tributo, 'principal': principal, 'multa': multa, 'juros': juros, 'total': total, 'enteFederadoDestino': enteFederadoDestino};
+    return {
+      'tributo': tributo,
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+      'enteFederadoDestino': enteFederadoDestino,
+    };
   }
 
   /// Formata o valor principal

@@ -5,18 +5,28 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -58,7 +68,10 @@ class ConsultarParcelasResponse {
     final dadosParsed = this.dadosParsed;
     if (dadosParsed == null) return 0.0;
 
-    return dadosParsed.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
+    return dadosParsed.listaParcelas.fold(
+      0.0,
+      (sum, parcela) => sum + parcela.valor,
+    );
   }
 
   /// Formata o valor total das parcelas
@@ -98,7 +111,9 @@ class ConsultarParcelasResponse {
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela > anoMesAtual).toList();
+    return dadosParsed.listaParcelas
+        .where((parcela) => parcela.parcela > anoMesAtual)
+        .toList();
   }
 
   /// Obtém parcelas vencidas
@@ -109,7 +124,9 @@ class ConsultarParcelasResponse {
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela < anoMesAtual).toList();
+    return dadosParsed.listaParcelas
+        .where((parcela) => parcela.parcela < anoMesAtual)
+        .toList();
   }
 
   /// Obtém parcelas do mês atual
@@ -120,7 +137,9 @@ class ConsultarParcelasResponse {
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela == anoMesAtual).toList();
+    return dadosParsed.listaParcelas
+        .where((parcela) => parcela.parcela == anoMesAtual)
+        .toList();
   }
 }
 
@@ -131,7 +150,11 @@ class ListaParcelasData {
 
   factory ListaParcelasData.fromJson(String jsonString) {
     final json = jsonString as Map<String, dynamic>;
-    return ListaParcelasData(listaParcelas: (json['listaParcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList());
+    return ListaParcelasData(
+      listaParcelas: (json['listaParcelas'] as List)
+          .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -146,7 +169,10 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(parcela: int.parse(json['parcela'].toString()), valor: double.parse(json['valor'].toString()));
+    return Parcela(
+      parcela: int.parse(json['parcela'].toString()),
+      valor: double.parse(json['valor'].toString()),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -187,7 +213,21 @@ class Parcela {
 
   /// Obtém o nome do mês da parcela
   String get nomeMes {
-    final meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    final meses = [
+      '',
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ];
 
     final mesAtual = this.mes;
     if (mesAtual >= 1 && mesAtual <= 12) {

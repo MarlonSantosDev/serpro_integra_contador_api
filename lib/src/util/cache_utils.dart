@@ -40,8 +40,12 @@ class CacheUtils {
   /// [diretorioCustomizado]: Diretório personalizado (opcional)
   ///
   /// Cria recursivamente todos os diretórios necessários
-  static Future<void> criarDiretorioCache({String? diretorioCustomizado}) async {
-    final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+  static Future<void> criarDiretorioCache({
+    String? diretorioCustomizado,
+  }) async {
+    final diretorio = obterDiretorioCache(
+      diretorioCustomizado: diretorioCustomizado,
+    );
     final dir = Directory(diretorio);
 
     if (!await dir.exists()) {
@@ -56,11 +60,17 @@ class CacheUtils {
   /// [diretorioCustomizado]: Diretório personalizado (opcional)
   ///
   /// Lança exceção se houver erro ao salvar
-  static Future<void> salvarCache(String chave, CacheModel cache, {String? diretorioCustomizado}) async {
+  static Future<void> salvarCache(
+    String chave,
+    CacheModel cache, {
+    String? diretorioCustomizado,
+  }) async {
     try {
       await criarDiretorioCache(diretorioCustomizado: diretorioCustomizado);
 
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final arquivo = File('$diretorio/${_sanitizarChave(chave)}.json');
 
       final json = cache.toJson();
@@ -77,9 +87,14 @@ class CacheUtils {
   ///
   /// Retorna: CacheModel se encontrado e válido, null caso contrário
   /// Remove automaticamente caches expirados
-  static Future<CacheModel?> carregarCache(String chave, {String? diretorioCustomizado}) async {
+  static Future<CacheModel?> carregarCache(
+    String chave, {
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final arquivo = File('$diretorio/${_sanitizarChave(chave)}.json');
 
       if (!await arquivo.exists()) {
@@ -103,9 +118,14 @@ class CacheUtils {
   }
 
   /// Remove cache
-  static Future<void> removerCache(String chave, {String? diretorioCustomizado}) async {
+  static Future<void> removerCache(
+    String chave, {
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final arquivo = File('$diretorio/${_sanitizarChave(chave)}.json');
 
       if (await arquivo.exists()) {
@@ -117,9 +137,13 @@ class CacheUtils {
   }
 
   /// Lista todos os caches
-  static Future<List<String>> listarCaches({String? diretorioCustomizado}) async {
+  static Future<List<String>> listarCaches({
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final dir = Directory(diretorio);
 
       if (!await dir.exists()) {
@@ -141,7 +165,9 @@ class CacheUtils {
   /// Limpa todos os caches
   static Future<void> limparTodosCaches({String? diretorioCustomizado}) async {
     try {
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final dir = Directory(diretorio);
 
       if (await dir.exists()) {
@@ -153,14 +179,21 @@ class CacheUtils {
   }
 
   /// Remove caches expirados
-  static Future<int> removerCachesExpirados({String? diretorioCustomizado}) async {
+  static Future<int> removerCachesExpirados({
+    String? diretorioCustomizado,
+  }) async {
     int removidos = 0;
 
     try {
-      final caches = await listarCaches(diretorioCustomizado: diretorioCustomizado);
+      final caches = await listarCaches(
+        diretorioCustomizado: diretorioCustomizado,
+      );
 
       for (final chave in caches) {
-        final cache = await carregarCache(chave, diretorioCustomizado: diretorioCustomizado);
+        final cache = await carregarCache(
+          chave,
+          diretorioCustomizado: diretorioCustomizado,
+        );
         if (cache == null || !cache.isTokenValido) {
           await removerCache(chave, diretorioCustomizado: diretorioCustomizado);
           removidos++;
@@ -174,15 +207,22 @@ class CacheUtils {
   }
 
   /// Obtém estatísticas do cache
-  static Future<Map<String, dynamic>> obterEstatisticas({String? diretorioCustomizado}) async {
+  static Future<Map<String, dynamic>> obterEstatisticas({
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final caches = await listarCaches(diretorioCustomizado: diretorioCustomizado);
+      final caches = await listarCaches(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       int validos = 0;
       int expirados = 0;
       int totalBytes = 0;
 
       for (final chave in caches) {
-        final cache = await carregarCache(chave, diretorioCustomizado: diretorioCustomizado);
+        final cache = await carregarCache(
+          chave,
+          diretorioCustomizado: diretorioCustomizado,
+        );
         if (cache != null) {
           if (cache.isTokenValido) {
             validos++;
@@ -201,7 +241,9 @@ class CacheUtils {
         'total_caches': caches.length,
         'caches_validos': validos,
         'caches_expirados': expirados,
-        'taxa_validos': caches.isNotEmpty ? (validos / caches.length * 100).toStringAsFixed(1) : '0.0',
+        'taxa_validos': caches.isNotEmpty
+            ? (validos / caches.length * 100).toStringAsFixed(1)
+            : '0.0',
         'tamanho_total_bytes': totalBytes,
         'tamanho_total_kb': (totalBytes / 1024).toStringAsFixed(2),
       };
@@ -229,7 +271,10 @@ class CacheUtils {
   /// [autorPedidoDadosNumero]: CPF/CNPJ do autor da requisição
   ///
   /// Retorna: Chave única no formato "contratante_autor"
-  static String gerarChaveCache({required String contratanteNumero, required String autorPedidoDadosNumero}) {
+  static String gerarChaveCache({
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+  }) {
     return '${contratanteNumero}_$autorPedidoDadosNumero';
   }
 
@@ -239,13 +284,22 @@ class CacheUtils {
   ///
   /// Retorna: true se a chave é válida (não vazia, tamanho adequado, sem espaços, com separador)
   static bool isChaveValida(String chave) {
-    return chave.isNotEmpty && chave.length > 5 && !chave.contains(' ') && chave.contains('_');
+    return chave.isNotEmpty &&
+        chave.length > 5 &&
+        !chave.contains(' ') &&
+        chave.contains('_');
   }
 
   /// Obtém informações de um arquivo de cache
-  static Future<Map<String, dynamic>?> obterInfoCache(String chave, {String? diretorioCustomizado}) async {
+  static Future<Map<String, dynamic>?> obterInfoCache(
+    String chave, {
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final cache = await carregarCache(chave, diretorioCustomizado: diretorioCustomizado);
+      final cache = await carregarCache(
+        chave,
+        diretorioCustomizado: diretorioCustomizado,
+      );
       if (cache == null) return null;
 
       return {
@@ -265,14 +319,24 @@ class CacheUtils {
   }
 
   /// Exporta cache para backup
-  static Future<String> exportarCache(String chave, {String? diretorioCustomizado}) async {
+  static Future<String> exportarCache(
+    String chave, {
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final cache = await carregarCache(chave, diretorioCustomizado: diretorioCustomizado);
+      final cache = await carregarCache(
+        chave,
+        diretorioCustomizado: diretorioCustomizado,
+      );
       if (cache == null) {
         throw Exception('Cache não encontrado');
       }
 
-      final backup = {'chave': chave, 'data_exportacao': DateTime.now().toIso8601String(), 'cache': cache.toJson()};
+      final backup = {
+        'chave': chave,
+        'data_exportacao': DateTime.now().toIso8601String(),
+        'cache': cache.toJson(),
+      };
 
       return jsonEncode(backup);
     } catch (e) {
@@ -293,9 +357,15 @@ class CacheUtils {
   }
 
   /// Verifica integridade do cache
-  static Future<bool> verificarIntegridade(String chave, {String? diretorioCustomizado}) async {
+  static Future<bool> verificarIntegridade(
+    String chave, {
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final cache = await carregarCache(chave, diretorioCustomizado: diretorioCustomizado);
+      final cache = await carregarCache(
+        chave,
+        diretorioCustomizado: diretorioCustomizado,
+      );
       if (cache == null) return false;
 
       // Verificar se os dados essenciais estão presentes
@@ -314,9 +384,13 @@ class CacheUtils {
   }
 
   /// Obtém configurações do cache
-  static Future<Map<String, dynamic>> obterConfiguracoes({String? diretorioCustomizado}) async {
+  static Future<Map<String, dynamic>> obterConfiguracoes({
+    String? diretorioCustomizado,
+  }) async {
     try {
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final arquivo = File('$diretorio/$_arquivoConfig');
 
       if (await arquivo.exists()) {
@@ -324,18 +398,33 @@ class CacheUtils {
         return json;
       }
 
-      return {'diretorio_cache': diretorio, 'versao': '1.0.0', 'criado_em': DateTime.now().toIso8601String()};
+      return {
+        'diretorio_cache': diretorio,
+        'versao': '1.0.0',
+        'criado_em': DateTime.now().toIso8601String(),
+      };
     } catch (e) {
-      return {'erro': e.toString(), 'diretorio_cache': obterDiretorioCache(diretorioCustomizado: diretorioCustomizado), 'versao': '1.0.0'};
+      return {
+        'erro': e.toString(),
+        'diretorio_cache': obterDiretorioCache(
+          diretorioCustomizado: diretorioCustomizado,
+        ),
+        'versao': '1.0.0',
+      };
     }
   }
 
   /// Salva configurações do cache
-  static Future<void> salvarConfiguracoes(Map<String, dynamic> configuracoes, {String? diretorioCustomizado}) async {
+  static Future<void> salvarConfiguracoes(
+    Map<String, dynamic> configuracoes, {
+    String? diretorioCustomizado,
+  }) async {
     try {
       await criarDiretorioCache(diretorioCustomizado: diretorioCustomizado);
 
-      final diretorio = obterDiretorioCache(diretorioCustomizado: diretorioCustomizado);
+      final diretorio = obterDiretorioCache(
+        diretorioCustomizado: diretorioCustomizado,
+      );
       final arquivo = File('$diretorio/$_arquivoConfig');
 
       await arquivo.writeAsString(jsonEncode(configuracoes));

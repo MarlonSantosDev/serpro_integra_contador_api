@@ -6,7 +6,10 @@ import '../models/autenticaprocurador/assinatura_digital_model.dart';
 /// Utilitários para assinatura digital
 class AssinaturaDigitalUtils {
   /// Valida certificado digital ICP-Brasil
-  static Future<bool> validarCertificadoICPBrasil({required String certificadoPath, required String senha}) async {
+  static Future<bool> validarCertificadoICPBrasil({
+    required String certificadoPath,
+    required String senha,
+  }) async {
     try {
       // Esta é uma implementação simulada para demonstração
 
@@ -37,7 +40,10 @@ class AssinaturaDigitalUtils {
   }
 
   /// Extrai informações do certificado
-  static Future<Map<String, dynamic>> extrairInfoCertificado({required String certificadoPath, required String senha}) async {
+  static Future<Map<String, dynamic>> extrairInfoCertificado({
+    required String certificadoPath,
+    required String senha,
+  }) async {
     try {
       // Esta é uma implementação simulada
 
@@ -48,8 +54,12 @@ class AssinaturaDigitalUtils {
         'serial': _gerarSerialSimulado(),
         'subject': _gerarSubjectSimulado(),
         'issuer': 'AC SERPRO v5',
-        'validade_inicio': DateTime.now().subtract(const Duration(days: 365)).toIso8601String(),
-        'validade_fim': DateTime.now().add(const Duration(days: 365)).toIso8601String(),
+        'validade_inicio': DateTime.now()
+            .subtract(const Duration(days: 365))
+            .toIso8601String(),
+        'validade_fim': DateTime.now()
+            .add(const Duration(days: 365))
+            .toIso8601String(),
         'tipo': _detectarTipoCertificado(bytes),
         'formato': _detectarFormatoCertificado(certificadoPath),
         'tamanho_bytes': bytes.length,
@@ -70,10 +80,17 @@ class AssinaturaDigitalUtils {
       // Esta é uma implementação simulada para demonstração
 
       final config =
-          configuracao ?? ConfiguracaoAssinatura.padraoICPBrasil(tipoCertificado: TipoCertificado.ecnpj, formatoCertificado: FormatoCertificado.a1);
+          configuracao ??
+          ConfiguracaoAssinatura.padraoICPBrasil(
+            tipoCertificado: TipoCertificado.ecnpj,
+            formatoCertificado: FormatoCertificado.a1,
+          );
 
       // Validar certificado
-      final isValid = await validarCertificadoICPBrasil(certificadoPath: certificadoPath, senha: senha);
+      final isValid = await validarCertificadoICPBrasil(
+        certificadoPath: certificadoPath,
+        senha: senha,
+      );
 
       if (!isValid) {
         throw Exception('Certificado digital inválido');
@@ -90,7 +107,10 @@ class AssinaturaDigitalUtils {
   }
 
   /// Verifica assinatura digital
-  static Future<bool> verificarAssinatura({required String xmlAssinado, required String certificadoPath}) async {
+  static Future<bool> verificarAssinatura({
+    required String xmlAssinado,
+    required String certificadoPath,
+  }) async {
     try {
       // Esta é uma implementação simulada
 
@@ -114,7 +134,10 @@ class AssinaturaDigitalUtils {
   }
 
   /// Gera assinatura simulada para demonstração
-  static String _gerarAssinaturaSimulada(String xml, ConfiguracaoAssinatura config) {
+  static String _gerarAssinaturaSimulada(
+    String xml,
+    ConfiguracaoAssinatura config,
+  ) {
     final hash = xml.hashCode.toString();
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     final serial = _gerarSerialSimulado();
@@ -140,7 +163,10 @@ class AssinaturaDigitalUtils {
 
   /// Insere assinatura no XML
   static String _inserirAssinaturaNoXml(String xml, String assinatura) {
-    return xml.replaceAll('<!-- Assinatura digital será inserida aqui -->', assinatura);
+    return xml.replaceAll(
+      '<!-- Assinatura digital será inserida aqui -->',
+      assinatura,
+    );
   }
 
   /// Gera serial simulado
@@ -215,7 +241,9 @@ class AssinaturaDigitalUtils {
       }
 
       // Verificar algoritmos obrigatórios
-      if (!xmlAssinado.contains('http://www.w3.org/2001/04/xmldsigmore#rsa-sha256')) {
+      if (!xmlAssinado.contains(
+        'http://www.w3.org/2001/04/xmldsigmore#rsa-sha256',
+      )) {
         erros.add('Algoritmo de assinatura RSA-SHA256 não encontrado');
       }
 
@@ -223,11 +251,15 @@ class AssinaturaDigitalUtils {
         erros.add('Algoritmo de hash SHA-256 não encontrado');
       }
 
-      if (!xmlAssinado.contains('http://www.w3.org/TR/2001/REC-xml-c14n-20010315')) {
+      if (!xmlAssinado.contains(
+        'http://www.w3.org/TR/2001/REC-xml-c14n-20010315',
+      )) {
         erros.add('Algoritmo de canonicalização C14N não encontrado');
       }
 
-      if (!xmlAssinado.contains('http://www.w3.org/2000/09/xmldsig#enveloped-signature')) {
+      if (!xmlAssinado.contains(
+        'http://www.w3.org/2000/09/xmldsig#enveloped-signature',
+      )) {
         erros.add('Transformação enveloped-signature não encontrada');
       }
     } catch (e) {
@@ -249,7 +281,9 @@ class AssinaturaDigitalUtils {
       final endIndex = xmlAssinado.indexOf(endTag, startIndex);
       if (endIndex == -1) return null;
 
-      return xmlAssinado.substring(startIndex + startTag.length, endIndex).trim();
+      return xmlAssinado
+          .substring(startIndex + startTag.length, endIndex)
+          .trim();
     } catch (e) {
       return null;
     }
@@ -267,7 +301,9 @@ class AssinaturaDigitalUtils {
       final endIndex = xmlAssinado.indexOf(endTag, startIndex);
       if (endIndex == -1) return null;
 
-      return xmlAssinado.substring(startIndex + startTag.length, endIndex).trim();
+      return xmlAssinado
+          .substring(startIndex + startTag.length, endIndex)
+          .trim();
     } catch (e) {
       return null;
     }
@@ -282,7 +318,10 @@ class AssinaturaDigitalUtils {
   }
 
   /// Valida se o certificado está dentro da validade
-  static bool isCertificadoValido({required DateTime validadeInicio, required DateTime validadeFim}) {
+  static bool isCertificadoValido({
+    required DateTime validadeInicio,
+    required DateTime validadeFim,
+  }) {
     final now = DateTime.now();
     return now.isAfter(validadeInicio) && now.isBefore(validadeFim);
   }

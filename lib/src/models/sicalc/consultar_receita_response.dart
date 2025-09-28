@@ -6,7 +6,11 @@ class ConsultarReceitaResponse {
   final List<String> mensagens;
   final ConsultarReceitaDados? dados;
 
-  ConsultarReceitaResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarReceitaResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ConsultarReceitaResponse.fromJson(Map<String, dynamic> json) {
     ConsultarReceitaDados? dadosParsed;
@@ -15,10 +19,13 @@ class ConsultarReceitaResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
+          final dadosJson =
+              jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = ConsultarReceitaDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
-          dadosParsed = ConsultarReceitaDados.fromJson(json['dados'] as Map<String, dynamic>);
+          dadosParsed = ConsultarReceitaDados.fromJson(
+            json['dados'] as Map<String, dynamic>,
+          );
         }
       } catch (e) {
         // Se falhar o parse, dadosParsed fica null
@@ -27,7 +34,11 @@ class ConsultarReceitaResponse {
 
     return ConsultarReceitaResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       dados: dadosParsed,
     );
   }
@@ -97,13 +108,19 @@ class ConsultarReceitaDados {
   }
 
   /// Indica se a receita é para pessoa física
-  bool get isPessoaFisica => tipoPessoa.toLowerCase().contains('física') || tipoPessoa.toLowerCase().contains('fisica');
+  bool get isPessoaFisica =>
+      tipoPessoa.toLowerCase().contains('física') ||
+      tipoPessoa.toLowerCase().contains('fisica');
 
   /// Indica se a receita é para pessoa jurídica
-  bool get isPessoaJuridica => tipoPessoa.toLowerCase().contains('jurídica') || tipoPessoa.toLowerCase().contains('juridica');
+  bool get isPessoaJuridica =>
+      tipoPessoa.toLowerCase().contains('jurídica') ||
+      tipoPessoa.toLowerCase().contains('juridica');
 
   /// Indica se a receita é para ambos os tipos
-  bool get isAmbosTipos => tipoPessoa.toLowerCase().contains('ambos') || tipoPessoa.toLowerCase().contains('todos');
+  bool get isAmbosTipos =>
+      tipoPessoa.toLowerCase().contains('ambos') ||
+      tipoPessoa.toLowerCase().contains('todos');
 
   /// Retorna descrição do tipo de pessoa formatada
   String get tipoPessoaFormatado {

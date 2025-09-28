@@ -97,7 +97,12 @@ class SicalcService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'SICALC', idServico: 'CONSOLIDARGERARDARF51', versaoSistema: '2.9', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'SICALC',
+        idServico: 'CONSOLIDARGERARDARF51',
+        versaoSistema: '2.9',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = SicalcUtils.obterEndpoint('CONSOLIDARGERARDARF51');
@@ -130,7 +135,12 @@ class SicalcService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'SICALC', idServico: 'CONSULTAAPOIORECEITAS52', versaoSistema: '2.9', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'SICALC',
+        idServico: 'CONSULTAAPOIORECEITAS52',
+        versaoSistema: '2.9',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = SicalcUtils.obterEndpoint('CONSULTAAPOIORECEITAS52');
@@ -162,7 +172,12 @@ class SicalcService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'SICALC', idServico: 'GERARDARFCODBARRA53', versaoSistema: '2.9', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'SICALC',
+        idServico: 'GERARDARFCODBARRA53',
+        versaoSistema: '2.9',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final endpoint = SicalcUtils.obterEndpoint('GERARDARFCODBARRA53');
@@ -404,8 +419,13 @@ class SicalcService {
         return false;
       }
 
-      final tipoPessoaContribuinte = DocumentUtils.detectDocumentType(contribuinteNumero);
-      return SicalcUtils.validarCompatibilidadeReceitaTipoPessoa(codigoReceita, tipoPessoaContribuinte);
+      final tipoPessoaContribuinte = DocumentUtils.detectDocumentType(
+        contribuinteNumero,
+      );
+      return SicalcUtils.validarCompatibilidadeReceitaTipoPessoa(
+        codigoReceita,
+        tipoPessoaContribuinte,
+      );
     } catch (e) {
       return false;
     }
@@ -441,10 +461,11 @@ class SicalcService {
         'vigente': dados.isVigente,
         'dataInicioVigencia': dados.dataInicioVigencia,
         'dataFimVigencia': dados.dataFimVigencia,
-        'compativelComContribuinte': SicalcUtils.validarCompatibilidadeReceitaTipoPessoa(
-          codigoReceita,
-          DocumentUtils.detectDocumentType(contribuinteNumero),
-        ),
+        'compativelComContribuinte':
+            SicalcUtils.validarCompatibilidadeReceitaTipoPessoa(
+              codigoReceita,
+              DocumentUtils.detectDocumentType(contribuinteNumero),
+            ),
       };
     } catch (e) {
       return null;

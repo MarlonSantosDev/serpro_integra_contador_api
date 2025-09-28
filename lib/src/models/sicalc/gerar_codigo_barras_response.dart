@@ -6,7 +6,11 @@ class GerarCodigoBarrasResponse {
   final List<String> mensagens;
   final GerarCodigoBarrasDados? dados;
 
-  GerarCodigoBarrasResponse({required this.status, required this.mensagens, this.dados});
+  GerarCodigoBarrasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory GerarCodigoBarrasResponse.fromJson(Map<String, dynamic> json) {
     GerarCodigoBarrasDados? dadosParsed;
@@ -15,10 +19,13 @@ class GerarCodigoBarrasResponse {
       try {
         // Se dados é uma string JSON, fazer parse
         if (json['dados'] is String) {
-          final dadosJson = jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
+          final dadosJson =
+              jsonDecode(json['dados'].toString()) as Map<String, dynamic>;
           dadosParsed = GerarCodigoBarrasDados.fromJson(dadosJson);
         } else if (json['dados'] is Map<String, dynamic>) {
-          dadosParsed = GerarCodigoBarrasDados.fromJson(json['dados'] as Map<String, dynamic>);
+          dadosParsed = GerarCodigoBarrasDados.fromJson(
+            json['dados'] as Map<String, dynamic>,
+          );
         }
       } catch (e) {
         // Se falhar o parse, dadosParsed fica null
@@ -27,7 +34,11 @@ class GerarCodigoBarrasResponse {
 
     return GerarCodigoBarrasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       dados: dadosParsed,
     );
   }
@@ -43,7 +54,8 @@ class GerarCodigoBarrasResponse {
   String get mensagemPrincipal => mensagens.isNotEmpty ? mensagens.first : '';
 
   /// Indica se há código de barras disponível
-  bool get temCodigoBarras => dados?.codigoBarras != null && dados!.codigoBarras!.isNotEmpty;
+  bool get temCodigoBarras =>
+      dados?.codigoBarras != null && dados!.codigoBarras!.isNotEmpty;
 
   /// Retorna o tamanho do código de barras em bytes (aproximado)
   int get tamanhoCodigoBarrasBytes {
@@ -74,7 +86,14 @@ class GerarCodigoBarrasDados {
   final String? dataGeracao;
   final String? dataValidade;
 
-  GerarCodigoBarrasDados({required this.numeroDocumento, this.codigoBarras, this.linhaDigitavel, this.qrCode, this.dataGeracao, this.dataValidade});
+  GerarCodigoBarrasDados({
+    required this.numeroDocumento,
+    this.codigoBarras,
+    this.linhaDigitavel,
+    this.qrCode,
+    this.dataGeracao,
+    this.dataValidade,
+  });
 
   factory GerarCodigoBarrasDados.fromJson(Map<String, dynamic> json) {
     return GerarCodigoBarrasDados(
@@ -99,7 +118,8 @@ class GerarCodigoBarrasDados {
   }
 
   /// Indica se há linha digitável disponível
-  bool get temLinhaDigitavel => linhaDigitavel != null && linhaDigitavel!.isNotEmpty;
+  bool get temLinhaDigitavel =>
+      linhaDigitavel != null && linhaDigitavel!.isNotEmpty;
 
   /// Indica se há QR Code disponível
   bool get temQrCode => qrCode != null && qrCode!.isNotEmpty;
@@ -112,7 +132,12 @@ class GerarCodigoBarrasDados {
       'tamanho_bytes_aproximado': tamanhoCodigoBarrasBytes,
       'tem_linha_digitavel': temLinhaDigitavel,
       'tem_qr_code': temQrCode,
-      'preview': codigoBarras?.substring(0, codigoBarras!.length > 50 ? 50 : codigoBarras!.length) ?? '',
+      'preview':
+          codigoBarras?.substring(
+            0,
+            codigoBarras!.length > 50 ? 50 : codigoBarras!.length,
+          ) ??
+          '',
     };
   }
 
@@ -150,7 +175,8 @@ class GerarCodigoBarrasDados {
   /// Indica se o código de barras está válido
   bool get isValido {
     if (!temCodigoBarras) return false;
-    if (dataValidade == null) return true; // Se não há data de validade, considera válido
+    if (dataValidade == null)
+      return true; // Se não há data de validade, considera válido
 
     try {
       final dataValidadeParsed = DateTime.parse(dataValidade!);

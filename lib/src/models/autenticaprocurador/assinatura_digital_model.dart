@@ -26,13 +26,25 @@ class AssinaturaDigitalModel {
   });
 
   /// Cria modelo a partir de arquivo de certificado
-  factory AssinaturaDigitalModel.fromFile({required String certificadoPath, required String certificadoPassword}) {
-    return AssinaturaDigitalModel(certificadoPath: certificadoPath, certificadoPassword: certificadoPassword);
+  factory AssinaturaDigitalModel.fromFile({
+    required String certificadoPath,
+    required String certificadoPassword,
+  }) {
+    return AssinaturaDigitalModel(
+      certificadoPath: certificadoPath,
+      certificadoPassword: certificadoPassword,
+    );
   }
 
   /// Cria modelo a partir de certificado em base64
-  factory AssinaturaDigitalModel.fromBase64({required String certificadoBase64, required String chavePrivada}) {
-    return AssinaturaDigitalModel(certificadoBase64: certificadoBase64, chavePrivada: chavePrivada);
+  factory AssinaturaDigitalModel.fromBase64({
+    required String certificadoBase64,
+    required String chavePrivada,
+  }) {
+    return AssinaturaDigitalModel(
+      certificadoBase64: certificadoBase64,
+      chavePrivada: chavePrivada,
+    );
   }
 
   /// Valida o certificado digital
@@ -110,7 +122,10 @@ class AssinaturaDigitalModel {
   /// Insere a assinatura no XML
   String _inserirAssinaturaNoXml(String xml, String assinatura) {
     // Substitui o placeholder da assinatura pelo conteúdo real
-    return xml.replaceAll('<!-- Assinatura digital será inserida aqui -->', assinatura);
+    return xml.replaceAll(
+      '<!-- Assinatura digital será inserida aqui -->',
+      assinatura,
+    );
   }
 
   /// Verifica se o certificado está dentro da validade
@@ -120,7 +135,8 @@ class AssinaturaDigitalModel {
     }
 
     final now = DateTime.now();
-    return now.isAfter(certificadoValidadeInicio!) && now.isBefore(certificadoValidadeFim!);
+    return now.isAfter(certificadoValidadeInicio!) &&
+        now.isBefore(certificadoValidadeFim!);
   }
 
   /// Obtém informações do certificado
@@ -131,7 +147,9 @@ class AssinaturaDigitalModel {
       'validade_inicio': certificadoValidadeInicio?.toIso8601String(),
       'validade_fim': certificadoValidadeFim?.toIso8601String(),
       'is_valido': isCertificadoValido,
-      'tempo_restante': certificadoValidadeFim != null ? certificadoValidadeFim!.difference(DateTime.now()).inDays : null,
+      'tempo_restante': certificadoValidadeFim != null
+          ? certificadoValidadeFim!.difference(DateTime.now()).inDays
+          : null,
     };
   }
 
@@ -189,12 +207,16 @@ class ConfiguracaoAssinatura {
     required this.tipoCertificado,
     required this.formatoCertificado,
     this.algoritmoHash = 'http://www.w3.org/2001/04/xmlenc#sha256',
-    this.algoritmoAssinatura = 'http://www.w3.org/2001/04/xmldsigmore#rsa-sha256',
+    this.algoritmoAssinatura =
+        'http://www.w3.org/2001/04/xmldsigmore#rsa-sha256',
     this.incluirCadeiaCompleta = false,
   });
 
   /// Configuração padrão para ICP-Brasil
-  factory ConfiguracaoAssinatura.padraoICPBrasil({required TipoCertificado tipoCertificado, required FormatoCertificado formatoCertificado}) {
+  factory ConfiguracaoAssinatura.padraoICPBrasil({
+    required TipoCertificado tipoCertificado,
+    required FormatoCertificado formatoCertificado,
+  }) {
     return ConfiguracaoAssinatura(
       tipoCertificado: tipoCertificado,
       formatoCertificado: formatoCertificado,

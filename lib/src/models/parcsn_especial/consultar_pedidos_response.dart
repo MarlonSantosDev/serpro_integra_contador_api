@@ -6,18 +6,28 @@ class ConsultarPedidosResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarPedidosResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarPedidosResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ConsultarPedidosResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarPedidosResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -57,13 +67,19 @@ class ConsultarPedidosResponse {
   /// Lista de parcelamentos ativos
   List<Parcelamento> get parcelamentosAtivos {
     final dadosParsed = this.dadosParsed;
-    return dadosParsed?.parcelamentos.where((p) => p.situacao.toLowerCase().contains('parcelamento')).toList() ?? [];
+    return dadosParsed?.parcelamentos
+            .where((p) => p.situacao.toLowerCase().contains('parcelamento'))
+            .toList() ??
+        [];
   }
 
   /// Lista de parcelamentos encerrados
   List<Parcelamento> get parcelamentosEncerrados {
     final dadosParsed = this.dadosParsed;
-    return dadosParsed?.parcelamentos.where((p) => p.situacao.toLowerCase().contains('encerrado')).toList() ?? [];
+    return dadosParsed?.parcelamentos
+            .where((p) => p.situacao.toLowerCase().contains('encerrado'))
+            .toList() ??
+        [];
   }
 
   @override
@@ -78,8 +94,13 @@ class ParcelamentosData {
   ParcelamentosData({required this.parcelamentos});
 
   factory ParcelamentosData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
-    return ParcelamentosData(parcelamentos: (json['parcelamentos'] as List).map((e) => Parcelamento.fromJson(e as Map<String, dynamic>)).toList());
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
+    return ParcelamentosData(
+      parcelamentos: (json['parcelamentos'] as List)
+          .map((e) => Parcelamento.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -93,7 +114,12 @@ class Parcelamento {
   final String situacao;
   final int dataDaSituacao;
 
-  Parcelamento({required this.numero, required this.dataDoPedido, required this.situacao, required this.dataDaSituacao});
+  Parcelamento({
+    required this.numero,
+    required this.dataDoPedido,
+    required this.situacao,
+    required this.dataDaSituacao,
+  });
 
   factory Parcelamento.fromJson(Map<String, dynamic> json) {
     return Parcelamento(
@@ -105,7 +131,12 @@ class Parcelamento {
   }
 
   Map<String, dynamic> toJson() {
-    return {'numero': numero, 'dataDoPedido': dataDoPedido, 'situacao': situacao, 'dataDaSituacao': dataDaSituacao};
+    return {
+      'numero': numero,
+      'dataDoPedido': dataDoPedido,
+      'situacao': situacao,
+      'dataDaSituacao': dataDaSituacao,
+    };
   }
 
   /// Data do pedido formatada (DD/MM/AAAA)

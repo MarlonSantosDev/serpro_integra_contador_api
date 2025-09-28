@@ -5,10 +5,25 @@ class SitfisCache {
   final String? etag;
   final String? cacheControl;
 
-  SitfisCache({required this.protocoloRelatorio, required this.dataExpiracao, this.etag, this.cacheControl});
+  SitfisCache({
+    required this.protocoloRelatorio,
+    required this.dataExpiracao,
+    this.etag,
+    this.cacheControl,
+  });
 
-  factory SitfisCache.fromHeaders({required String protocoloRelatorio, required String etag, required String cacheControl, required String expires}) {
-    return SitfisCache(protocoloRelatorio: protocoloRelatorio, dataExpiracao: DateTime.parse(expires), etag: etag, cacheControl: cacheControl);
+  factory SitfisCache.fromHeaders({
+    required String protocoloRelatorio,
+    required String etag,
+    required String cacheControl,
+    required String expires,
+  }) {
+    return SitfisCache(
+      protocoloRelatorio: protocoloRelatorio,
+      dataExpiracao: DateTime.parse(expires),
+      etag: etag,
+      cacheControl: cacheControl,
+    );
   }
 
   /// Verifica se o cache ainda é válido
@@ -27,7 +42,12 @@ class SitfisCache {
   int get tempoRestanteEmSegundos => tempoRestante.inSeconds;
 
   Map<String, dynamic> toJson() {
-    return {'protocoloRelatorio': protocoloRelatorio, 'dataExpiracao': dataExpiracao.toIso8601String(), 'etag': etag, 'cacheControl': cacheControl};
+    return {
+      'protocoloRelatorio': protocoloRelatorio,
+      'dataExpiracao': dataExpiracao.toIso8601String(),
+      'etag': etag,
+      'cacheControl': cacheControl,
+    };
   }
 
   factory SitfisCache.fromJson(Map<String, dynamic> json) {
@@ -104,7 +124,12 @@ class SitfisCacheUtils {
         return null;
       }
 
-      return SitfisCache.fromHeaders(protocoloRelatorio: protocolo, etag: etag, cacheControl: cacheControl ?? '', expires: expires);
+      return SitfisCache.fromHeaders(
+        protocoloRelatorio: protocolo,
+        etag: etag,
+        cacheControl: cacheControl ?? '',
+        expires: expires,
+      );
     } catch (e) {
       return null;
     }

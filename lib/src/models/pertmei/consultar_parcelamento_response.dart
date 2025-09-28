@@ -5,18 +5,30 @@ class ConsultarParcelamentoResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelamentoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelamentoResponse(
       status: json['status']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       dados: json['dados']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Retorna os dados parseados como objeto parcelamento detalhado
@@ -59,12 +71,23 @@ class ParcelamentoDetalhado {
       situacao: json['situacao']?.toString() ?? '',
       dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacaoOriginal: json['consolidacaoOriginal'] != null
-          ? ConsolidacaoOriginal.fromJson(json['consolidacaoOriginal'] as Map<String, dynamic>)
+          ? ConsolidacaoOriginal.fromJson(
+              json['consolidacaoOriginal'] as Map<String, dynamic>,
+            )
           : null,
       consolidacoesRestanteDivida:
-          (json['consolidacoesRestanteDivida'] as List<dynamic>?)?.map((e) => RestanteDivida.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['consolidacoesRestanteDivida'] as List<dynamic>?)
+              ?.map((e) => RestanteDivida.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       demonstrativoPagamentos:
-          (json['demonstrativoPagamentos'] as List<dynamic>?)?.map((e) => DemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['demonstrativoPagamentos'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    DemonstrativoPagamento.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -75,8 +98,12 @@ class ParcelamentoDetalhado {
       'situacao': situacao,
       'dataDaSituacao': dataDaSituacao,
       'consolidacaoOriginal': consolidacaoOriginal?.toJson(),
-      'consolidacoesRestanteDivida': consolidacoesRestanteDivida.map((e) => e.toJson()).toList(),
-      'demonstrativoPagamentos': demonstrativoPagamentos.map((e) => e.toJson()).toList(),
+      'consolidacoesRestanteDivida': consolidacoesRestanteDivida
+          .map((e) => e.toJson())
+          .toList(),
+      'demonstrativoPagamentos': demonstrativoPagamentos
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 }
@@ -100,13 +127,26 @@ class ConsolidacaoOriginal {
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
-      valorTotalConsolidadoDaEntrada: (num.parse(json['valorTotalConsolidadoDaEntrada'].toString())).toDouble(),
-      quantidadeParcelasDaEntrada: int.parse(json['quantidadeParcelasDaEntrada'].toString()),
-      parcelaBasicaDaEntrada: (num.parse(json['parcelaBasicaDaEntrada'].toString())).toDouble(),
+      valorTotalConsolidadoDaEntrada: (num.parse(
+        json['valorTotalConsolidadoDaEntrada'].toString(),
+      )).toDouble(),
+      quantidadeParcelasDaEntrada: int.parse(
+        json['quantidadeParcelasDaEntrada'].toString(),
+      ),
+      parcelaBasicaDaEntrada: (num.parse(
+        json['parcelaBasicaDaEntrada'].toString(),
+      )).toDouble(),
       dataConsolidacao: int.parse(json['dataConsolidacao'].toString()),
-      valorTotalConsolidadoDaDivida: (num.parse(json['valorTotalConsolidadoDaDivida'].toString())).toDouble(),
+      valorTotalConsolidadoDaDivida: (num.parse(
+        json['valorTotalConsolidadoDaDivida'].toString(),
+      )).toDouble(),
       detalhesConsolidacao:
-          (json['detalhesConsolidacao'] as List<dynamic>?)?.map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['detalhesConsolidacao'] as List<dynamic>?)
+              ?.map(
+                (e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -117,7 +157,9 @@ class ConsolidacaoOriginal {
       'parcelaBasicaDaEntrada': parcelaBasicaDaEntrada,
       'dataConsolidacao': dataConsolidacao,
       'valorTotalConsolidadoDaDivida': valorTotalConsolidadoDaDivida,
-      'detalhesConsolidacao': detalhesConsolidacao.map((e) => e.toJson()).toList(),
+      'detalhesConsolidacao': detalhesConsolidacao
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 }
@@ -142,8 +184,12 @@ class DetalhesConsolidacao {
       periodoApuracao: int.parse(json['periodoApuracao'].toString()),
       vencimento: int.parse(json['vencimento'].toString()),
       numeroProcesso: json['numeroProcesso']?.toString() ?? '',
-      saldoDevedorOriginal: (num.parse(json['saldoDevedorOriginal'].toString())).toDouble(),
-      valorAtualizado: (num.parse(json['valorAtualizado'].toString())).toDouble(),
+      saldoDevedorOriginal: (num.parse(
+        json['saldoDevedorOriginal'].toString(),
+      )).toDouble(),
+      valorAtualizado: (num.parse(
+        json['valorAtualizado'].toString(),
+      )).toDouble(),
     );
   }
 
@@ -175,12 +221,23 @@ class RestanteDivida {
 
   factory RestanteDivida.fromJson(Map<String, dynamic> json) {
     return RestanteDivida(
-      valorTotalConsolidadoDivida: (num.parse(json['valorTotalConsolidadoDivida'].toString())).toDouble(),
-      parcelasRemanescentes: int.parse(json['parcelasRemanescentes'].toString()),
+      valorTotalConsolidadoDivida: (num.parse(
+        json['valorTotalConsolidadoDivida'].toString(),
+      )).toDouble(),
+      parcelasRemanescentes: int.parse(
+        json['parcelasRemanescentes'].toString(),
+      ),
       parcelaBasica: (num.parse(json['parcelaBasica'].toString())).toDouble(),
-      dataConfirmacaoConsolidacao: int.parse(json['dataConfirmacaoConsolidacao'].toString()),
+      dataConfirmacaoConsolidacao: int.parse(
+        json['dataConfirmacaoConsolidacao'].toString(),
+      ),
       detalhesConsolidacao:
-          (json['detalhesConsolidacao'] as List<dynamic>?)?.map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['detalhesConsolidacao'] as List<dynamic>?)
+              ?.map(
+                (e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -190,7 +247,9 @@ class RestanteDivida {
       'parcelasRemanescentes': parcelasRemanescentes,
       'parcelaBasica': parcelaBasica,
       'dataConfirmacaoConsolidacao': dataConfirmacaoConsolidacao,
-      'detalhesConsolidacao': detalhesConsolidacao.map((e) => e.toJson()).toList(),
+      'detalhesConsolidacao': detalhesConsolidacao
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 }
@@ -201,7 +260,12 @@ class DemonstrativoPagamento {
   final int dataDeArrecadacao;
   final double valorPago;
 
-  DemonstrativoPagamento({required this.mesDaParcela, required this.vencimentoDoDas, required this.dataDeArrecadacao, required this.valorPago});
+  DemonstrativoPagamento({
+    required this.mesDaParcela,
+    required this.vencimentoDoDas,
+    required this.dataDeArrecadacao,
+    required this.valorPago,
+  });
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
@@ -213,6 +277,11 @@ class DemonstrativoPagamento {
   }
 
   Map<String, dynamic> toJson() {
-    return {'mesDaParcela': mesDaParcela, 'vencimentoDoDas': vencimentoDoDas, 'dataDeArrecadacao': dataDeArrecadacao, 'valorPago': valorPago};
+    return {
+      'mesDaParcela': mesDaParcela,
+      'vencimentoDoDas': vencimentoDoDas,
+      'dataDeArrecadacao': dataDeArrecadacao,
+      'valorPago': valorPago,
+    };
   }
 }

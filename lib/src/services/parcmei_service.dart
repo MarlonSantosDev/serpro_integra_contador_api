@@ -37,11 +37,20 @@ class ParcmeiService {
   /// ```
   Future<ConsultarPedidosResponse> consultarPedidos() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCMEI', idServico: 'PEDIDOSPARC203', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCMEI',
+        idServico: 'PEDIDOSPARC203',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
-    final response = await _apiClient.post('/integra-contador-trial/v1/Consultar', request);
+    final response = await _apiClient.post(
+      '/integra-contador-trial/v1/Consultar',
+      request,
+    );
     return ConsultarPedidosResponse.fromJson(response);
   }
 
@@ -64,15 +73,20 @@ class ParcmeiService {
   ///   print('Valor total: ${response.valorTotalConsolidadoFormatado}');
   /// }
   /// ```
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    int numeroParcelamento,
+  ) async {
     // Validação do parâmetro
-    final validacao = ParcmeiValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacao = ParcmeiValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacao != null) {
       throw ArgumentError(validacao);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI',
         idServico: 'OBTERPARC204',
@@ -81,7 +95,10 @@ class ParcmeiService {
       ),
     );
 
-    final response = await _apiClient.post('/integra-contador-trial/v1/Consultar', request);
+    final response = await _apiClient.post(
+      '/integra-contador-trial/v1/Consultar',
+      request,
+    );
     return ConsultarParcelamentoResponse.fromJson(response);
   }
 
@@ -102,11 +119,20 @@ class ParcmeiService {
   /// ```
   Future<ConsultarParcelasResponse> consultarParcelas() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCMEI', idServico: 'PARCELASPARAGERAR202', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCMEI',
+        idServico: 'PARCELASPARAGERAR202',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
-    final response = await _apiClient.post('/integra-contador-trial/v1/Consultar', request);
+    final response = await _apiClient.post(
+      '/integra-contador-trial/v1/Consultar',
+      request,
+    );
     return ConsultarParcelasResponse.fromJson(response);
   }
 
@@ -130,29 +156,41 @@ class ParcmeiService {
   ///   print('Data de pagamento: ${response.dataPagamentoFormatada}');
   /// }
   /// ```
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     // Validação dos parâmetros
-    final validacaoParcelamento = ParcmeiValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacaoParcelamento = ParcmeiValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacaoParcelamento != null) {
       throw ArgumentError(validacaoParcelamento);
     }
 
-    final validacaoAnoMes = ParcmeiValidations.validarAnoMesParcela(anoMesParcela);
+    final validacaoAnoMes = ParcmeiValidations.validarAnoMesParcela(
+      anoMesParcela,
+    );
     if (validacaoAnoMes != null) {
       throw ArgumentError(validacaoAnoMes);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI',
         idServico: 'DETPAGTOPARC205',
         versaoSistema: '1.0',
-        dados: '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
+        dados:
+            '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
       ),
     );
 
-    final response = await _apiClient.post('/integra-contador-trial/v1/Consultar', request);
+    final response = await _apiClient.post(
+      '/integra-contador-trial/v1/Consultar',
+      request,
+    );
     return ConsultarDetalhesPagamentoResponse.fromJson(response);
   }
 
@@ -174,19 +212,24 @@ class ParcmeiService {
   /// ```
   Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir) async {
     // Validação dos parâmetros
-    final validacaoParcela = ParcmeiValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    final validacaoParcela = ParcmeiValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
     if (validacaoParcela != null) {
       throw ArgumentError(validacaoParcela);
     }
 
     // Validação adicional: prazo para emissão
-    final validacaoPrazo = ParcmeiValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    final validacaoPrazo = ParcmeiValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
     if (validacaoPrazo != null) {
       throw ArgumentError(validacaoPrazo);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI',
         idServico: 'GERARDAS201',
@@ -195,7 +238,10 @@ class ParcmeiService {
       ),
     );
 
-    final response = await _apiClient.post('/integra-contador-trial/v1/Emitir', request);
+    final response = await _apiClient.post(
+      '/integra-contador-trial/v1/Emitir',
+      request,
+    );
     return EmitirDasResponse.fromJson(response);
   }
 
@@ -266,7 +312,9 @@ class ParcmeiService {
 
   /// Valida se a parcela está disponível para emissão
   String? validarParcelaDisponivelParaEmissao(int parcelaParaEmitir) {
-    return ParcmeiValidations.validarParcelaDisponivelParaEmissao(parcelaParaEmitir);
+    return ParcmeiValidations.validarParcelaDisponivelParaEmissao(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida um período de apuração
@@ -346,7 +394,9 @@ class ParcmeiService {
 
   /// Valida um número de parcelamento no formato específico do PARCMEI
   String? validarNumeroParcelamentoFormato(int? numeroParcelamento) {
-    return ParcmeiValidations.validarNumeroParcelamentoFormato(numeroParcelamento);
+    return ParcmeiValidations.validarNumeroParcelamentoFormato(
+      numeroParcelamento,
+    );
   }
 
   /// Valida um período de apuração dentro de um range válido

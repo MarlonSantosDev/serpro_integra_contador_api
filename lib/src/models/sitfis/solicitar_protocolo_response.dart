@@ -7,18 +7,32 @@ class SolicitarProtocoloResponse {
   final List<SitfisMensagem> mensagens;
   final SolicitarProtocoloDados? dados;
 
-  SolicitarProtocoloResponse({required this.status, required this.mensagens, this.dados});
+  SolicitarProtocoloResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory SolicitarProtocoloResponse.fromJson(Map<String, dynamic> json) {
     return SolicitarProtocoloResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados'] != null ? SolicitarProtocoloDados.fromJson(json['dados'].toString()) : null,
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => SitfisMensagem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      dados: json['dados'] != null
+          ? SolicitarProtocoloDados.fromJson(json['dados'].toString())
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados?.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados?.toJson(),
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -28,7 +42,9 @@ class SolicitarProtocoloResponse {
   bool get hasTempoEspera => dados?.tempoEspera != null;
 
   /// Verifica se há protocolo disponível
-  bool get hasProtocolo => dados?.protocoloRelatorio != null && dados!.protocoloRelatorio!.isNotEmpty;
+  bool get hasProtocolo =>
+      dados?.protocoloRelatorio != null &&
+      dados!.protocoloRelatorio!.isNotEmpty;
 }
 
 /// Dados retornados na solicitação de protocolo
@@ -51,14 +67,19 @@ class SolicitarProtocoloDados {
   }
 
   Map<String, dynamic> toJson() {
-    return {'protocoloRelatorio': protocoloRelatorio, 'tempoEspera': tempoEspera};
+    return {
+      'protocoloRelatorio': protocoloRelatorio,
+      'tempoEspera': tempoEspera,
+    };
   }
 
   /// Converte tempo de espera de milissegundos para segundos
-  int? get tempoEsperaEmSegundos => tempoEspera != null ? tempoEspera! ~/ 1000 : null;
+  int? get tempoEsperaEmSegundos =>
+      tempoEspera != null ? tempoEspera! ~/ 1000 : null;
 
   /// Converte tempo de espera de milissegundos para minutos
-  double? get tempoEsperaEmMinutos => tempoEspera != null ? tempoEspera! / 60000 : null;
+  double? get tempoEsperaEmMinutos =>
+      tempoEspera != null ? tempoEspera! / 60000 : null;
 }
 
 /// Função auxiliar para fazer parse de JSON string escapada

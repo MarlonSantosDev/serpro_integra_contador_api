@@ -4,12 +4,22 @@ import 'dart:convert';
 class XmlUtils {
   /// Escapa caracteres especiais em XML
   static String escapeXml(String text) {
-    return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;');
+    return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&apos;');
   }
 
   /// Remove escape de caracteres XML
   static String unescapeXml(String text) {
-    return text.replaceAll('&apos;', "'").replaceAll('&quot;', '"').replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll('&amp;', '&');
+    return text
+        .replaceAll('&apos;', "'")
+        .replaceAll('&quot;', '"')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&amp;', '&');
   }
 
   /// Valida se o texto é um XML válido
@@ -31,7 +41,11 @@ class XmlUtils {
   }
 
   /// Extrai valor de um atributo XML
-  static String? extractAttributeValue(String xml, String tagName, String attributeName) {
+  static String? extractAttributeValue(
+    String xml,
+    String tagName,
+    String attributeName,
+  ) {
     try {
       final regex = RegExp('<$tagName[^>]*$attributeName="([^"]*)"');
       final match = regex.firstMatch(xml);
@@ -56,7 +70,11 @@ class XmlUtils {
   static List<String> extractAllTagContent(String xml, String tagName) {
     try {
       final regex = RegExp('<$tagName[^>]*>(.*?)</$tagName>', dotAll: true);
-      return regex.allMatches(xml).map((match) => match.group(1)?.trim() ?? '').where((content) => content.isNotEmpty).toList();
+      return regex
+          .allMatches(xml)
+          .map((match) => match.group(1)?.trim() ?? '')
+          .where((content) => content.isNotEmpty)
+          .toList();
     } catch (e) {
       return [];
     }
@@ -89,7 +107,9 @@ class XmlUtils {
         formattedLines.add('  ' * indentLevel + trimmed);
 
         // Aumentar indentação para tags de abertura (não auto-fechamento)
-        if (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.endsWith('/>')) {
+        if (trimmed.startsWith('<') &&
+            !trimmed.startsWith('</') &&
+            !trimmed.endsWith('/>')) {
           indentLevel++;
         }
       }
@@ -174,7 +194,11 @@ class XmlUtils {
       }
 
       // Verificar formato de datas
-      final dataAssinatura = extractAttributeValue(xml, 'dataAssinatura', 'data');
+      final dataAssinatura = extractAttributeValue(
+        xml,
+        'dataAssinatura',
+        'data',
+      );
       if (dataAssinatura != null && !_isValidDateFormat(dataAssinatura)) {
         erros.add('Formato de data de assinatura inválido: $dataAssinatura');
       }
@@ -185,8 +209,13 @@ class XmlUtils {
       }
 
       // Verificar tipos de documento
-      final tipoDestinatario = extractAttributeValue(xml, 'destinatario', 'tipo');
-      if (tipoDestinatario != null && !['PF', 'PJ'].contains(tipoDestinatario)) {
+      final tipoDestinatario = extractAttributeValue(
+        xml,
+        'destinatario',
+        'tipo',
+      );
+      if (tipoDestinatario != null &&
+          !['PF', 'PJ'].contains(tipoDestinatario)) {
         erros.add('Tipo do destinatário deve ser PF ou PJ: $tipoDestinatario');
       }
 
@@ -252,13 +281,21 @@ class XmlUtils {
       }
 
       // Extrair algoritmo de assinatura
-      final algoritmo = extractAttributeValue(xmlAssinado, 'SignatureMethod', 'Algorithm');
+      final algoritmo = extractAttributeValue(
+        xmlAssinado,
+        'SignatureMethod',
+        'Algorithm',
+      );
       if (algoritmo != null) {
         info['algoritmo_assinatura'] = algoritmo;
       }
 
       // Extrair algoritmo de hash
-      final hash = extractAttributeValue(xmlAssinado, 'DigestMethod', 'Algorithm');
+      final hash = extractAttributeValue(
+        xmlAssinado,
+        'DigestMethod',
+        'Algorithm',
+      );
       if (hash != null) {
         info['algoritmo_hash'] = hash;
       }
@@ -277,7 +314,9 @@ class XmlUtils {
 
   /// Verifica se o XML está assinado digitalmente
   static bool isXmlAssinado(String xml) {
-    return xml.contains('<Signature') && xml.contains('SignatureValue') && xml.contains('X509Certificate');
+    return xml.contains('<Signature') &&
+        xml.contains('SignatureValue') &&
+        xml.contains('X509Certificate');
   }
 
   /// Remove assinatura digital do XML
@@ -291,7 +330,8 @@ class XmlUtils {
       if (endIndex == -1) return xml;
 
       // Remover a assinatura
-      return xml.substring(0, startIndex) + xml.substring(endIndex + 12); // 12 = length of '</Signature>'
+      return xml.substring(0, startIndex) +
+          xml.substring(endIndex + 12); // 12 = length of '</Signature>'
     } catch (e) {
       return xml;
     }

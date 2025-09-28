@@ -6,18 +6,28 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   /// Dados parseados do JSON string
@@ -95,8 +105,11 @@ class DasData {
   DasData({required this.docArrecadacaoPdfB64});
 
   factory DasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

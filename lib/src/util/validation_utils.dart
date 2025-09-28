@@ -66,42 +66,54 @@ class ValidationUtils {
   /// Valida e lança exceção se inválido
   static void validateCNPJ(String cnpj, {String? fieldName}) {
     if (!isValidCNPJ(cnpj)) {
-      throw ArgumentError('${fieldName ?? 'CNPJ'} inválido: deve ter exatamente 14 dígitos');
+      throw ArgumentError(
+        '${fieldName ?? 'CNPJ'} inválido: deve ter exatamente 14 dígitos',
+      );
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateCPF(String cpf, {String? fieldName}) {
     if (!isValidCPF(cpf)) {
-      throw ArgumentError('${fieldName ?? 'CPF'} inválido: deve ter exatamente 11 dígitos');
+      throw ArgumentError(
+        '${fieldName ?? 'CPF'} inválido: deve ter exatamente 11 dígitos',
+      );
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validatePeriodo(String periodo, {String? fieldName}) {
     if (!isValidPeriodo(periodo)) {
-      throw ArgumentError('${fieldName ?? 'Período'} inválido: deve estar no formato AAAAMM (ex: 202401)');
+      throw ArgumentError(
+        '${fieldName ?? 'Período'} inválido: deve estar no formato AAAAMM (ex: 202401)',
+      );
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateNumeroDeclaracao(String numero, {String? fieldName}) {
     if (!isValidNumeroDeclaracao(numero)) {
-      throw ArgumentError('${fieldName ?? 'Número da declaração'} inválido: deve ter exatamente 17 dígitos');
+      throw ArgumentError(
+        '${fieldName ?? 'Número da declaração'} inválido: deve ter exatamente 17 dígitos',
+      );
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateNumeroDas(String numero, {String? fieldName}) {
     if (!isValidNumeroDas(numero)) {
-      throw ArgumentError('${fieldName ?? 'Número do DAS'} inválido: deve ter exatamente 17 dígitos');
+      throw ArgumentError(
+        '${fieldName ?? 'Número do DAS'} inválido: deve ter exatamente 17 dígitos',
+      );
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateAno(String ano, {String? fieldName}) {
     if (!isValidAno(ano)) {
-      throw ArgumentError('${fieldName ?? 'Ano'} inválido: deve ter 4 dígitos (ex: 2024)');
+      throw ArgumentError(
+        '${fieldName ?? 'Ano'} inválido: deve ter 4 dígitos (ex: 2024)',
+      );
     }
   }
 }

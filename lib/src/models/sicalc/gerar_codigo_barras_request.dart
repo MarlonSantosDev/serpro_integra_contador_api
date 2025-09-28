@@ -6,7 +6,9 @@ class GerarCodigoBarrasRequest {
 
   /// Converte para JSON string para ser usado no campo 'dados' do PedidoDados
   String toDadosJson() {
-    final Map<String, dynamic> dados = {'numeroDocumento': numeroDocumento.toString()};
+    final Map<String, dynamic> dados = {
+      'numeroDocumento': numeroDocumento.toString(),
+    };
 
     return _mapToJsonString(dados);
   }
@@ -44,7 +46,9 @@ class GerarCodigoBarrasRequest {
 
   /// Cria uma cópia com novos valores
   GerarCodigoBarrasRequest copyWith({int? numeroDocumento}) {
-    return GerarCodigoBarrasRequest(numeroDocumento: numeroDocumento ?? this.numeroDocumento);
+    return GerarCodigoBarrasRequest(
+      numeroDocumento: numeroDocumento ?? this.numeroDocumento,
+    );
   }
 
   @override
