@@ -14,6 +14,7 @@ export 'src/util/document_utils.dart';
 export 'src/util/message_utils.dart';
 export 'src/util/dctfweb_utils.dart';
 export 'src/util/sicalc_utils.dart';
+export 'src/util/validation_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';

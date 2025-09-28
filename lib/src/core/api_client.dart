@@ -6,7 +6,8 @@ import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
 import 'package:serpro_integra_contador_api/src/models/autenticaprocurador/cache_model.dart';
 
 class ApiClient {
-  final String _baseUrl = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  final String _baseUrlDemo = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  //final String _baseUrlProd = 'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
 
   AuthenticationModel? _authModel;
   CacheModel? _procuradorCache;
@@ -98,7 +99,7 @@ class ApiClient {
       headers['autenticar_procurador_token'] = procuradorToken;
     }
 
-    final response = await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
+    final response = await http.post(Uri.parse('$_baseUrlDemo$endpoint'), headers: headers, body: json.encode(requestBody));
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
@@ -132,7 +133,7 @@ class ApiClient {
     final requestBody = {'termoAutorizacao': termoAutorizacaoBase64};
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/AutenticarProcurador'),
+      Uri.parse('$_baseUrlDemo/AutenticarProcurador'),
       headers: {'Authorization': 'Bearer ${_authModel!.accessToken}', 'jwt_token': _authModel!.jwtToken, 'Content-Type': 'application/json'},
       body: json.encode(requestBody),
     );

@@ -17,7 +17,6 @@ void main() async {
     contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
-
   // Exemplo de uso dos serviços
   await exemplosCaixaPostal(apiClient);
   await exemplosPgmei(apiClient);
@@ -120,7 +119,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
   final pgmeiService = PgmeiService(apiClient);
   try {
     // Gerar DAS
-    final response = await pgmeiService.gerarDas('00000000000100', '2023-10');
+    final response = await pgmeiService.gerarDas('00000000000100', '202310');
     print('DAS gerado com sucesso Padrao');
 
     if (response.dados.isNotEmpty) {
@@ -131,7 +130,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: .... $e');
   }
   try {
-    final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '2023-10');
+    final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000100', '202310');
     print('DAS gerado com sucesso Codigo de Barras');
 
     if (response.dados.isNotEmpty) {
@@ -142,7 +141,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: .... $e');
   }
   try {
-    final response = await pgmeiService.AtualizarBeneficio('00000000000100', '2023-10');
+    final response = await pgmeiService.atualizarBeneficio('00000000000100', '202310');
     print('DAS gerado com sucesso Atualizar Beneficio');
 
     if (response.dados.isNotEmpty) {
@@ -153,7 +152,7 @@ Future<void> exemplosPgmei(ApiClient apiClient) async {
     print('Erro no serviço PGMEI: Atualizar Beneficio: $e');
   }
   try {
-    final response = await pgmeiService.ConsultarDividaAtiva('00000000000100', '2020');
+    final response = await pgmeiService.consultarDividaAtiva('00000000000100', '2020');
     print('DAS gerado com sucesso Consultar Divida Ativa');
 
     if (response.dados.isNotEmpty) {
