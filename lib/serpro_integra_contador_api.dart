@@ -70,7 +70,6 @@ export 'src/core/auth/authentication_model.dart';
 // Common Models (Classes base consolidadas)
 export 'src/models/base/mensagem_negocio.dart';
 export 'src/models/base/mensagem.dart';
-export 'src/models/base/error_models.dart';
 export 'src/models/base/tipo_documento.dart';
 
 // Utilities

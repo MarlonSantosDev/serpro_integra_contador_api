@@ -8,11 +8,5 @@
 export 'mensagem_negocio.dart';
 export 'mensagem.dart';
 
-// Classes base para responses de parcelamento
-export 'parcelamento_responses.dart';
-
-// Classes base para erros e validações
-export 'error_models.dart';
-
 // Classes específicas para tipos de documento
 export 'tipo_documento.dart';

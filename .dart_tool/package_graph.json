@@ -15,7 +15,7 @@
     },
     {
       "name": "test",
-      "version": "1.26.3",
+      "version": "1.26.2",
       "dependencies": [
         "analyzer",
         "async",
@@ -91,7 +91,7 @@
     },
     {
       "name": "test_core",
-      "version": "0.6.12",
+      "version": "0.6.11",
       "dependencies": [
         "analyzer",
         "args",
@@ -118,7 +118,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.7",
+      "version": "0.7.6",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -292,7 +292,7 @@
     },
     {
       "name": "analyzer",
-      "version": "8.2.0",
+      "version": "7.7.1",
       "dependencies": [
         "_fe_analyzer_shared",
         "collection",
@@ -315,7 +315,7 @@
     },
     {
       "name": "meta",
-      "version": "1.17.0",
+      "version": "1.16.0",
       "dependencies": []
     },
     {
@@ -441,7 +441,7 @@
     },
     {
       "name": "_fe_analyzer_shared",
-      "version": "89.0.0",
+      "version": "85.0.0",
       "dependencies": [
         "meta"
       ]

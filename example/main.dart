@@ -441,8 +441,8 @@ Future<void> exemplosDctfWeb(ApiClient apiClient) async {
         autorPedidoDadosNumero: '00000000000000',
         categoria: CategoriaDctf.pfMensal,
         anoPA: '2022',
-        mesPA: '03',
-        cnoAfericao: 28151, // CNO obrigatório para aferição
+        mesPA: '06',
+        //cnoAfericao: 28151, // CNO obrigatório para aferição
       );
       print('✅ XML Aferição: ${afericaoResponse.sucesso}');
     } catch (e) {

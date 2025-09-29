@@ -10,13 +10,10 @@ class ConsultarSituacaoCadastralCcmeiResponse {
 
   factory ConsultarSituacaoCadastralCcmeiResponse.fromJson(Map<String, dynamic> json) {
     json['dados'] = json['dados'].replaceAll(']]', ']');
-    print("aaaaaaaa ${json['dados']}");
-    final res = jsonDecode(json['dados']);
-    print("bbbbbb ${res[0]}");
     return ConsultarSituacaoCadastralCcmeiResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List).map((e) => MensagemCcmei.fromJson(e)).toList(),
-      dados: (res[0] as List).map((e) => CcmeiSituacaoCadastral.fromJson(e)).toList(),
+      dados: (jsonDecode(json['dados']) as List).map((e) => CcmeiSituacaoCadastral.fromJson(e)).toList(),
     );
   }
 

@@ -3,15 +3,15 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-89.0.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-85.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.5"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-8.2.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-7.7.1",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.5"
     },
     {
       "name": "args",
@@ -123,9 +123,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.17.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.16.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "2.12"
     },
     {
       "name": "mime",
@@ -231,19 +231,19 @@
     },
     {
       "name": "test",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.26.3",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.26.2",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.7",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.6",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
     {
       "name": "test_core",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.12",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.11",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
