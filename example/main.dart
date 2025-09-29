@@ -2,7 +2,6 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis;
 import 'package:serpro_integra_contador_api/src/models/defis/defis_enums.dart' as defis;
 import 'package:serpro_integra_contador_api/src/models/pgdasd/entregar_declaracao_request.dart' as pgdasd_models;
-import 'package:serpro_integra_contador_api/src/services/autenticaprocurador_service.dart';
 
 void main() async {
   // Inicializar o cliente da API
@@ -18,7 +17,7 @@ void main() async {
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
   // Exemplo de uso dos serviços
-  //await exemplosCaixaPostal(apiClient);
+  await exemplosCaixaPostal(apiClient);
   await exemplosCcmei(apiClient);
   // await exemplosPgmei(apiClient);
   // await exemplosCcmei(apiClient);
@@ -270,7 +269,6 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
 
   try {
     // 1. Emitir CCMEI (PDF)
-    /*
     try {
       print('\n--- 1. Emitir CCMEI (PDF) ---');
       final emitirResponse = await ccmeiService.emitirCcmei(
@@ -335,7 +333,6 @@ Future<void> exemplosCcmei(ApiClient apiClient) async {
       print('❌ Erro ao consultar dados CCMEI: $e');
     }
     await Future.delayed(Duration(seconds: 10));
-    */
 
     // 3. Consultar Situação Cadastral por CPF
     try {

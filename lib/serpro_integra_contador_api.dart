@@ -73,6 +73,10 @@ export 'src/util/message_utils.dart';
 export 'src/util/dctfweb_utils.dart';
 export 'src/util/sicalc_utils.dart';
 export 'src/util/validation_utils.dart';
+export 'src/util/assinatura_digital_utils.dart';
+export 'src/util/cache_utils.dart';
+export 'src/util/xml_utils.dart';
+export 'src/util/eventos_atualizacao_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';
@@ -101,6 +105,13 @@ export 'src/models/dctfweb/consultar_relatorio_response.dart';
 export 'src/models/procuracoes/obter_procuracao_request.dart';
 export 'src/models/procuracoes/obter_procuracao_response.dart';
 export 'src/models/procuracoes/mensagem_negocio.dart';
+export 'src/models/procuracoes/procuracoes_enums.dart';
+
+// Autenticação de Procurador Models
+export 'src/models/autenticaprocurador/termo_autorizacao_request.dart';
+export 'src/models/autenticaprocurador/termo_autorizacao_response.dart' hide MensagemNegocio;
+export 'src/models/autenticaprocurador/assinatura_digital_model.dart';
+export 'src/models/autenticaprocurador/cache_model.dart';
 
 // Caixa Postal Models
 export 'src/models/caixa_postal/mensagem_negocio.dart' hide MensagemNegocio;
@@ -296,3 +307,4 @@ export 'src/services/sitfis_service.dart';
 export 'src/services/defis_service.dart';
 export 'src/services/mit_service.dart';
 export 'src/services/eventos_atualizacao_service.dart';
+export 'src/services/autenticaprocurador_service.dart';

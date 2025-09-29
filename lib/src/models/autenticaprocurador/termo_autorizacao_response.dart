@@ -53,9 +53,7 @@ class TermoAutorizacaoResponse {
         }
       } else if (json['mensagens'] is String) {
         // Caso especial quando mensagens vem como string
-        mensagens.add(
-          MensagemNegocio(codigo: 'INFO', texto: json['mensagens'].toString()),
-        );
+        mensagens.add(MensagemNegocio(codigo: 'INFO', texto: json['mensagens'].toString()));
       }
     }
 
@@ -63,11 +61,8 @@ class TermoAutorizacaoResponse {
       status: int.parse(json['status'].toString()),
       mensagens: mensagens,
       dados: json['dados']?.toString(),
-      autenticarProcuradorToken: json['autenticar_procurador_token']
-          ?.toString(),
-      dataExpiracao: json['data_expiracao'] != null
-          ? DateTime.tryParse(json['data_expiracao'].toString())
-          : null,
+      autenticarProcuradorToken: json['autenticar_procurador_token']?.toString(),
+      dataExpiracao: json['data_expiracao'] != null ? DateTime.tryParse(json['data_expiracao'].toString()) : null,
     );
   }
 
@@ -100,9 +95,7 @@ class TermoAutorizacaoResponse {
 
     return TermoAutorizacaoResponse(
       status: status,
-      mensagens: [
-        MensagemNegocio(codigo: 'CACHE', texto: 'Token em cache válido'),
-      ],
+      mensagens: [MensagemNegocio(codigo: 'CACHE', texto: 'Token em cache válido')],
       autenticarProcuradorToken: token,
       dataExpiracao: dataExpiracao,
       isCacheValido: true,
@@ -136,10 +129,7 @@ class MensagemNegocio {
   MensagemNegocio({required this.codigo, required this.texto});
 
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(
-      codigo: json['codigo']?.toString() ?? 'UNKNOWN',
-      texto: json['texto']?.toString() ?? '',
-    );
+    return MensagemNegocio(codigo: json['codigo']?.toString() ?? 'UNKNOWN', texto: json['texto']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -158,11 +148,7 @@ class CacheToken {
   final DateTime dataExpiracao;
   final DateTime dataCriacao;
 
-  CacheToken({
-    required this.token,
-    required this.dataExpiracao,
-    required this.dataCriacao,
-  });
+  CacheToken({required this.token, required this.dataExpiracao, required this.dataCriacao});
 
   /// Verifica se o token ainda é válido
   bool get isValido => DateTime.now().isBefore(dataExpiracao);
@@ -182,11 +168,7 @@ class CacheToken {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'token': token,
-      'data_expiracao': dataExpiracao.toIso8601String(),
-      'data_criacao': dataCriacao.toIso8601String(),
-    };
+    return {'token': token, 'data_expiracao': dataExpiracao.toIso8601String(), 'data_criacao': dataCriacao.toIso8601String()};
   }
 
   @override

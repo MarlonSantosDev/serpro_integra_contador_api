@@ -28,10 +28,7 @@ class EventosAtualizacaoService {
   /// [evento] Tipo de evento a ser monitorado
   ///
   /// Retorna um protocolo que deve ser usado posteriormente para obter os resultados
-  Future<SolicitarEventosPFResponse> solicitarEventosPF({
-    required List<String> cpfs,
-    required TipoEvento evento,
-  }) async {
+  Future<SolicitarEventosPFResponse> solicitarEventosPF({required List<String> cpfs, required TipoEvento evento}) async {
     final request = SolicitarEventosPFRequest(cpfs: cpfs, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -54,14 +51,11 @@ class EventosAtualizacaoService {
   /// [evento] Tipo de evento consultado
   ///
   /// Retorna a lista de eventos com as datas de última atualização
-  Future<ObterEventosPFResponse> obterEventosPF({
-    required String protocolo,
-    required TipoEvento evento,
-  }) async {
+  Future<ObterEventosPFResponse> obterEventosPF({required String protocolo, required TipoEvento evento}) async {
     final request = ObterEventosPFRequest(protocolo: protocolo, evento: evento);
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: '', // Vazio para obter eventos
+      contribuinteNumero: '00000000000', // Placeholder para obter eventos
       pedidoDados: PedidoDados(
         idSistema: EventosAtualizacaoCommon.idSistema,
         idServico: EventosAtualizacaoCommon.obterEventosPF,
@@ -80,10 +74,7 @@ class EventosAtualizacaoService {
   /// [evento] Tipo de evento a ser monitorado
   ///
   /// Retorna um protocolo que deve ser usado posteriormente para obter os resultados
-  Future<SolicitarEventosPJResponse> solicitarEventosPJ({
-    required List<String> cnpjs,
-    required TipoEvento evento,
-  }) async {
+  Future<SolicitarEventosPJResponse> solicitarEventosPJ({required List<String> cnpjs, required TipoEvento evento}) async {
     final request = SolicitarEventosPJRequest(cnpjs: cnpjs, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -106,14 +97,11 @@ class EventosAtualizacaoService {
   /// [evento] Tipo de evento consultado
   ///
   /// Retorna a lista de eventos com as datas de última atualização
-  Future<ObterEventosPJResponse> obterEventosPJ({
-    required String protocolo,
-    required TipoEvento evento,
-  }) async {
+  Future<ObterEventosPJResponse> obterEventosPJ({required String protocolo, required TipoEvento evento}) async {
     final request = ObterEventosPJRequest(protocolo: protocolo, evento: evento);
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: '', // Vazio para obter eventos
+      contribuinteNumero: '00000000000000', // Placeholder para obter eventos
       pedidoDados: PedidoDados(
         idSistema: EventosAtualizacaoCommon.idSistema,
         idServico: EventosAtualizacaoCommon.obterEventosPJ,
@@ -138,16 +126,11 @@ class EventosAtualizacaoService {
     final solicitacao = await solicitarEventosPF(cpfs: cpfs, evento: evento);
 
     // Aguardar o tempo estimado (ou customizado)
-    final tempoEspera =
-        tempoEsperaCustomizado ??
-        Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
+    final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
     await Future.delayed(tempoEspera);
 
     // Obter resultados
-    return obterEventosPF(
-      protocolo: solicitacao.dados.protocolo,
-      evento: evento,
-    );
+    return obterEventosPF(protocolo: solicitacao.dados.protocolo, evento: evento);
   }
 
   /// Método de conveniência para solicitar e obter eventos PJ em uma única operação
@@ -162,15 +145,10 @@ class EventosAtualizacaoService {
     final solicitacao = await solicitarEventosPJ(cnpjs: cnpjs, evento: evento);
 
     // Aguardar o tempo estimado (ou customizado)
-    final tempoEspera =
-        tempoEsperaCustomizado ??
-        Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
+    final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
     await Future.delayed(tempoEspera);
 
     // Obter resultados
-    return obterEventosPJ(
-      protocolo: solicitacao.dados.protocolo,
-      evento: evento,
-    );
+    return obterEventosPJ(protocolo: solicitacao.dados.protocolo, evento: evento);
   }
 }
