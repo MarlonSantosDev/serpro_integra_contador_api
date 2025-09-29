@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../base/mensagem_negocio.dart';
 
 /// Resposta do serviço DTE - Domicílio Tributário Eletrônico
 class DteResponse {
@@ -112,33 +113,4 @@ class DteDados {
 
   /// Indica se o indicador é válido
   bool get isIndicadorValido => indicadorEnquadramento >= -2 && indicadorEnquadramento <= 2;
-}
-
-/// Mensagem de negócio do DTE
-class MensagemNegocio {
-  final String codigo;
-  final String texto;
-
-  MensagemNegocio({required this.codigo, required this.texto});
-
-  factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'].toString(), texto: json['texto'].toString());
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'texto': texto};
-  }
-
-  /// Indica se é uma mensagem de sucesso
-  bool get isSucesso => codigo.startsWith('Sucesso-DTE');
-
-  /// Indica se é uma mensagem de erro
-  bool get isErro => codigo.startsWith('Erro-DTE');
-
-  /// Retorna o tipo da mensagem
-  String get tipo {
-    if (isSucesso) return 'Sucesso';
-    if (isErro) return 'Erro';
-    return 'Informação';
-  }
 }

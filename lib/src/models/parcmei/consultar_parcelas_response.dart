@@ -5,30 +5,18 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
       status: json['status']?.toString() ?? '',
-      mensagens:
-          (json['mensagens'] as List?)
-              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       dados: json['dados']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -68,12 +56,7 @@ class ConsultarParcelasResponse {
   /// Valor total das parcelas disponíveis formatado
   String get valorTotalParcelasFormatado {
     final dadosParsed = this.dadosParsed;
-    final total =
-        dadosParsed?.listaParcelas.fold<double>(
-          0.0,
-          (sum, parcela) => sum + parcela.valor,
-        ) ??
-        0.0;
+    final total = dadosParsed?.listaParcelas.fold<double>(0.0, (sum, parcela) => sum + parcela.valor) ?? 0.0;
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
@@ -90,9 +73,7 @@ class ConsultarParcelasResponse {
     final dadosParsed = this.dadosParsed;
     if (dadosParsed?.listaParcelas.isEmpty ?? true) return null;
 
-    return dadosParsed!.listaParcelas.reduce(
-      (a, b) => a.valor < b.valor ? a : b,
-    );
+    return dadosParsed!.listaParcelas.reduce((a, b) => a.valor < b.valor ? a : b);
   }
 
   /// Parcela com maior valor
@@ -100,9 +81,7 @@ class ConsultarParcelasResponse {
     final dadosParsed = this.dadosParsed;
     if (dadosParsed?.listaParcelas.isEmpty ?? true) return null;
 
-    return dadosParsed!.listaParcelas.reduce(
-      (a, b) => a.valor > b.valor ? a : b,
-    );
+    return dadosParsed!.listaParcelas.reduce((a, b) => a.valor > b.valor ? a : b);
   }
 
   /// Verifica se todas as parcelas têm o mesmo valor
@@ -126,11 +105,7 @@ class ListaParcelasData {
       final Map<String, dynamic> json = jsonString as Map<String, dynamic>;
 
       return ListaParcelasData(
-        listaParcelas:
-            (json['listaParcelas'] as List?)
-                ?.map((e) => Parcela.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
+        listaParcelas: (json['listaParcelas'] as List?)?.map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       );
     } catch (e) {
       return ListaParcelasData(listaParcelas: []);
@@ -149,10 +124,7 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(
-      parcela: int.tryParse(json['parcela']?.toString() ?? '0') ?? 0,
-      valor: double.tryParse(json['valor']?.toString() ?? '0') ?? 0.0,
-    );
+    return Parcela(parcela: int.tryParse(json['parcela']?.toString() ?? '0') ?? 0, valor: double.tryParse(json['valor']?.toString() ?? '0') ?? 0.0);
   }
 
   Map<String, dynamic> toJson() {
@@ -193,21 +165,7 @@ class Parcela {
 
   /// Nome do mês da parcela
   String get nomeMes {
-    const meses = [
-      '',
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ];
+    const meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     return mes > 0 && mes <= 12 ? meses[mes] : '';
   }
 

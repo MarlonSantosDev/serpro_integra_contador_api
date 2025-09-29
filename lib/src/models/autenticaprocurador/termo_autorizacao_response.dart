@@ -1,3 +1,5 @@
+import '../base/mensagem_negocio.dart';
+
 /// Modelo para resposta da autenticação de procurador
 class TermoAutorizacaoResponse {
   final int status;
@@ -118,27 +120,6 @@ class TermoAutorizacaoResponse {
     return 'TermoAutorizacaoResponse(status: $status, sucesso: $sucesso, '
         'token: ${autenticarProcuradorToken != null ? "presente" : "ausente"}, '
         'expirado: $isTokenExpirado, mensagem: $mensagemPrincipal)';
-  }
-}
-
-/// Modelo para mensagens de negócio
-class MensagemNegocio {
-  final String codigo;
-  final String texto;
-
-  MensagemNegocio({required this.codigo, required this.texto});
-
-  factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo']?.toString() ?? 'UNKNOWN', texto: json['texto']?.toString() ?? '');
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'texto': texto};
-  }
-
-  @override
-  String toString() {
-    return 'MensagemNegocio(codigo: $codigo, texto: $texto)';
   }
 }
 

@@ -6,30 +6,18 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  EmitirDasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
       status: json['status']?.toString() ?? '',
-      mensagens:
-          (json['mensagens'] as List?)
-              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       dados: json['dados']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -107,9 +95,7 @@ class EmitirDasResponse {
     if (bytes == null) return null;
 
     // Hash simples usando o tamanho e primeiros bytes
-    final hash =
-        bytes.length.toString() +
-        bytes.take(10).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    final hash = bytes.length.toString() + bytes.take(10).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
     return hash.substring(0, 16);
   }
 
@@ -136,9 +122,7 @@ class DasData {
     try {
       final Map<String, dynamic> json = jsonString as Map<String, dynamic>;
 
-      return DasData(
-        docArrecadacaoPdfB64: json['docArrecadacaoPdfB64']?.toString() ?? '',
-      );
+      return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64']?.toString() ?? '');
     } catch (e) {
       return DasData(docArrecadacaoPdfB64: '');
     }
@@ -172,9 +156,7 @@ class DasData {
   /// Primeiros caracteres da string Base64 (para debug)
   String get base64Preview {
     if (docArrecadacaoPdfB64.isEmpty) return '';
-    return docArrecadacaoPdfB64.length > 50
-        ? '${docArrecadacaoPdfB64.substring(0, 50)}...'
-        : docArrecadacaoPdfB64;
+    return docArrecadacaoPdfB64.length > 50 ? '${docArrecadacaoPdfB64.substring(0, 50)}...' : docArrecadacaoPdfB64;
   }
 
   /// Verifica se parece ser um PDF válido (começa com JVBERi0x que é %PDF em Base64)
