@@ -367,7 +367,11 @@ class DctfWebService {
   /// [categoria] Categoria da declaração
   /// [anoPA] Ano do período de apuração
   /// [mesPA] Mês do período de apuração
+  /// [diaPA] Dia do período de apuração - apenas para espetáculo desportivo
+  /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   /// [assinadorXml] Função que assina digitalmente o XML
+  /// [contratanteNumero] CPF ou CNPJ do contratante do serviço
+  /// [autorPedidoDadosNumero] CPF ou CNPJ do autor do pedido de dados
   Future<TransmitirDeclaracaoDctfResponse> consultarXmlETransmitir({
     required String contribuinteNumero,
     required CategoriaDctf categoria,
@@ -376,6 +380,8 @@ class DctfWebService {
     String? diaPA,
     String? numProcReclamatoria,
     required Future<String> Function(String xmlBase64) assinadorXml,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     // 1. Consultar/Gerar XML
     final xmlResponse = await consultarXmlDeclaracao(
@@ -385,6 +391,8 @@ class DctfWebService {
       mesPA: mesPA,
       diaPA: diaPA,
       numProcReclamatoria: numProcReclamatoria,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
 
     if (!xmlResponse.sucesso || xmlResponse.xmlBase64 == null) {
@@ -403,6 +411,8 @@ class DctfWebService {
       diaPA: diaPA,
       numProcReclamatoria: numProcReclamatoria,
       xmlAssinadoBase64: xmlAssinado,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 }
