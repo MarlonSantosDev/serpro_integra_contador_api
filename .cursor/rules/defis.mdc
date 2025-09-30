@@ -1,17 +1,69 @@
 ---
 alwaysApply: true
 ---
-# Documentação da API Integra Contador - DEFIS
 
-Esta documentação fornece informações detalhadas sobre a API Integra Contador do SERPRO, com foco na Declaração de Informações Socioeconômicas e Fiscais (DEFIS).
+# DEFIS - Integra Contador
 
-## 1. Introdução
+# Cenários DEFIS
 
-### O que é o Integra DEFIS?
+**IMPORTANTE**
 
-É uma solução integrada ao sistema DEFIS que permite efetuar a Declaração de Informações Socioeconômicas e Fiscais (DEFIS), conforme determina a Lei Complementar nº 123, de 2006, art. 25, caput e a Resolução CGSN nº 140/2018.
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
 
-### Como funciona o uso via Integra Contador?
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API]().
+
+## Entregar Defis
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "DEFIS",         "idServico": "TRANSDECLARACAO141",         "dados": "{\"ano\":2021,\"situacaoEspecial\":null,\"inatividade\":2,\"empresa\":{\"ganhoCapital\":10.0,\"qtdEmpregadoInicial\":20,\"qtdEmpregadoFinal\":0,\"lucroContabil\":20.0,\"receitaExportacaoDireta\":10.0,\"comerciaisExportadoras\":[{\"cnpjCompleto\":\"00000000000000\",\"valor\":123.0}],\"socios\":[{\"cpf\":\"00000000000\",\"rendimentosIsentos\":50.0,\"rendimentosTributaveis\":20.0,\"participacaoCapitalSocial\":90.0,\"irRetidoFonte\":10.0}],\"participacaoCotasTesouraria\":10.0,\"ganhoRendaVariavel\":10.0,\"doacoesCampanhaEleitoral\":[{\"cnpjBeneficiario\":\"00000000000000\",\"tipoBeneficiario\":1,\"formaDoacao\":1,\"valor\":10.0}],\"estabelecimentos\":[{\"cnpjCompleto\":\"00000000000000\",\"totalDevolucoesCompras\":200.0,\"OperacoesInterestaduais\":[{\"Uf\":\"SP\",\"Valor\":15.0,\"TipoOperacao\":1}],\"IssRetidosFonte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"PrestacaoServicosComunicacao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"MudancasOutroMunicipio\":[],\"PrestacoesServicoTransporte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"InformacaoOpcional\":{\"vendasRevendedorAmbulante\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"preparosComercializacaoRefeicoes\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"producoesRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesProdutoresRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesDispensadosInscricao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"rateiosReceitaRegimeEspecial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"numeroRegime\":\"999999\"}],\"rateiosDecisaoJudicial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"identificacaoDecisao\":\"teste\"}],\"rateiosReceitaOutrosRateios\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"origemExigencia\":\"teste\"}],\"saidaTransferenciaMercadoria\":20.0,\"autoInfracaoPago\":20.0},\"estoqueInicial\":10.0,\"estoqueFinal\":20.0,\"saldoCaixaInicial\":-100.0,\"saldoCaixaFinal\":-50.0,\"aquisicoesMercadoInterno\":20.0,\"importacoes\":50.0,\"totalEntradasPorTransferencia\":200.0,\"totalSaidasPorTransferencia\":200.0,\"totalDevolucoesVendas\":300.0,\"totalEntradas\":5000.0,\"totalDespesas\":10000.0}]},\"naoOptante\":null}"     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Declarar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '    {     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "DEFIS",         "idServico": "TRANSDECLARACAO141",         "dados": "{\"ano\":2021,\"situacaoEspecial\":null,\"inatividade\":2,\"empresa\":{\"ganhoCapital\":10.0,\"qtdEmpregadoInicial\":20,\"qtdEmpregadoFinal\":0,\"lucroContabil\":20.0,\"receitaExportacaoDireta\":10.0,\"comerciaisExportadoras\":[{\"cnpjCompleto\":\"00000000000000\",\"valor\":123.0}],\"socios\":[{\"cpf\":\"00000000000\",\"rendimentosIsentos\":50.0,\"rendimentosTributaveis\":20.0,\"participacaoCapitalSocial\":90.0,\"irRetidoFonte\":10.0}],\"participacaoCotasTesouraria\":10.0,\"ganhoRendaVariavel\":10.0,\"doacoesCampanhaEleitoral\":[{\"cnpjBeneficiario\":\"00000000000000\",\"tipoBeneficiario\":1,\"formaDoacao\":1,\"valor\":10.0}],\"estabelecimentos\":[{\"cnpjCompleto\":\"00000000000000\",\"totalDevolucoesCompras\":200.0,\"OperacoesInterestaduais\":[{\"Uf\":\"SP\",\"Valor\":15.0,\"TipoOperacao\":1}],\"IssRetidosFonte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"PrestacaoServicosComunicacao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"MudancasOutroMunicipio\":[],\"PrestacoesServicoTransporte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"InformacaoOpcional\":{\"vendasRevendedorAmbulante\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"preparosComercializacaoRefeicoes\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"producoesRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesProdutoresRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesDispensadosInscricao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"rateiosReceitaRegimeEspecial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"numeroRegime\":\"999999\"}],\"rateiosDecisaoJudicial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"identificacaoDecisao\":\"teste\"}],\"rateiosReceitaOutrosRateios\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"origemExigencia\":\"teste\"}],\"saidaTransferenciaMercadoria\":20.0,\"autoInfracaoPago\":20.0},\"estoqueInicial\":10.0,\"estoqueFinal\":20.0,\"saldoCaixaInicial\":-100.0,\"saldoCaixaFinal\":-50.0,\"aquisicoesMercadoInterno\":20.0,\"importacoes\":50.0,\"totalEntradasPorTransferencia\":200.0,\"totalSaidasPorTransferencia\":200.0,\"totalDevolucoesVendas\":300.0,\"totalEntradas\":5000.0,\"totalDespesas\":10000.0}]},\"naoOptante\":null}"     }    }    '`
+
+## Consultar Declarações
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "DEFIS",         "idServico": "CONSDECLARACAO142",         "dados": ""     } }`
+
+Curl:
+
+`curl -X 'POST' \   'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \   -H 'accept: text/plain' \   -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \   -H 'Content-Type: application/json' \   -d '{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },     "pedidoDados": {         "idSistema": "DEFIS",         "idServico": "CONSDECLARACAO142",         "dados": ""     }    }    '`
+
+## Consultar Última Declaração e Recibo
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+Body:
+
+`{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000000",         "tipo": 2     },     "contribuinte": {         "numero": "00000000000000",         "tipo": 2     },    ...2042 bytes truncated...
+
+
+
+# Introdução - Integra Contador
+
+# Introdução
+
+## O que é o Integra DEFIS?
+
+É uma solução integrada ao sistema DEFIS que permite efetuar a Declaração de Informações Socioeconômicas e Fiscais (DEFIS), conforme determina a Lei Complementar nº 123, de 2006, art. 25, caput e a Resolução CGSN nº 140/2018
+
+## Como funciona o uso via Integra Contador?
 
 Para utilizar os serviços do Integra DEFIS, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
 
@@ -26,117 +78,351 @@ A requisição deve ser feita via método `POST`, com um corpo (`body`) em forma
 
 O Integra Contador estabelece um canal seguro de comunicação com o sistema DEFIS, garantindo a integridade e a confidencialidade das informações transmitidas.
 
-## 2. Serviços
 
-### 2.1. Transmitir a Declaração Sócio Econômica - DEFIS
 
-Permite a transmissão da declaração.
+# Entrada - Integra Contador
 
-**PedidoDados**
+# Transmitir a Declaração Sócio Econômica - DEFIS
 
-*   **idSistema:** `DEFIS`
-*   **idServico:** `TRANSDECLARACAO141`
-*   **versaoSistema:** `1.0`
+Permitir a transmissão da declaração
 
-#### Dados de Entrada
+PedidoDados
 
-`O objeto Dados é um JSON dentro de uma string.`
+idSistema: DEFIS  
+idServico: TRANSDECLARACAO141 versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Objeto Dados:
 
 | Campo | Descrição | Tipo | Obrigatório |
 | --- | --- | --- | --- |
 | ano | Ano calendário | `Number` | SIM |
-| situacaoEspecial | Informações de situação especial | `Object` | NÃO |
-| inatividade | Resposta à pergunta sobre inatividade. | `Number` | SIM (somente para AC anterior a 2025) |
-| empresa | Informações da matriz. | `Object` | SIM |
+| situacaoEspecial | Informações de [situacaoEspecial]() | `Object` | NÃO |
+| inatividade | Resposta à pergunta sobre inatividade. Ver [Regra](). | `Number` | SIM (somente para AC anterior a 2025) |
+| empresa | Informações da matriz. Ver [empresa](). | `Object` | SIM |
 
-#### Dados de Saída
+Objeto [situacaoEspecial:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| tipoEvento | [Tipo do evento]() com 1 dígito. | `Number` | SIM |
+| dataEvento | Data do evento da situação especial no formato AAAAMMDD. | `Number` | SIM |
+
+Objeto [empresa:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| ganhoCapital | Ganhos de capital | `Number` | SIM |
+| qtdEmpregadoInicial | Quantidade de empregados no ínicio do Ano Calendário | `Number` | SIM |
+| qtdEmpregadoFinal | Quantidade de empregados no final do Ano Calendário | `Number` | SIM |
+| lucroContabil | Caso a ME/EPP mantenha escrituração contábil e tenha evidenciado lucro superior ao limite de que trata o § 1º do art. 131 da Resolução CGSN nº 94, de 29/11/2011, no período abrangido por esta declaração, informe o valor do lucro contábil apurado | `Number` | NÃO |
+| receitaExportacaoDireta | Receita proveniente de exportação direta | `Number` | SIM |
+| comerciaisExportadoras | Receitas provenientes de exportação por meio de comercial exportadora. | `Array` de `Object` [comercialExportadora]() | NÃO |
+| socios | Identificação e rendimentos dos sócios. | `Array` de `Object` [socio]() | SIM |
+| participacaoCotasTesouraria | Percentual de participação em cotas em tesouraria no capital social da empresa | `Number` | NÃO |
+| ganhoRendaVariavel | Total de ganhos líquidos auferidos em operações de renda variável | `Number` | SIM |
+| doacoesCampanhaEleitoral | Doações à Campanha Eleitoral. | `Array` de `Object` [doacao]() | NÃO |
+| estabelecimentos | Lista de estabelecimentos. | `Array` de `Object` [estabelecimento]() | SIM |
+| naoOptante | Informação de não optante. Ver [naoOptante]() | `Object` | NÃO |
+
+Objeto [comercialExportadora:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | CNPJ completo | `String` (14) | SIM |
+| valor | Valor | `Number` | SIM |
+
+Objeto [socio:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cpf | CPF do sócio - somente números | `String` (11) | SIM |
+| rendimentosIsentos | Rendimentos isentos pagos ao sócio pela empresa | `Number` | SIM |
+| rendimentosTributaveis | Rendimentos tributáveis pagos ao sócio pela empresa | `Number` | SIM |
+| participacaoCapitalSocial | Percentual de participação do sócio no capital social da empresa no último dia do período abrangido pela declaração | `Number` | SIM |
+| irRetidoFonte | Imposto de renda retido na fonte sobre os rendimentos pagos ao sócio pela ME/EPP | `Number` | SIM |
+
+Objeto [doacao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjBeneficiario | CNPJ beneficiário | `String` (14) | SIM |
+| tipoBeneficiario | [Tipo de beneficiário]() | `Number` | SIM |
+| formaDoacao | [Forma de Doação]() | `Number` | SIM |
+| valor | Valor | `Number` | SIM |
+
+Objeto [naoOptante:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| administracaoTributaria | [Administração tributária]() onde foi protocolado, com 1 dígito. | `Number` | SIM |
+| uf | UF | `String` (2) | SIM |
+| codigoMunicipio | Código do município de acordo com a tabela TOM | `String` (4) | SIM |
+| numeroProcesso | Número do processo | `String` (20) | SIM |
+
+Objeto [estabelecimento:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | CNPJ completo do estabelecimento (somente números) | `String` (14) | SIM |
+| estoqueInicial | Estoque Inicial do período abrangido pela declaração - este campo será preenchido exclusivamente pelos contribuintes do ICMS, os demais devem informar 0 | `Number` | SIM |
+| estoqueFinal | Estoque Final do período abrangido pela declaração - este campo será preenchido exclusivamente pelos contribuintes do ICMS, os demais devem informar 0 | `Number` | SIM |
+| saldoCaixaInicial | Saldo em caixa/banco no início do período abrangido pela declaração | `Number` | SIM |
+| saldoCaixaFinal | Saldo em caixa/banco no final do período abrangido pela declaração | `Number` | SIM |
+| aquisicoesMercadoInterno | Aquisições de mercadorias para comercialização ou industrialização no período abrangido pela declaração - Mercado interno | `Number` | SIM |
+| importacoes | Aquisições de mercadorias para comercialização ou industrialização no período abrangido pela declaração - importacoes | `Number` | SIM |
+| totalEntradasPorTransferencia | Total de entradas de mercadorias por transferência para comercialização ou industrialização no período abrangido pela declaração | `Number` | SIM |
+| totalSaidasPorTransferencia | Total de saídas de mercadorias por transferência para comercialização ou industrialização no período abrangido pela declaração | `Number` | SIM |
+| totalDevolucoesVendas | Total de devoluções de vendas de mercadorias para comercialização ou industrialização no período abrangido pela declaração | `Number` | SIM |
+| totalEntradas | Total de entradas (incluídos itens aquisicoesMercadoInterno, totalEntradasPorTransferencia e totalDevolucoesVendas) no período abrangido pela declaração | `Number` | SIM |
+| totalDevolucoesCompras | Total de devoluções de compras de mercadorias para comercialização ou industrialização no período abrangido pela declaração | `Number` | SIM |
+| totalDespesas | Total de despesas no período abrangido pela declaração | `Number` | SIM |
+| operacoesInterestaduais | Lista de operações interestaduais por UF. | `Array` de `Object` [operacaoInterestadual]() | NÃO |
+| issRetidosFonte | Valor de ISS retido na fonte no ano-calendário, por Município. | `Array` de `Object` [issRetidoFonte]() | NÃO |
+| prestacoesServicoComunicacao | Prestação de serviços de comunicação. | `Array` de `Object` [prestacaoServicoComunicacao]() | NÃO |
+| mudancaOutroMunicipio | Se houve mudança de endereço do estabelecimento para outro município no período abrangido pela declaração, inserir neste objeto. Um por mudança. | `Array` de `Object` [mudancaOutroMunicipio]() | NÃO |
+| prestacoesServicoTransporte | Informações sobre prestação de serviços de transporte de cargas interestadual e/ou intermunicipal, e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, com e sem substituição tributária. | `Array` de `Object` [prestacaoServicoTransporte]() | NÃO |
+| informacaoOpcional | Informações opcionais sobre o estabelecimento. Ver [regra]() e [informacaoOpcional]() | `Object` | NÃO |
+
+Objeto [operacaoInterestadual:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| uf | UF | `String` (2) | SIM |
+| valor | Valor | `Number` | SIM |
+| tipoOperacao | [Tipo de operação]() com 1 dígito. | `Number` | SIM |
+
+Objeto [issRetidoFonte:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| uf | UF | `String` (2) | SIM |
+| codMunicipio | Código do município de acordo com a tabela TOM | `String` (4) | SIM |
+| valor | Valor | `Number` | SIM |
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| uf | UF | `String` (2) | SIM |
+| codMunicipio | Código do município de acordo com a tabela TOM | `String` (4) | SIM |
+| valor | Valor | `Number` | SIM |
+
+Objeto [mudancaOutroMunicipio:]()
+
+| Campo | Des...8018 bytes truncated...
+
+
+
+## Transmitir a Declaração Sócio Econômica - DEFIS
+
+**_Dados de Saída_**
 
 | Campo | Descrição | Tipo |
 | --- | --- | --- |
 | status | Status HTTP retornado no acionamento do serviço. | `Number` |
-| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um Array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
 | dados | Estrutura de dados de retorno. | `String` |
 
-### 2.2. Consultar Declarações Transmitidas na Defis
+Objeto: SaidaEntregar
 
-Consulta todas as declarações transmitidas.
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| declaracaoPdf | PDF da Declaração, em base 64. | `String` |
+| reciboPdf | PDF do Recibo, em base 64. | `String` |
+| idDefis | Id da Defis gerada na transmissão. | `String` (15) |
 
-**PedidoDados**
+**_Exemplo: conteúdo payload json de saída_**
 
-*   **idSistema:** `DEFIS`
-*   **idServico:** `CONSDECLARACAO142`
-*   **versaoSistema:** `1.0`
+Json de exemplo: [dados de Saida]()
 
-#### Dados de Entrada
 
-Não é necessário passar nenhum conteúdo no campo `Dados`.
 
-#### Dados de Saída
+# Consultar declarações - Integra Contador
+
+# Consultar Declarações Transmitidas na Defis
+
+Consultar todas as declarações transmitidas
+
+PedidoDados
+
+idSistema: DEFIS  
+idServico: CONSDECLARACAO142  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+Não é necessário passar nenhum conteúdo no campo Dados, uma vez que serão consultadas todas as DEFIS transmitidas do contribuinte, dentro do período não decadente.
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "Contratante": {             "numero": "00000000000000",             "tipo": 2         },         "AutorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "Contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "PedidoDados": {             "IdSistema": "DEFIS",             "IdServico": "CONSDECLARACAO142",             "Dados": ""         }     }`
+
+**_Dados de Saída_**
 
 | Campo | Descrição | Tipo |
 | --- | --- | --- |
 | status | Status HTTP retornado no acionamento do serviço. | `Number` |
-| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
 | dados | Estrutura de dados de retorno, contendo uma lista com o objeto Declarações. | `String` |
 
-### 2.3. Consultar a Última Declaração Transmitida na Defis
-
-Consulta a última declaração transmitida no ano calendário.
-
-**PedidoDados**
-
-*   **idSistema:** `DEFIS`
-*   **idServico:** `CONSULTIMADECREC143`
-*   **versaoSistema:** `1.0`
-
-#### Dados de Entrada
-
-`O objeto Dados é um JSON dentro de uma string.`
+Objeto: Declarações
 
 | Campo | Descrição | Tipo |
 | --- | --- | --- |
-| ano | Ano calendário que se deseja consultar a última declaração transmitida | `Number` |
+| anoCalendario | Ano calendário da declaração transmitida | `Number` |
+| idDefis | ID da Defis transmitida | `String` (15) |
+| tipo | Tipo da declaração 1-Original Normal; 2-Retificadora Normal; 3-Original de Situação Especial; 4-Retificadora de Situação Especial | `String` |
+| dataHora | Data e hora da transmissão no formato AAAAMMDDHHMMSS (24 hrs) | `Number` |
 
-#### Dados de Saída
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultarDeclaracoes]()
+
+
+
+# Consultar última declaração e recibo - Integra Contador
+
+# Consultar a Última Declaração Transmitidas na Defis
+
+Consultar a última declaração transmitida no ano calendário
+
+PedidoDados
+
+idSistema: DEFIS  
+idServico: CONSULTIMADECREC143  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
 
 | Campo | Descrição | Tipo |
 | --- | --- | --- |
-| status | Status HTTP retornado no acionamento do serviço. | `Number` |
-| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
-| dados | Estrutura de dados de retorno, contendo uma lista com o objeto UltimaDeclaracao. | `String` |
+| ano | Ano calendário, dentro do periodo não decadente, que se deseja consultar a última declaração transmitida | `Number` |
 
-### 2.4. Consultar Declaração Específica Transmitida na Defis
+**_Exemplo: conteúdo body json de entrada_**
 
-Consulta uma determinada declaração.
+    `{         "Contratante": {             "numero": "00000000000000",             "tipo": 2         },         "AutorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "Contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "PedidoDados": {             "IdSistema": "DEFIS",             "IdServico": "CONSULTIMADECREC143",             "Dados": "{\"ano\":2021}"         }     }`
 
-**PedidoDados**
-
-*   **idSistema:** `DEFIS`
-*   **idServico:** `CONSDECREC144`
-*   **versaoSistema:** `1.0`
-
-#### Dados de Entrada
-
-`O objeto Dados é um JSON dentro de uma string.`
-
-| Campo | Descrição | Tipo |
-| --- | --- | --- |
-| idDefis | Id Defis de uma declaração. | `Number` |
-
-#### Dados de Saída
+**_Dados de Saída_**
 
 | Campo | Descrição | Tipo |
 | --- | --- | --- |
 | status | Status HTTP retornado no acionamento do serviço. | `Number` |
-| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
 | dados | Estrutura de dados de retorno, contendo uma lista com o objeto UltimaDeclaracao. | `String` |
 
-## 3. Mensagens
+Objeto: UltimaDeclaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDefis | Id da última DEFIS transmitida para o ano calendário | `Number` |
+| recibo | PDF do recibo no formato base 64 | `String` |
+| declaracao | PDF da declaração no formato base 64 | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultarUltimaDeclaracaoRecibo]()
+
+
+
+# Consultar declaração e recibo - Integra Contador
+
+# Consultar Declaração Específica Transmitida na Defis
+
+Consultar uma determinada declaração
+
+PedidoDados
+
+idSistema: DEFIS  
+idServico: CONSDECREC144  
+versaoSistema: "1.0"
+
+**_Dados de Entrada_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDefis | Id Defis de uma declaração contida entre o primeiro ano após decadência e o ano atual | `Number` |
+
+**_Exemplo: conteúdo body json de entrada_**
+
+    `{         "Contratante": {             "numero": "00000000000000",             "tipo": 2         },         "AutorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "Contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "PedidoDados": {             "IdSistema": "DEFIS",             "IdServico": "CONSDECREC144",             "Dados": "{\"idDefis\":\"000000002021002\"}"         }     }`
+
+**_Dados de Saída_**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto UltimaDeclaracao. | `String` |
+
+Objeto: UltimaDeclaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| recibo | PDF do recibo no formato base 64 | `String` |
+| declaracao | PDF da declaração no formato base 64 | `String` |
+
+**_Exemplo: conteúdo payload json de saída_**
+
+Json de exemplo: [consultarDeclaracaoRecibo]()
+
+
+
+# Retorno Transmitir declaração - Integra Contador
+
+# Exemplo de Json de retorno
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "numero": "00000000000000",             "tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "DEFIS",             "idServico": "TRANSDECLARACAO141",             "versaoSistema": "1.0",             "dados": "{ \"ano\":2021,\"situacaoEspecial\":null,\"inatividade\":2,\"empresa\":{\"ganhoCapital\":10.0,\"qtdEmpregadoInicial\":20,\"qtdEmpregadoFinal\":0,\"lucroContabil\":20.0,\"receitaExportacaoDireta\":10.0,\"comerciaisExportadoras\":[{\"cnpjCompleto\":\"00000000000000\",\"valor\":123.0}],\"socios\":[{\"cpf\":\"00000000000\",\"rendimentosIsentos\":50.0,\"rendimentosTributaveis\":20.0,\"participacaoCapitalSocial\":90.0,\"irRetidoFonte\":10.0}],\"participacaoCotasTesouraria\":10.0,\"ganhoRendaVariavel\":10.0,\"doacoesCampanhaEleitoral\":[{\"cnpjBeneficiario\":\"00000000000000\",\"tipoBeneficiario\":1,\"formaDoacao\":1,\"valor\":10.0}],\"estabelecimentos\":[{\"cnpjCompleto\":\"00000000000000\",\"totalDevolucoesCompras\":200.0,\"OperacoesInterestaduais\":[{\"Uf\":\"SP\",\"Valor\":15.0,\"TipoOperacao\":1}],\"IssRetidosFonte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"PrestacaoServicosComunicacao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"MudancasOutroMunicipio\":[],\"PrestacoesServicoTransporte\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"InformacaoOpcional\":{\"vendasRevendedorAmbulante\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"preparosComercializacaoRefeicoes\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"producoesRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesProdutoresRurais\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"aquisicoesDispensadosInscricao\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0}],\"rateiosReceitaRegimeEspecial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"numeroRegime\":\"999999\"}],\"rateiosDecisaoJudicial\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"identificacaoDecisao\":\"teste\"}],\"rateiosReceitaOutrosRateios\":[{\"Uf\":\"SP\",\"CodigoMunicipio\":7107,\"Valor\":20.0,\"origemExigencia\":\"teste\"}],\"saidaTransferenciaMercadoria\":20.0,\"autoInfracaoPago\":20.0},\"estoqueInicial\":10.0,\"estoqueFinal\":20.0,\"saldoCaixaInicial\":-100.0,\"saldoCaixaFinal\":-50.0,\"aquisicoesMercadoInterno\":20.0,\"importacoes\":50.0,\"totalEntradasPorTransferencia\":200.0,\"totalSaidasPorTransferencia\":200.0,\"totalDevolucoesVendas\":300.0,\"totalEntradas\":5000.0,\"totalDespesas\":10000.0}]},\"naoOptante\":null}"         },         "status": 200,         "mensagens": [         {           "codigo": "[Sucesso-DEFIS]",           "texto": "Requisição efetuada com sucesso."         }         ],          "dados": "{\"declaracaoPdf\":\"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...27735 bytes truncated...
+
+
+
+# Retorno Consultar declarações - Integra Contador
+
+# Exemplo de Json de retorno
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "idSistema": "DEFIS",             "idServico": "CONSDECLARACAO142",             "Dados": ""         },         "status": "200",         "mensagens": [         {           "codigo": "[Sucesso-DEFIS]",           "texto": "Requisição efetuada com sucesso."         }         ],         "dados": "[{\"anoCalendario\":2019,\"idDefis\":\"000000002019001\",\"tipo\":1,\"dataHora\":\"20230725102410\"},{\"anoCalendario\":2018,\"idDefis\":\"000000002018003\",\"tipo\":2,\"dataHora\":\"20230801145404\"},{\"anoCalendario\":2018,\"idDefis\":\"000000002019002\",\"tipo\":2,\"dataHora\":\"20230728112244\"}]"      }`
+
+
+
+# Retorno Consultar última declaração e recibo - Integra Contador
+
+# Exemplo de Json de retorno
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "IdSistema": "DEFIS",             "IdServico": "CONSULTIMADECREC143",             "Dados": "{\"ano\":2021}"         },         "status": "200",         "mensagens": [         {           "codigo": "[Sucesso-DEFIS]",           "texto": "Requisição efetuada com sucesso."         }         ],         "dados": "{\"declaracaoPdf\":\"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...27735 bytes truncated...
+
+
+
+# Retorno Consultar declaração e recibo - Integra Contador
+
+# Exemplo de Json de retorno
+
+    `{         "contratante": {             "numero": "00000000000000",             "tipo": 2         },         "autorPedidoDados": {             "Numero": "00000000000000",             "Tipo": 2         },         "contribuinte": {             "numero": "00000000000000",             "tipo": 2         },         "pedidoDados": {             "IdSistema": "DEFIS",             "IdServico": "CONSDECREC144",             "Dados": "{\"idDefis\":\"000000002021002\"}"         },         "status": "200",         "mensagens": [         {           "codigo": "[Sucesso-DEFIS]",           "texto": "Requisição efetuada com sucesso."         }         ],         "dados": "{\"declaracaoPdf\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgNCAwIFIKL091dGxpbmVzIDUgMCBSCi9BY3JvRm9ybSA2IDAgUgovVmVyc2lvbiAvMSMyRTUKPj4KZW5kb2JqCjE1IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggMTAKPj4Kc3RyZWFtDQp4nCvkAgAA7gB8DQplbmRzdHJlYW0KZW5kb2JqCjE2IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggMTk4NAo+PgpzdHJlZ...25370 bytes truncated...
+
+
+
+# Regra da Informação Opcional - Integra Contador
+
+# Regra da informação opcional
+
+*   O Estabelecimento incorreu em pelo menos uma das hipóteses a seguir?
+    *   Saídas por transferência de mercadorias entre estabelecimentos do mesmo proprietário;
+    *   Vendas por meio de revendedores ambulantes autônomos em outros municípios dentro do estado em que esteja localizado o estabelecimento;
+    *   Preparo e comercialização de refeições em municípios diferentes do município de localização do estabelecimento;
+    *   Produção rural ocorrida no território de mais de um município do estado em que esteja localizado o estabelecimento
+    *   Aquisição de mercadorias de produtores rurais não equiparados a comerciantes ou a industriais;
+    *   Aquisição de mercadorias de contribuintes dispensados de inscrição, exceto produtor rural;
+    *   Autos de infração pagos ou com decisão administrativa irrecorrível decorrentes de saídas de mercadorias ou prestações de serviço não oferecidas à tributação, somente o valor da operação;
+    *   Rateio de receita oriundo de regime especial concedido pela secretaria estadual de fazenda e de decisão judicial ou de situações similares
+
+
+
+# Mensagens - Integra Contador
+
+# Mensagens específicas para o Integra Simples Nacional - DEFIS
 
 | Códigos | Mensagem | Ação |
 | --- | --- | --- |
 | \[EntradaIncorreta-DEFIS-MSG\_0001\] | O campo _campo_ possui valor inválido. Dever ser numérico com o valor mínimo de _valormínimo_ e o máximo _valormaximo_. | Corrigir o campo e reenviar. |
-| \[Erro-DEFIS-MSG\_0002\] | Houve um erro ao utilizar o sistema. Tente novamente mais tarde.  | Erro interno. Reenviar a requisição. |
+| \[Erro-DEFIS-MSG\_0002\] | Houve um erro ao utilizar o sistema. Tente novamente mais tarde. | Erro interno. Reenviar a requisição. |
 | \[EntradaIncorreta-DEFIS-MSG\_0003\] | O campo _campo_ possui valor inválido. Dever ser numérico, inteiro e com o valor mínimo de _valorminimo_ e o máximo _valormaximo_. | Corrigir o campo e reenviar. |
 | \[EntradaIncorreta-DEFIS-MSG\_0004\] | O campo _campo_ possui valor inválido. | Corrigir o campo e reenviar. |
 | \[EntradaIncorreta-DEFIS-MSG\_0005\] | O campo _campo_ deve ter o total de _total_ caracteres. | O valor está acima do que o permitido. Corrigir e reenviar. |
@@ -145,10 +431,48 @@ Consulta uma determinada declaração.
 | \[EntradaIncorreta-DEFIS-MSG\_0008\] | Contribuinte não optante e bloco NaoOptante não preenchido. | Corrigir e reenviar. |
 | \[Erro-DEFIS-MSG\_0009\] | Ocorreu um erro durante o acesso ao sistema COMPROT. O número do processo não pôde ser validado. Por favor, tente mais tarde. | Houve um erro em uma integração. Tente novamente mais tarde. |
 | \[EntradaIncorreta-DEFIS-MSG\_0010\] | Para administração tributária distrital deve ser passado DF no campo UF. | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0011\] | A DEFIS, ano-calendário _ano_, só poderá ser entregue mediante informação de situação especial. | Foi passado um ano calendário que só pode ser entregue por situação especial |
+| \[EntradaIncorreta-DEFIS-MSG\_0012\] | A data do evento não pode ser anterior à data de opção. | Corrigir o campo e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0013\] | O evento de situação especial não ocorreu durante o período de opção pelo Simples Nacional. Nesse caso, deve ser entregue declaração normal do exercício subsequente. | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0014\] | A data do evento não pode ser anterior à data de abertura da empresa. | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0015\] | Cnpj não encontrado. | Corrigir e reenviar. |
+| \[NãoAutorizado-DEFIS-MSG\_0016\] | O idDefis não é uma declaração do contribuinte. | Foi passado um idDefis que não corresponde ao contribuinte que fez a autorização. |
+| \[EntradaIncorreta-DEFIS-MSG\_0017\] | A data do evento não pode ser superior à data corrente. | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0018\] | Para a DEFIS do ano-calendário _ano_, a data do evento deve ser maior ou igual a 01/01/_AAAA_ e menor ou igual a 31/12/_AAAA_. | Corrigir e reenviar. |
+| \[Aviso-DEFIS-MSG\_0019\] | Consta entrega de declaração de situação especial para o ano-calendário de _ano_. Não é possível a entrega de declaração de situação especial por dois anos consecutivos. | Revisar esta declaração. |
+| \[Erro-DEFIS-MSG\_0020\] | Houve um erro ao acesso o PGDASD2018. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. |
+| \[Aviso-DEFIS-MSG\_0021\] | Não foram efetuadas apurações no PGDASD para o período entre _inicio_ e _fim_. | Regularizar a situação no sistema PGDASD. |
+| \[Aviso-DEFIS-MSG\_0022\] | Existem pendências de apurações para o(s) período(s) de: \_MM/AAAA. Regularizar a situação efetuando a transmissão no PGDASD. | Regularizar a situação no sistema PGDASD. |
+| \[Aviso-DEFIS-MSG\_0023\] | Não foram enviados todos os estabelecimentos necessários: _cnpj_. Reenviar a requisição acrescentando estas informações. | Corrigir e reenviar. |
+| \[Aviso-DEFIS-MSG\_0024\] | Um ou mais estabelecimentos enviados não pertencem às declarações transmitidas no PGDASD. Reenviar a requisição removendo estas informações: _cnpj_. | Corrigir e reenviar. |
+| \[Aviso-DEFIS-MSG\_0025\] | O indicador de inatividade não corresponde às declarações transmitidas no PGDASD. Se houve atividade no período, deve ser enviado 2. Se as atividades totalizam o valor zero, enviar 0 ou 1 (ver [documentação]()). | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0026\] | A soma da participação dos sócios no capital social da empresa, incluindo cotas em tesouraria, é diferente de 100,00%. | Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0027\] | Informações duplicadas em _campo_. | Corrigir os dados duplicados e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0028\] | Campo totalEntradas deve ser maior ou igual à soma dos campos: aquisicoesMercadoInterno, importacoes, totalEntradasPorTransferencia e totalDevolucoesVendas. | Corrigir os dados e reenviar. |
+| \[Erro-DEFIS-MSG\_0029\] | Houve um erro na transmissão. Tente novamente mais tarde. | Erro interno. |
+| \[Erro-DEFIS-MSG\_0030\] | Houve um erro ao recuperar os municípios. | Integração indisponível. Tentar novamente mais tarde. |
+| \[Erro-DEFIS-MSG\_0031\] | Houve um erro ao gerar o número do recibo. | Erro interno. Tentar novamente mais tarde. |
+| \[Erro-DEFIS-MSG\_0032\] | Município informado inválido. | O código do município é inválido. Corrigir e reenviar. |
+| \[EntradaIncorreta-DEFIS-MSG\_0033\] | O _municipio_ não pertence a _uf_. | O código do município não pertence a UF. Corrigir e reenviar. |
+| \[Erro-DEFIS-MSG\_0034\] | Houve um erro ao acessar o sistema CPF. Tente novamente mais tarde. | Erro interno na integração. Tentar novamente mais tarde. |
+| \[Aviso-DEFIS-MSG\_0035\] | CPF não encontrado no cadastro CPF. | O CPF não é válido. |
+| \[Erro-DEFIS-MSG\_0036\] | Houve um erro ao gerar o Recibo. Tente novamente mais tarde. | Erro interno. |
+| \[Erro-DEFIS-MSG\_0037\] | Houve um erro ao gerar o PDF da declaração. Tente novamente mais tarde. | Erro interno. |
+| \[EntradaIncorreta-DEFIS-MSG\_0038\] | O Json contém dados inválidos. | O json do campo dados não está em um formato válido. Revise os tipos de campos e estrutura. |
+| \[EntradaIncorreta-DEFIS-MSG\_0039\] | Informações sobre mudança de endereço do estabelecimento não pode ter o campo dataMudanca com data anterior ou posterior ao período abrangido dessa declaração. Período abrangido: _dd/mm/aaaa_ a _dd/mm/aaaa_. | Corrigir o dado e reenviar. |
+| \[Aviso-DEFIS-MSG\_0040\] | Contribuinte é optante mas foram enviadas informações no campo naoOptante. Reenviar retirando este bloco. | Corrigir e reenviar. |
+| \[Aviso-DEFIS-MSG\_0041\] | Esta empresa ainda não efetuou a Declaração de Informações Socioeconômicas e Fiscais(DEFIS) para o ano-calendário _ano_. | Deve ser transmitida outra declaração primeiro. |
+| \[Aviso-DEFIS-MSG\_0042\] | Não há declaração transmitida para o ano calendário. | Não há declarações para o ano solicitado. |
+| \[EntradaIncorreta-DEFIS-MSG\_0043\] | O campo dado não deve possuir nenhum valor. Este serviço consulta todas as declarações transmitidas dentro do período não decadente e não é permitido usar parâmetros. | Retirar qualquer conteúdo do campo dados e reenviar. |
+| \[Aviso-DEFIS-MSG\_0044\] | Não foram encontradas declarações transmitidas. |
+| \[Aviso-DEFIS-MSG\_0045\] | Não foi encontrada declaração para o idDefis informado. | Verificar o idDefis |
+| \[EntradaIncorreta-DEFIS-MSG\_0046\] | O campo _campo_ possui mais que 2 casas decimais. Corrija o valor e tente novamente. | Corrigir o valor do campo e reenviar. |
 
-## 4. Dados de Domínio
 
-### Tipos de evento para situação especial
+
+# Dados de domínio
+
+# Dados de domínio
 
 | Código | Descrição |
 | --- | --- |
@@ -158,23 +482,17 @@ Consulta uma determinada declaração.
 | 4 | Fusão |
 | 5 | Incorporação/Incorporada |
 
-### Regra para inatividade
-
 | Código | Descrição |
 | --- | --- |
 | 0 | As atividades do PGDASD totalizam zero. Responde NÃO à pergunta "Contribuinte declara que permaneceu, durante o ano calendário, sem efetuar qualquer atividade operacional, não operacional, financeira ou patrimonial?" |
 | 1 | As atividades do PGDASD totalizam zero. Responde SIM à pergunta "Contribuinte declara que permaneceu, durante o ano calendário, sem efetuar qualquer atividade operacional, não operacional, financeira ou patrimonial?" |
 | 2 | O total das atividades do PGDASD (incluindo valor fixo) é maior que zero. |
 
-### Tipo de beneficiário da doação à campanha eleitoral
-
 | Código | Descrição |
 | --- | --- |
 | 1 | Candidato a cargo político eletivo |
 | 2 | Comitê financeiro |
 | 3 | Partido político |
-
-### Forma de doação
 
 | Código | Descrição |
 | --- | --- |
@@ -186,33 +504,14 @@ Consulta uma determinada declaração.
 | 6 | Bens |
 | 7 | Serviços |
 
-### Tipo de operação
-
 | Código | Descrição |
-| --- | --- |
+| --- | --- | --- |
 | 1 | Entrada |
 | 2 | Saída |
 
-### Administração tributária
-
 | Código | Descrição |
-| --- | --- |
+| --- | --- | --- |
 | 1 | Distrital |
 | 2 | Estadual |
 | 3 | Federal |
 | 4 | Municipal |
-
-## 5. Regras de Negócio
-
-### Regra da informação opcional
-
-O Estabelecimento incorreu em pelo menos uma das hipóteses a seguir?
-
-*   Saídas por transferência de mercadorias entre estabelecimentos do mesmo proprietário;
-*   Vendas por meio de revendedores ambulantes autônomos em outros municípios dentro do estado em que esteja localizado o estabelecimento;
-*   Preparo e comercialização de refeições em municípios diferentes do município de localização do estabelecimento;
-*   Produção rural ocorrida no território de mais de um município do estado em que esteja localizado o estabelecimento
-*   Aquisição de mercadorias de produtores rurais não equiparados a comerciantes ou a industriais;
-*   Aquisição de mercadorias de contribuintes dispensados de inscrição, exceto produtor rural;
-*   Autos de infração pagos ou com decisão administrativa irrecorrível decorrentes de saídas de mercadorias ou prestações de serviço não oferecidas à tributação, somente o valor da operação;
-*   Rateio de receita oriundo de regime especial concedido pela secretaria estadual de fazenda e de decisão judicial ou de situações similares.

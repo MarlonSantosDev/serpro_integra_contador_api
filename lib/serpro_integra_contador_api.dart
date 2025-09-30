@@ -272,6 +272,12 @@ export 'src/models/pagtoweb/pagtoweb_response.dart';
 // DEFIS Models
 export 'src/models/defis/transmitir_declaracao_request.dart';
 export 'src/models/defis/transmitir_declaracao_response.dart';
+export 'src/models/defis/consultar_declaracoes_response.dart';
+export 'src/models/defis/consultar_ultima_declaracao_request.dart';
+export 'src/models/defis/consultar_ultima_declaracao_response.dart';
+export 'src/models/defis/consultar_declaracao_especifica_request.dart';
+export 'src/models/defis/consultar_declaracao_especifica_response.dart';
+export 'src/models/defis/defis_enums.dart';
 export 'src/models/defis/defis_response.dart';
 
 // MIT Models

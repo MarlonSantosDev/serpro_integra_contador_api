@@ -415,15 +415,248 @@ class PrestacaoServicoTransporte {
 }
 
 class InformacaoOpcional {
-  // ... campos da informação opcional
+  final List<VendaRevendedorAmbulante>? vendasRevendedorAmbulante;
+  final List<PreparoComercializacaoRefeicoes>? preparosComercializacaoRefeicoes;
+  final List<ProducaoRural>? producoesRurais;
+  final List<AquisicaoProdutoresRurais>? aquisicoesProdutoresRurais;
+  final List<AquisicaoDispensadosInscricao>? aquisicoesDispensadosInscricao;
+  final List<RateioReceitaRegimeEspecial>? rateiosReceitaRegimeEspecial;
+  final List<RateioDecisaoJudicial>? rateiosDecisaoJudicial;
+  final List<RateioReceitaOutrosRateios>? rateiosReceitaOutrosRateios;
+  final double? saidaTransferenciaMercadoria;
+  final double? autoInfracaoPago;
 
-  InformacaoOpcional();
+  InformacaoOpcional({
+    this.vendasRevendedorAmbulante,
+    this.preparosComercializacaoRefeicoes,
+    this.producoesRurais,
+    this.aquisicoesProdutoresRurais,
+    this.aquisicoesDispensadosInscricao,
+    this.rateiosReceitaRegimeEspecial,
+    this.rateiosDecisaoJudicial,
+    this.rateiosReceitaOutrosRateios,
+    this.saidaTransferenciaMercadoria,
+    this.autoInfracaoPago,
+  });
 
   factory InformacaoOpcional.fromJson(Map<String, dynamic> json) {
-    return InformacaoOpcional();
+    return InformacaoOpcional(
+      vendasRevendedorAmbulante: json['vendasRevendedorAmbulante'] != null
+          ? (json['vendasRevendedorAmbulante'] as List<dynamic>).map((e) => VendaRevendedorAmbulante.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+      preparosComercializacaoRefeicoes: json['preparosComercializacaoRefeicoes'] != null
+          ? (json['preparosComercializacaoRefeicoes'] as List<dynamic>)
+                .map((e) => PreparoComercializacaoRefeicoes.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : null,
+      producoesRurais: json['producoesRurais'] != null
+          ? (json['producoesRurais'] as List<dynamic>).map((e) => ProducaoRural.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+      aquisicoesProdutoresRurais: json['aquisicoesProdutoresRurais'] != null
+          ? (json['aquisicoesProdutoresRurais'] as List<dynamic>).map((e) => AquisicaoProdutoresRurais.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+      aquisicoesDispensadosInscricao: json['aquisicoesDispensadosInscricao'] != null
+          ? (json['aquisicoesDispensadosInscricao'] as List<dynamic>)
+                .map((e) => AquisicaoDispensadosInscricao.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : null,
+      rateiosReceitaRegimeEspecial: json['rateiosReceitaRegimeEspecial'] != null
+          ? (json['rateiosReceitaRegimeEspecial'] as List<dynamic>)
+                .map((e) => RateioReceitaRegimeEspecial.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : null,
+      rateiosDecisaoJudicial: json['rateiosDecisaoJudicial'] != null
+          ? (json['rateiosDecisaoJudicial'] as List<dynamic>).map((e) => RateioDecisaoJudicial.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+      rateiosReceitaOutrosRateios: json['rateiosReceitaOutrosRateios'] != null
+          ? (json['rateiosReceitaOutrosRateios'] as List<dynamic>).map((e) => RateioReceitaOutrosRateios.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+      saidaTransferenciaMercadoria: json['saidaTransferenciaMercadoria'] != null
+          ? (num.parse(json['saidaTransferenciaMercadoria'].toString())).toDouble()
+          : null,
+      autoInfracaoPago: json['autoInfracaoPago'] != null ? (num.parse(json['autoInfracaoPago'].toString())).toDouble() : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {};
+    return {
+      'vendasRevendedorAmbulante': vendasRevendedorAmbulante?.map((e) => e.toJson()).toList(),
+      'preparosComercializacaoRefeicoes': preparosComercializacaoRefeicoes?.map((e) => e.toJson()).toList(),
+      'producoesRurais': producoesRurais?.map((e) => e.toJson()).toList(),
+      'aquisicoesProdutoresRurais': aquisicoesProdutoresRurais?.map((e) => e.toJson()).toList(),
+      'aquisicoesDispensadosInscricao': aquisicoesDispensadosInscricao?.map((e) => e.toJson()).toList(),
+      'rateiosReceitaRegimeEspecial': rateiosReceitaRegimeEspecial?.map((e) => e.toJson()).toList(),
+      'rateiosDecisaoJudicial': rateiosDecisaoJudicial?.map((e) => e.toJson()).toList(),
+      'rateiosReceitaOutrosRateios': rateiosReceitaOutrosRateios?.map((e) => e.toJson()).toList(),
+      'saidaTransferenciaMercadoria': saidaTransferenciaMercadoria,
+      'autoInfracaoPago': autoInfracaoPago,
+    };
+  }
+}
+
+// Classes auxiliares para InformacaoOpcional
+class VendaRevendedorAmbulante {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+
+  VendaRevendedorAmbulante({required this.uf, required this.codigoMunicipio, required this.valor});
+
+  factory VendaRevendedorAmbulante.fromJson(Map<String, dynamic> json) {
+    return VendaRevendedorAmbulante(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor};
+  }
+}
+
+class PreparoComercializacaoRefeicoes {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+
+  PreparoComercializacaoRefeicoes({required this.uf, required this.codigoMunicipio, required this.valor});
+
+  factory PreparoComercializacaoRefeicoes.fromJson(Map<String, dynamic> json) {
+    return PreparoComercializacaoRefeicoes(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor};
+  }
+}
+
+class ProducaoRural {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+
+  ProducaoRural({required this.uf, required this.codigoMunicipio, required this.valor});
+
+  factory ProducaoRural.fromJson(Map<String, dynamic> json) {
+    return ProducaoRural(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor};
+  }
+}
+
+class AquisicaoProdutoresRurais {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+
+  AquisicaoProdutoresRurais({required this.uf, required this.codigoMunicipio, required this.valor});
+
+  factory AquisicaoProdutoresRurais.fromJson(Map<String, dynamic> json) {
+    return AquisicaoProdutoresRurais(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor};
+  }
+}
+
+class AquisicaoDispensadosInscricao {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+
+  AquisicaoDispensadosInscricao({required this.uf, required this.codigoMunicipio, required this.valor});
+
+  factory AquisicaoDispensadosInscricao.fromJson(Map<String, dynamic> json) {
+    return AquisicaoDispensadosInscricao(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor};
+  }
+}
+
+class RateioReceitaRegimeEspecial {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+  final String numeroRegime;
+
+  RateioReceitaRegimeEspecial({required this.uf, required this.codigoMunicipio, required this.valor, required this.numeroRegime});
+
+  factory RateioReceitaRegimeEspecial.fromJson(Map<String, dynamic> json) {
+    return RateioReceitaRegimeEspecial(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      numeroRegime: json['numeroRegime'].toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor, 'numeroRegime': numeroRegime};
+  }
+}
+
+class RateioDecisaoJudicial {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+  final String identificacaoDecisao;
+
+  RateioDecisaoJudicial({required this.uf, required this.codigoMunicipio, required this.valor, required this.identificacaoDecisao});
+
+  factory RateioDecisaoJudicial.fromJson(Map<String, dynamic> json) {
+    return RateioDecisaoJudicial(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      identificacaoDecisao: json['identificacaoDecisao'].toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor, 'identificacaoDecisao': identificacaoDecisao};
+  }
+}
+
+class RateioReceitaOutrosRateios {
+  final String uf;
+  final String codigoMunicipio;
+  final double valor;
+  final String origemExigencia;
+
+  RateioReceitaOutrosRateios({required this.uf, required this.codigoMunicipio, required this.valor, required this.origemExigencia});
+
+  factory RateioReceitaOutrosRateios.fromJson(Map<String, dynamic> json) {
+    return RateioReceitaOutrosRateios(
+      uf: json['uf'].toString(),
+      codigoMunicipio: json['codigoMunicipio'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+      origemExigencia: json['origemExigencia'].toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'uf': uf, 'codigoMunicipio': codigoMunicipio, 'valor': valor, 'origemExigencia': origemExigencia};
   }
 }

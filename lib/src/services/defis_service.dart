@@ -128,7 +128,7 @@ class DefisService {
   /// [procuradorToken] Token de procurador (opcional)
   Future<ConsultarDeclaracaoEspecificaResponse> consultarDeclaracaoEspecifica({
     required String contribuinteNumero,
-    required int idDefis,
+    required String idDefis,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
     String? procuradorToken,

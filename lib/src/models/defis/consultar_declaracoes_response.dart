@@ -24,34 +24,23 @@ class ConsultarDeclaracoesResponse {
 
 /// Modelo para declaração na lista de declarações
 class Declaracao {
-  final int idDefis;
-  final int ano;
-  final String dataTransmissao;
-  final String situacao;
-  final String? declaracaoPdf;
-  final String? reciboPdf;
+  final int anoCalendario;
+  final String idDefis;
+  final String tipo;
+  final int dataHora;
 
-  Declaracao({required this.idDefis, required this.ano, required this.dataTransmissao, required this.situacao, this.declaracaoPdf, this.reciboPdf});
+  Declaracao({required this.anoCalendario, required this.idDefis, required this.tipo, required this.dataHora});
 
   factory Declaracao.fromJson(Map<String, dynamic> json) {
     return Declaracao(
-      idDefis: int.parse(json['idDefis'].toString()),
-      ano: int.parse(json['anoCalendario'].toString()),
-      dataTransmissao: json['dataHora'].toString(),
-      situacao: json['situacao'].toString(),
-      declaracaoPdf: json['declaracaoPdf']?.toString(),
-      reciboPdf: json['reciboPdf']?.toString(),
+      anoCalendario: int.parse(json['anoCalendario'].toString()),
+      idDefis: json['idDefis'].toString(),
+      tipo: json['tipo'].toString(),
+      dataHora: int.parse(json['dataHora'].toString()),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'idDefis': idDefis,
-      'ano': ano,
-      'dataTransmissao': dataTransmissao,
-      'situacao': situacao,
-      'declaracaoPdf': declaracaoPdf,
-      'reciboPdf': reciboPdf,
-    };
+    return {'anoCalendario': anoCalendario, 'idDefis': idDefis, 'tipo': tipo, 'dataHora': dataHora};
   }
 }

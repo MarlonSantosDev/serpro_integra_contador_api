@@ -181,65 +181,158 @@ void main() async {
 
   // Criar declaração com enums tipados
   final declaracao = TransmitirDeclaracaoRequest(
-    ano: 2023,
+    ano: 2021,
     situacaoEspecial: SituacaoEspecial(
       tipoEvento: TipoEventoSituacaoEspecial.cisaoParcial,
       dataEvento: 20230101,
     ),
     inatividade: RegraInatividade.atividadesMaiorZero,
     empresa: Empresa(
-      ganhoCapital: 0,
-      qtdEmpregadoInicial: 1,
-      qtdEmpregadoFinal: 1,
-      receitaExportacaoDireta: 0,
+      ganhoCapital: 10.0,
+      qtdEmpregadoInicial: 20,
+      qtdEmpregadoFinal: 0,
+      lucroContabil: 20.0,
+      receitaExportacaoDireta: 10.0,
+      comerciaisExportadoras: [
+        ComercialExportadora(
+          cnpjCompleto: '00000000000000',
+          valor: 123.0,
+        ),
+      ],
       socios: [
         Socio(
           cpf: '00000000000',
-          rendimentosIsentos: 10000,
-          rendimentosTributaveis: 5000,
-          participacaoCapitalSocial: 100,
-          irRetidoFonte: 0,
+          rendimentosIsentos: 50.0,
+          rendimentosTributaveis: 20.0,
+          participacaoCapitalSocial: 90.0,
+          irRetidoFonte: 10.0,
         ),
       ],
-      ganhoRendaVariavel: 0,
+      participacaoCotasTesouraria: 10.0,
+      ganhoRendaVariavel: 10.0,
       doacoesCampanhaEleitoral: [
         Doacao(
           cnpjBeneficiario: '00000000000000',
           tipoBeneficiario: TipoBeneficiarioDoacao.candidatoCargoPolitico,
           formaDoacao: FormaDoacao.dinheiro,
-          valor: 1000.00,
+          valor: 10.0,
         ),
       ],
       estabelecimentos: [
         Estabelecimento(
           cnpjCompleto: '00000000000000',
-          estoqueInicial: 1000,
-          estoqueFinal: 2000,
-          saldoCaixaInicial: 5000,
-          saldoCaixaFinal: 15000,
-          aquisicoesMercadoInterno: 10000,
-          importacoes: 0,
-          totalEntradasPorTransferencia: 0,
-          totalSaidasPorTransferencia: 0,
-          totalDevolucoesVendas: 100,
-          totalEntradas: 10100,
-          totalDevolucoesCompras: 50,
-          totalDespesas: 8000,
+          totalDevolucoesCompras: 200.0,
           operacoesInterestaduais: [
             OperacaoInterestadual(
               uf: 'SP',
-              valor: 5000.00,
+              valor: 15.0,
               tipoOperacao: TipoOperacao.entrada,
             ),
           ],
-          naoOptante: NaoOptante(
-            administracaoTributaria: AdministracaoTributaria.federal,
-            uf: 'SP',
-            codigoMunicipio: '3550308',
-            numeroProcesso: '12345678901234567890',
+          issRetidosFonte: [
+            IssRetidoFonte(
+              uf: 'SP',
+              codMunicipio: '7107',
+              valor: 20.0,
+            ),
+          ],
+          prestacoesServicoComunicacao: [
+            PrestacaoServicoComunicacao(
+              uf: 'SP',
+              codMunicipio: '7107',
+              valor: 20.0,
+            ),
+          ],
+          mudancaOutroMunicipio: [],
+          prestacoesServicoTransporte: [
+            PrestacaoServicoTransporte(
+              uf: 'SP',
+              codMunicipio: '7107',
+              valor: 20.0,
+            ),
+          ],
+          informacaoOpcional: InformacaoOpcional(
+            vendasRevendedorAmbulante: [
+              VendaRevendedorAmbulante(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+              ),
+            ],
+            preparosComercializacaoRefeicoes: [
+              PreparoComercializacaoRefeicoes(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+              ),
+            ],
+            producoesRurais: [
+              ProducaoRural(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+              ),
+            ],
+            aquisicoesProdutoresRurais: [
+              AquisicaoProdutoresRurais(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+              ),
+            ],
+            aquisicoesDispensadosInscricao: [
+              AquisicaoDispensadosInscricao(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+              ),
+            ],
+            rateiosReceitaRegimeEspecial: [
+              RateioReceitaRegimeEspecial(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+                numeroRegime: '999999',
+              ),
+            ],
+            rateiosDecisaoJudicial: [
+              RateioDecisaoJudicial(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+                identificacaoDecisao: 'teste',
+              ),
+            ],
+            rateiosReceitaOutrosRateios: [
+              RateioReceitaOutrosRateios(
+                uf: 'SP',
+                codigoMunicipio: '7107',
+                valor: 20.0,
+                origemExigencia: 'teste',
+              ),
+            ],
+            saidaTransferenciaMercadoria: 20.0,
+            autoInfracaoPago: 20.0,
           ),
+          estoqueInicial: 10.0,
+          estoqueFinal: 20.0,
+          saldoCaixaInicial: -100.0,
+          saldoCaixaFinal: -50.0,
+          aquisicoesMercadoInterno: 20.0,
+          importacoes: 50.0,
+          totalEntradasPorTransferencia: 200.0,
+          totalSaidasPorTransferencia: 200.0,
+          totalDevolucoesVendas: 300.0,
+          totalEntradas: 5000.0,
+          totalDespesas: 10000.0,
         ),
       ],
+      naoOptante: NaoOptante(
+        administracaoTributaria: AdministracaoTributaria.federal,
+        uf: 'SP',
+        codigoMunicipio: '3550308',
+        numeroProcesso: '12345678901234567890',
+      ),
     ),
   );
 
@@ -263,10 +356,18 @@ void main() async {
     // Consultar última declaração
     final ultimaResponse = await defisService.consultarUltimaDeclaracao(
       contribuinteNumero: '00000000000000',
-      ano: 2023,
+      ano: 2021,
     );
     
     print('Última declaração: ${ultimaResponse.dados.idDefis}');
+
+    // Consultar declaração específica
+    final especificaResponse = await defisService.consultarDeclaracaoEspecifica(
+      contribuinteNumero: '00000000000000',
+      idDefis: '000000002021002',
+    );
+    
+    print('Declaração específica PDF: ${especificaResponse.dados.declaracaoPdf.isNotEmpty}');
 
   } catch (e) {
     print('Erro: $e');

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'defis_response.dart';
 
 /// Response para consultar a última declaração transmitida na DEFIS
@@ -12,7 +13,7 @@ class ConsultarUltimaDeclaracaoResponse {
     return ConsultarUltimaDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: UltimaDeclaracao.fromJson(json['dados'] as Map<String, dynamic>),
+      dados: UltimaDeclaracao.fromJson(jsonDecode(json['dados'])),
     );
   }
 
@@ -23,41 +24,17 @@ class ConsultarUltimaDeclaracaoResponse {
 
 /// Modelo para última declaração
 class UltimaDeclaracao {
-  final int idDefis;
-  final int ano;
-  final String dataTransmissao;
-  final String situacao;
-  final String? declaracaoPdf;
-  final String? reciboPdf;
+  final String idDefis;
+  final String declaracaoPdf;
+  final String reciboPdf;
 
-  UltimaDeclaracao({
-    required this.idDefis,
-    required this.ano,
-    required this.dataTransmissao,
-    required this.situacao,
-    this.declaracaoPdf,
-    this.reciboPdf,
-  });
+  UltimaDeclaracao({required this.idDefis, required this.declaracaoPdf, required this.reciboPdf});
 
   factory UltimaDeclaracao.fromJson(Map<String, dynamic> json) {
-    return UltimaDeclaracao(
-      idDefis: int.parse(json['idDefis'].toString()),
-      ano: int.parse(json['ano'].toString()),
-      dataTransmissao: json['dataTransmissao'].toString(),
-      situacao: json['situacao'].toString(),
-      declaracaoPdf: json['declaracaoPdf']?.toString(),
-      reciboPdf: json['reciboPdf']?.toString(),
-    );
+    return UltimaDeclaracao(idDefis: json['idDefis'].toString(), declaracaoPdf: json['declaracao'].toString(), reciboPdf: json['recibo'].toString());
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'idDefis': idDefis,
-      'ano': ano,
-      'dataTransmissao': dataTransmissao,
-      'situacao': situacao,
-      'declaracaoPdf': declaracaoPdf,
-      'reciboPdf': reciboPdf,
-    };
+    return {'idDefis': idDefis, 'declaracao': declaracaoPdf, 'recibo': reciboPdf};
   }
 }
