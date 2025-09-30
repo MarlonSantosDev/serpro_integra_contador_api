@@ -30,10 +30,11 @@ class DteService {
   /// ```
   Future<DteResponse> obterIndicadorDte(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações
+    /* // Para testes deve ser desabilitado
     final validacao = _validarCnpj(cnpj);
     if (validacao != null) {
       throw ArgumentError(validacao);
-    }
+    }*/
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,

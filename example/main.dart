@@ -21,9 +21,9 @@ void main() async {
   //await Ccmei(apiClient);
   //await DctfWeb(apiClient);
   //await Defis(apiClient);
-  await Dte(apiClient);
+  //await Dte(apiClient);
+  await EventosAtualizacao(apiClient);
 
-  // await EventosAtualizacao(apiClient);
   // await Mit(apiClient);
   // await PagtoWeb(apiClient);
   // await ParcmeiEspecial(apiClient);
