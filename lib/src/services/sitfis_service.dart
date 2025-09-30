@@ -24,12 +24,18 @@ class SitfisService {
   /// um protocolo que será usado posteriormente para emitir o relatório.
   ///
   /// [contribuinteNumero] - CPF ou CNPJ do contribuinte (apenas números)
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna [SolicitarProtocoloResponse] com o protocolo e tempo de espera
-  Future<SolicitarProtocoloResponse> solicitarProtocoloRelatorio(String contribuinteNumero) async {
+  Future<SolicitarProtocoloResponse> solicitarProtocoloRelatorio(
+    String contribuinteNumero, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = SolicitarProtocoloRequest(contribuinteNumero: contribuinteNumero);
 
-    final response = await _apiClient.post('/Apoiar', request);
+    final response = await _apiClient.post('/Apoiar', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return SolicitarProtocoloResponse.fromJson(response);
   }
 
@@ -40,12 +46,19 @@ class SitfisService {
   ///
   /// [contribuinteNumero] - CPF ou CNPJ do contribuinte (apenas números)
   /// [protocoloRelatorio] - Protocolo obtido na solicitação anterior
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna [EmitirRelatorioResponse] com o PDF do relatório ou tempo de espera
-  Future<EmitirRelatorioResponse> emitirRelatorioSituacaoFiscal(String contribuinteNumero, String protocoloRelatorio) async {
+  Future<EmitirRelatorioResponse> emitirRelatorioSituacaoFiscal(
+    String contribuinteNumero,
+    String protocoloRelatorio, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = EmitirRelatorioRequest(contribuinteNumero: contribuinteNumero, protocoloRelatorio: protocoloRelatorio);
 
-    final response = await _apiClient.post('/Emitir', request);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return EmitirRelatorioResponse.fromJson(response);
   }
 
@@ -56,15 +69,26 @@ class SitfisService {
   ///
   /// [contribuinteNumero] - CPF ou CNPJ do contribuinte
   /// [cache] - Cache existente (opcional)
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna [SolicitarProtocoloResponse] ou null se usar cache válido
-  Future<SolicitarProtocoloResponse?> solicitarProtocoloComCache(String contribuinteNumero, {SitfisCache? cache}) async {
+  Future<SolicitarProtocoloResponse?> solicitarProtocoloComCache(
+    String contribuinteNumero, {
+    SitfisCache? cache,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     // Se há cache válido, retorna null para indicar que deve usar o cache
     if (cache != null && cache.isValid) {
       return null;
     }
 
-    return await solicitarProtocoloRelatorio(contribuinteNumero);
+    return await solicitarProtocoloRelatorio(
+      contribuinteNumero,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Emite relatório com retry automático baseado no tempo de espera
@@ -76,6 +100,8 @@ class SitfisService {
   /// [protocoloRelatorio] - Protocolo obtido na solicitação anterior
   /// [maxTentativas] - Número máximo de tentativas (padrão: 5)
   /// [callbackProgresso] - Callback chamado a cada tentativa
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna [EmitirRelatorioResponse] com o PDF do relatório
   Future<EmitirRelatorioResponse> emitirRelatorioComRetry(
@@ -83,13 +109,20 @@ class SitfisService {
     String protocoloRelatorio, {
     int maxTentativas = 5,
     Function(int tentativa, int? tempoEspera)? callbackProgresso,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     int tentativa = 0;
 
     while (tentativa < maxTentativas) {
       tentativa++;
 
-      final response = await emitirRelatorioSituacaoFiscal(contribuinteNumero, protocoloRelatorio);
+      final response = await emitirRelatorioSituacaoFiscal(
+        contribuinteNumero,
+        protocoloRelatorio,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       // Se obteve sucesso, retorna
       if (response.isSuccess && response.hasPdf) {
@@ -115,7 +148,12 @@ class SitfisService {
     }
 
     // Se esgotou as tentativas, retorna a última resposta
-    return await emitirRelatorioSituacaoFiscal(contribuinteNumero, protocoloRelatorio);
+    return await emitirRelatorioSituacaoFiscal(
+      contribuinteNumero,
+      protocoloRelatorio,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Fluxo completo: solicita protocolo e emite relatório
@@ -126,16 +164,24 @@ class SitfisService {
   /// [contribuinteNumero] - CPF ou CNPJ do contribuinte
   /// [maxTentativas] - Número máximo de tentativas para emissão
   /// [callbackProgresso] - Callback chamado durante o progresso
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna [EmitirRelatorioResponse] com o PDF do relatório
   Future<EmitirRelatorioResponse> obterRelatorioCompleto(
     String contribuinteNumero, {
     int maxTentativas = 5,
     Function(String etapa, int? tempoEspera)? callbackProgresso,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     // 1. Solicitar protocolo
     callbackProgresso?.call('Solicitando protocolo...', null);
-    final protocoloResponse = await solicitarProtocoloRelatorio(contribuinteNumero);
+    final protocoloResponse = await solicitarProtocoloRelatorio(
+      contribuinteNumero,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     if (!protocoloResponse.isSuccess || !protocoloResponse.hasProtocolo) {
       throw Exception('Falha ao obter protocolo: ${protocoloResponse.mensagens.map((m) => m.texto).join(', ')}');
@@ -159,6 +205,8 @@ class SitfisService {
       callbackProgresso: (tentativa, tempoEspera) {
         callbackProgresso?.call('Tentativa $tentativa - Aguardando...', tempoEspera);
       },
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 

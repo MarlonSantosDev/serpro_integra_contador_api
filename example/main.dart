@@ -23,7 +23,9 @@ void main() async {
   //await exemplosDctfWeb(apiClient);
   // await exemplosDefis(apiClient); Em teste
   //await exemplosDte(apiClient);
-  await exemplosEventosAtualizacao(apiClient);
+  //await exemplosEventosAtualizacao(apiClient);
+  await exemplosMit(apiClient);
+  await exemplosPagtoWeb(apiClient);
 
   //await exemplosPgmei(apiClient);
   // await exemplosCcmei(apiClient);
@@ -40,7 +42,6 @@ void main() async {
   // await exemplosRelpmei(apiClient);
   // await exemplosPertmei(apiClient);
   // await exemplosParcsnEspecial(apiClient);
-  // await exemplosMit(apiClient);
 }
 
 Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
@@ -986,7 +987,12 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
     print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
     final cpfsExemplo = ['00000000000', '11111111111', '22222222222', '33333333333'];
 
-    final solicitacaoPF = await eventosService.solicitarEventosPF(cpfs: cpfsExemplo, evento: TipoEvento.dctfWeb);
+    final solicitacaoPF = await eventosService.solicitarEventosPF(
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999999',
+      cpfs: cpfsExemplo,
+      evento: TipoEvento.dctfWeb,
+    );
 
     print('Status: ${solicitacaoPF.status}');
     print('Protocolo: ${solicitacaoPF.dados.protocolo}');
@@ -1090,6 +1096,439 @@ Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
     print('\n=== Exemplos Eventos de Atualização Concluídos ===');
   } catch (e) {
     print('Erro nos exemplos de Eventos de Atualização: $e');
+  }
+}
+
+Future<void> exemplosMit(ApiClient apiClient) async {
+  print('\n=== Exemplos MIT (Módulo de Inclusão de Tributos) ===');
+
+  final mitService = MitService(apiClient);
+  const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
+
+  try {
+    // 1. Criar Apuração Sem Movimento
+    print('\n1. Criando apuração sem movimento...');
+    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '12345678901', emailResponsavel: 'responsavel@exemplo.com');
+
+    final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
+
+    final apuracaoSemMovimento = await mitService.criarApuracaoSemMovimento(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      responsavelApuracao: responsavelApuracao,
+    );
+
+    print('Status: ${apuracaoSemMovimento.status}');
+    print('Sucesso: ${apuracaoSemMovimento.sucesso}');
+    if (apuracaoSemMovimento.sucesso) {
+      print('Protocolo: ${apuracaoSemMovimento.protocoloEncerramento}');
+      print('ID Apuração: ${apuracaoSemMovimento.idApuracao}');
+    } else {
+      print('Erro: ${apuracaoSemMovimento.mensagemErro}');
+    }
+
+    // 2. Criar Apuração Com Movimento
+    print('\n2. Criando apuração com movimento...');
+    final debitoIrpj = Debito(idDebito: 1, codigoDebito: '236208', valorDebito: 100.00);
+
+    final debitoCsll = Debito(idDebito: 2, codigoDebito: '248408', valorDebito: 220.00);
+
+    final debitos = Debitos(
+      irpj: ListaDebitosIrpj(listaDebitos: [debitoIrpj]),
+      csll: ListaDebitosCsll(listaDebitos: [debitoCsll]),
+    );
+
+    final apuracaoComMovimento = await mitService.criarApuracaoComMovimento(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      responsavelApuracao: responsavelApuracao,
+      debitos: debitos,
+    );
+
+    print('Status: ${apuracaoComMovimento.status}');
+    print('Sucesso: ${apuracaoComMovimento.sucesso}');
+    if (apuracaoComMovimento.sucesso) {
+      print('Protocolo: ${apuracaoComMovimento.protocoloEncerramento}');
+      print('ID Apuração: ${apuracaoComMovimento.idApuracao}');
+    } else {
+      print('Erro: ${apuracaoComMovimento.mensagemErro}');
+    }
+
+    // 3. Consultar Situação de Encerramento
+    if (apuracaoSemMovimento.protocoloEncerramento != null) {
+      print('\n3. Consultando situação de encerramento...');
+      final situacaoResponse = await mitService.consultarSituacaoEncerramento(
+        contribuinteNumero: cnpjContribuinte,
+        protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
+      );
+
+      print('Status: ${situacaoResponse.status}');
+      print('Sucesso: ${situacaoResponse.sucesso}');
+      if (situacaoResponse.sucesso) {
+        print('ID Apuração: ${situacaoResponse.idApuracao}');
+        print('Situação: ${situacaoResponse.textoSituacao}');
+        print('Data Encerramento: ${situacaoResponse.dataEncerramento}');
+        if (situacaoResponse.avisosDctf != null) {
+          print('Avisos DCTF: ${situacaoResponse.avisosDctf!.join(', ')}');
+        }
+      } else {
+        print('Erro: ${situacaoResponse.mensagemErro}');
+      }
+    }
+
+    // 4. Consultar Apuração
+    if (apuracaoSemMovimento.idApuracao != null) {
+      print('\n4. Consultando dados da apuração...');
+      final consultaResponse = await mitService.consultarApuracao(contribuinteNumero: cnpjContribuinte, idApuracao: apuracaoSemMovimento.idApuracao!);
+
+      print('Status: ${consultaResponse.status}');
+      print('Sucesso: ${consultaResponse.sucesso}');
+      if (consultaResponse.sucesso) {
+        print('Situação: ${consultaResponse.textoSituacao}');
+        if (consultaResponse.dadosApuracaoMit != null) {
+          print('Dados da apuração encontrados: ${consultaResponse.dadosApuracaoMit!.length} registros');
+        }
+      } else {
+        print('Erro: ${consultaResponse.mensagemErro}');
+      }
+    }
+
+    // 5. Listar Apurações por Ano
+    print('\n5. Listando apurações por ano...');
+    final listagemResponse = await mitService.listarApuracaoes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
+
+    print('Status: ${listagemResponse.status}');
+    print('Sucesso: ${listagemResponse.sucesso}');
+    if (listagemResponse.sucesso) {
+      print('Apurações encontradas: ${listagemResponse.apuracoes?.length ?? 0}');
+      if (listagemResponse.apuracoes != null) {
+        for (final apuracao in listagemResponse.apuracoes!) {
+          print('  - Período: ${apuracao.periodoApuracao}, ID: ${apuracao.idApuracao}, Situação: ${apuracao.situacaoEnum?.descricao}');
+        }
+      }
+    } else {
+      print('Erro: ${listagemResponse.mensagemErro}');
+    }
+
+    // 6. Consultar Apurações por Mês
+    print('\n6. Consultando apurações por mês...');
+    final listagemMesResponse = await mitService.consultarApuracaoesPorMes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025, mesApuracao: 1);
+
+    print('Status: ${listagemMesResponse.status}');
+    print('Sucesso: ${listagemMesResponse.sucesso}');
+    if (listagemMesResponse.sucesso) {
+      print('Apurações do mês: ${listagemMesResponse.apuracoes?.length ?? 0}');
+    } else {
+      print('Erro: ${listagemMesResponse.mensagemErro}');
+    }
+
+    // 7. Consultar Apurações Encerradas
+    print('\n7. Consultando apurações encerradas...');
+    final listagemEncerradasResponse = await mitService.consultarApuracaoesEncerradas(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
+
+    print('Status: ${listagemEncerradasResponse.status}');
+    print('Sucesso: ${listagemEncerradasResponse.sucesso}');
+    if (listagemEncerradasResponse.sucesso) {
+      print('Apurações encerradas: ${listagemEncerradasResponse.apuracoes?.length ?? 0}');
+    } else {
+      print('Erro: ${listagemEncerradasResponse.mensagemErro}');
+    }
+
+    // 8. Aguardar Encerramento (exemplo com timeout curto)
+    if (apuracaoSemMovimento.protocoloEncerramento != null) {
+      print('\n8. Aguardando encerramento (timeout de 60 segundos)...');
+      try {
+        final aguardarResponse = await mitService.aguardarEncerramento(
+          contribuinteNumero: cnpjContribuinte,
+          protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
+          timeoutSegundos: 60,
+          intervaloConsulta: 10,
+        );
+
+        print('Status final: ${aguardarResponse.status}');
+        print('Situação final: ${aguardarResponse.textoSituacao}');
+      } catch (e) {
+        print('Timeout ou erro ao aguardar encerramento: $e');
+      }
+    }
+
+    // 9. Exemplo com Eventos Especiais
+    print('\n9. Criando apuração com evento especial...');
+    final eventoEspecial = EventoEspecial(idEvento: 1, diaEvento: 15, tipoEvento: TipoEventoEspecial.fusao);
+
+    final dadosIniciaisComEvento = DadosIniciais(
+      semMovimento: false,
+      qualificacaoPj: QualificacaoPj.pjEmGeral,
+      tributacaoLucro: TributacaoLucro.realAnual,
+      variacoesMonetarias: VariacoesMonetarias.regimeCaixa,
+      regimePisCofins: RegimePisCofins.naoCumulativa,
+      responsavelApuracao: responsavelApuracao,
+    );
+
+    final apuracaoComEvento = await mitService.encerrarApuracao(
+      contribuinteNumero: cnpjContribuinte,
+      periodoApuracao: periodoApuracao,
+      dadosIniciais: dadosIniciaisComEvento,
+      debitos: debitos,
+      listaEventosEspeciais: [eventoEspecial],
+    );
+
+    print('Status: ${apuracaoComEvento.status}');
+    print('Sucesso: ${apuracaoComEvento.sucesso}');
+    if (apuracaoComEvento.sucesso) {
+      print('Protocolo: ${apuracaoComEvento.protocoloEncerramento}');
+    } else {
+      print('Erro: ${apuracaoComEvento.mensagemErro}');
+    }
+
+    // 10. Exemplo de Validação com Dados Inválidos
+    print('\n10. Testando validação com dados inválidos...');
+    try {
+      PeriodoApuracao(
+        mesApuracao: 13, // Mês inválido
+        anoApuracao: 2025,
+      );
+    } catch (e) {
+      print('Validação de mês inválido: $e');
+    }
+
+    try {
+      Debito(
+        idDebito: 0, // ID inválido
+        codigoDebito: '236208',
+        valorDebito: -100.00, // Valor negativo
+      );
+    } catch (e) {
+      print('Validação de débito inválido: $e');
+    }
+
+    print('\n=== Exemplos MIT Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço MIT: $e');
+  }
+}
+
+Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
+  print('=== Exemplos PAGTOWEB ===');
+
+  final pagtoWebService = PagtoWebService(apiClient);
+
+  try {
+    // 1. Consultar pagamentos por intervalo de data
+    print('\n--- Consultando pagamentos por data ---');
+    final consultarDataResponse = await pagtoWebService.consultarPagamentosPorData(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
+
+    print('Status: ${consultarDataResponse.status}');
+    print('Sucesso: ${consultarDataResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarDataResponse.dados.length}');
+
+    if (consultarDataResponse.dados.isNotEmpty) {
+      final pagamento = consultarDataResponse.dados.first;
+      print('Primeiro pagamento:');
+      print('  Número: ${pagamento.numeroDocumento}');
+      print('  Tipo: ${pagamento.tipo.descricao}');
+      print('  Período: ${pagamento.periodoApuracao}');
+      print('  Data Arrecadação: ${pagamento.dataArrecadacao}');
+      print('  Valor Total: R\$ ${pagamento.valorTotal}');
+      print('  Receita: ${pagamento.receitaPrincipal.descricao}');
+    }
+
+    // 2. Consultar pagamentos por códigos de receita
+    print('\n--- Consultando pagamentos por receita ---');
+    final consultarReceitaResponse = await pagtoWebService.consultarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Status: ${consultarReceitaResponse.status}');
+    print('Sucesso: ${consultarReceitaResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarReceitaResponse.dados.length}');
+
+    // 3. Consultar pagamentos por intervalo de valor
+    print('\n--- Consultando pagamentos por valor ---');
+    final consultarValorResponse = await pagtoWebService.consultarPagamentosPorValor(
+      contribuinteNumero: '00000000000100',
+      valorInicial: 100.00,
+      valorFinal: 1000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Status: ${consultarValorResponse.status}');
+    print('Sucesso: ${consultarValorResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarValorResponse.dados.length}');
+
+    // 4. Consultar pagamentos por números de documento
+    print('\n--- Consultando pagamentos por documento ---');
+    final consultarDocumentoResponse = await pagtoWebService.consultarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 10,
+    );
+
+    print('Status: ${consultarDocumentoResponse.status}');
+    print('Sucesso: ${consultarDocumentoResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarDocumentoResponse.dados.length}');
+
+    // 5. Contar pagamentos por data
+    print('\n--- Contando pagamentos por data ---');
+    final contarDataResponse = await pagtoWebService.contarPagamentosPorData(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+    );
+
+    print('Status: ${contarDataResponse.status}');
+    print('Sucesso: ${contarDataResponse.sucesso}');
+    print('Quantidade total: ${contarDataResponse.quantidade}');
+
+    // 6. Contar pagamentos por receita
+    print('\n--- Contando pagamentos por receita ---');
+    final contarReceitaResponse = await pagtoWebService.contarPagamentosPorReceita(
+      contribuinteNumero: '00000000000100',
+      codigoReceitaLista: ['0001', '0002'],
+    );
+
+    print('Status: ${contarReceitaResponse.status}');
+    print('Sucesso: ${contarReceitaResponse.sucesso}');
+    print('Quantidade total: ${contarReceitaResponse.quantidade}');
+
+    // 7. Contar pagamentos por valor
+    print('\n--- Contando pagamentos por valor ---');
+    final contarValorResponse = await pagtoWebService.contarPagamentosPorValor(
+      contribuinteNumero: '00000000000100',
+      valorInicial: 100.00,
+      valorFinal: 1000.00,
+    );
+
+    print('Status: ${contarValorResponse.status}');
+    print('Sucesso: ${contarValorResponse.sucesso}');
+    print('Quantidade total: ${contarValorResponse.quantidade}');
+
+    // 8. Contar pagamentos por documento
+    print('\n--- Contando pagamentos por documento ---');
+    final contarDocumentoResponse = await pagtoWebService.contarPagamentosPorDocumento(
+      contribuinteNumero: '00000000000100',
+      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
+    );
+
+    print('Status: ${contarDocumentoResponse.status}');
+    print('Sucesso: ${contarDocumentoResponse.sucesso}');
+    print('Quantidade total: ${contarDocumentoResponse.quantidade}');
+
+    // 9. Emitir comprovante de pagamento
+    print('\n--- Emitindo comprovante de pagamento ---');
+    final emitirComprovanteResponse = await pagtoWebService.emitirComprovante(
+      contribuinteNumero: '00000000000100',
+      numeroDocumento: '12345678901234567890',
+    );
+
+    print('Status: ${emitirComprovanteResponse.status}');
+    print('Sucesso: ${emitirComprovanteResponse.sucesso}');
+    print('PDF disponível: ${emitirComprovanteResponse.pdfBase64 != null}');
+
+    if (emitirComprovanteResponse.pdfBase64 != null) {
+      print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
+    }
+
+    // 10. Exemplo com filtros combinados
+    print('\n--- Exemplo com filtros combinados ---');
+    final consultarCombinadoResponse = await pagtoWebService.consultarPagamentos(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-06-01',
+      dataFinal: '2023-06-30',
+      codigoReceitaLista: ['0001'],
+      valorInicial: 500.00,
+      valorFinal: 2000.00,
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 20,
+    );
+
+    print('Status: ${consultarCombinadoResponse.status}');
+    print('Sucesso: ${consultarCombinadoResponse.sucesso}');
+    print('Quantidade de pagamentos: ${consultarCombinadoResponse.dados.length}');
+
+    // 11. Exemplo de paginação
+    print('\n--- Exemplo de paginação ---');
+    final pagina1Response = await pagtoWebService.consultarPagamentos(
+      contribuinteNumero: '00000000000100',
+      dataInicial: '2023-01-01',
+      dataFinal: '2023-12-31',
+      primeiroDaPagina: 0,
+      tamanhoDaPagina: 5,
+    );
+
+    print('Página 1 - Status: ${pagina1Response.status}');
+    print('Página 1 - Quantidade: ${pagina1Response.dados.length}');
+
+    if (pagina1Response.dados.length == 5) {
+      // Simular próxima página
+      final pagina2Response = await pagtoWebService.consultarPagamentos(
+        contribuinteNumero: '00000000000100',
+        dataInicial: '2023-01-01',
+        dataFinal: '2023-12-31',
+        primeiroDaPagina: 5,
+        tamanhoDaPagina: 5,
+      );
+
+      print('Página 2 - Status: ${pagina2Response.status}');
+      print('Página 2 - Quantidade: ${pagina2Response.dados.length}');
+    }
+
+    // 12. Exemplo de tratamento de erros
+    print('\n--- Exemplo de tratamento de erros ---');
+    try {
+      final erroResponse = await pagtoWebService.consultarPagamentos(
+        contribuinteNumero: '00000000000000', // CNPJ inválido
+        dataInicial: '2023-01-01',
+        dataFinal: '2023-12-31',
+      );
+
+      print('Status: ${erroResponse.status}');
+      print('Sucesso: ${erroResponse.sucesso}');
+
+      if (!erroResponse.sucesso) {
+        print('Mensagens de erro:');
+        for (final mensagem in erroResponse.mensagens) {
+          print('  ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+    } catch (e) {
+      print('Erro capturado: $e');
+    }
+
+    // 13. Exemplo de análise de desmembramentos
+    print('\n--- Exemplo de análise de desmembramentos ---');
+    if (consultarDataResponse.dados.isNotEmpty) {
+      final pagamento = consultarDataResponse.dados.first;
+      print('Análise do pagamento ${pagamento.numeroDocumento}:');
+      print('  Desmembramentos: ${pagamento.desmembramentos.length}');
+
+      for (int i = 0; i < pagamento.desmembramentos.length; i++) {
+        final desmembramento = pagamento.desmembramentos[i];
+        print('  Desmembramento ${i + 1}:');
+        print('    Sequencial: ${desmembramento.sequencial}');
+        print('    Receita: ${desmembramento.receitaPrincipal.descricao}');
+        print('    Período: ${desmembramento.periodoApuracao}');
+        print('    Valor Total: R\$ ${desmembramento.valorTotal ?? 0.0}');
+        print('    Valor Principal: R\$ ${desmembramento.valorPrincipal ?? 0.0}');
+        print('    Valor Multa: R\$ ${desmembramento.valorMulta ?? 0.0}');
+        print('    Valor Juros: R\$ ${desmembramento.valorJuros ?? 0.0}');
+      }
+    }
+
+    print('\n=== Exemplos PAGTOWEB Concluídos ===');
+  } catch (e) {
+    print('Erro no serviço PAGTOWEB: $e');
   }
 }
 
@@ -1861,230 +2300,6 @@ Future<void> exemplosSitfis(ApiClient apiClient) async {
     }
   } catch (e) {
     print('Erro no serviço SITFIS: $e');
-  }
-}
-
-Future<void> exemplosPagtoWeb(ApiClient apiClient) async {
-  print('=== Exemplos PAGTOWEB ===');
-
-  final pagtoWebService = PagtoWebService(apiClient);
-
-  try {
-    // 1. Consultar pagamentos por intervalo de data
-    print('\n--- Consultando pagamentos por data ---');
-    final consultarDataResponse = await pagtoWebService.consultarPagamentosPorData(
-      contribuinteNumero: '00000000000100',
-      dataInicial: '2023-01-01',
-      dataFinal: '2023-12-31',
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 10,
-    );
-
-    print('Status: ${consultarDataResponse.status}');
-    print('Sucesso: ${consultarDataResponse.sucesso}');
-    print('Quantidade de pagamentos: ${consultarDataResponse.dados.length}');
-
-    if (consultarDataResponse.dados.isNotEmpty) {
-      final pagamento = consultarDataResponse.dados.first;
-      print('Primeiro pagamento:');
-      print('  Número: ${pagamento.numeroDocumento}');
-      print('  Tipo: ${pagamento.tipo.descricao}');
-      print('  Período: ${pagamento.periodoApuracao}');
-      print('  Data Arrecadação: ${pagamento.dataArrecadacao}');
-      print('  Valor Total: R\$ ${pagamento.valorTotal}');
-      print('  Receita: ${pagamento.receitaPrincipal.descricao}');
-    }
-
-    // 2. Consultar pagamentos por códigos de receita
-    print('\n--- Consultando pagamentos por receita ---');
-    final consultarReceitaResponse = await pagtoWebService.consultarPagamentosPorReceita(
-      contribuinteNumero: '00000000000100',
-      codigoReceitaLista: ['0001', '0002'],
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 5,
-    );
-
-    print('Status: ${consultarReceitaResponse.status}');
-    print('Sucesso: ${consultarReceitaResponse.sucesso}');
-    print('Quantidade de pagamentos: ${consultarReceitaResponse.dados.length}');
-
-    // 3. Consultar pagamentos por intervalo de valor
-    print('\n--- Consultando pagamentos por valor ---');
-    final consultarValorResponse = await pagtoWebService.consultarPagamentosPorValor(
-      contribuinteNumero: '00000000000100',
-      valorInicial: 100.00,
-      valorFinal: 1000.00,
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 5,
-    );
-
-    print('Status: ${consultarValorResponse.status}');
-    print('Sucesso: ${consultarValorResponse.sucesso}');
-    print('Quantidade de pagamentos: ${consultarValorResponse.dados.length}');
-
-    // 4. Consultar pagamentos por números de documento
-    print('\n--- Consultando pagamentos por documento ---');
-    final consultarDocumentoResponse = await pagtoWebService.consultarPagamentosPorDocumento(
-      contribuinteNumero: '00000000000100',
-      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 10,
-    );
-
-    print('Status: ${consultarDocumentoResponse.status}');
-    print('Sucesso: ${consultarDocumentoResponse.sucesso}');
-    print('Quantidade de pagamentos: ${consultarDocumentoResponse.dados.length}');
-
-    // 5. Contar pagamentos por data
-    print('\n--- Contando pagamentos por data ---');
-    final contarDataResponse = await pagtoWebService.contarPagamentosPorData(
-      contribuinteNumero: '00000000000100',
-      dataInicial: '2023-01-01',
-      dataFinal: '2023-12-31',
-    );
-
-    print('Status: ${contarDataResponse.status}');
-    print('Sucesso: ${contarDataResponse.sucesso}');
-    print('Quantidade total: ${contarDataResponse.quantidade}');
-
-    // 6. Contar pagamentos por receita
-    print('\n--- Contando pagamentos por receita ---');
-    final contarReceitaResponse = await pagtoWebService.contarPagamentosPorReceita(
-      contribuinteNumero: '00000000000100',
-      codigoReceitaLista: ['0001', '0002'],
-    );
-
-    print('Status: ${contarReceitaResponse.status}');
-    print('Sucesso: ${contarReceitaResponse.sucesso}');
-    print('Quantidade total: ${contarReceitaResponse.quantidade}');
-
-    // 7. Contar pagamentos por valor
-    print('\n--- Contando pagamentos por valor ---');
-    final contarValorResponse = await pagtoWebService.contarPagamentosPorValor(
-      contribuinteNumero: '00000000000100',
-      valorInicial: 100.00,
-      valorFinal: 1000.00,
-    );
-
-    print('Status: ${contarValorResponse.status}');
-    print('Sucesso: ${contarValorResponse.sucesso}');
-    print('Quantidade total: ${contarValorResponse.quantidade}');
-
-    // 8. Contar pagamentos por documento
-    print('\n--- Contando pagamentos por documento ---');
-    final contarDocumentoResponse = await pagtoWebService.contarPagamentosPorDocumento(
-      contribuinteNumero: '00000000000100',
-      numeroDocumentoLista: ['12345678901234567890', '09876543210987654321'],
-    );
-
-    print('Status: ${contarDocumentoResponse.status}');
-    print('Sucesso: ${contarDocumentoResponse.sucesso}');
-    print('Quantidade total: ${contarDocumentoResponse.quantidade}');
-
-    // 9. Emitir comprovante de pagamento
-    print('\n--- Emitindo comprovante de pagamento ---');
-    final emitirComprovanteResponse = await pagtoWebService.emitirComprovante(
-      contribuinteNumero: '00000000000100',
-      numeroDocumento: '12345678901234567890',
-    );
-
-    print('Status: ${emitirComprovanteResponse.status}');
-    print('Sucesso: ${emitirComprovanteResponse.sucesso}');
-    print('PDF disponível: ${emitirComprovanteResponse.pdfBase64 != null}');
-
-    if (emitirComprovanteResponse.pdfBase64 != null) {
-      print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
-    }
-
-    // 10. Exemplo com filtros combinados
-    print('\n--- Exemplo com filtros combinados ---');
-    final consultarCombinadoResponse = await pagtoWebService.consultarPagamentos(
-      contribuinteNumero: '00000000000100',
-      dataInicial: '2023-06-01',
-      dataFinal: '2023-06-30',
-      codigoReceitaLista: ['0001'],
-      valorInicial: 500.00,
-      valorFinal: 2000.00,
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 20,
-    );
-
-    print('Status: ${consultarCombinadoResponse.status}');
-    print('Sucesso: ${consultarCombinadoResponse.sucesso}');
-    print('Quantidade de pagamentos: ${consultarCombinadoResponse.dados.length}');
-
-    // 11. Exemplo de paginação
-    print('\n--- Exemplo de paginação ---');
-    final pagina1Response = await pagtoWebService.consultarPagamentos(
-      contribuinteNumero: '00000000000100',
-      dataInicial: '2023-01-01',
-      dataFinal: '2023-12-31',
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 5,
-    );
-
-    print('Página 1 - Status: ${pagina1Response.status}');
-    print('Página 1 - Quantidade: ${pagina1Response.dados.length}');
-
-    if (pagina1Response.dados.length == 5) {
-      // Simular próxima página
-      final pagina2Response = await pagtoWebService.consultarPagamentos(
-        contribuinteNumero: '00000000000100',
-        dataInicial: '2023-01-01',
-        dataFinal: '2023-12-31',
-        primeiroDaPagina: 5,
-        tamanhoDaPagina: 5,
-      );
-
-      print('Página 2 - Status: ${pagina2Response.status}');
-      print('Página 2 - Quantidade: ${pagina2Response.dados.length}');
-    }
-
-    // 12. Exemplo de tratamento de erros
-    print('\n--- Exemplo de tratamento de erros ---');
-    try {
-      final erroResponse = await pagtoWebService.consultarPagamentos(
-        contribuinteNumero: '00000000000000', // CNPJ inválido
-        dataInicial: '2023-01-01',
-        dataFinal: '2023-12-31',
-      );
-
-      print('Status: ${erroResponse.status}');
-      print('Sucesso: ${erroResponse.sucesso}');
-
-      if (!erroResponse.sucesso) {
-        print('Mensagens de erro:');
-        for (final mensagem in erroResponse.mensagens) {
-          print('  ${mensagem.codigo}: ${mensagem.texto}');
-        }
-      }
-    } catch (e) {
-      print('Erro capturado: $e');
-    }
-
-    // 13. Exemplo de análise de desmembramentos
-    print('\n--- Exemplo de análise de desmembramentos ---');
-    if (consultarDataResponse.dados.isNotEmpty) {
-      final pagamento = consultarDataResponse.dados.first;
-      print('Análise do pagamento ${pagamento.numeroDocumento}:');
-      print('  Desmembramentos: ${pagamento.desmembramentos.length}');
-
-      for (int i = 0; i < pagamento.desmembramentos.length; i++) {
-        final desmembramento = pagamento.desmembramentos[i];
-        print('  Desmembramento ${i + 1}:');
-        print('    Sequencial: ${desmembramento.sequencial}');
-        print('    Receita: ${desmembramento.receitaPrincipal.descricao}');
-        print('    Período: ${desmembramento.periodoApuracao}');
-        print('    Valor Total: R\$ ${desmembramento.valorTotal ?? 0.0}');
-        print('    Valor Principal: R\$ ${desmembramento.valorPrincipal ?? 0.0}');
-        print('    Valor Multa: R\$ ${desmembramento.valorMulta ?? 0.0}');
-        print('    Valor Juros: R\$ ${desmembramento.valorJuros ?? 0.0}');
-      }
-    }
-
-    print('\n=== Exemplos PAGTOWEB Concluídos ===');
-  } catch (e) {
-    print('Erro no serviço PAGTOWEB: $e');
   }
 }
 
@@ -3437,215 +3652,6 @@ Future<void> exemplosPertmei(ApiClient apiClient) async {
     print('\n=== Exemplos PERTMEI Concluídos ===');
   } catch (e) {
     print('Erro geral no serviço PERTMEI: $e');
-  }
-}
-
-Future<void> exemplosMit(ApiClient apiClient) async {
-  print('\n=== Exemplos MIT (Módulo de Inclusão de Tributos) ===');
-
-  final mitService = MitService(apiClient);
-  const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
-
-  try {
-    // 1. Criar Apuração Sem Movimento
-    print('\n1. Criando apuração sem movimento...');
-    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '12345678901', emailResponsavel: 'responsavel@exemplo.com');
-
-    final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
-
-    final apuracaoSemMovimento = await mitService.criarApuracaoSemMovimento(
-      contribuinteNumero: cnpjContribuinte,
-      periodoApuracao: periodoApuracao,
-      responsavelApuracao: responsavelApuracao,
-    );
-
-    print('Status: ${apuracaoSemMovimento.status}');
-    print('Sucesso: ${apuracaoSemMovimento.sucesso}');
-    if (apuracaoSemMovimento.sucesso) {
-      print('Protocolo: ${apuracaoSemMovimento.protocoloEncerramento}');
-      print('ID Apuração: ${apuracaoSemMovimento.idApuracao}');
-    } else {
-      print('Erro: ${apuracaoSemMovimento.mensagemErro}');
-    }
-
-    // 2. Criar Apuração Com Movimento
-    print('\n2. Criando apuração com movimento...');
-    final debitoIrpj = Debito(idDebito: 1, codigoDebito: '236208', valorDebito: 100.00);
-
-    final debitoCsll = Debito(idDebito: 2, codigoDebito: '248408', valorDebito: 220.00);
-
-    final debitos = Debitos(
-      irpj: ListaDebitosIrpj(listaDebitos: [debitoIrpj]),
-      csll: ListaDebitosCsll(listaDebitos: [debitoCsll]),
-    );
-
-    final apuracaoComMovimento = await mitService.criarApuracaoComMovimento(
-      contribuinteNumero: cnpjContribuinte,
-      periodoApuracao: periodoApuracao,
-      responsavelApuracao: responsavelApuracao,
-      debitos: debitos,
-    );
-
-    print('Status: ${apuracaoComMovimento.status}');
-    print('Sucesso: ${apuracaoComMovimento.sucesso}');
-    if (apuracaoComMovimento.sucesso) {
-      print('Protocolo: ${apuracaoComMovimento.protocoloEncerramento}');
-      print('ID Apuração: ${apuracaoComMovimento.idApuracao}');
-    } else {
-      print('Erro: ${apuracaoComMovimento.mensagemErro}');
-    }
-
-    // 3. Consultar Situação de Encerramento
-    if (apuracaoSemMovimento.protocoloEncerramento != null) {
-      print('\n3. Consultando situação de encerramento...');
-      final situacaoResponse = await mitService.consultarSituacaoEncerramento(
-        contribuinteNumero: cnpjContribuinte,
-        protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
-      );
-
-      print('Status: ${situacaoResponse.status}');
-      print('Sucesso: ${situacaoResponse.sucesso}');
-      if (situacaoResponse.sucesso) {
-        print('ID Apuração: ${situacaoResponse.idApuracao}');
-        print('Situação: ${situacaoResponse.textoSituacao}');
-        print('Data Encerramento: ${situacaoResponse.dataEncerramento}');
-        if (situacaoResponse.avisosDctf != null) {
-          print('Avisos DCTF: ${situacaoResponse.avisosDctf!.join(', ')}');
-        }
-      } else {
-        print('Erro: ${situacaoResponse.mensagemErro}');
-      }
-    }
-
-    // 4. Consultar Apuração
-    if (apuracaoSemMovimento.idApuracao != null) {
-      print('\n4. Consultando dados da apuração...');
-      final consultaResponse = await mitService.consultarApuracao(contribuinteNumero: cnpjContribuinte, idApuracao: apuracaoSemMovimento.idApuracao!);
-
-      print('Status: ${consultaResponse.status}');
-      print('Sucesso: ${consultaResponse.sucesso}');
-      if (consultaResponse.sucesso) {
-        print('Situação: ${consultaResponse.textoSituacao}');
-        if (consultaResponse.dadosApuracaoMit != null) {
-          print('Dados da apuração encontrados: ${consultaResponse.dadosApuracaoMit!.length} registros');
-        }
-      } else {
-        print('Erro: ${consultaResponse.mensagemErro}');
-      }
-    }
-
-    // 5. Listar Apurações por Ano
-    print('\n5. Listando apurações por ano...');
-    final listagemResponse = await mitService.listarApuracaoes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
-
-    print('Status: ${listagemResponse.status}');
-    print('Sucesso: ${listagemResponse.sucesso}');
-    if (listagemResponse.sucesso) {
-      print('Apurações encontradas: ${listagemResponse.apuracoes?.length ?? 0}');
-      if (listagemResponse.apuracoes != null) {
-        for (final apuracao in listagemResponse.apuracoes!) {
-          print('  - Período: ${apuracao.periodoApuracao}, ID: ${apuracao.idApuracao}, Situação: ${apuracao.situacaoEnum?.descricao}');
-        }
-      }
-    } else {
-      print('Erro: ${listagemResponse.mensagemErro}');
-    }
-
-    // 6. Consultar Apurações por Mês
-    print('\n6. Consultando apurações por mês...');
-    final listagemMesResponse = await mitService.consultarApuracaoesPorMes(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025, mesApuracao: 1);
-
-    print('Status: ${listagemMesResponse.status}');
-    print('Sucesso: ${listagemMesResponse.sucesso}');
-    if (listagemMesResponse.sucesso) {
-      print('Apurações do mês: ${listagemMesResponse.apuracoes?.length ?? 0}');
-    } else {
-      print('Erro: ${listagemMesResponse.mensagemErro}');
-    }
-
-    // 7. Consultar Apurações Encerradas
-    print('\n7. Consultando apurações encerradas...');
-    final listagemEncerradasResponse = await mitService.consultarApuracaoesEncerradas(contribuinteNumero: cnpjContribuinte, anoApuracao: 2025);
-
-    print('Status: ${listagemEncerradasResponse.status}');
-    print('Sucesso: ${listagemEncerradasResponse.sucesso}');
-    if (listagemEncerradasResponse.sucesso) {
-      print('Apurações encerradas: ${listagemEncerradasResponse.apuracoes?.length ?? 0}');
-    } else {
-      print('Erro: ${listagemEncerradasResponse.mensagemErro}');
-    }
-
-    // 8. Aguardar Encerramento (exemplo com timeout curto)
-    if (apuracaoSemMovimento.protocoloEncerramento != null) {
-      print('\n8. Aguardando encerramento (timeout de 60 segundos)...');
-      try {
-        final aguardarResponse = await mitService.aguardarEncerramento(
-          contribuinteNumero: cnpjContribuinte,
-          protocoloEncerramento: apuracaoSemMovimento.protocoloEncerramento!,
-          timeoutSegundos: 60,
-          intervaloConsulta: 10,
-        );
-
-        print('Status final: ${aguardarResponse.status}');
-        print('Situação final: ${aguardarResponse.textoSituacao}');
-      } catch (e) {
-        print('Timeout ou erro ao aguardar encerramento: $e');
-      }
-    }
-
-    // 9. Exemplo com Eventos Especiais
-    print('\n9. Criando apuração com evento especial...');
-    final eventoEspecial = EventoEspecial(idEvento: 1, diaEvento: 15, tipoEvento: TipoEventoEspecial.fusao);
-
-    final dadosIniciaisComEvento = DadosIniciais(
-      semMovimento: false,
-      qualificacaoPj: QualificacaoPj.pjEmGeral,
-      tributacaoLucro: TributacaoLucro.realAnual,
-      variacoesMonetarias: VariacoesMonetarias.regimeCaixa,
-      regimePisCofins: RegimePisCofins.naoCumulativa,
-      responsavelApuracao: responsavelApuracao,
-    );
-
-    final apuracaoComEvento = await mitService.encerrarApuracao(
-      contribuinteNumero: cnpjContribuinte,
-      periodoApuracao: periodoApuracao,
-      dadosIniciais: dadosIniciaisComEvento,
-      debitos: debitos,
-      listaEventosEspeciais: [eventoEspecial],
-    );
-
-    print('Status: ${apuracaoComEvento.status}');
-    print('Sucesso: ${apuracaoComEvento.sucesso}');
-    if (apuracaoComEvento.sucesso) {
-      print('Protocolo: ${apuracaoComEvento.protocoloEncerramento}');
-    } else {
-      print('Erro: ${apuracaoComEvento.mensagemErro}');
-    }
-
-    // 10. Exemplo de Validação com Dados Inválidos
-    print('\n10. Testando validação com dados inválidos...');
-    try {
-      PeriodoApuracao(
-        mesApuracao: 13, // Mês inválido
-        anoApuracao: 2025,
-      );
-    } catch (e) {
-      print('Validação de mês inválido: $e');
-    }
-
-    try {
-      Debito(
-        idDebito: 0, // ID inválido
-        codigoDebito: '236208',
-        valorDebito: -100.00, // Valor negativo
-      );
-    } catch (e) {
-      print('Validação de débito inválido: $e');
-    }
-
-    print('\n=== Exemplos MIT Concluídos ===');
-  } catch (e) {
-    print('Erro geral no serviço MIT: $e');
   }
 }
 

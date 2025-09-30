@@ -26,9 +26,16 @@ class EventosAtualizacaoService {
   ///
   /// [cpfs] Lista de CPFs (máximo 1000)
   /// [evento] Tipo de evento a ser monitorado
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna um protocolo que deve ser usado posteriormente para obter os resultados
-  Future<SolicitarEventosPFResponse> solicitarEventosPF({required List<String> cpfs, required TipoEvento evento}) async {
+  Future<SolicitarEventosPFResponse> solicitarEventosPF({
+    required List<String> cpfs,
+    required TipoEvento evento,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = SolicitarEventosPFRequest(cpfs: cpfs, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -41,7 +48,12 @@ class EventosAtualizacaoService {
       ),
     );
 
-    final response = await _apiClient.post('/Monitorar', baseRequest);
+    final response = await _apiClient.post(
+      '/Monitorar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return SolicitarEventosPFResponse.fromJson(response);
   }
 
@@ -49,9 +61,16 @@ class EventosAtualizacaoService {
   ///
   /// [protocolo] Protocolo retornado pela solicitação anterior
   /// [evento] Tipo de evento consultado
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna a lista de eventos com as datas de última atualização
-  Future<ObterEventosPFResponse> obterEventosPF({required String protocolo, required TipoEvento evento}) async {
+  Future<ObterEventosPFResponse> obterEventosPF({
+    required String protocolo,
+    required TipoEvento evento,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ObterEventosPFRequest(protocolo: protocolo, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -64,7 +83,12 @@ class EventosAtualizacaoService {
       ),
     );
 
-    final response = await _apiClient.post('/Monitorar', baseRequest);
+    final response = await _apiClient.post(
+      '/Monitorar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ObterEventosPFResponse.fromJson(response);
   }
 
@@ -72,9 +96,16 @@ class EventosAtualizacaoService {
   ///
   /// [cnpjs] Lista de CNPJs (máximo 1000)
   /// [evento] Tipo de evento a ser monitorado
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna um protocolo que deve ser usado posteriormente para obter os resultados
-  Future<SolicitarEventosPJResponse> solicitarEventosPJ({required List<String> cnpjs, required TipoEvento evento}) async {
+  Future<SolicitarEventosPJResponse> solicitarEventosPJ({
+    required List<String> cnpjs,
+    required TipoEvento evento,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = SolicitarEventosPJRequest(cnpjs: cnpjs, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -87,7 +118,12 @@ class EventosAtualizacaoService {
       ),
     );
 
-    final response = await _apiClient.post('/Monitorar', baseRequest);
+    final response = await _apiClient.post(
+      '/Monitorar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return SolicitarEventosPJResponse.fromJson(response);
   }
 
@@ -95,9 +131,16 @@ class EventosAtualizacaoService {
   ///
   /// [protocolo] Protocolo retornado pela solicitação anterior
   /// [evento] Tipo de evento consultado
+  /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna a lista de eventos com as datas de última atualização
-  Future<ObterEventosPJResponse> obterEventosPJ({required String protocolo, required TipoEvento evento}) async {
+  Future<ObterEventosPJResponse> obterEventosPJ({
+    required String protocolo,
+    required TipoEvento evento,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ObterEventosPJRequest(protocolo: protocolo, evento: evento);
 
     final baseRequest = BaseRequest(
@@ -110,7 +153,12 @@ class EventosAtualizacaoService {
       ),
     );
 
-    final response = await _apiClient.post('/Monitorar', baseRequest);
+    final response = await _apiClient.post(
+      '/Monitorar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ObterEventosPJResponse.fromJson(response);
   }
 
@@ -121,16 +169,28 @@ class EventosAtualizacaoService {
     required List<String> cpfs,
     required TipoEvento evento,
     Duration? tempoEsperaCustomizado,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     // Solicitar eventos
-    final solicitacao = await solicitarEventosPF(cpfs: cpfs, evento: evento);
+    final solicitacao = await solicitarEventosPF(
+      cpfs: cpfs,
+      evento: evento,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     // Aguardar o tempo estimado (ou customizado)
     final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
     await Future.delayed(tempoEspera);
 
     // Obter resultados
-    return obterEventosPF(protocolo: solicitacao.dados.protocolo, evento: evento);
+    return obterEventosPF(
+      protocolo: solicitacao.dados.protocolo,
+      evento: evento,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Método de conveniência para solicitar e obter eventos PJ em uma única operação
@@ -140,15 +200,27 @@ class EventosAtualizacaoService {
     required List<String> cnpjs,
     required TipoEvento evento,
     Duration? tempoEsperaCustomizado,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     // Solicitar eventos
-    final solicitacao = await solicitarEventosPJ(cnpjs: cnpjs, evento: evento);
+    final solicitacao = await solicitarEventosPJ(
+      cnpjs: cnpjs,
+      evento: evento,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     // Aguardar o tempo estimado (ou customizado)
     final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
     await Future.delayed(tempoEspera);
 
     // Obter resultados
-    return obterEventosPJ(protocolo: solicitacao.dados.protocolo, evento: evento);
+    return obterEventosPJ(
+      protocolo: solicitacao.dados.protocolo,
+      evento: evento,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 }
