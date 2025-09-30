@@ -30,7 +30,6 @@ class CcmeiSituacaoCadastral {
   CcmeiSituacaoCadastral({required this.cnpj, required this.situacao, required this.enquadradoMei});
 
   factory CcmeiSituacaoCadastral.fromJson(Map<String, dynamic> json) {
-    print("object ${json}");
     return CcmeiSituacaoCadastral(cnpj: json['cnpj'].toString(), situacao: json['situacao'].toString(), enquadradoMei: json['enquadradoMei'] as bool);
   }
 

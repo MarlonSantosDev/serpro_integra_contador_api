@@ -1,59 +1,104 @@
-/// Utilitários para trabalhar com documentos (CPF/CNPJ)
+/// Utilitários centralizados para trabalhar com documentos (CPF/CNPJ)
+///
+/// Esta classe fornece todas as funcionalidades necessárias para:
+/// - Validação de CPF e CNPJ
+/// - Formatação e limpeza de documentos
+/// - Detecção automática de tipo de documento
+/// - Validações de formato e estrutura
 class DocumentUtils {
+  // Constantes para tipos de documento
+  static const int tipoCpf = 1;
+  static const int tipoCnpj = 2;
+
+  // Constantes para tamanhos
+  static const int tamanhoCpf = 11;
+  static const int tamanhoCnpj = 14;
+
+  // Padrão regex para limpeza
+  static final RegExp _apenasDigitos = RegExp(r'[^\d]');
+
   /// Detecta automaticamente o tipo do documento baseado no número
   /// Retorna 1 para CPF (11 dígitos) e 2 para CNPJ (14 dígitos)
+  /// Lança ArgumentError se o documento não for válido
   static int detectDocumentType(String numero) {
-    // Remove qualquer formatação (pontos, traços, barras)
-    final cleanNumber = numero.replaceAll(RegExp(r'[^\d]'), '');
+    if (numero.isEmpty) {
+      throw ArgumentError('Número de documento não pode ser vazio');
+    }
 
-    if (cleanNumber.length == 11) {
-      return 1; // CPF
-    } else if (cleanNumber.length == 14) {
-      return 2; // CNPJ
+    final cleanNumber = cleanDocumentNumber(numero);
+
+    if (cleanNumber.length == tamanhoCpf) {
+      return tipoCpf;
+    } else if (cleanNumber.length == tamanhoCnpj) {
+      return tipoCnpj;
     } else {
       throw ArgumentError(
-        'Número de documento inválido. Deve conter 11 dígitos (CPF) ou 14 dígitos (CNPJ). Recebido: $cleanNumber',
+        'Número de documento inválido. Deve conter $tamanhoCpf dígitos (CPF) ou $tamanhoCnpj dígitos (CNPJ). '
+        'Recebido: $cleanNumber (${cleanNumber.length} dígitos)',
       );
     }
   }
 
-  /// Limpa a formatação do número do documento
+  /// Limpa a formatação do número do documento, removendo todos os caracteres não numéricos
   static String cleanDocumentNumber(String numero) {
-    return numero.replaceAll(RegExp(r'[^\d]'), '');
+    if (numero.isEmpty) return '';
+    return numero.replaceAll(_apenasDigitos, '');
   }
 
-  /// Valida se o número tem o formato correto para CPF ou CNPJ
-  static bool isValidDocumentLength(String numero) {
-    final cleanNumber = cleanDocumentNumber(numero);
-    return cleanNumber.length == 11 || cleanNumber.length == 14;
-  }
-
-  /// Valida se é um CPF válido
+  /// Valida se é um CPF válido (formato e dígitos verificadores)
   static bool isValidCpf(String cpf) {
     final cleanCpf = cleanDocumentNumber(cpf);
-    if (cleanCpf.length != 11) return false;
 
-    // Verificar se todos os dígitos são iguais
-    if (cleanCpf.split('').every((digit) => digit == cleanCpf[0])) return false;
+    // Verificar tamanho
+    if (cleanCpf.length != tamanhoCpf) return false;
+
+    // Verificar se contém apenas dígitos
+    if (!RegExp(r'^\d+$').hasMatch(cleanCpf)) return false;
+
+    // Verificar se todos os dígitos são iguais (CPFs inválidos conhecidos)
+    if (_isAllDigitsEqual(cleanCpf)) return false;
 
     // Validar dígitos verificadores
     return _validateCpfDigits(cleanCpf);
   }
 
-  /// Valida se é um CNPJ válido
+  /// Valida se é um CNPJ válido (formato e dígitos verificadores)
   static bool isValidCnpj(String cnpj) {
     final cleanCnpj = cleanDocumentNumber(cnpj);
-    if (cleanCnpj.length != 14) return false;
 
-    // Verificar se todos os dígitos são iguais
-    if (cleanCnpj.split('').every((digit) => digit == cleanCnpj[0]))
-      return false;
+    // Verificar tamanho
+    if (cleanCnpj.length != tamanhoCnpj) return false;
+
+    // Verificar se contém apenas dígitos
+    if (!RegExp(r'^\d+$').hasMatch(cleanCnpj)) return false;
+
+    // Verificar se todos os dígitos são iguais (CNPJs inválidos conhecidos)
+    if (_isAllDigitsEqual(cleanCnpj)) return false;
 
     // Validar dígitos verificadores
     return _validateCnpjDigits(cleanCnpj);
   }
 
-  /// Valida dígitos verificadores do CPF
+  /// Valida qualquer documento (CPF ou CNPJ) automaticamente
+  static bool isValidDocument(String documento) {
+    final cleanDocument = cleanDocumentNumber(documento);
+
+    if (cleanDocument.length == tamanhoCpf) {
+      return isValidCpf(documento);
+    } else if (cleanDocument.length == tamanhoCnpj) {
+      return isValidCnpj(documento);
+    }
+
+    return false;
+  }
+
+  /// Verifica se todos os dígitos são iguais (documentos inválidos)
+  static bool _isAllDigitsEqual(String numero) {
+    if (numero.isEmpty) return false;
+    return numero.split('').every((digit) => digit == numero[0]);
+  }
+
+  /// Valida dígitos verificadores do CPF usando algoritmo oficial
   static bool _validateCpfDigits(String cpf) {
     // Primeiro dígito verificador
     int sum = 0;
@@ -76,7 +121,7 @@ class DocumentUtils {
     return int.parse(cpf[10]) == secondDigit;
   }
 
-  /// Valida dígitos verificadores do CNPJ
+  /// Valida dígitos verificadores do CNPJ usando algoritmo oficial
   static bool _validateCnpjDigits(String cnpj) {
     // Primeiro dígito verificador
     int sum = 0;

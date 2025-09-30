@@ -1,3 +1,5 @@
+import '../../util/document_utils.dart';
+
 /// Validações específicas para os serviços PERTSN
 class PertsnValidations {
   /// Valida o número do parcelamento
@@ -78,16 +80,9 @@ class PertsnValidations {
       return 'CNPJ do contribuinte é obrigatório';
     }
 
-    // Remove caracteres não numéricos
-    final cnpjLimpo = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
-
-    if (cnpjLimpo.length != 14) {
-      return 'CNPJ deve ter 14 dígitos';
-    }
-
-    // Validação básica de CNPJ
-    if (RegExp(r'^(\d)\1+$').hasMatch(cnpjLimpo)) {
-      return 'CNPJ não pode ter todos os dígitos iguais';
+    // Usa a validação centralizada do DocumentUtils
+    if (!DocumentUtils.isValidCnpj(cnpj)) {
+      return 'CNPJ inválido';
     }
 
     return null;
@@ -344,13 +339,7 @@ class PertsnValidations {
       return 'Situação do parcelamento é obrigatória';
     }
 
-    final situacoesValidas = [
-      'Em parcelamento',
-      'Parcelamento encerrado',
-      'Parcelamento cancelado',
-      'Parcelamento suspenso',
-      'Aguardando pagamento',
-    ];
+    final situacoesValidas = ['Em parcelamento', 'Parcelamento encerrado', 'Parcelamento cancelado', 'Parcelamento suspenso', 'Aguardando pagamento'];
 
     if (!situacoesValidas.contains(situacao)) {
       return 'Situação do parcelamento inválida';
@@ -449,13 +438,7 @@ class PertsnValidations {
       return 'Serviço é obrigatório';
     }
 
-    final servicosValidos = [
-      'PEDIDOSPARC183',
-      'OBTERPARC184',
-      'PARCELASPARAGERAR182',
-      'DETPAGTOPARC185',
-      'GERARDAS181',
-    ];
+    final servicosValidos = ['PEDIDOSPARC183', 'OBTERPARC184', 'PARCELASPARAGERAR182', 'DETPAGTOPARC185', 'GERARDAS181'];
 
     if (!servicosValidos.contains(servico)) {
       return 'Serviço inválido para PERTSN';

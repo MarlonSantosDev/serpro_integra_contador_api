@@ -1,3 +1,5 @@
+import '../../util/document_utils.dart';
+
 /// Validações específicas para os serviços RELPSN
 class RelpsnValidations {
   /// Valida o número do parcelamento
@@ -78,16 +80,9 @@ class RelpsnValidations {
       return 'CNPJ do contribuinte é obrigatório';
     }
 
-    // Remove caracteres não numéricos
-    final cnpjLimpo = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
-
-    if (cnpjLimpo.length != 14) {
-      return 'CNPJ deve ter 14 dígitos';
-    }
-
-    // Validação básica de CNPJ
-    if (RegExp(r'^(\d)\1+$').hasMatch(cnpjLimpo)) {
-      return 'CNPJ não pode ter todos os dígitos iguais';
+    // Usa a validação centralizada do DocumentUtils
+    if (!DocumentUtils.isValidCnpj(cnpj)) {
+      return 'CNPJ inválido';
     }
 
     return null;
@@ -371,13 +366,7 @@ class RelpsnValidations {
       return 'Situação do parcelamento é obrigatória';
     }
 
-    final situacoesValidas = [
-      'Em parcelamento',
-      'Parcelamento encerrado',
-      'Parcelamento cancelado',
-      'Parcelamento suspenso',
-      'Aguardando pagamento',
-    ];
+    final situacoesValidas = ['Em parcelamento', 'Parcelamento encerrado', 'Parcelamento cancelado', 'Parcelamento suspenso', 'Aguardando pagamento'];
 
     if (!situacoesValidas.contains(situacao)) {
       return 'Situação do parcelamento inválida';

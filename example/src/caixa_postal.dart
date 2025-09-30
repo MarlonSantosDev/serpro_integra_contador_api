@@ -68,10 +68,10 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         print('\n📧 Mensagem ${i + 1}:');
         print('  🆔 ISN: ${msg.isn}');
         print('  📝 Assunto: ${msg.assuntoProcessado}');
-        print('  📅 Data envio: ${MessageUtils.formatarData(msg.dataEnvio)}');
+        print('  📅 Data envio: ${msg.dataEnvio}');
         print('  👁️ Foi lida: ${msg.foiLida}');
         print('  ⭐ É favorita: ${msg.isFavorita}');
-        print('  📈 Relevância: ${MessageUtils.obterDescricaoRelevancia(msg.relevancia)}');
+        print('  📈 Relevância: ${msg.relevancia}');
         print('  📍 Origem: ${msg.descricaoOrigem}');
       }
     }
@@ -154,13 +154,39 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
         print('✅ Detalhes da mensagem obtidos:');
         print('📝 Assunto processado: ${detalhe.assuntoProcessado}');
-        print('📅 Data de envio: ${MessageUtils.formatarData(detalhe.dataEnvio)}');
-        print('⏰ Data de expiração: ${MessageUtils.formatarData(detalhe.dataExpiracao)}');
+        print('📅 Data de envio: ${detalhe.dataEnvio}');
+        print('⏰ Data de expiração: ${detalhe.dataExpiracao}');
         print('⭐ É favorita: ${detalhe.isFavorita}');
 
         // Corpo da mensagem processado
         final corpoProcessado = detalhe.corpoProcessado;
-        final corpoLimpo = MessageUtils.removerTagsHtml(corpoProcessado);
+        final corpoLimpo = corpoProcessado
+            .replaceAll(RegExp(r'<[^>]*>'), '')
+            .replaceAll('&nbsp;', ' ')
+            .replaceAll('&lt;', '<')
+            .replaceAll('&gt;', '>')
+            .replaceAll('&amp;', '&')
+            .replaceAll('&quot;', '"')
+            .replaceAll('&#39;', "'")
+            .replaceAll('&aacute;', 'á')
+            .replaceAll('&eacute;', 'é')
+            .replaceAll('&iacute;', 'í')
+            .replaceAll('&oacute;', 'ó')
+            .replaceAll('&uacute;', 'ú')
+            .replaceAll('&atilde;', 'ã')
+            .replaceAll('&otilde;', 'õ')
+            .replaceAll('&ccedil;', 'ç')
+            .replaceAll('&Aacute;', 'Á')
+            .replaceAll('&Eacute;', 'É')
+            .replaceAll('&Iacute;', 'Í')
+            .replaceAll('&Oacute;', 'Ó')
+            .replaceAll('&Uacute;', 'Ú')
+            .replaceAll('&Atilde;', 'Ã')
+            .replaceAll('&Otilde;', 'Õ')
+            .replaceAll('&Ccedil;', 'Ç')
+            .replaceAll('&ordm;', 'º')
+            .trim();
+        ;
         print('📄 Corpo (primeiros 200 caracteres):');
         print('${corpoLimpo.length > 200 ? corpoLimpo.substring(0, 200) + '...' : corpoLimpo}');
 

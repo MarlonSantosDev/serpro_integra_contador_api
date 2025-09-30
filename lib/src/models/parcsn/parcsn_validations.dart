@@ -1,3 +1,5 @@
+import '../../util/document_utils.dart';
+
 /// Validações específicas para o sistema PARCSN
 class PertsnValidations {
   /// Valida um número de parcelamento
@@ -104,20 +106,8 @@ class PertsnValidations {
       return 'CNPJ do contribuinte é obrigatório';
     }
 
-    // Remove caracteres não numéricos
-    final cnpjLimpo = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
-
-    if (cnpjLimpo.length != 14) {
-      return 'CNPJ deve ter 14 dígitos';
-    }
-
-    // Verifica se não são todos os dígitos iguais
-    if (RegExp(r'^(\d)\1+$').hasMatch(cnpjLimpo)) {
-      return 'CNPJ não pode ter todos os dígitos iguais';
-    }
-
-    // Validação básica do CNPJ (algoritmo de validação)
-    if (!_validarCnpj(cnpjLimpo)) {
+    // Usa a validação centralizada do DocumentUtils
+    if (!DocumentUtils.isValidCnpj(cnpj)) {
       return 'CNPJ inválido';
     }
 
@@ -137,37 +127,6 @@ class PertsnValidations {
     }
 
     return null;
-  }
-
-  /// Valida se um CNPJ é válido usando o algoritmo de validação
-  static bool _validarCnpj(String cnpj) {
-    if (cnpj.length != 14) return false;
-
-    // Verifica o primeiro dígito verificador
-    int soma = 0;
-    int peso = 5;
-    for (int i = 0; i < 12; i++) {
-      soma += int.parse(cnpj[i]) * peso;
-      peso = peso == 2 ? 9 : peso - 1;
-    }
-
-    int resto = soma % 11;
-    int digito1 = resto < 2 ? 0 : 11 - resto;
-
-    if (int.parse(cnpj[12]) != digito1) return false;
-
-    // Verifica o segundo dígito verificador
-    soma = 0;
-    peso = 6;
-    for (int i = 0; i < 13; i++) {
-      soma += int.parse(cnpj[i]) * peso;
-      peso = peso == 2 ? 9 : peso - 1;
-    }
-
-    resto = soma % 11;
-    int digito2 = resto < 2 ? 0 : 11 - resto;
-
-    return int.parse(cnpj[13]) == digito2;
   }
 
   /// Valida se uma data está no formato correto (AAAAMMDD)

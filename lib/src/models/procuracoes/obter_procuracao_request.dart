@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../util/document_utils.dart';
 
 /// Request para obter procurações eletrônicas
 class ObterProcuracaoRequest {
@@ -7,18 +8,10 @@ class ObterProcuracaoRequest {
   final String outorgado;
   final String tipoOutorgado;
 
-  ObterProcuracaoRequest({
-    required this.outorgante,
-    required this.tipoOutorgante,
-    required this.outorgado,
-    required this.tipoOutorgado,
-  });
+  ObterProcuracaoRequest({required this.outorgante, required this.tipoOutorgante, required this.outorgado, required this.tipoOutorgado});
 
   /// Cria request a partir de CPF/CNPJ
-  factory ObterProcuracaoRequest.fromDocuments({
-    required String outorgante,
-    required String outorgado,
-  }) {
+  factory ObterProcuracaoRequest.fromDocuments({required String outorgante, required String outorgado}) {
     return ObterProcuracaoRequest(
       outorgante: outorgante,
       tipoOutorgante: _detectDocumentType(outorgante),
@@ -29,8 +22,7 @@ class ObterProcuracaoRequest {
 
   /// Detecta o tipo de documento (1=CPF, 2=CNPJ)
   static String _detectDocumentType(String document) {
-    final cleaned = document.replaceAll(RegExp(r'[^0-9]'), '');
-    return cleaned.length == 11 ? '1' : '2';
+    return DocumentUtils.detectDocumentType(document).toString();
   }
 
   /// Valida os dados da requisição
@@ -41,11 +33,10 @@ class ObterProcuracaoRequest {
     if (outorgante.isEmpty) {
       errors.add('Outorgante é obrigatório');
     } else {
-      final cleanedOutorgante = outorgante.replaceAll(RegExp(r'[^0-9]'), '');
-      if (tipoOutorgante == '1' && cleanedOutorgante.length != 11) {
-        errors.add('CPF do outorgante deve ter 11 dígitos');
-      } else if (tipoOutorgante == '2' && cleanedOutorgante.length != 14) {
-        errors.add('CNPJ do outorgante deve ter 14 dígitos');
+      if (tipoOutorgante == '1' && !DocumentUtils.isValidCpf(outorgante)) {
+        errors.add('CPF do outorgante inválido');
+      } else if (tipoOutorgante == '2' && !DocumentUtils.isValidCnpj(outorgante)) {
+        errors.add('CNPJ do outorgante inválido');
       }
     }
 
@@ -53,11 +44,10 @@ class ObterProcuracaoRequest {
     if (outorgado.isEmpty) {
       errors.add('Outorgado é obrigatório');
     } else {
-      final cleanedOutorgado = outorgado.replaceAll(RegExp(r'[^0-9]'), '');
-      if (tipoOutorgado == '1' && cleanedOutorgado.length != 11) {
-        errors.add('CPF do outorgado deve ter 11 dígitos');
-      } else if (tipoOutorgado == '2' && cleanedOutorgado.length != 14) {
-        errors.add('CNPJ do outorgado deve ter 14 dígitos');
+      if (tipoOutorgado == '1' && !DocumentUtils.isValidCpf(outorgado)) {
+        errors.add('CPF do outorgado inválido');
+      } else if (tipoOutorgado == '2' && !DocumentUtils.isValidCnpj(outorgado)) {
+        errors.add('CNPJ do outorgado inválido');
       }
     }
 
@@ -75,23 +65,13 @@ class ObterProcuracaoRequest {
 
   /// Converte para JSON string para envio na API
   String toJsonString() {
-    final data = {
-      'outorgante': outorgante,
-      'tipoOutorgante': tipoOutorgante,
-      'outorgado': outorgado,
-      'tipoOutorgado': tipoOutorgado,
-    };
+    final data = {'outorgante': outorgante, 'tipoOutorgante': tipoOutorgante, 'outorgado': outorgado, 'tipoOutorgado': tipoOutorgado};
     return jsonEncode(data);
   }
 
   /// Converte para Map
   Map<String, dynamic> toJson() {
-    return {
-      'outorgante': outorgante,
-      'tipoOutorgante': tipoOutorgante,
-      'outorgado': outorgado,
-      'tipoOutorgado': tipoOutorgado,
-    };
+    return {'outorgante': outorgante, 'tipoOutorgante': tipoOutorgante, 'outorgado': outorgado, 'tipoOutorgado': tipoOutorgado};
   }
 
   /// Cria a partir de JSON

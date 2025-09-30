@@ -75,7 +75,6 @@ export 'src/models/base/tipo_documento.dart';
 
 // Utilities
 export 'src/util/document_utils.dart';
-export 'src/util/message_utils.dart';
 export 'src/util/dctfweb_utils.dart';
 export 'src/util/sicalc_utils.dart';
 export 'src/util/validation_utils.dart';

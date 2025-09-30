@@ -1,3 +1,5 @@
+import '../../util/document_utils.dart';
+
 class ParcmeiValidations {
   /// Valida um número de parcelamento
   static String? validarNumeroParcelamento(int? numeroParcelamento) {
@@ -87,20 +89,8 @@ class ParcmeiValidations {
       return 'CNPJ do contribuinte é obrigatório';
     }
 
-    // Remove caracteres não numéricos
-    final cnpjLimpo = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
-
-    if (cnpjLimpo.length != 14) {
-      return 'CNPJ deve ter 14 dígitos';
-    }
-
-    // Verifica se não são todos os dígitos iguais
-    if (RegExp(r'^(\d)\1{13}$').hasMatch(cnpjLimpo)) {
-      return 'CNPJ inválido (todos os dígitos iguais)';
-    }
-
-    // Validação básica do CNPJ
-    if (!_validarCnpj(cnpjLimpo)) {
+    // Usa a validação centralizada do DocumentUtils
+    if (!DocumentUtils.isValidCnpj(cnpj)) {
       return 'CNPJ inválido';
     }
 
@@ -227,12 +217,7 @@ class ParcmeiValidations {
     final minuto = int.tryParse(dataHoraStr.substring(10, 12));
     final segundo = int.tryParse(dataHoraStr.substring(12, 14));
 
-    if (ano == null ||
-        mes == null ||
-        dia == null ||
-        hora == null ||
-        minuto == null ||
-        segundo == null) {
+    if (ano == null || mes == null || dia == null || hora == null || minuto == null || segundo == null) {
       return 'Data/hora deve conter apenas números';
     }
 
@@ -423,13 +408,7 @@ class ParcmeiValidations {
       return 'Serviço é obrigatório';
     }
 
-    final servicosValidos = [
-      'PEDIDOSPARC203',
-      'OBTERPARC204',
-      'PARCELASPARAGERAR202',
-      'DETPAGTOPARC205',
-      'GERARDAS201',
-    ];
+    final servicosValidos = ['PEDIDOSPARC203', 'OBTERPARC204', 'PARCELASPARAGERAR202', 'DETPAGTOPARC205', 'GERARDAS201'];
 
     if (!servicosValidos.contains(servico)) {
       return 'Serviço inválido para PARCMEI';
@@ -486,42 +465,5 @@ class ParcmeiValidations {
     }
 
     return null;
-  }
-
-  /// Validação básica de CNPJ
-  static bool _validarCnpj(String cnpj) {
-    if (cnpj.length != 14) return false;
-
-    // Verifica se não são todos os dígitos iguais
-    if (RegExp(r'^(\d)\1{13}$').hasMatch(cnpj)) return false;
-
-    // Validação dos dígitos verificadores
-    int soma = 0;
-    int peso = 2;
-
-    // Primeiro dígito verificador
-    for (int i = 11; i >= 0; i--) {
-      soma += int.parse(cnpj[i]) * peso;
-      peso = peso == 9 ? 2 : peso + 1;
-    }
-
-    int resto = soma % 11;
-    int dv1 = resto < 2 ? 0 : 11 - resto;
-
-    if (int.parse(cnpj[12]) != dv1) return false;
-
-    // Segundo dígito verificador
-    soma = 0;
-    peso = 2;
-
-    for (int i = 12; i >= 0; i--) {
-      soma += int.parse(cnpj[i]) * peso;
-      peso = peso == 9 ? 2 : peso + 1;
-    }
-
-    resto = soma % 11;
-    int dv2 = resto < 2 ? 0 : 11 - resto;
-
-    return int.parse(cnpj[13]) == dv2;
   }
 }

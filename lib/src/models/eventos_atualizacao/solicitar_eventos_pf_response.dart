@@ -6,33 +6,18 @@ class SolicitarEventosPFResponse {
   final List<MensagemEventosAtualizacao> mensagens;
   final SolicitarEventosPFDados dados;
 
-  SolicitarEventosPFResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  SolicitarEventosPFResponse({required this.status, required this.mensagens, required this.dados});
 
   factory SolicitarEventosPFResponse.fromJson(Map<String, dynamic> json) {
     return SolicitarEventosPFResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>)
-          .map(
-            (e) =>
-                MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-      dados: SolicitarEventosPFDados.fromJson(
-        json['dados'] as Map<String, dynamic>,
-      ),
+      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>)).toList(),
+      dados: SolicitarEventosPFDados.fromJson(json['dados'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados.toJson(),
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.toJson()};
   }
 }
 
@@ -42,11 +27,7 @@ class SolicitarEventosPFDados {
   final int tempoEsperaMedioEmMs;
   final int tempoLimiteEmMin;
 
-  SolicitarEventosPFDados({
-    required this.protocolo,
-    required this.tempoEsperaMedioEmMs,
-    required this.tempoLimiteEmMin,
-  });
+  SolicitarEventosPFDados({required this.protocolo, required this.tempoEsperaMedioEmMs, required this.tempoLimiteEmMin});
 
   factory SolicitarEventosPFDados.fromJson(Map<String, dynamic> json) {
     return SolicitarEventosPFDados(
@@ -57,10 +38,6 @@ class SolicitarEventosPFDados {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'protocolo': protocolo,
-      'TempoEsperaMedioEmMs': tempoEsperaMedioEmMs,
-      'TempoLimiteEmMin': tempoLimiteEmMin,
-    };
+    return {'protocolo': protocolo, 'TempoEsperaMedioEmMs': tempoEsperaMedioEmMs, 'TempoLimiteEmMin': tempoLimiteEmMin};
   }
 }

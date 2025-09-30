@@ -76,15 +76,9 @@ class DteService {
       return 'CNPJ não pode estar vazio';
     }
 
-    final cnpjLimpo = DocumentUtils.cleanDocumentNumber(cnpj);
-
-    if (!DocumentUtils.isValidCnpj(cnpjLimpo)) {
-      return 'CNPJ inválido. Deve ter 14 dígitos e ser válido';
-    }
-
-    // Verifica se tem 14 dígitos (CNPJ)
-    if (cnpjLimpo.length != 14) {
-      return 'CNPJ deve ter exatamente 14 dígitos';
+    // Usa a validação centralizada do DocumentUtils
+    if (!DocumentUtils.isValidCnpj(cnpj)) {
+      return 'CNPJ inválido';
     }
 
     return null;
