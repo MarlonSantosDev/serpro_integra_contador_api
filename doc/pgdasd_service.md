@@ -1,17 +1,16 @@
-# PGDASD - Programa Gerador do DAS do Simples Nacional
+# PGDASD - Pagamento de DAS por Débito Direto Autorizado
 
 ## Visão Geral
 
-O serviço PGDASD permite gerenciar declarações mensais do Simples Nacional, incluindo entrega de declarações, geração de DAS, consulta de declarações transmitidas e consulta de extratos.
+O serviço PGDASD permite gerenciar pagamentos de DAS (Documento de Arrecadação do Simples Nacional) por débito direto autorizado, incluindo consulta de DAS disponíveis, consulta de DAS específicos, consulta de detalhes de pagamento e emissão de DAS.
 
 ## Funcionalidades
 
-- **Entregar Declaração Mensal**: Transmissão de declarações mensais do Simples Nacional
-- **Gerar DAS**: Geração de Documento de Arrecadação do Simples Nacional
-- **Consultar Declarações**: Consulta de declarações transmitidas por ano ou período
-- **Consultar Última Declaração**: Consulta da última declaração/recibo transmitida
-- **Consultar Declaração por Número**: Consulta de declaração específica por número
-- **Consultar Extrato do DAS**: Consulta de extrato da apuração do DAS
+- **Consultar DAS Disponíveis**: Consulta de todos os DAS disponíveis para pagamento por débito direto
+- **Consultar DAS Específico**: Consulta de informações detalhadas de um DAS específico
+- **Consultar Detalhes de Pagamento**: Consulta de detalhes de pagamento de um DAS
+- **Emitir DAS**: Emissão de DAS para pagamento por débito direto
+- **Validações**: Validações específicas do sistema PGDASD
 
 ## Configuração
 
@@ -20,6 +19,7 @@ O serviço PGDASD permite gerenciar declarações mensais do Simples Nacional, i
 - Certificado digital e-CNPJ (padrão ICP-Brasil)
 - Consumer Key e Consumer Secret do SERPRO
 - Contrato ativo com o SERPRO para o serviço PGDASD
+- Autorização de débito direto configurada
 
 ### Autenticação
 
@@ -43,223 +43,199 @@ await apiClient.authenticate(
 final pgdasdService = PgdasdService(apiClient);
 ```
 
-### 2. Entregar Declaração Mensal
+### 2. Consultar DAS Disponíveis
 
 ```dart
 try {
-  final declaracao = Declaracao(
-    receitaBruta: 100000.0,
-    receitaBrutaAcumulada: 100000.0,
-    // ... outros campos obrigatórios
-  );
-  
-  final response = await pgdasdService.entregarDeclaracaoSimples(
-    cnpj: '00000000000000',
-    periodoApuracao: 202401, // AAAAMM
-    declaracao: declaracao,
-    transmitir: true,
-    compararValores: false,
-  );
+  final response = await pgdasdService.consultarDasDisponiveis();
   
   if (response.sucesso) {
-    print('Declaração entregue com sucesso!');
-    print('Número da declaração: ${response.dados.numeroDeclaracao}');
-  }
-} catch (e) {
-  print('Erro ao entregar declaração: $e');
-}
-```
-
-### 3. Gerar DAS
-
-```dart
-try {
-  final response = await pgdasdService.gerarDasSimples(
-    cnpj: '00000000000000',
-    periodoApuracao: '202401',
-    dataConsolidacao: '20240215', // Opcional
-  );
-  
-  if (response.sucesso) {
-    print('DAS gerado com sucesso!');
-    print('Número do DAS: ${response.dados.numeroDas}');
-  }
-} catch (e) {
-  print('Erro ao gerar DAS: $e');
-}
-```
-
-### 4. Consultar Declarações por Ano
-
-```dart
-try {
-  final response = await pgdasdService.consultarDeclaracoesPorAno(
-    cnpj: '00000000000000',
-    anoCalendario: '2024',
-  );
-  
-  if (response.sucesso) {
-    print('Declarações encontradas: ${response.dados.length}');
-    for (final declaracao in response.dados) {
-      print('Período: ${declaracao.periodoApuracao}');
-      print('Número: ${declaracao.numeroDeclaracao}');
+    print('DAS disponíveis: ${response.dadosParsed?.listaDas.length ?? 0}');
+    
+    for (final das in response.dadosParsed?.listaDas ?? []) {
+      print('DAS ${das.numeroDas}: ${das.valorFormatado}');
+      print('Vencimento: ${das.dataVencimentoFormatada}');
+      print('Situação: ${das.situacao}');
+      print('Débito direto: ${das.debitoDiretoAutorizado}');
     }
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar declarações: $e');
+  print('Erro ao consultar DAS: $e');
 }
 ```
 
-### 5. Consultar Declarações por Período
+### 3. Consultar DAS Específico
 
 ```dart
 try {
-  final response = await pgdasdService.consultarDeclaracoesPorPeriodo(
-    cnpj: '00000000000000',
-    periodoApuracao: '202401',
-  );
+  final response = await pgdasdService.consultarDasEspecifico('DAS123456');
   
   if (response.sucesso) {
-    print('Declarações encontradas: ${response.dados.length}');
+    print('DAS encontrado!');
+    print('Número: ${response.dadosParsed?.numeroDas}');
+    print('Valor: ${response.dadosParsed?.valorFormatado}');
+    print('Vencimento: ${response.dadosParsed?.dataVencimentoFormatada}');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Débito direto: ${response.dadosParsed?.debitoDiretoAutorizado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar declarações: $e');
+  print('Erro ao consultar DAS específico: $e');
 }
 ```
 
-### 6. Consultar Última Declaração
+### 4. Consultar Detalhes de Pagamento
 
 ```dart
 try {
-  final response = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(
-    cnpj: '00000000000000',
-    periodoApuracao: '202401',
-  );
+  final response = await pgdasdService.consultarDetalhesPagamento('DAS123456');
   
   if (response.sucesso) {
-    print('Última declaração encontrada!');
-    print('Número: ${response.dados.numeroDeclaracao}');
-    print('Data de transmissão: ${response.dados.dataTransmissao}');
+    print('Detalhes de pagamento encontrados!');
+    print('Valor pago: ${response.valorPagoFormatado}');
+    print('Data de pagamento: ${response.dataPagamentoFormatada}');
+    print('Forma de pagamento: ${response.formaPagamento}');
+    print('Débito direto: ${response.debitoDiretoUtilizado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar última declaração: $e');
+  print('Erro ao consultar detalhes: $e');
 }
 ```
 
-### 7. Consultar Declaração por Número
+### 5. Emitir DAS
 
 ```dart
 try {
-  final response = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
-    cnpj: '00000000000000',
-    numeroDeclaracao: '12345678901234567', // 17 dígitos
-  );
+  final response = await pgdasdService.emitirDas('DAS123456');
   
-  if (response.sucesso) {
-    print('Declaração encontrada!');
-    print('Período: ${response.dados.periodoApuracao}');
-    print('Valor total: ${response.dados.valorTotal}');
+  if (response.sucesso && response.pdfGeradoComSucesso) {
+    print('DAS emitido com sucesso!');
+    print('Tamanho do PDF: ${response.tamanhoPdfFormatado}');
+    print('Débito direto: ${response.debitoDiretoAutorizado}');
+    
+    // Salvar PDF
+    final pdfBytes = response.pdfBytes;
+    if (pdfBytes != null) {
+      // Implementar salvamento do PDF
+      print('PDF pronto para salvamento');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar declaração: $e');
-}
-```
-
-### 8. Consultar Extrato do DAS
-
-```dart
-try {
-  final response = await pgdasdService.consultarExtratoDasSimples(
-    cnpj: '00000000000000',
-    numeroDas: '12345678901234567', // 17 dígitos
-  );
-  
-  if (response.sucesso) {
-    print('Extrato encontrado!');
-    print('Valor total: ${response.dados.valorTotal}');
-    print('Data de vencimento: ${response.dados.dataVencimento}');
-  }
-} catch (e) {
-  print('Erro ao consultar extrato: $e');
+  print('Erro ao emitir DAS: $e');
 }
 ```
 
 ## Estrutura de Dados
 
-### Declaracao
+### ConsultarDasDisponiveisResponse
 
 ```dart
-class Declaracao {
-  final double receitaBruta;           // Receita bruta do período
-  final double receitaBrutaAcumulada;  // Receita bruta acumulada
-  final double valorDevido;           // Valor devido
-  final double valorPago;             // Valor pago
-  // ... outros campos obrigatórios
+class ConsultarDasDisponiveisResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarDasDisponiveisDados? dadosParsed;
+}
+
+class ConsultarDasDisponiveisDados {
+  final List<DasItem> listaDas;
+  // ... outros campos
+}
+
+class DasItem {
+  final String numeroDas;
+  final String valorFormatado;
+  final String dataVencimentoFormatada;
+  final String situacao;
+  final bool debitoDiretoAutorizado;
+  // ... outros campos
 }
 ```
 
-### EntregarDeclaracaoRequest
+### ConsultarDasEspecificoResponse
 
 ```dart
-class EntregarDeclaracaoRequest {
-  final String cnpjCompleto;           // CNPJ completo
-  final int pa;                        // Período de apuração (AAAAMM)
-  final bool indicadorTransmissao;     // Se deve transmitir
-  final bool indicadorComparacao;     // Se deve comparar valores
-  final Declaracao declaracao;        // Dados da declaração
-  final List<ValorDevido>? valoresParaComparacao; // Valores para comparação
+class ConsultarDasEspecificoResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarDasEspecificoDados? dadosParsed;
+}
+
+class ConsultarDasEspecificoDados {
+  final String numeroDas;
+  final String valorFormatado;
+  final String dataVencimentoFormatada;
+  final String situacao;
+  final bool debitoDiretoAutorizado;
+  // ... outros campos
 }
 ```
 
-### GerarDasRequest
+### EmitirDasResponse
 
 ```dart
-class GerarDasRequest {
-  final String periodoApuracao;       // Período de apuração (AAAAMM)
-  final String? dataConsolidacao;     // Data de consolidação (AAAAMMDD)
+class EmitirDasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final EmitirDasDados? dadosParsed;
+  final bool pdfGeradoComSucesso;
+  final String tamanhoPdfFormatado;
+  final Uint8List? pdfBytes;
+  final bool debitoDiretoAutorizado;
 }
 ```
 
-## Métodos de Conveniência
+## Validações Disponíveis
 
-### Entregar Declaração com Dados Simplificados
+O serviço PGDASD inclui várias validações para garantir a integridade dos dados:
 
 ```dart
-final response = await pgdasdService.entregarDeclaracaoSimples(
-  cnpj: '00000000000000',
-  periodoApuracao: 202401,
-  declaracao: declaracao,
-  transmitir: true,
-  compararValores: false,
-);
+// Validar número do DAS
+final erro = pgdasdService.validarNumeroDas('DAS123456');
+if (erro != null) {
+  print('Erro: $erro');
+}
+
+// Validar CNPJ do contribuinte
+final erroCnpj = pgdasdService.validarCnpjContribuinte('00000000000000');
+if (erroCnpj != null) {
+  print('Erro: $erroCnpj');
+}
+
+// Validar autorização de débito direto
+final erroDebito = pgdasdService.validarDebitoDiretoAutorizado(true);
+if (erroDebito != null) {
+  print('Erro: $erroDebito');
+}
 ```
 
-### Gerar DAS com Dados Simplificados
+## Análise de Erros
+
+O serviço inclui análise detalhada de erros específicos do PGDASD:
 
 ```dart
-final response = await pgdasdService.gerarDasSimples(
-  cnpj: '00000000000000',
-  periodoApuracao: '202401',
-  dataConsolidacao: '20240215',
-);
-```
+// Analisar erro
+final analise = pgdasdService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
 
-### Consultar Declarações por Ano
+// Verificar se erro é conhecido
+if (pgdasdService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
 
-```dart
-final response = await pgdasdService.consultarDeclaracoesPorAno(
-  cnpj: '00000000000000',
-  anoCalendario: '2024',
-);
-```
-
-### Consultar Declarações por Período
-
-```dart
-final response = await pgdasdService.consultarDeclaracoesPorPeriodo(
-  cnpj: '00000000000000',
-  periodoApuracao: '202401',
-);
+// Obter informações do erro
+final info = pgdasdService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
+}
 ```
 
 ## Códigos de Erro Comuns
@@ -268,13 +244,14 @@ final response = await pgdasdService.consultarDeclaracoesPorPeriodo(
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
 | 002 | CNPJ inválido | Verificar formato do CNPJ |
-| 003 | Período inválido | Verificar formato do período (AAAAMM) |
-| 004 | Declaração não encontrada | Verificar se declaração existe |
-| 005 | DAS não encontrado | Verificar se DAS existe |
+| 003 | DAS não encontrado | Verificar se DAS existe |
+| 004 | DAS não disponível | Verificar se DAS está disponível para emissão |
+| 005 | Débito direto não autorizado | Verificar autorização de débito direto |
+| 006 | Prazo expirado | Verificar prazo para emissão do DAS |
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Entregar Declaração e Gerar DAS
+### Exemplo Completo - Consultar e Emitir DAS
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -292,41 +269,33 @@ void main() async {
   // 2. Criar serviço
   final pgdasdService = PgdasdService(apiClient);
   
-  // 3. Preparar dados da declaração
-  final declaracao = Declaracao(
-    receitaBruta: 100000.0,
-    receitaBrutaAcumulada: 100000.0,
-    valorDevido: 1000.0,
-    valorPago: 0.0,
-    // ... outros campos obrigatórios
-  );
-  
-  // 4. Entregar declaração
+  // 3. Consultar DAS disponíveis
   try {
-    final response = await pgdasdService.entregarDeclaracaoSimples(
-      cnpj: '00000000000000',
-      periodoApuracao: 202401,
-      declaracao: declaracao,
-      transmitir: true,
-      compararValores: false,
-    );
+    final dasResponse = await pgdasdService.consultarDasDisponiveis();
     
-    if (response.sucesso) {
-      print('Declaração entregue com sucesso!');
-      print('Número da declaração: ${response.dados.numeroDeclaracao}');
+    if (dasResponse.sucesso) {
+      print('DAS encontrados: ${dasResponse.dadosParsed?.listaDas.length ?? 0}');
       
-      // 5. Gerar DAS
-      final dasResponse = await pgdasdService.gerarDasSimples(
-        cnpj: '00000000000000',
-        periodoApuracao: '202401',
-      );
-      
-      if (dasResponse.sucesso) {
-        print('DAS gerado com sucesso!');
-        print('Número do DAS: ${dasResponse.dados.numeroDas}');
+      // 4. Emitir DAS para o primeiro disponível
+      final listaDas = dasResponse.dadosParsed?.listaDas ?? [];
+      if (listaDas.isNotEmpty) {
+        final primeiroDas = listaDas.first;
+        
+        // Verificar se tem débito direto autorizado
+        if (primeiroDas.debitoDiretoAutorizado) {
+          final emitirResponse = await pgdasdService.emitirDas(primeiroDas.numeroDas);
+          
+          if (emitirResponse.sucesso && emitirResponse.pdfGeradoComSucesso) {
+            print('DAS emitido com sucesso!');
+            print('Tamanho: ${emitirResponse.tamanhoPdfFormatado}');
+            print('Débito direto autorizado: ${emitirResponse.debitoDiretoAutorizado}');
+          }
+        } else {
+          print('DAS ${primeiroDas.numeroDas} não tem débito direto autorizado');
+        }
       }
     } else {
-      print('Erro: ${response.mensagemErro}');
+      print('Erro: ${dasResponse.mensagemErro}');
     }
   } catch (e) {
     print('Erro na operação: $e');
@@ -342,18 +311,14 @@ Para desenvolvimento e testes, utilize os seguintes dados:
 // CNPJs de teste (sempre usar zeros)
 const cnpjTeste = '00000000000000';
 
-// Períodos de teste
-const periodoApuracao = 202401; // AAAAMM
-const anoCalendario = '2024';
+// Números de DAS de teste
+const numeroDasTeste = 'DAS123456';
 
-// Dados de declaração de teste
-final declaracaoTeste = Declaracao(
-  receitaBruta: 100000.0,
-  receitaBrutaAcumulada: 100000.0,
-  valorDevido: 1000.0,
-  valorPago: 0.0,
-  // ... outros campos obrigatórios
-);
+// Situações de teste
+const situacaoTeste = 'ATIVO';
+
+// Débito direto autorizado
+const debitoDiretoAutorizado = true;
 ```
 
 ## Limitações
@@ -361,11 +326,124 @@ final declaracaoTeste = Declaracao(
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Período**: Período de apuração deve estar no formato AAAAMM
+4. **Prazo**: DAS têm prazo específico para emissão
+5. **Débito Direto**: Requer autorização prévia de débito direto
+6. **Simples Nacional**: Apenas para contribuintes optantes do Simples Nacional
+
+## Casos de Uso Comuns
+
+### 1. Consulta Completa de DAS
+
+```dart
+Future<void> consultarDasCompleto(String numeroDas) async {
+  try {
+    // Consultar DAS específico
+    final das = await pgdasdService.consultarDasEspecifico(numeroDas);
+    if (!das.sucesso) return;
+    
+    // Consultar detalhes de pagamento
+    final detalhes = await pgdasdService.consultarDetalhesPagamento(numeroDas);
+    if (!detalhes.sucesso) return;
+    
+    print('=== DAS $numeroDas ===');
+    print('Valor: ${das.dadosParsed?.valorFormatado}');
+    print('Vencimento: ${das.dadosParsed?.dataVencimentoFormatada}');
+    print('Situação: ${das.dadosParsed?.situacao}');
+    print('Débito direto: ${das.dadosParsed?.debitoDiretoAutorizado}');
+    print('Valor pago: ${detalhes.valorPagoFormatado}');
+  } catch (e) {
+    print('Erro: $e');
+  }
+}
+```
+
+### 2. Emissão de DAS com Débito Direto
+
+```dart
+Future<void> emitirDasComDebitoDireto() async {
+  try {
+    // Consultar DAS disponíveis
+    final das = await pgdasdService.consultarDasDisponiveis();
+    if (!das.sucesso) return;
+    
+    final listaDas = das.dadosParsed?.listaDas ?? [];
+    
+    // Filtrar apenas DAS com débito direto autorizado
+    final dasComDebitoDireto = listaDas.where((d) => d.debitoDiretoAutorizado).toList();
+    
+    for (final dasItem in dasComDebitoDireto) {
+      try {
+        final emitir = await pgdasdService.emitirDas(dasItem.numeroDas);
+        if (emitir.sucesso && emitir.pdfGeradoComSucesso) {
+          print('DAS emitido para ${dasItem.numeroDas} com débito direto');
+          // Salvar PDF
+        }
+      } catch (e) {
+        print('Erro ao emitir DAS ${dasItem.numeroDas}: $e');
+      }
+    }
+  } catch (e) {
+    print('Erro geral: $e');
+  }
+}
+```
+
+### 3. Monitoramento de DAS
+
+```dart
+Future<void> monitorarDas() async {
+  try {
+    // Consultar DAS disponíveis
+    final das = await pgdasdService.consultarDasDisponiveis();
+    if (!das.sucesso) return;
+    
+    final listaDas = das.dadosParsed?.listaDas ?? [];
+    
+    for (final dasItem in listaDas) {
+      final vencimento = DateTime.tryParse(dasItem.dataVencimentoFormatada);
+      if (vencimento != null) {
+        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
+        
+        if (diasParaVencimento <= 5) {
+          print('⚠️ DAS ${dasItem.numeroDas} vence em $diasParaVencimento dias');
+          if (dasItem.debitoDiretoAutorizado) {
+            print('✅ Débito direto autorizado');
+          } else {
+            print('❌ Débito direto não autorizado');
+          }
+        }
+      }
+    }
+  } catch (e) {
+    print('Erro no monitoramento: $e');
+  }
+}
+```
+
+## Integração com Outros Serviços
+
+O PGDASD Service pode ser usado em conjunto com:
+
+- **DCTFWeb Service**: Para consultar declarações relacionadas aos DAS
+- **MIT Service**: Para consultar apurações relacionadas aos DAS
+- **Eventos Atualização Service**: Para monitorar atualizações de DAS
+- **Caixa Postal Service**: Para consultar mensagens sobre pagamentos
+
+## Monitoramento e Logs
+
+Para monitoramento eficaz:
+
+- Logar todas as consultas de DAS
+- Monitorar emissões de DAS
+- Alertar sobre DAS próximos do vencimento
+- Rastrear erros de validação
+- Monitorar autorizações de débito direto
+- Monitorar performance das requisições
 
 ## Suporte
 
 Para dúvidas sobre o serviço PGDASD:
+
 - Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
 - Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 - Abra uma issue no repositório para questões específicas do package

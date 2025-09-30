@@ -2,6 +2,7 @@ import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/procuracoes/obter_procuracao_request.dart';
 import 'package:serpro_integra_contador_api/src/models/procuracoes/obter_procuracao_response.dart';
+import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
 
 /// Serviço para operações de Procurações Eletrônicas
 class ProcuracoesService {
@@ -137,27 +138,29 @@ class ProcuracoesService {
     );
   }
 
-  /// Valida se um documento é um CPF válido
+  /// Valida se um documento é um CPF válido usando DocumentUtils
   bool isCpfValido(String cpf) {
-    final cleaned = cpf.replaceAll(RegExp(r'[^0-9]'), '');
-    return cleaned.length == 11;
+    return DocumentUtils.isValidCpf(cpf);
   }
 
-  /// Valida se um documento é um CNPJ válido
+  /// Valida se um documento é um CNPJ válido usando DocumentUtils
   bool isCnpjValido(String cnpj) {
-    final cleaned = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
-    return cleaned.length == 14;
+    return DocumentUtils.isValidCnpj(cnpj);
   }
 
-  /// Detecta o tipo de documento (1=CPF, 2=CNPJ)
+  /// Detecta o tipo de documento (1=CPF, 2=CNPJ) usando DocumentUtils
   String detectarTipoDocumento(String documento) {
-    final cleaned = documento.replaceAll(RegExp(r'[^0-9]'), '');
-    return cleaned.length == 11 ? '1' : '2';
+    try {
+      final tipo = DocumentUtils.detectDocumentType(documento);
+      return tipo.toString();
+    } catch (e) {
+      throw ArgumentError('Documento inválido: $documento');
+    }
   }
 
-  /// Limpa um documento removendo caracteres não numéricos
+  /// Limpa um documento removendo caracteres não numéricos usando DocumentUtils
   String limparDocumento(String documento) {
-    return documento.replaceAll(RegExp(r'[^0-9]'), '');
+    return DocumentUtils.cleanDocumentNumber(documento);
   }
 
   /// Formata um CPF (xxx.xxx.xxx-xx)

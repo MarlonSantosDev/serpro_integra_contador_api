@@ -270,3 +270,4 @@ class DiscriminacaoDebito {
     return '$codigoReceita - $descricaoReceita';
   }
 }
+

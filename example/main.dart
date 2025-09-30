@@ -24,8 +24,8 @@ void main() async {
   //await Dte(apiClient);
   await EventosAtualizacao(apiClient);
 
-  // await Mit(apiClient);
-  // await PagtoWeb(apiClient);
+  //await Mit(apiClient);
+  //await PagtoWeb(apiClient);
   // await ParcmeiEspecial(apiClient);
   // await Parcmei(apiClient);
   // await ParcsnEspecial(apiClient);

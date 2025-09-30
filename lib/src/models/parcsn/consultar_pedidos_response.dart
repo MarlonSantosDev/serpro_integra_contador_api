@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarPedidosResponse {
   final String status;
@@ -112,7 +113,7 @@ class Parcelamento {
   String get dataDoPedidoFormatada {
     final data = dataDoPedido.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -121,7 +122,7 @@ class Parcelamento {
   String get dataDaSituacaoFormatada {
     final data = dataDaSituacao.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }

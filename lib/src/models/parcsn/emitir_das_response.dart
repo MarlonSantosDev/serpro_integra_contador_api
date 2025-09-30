@@ -1,33 +1,24 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class EmitirDasResponse {
   final String status;
   final List<Mensagem> mensagens;
   final String dados;
 
-  EmitirDasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List)
-          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -58,8 +49,7 @@ class EmitirDasResponse {
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
     final dadosParsed = this.dadosParsed;
-    return dadosParsed?.docArrecadacaoPdfB64 != null &&
-        dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
+    return dadosParsed?.docArrecadacaoPdfB64 != null && dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Tamanho do PDF em bytes
@@ -107,7 +97,7 @@ class EmitirDasResponse {
   String? get valorDasFormatado {
     final valor = valorDas;
     if (valor == null) return null;
-    return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valor);
   }
 
   /// Data de vencimento do DAS
@@ -122,7 +112,7 @@ class EmitirDasResponse {
     if (data == null || data.isEmpty) return null;
 
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -149,8 +139,7 @@ class DasData {
   });
 
   factory DasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json =
-        jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return DasData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),
@@ -172,13 +161,13 @@ class DasData {
 
   /// Valor formatado como moeda brasileira
   String get valorFormatado {
-    return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valor);
   }
 
   /// Data de vencimento formatada (DD/MM/AAAA)
   String get dataVencimentoFormatada {
     if (dataVencimento.length == 8) {
-      return '${dataVencimento.substring(6, 8)}/${dataVencimento.substring(4, 6)}/${dataVencimento.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(dataVencimento);
     }
     return dataVencimento;
   }

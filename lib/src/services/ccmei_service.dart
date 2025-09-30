@@ -3,7 +3,7 @@ import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/consultar_dados_ccmei_response.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/consultar_situacao_cadastral_ccmei_response.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/emitir_ccmei_response.dart';
-import 'package:serpro_integra_contador_api/src/util/validation_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
 
 /// Serviço para operações relacionadas ao CCMEI (Cadastro Centralizado de Microempreendedor Individual)
 ///
@@ -29,7 +29,7 @@ class CcmeiService {
   /// Lança exceção se o CNPJ for inválido ou houver erro na API
   Future<EmitirCcmeiResponse> emitirCcmei(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validar formato do CNPJ antes de fazer a requisição
-    ValidationUtils.validateCNPJ(cnpj);
+    DocumentUtils.validateCNPJ(cnpj);
 
     // Criar requisição com dados específicos do serviço CCMEI
     final request = BaseRequest(
@@ -62,7 +62,7 @@ class CcmeiService {
   /// Lança exceção se o CNPJ for inválido ou houver erro na API
   Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validar formato do CNPJ antes de fazer a requisição
-    ValidationUtils.validateCNPJ(cnpj);
+    DocumentUtils.validateCNPJ(cnpj);
 
     // Criar requisição para consulta de dados completos
     final request = BaseRequest(
@@ -100,7 +100,6 @@ class CcmeiService {
     String? autorPedidoDadosNumero,
   }) async {
     // Validar formato do CPF antes de fazer a requisição
-    //ValidationUtils.validateCPF(cpf);
 
     // Criar requisição para consulta de situação cadastral
     final request = BaseRequest(

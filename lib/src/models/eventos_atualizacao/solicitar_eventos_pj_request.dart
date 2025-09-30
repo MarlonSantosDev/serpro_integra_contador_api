@@ -1,4 +1,5 @@
 import 'eventos_atualizacao_common.dart';
+import '../../util/document_utils.dart';
 
 /// Modelo de requisição para solicitar eventos de atualização de Pessoa Jurídica
 class SolicitarEventosPJRequest {
@@ -10,14 +11,12 @@ class SolicitarEventosPJRequest {
       throw ArgumentError('Lista de CNPJs não pode estar vazia');
     }
     if (cnpjs.length > EventosAtualizacaoCommon.maxContribuintesPorLote) {
-      throw ArgumentError(
-        'Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CNPJs por lote',
-      );
+      throw ArgumentError('Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CNPJs por lote');
     }
 
     // Validar formato dos CNPJs
     for (final cnpj in cnpjs) {
-      if (!_isValidCNPJ(cnpj)) {
+      if (!DocumentUtils.isValidCnpj(cnpj)) {
         throw ArgumentError('CNPJ inválido: $cnpj');
       }
     }
@@ -31,12 +30,6 @@ class SolicitarEventosPJRequest {
   /// Cria a string de CNPJs separados por vírgula
   String get cnpjsString {
     return cnpjs.join(',');
-  }
-
-  /// Valida se o CNPJ tem formato válido (14 dígitos)
-  bool _isValidCNPJ(String cnpj) {
-    final cleanCnpj = cnpj.replaceAll(RegExp(r'[^\d]'), '');
-    return cleanCnpj.length == 14 && RegExp(r'^\d{14}$').hasMatch(cleanCnpj);
   }
 
   factory SolicitarEventosPJRequest.fromJson(Map<String, dynamic> json) {

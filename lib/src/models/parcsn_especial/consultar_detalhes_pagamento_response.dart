@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarDetalhesPagamentoResponse {
   final String status;
@@ -115,7 +116,7 @@ class DetalhesPagamentoData {
   String get dataVencimentoFormatada {
     final data = dataVencimento.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -124,7 +125,7 @@ class DetalhesPagamentoData {
   String get paDasGeradoFormatado {
     final pa = paDasGerado.toString();
     if (pa.length == 6) {
-      return '${pa.substring(4, 6)}/${pa.substring(0, 4)}';
+      return FormatterUtils.formatPeriodFromStringReverse(pa);
     }
     return pa;
   }
@@ -133,7 +134,7 @@ class DetalhesPagamentoData {
   String get dataLimiteAcolhimentoFormatada {
     final data = dataLimiteAcolhimento.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -142,14 +143,14 @@ class DetalhesPagamentoData {
   String get dataPagamentoFormatada {
     final data = dataPagamento.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
 
   /// Valor pago na arrecadação formatado como moeda brasileira
   String get valorPagoArrecadacaoFormatado {
-    return 'R\$ ${valorPagoArrecadacao.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorPagoArrecadacao);
   }
 
   /// Verifica se o pagamento foi realizado
@@ -184,7 +185,7 @@ class PagamentoDebito {
   String get paDebitoFormatado {
     final pa = paDebito.toString();
     if (pa.length == 6) {
-      return '${pa.substring(4, 6)}/${pa.substring(0, 4)}';
+      return FormatterUtils.formatPeriodFromStringReverse(pa);
     }
     return pa;
   }
@@ -196,7 +197,7 @@ class PagamentoDebito {
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalDebitosFormatado {
-    return 'R\$ ${valorTotalDebitos.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotalDebitos);
   }
 
   @override
@@ -239,22 +240,22 @@ class DiscriminacaoDebito {
 
   /// Valor principal formatado como moeda brasileira
   String get principalFormatado {
-    return 'R\$ ${principal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(principal);
   }
 
   /// Valor da multa formatado como moeda brasileira
   String get multaFormatada {
-    return 'R\$ ${multa.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(multa);
   }
 
   /// Valor dos juros formatado como moeda brasileira
   String get jurosFormatados {
-    return 'R\$ ${juros.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(juros);
   }
 
   /// Valor total formatado como moeda brasileira
   String get totalFormatado {
-    return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(total);
   }
 
   @override

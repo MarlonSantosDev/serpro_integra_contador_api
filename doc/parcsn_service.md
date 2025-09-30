@@ -1,248 +1,350 @@
-# PARCSN Service
+# PARCSN - Parcelamento do Simples Nacional
 
 ## Visão Geral
 
-O `ParcsnService` é responsável pela integração com o sistema PARCSN (Parcelamento do Simples Nacional). Este serviço permite consultar pedidos de parcelamento ordinário, consultar parcelamentos específicos, consultar parcelas disponíveis para impressão, consultar detalhes de pagamento e emitir DAS para parcelas.
+O serviço PARCSN permite gerenciar parcelamentos de débitos do Simples Nacional, incluindo consulta de pedidos de parcelamento ordinário, consulta de parcelamentos específicos, consulta de parcelas disponíveis para impressão, consulta de detalhes de pagamento e emissão de DAS para parcelas.
 
-## Funcionalidades Principais
+## Funcionalidades
 
-- **Consultar Pedidos**: Consulta todos os pedidos de parcelamento ordinário
-- **Consultar Parcelamento**: Consulta informações detalhadas de um parcelamento específico
-- **Consultar Parcelas**: Consulta parcelas disponíveis para impressão
-- **Consultar Detalhes de Pagamento**: Consulta detalhes de pagamento de uma parcela
-- **Emitir DAS**: Emite DAS para parcelas específicas
-- **Validações**: Validações específicas do sistema PARCSN
+- **Consultar Pedidos de Parcelamento**: Consulta de todos os pedidos de parcelamento ordinário do tipo PARCSN
+- **Consultar Parcelamento Específico**: Consulta de informações detalhadas de um parcelamento específico
+- **Consultar Parcelas Disponíveis**: Consulta de parcelas disponíveis para impressão de DAS
+- **Consultar Detalhes de Pagamento**: Consulta de detalhes de pagamento de uma parcela específica
+- **Emitir DAS para Parcela**: Emissão de DAS para uma parcela específica
 
-## Métodos Disponíveis
+## Configuração
 
-### 1. Consultar Pedidos
+### Pré-requisitos
+
+- Certificado digital e-CNPJ (padrão ICP-Brasil)
+- Consumer Key e Consumer Secret do SERPRO
+- Contrato ativo com o SERPRO para o serviço PARCSN
+
+### Autenticação
 
 ```dart
-Future<ConsultarPedidosResponse> consultarPedidos()
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+final apiClient = ApiClient();
+await apiClient.authenticate(
+  'seu_consumer_key',
+  'seu_consumer_secret', 
+  'caminho/para/certificado.p12',
+  'senha_do_certificado',
+);
 ```
 
-**Retorna:** Lista de todos os parcelamentos ordinários do contribuinte
+## Como Utilizar
 
-**Exemplo:**
+### 1. Criar Instância do Serviço
+
 ```dart
-final response = await parcsnService.consultarPedidos();
-if (response.sucesso) {
-  final parcelamentos = response.dadosParsed?.parcelamentos ?? [];
-  for (final parcela in parcelamentos) {
-    print('Parcelamento ${parcela.numero}: ${parcela.situacao}');
+final parcsnService = ParcsnService(apiClient);
+```
+
+### 2. Consultar Pedidos de Parcelamento
+
+```dart
+try {
+  final response = await parcsnService.consultarPedidos();
+  
+  if (response.sucesso) {
+    print('Pedidos de parcelamento encontrados: ${response.dadosParsed?.parcelamentos.length ?? 0}');
+    
+    for (final parcelamento in response.dadosParsed?.parcelamentos ?? []) {
+      print('Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
+      print('Valor total: ${parcelamento.valorTotal}');
+      print('Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
+} catch (e) {
+  print('Erro ao consultar pedidos: $e');
 }
 ```
 
-### 2. Consultar Parcelamento
+### 3. Consultar Parcelamento Específico
 
 ```dart
-Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento)
-```
-
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento a ser consultado
-
-**Exemplo:**
-```dart
-final response = await parcsnService.consultarParcelamento(1);
-if (response.sucesso) {
-  final parcelamento = response.dadosParsed;
-  print('Situação: ${parcelamento?.situacao}');
-  print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
-}
-```
-
-### 3. Consultar Detalhes de Pagamento
-
-```dart
-Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
-  int numeroParcelamento,
-  int anoMesParcela,
-)
-```
-
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento
-- `anoMesParcela`: Ano/mês da parcela no formato AAAAMM
-
-**Exemplo:**
-```dart
-final response = await parcsnService.consultarDetalhesPagamento(1, 201612);
-if (response.sucesso) {
-  final detalhes = response.dadosParsed;
-  print('DAS: ${detalhes?.numeroDas}');
-  print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
-}
-```
-
-### 4. Consultar Parcelas
-
-```dart
-Future<ConsultarParcelasResponse> consultarParcelas()
-```
-
-**Retorna:** Lista de parcelas disponíveis para emissão de DAS
-
-**Exemplo:**
-```dart
-final response = await parcsnService.consultarParcelas();
-if (response.sucesso) {
-  final parcelas = response.dadosParsed?.listaParcelas ?? [];
-  for (final parcela in parcelas) {
-    print('Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+try {
+  final response = await parcsnService.consultarParcelamento(1);
+  
+  if (response.sucesso) {
+    print('Parcelamento encontrado!');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Data do pedido: ${response.dadosParsed?.dataDoPedidoFormatada}');
+    print('Valor total consolidado: ${response.valorTotalConsolidadoFormatado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
+} catch (e) {
+  print('Erro ao consultar parcelamento: $e');
 }
 ```
 
-### 5. Emitir DAS
+### 4. Consultar Parcelas Disponíveis
 
 ```dart
-Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir)
+try {
+  final response = await parcsnService.consultarParcelas();
+  
+  if (response.sucesso) {
+    print('Parcelas disponíveis: ${response.dadosParsed?.listaParcelas.length ?? 0}');
+    
+    for (final parcela in response.dadosParsed?.listaParcelas ?? []) {
+      print('Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+    }
+    
+    print('Valor total das parcelas: ${response.valorTotalParcelasFormatado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar parcelas: $e');
+}
 ```
 
-**Parâmetros:**
-- `parcelaParaEmitir`: Parcela para emitir no formato AAAAMM
+### 5. Consultar Detalhes de Pagamento
 
-**Exemplo:**
 ```dart
-final response = await parcsnService.emitirDas(202306);
-if (response.sucesso && response.pdfGeradoComSucesso) {
-  final pdfBase64 = response.dadosParsed?.docArrecadacaoPdfB64;
-  print('PDF gerado com sucesso! Tamanho: ${response.tamanhoPdfFormatado}');
+try {
+  final response = await parcsnService.consultarDetalhesPagamento(1, 201612);
+  
+  if (response.sucesso) {
+    print('Detalhes de pagamento encontrados!');
+    print('DAS: ${response.dadosParsed?.numeroDas}');
+    print('Valor pago: ${response.valorPagoArrecadacaoFormatado}');
+    print('Data de pagamento: ${response.dataPagamentoFormatada}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar detalhes: $e');
+}
+```
+
+### 6. Emitir DAS para Parcela
+
+```dart
+try {
+  final response = await parcsnService.emitirDas(202306);
+  
+  if (response.sucesso && response.pdfGeradoComSucesso) {
+    print('DAS emitido com sucesso!');
+    print('Tamanho do PDF: ${response.tamanhoPdfFormatado}');
+    
+    // Salvar PDF
+    final pdfBytes = response.pdfBytes;
+    if (pdfBytes != null) {
+      // Implementar salvamento do PDF
+      print('PDF pronto para salvamento');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao emitir DAS: $e');
+}
+```
+
+## Estrutura de Dados
+
+### ConsultarPedidosResponse
+
+```dart
+class ConsultarPedidosResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarPedidosDados? dadosParsed;
+}
+
+class ConsultarPedidosDados {
+  final List<Parcelamento> parcelamentos;
+  // ... outros campos
+}
+
+class Parcelamento {
+  final int numero;
+  final String situacao;
+  final double valorTotal;
+  final String dataDoPedidoFormatada;
+  // ... outros campos
+}
+```
+
+### ConsultarParcelasResponse
+
+```dart
+class ConsultarParcelasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarParcelasDados? dadosParsed;
+  final String valorTotalParcelasFormatado;
+}
+
+class ConsultarParcelasDados {
+  final List<Parcela> listaParcelas;
+  // ... outros campos
+}
+
+class Parcela {
+  final String parcelaFormatada;
+  final String valorFormatado;
+  // ... outros campos
+}
+```
+
+### EmitirDasResponse
+
+```dart
+class EmitirDasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final EmitirDasDados? dadosParsed;
+  final bool pdfGeradoComSucesso;
+  final String tamanhoPdfFormatado;
+  final Uint8List? pdfBytes;
 }
 ```
 
 ## Validações Disponíveis
 
-### Validações de Parâmetros
+O serviço PARCSN inclui várias validações para garantir a integridade dos dados:
 
 ```dart
 // Validar número de parcelamento
-String? validarNumeroParcelamento(int? numeroParcelamento)
+final erro = parcsnService.validarNumeroParcelamento(1);
+if (erro != null) {
+  print('Erro: $erro');
+}
 
 // Validar ano/mês de parcela
-String? validarAnoMesParcela(int? anoMesParcela)
+final erroAnoMes = parcsnService.validarAnoMesParcela(201612);
+if (erroAnoMes != null) {
+  print('Erro: $erroAnoMes');
+}
 
 // Validar parcela para emissão
-String? validarParcelaParaEmitir(int? parcelaParaEmitir)
-
-// Validar prazo para emissão
-String? validarPrazoEmissaoParcela(int parcelaParaEmitir)
+final erroParcela = parcsnService.validarParcelaParaEmitir(202306);
+if (erroParcela != null) {
+  print('Erro: $erroParcela');
+}
 ```
 
-### Validações de Dados
+## Análise de Erros
+
+O serviço inclui análise detalhada de erros específicos do PARCSN:
 
 ```dart
-// Validar CNPJ do contribuinte
-String? validarCnpjContribuinte(String? cnpj)
-
-// Validar tipo de contribuinte
-String? validarTipoContribuinte(int? tipoContribuinte)
-```
-
-## Tratamento de Erros
-
-### Análise de Erros
-
-```dart
-// Analisar erro específico
-PertsnErrorAnalysis analyzeError(String codigo, String mensagem)
+// Analisar erro
+final analise = parcsnService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
 
 // Verificar se erro é conhecido
-bool isKnownError(String codigo)
+if (parcsnService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
 
 // Obter informações do erro
-PertsnErrorInfo? getErrorInfo(String codigo)
+final info = parcsnService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
+}
 ```
 
-### Categorias de Erros
+## Códigos de Erro Comuns
 
-```dart
-// Obter avisos
-List<PertsnErrorInfo> getAvisos()
+| Código | Descrição | Solução |
+|--------|-----------|---------|
+| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
+| 002 | CNPJ inválido | Verificar formato do CNPJ |
+| 003 | Parcelamento não encontrado | Verificar se parcelamento existe |
+| 004 | Parcela não disponível | Verificar se parcela está disponível para emissão |
+| 005 | Prazo expirado | Verificar prazo para emissão da parcela |
 
-// Obter entradas incorretas
-List<PertsnErrorInfo> getEntradasIncorretas()
+## Exemplos Práticos
 
-// Obter erros gerais
-List<PertsnErrorInfo> getErros()
-
-// Obter sucessos
-List<PertsnErrorInfo> getSucessos()
-```
-
-## Exemplo de Uso Completo
+### Exemplo Completo - Consultar e Emitir DAS
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // Configurar cliente
-  final apiClient = ApiClient(
-    baseUrl: 'https://apigateway.serpro.gov.br/integra-contador-trial/v1',
-    clientId: 'seu_client_id',
-    clientSecret: 'seu_client_secret',
+  // 1. Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    'seu_consumer_key',
+    'seu_consumer_secret', 
+    'caminho/para/certificado.p12',
+    'senha_do_certificado',
   );
-
-  // Criar serviço
+  
+  // 2. Criar serviço
   final parcsnService = ParcsnService(apiClient);
-
+  
+  // 3. Consultar pedidos de parcelamento
   try {
-    // 1. Consultar pedidos
-    print('=== Consultando Pedidos ===');
-    final pedidos = await parcsnService.consultarPedidos();
+    final pedidosResponse = await parcsnService.consultarPedidos();
     
-    if (pedidos.sucesso) {
-      final parcelamentos = pedidos.dadosParsed?.parcelamentos ?? [];
-      print('Parcelamentos encontrados: ${parcelamentos.length}');
+    if (pedidosResponse.sucesso) {
+      print('Pedidos encontrados: ${pedidosResponse.dadosParsed?.parcelamentos.length ?? 0}');
       
-      for (final parcelamento in parcelamentos) {
-        print('Número: ${parcelamento.numero}');
-        print('Situação: ${parcelamento.situacao}');
-        print('---');
-      }
-    }
-    
-    // 2. Consultar parcelas disponíveis
-    print('\n=== Consultando Parcelas ===');
-    final parcelas = await parcsnService.consultarParcelas();
-    
-    if (parcelas.sucesso) {
-      final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
-      print('Parcelas disponíveis: ${listaParcelas.length}');
+      // 4. Consultar parcelas disponíveis
+      final parcelasResponse = await parcsnService.consultarParcelas();
       
-      for (final parcela in listaParcelas) {
-        print('Parcela: ${parcela.parcelaFormatada}');
-        print('Valor: ${parcela.valorFormatado}');
-        print('---');
+      if (parcelasResponse.sucesso) {
+        print('Parcelas disponíveis: ${parcelasResponse.dadosParsed?.listaParcelas.length ?? 0}');
+        
+        // 5. Emitir DAS para primeira parcela disponível
+        final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
+        if (parcelas.isNotEmpty) {
+          final primeiraParcela = parcelas.first;
+          final parcelaParaEmitir = int.tryParse(primeiraParcela.parcelaFormatada.replaceAll('/', ''));
+          
+          if (parcelaParaEmitir != null) {
+            final dasResponse = await parcsnService.emitirDas(parcelaParaEmitir);
+            
+            if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
+              print('DAS emitido com sucesso!');
+              print('Tamanho: ${dasResponse.tamanhoPdfFormatado}');
+            }
+          }
+        }
       }
+    } else {
+      print('Erro: ${pedidosResponse.mensagemErro}');
     }
-    
-    // 3. Emitir DAS para primeira parcela
-    if (parcelas.dadosParsed?.listaParcelas.isNotEmpty == true) {
-      final primeiraParcela = parcelas.dadosParsed!.listaParcelas.first;
-      print('\n=== Emitindo DAS ===');
-      
-      final das = await parcsnService.emitirDas(primeiraParcela.parcelaParaEmitir);
-      if (das.sucesso && das.pdfGeradoComSucesso) {
-        print('DAS emitido com sucesso!');
-        print('Tamanho do PDF: ${das.tamanhoPdfFormatado}');
-      }
-    }
-    
   } catch (e) {
-    print('Erro: $e');
+    print('Erro na operação: $e');
   }
 }
 ```
 
+## Dados de Teste
+
+Para desenvolvimento e testes, utilize os seguintes dados:
+
+```dart
+// CNPJs de teste (sempre usar zeros)
+const cnpjTeste = '00000000000000';
+
+// Números de parcelamento de teste
+const numeroParcelamento = 1;
+
+// Períodos de teste (formato AAAAMM)
+const anoMesParcela = 201612;
+```
+
 ## Limitações
 
-- Apenas CNPJs são aceitos (Pessoa Jurídica)
-- Parcelas devem estar no formato AAAAMM
-- Prazo para emissão de parcelas é limitado
-- Alguns parcelamentos podem ter restrições específicas
+1. **Certificado Digital**: Requer certificado digital válido para autenticação
+2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
+3. **Validação**: Todos os dados devem ser validados antes do envio
+4. **Prazo**: Parcelas têm prazo específico para emissão
+5. **Simples Nacional**: Apenas para contribuintes optantes do Simples Nacional
 
 ## Casos de Uso Comuns
 
@@ -261,6 +363,7 @@ Future<void> consultarParcelamentoCompleto(int numeroParcelamento) async {
     
     print('=== Parcelamento $numeroParcelamento ===');
     print('Situação: ${parcelamento.dadosParsed?.situacao}');
+    print('Valor total: ${parcelamento.dadosParsed?.valorTotalConsolidadoFormatado}');
     print('Parcelas disponíveis: ${parcelas.dadosParsed?.listaParcelas.length}');
   } catch (e) {
     print('Erro: $e');
@@ -284,6 +387,7 @@ Future<void> emitirDasLote() async {
         final das = await parcsnService.emitirDas(parcela.parcelaParaEmitir);
         if (das.sucesso && das.pdfGeradoComSucesso) {
           print('DAS emitido para parcela ${parcela.parcelaFormatada}');
+          // Salvar PDF
         }
       } catch (e) {
         print('Erro ao emitir DAS para parcela ${parcela.parcelaFormatada}: $e');
@@ -295,6 +399,33 @@ Future<void> emitirDasLote() async {
 }
 ```
 
+### 3. Monitoramento de Parcelas
+
+```dart
+Future<void> monitorarParcelas() async {
+  try {
+    // Consultar parcelas disponíveis
+    final parcelas = await parcsnService.consultarParcelas();
+    if (!parcelas.sucesso) return;
+    
+    final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
+    
+    for (final parcela in listaParcelas) {
+      final vencimento = DateTime.tryParse(parcela.dataVencimentoFormatada);
+      if (vencimento != null) {
+        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
+        
+        if (diasParaVencimento <= 5) {
+          print('⚠️ Parcela ${parcela.parcelaFormatada} vence em $diasParaVencimento dias');
+        }
+      }
+    }
+  } catch (e) {
+    print('Erro no monitoramento: $e');
+  }
+}
+```
+
 ## Integração com Outros Serviços
 
 O PARCSN Service pode ser usado em conjunto com:
@@ -302,6 +433,7 @@ O PARCSN Service pode ser usado em conjunto com:
 - **DCTFWeb Service**: Para consultar declarações relacionadas aos parcelamentos
 - **MIT Service**: Para consultar apurações relacionadas aos parcelamentos
 - **Eventos Atualização Service**: Para monitorar atualizações de parcelamentos
+- **SITFIS Service**: Para consultar informações tributárias do contribuinte
 
 ## Monitoramento e Logs
 
@@ -311,3 +443,12 @@ Para monitoramento eficaz:
 - Monitorar emissões de DAS
 - Alertar sobre parcelas próximas do vencimento
 - Rastrear erros de validação
+- Monitorar performance das requisições
+
+## Suporte
+
+Para dúvidas sobre o serviço PARCSN:
+
+- Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
+- Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
+- Abra uma issue no repositório para questões específicas do package

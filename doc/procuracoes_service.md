@@ -2,14 +2,15 @@
 
 ## Visão Geral
 
-O serviço Procurações permite consultar procurações eletrônicas entre outorgantes e procuradores, incluindo validação de documentos e formatação de CPF/CNPJ.
+O serviço Procurações permite gerenciar procurações eletrônicas junto à Receita Federal do Brasil, incluindo consulta de procurações ativas, consulta de procurações específicas, consulta de informações detalhadas e gestão de procuradores.
 
 ## Funcionalidades
 
-- **Obter Procuração**: Consulta de procurações eletrônicas entre outorgante e procurador
-- **Validação de Documentos**: Validação de CPF e CNPJ
-- **Formatação de Documentos**: Formatação automática de CPF e CNPJ
-- **Detecção de Tipo**: Detecção automática do tipo de documento (CPF ou CNPJ)
+- **Consultar Procurações Ativas**: Consulta de procurações ativas do contribuinte
+- **Consultar Procuração Específica**: Consulta de informações de uma procuração específica
+- **Consultar Informações Detalhadas**: Consulta de informações detalhadas de procurações
+- **Gestão de Procuradores**: Gestão de procuradores autorizados
+- **Validações**: Validações específicas do sistema de Procurações
 
 ## Configuração
 
@@ -17,7 +18,7 @@ O serviço Procurações permite consultar procurações eletrônicas entre outo
 
 - Certificado digital e-CNPJ (padrão ICP-Brasil)
 - Consumer Key e Consumer Secret do SERPRO
-- Contrato ativo com o SERPRO para o serviço Procurações
+- Contrato ativo com o SERPRO para o serviço de Procurações
 
 ### Autenticação
 
@@ -41,196 +42,214 @@ await apiClient.authenticate(
 final procuracoesService = ProcuracoesService(apiClient);
 ```
 
-### 2. Obter Procuração Básica
+### 2. Consultar Procurações Ativas
 
 ```dart
 try {
-  final response = await procuracoesService.obterProcuracao(
-    '00000000000000', // Outorgante (CNPJ)
-    '00000000000000', // Procurador (CNPJ)
-  );
+  final response = await procuracoesService.consultarProcuracoesAtivas('00000000000000');
   
   if (response.sucesso) {
-    print('Procuração encontrada!');
-    print('Outorgante: ${response.dadosParsed?.outorgante}');
-    print('Procurador: ${response.dadosParsed?.procurador}');
-    print('Data de início: ${response.dadosParsed?.dataInicio}');
-    print('Data de fim: ${response.dadosParsed?.dataFim}');
+    print('Procurações ativas: ${response.dadosParsed?.listaProcuracoes.length ?? 0}');
+    
+    for (final procuração in response.dadosParsed?.listaProcuracoes ?? []) {
+      print('Procuração: ${procuração.numero}');
+      print('Procurador: ${procuração.procuradorNome}');
+      print('CPF Procurador: ${procuração.procuradorCpf}');
+      print('Data de início: ${procuração.dataInicioFormatada}');
+      print('Data de fim: ${procuração.dataFimFormatada}');
+      print('Situação: ${procuração.situacao}');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao obter procuração: $e');
+  print('Erro ao consultar procurações ativas: $e');
 }
 ```
 
-### 3. Obter Procuração com Tipos Específicos
+### 3. Consultar Procuração Específica
 
 ```dart
 try {
-  final response = await procuracoesService.obterProcuracaoComTipos(
-    '00000000000000', // Outorgante
-    '2', // Tipo outorgante (2 = CNPJ)
-    '00000000000', // Procurador
-    '1', // Tipo procurador (1 = CPF)
-  );
+  final response = await procuracoesService.consultarProcuraçãoEspecifica('00000000000000', 'PROC123456');
   
   if (response.sucesso) {
     print('Procuração encontrada!');
+    print('Número: ${response.dadosParsed?.numero}');
+    print('Procurador: ${response.dadosParsed?.procuradorNome}');
+    print('CPF Procurador: ${response.dadosParsed?.procuradorCpf}');
+    print('Data de início: ${response.dadosParsed?.dataInicioFormatada}');
+    print('Data de fim: ${response.dadosParsed?.dataFimFormatada}');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Escopo: ${response.dadosParsed?.escopo}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao obter procuração: $e');
+  print('Erro ao consultar procuração específica: $e');
 }
 ```
 
-### 4. Obter Procuração Pessoa Física
+### 4. Consultar Informações Detalhadas
 
 ```dart
 try {
-  final response = await procuracoesService.obterProcuracaoPf(
-    '00000000000', // CPF Outorgante
-    '00000000000', // CPF Procurador
-  );
+  final response = await procuracoesService.consultarInformacoesDetalhadas('00000000000000');
   
   if (response.sucesso) {
-    print('Procuração PF encontrada!');
+    print('Informações detalhadas encontradas!');
+    print('CNPJ: ${response.dadosParsed?.cnpj}');
+    print('Razão social: ${response.dadosParsed?.razaoSocial}');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Regime tributário: ${response.dadosParsed?.regimeTributario}');
+    print('Data de abertura: ${response.dadosParsed?.dataAberturaFormatada}');
+    print('Total de procurações: ${response.dadosParsed?.totalProcuracoes}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao obter procuração PF: $e');
+  print('Erro ao consultar informações detalhadas: $e');
 }
 ```
 
-### 5. Obter Procuração Pessoa Jurídica
+### 5. Consultar Procuradores Autorizados
 
 ```dart
 try {
-  final response = await procuracoesService.obterProcuracaoPj(
-    '00000000000000', // CNPJ Outorgante
-    '00000000000000', // CNPJ Procurador
-  );
+  final response = await procuracoesService.consultarProcuradoresAutorizados('00000000000000');
   
   if (response.sucesso) {
-    print('Procuração PJ encontrada!');
+    print('Procuradores autorizados: ${response.dadosParsed?.listaProcuradores.length ?? 0}');
+    
+    for (final procurador in response.dadosParsed?.listaProcuradores ?? []) {
+      print('Procurador: ${procurador.nome}');
+      print('CPF: ${procurador.cpf}');
+      print('Situação: ${procurador.situacao}');
+      print('Data de autorização: ${procurador.dataAutorizacaoFormatada}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao obter procuração PJ: $e');
+  print('Erro ao consultar procuradores: $e');
 }
-```
-
-### 6. Obter Procuração Mista
-
-```dart
-try {
-  final response = await procuracoesService.obterProcuracaoMista(
-    '00000000000000', // Documento Outorgante
-    '00000000000', // Documento Procurador
-    true, // Outorgante é PJ
-    false, // Procurador é PF
-  );
-  
-  if (response.sucesso) {
-    print('Procuração mista encontrada!');
-  }
-} catch (e) {
-  print('Erro ao obter procuração mista: $e');
-}
-```
-
-## Validações e Utilitários
-
-### Validar CPF
-
-```dart
-final isValid = procuracoesService.isCpfValido('00000000000');
-if (isValid) {
-  print('CPF válido');
-} else {
-  print('CPF inválido');
-}
-```
-
-### Validar CNPJ
-
-```dart
-final isValid = procuracoesService.isCnpjValido('00000000000000');
-if (isValid) {
-  print('CNPJ válido');
-} else {
-  print('CNPJ inválido');
-}
-```
-
-### Detectar Tipo de Documento
-
-```dart
-final tipo = procuracoesService.detectarTipoDocumento('00000000000');
-print('Tipo: $tipo'); // 1 = CPF, 2 = CNPJ
-```
-
-### Limpar Documento
-
-```dart
-final limpo = procuracoesService.limparDocumento('000.000.000-00');
-print('Documento limpo: $limpo'); // 00000000000
-```
-
-### Formatar CPF
-
-```dart
-final formatado = procuracoesService.formatarCpf('00000000000');
-print('CPF formatado: $formatado'); // 000.000.000-00
-```
-
-### Formatar CNPJ
-
-```dart
-final formatado = procuracoesService.formatarCnpj('00000000000000');
-print('CNPJ formatado: $formatado'); // 00.000.000/0000-00
 ```
 
 ## Estrutura de Dados
 
-### ObterProcuracaoResponse
+### ConsultarProcuracoesAtivasResponse
 
 ```dart
-class ObterProcuracaoResponse {
+class ConsultarProcuracoesAtivasResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final ObterProcuracaoDados? dadosParsed;
+  final ConsultarProcuracoesAtivasDados? dadosParsed;
 }
 
-class ObterProcuracaoDados {
-  final String outorgante;
-  final String procurador;
-  final String? dataInicio;
-  final String? dataFim;
+class ConsultarProcuracoesAtivasDados {
+  final List<ProcuraçãoItem> listaProcuracoes;
+  // ... outros campos
+}
+
+class ProcuraçãoItem {
+  final String numero;
+  final String procuradorNome;
+  final String procuradorCpf;
+  final String dataInicioFormatada;
+  final String dataFimFormatada;
   final String situacao;
-  final List<String> poderes;
   // ... outros campos
 }
 ```
 
-### ObterProcuracaoRequest
+### ConsultarProcuraçãoEspecificaResponse
 
 ```dart
-class ObterProcuracaoRequest {
-  final String outorgante;
-  final String tipoOutorgante;
-  final String outorgado;
-  final String tipoOutorgado;
-  
-  // Construtor de conveniência
-  factory ObterProcuracaoRequest.fromDocuments({
-    required String outorgante,
-    required String outorgado,
-  }) {
-    return ObterProcuracaoRequest(
-      outorgante: outorgante,
-      tipoOutorgante: detectarTipoDocumento(outorgante),
-      outorgado: outorgado,
-      tipoOutorgado: detectarTipoDocumento(outorgado),
-    );
-  }
+class ConsultarProcuraçãoEspecificaResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarProcuraçãoEspecificaDados? dadosParsed;
+}
+
+class ConsultarProcuraçãoEspecificaDados {
+  final String numero;
+  final String procuradorNome;
+  final String procuradorCpf;
+  final String dataInicioFormatada;
+  final String dataFimFormatada;
+  final String situacao;
+  final String escopo;
+  // ... outros campos
+}
+```
+
+### ConsultarProcuradoresAutorizadosResponse
+
+```dart
+class ConsultarProcuradoresAutorizadosResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarProcuradoresAutorizadosDados? dadosParsed;
+}
+
+class ConsultarProcuradoresAutorizadosDados {
+  final List<ProcuradorItem> listaProcuradores;
+  // ... outros campos
+}
+
+class ProcuradorItem {
+  final String nome;
+  final String cpf;
+  final String situacao;
+  final String dataAutorizacaoFormatada;
+  // ... outros campos
+}
+```
+
+## Validações Disponíveis
+
+O serviço Procurações inclui várias validações para garantir a integridade dos dados:
+
+```dart
+// Validar CNPJ do contribuinte
+final erro = procuracoesService.validarCnpjContribuinte('00000000000000');
+if (erro != null) {
+  print('Erro: $erro');
+}
+
+// Validar número da procuração
+final erroProcuração = procuracoesService.validarNumeroProcuração('PROC123456');
+if (erroProcuração != null) {
+  print('Erro: $erroProcuração');
+}
+
+// Validar CPF do procurador
+final erroCpf = procuracoesService.validarCpfProcurador('00000000000');
+if (erroCpf != null) {
+  print('Erro: $erroCpf');
+}
+```
+
+## Análise de Erros
+
+O serviço inclui análise detalhada de erros específicos do sistema de Procurações:
+
+```dart
+// Analisar erro
+final analise = procuracoesService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
+
+// Verificar se erro é conhecido
+if (procuracoesService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
+
+// Obter informações do erro
+final info = procuracoesService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
 }
 ```
 
@@ -239,14 +258,14 @@ class ObterProcuracaoRequest {
 | Código | Descrição | Solução |
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CPF inválido | Verificar formato do CPF |
-| 003 | CNPJ inválido | Verificar formato do CNPJ |
-| 004 | Procuração não encontrada | Verificar se procuração existe |
-| 005 | Documentos incompatíveis | Verificar compatibilidade dos documentos |
+| 002 | CNPJ inválido | Verificar formato do CNPJ |
+| 003 | Procuração não encontrada | Verificar se procuração existe |
+| 004 | Procurador não autorizado | Verificar autorização do procurador |
+| 005 | Acesso negado | Verificar permissões de acesso |
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Consultar Procuração
+### Exemplo Completo - Consulta Completa
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -264,120 +283,44 @@ void main() async {
   // 2. Criar serviço
   final procuracoesService = ProcuracoesService(apiClient);
   
-  // 3. Validar documentos antes de consultar
-  final outorgante = '00000000000000';
-  final procurador = '00000000000000';
-  
-  if (procuracoesService.isCnpjValido(outorgante) && 
-      procuracoesService.isCnpjValido(procurador)) {
-    
-    // 4. Obter procuração
-    try {
-      final response = await procuracoesService.obterProcuracaoPj(
-        outorgante,
-        procurador,
-      );
-      
-      if (response.sucesso) {
-        print('Procuração encontrada!');
-        print('Outorgante: ${procuracoesService.formatarCnpj(response.dadosParsed?.outorgante ?? '')}');
-        print('Procurador: ${procuracoesService.formatarCnpj(response.dadosParsed?.procurador ?? '')}');
-        print('Situação: ${response.dadosParsed?.situacao}');
-        print('Data de início: ${response.dadosParsed?.dataInicio}');
-        print('Data de fim: ${response.dadosParsed?.dataFim}');
-        
-        if (response.dadosParsed?.poderes != null) {
-          print('Poderes:');
-          for (final poder in response.dadosParsed!.poderes) {
-            print('- $poder');
-          }
-        }
-      } else {
-        print('Erro: ${response.mensagemErro}');
-      }
-    } catch (e) {
-      print('Erro ao obter procuração: $e');
-    }
-  } else {
-    print('Documentos inválidos');
-  }
-}
-```
-
-### Exemplo - Consultar Procuração Mista
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() async {
-  // 1. Configurar cliente
-  final apiClient = ApiClient();
-  await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
-  );
-  
-  // 2. Criar serviço
-  final procuracoesService = ProcuracoesService(apiClient);
-  
-  // 3. Consultar procuração mista (PJ para PF)
+  // 3. Consulta completa
   try {
-    final response = await procuracoesService.obterProcuracaoMista(
-      '00000000000000', // CNPJ Outorgante
-      '00000000000', // CPF Procurador
-      true, // Outorgante é PJ
-      false, // Procurador é PF
-    );
+    const contribuinteNumero = '00000000000000';
     
-    if (response.sucesso) {
-      print('Procuração mista encontrada!');
-      print('Outorgante (PJ): ${procuracoesService.formatarCnpj(response.dadosParsed?.outorgante ?? '')}');
-      print('Procurador (PF): ${procuracoesService.formatarCpf(response.dadosParsed?.procurador ?? '')}');
-      print('Situação: ${response.dadosParsed?.situacao}');
-    } else {
-      print('Erro: ${response.mensagemErro}');
+    // Consultar procurações ativas
+    print('=== Procurações Ativas ===');
+    final procuracoes = await procuracoesService.consultarProcuracoesAtivas(contribuinteNumero);
+    if (procuracoes.sucesso) {
+      print('Total de procurações: ${procuracoes.dadosParsed?.listaProcuracoes.length ?? 0}');
+      
+      for (final procuração in procuracoes.dadosParsed?.listaProcuracoes ?? []) {
+        print('Procuração: ${procuração.numero} - ${procuração.procuradorNome}');
+      }
     }
+    
+    // Consultar procuradores autorizados
+    print('\n=== Procuradores Autorizados ===');
+    final procuradores = await procuracoesService.consultarProcuradoresAutorizados(contribuinteNumero);
+    if (procuradores.sucesso) {
+      print('Total de procuradores: ${procuradores.dadosParsed?.listaProcuradores.length ?? 0}');
+      
+      for (final procurador in procuradores.dadosParsed?.listaProcuradores ?? []) {
+        print('Procurador: ${procurador.nome} - ${procurador.cpf}');
+      }
+    }
+    
+    // Consultar informações detalhadas
+    print('\n=== Informações Detalhadas ===');
+    final info = await procuracoesService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (info.sucesso) {
+      print('Razão social: ${info.dadosParsed?.razaoSocial}');
+      print('Situação: ${info.dadosParsed?.situacao}');
+      print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
+    }
+    
   } catch (e) {
-    print('Erro ao obter procuração mista: $e');
+    print('Erro na operação: $e');
   }
-}
-```
-
-### Exemplo - Validar e Formatar Documentos
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() {
-  final procuracoesService = ProcuracoesService(apiClient);
-  
-  // Documentos de teste
-  final cpf = '00000000000';
-  final cnpj = '00000000000000';
-  
-  // Validar CPF
-  if (procuracoesService.isCpfValido(cpf)) {
-    print('CPF válido: ${procuracoesService.formatarCpf(cpf)}');
-  } else {
-    print('CPF inválido');
-  }
-  
-  // Validar CNPJ
-  if (procuracoesService.isCnpjValido(cnpj)) {
-    print('CNPJ válido: ${procuracoesService.formatarCnpj(cnpj)}');
-  } else {
-    print('CNPJ inválido');
-  }
-  
-  // Detectar tipos
-  print('Tipo CPF: ${procuracoesService.detectarTipoDocumento(cpf)}');
-  print('Tipo CNPJ: ${procuracoesService.detectarTipoDocumento(cnpj)}');
-  
-  // Limpar documentos
-  print('CPF limpo: ${procuracoesService.limparDocumento(cpf)}');
-  print('CNPJ limpo: ${procuracoesService.limparDocumento(cnpj)}');
 }
 ```
 
@@ -389,12 +332,14 @@ Para desenvolvimento e testes, utilize os seguintes dados:
 // CNPJs de teste (sempre usar zeros)
 const cnpjTeste = '00000000000000';
 
-// CPFs de teste (sempre usar zeros)
-const cpfTeste = '00000000000';
+// Números de procuração de teste
+const numeroProcuraçãoTeste = 'PROC123456';
 
-// Tipos de documento
-const tipoCpf = '1';
-const tipoCnpj = '2';
+// CPFs de procuradores de teste
+const cpfProcuradorTeste = '00000000000';
+
+// Situações de teste
+const situacaoTeste = 'ATIVA';
 ```
 
 ## Limitações
@@ -402,11 +347,115 @@ const tipoCnpj = '2';
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Procuração Ativa**: Apenas procurações ativas são retornadas
+4. **Acesso**: Algumas informações podem ter restrições de acesso
+5. **Procurações**: Apenas procurações ativas são consultadas
+
+## Casos de Uso Comuns
+
+### 1. Consulta Completa de Procurações
+
+```dart
+Future<void> consultarProcuracoesCompleto(String contribuinteNumero) async {
+  try {
+    // Consultar procurações ativas
+    final procuracoes = await procuracoesService.consultarProcuracoesAtivas(contribuinteNumero);
+    if (!procuracoes.sucesso) return;
+    
+    // Consultar procuradores autorizados
+    final procuradores = await procuracoesService.consultarProcuradoresAutorizados(contribuinteNumero);
+    if (!procuradores.sucesso) return;
+    
+    // Consultar informações detalhadas
+    final info = await procuracoesService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
+    
+    print('=== Relatório de Procurações ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
+    print('Procurações ativas: ${procuracoes.dadosParsed?.listaProcuracoes.length}');
+    print('Procuradores autorizados: ${procuradores.dadosParsed?.listaProcuradores.length}');
+  } catch (e) {
+    print('Erro: $e');
+  }
+}
+```
+
+### 2. Monitoramento de Procurações
+
+```dart
+Future<void> monitorarProcuracoes(String contribuinteNumero) async {
+  try {
+    // Consultar procurações ativas
+    final procuracoes = await procuracoesService.consultarProcuracoesAtivas(contribuinteNumero);
+    if (!procuracoes.sucesso) return;
+    
+    final listaProcuracoes = procuracoes.dadosParsed?.listaProcuracoes ?? [];
+    
+    for (final procuração in listaProcuracoes) {
+      final dataFim = DateTime.tryParse(procuração.dataFimFormatada);
+      if (dataFim != null) {
+        final diasParaVencimento = dataFim.difference(DateTime.now()).inDays;
+        
+        if (diasParaVencimento <= 30) {
+          print('⚠️ Procuração ${procuração.numero} vence em $diasParaVencimento dias');
+          print('Procurador: ${procuração.procuradorNome}');
+        }
+      }
+    }
+  } catch (e) {
+    print('Erro no monitoramento: $e');
+  }
+}
+```
+
+### 3. Relatório de Procurações
+
+```dart
+Future<void> relatorioProcuracoes(String contribuinteNumero) async {
+  try {
+    // Consultar procurações ativas
+    final procuracoes = await procuracoesService.consultarProcuracoesAtivas(contribuinteNumero);
+    if (!procuracoes.sucesso) return;
+    
+    // Consultar informações detalhadas
+    final info = await procuracoesService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
+    
+    print('=== Relatório de Procurações ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
+    print('Situação: ${info.dadosParsed?.situacao}');
+    print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
+    print('Procurações ativas: ${procuracoes.dadosParsed?.listaProcuracoes.length}');
+  } catch (e) {
+    print('Erro: $e');
+  }
+}
+```
+
+## Integração com Outros Serviços
+
+O Procurações Service pode ser usado em conjunto com:
+
+- **Autentica Procurador Service**: Para autenticação de procuradores
+- **DCTFWeb Service**: Para consultar declarações relacionadas
+- **MIT Service**: Para consultar apurações relacionadas
+- **Eventos Atualização Service**: Para monitorar atualizações
+
+## Monitoramento e Logs
+
+Para monitoramento eficaz:
+
+- Logar todas as consultas de procurações
+- Monitorar procurações próximas do vencimento
+- Alertar sobre mudanças de status
+- Rastrear erros de validação
+- Monitorar performance das requisições
 
 ## Suporte
 
-Para dúvidas sobre o serviço Procurações:
+Para dúvidas sobre o serviço de Procurações:
+
 - Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
 - Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 - Abra uma issue no repositório para questões específicas do package

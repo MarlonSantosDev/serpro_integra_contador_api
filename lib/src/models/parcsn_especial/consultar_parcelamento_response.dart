@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarParcelamentoResponse {
   final String status;
@@ -102,7 +103,7 @@ class ParcelamentoDetalhado {
   String get dataDoPedidoFormatada {
     final data = dataDoPedido.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -111,7 +112,7 @@ class ParcelamentoDetalhado {
   String get dataDaSituacaoFormatada {
     final data = dataDaSituacao.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -169,17 +170,17 @@ class ConsolidacaoOriginal {
 
   /// Valor total consolidado formatado como moeda brasileira
   String get valorTotalConsolidadoFormatado {
-    return 'R\$ ${valorTotalConsolidado.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotalConsolidado);
   }
 
   /// Primeira parcela formatada como moeda brasileira
   String get primeiraParcelaFormatada {
-    return 'R\$ ${primeiraParcela.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(primeiraParcela);
   }
 
   /// Parcela básica formatada como moeda brasileira
   String get parcelaBasicaFormatada {
-    return 'R\$ ${parcelaBasica.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(parcelaBasica);
   }
 
   /// Data da consolidação formatada (DD/MM/AAAA HH:MM:SS)
@@ -246,19 +247,19 @@ class DetalhesConsolidacao {
   String get vencimentoFormatado {
     final data = vencimento.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
 
   /// Saldo devedor original formatado como moeda brasileira
   String get saldoDevedorOriginalFormatado {
-    return 'R\$ ${saldoDevedorOriginal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(saldoDevedorOriginal);
   }
 
   /// Valor atualizado formatado como moeda brasileira
   String get valorAtualizadoFormatado {
-    return 'R\$ ${valorAtualizado.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorAtualizado);
   }
 }
 
@@ -299,19 +300,19 @@ class AlteracaoDivida {
 
   /// Valor total consolidado formatado como moeda brasileira
   String get valorTotalConsolidadoFormatado {
-    return 'R\$ ${valorTotalConsolidado.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotalConsolidado);
   }
 
   /// Parcela básica formatada como moeda brasileira
   String get parcelaBasicaFormatada {
-    return 'R\$ ${parcelaBasica.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(parcelaBasica);
   }
 
   /// Data da alteração de dívida formatada (DD/MM/AAAA)
   String get dataAlteracaoDividaFormatada {
     final data = dataAlteracaoDivida.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -351,7 +352,7 @@ class DemonstrativoPagamento {
   String get vencimentoDoDasFormatado {
     final data = vencimentoDoDas.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -360,13 +361,14 @@ class DemonstrativoPagamento {
   String get dataDeArrecadacaoFormatada {
     final data = dataDeArrecadacao.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
 
   /// Valor pago formatado como moeda brasileira
   String get valorPagoFormatado {
-    return 'R\$ ${valorPago.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorPago);
   }
 }
+

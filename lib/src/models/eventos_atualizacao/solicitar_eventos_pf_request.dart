@@ -1,4 +1,5 @@
 import 'eventos_atualizacao_common.dart';
+import '../../util/document_utils.dart';
 
 /// Modelo de requisição para solicitar eventos de atualização de Pessoa Física
 class SolicitarEventosPFRequest {
@@ -15,7 +16,7 @@ class SolicitarEventosPFRequest {
 
     // Validar formato dos CPFs
     for (final cpf in cpfs) {
-      if (!_isValidCPF(cpf)) {
+      if (!DocumentUtils.isValidCpf(cpf)) {
         throw ArgumentError('CPF inválido: $cpf');
       }
     }
@@ -29,12 +30,6 @@ class SolicitarEventosPFRequest {
   /// Cria a string de CPFs separados por vírgula
   String get cpfsString {
     return cpfs.join(',');
-  }
-
-  /// Valida se o CPF tem formato válido (11 dígitos)
-  bool _isValidCPF(String cpf) {
-    final cleanCpf = cpf.replaceAll(RegExp(r'[^\d]'), '');
-    return cleanCpf.length == 11 && RegExp(r'^\d{11}$').hasMatch(cleanCpf);
   }
 
   factory SolicitarEventosPFRequest.fromJson(Map<String, dynamic> json) {

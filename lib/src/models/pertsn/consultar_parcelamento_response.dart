@@ -393,3 +393,4 @@ class DemonstrativoPagamento {
     return 'R\$ ${valorPago.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 }
+

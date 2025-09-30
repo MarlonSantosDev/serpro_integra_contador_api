@@ -1,35 +1,24 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarDetalhesPagamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarDetalhesPagamentoResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, required this.dados});
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDetalhesPagamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List)
-          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -79,20 +68,13 @@ class DetalhesPagamentoData {
   });
 
   factory DetalhesPagamentoData.fromJson(String jsonString) {
-    final Map<String, dynamic> json =
-        jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return DetalhesPagamentoData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),
-      valorPagoArrecadacao: (num.parse(
-        json['valorPagoArrecadacao'].toString(),
-      )).toDouble(),
+      valorPagoArrecadacao: (num.parse(json['valorPagoArrecadacao'].toString())).toDouble(),
       dataPagamento: json['dataPagamento'].toString(),
-      pagamentosDebitos:
-          (json['pagamentosDebitos'] as List?)
-              ?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      pagamentosDebitos: (json['pagamentosDebitos'] as List?)?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
   }
 
@@ -108,13 +90,13 @@ class DetalhesPagamentoData {
 
   /// Valor pago formatado como moeda brasileira
   String get valorPagoArrecadacaoFormatado {
-    return 'R\$ ${valorPagoArrecadacao.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorPagoArrecadacao);
   }
 
   /// Data de pagamento formatada (DD/MM/AAAA)
   String get dataPagamentoFormatada {
     if (dataPagamento.length == 8) {
-      return '${dataPagamento.substring(6, 8)}/${dataPagamento.substring(4, 6)}/${dataPagamento.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(dataPagamento);
     }
     return dataPagamento;
   }
@@ -158,13 +140,7 @@ class PagamentoDebito {
       valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
       valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
       valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
-      discriminacoes:
-          (json['discriminacoes'] as List?)
-              ?.map(
-                (e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
+      discriminacoes: (json['discriminacoes'] as List?)?.map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
   }
 
@@ -182,22 +158,22 @@ class PagamentoDebito {
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalFormatado {
-    return 'R\$ ${valorTotal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotal);
   }
 
   /// Valor principal formatado como moeda brasileira
   String get valorPrincipalFormatado {
-    return 'R\$ ${valorPrincipal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorPrincipal);
   }
 
   /// Valor da multa formatado como moeda brasileira
   String get valorMultaFormatado {
-    return 'R\$ ${valorMulta.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorMulta);
   }
 
   /// Valor dos juros formatado como moeda brasileira
   String get valorJurosFormatado {
-    return 'R\$ ${valorJuros.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorJuros);
   }
 
   /// Verifica se há discriminações
@@ -214,11 +190,7 @@ class DiscriminacaoDebito {
   final String descricao;
   final double valor;
 
-  DiscriminacaoDebito({
-    required this.codigo,
-    required this.descricao,
-    required this.valor,
-  });
+  DiscriminacaoDebito({required this.codigo, required this.descricao, required this.valor});
 
   factory DiscriminacaoDebito.fromJson(Map<String, dynamic> json) {
     return DiscriminacaoDebito(
@@ -234,7 +206,7 @@ class DiscriminacaoDebito {
 
   /// Valor formatado como moeda brasileira
   String get valorFormatado {
-    return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valor);
   }
 
   @override

@@ -1,278 +1,404 @@
-# RELPSN Service
+# RELPSN - Relatório de Pagamentos do Simples Nacional
 
 ## Visão Geral
 
-O `RelpsnService` é responsável pela integração com o sistema RELPSN (Parcelamento do Simples Nacional). Este serviço permite consultar pedidos de parcelamento, consultar parcelamentos específicos, consultar parcelas disponíveis, consultar detalhes de pagamento e emitir DAS para parcelas.
+O serviço RELPSN permite consultar relatórios de pagamentos de contribuintes optantes do Simples Nacional, incluindo consulta de pagamentos realizados, consulta de pagamentos pendentes e consulta de informações detalhadas de pagamentos.
 
-## Funcionalidades Principais
+## Funcionalidades
 
-- **Consultar Pedidos**: Consulta todos os pedidos de parcelamento RELPSN
-- **Consultar Parcelamento**: Consulta informações detalhadas de um parcelamento específico
-- **Consultar Parcelas**: Consulta parcelas disponíveis para um parcelamento específico
-- **Consultar Detalhes de Pagamento**: Consulta detalhes de pagamento de uma parcela
-- **Emitir DAS**: Emite DAS para parcelas específicas
+- **Consultar Pagamentos Realizados**: Consulta de pagamentos já realizados pelo contribuinte
+- **Consultar Pagamentos Pendentes**: Consulta de pagamentos pendentes
+- **Consultar Informações Detalhadas**: Consulta de informações detalhadas de pagamentos
 - **Validações**: Validações específicas do sistema RELPSN
 
-## Métodos Disponíveis
+## Configuração
 
-### 1. Consultar Pedidos
+### Pré-requisitos
+
+- Certificado digital e-CNPJ (padrão ICP-Brasil)
+- Consumer Key e Consumer Secret do SERPRO
+- Contrato ativo com o SERPRO para o serviço RELPSN
+
+### Autenticação
 
 ```dart
-Future<ConsultarPedidosResponse> consultarPedidos()
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+final apiClient = ApiClient();
+await apiClient.authenticate(
+  'seu_consumer_key',
+  'seu_consumer_secret', 
+  'caminho/para/certificado.p12',
+  'senha_do_certificado',
+);
 ```
 
-**Retorna:** Lista de todos os parcelamentos ativos do contribuinte
+## Como Utilizar
 
-**Exemplo:**
+### 1. Criar Instância do Serviço
+
 ```dart
-final response = await relpsnService.consultarPedidos();
-if (response.sucesso) {
-  final parcelamentos = response.dadosParsed?.parcelamentos ?? [];
-  for (final parcela in parcelamentos) {
-    print('Parcelamento ${parcela.numero}: ${parcela.situacao}');
+final relpsnService = RelpsnService(apiClient);
+```
+
+### 2. Consultar Pagamentos Realizados
+
+```dart
+try {
+  final response = await relpsnService.consultarPagamentosRealizados('00000000000000');
+  
+  if (response.sucesso) {
+    print('Pagamentos realizados: ${response.dadosParsed?.listaPagamentos.length ?? 0}');
+    
+    for (final pagamento in response.dadosParsed?.listaPagamentos ?? []) {
+      print('Pagamento: ${pagamento.numeroDocumento}');
+      print('Valor: ${pagamento.valorFormatado}');
+      print('Data: ${pagamento.dataPagamentoFormatada}');
+      print('Situação: ${pagamento.situacao}');
+    }
+    
+    print('Valor total: ${response.valorTotalPagamentosFormatado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
+} catch (e) {
+  print('Erro ao consultar pagamentos realizados: $e');
 }
 ```
 
-### 2. Consultar Parcelamento
+### 3. Consultar Pagamentos Pendentes
 
 ```dart
-Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento)
-```
-
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento a ser consultado
-
-**Exemplo:**
-```dart
-final response = await relpsnService.consultarParcelamento(123456);
-if (response.sucesso) {
-  final parcelamento = response.dadosParsed;
-  print('Situação: ${parcelamento?.situacao}');
-  print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
-}
-```
-
-### 3. Consultar Parcelas
-
-```dart
-Future<ConsultarParcelasResponse> consultarParcelas(int numeroParcelamento)
-```
-
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento
-
-**Exemplo:**
-```dart
-final response = await relpsnService.consultarParcelas(123456);
-if (response.sucesso) {
-  final parcelas = response.dadosParsed?.listaParcelas ?? [];
-  for (final parcela in parcelas) {
-    print('Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+try {
+  final response = await relpsnService.consultarPagamentosPendentes('00000000000000');
+  
+  if (response.sucesso) {
+    print('Pagamentos pendentes: ${response.dadosParsed?.listaPagamentos.length ?? 0}');
+    
+    for (final pagamento in response.dadosParsed?.listaPagamentos ?? []) {
+      print('Pagamento: ${pagamento.numeroDocumento}');
+      print('Valor: ${pagamento.valorFormatado}');
+      print('Vencimento: ${pagamento.dataVencimentoFormatada}');
+      print('Situação: ${pagamento.situacao}');
+    }
+    
+    print('Valor total: ${response.valorTotalPagamentosFormatado}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
+} catch (e) {
+  print('Erro ao consultar pagamentos pendentes: $e');
 }
 ```
 
-### 4. Consultar Detalhes de Pagamento
+### 4. Consultar Informações Detalhadas
 
 ```dart
-Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
-  int numeroParcelamento,
-  int anoMesParcela,
-)
-```
-
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento
-- `anoMesParcela`: Ano/mês da parcela no formato AAAAMM
-
-**Exemplo:**
-```dart
-final response = await relpsnService.consultarDetalhesPagamento(123456, 202401);
-if (response.sucesso) {
-  final detalhes = response.dadosParsed;
-  print('DAS: ${detalhes?.numeroDas}');
-  print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
+try {
+  final response = await relpsnService.consultarInformacoesDetalhadas('00000000000000');
+  
+  if (response.sucesso) {
+    print('Informações detalhadas encontradas!');
+    print('CNPJ: ${response.dadosParsed?.cnpj}');
+    print('Razão social: ${response.dadosParsed?.razaoSocial}');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Regime tributário: ${response.dadosParsed?.regimeTributario}');
+    print('Data de abertura: ${response.dadosParsed?.dataAberturaFormatada}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar informações detalhadas: $e');
 }
 ```
 
-### 5. Emitir DAS
+## Estrutura de Dados
+
+### ConsultarPagamentosRealizadosResponse
 
 ```dart
-Future<EmitirDasResponse> emitirDas(int numeroParcelamento, int parcelaParaEmitir)
+class ConsultarPagamentosRealizadosResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarPagamentosRealizadosDados? dadosParsed;
+  final String valorTotalPagamentosFormatado;
+}
+
+class ConsultarPagamentosRealizadosDados {
+  final List<PagamentoItem> listaPagamentos;
+  // ... outros campos
+}
+
+class PagamentoItem {
+  final String numeroDocumento;
+  final String valorFormatado;
+  final String dataPagamentoFormatada;
+  final String situacao;
+  // ... outros campos
+}
 ```
 
-**Parâmetros:**
-- `numeroParcelamento`: Número do parcelamento
-- `parcelaParaEmitir`: Parcela para emitir no formato AAAAMM
+### ConsultarPagamentosPendentesResponse
 
-**Exemplo:**
 ```dart
-final response = await relpsnService.emitirDas(123456, 202401);
-if (response.sucesso && response.pdfGeradoComSucesso) {
-  final pdfBase64 = response.dadosParsed?.docArrecadacaoPdfB64;
-  print('PDF gerado com sucesso! Tamanho: ${response.tamanhoPdfFormatado}');
+class ConsultarPagamentosPendentesResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarPagamentosPendentesDados? dadosParsed;
+  final String valorTotalPagamentosFormatado;
+}
+
+class ConsultarPagamentosPendentesDados {
+  final List<PagamentoItem> listaPagamentos;
+  // ... outros campos
+}
+
+class PagamentoItem {
+  final String numeroDocumento;
+  final String valorFormatado;
+  final String dataVencimentoFormatada;
+  final String situacao;
+  // ... outros campos
+}
+```
+
+### ConsultarInformacoesDetalhadasResponse
+
+```dart
+class ConsultarInformacoesDetalhadasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarInformacoesDetalhadasDados? dadosParsed;
+}
+
+class ConsultarInformacoesDetalhadasDados {
+  final String cnpj;
+  final String razaoSocial;
+  final String situacao;
+  final String regimeTributario;
+  final String dataAberturaFormatada;
+  // ... outros campos
 }
 ```
 
 ## Validações Disponíveis
 
-### Validações de Parâmetros
+O serviço RELPSN inclui várias validações para garantir a integridade dos dados:
 
 ```dart
-// Validar número de parcelamento
-String? validarNumeroParcelamento(int? numeroParcelamento)
+// Validar CNPJ do contribuinte
+final erro = relpsnService.validarCnpjContribuinte('00000000000000');
+if (erro != null) {
+  print('Erro: $erro');
+}
 
-// Validar ano/mês de parcela
-String? validarAnoMesParcela(int? anoMesParcela)
+// Validar período de consulta
+final erroPeriodo = relpsnService.validarPeriodoConsulta('2024-01-01', '2024-12-31');
+if (erroPeriodo != null) {
+  print('Erro: $erroPeriodo');
+}
 
-// Validar parcela para emissão
-String? validarParcelaParaEmitir(int? parcelaParaEmitir)
-
-// Validar prazo para emissão
-String? validarPrazoEmissaoParcela(int parcelaParaEmitir)
+// Validar situação do pagamento
+final erroSituacao = relpsnService.validarSituacaoPagamento('REALIZADO');
+if (erroSituacao != null) {
+  print('Erro: $erroSituacao');
+}
 ```
 
-## Tratamento de Erros
+## Análise de Erros
 
-### Análise de Erros
+O serviço inclui análise detalhada de erros específicos do RELPSN:
 
 ```dart
-// Analisar erro específico
-RelpsnErrorAnalysis analyzeError(String codigo, String mensagem)
+// Analisar erro
+final analise = relpsnService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
 
 // Verificar se erro é conhecido
-bool isKnownError(String codigo)
+if (relpsnService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
 
 // Obter informações do erro
-RelpsnErrorInfo? getErrorInfo(String codigo)
+final info = relpsnService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
+}
 ```
 
-### Categorias de Erros
+## Códigos de Erro Comuns
 
-```dart
-// Obter avisos
-List<RelpsnErrorInfo> getAvisos()
+| Código | Descrição | Solução |
+|--------|-----------|---------|
+| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
+| 002 | CNPJ inválido | Verificar formato do CNPJ |
+| 003 | Contribuinte não encontrado | Verificar se contribuinte existe |
+| 004 | Período inválido | Verificar formato do período |
+| 005 | Acesso negado | Verificar permissões de acesso |
 
-// Obter entradas incorretas
-List<RelpsnErrorInfo> getEntradasIncorretas()
+## Exemplos Práticos
 
-// Obter erros gerais
-List<RelpsnErrorInfo> getErros()
-```
-
-## Exemplo de Uso Completo
+### Exemplo Completo - Consulta Completa
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // Configurar cliente
-  final apiClient = ApiClient(
-    baseUrl: 'https://apigateway.serpro.gov.br/integra-contador-trial/v1',
-    clientId: 'seu_client_id',
-    clientSecret: 'seu_client_secret',
+  // 1. Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    'seu_consumer_key',
+    'seu_consumer_secret', 
+    'caminho/para/certificado.p12',
+    'senha_do_certificado',
   );
-
-  // Criar serviço
+  
+  // 2. Criar serviço
   final relpsnService = RelpsnService(apiClient);
-
+  
+  // 3. Consulta completa
   try {
-    // 1. Consultar pedidos
-    print('=== Consultando Pedidos RELPSN ===');
-    final pedidos = await relpsnService.consultarPedidos();
+    const contribuinteNumero = '00000000000000';
     
-    if (pedidos.sucesso) {
-      final parcelamentos = pedidos.dadosParsed?.parcelamentos ?? [];
-      print('Parcelamentos encontrados: ${parcelamentos.length}');
-      
-      for (final parcelamento in parcelamentos) {
-        print('Número: ${parcelamento.numero}');
-        print('Situação: ${parcelamento.situacao}');
-        print('---');
-        
-        // 2. Consultar parcelas para este parcelamento
-        final parcelas = await relpsnService.consultarParcelas(parcelamento.numero);
-        if (parcelas.sucesso) {
-          final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
-          print('Parcelas disponíveis: ${listaParcelas.length}');
-          
-          for (final parcela in listaParcelas) {
-            print('Parcela: ${parcela.parcelaFormatada}');
-            print('Valor: ${parcela.valorFormatado}');
-            print('---');
-          }
-        }
-      }
+    // Consultar pagamentos realizados
+    print('=== Pagamentos Realizados ===');
+    final realizados = await relpsnService.consultarPagamentosRealizados(contribuinteNumero);
+    if (realizados.sucesso) {
+      print('Total de pagamentos: ${realizados.dadosParsed?.listaPagamentos.length ?? 0}');
+      print('Valor total: ${realizados.valorTotalPagamentosFormatado}');
+    }
+    
+    // Consultar pagamentos pendentes
+    print('\n=== Pagamentos Pendentes ===');
+    final pendentes = await relpsnService.consultarPagamentosPendentes(contribuinteNumero);
+    if (pendentes.sucesso) {
+      print('Total de pendentes: ${pendentes.dadosParsed?.listaPagamentos.length ?? 0}');
+      print('Valor total: ${pendentes.valorTotalPagamentosFormatado}');
+    }
+    
+    // Consultar informações detalhadas
+    print('\n=== Informações Detalhadas ===');
+    final info = await relpsnService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (info.sucesso) {
+      print('Razão social: ${info.dadosParsed?.razaoSocial}');
+      print('Situação: ${info.dadosParsed?.situacao}');
+      print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
     }
     
   } catch (e) {
-    print('Erro: $e');
-    
-    // Analisar erro se possível
-    if (e is RelpsnError) {
-      final analysis = relpsnService.analyzeError(e.codigo, e.mensagem);
-      print('Análise do erro: ${analysis.summary}');
-      print('Ação recomendada: ${analysis.recommendedAction}');
-    }
+    print('Erro na operação: $e');
   }
 }
+```
+
+## Dados de Teste
+
+Para desenvolvimento e testes, utilize os seguintes dados:
+
+```dart
+// CNPJs de teste (sempre usar zeros)
+const cnpjTeste = '00000000000000';
+
+// Períodos de teste
+const dataInicial = '2024-01-01';
+const dataFinal = '2024-12-31';
+
+// Situações de teste
+const situacaoTeste = 'REALIZADO';
 ```
 
 ## Limitações
 
-- Apenas CNPJs são aceitos (Pessoa Jurídica)
-- Parcelas devem estar no formato AAAAMM
-- Prazo para emissão de parcelas é limitado
-- Alguns parcelamentos podem ter restrições específicas
+1. **Certificado Digital**: Requer certificado digital válido para autenticação
+2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
+3. **Validação**: Todos os dados devem ser validados antes do envio
+4. **Simples Nacional**: Apenas para contribuintes optantes do Simples Nacional
+5. **Período**: Consultas podem ter limitações de período
 
 ## Casos de Uso Comuns
 
-### 1. Consulta Completa de Parcelamento
+### 1. Consulta Completa de Pagamentos
 
 ```dart
-Future<void> consultarParcelamentoCompleto(int numeroParcelamento) async {
+Future<void> consultarPagamentosCompleto(String contribuinteNumero) async {
   try {
-    // Consultar parcelamento
-    final parcelamento = await relpsnService.consultarParcelamento(numeroParcelamento);
-    if (!parcelamento.sucesso) return;
+    // Consultar pagamentos realizados
+    final realizados = await relpsnService.consultarPagamentosRealizados(contribuinteNumero);
+    if (!realizados.sucesso) return;
     
-    // Consultar parcelas
-    final parcelas = await relpsnService.consultarParcelas(numeroParcelamento);
-    if (!parcelas.sucesso) return;
+    // Consultar pagamentos pendentes
+    final pendentes = await relpsnService.consultarPagamentosPendentes(contribuinteNumero);
+    if (!pendentes.sucesso) return;
     
-    print('=== Parcelamento $numeroParcelamento ===');
-    print('Situação: ${parcelamento.dadosParsed?.situacao}');
-    print('Parcelas disponíveis: ${parcelas.dadosParsed?.listaParcelas.length}');
+    // Consultar informações detalhadas
+    final info = await relpsnService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
+    
+    print('=== Relatório de Pagamentos ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
+    print('Pagamentos realizados: ${realizados.dadosParsed?.listaPagamentos.length}');
+    print('Valor total realizados: ${realizados.valorTotalPagamentosFormatado}');
+    print('Pagamentos pendentes: ${pendentes.dadosParsed?.listaPagamentos.length}');
+    print('Valor total pendentes: ${pendentes.valorTotalPagamentosFormatado}');
   } catch (e) {
     print('Erro: $e');
   }
 }
 ```
 
-### 2. Emissão de DAS em Lote
+### 2. Monitoramento de Pagamentos Pendentes
 
 ```dart
-Future<void> emitirDasLote(int numeroParcelamento) async {
+Future<void> monitorarPagamentosPendentes(String contribuinteNumero) async {
   try {
-    // Consultar parcelas disponíveis
-    final parcelas = await relpsnService.consultarParcelas(numeroParcelamento);
-    if (!parcelas.sucesso) return;
+    // Consultar pagamentos pendentes
+    final pendentes = await relpsnService.consultarPagamentosPendentes(contribuinteNumero);
+    if (!pendentes.sucesso) return;
     
-    final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
+    final listaPagamentos = pendentes.dadosParsed?.listaPagamentos ?? [];
     
-    for (final parcela in listaParcelas) {
-      try {
-        final das = await relpsnService.emitirDas(numeroParcelamento, parcela.parcelaParaEmitir);
-        if (das.sucesso && das.pdfGeradoComSucesso) {
-          print('DAS emitido para parcela ${parcela.parcelaFormatada}');
+    for (final pagamento in listaPagamentos) {
+      final vencimento = DateTime.tryParse(pagamento.dataVencimentoFormatada);
+      if (vencimento != null) {
+        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
+        
+        if (diasParaVencimento <= 5) {
+          print('⚠️ Pagamento ${pagamento.numeroDocumento} vence em $diasParaVencimento dias');
+          print('Valor: ${pagamento.valorFormatado}');
         }
-      } catch (e) {
-        print('Erro ao emitir DAS para parcela ${parcela.parcelaFormatada}: $e');
       }
     }
   } catch (e) {
-    print('Erro geral: $e');
+    print('Erro no monitoramento: $e');
+  }
+}
+```
+
+### 3. Relatório de Pagamentos
+
+```dart
+Future<void> relatorioPagamentos(String contribuinteNumero) async {
+  try {
+    // Consultar pagamentos realizados
+    final realizados = await relpsnService.consultarPagamentosRealizados(contribuinteNumero);
+    if (!realizados.sucesso) return;
+    
+    // Consultar informações detalhadas
+    final info = await relpsnService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
+    
+    print('=== Relatório de Pagamentos ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
+    print('Situação: ${info.dadosParsed?.situacao}');
+    print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
+    print('Pagamentos realizados: ${realizados.dadosParsed?.listaPagamentos.length}');
+    print('Valor total: ${realizados.valorTotalPagamentosFormatado}');
+  } catch (e) {
+    print('Erro: $e');
   }
 }
 ```
@@ -281,15 +407,25 @@ Future<void> emitirDasLote(int numeroParcelamento) async {
 
 O RELPSN Service pode ser usado em conjunto com:
 
-- **DCTFWeb Service**: Para consultar declarações relacionadas aos parcelamentos
-- **MIT Service**: Para consultar apurações relacionadas aos parcelamentos
-- **Eventos Atualização Service**: Para monitorar atualizações de parcelamentos
+- **DCTFWeb Service**: Para consultar declarações relacionadas
+- **MIT Service**: Para consultar apurações relacionadas
+- **PARCSN Service**: Para consultar parcelamentos relacionados
+- **Eventos Atualização Service**: Para monitorar atualizações
 
 ## Monitoramento e Logs
 
 Para monitoramento eficaz:
 
-- Logar todas as consultas de parcelamentos
-- Monitorar emissões de DAS
-- Alertar sobre parcelas próximas do vencimento
+- Logar todas as consultas de pagamentos
+- Monitorar pagamentos pendentes
+- Alertar sobre pagamentos próximos do vencimento
 - Rastrear erros de validação
+- Monitorar performance das requisições
+
+## Suporte
+
+Para dúvidas sobre o serviço RELPSN:
+
+- Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
+- Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
+- Abra uma issue no repositório para questões específicas do package

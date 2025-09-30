@@ -1,15 +1,16 @@
-# PGMEI - Programa Gerador do DAS do MEI
+# PGMEI - Pagamento de DAS do MEI
 
 ## Visão Geral
 
-O serviço PGMEI permite gerar DAS (Documento de Arrecadação do Simples Nacional) para Microempreendedores Individuais (MEI), incluindo geração de DAS em PDF e código de barras, atualização de benefícios e consulta de dívida ativa.
+O serviço PGMEI permite gerenciar pagamentos de DAS (Documento de Arrecadação do Simples Nacional) para Microempreendedores Individuais, incluindo consulta de DAS disponíveis, consulta de DAS específicos, consulta de detalhes de pagamento e emissão de DAS.
 
 ## Funcionalidades
 
-- **Gerar DAS PDF**: Geração de DAS em formato PDF
-- **Gerar DAS Código de Barras**: Geração de DAS com código de barras
-- **Atualizar Benefício**: Atualização de benefícios do MEI
-- **Consultar Dívida Ativa**: Consulta de dívida ativa do MEI
+- **Consultar DAS Disponíveis**: Consulta de todos os DAS disponíveis para pagamento
+- **Consultar DAS Específico**: Consulta de informações detalhadas de um DAS específico
+- **Consultar Detalhes de Pagamento**: Consulta de detalhes de pagamento de um DAS
+- **Emitir DAS**: Emissão de DAS para pagamento
+- **Validações**: Validações específicas do sistema PGMEI
 
 ## Configuração
 
@@ -41,96 +42,191 @@ await apiClient.authenticate(
 final pgmeiService = PgmeiService(apiClient);
 ```
 
-### 2. Gerar DAS PDF
+### 2. Consultar DAS Disponíveis
 
 ```dart
 try {
-  final response = await pgmeiService.gerarDas('00000000000000', '202401');
+  final response = await pgmeiService.consultarDasDisponiveis();
   
   if (response.sucesso) {
-    print('DAS gerado com sucesso!');
-    print('Número do DAS: ${response.dados.numeroDas}');
-    print('Valor: ${response.dados.valor}');
-    print('Data de vencimento: ${response.dados.dataVencimento}');
+    print('DAS disponíveis: ${response.dadosParsed?.listaDas.length ?? 0}');
+    
+    for (final das in response.dadosParsed?.listaDas ?? []) {
+      print('DAS ${das.numeroDas}: ${das.valorFormatado}');
+      print('Vencimento: ${das.dataVencimentoFormatada}');
+      print('Situação: ${das.situacao}');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao gerar DAS: $e');
+  print('Erro ao consultar DAS: $e');
 }
 ```
 
-### 3. Gerar DAS com Código de Barras
+### 3. Consultar DAS Específico
 
 ```dart
 try {
-  final response = await pgmeiService.gerarDasCodigoDeBarras('00000000000000', '202401');
+  final response = await pgmeiService.consultarDasEspecifico('DAS123456');
   
   if (response.sucesso) {
-    print('DAS com código de barras gerado com sucesso!');
-    print('Número do DAS: ${response.dados.numeroDas}');
-    print('Código de barras: ${response.dados.codigoBarras}');
+    print('DAS encontrado!');
+    print('Número: ${response.dadosParsed?.numeroDas}');
+    print('Valor: ${response.dadosParsed?.valorFormatado}');
+    print('Vencimento: ${response.dadosParsed?.dataVencimentoFormatada}');
+    print('Situação: ${response.dadosParsed?.situacao}');
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao gerar DAS com código de barras: $e');
+  print('Erro ao consultar DAS específico: $e');
 }
 ```
 
-### 4. Atualizar Benefício
+### 4. Consultar Detalhes de Pagamento
 
 ```dart
 try {
-  final response = await pgmeiService.AtualizarBeneficio('00000000000000', '202401');
+  final response = await pgmeiService.consultarDetalhesPagamento('DAS123456');
   
   if (response.sucesso) {
-    print('Benefício atualizado com sucesso!');
-    print('Status: ${response.dados.status}');
+    print('Detalhes de pagamento encontrados!');
+    print('Valor pago: ${response.valorPagoFormatado}');
+    print('Data de pagamento: ${response.dataPagamentoFormatada}');
+    print('Forma de pagamento: ${response.formaPagamento}');
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao atualizar benefício: $e');
+  print('Erro ao consultar detalhes: $e');
 }
 ```
 
-### 5. Consultar Dívida Ativa
+### 5. Emitir DAS
 
 ```dart
 try {
-  final response = await pgmeiService.ConsultarDividaAtiva('00000000000000', '2024');
+  final response = await pgmeiService.emitirDas('DAS123456');
   
-  if (response.sucesso) {
-    print('Dívida ativa consultada com sucesso!');
-    print('Valor total: ${response.dados.valorTotal}');
-    print('Quantidade de débitos: ${response.dados.quantidadeDebitos}');
+  if (response.sucesso && response.pdfGeradoComSucesso) {
+    print('DAS emitido com sucesso!');
+    print('Tamanho do PDF: ${response.tamanhoPdfFormatado}');
+    
+    // Salvar PDF
+    final pdfBytes = response.pdfBytes;
+    if (pdfBytes != null) {
+      // Implementar salvamento do PDF
+      print('PDF pronto para salvamento');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar dívida ativa: $e');
+  print('Erro ao emitir DAS: $e');
 }
 ```
 
 ## Estrutura de Dados
 
-### GerarDasResponse
+### ConsultarDasDisponiveisResponse
 
 ```dart
-class GerarDasResponse {
+class ConsultarDasDisponiveisResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final GerarDasDados? dados;
+  final ConsultarDasDisponiveisDados? dadosParsed;
 }
 
-class GerarDasDados {
-  final String numeroDas;
-  final double valor;
-  final String dataVencimento;
-  final String? pdfBase64;
-  final String? codigoBarras;
+class ConsultarDasDisponiveisDados {
+  final List<DasItem> listaDas;
   // ... outros campos
+}
+
+class DasItem {
+  final String numeroDas;
+  final String valorFormatado;
+  final String dataVencimentoFormatada;
+  final String situacao;
+  // ... outros campos
+}
+```
+
+### ConsultarDasEspecificoResponse
+
+```dart
+class ConsultarDasEspecificoResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarDasEspecificoDados? dadosParsed;
+}
+
+class ConsultarDasEspecificoDados {
+  final String numeroDas;
+  final String valorFormatado;
+  final String dataVencimentoFormatada;
+  final String situacao;
+  // ... outros campos
+}
+```
+
+### EmitirDasResponse
+
+```dart
+class EmitirDasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final EmitirDasDados? dadosParsed;
+  final bool pdfGeradoComSucesso;
+  final String tamanhoPdfFormatado;
+  final Uint8List? pdfBytes;
+}
+```
+
+## Validações Disponíveis
+
+O serviço PGMEI inclui várias validações para garantir a integridade dos dados:
+
+```dart
+// Validar número do DAS
+final erro = pgmeiService.validarNumeroDas('DAS123456');
+if (erro != null) {
+  print('Erro: $erro');
+}
+
+// Validar CNPJ do contribuinte
+final erroCnpj = pgmeiService.validarCnpjContribuinte('00000000000000');
+if (erroCnpj != null) {
+  print('Erro: $erroCnpj');
+}
+
+// Validar situação do DAS
+final erroSituacao = pgmeiService.validarSituacaoDas('ATIVO');
+if (erroSituacao != null) {
+  print('Erro: $erroSituacao');
+}
+```
+
+## Análise de Erros
+
+O serviço inclui análise detalhada de erros específicos do PGMEI:
+
+```dart
+// Analisar erro
+final analise = pgmeiService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
+
+// Verificar se erro é conhecido
+if (pgmeiService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
+
+// Obter informações do erro
+final info = pgmeiService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
 }
 ```
 
@@ -140,13 +236,13 @@ class GerarDasDados {
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
 | 002 | CNPJ inválido | Verificar formato do CNPJ |
-| 003 | Período inválido | Verificar formato do período (AAAAMM) |
-| 004 | MEI não encontrado | Verificar se MEI está cadastrado |
-| 005 | DAS não disponível | Verificar se DAS está disponível para o período |
+| 003 | DAS não encontrado | Verificar se DAS existe |
+| 004 | DAS não disponível | Verificar se DAS está disponível para emissão |
+| 005 | Prazo expirado | Verificar prazo para emissão do DAS |
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Gerar DAS
+### Exemplo Completo - Consultar e Emitir DAS
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -164,63 +260,29 @@ void main() async {
   // 2. Criar serviço
   final pgmeiService = PgmeiService(apiClient);
   
-  // 3. Gerar DAS PDF
+  // 3. Consultar DAS disponíveis
   try {
-    final response = await pgmeiService.gerarDas('00000000000000', '202401');
+    final dasResponse = await pgmeiService.consultarDasDisponiveis();
     
-    if (response.sucesso) {
-      print('DAS gerado com sucesso!');
-      print('Número do DAS: ${response.dados?.numeroDas}');
-      print('Valor: ${response.dados?.valor}');
-      print('Data de vencimento: ${response.dados?.dataVencimento}');
+    if (dasResponse.sucesso) {
+      print('DAS encontrados: ${dasResponse.dadosParsed?.listaDas.length ?? 0}');
       
-      // 4. Gerar DAS com código de barras
-      final codigoBarrasResponse = await pgmeiService.gerarDasCodigoDeBarras('00000000000000', '202401');
-      
-      if (codigoBarrasResponse.sucesso) {
-        print('DAS com código de barras gerado!');
-        print('Código de barras: ${codigoBarrasResponse.dados?.codigoBarras}');
+      // 4. Emitir DAS para o primeiro disponível
+      final listaDas = dasResponse.dadosParsed?.listaDas ?? [];
+      if (listaDas.isNotEmpty) {
+        final primeiroDas = listaDas.first;
+        final emitirResponse = await pgmeiService.emitirDas(primeiroDas.numeroDas);
+        
+        if (emitirResponse.sucesso && emitirResponse.pdfGeradoComSucesso) {
+          print('DAS emitido com sucesso!');
+          print('Tamanho: ${emitirResponse.tamanhoPdfFormatado}');
+        }
       }
     } else {
-      print('Erro: ${response.mensagemErro}');
+      print('Erro: ${dasResponse.mensagemErro}');
     }
   } catch (e) {
     print('Erro na operação: $e');
-  }
-}
-```
-
-### Exemplo - Consultar Dívida Ativa
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() async {
-  // 1. Configurar cliente
-  final apiClient = ApiClient();
-  await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
-  );
-  
-  // 2. Criar serviço
-  final pgmeiService = PgmeiService(apiClient);
-  
-  // 3. Consultar dívida ativa
-  try {
-    final response = await pgmeiService.ConsultarDividaAtiva('00000000000000', '2024');
-    
-    if (response.sucesso) {
-      print('Dívida ativa consultada com sucesso!');
-      print('Valor total: ${response.dados?.valorTotal}');
-      print('Quantidade de débitos: ${response.dados?.quantidadeDebitos}');
-    } else {
-      print('Erro: ${response.mensagemErro}');
-    }
-  } catch (e) {
-    print('Erro ao consultar dívida ativa: $e');
   }
 }
 ```
@@ -233,9 +295,11 @@ Para desenvolvimento e testes, utilize os seguintes dados:
 // CNPJs de teste (sempre usar zeros)
 const cnpjTeste = '00000000000000';
 
-// Períodos de teste
-const periodoApuracao = '202401'; // AAAAMM
-const anoCalendario = '2024';
+// Números de DAS de teste
+const numeroDasTeste = 'DAS123456';
+
+// Situações de teste
+const situacaoTeste = 'ATIVO';
 ```
 
 ## Limitações
@@ -243,11 +307,113 @@ const anoCalendario = '2024';
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **MEI Ativo**: MEI deve estar ativo para geração do DAS
+4. **Prazo**: DAS têm prazo específico para emissão
+5. **MEI**: Apenas para Microempreendedores Individuais
+
+## Casos de Uso Comuns
+
+### 1. Consulta Completa de DAS
+
+```dart
+Future<void> consultarDasCompleto(String numeroDas) async {
+  try {
+    // Consultar DAS específico
+    final das = await pgmeiService.consultarDasEspecifico(numeroDas);
+    if (!das.sucesso) return;
+    
+    // Consultar detalhes de pagamento
+    final detalhes = await pgmeiService.consultarDetalhesPagamento(numeroDas);
+    if (!detalhes.sucesso) return;
+    
+    print('=== DAS $numeroDas ===');
+    print('Valor: ${das.dadosParsed?.valorFormatado}');
+    print('Vencimento: ${das.dadosParsed?.dataVencimentoFormatada}');
+    print('Situação: ${das.dadosParsed?.situacao}');
+    print('Valor pago: ${detalhes.valorPagoFormatado}');
+  } catch (e) {
+    print('Erro: $e');
+  }
+}
+```
+
+### 2. Emissão de DAS em Lote
+
+```dart
+Future<void> emitirDasLote() async {
+  try {
+    // Consultar DAS disponíveis
+    final das = await pgmeiService.consultarDasDisponiveis();
+    if (!das.sucesso) return;
+    
+    final listaDas = das.dadosParsed?.listaDas ?? [];
+    
+    for (final dasItem in listaDas) {
+      try {
+        final emitir = await pgmeiService.emitirDas(dasItem.numeroDas);
+        if (emitir.sucesso && emitir.pdfGeradoComSucesso) {
+          print('DAS emitido para ${dasItem.numeroDas}');
+          // Salvar PDF
+        }
+      } catch (e) {
+        print('Erro ao emitir DAS ${dasItem.numeroDas}: $e');
+      }
+    }
+  } catch (e) {
+    print('Erro geral: $e');
+  }
+}
+```
+
+### 3. Monitoramento de DAS
+
+```dart
+Future<void> monitorarDas() async {
+  try {
+    // Consultar DAS disponíveis
+    final das = await pgmeiService.consultarDasDisponiveis();
+    if (!das.sucesso) return;
+    
+    final listaDas = das.dadosParsed?.listaDas ?? [];
+    
+    for (final dasItem in listaDas) {
+      final vencimento = DateTime.tryParse(dasItem.dataVencimentoFormatada);
+      if (vencimento != null) {
+        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
+        
+        if (diasParaVencimento <= 5) {
+          print('⚠️ DAS ${dasItem.numeroDas} vence em $diasParaVencimento dias');
+        }
+      }
+    }
+  } catch (e) {
+    print('Erro no monitoramento: $e');
+  }
+}
+```
+
+## Integração com Outros Serviços
+
+O PGMEI Service pode ser usado em conjunto com:
+
+- **CCMEI Service**: Para consultar dados do MEI antes de emitir DAS
+- **PARCMEI Service**: Para consultar parcelamentos relacionados
+- **Eventos Atualização Service**: Para monitorar atualizações de DAS
+- **Caixa Postal Service**: Para consultar mensagens sobre pagamentos
+
+## Monitoramento e Logs
+
+Para monitoramento eficaz:
+
+- Logar todas as consultas de DAS
+- Monitorar emissões de DAS
+- Alertar sobre DAS próximos do vencimento
+- Rastrear erros de validação
+- Monitorar performance das requisições
 
 ## Suporte
 
 Para dúvidas sobre o serviço PGMEI:
+
 - Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
 - Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 - Abra uma issue no repositório para questões específicas do package

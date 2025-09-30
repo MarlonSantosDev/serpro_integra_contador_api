@@ -175,3 +175,4 @@ class Parcela {
     return 'Parcela ${parcelaFormatada} - ${valorFormatado} - Vencimento: ${dataVencimentoEstimada.day}/${dataVencimentoEstimada.month}/${dataVencimentoEstimada.year}';
   }
 }
+

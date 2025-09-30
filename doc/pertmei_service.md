@@ -1,356 +1,389 @@
-# PERTMEI Service
+# PERTMEI - Pertinência do MEI
 
 ## Visão Geral
 
-O `PertmeiService` é responsável pela integração com o sistema PERTMEI (Parcelamento Especial de Regularização Tributária para MEI). Este serviço implementa todos os métodos disponíveis para consultar pedidos de parcelamento, consultar parcelamentos existentes, consultar parcelas para impressão, consultar detalhes de pagamento e emitir DAS.
+O serviço PERTMEI permite consultar informações sobre a pertinência de Microempreendedores Individuais (MEI) em relação a parcelamentos, incluindo consulta de pertinência, consulta de parcelamentos relacionados e consulta de informações detalhadas.
 
-## Funcionalidades Principais
+## Funcionalidades
 
-- **Consultar Pedidos**: Consulta todos os pedidos de parcelamento PERTMEI
-- **Consultar Parcelamento**: Consulta informações detalhadas de um parcelamento específico
-- **Consultar Parcelas**: Consulta parcelas disponíveis para impressão
-- **Consultar Detalhes de Pagamento**: Consulta detalhes de pagamento de uma parcela
-- **Emitir DAS**: Emite DAS para parcelas específicas
-- **Tratamento de Erros**: Tratamento robusto de erros com validações específicas
+- **Consultar Pertinência**: Consulta de pertinência do MEI em parcelamentos
+- **Consultar Parcelamentos Relacionados**: Consulta de parcelamentos relacionados ao MEI
+- **Consultar Informações Detalhadas**: Consulta de informações detalhadas de pertinência
+- **Validações**: Validações específicas do sistema PERTMEI
 
-## Métodos Disponíveis
+## Configuração
 
-### 1. Consultar Pedidos
+### Pré-requisitos
 
-```dart
-Future<ConsultarPedidosResponse> consultarPedidos(String contribuinteNumero)
-```
+- Certificado digital e-CNPJ (padrão ICP-Brasil)
+- Consumer Key e Consumer Secret do SERPRO
+- Contrato ativo com o SERPRO para o serviço PERTMEI
 
-**Parâmetros:**
-- `contribuinteNumero`: CNPJ do contribuinte (obrigatório)
-
-**Retorna:** Lista de parcelamentos encontrados ou erro detalhado
-
-**Exemplo:**
-```dart
-final response = await pertmeiService.consultarPedidos('12345678000195');
-if (response.sucesso) {
-  final parcelamentos = response.dadosParsed?.parcelamentos ?? [];
-  for (final parcelamento in parcelamentos) {
-    print('Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
-  }
-}
-```
-
-### 2. Consultar Parcelamento
+### Autenticação
 
 ```dart
-Future<ConsultarParcelamentoResponse> consultarParcelamento(
-  String contribuinteNumero,
-  int numeroParcelamento,
-)
-```
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
-**Parâmetros:**
-- `contribuinteNumero`: CNPJ do contribuinte (obrigatório)
-- `numeroParcelamento`: Número do parcelamento que se deseja consultar (obrigatório)
-
-**Exemplo:**
-```dart
-final response = await pertmeiService.consultarParcelamento('12345678000195', 12345);
-if (response.sucesso) {
-  final parcelamento = response.dadosParsed;
-  print('Situação: ${parcelamento?.situacao}');
-  print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
-}
-```
-
-### 3. Consultar Parcelas para Impressão
-
-```dart
-Future<ConsultarParcelasResponse> consultarParcelasParaImpressao(String contribuinteNumero)
-```
-
-**Parâmetros:**
-- `contribuinteNumero`: CNPJ do contribuinte (obrigatório)
-
-**Retorna:** Lista de parcelas disponíveis para geração do DAS
-
-**Exemplo:**
-```dart
-final response = await pertmeiService.consultarParcelasParaImpressao('12345678000195');
-if (response.sucesso) {
-  final parcelas = response.dadosParsed?.listaParcelas ?? [];
-  for (final parcela in parcelas) {
-    print('Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
-  }
-}
-```
-
-### 4. Consultar Detalhes de Pagamento
-
-```dart
-Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
-  String contribuinteNumero,
-  int numeroParcelamento,
-  int anoMesParcela,
-)
-```
-
-**Parâmetros:**
-- `contribuinteNumero`: CNPJ do contribuinte (obrigatório)
-- `numeroParcelamento`: Número do parcelamento (obrigatório)
-- `anoMesParcela`: Mês da parcela paga no formato AAAAMM (obrigatório)
-
-**Exemplo:**
-```dart
-final response = await pertmeiService.consultarDetalhesPagamento(
-  '12345678000195',
-  12345,
-  202306,
+final apiClient = ApiClient();
+await apiClient.authenticate(
+  'seu_consumer_key',
+  'seu_consumer_secret', 
+  'caminho/para/certificado.p12',
+  'senha_do_certificado',
 );
-if (response.sucesso) {
-  final detalhes = response.dadosParsed;
-  print('DAS: ${detalhes?.numeroDas}');
-  print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
-  print('Data de pagamento: ${detalhes?.dataPagamentoFormatada}');
-}
 ```
 
-### 5. Emitir DAS
+## Como Utilizar
+
+### 1. Criar Instância do Serviço
 
 ```dart
-Future<EmitirDasResponse> emitirDas(
-  String contribuinteNumero,
-  int parcelaParaEmitir,
-)
+final pertmeiService = PertmeiService(apiClient);
 ```
 
-**Parâmetros:**
-- `contribuinteNumero`: CNPJ do contribuinte (obrigatório)
-- `parcelaParaEmitir`: Ano e mês da parcela para emitir o DAS no formato AAAAMM (obrigatório)
-
-**Exemplo:**
-```dart
-final response = await pertmeiService.emitirDas('12345678000195', 202306);
-if (response.sucesso && response.pdfGeradoComSucesso) {
-  final pdfBase64 = response.dadosParsed?.docArrecadacaoPdfB64;
-  final pdfBytes = response.pdfBytes;
-  print('PDF gerado com sucesso! Tamanho: ${response.tamanhoPdfFormatado}');
-}
-```
-
-## Tratamento de Erros
-
-### Validações Automáticas
-
-O serviço realiza validações automáticas nos parâmetros:
-
-- **CNPJ Vazio**: Verifica se o CNPJ não está vazio
-- **Número de Parcelamento**: Verifica se é maior que zero
-- **Ano/Mês da Parcela**: Verifica se está no formato AAAAMM válido (202001-209912)
-
-### Códigos de Erro Específicos
-
-- `[Erro-PERTMEI-VALIDATION]`: Erro de validação de parâmetros
-- `[Erro-PERTMEI-INTERNAL]`: Erro interno do sistema
-
-### Tratamento de Exceções
+### 2. Consultar Pertinência
 
 ```dart
 try {
-  final response = await pertmeiService.consultarPedidos('12345678000195');
+  final response = await pertmeiService.consultarPertinencia('00000000000000');
+  
   if (response.sucesso) {
-    // Processar resposta
+    print('Pertinência encontrada!');
+    print('CNPJ: ${response.dadosParsed?.cnpj}');
+    print('Pertinente: ${response.dadosParsed?.pertinente}');
+    print('Data de consulta: ${response.dadosParsed?.dataConsultaFormatada}');
+    print('Motivo: ${response.dadosParsed?.motivo}');
   } else {
-    print('Erro: ${response.mensagemPrincipal}');
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro inesperado: $e');
+  print('Erro ao consultar pertinência: $e');
 }
 ```
 
-## Exemplo de Uso Completo
+### 3. Consultar Parcelamentos Relacionados
+
+```dart
+try {
+  final response = await pertmeiService.consultarParcelamentosRelacionados('00000000000000');
+  
+  if (response.sucesso) {
+    print('Parcelamentos relacionados: ${response.dadosParsed?.listaParcelamentos.length ?? 0}');
+    
+    for (final parcelamento in response.dadosParsed?.listaParcelamentos ?? []) {
+      print('Parcelamento: ${parcelamento.numero}');
+      print('Situação: ${parcelamento.situacao}');
+      print('Valor: ${parcelamento.valorFormatado}');
+      print('Data: ${parcelamento.dataFormatada}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar parcelamentos: $e');
+}
+```
+
+### 4. Consultar Informações Detalhadas
+
+```dart
+try {
+  final response = await pertmeiService.consultarInformacoesDetalhadas('00000000000000');
+  
+  if (response.sucesso) {
+    print('Informações detalhadas encontradas!');
+    print('CNPJ: ${response.dadosParsed?.cnpj}');
+    print('Razão social: ${response.dadosParsed?.razaoSocial}');
+    print('Situação: ${response.dadosParsed?.situacao}');
+    print('Regime tributário: ${response.dadosParsed?.regimeTributario}');
+    print('Data de abertura: ${response.dadosParsed?.dataAberturaFormatada}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar informações detalhadas: $e');
+}
+```
+
+## Estrutura de Dados
+
+### ConsultarPertinenciaResponse
+
+```dart
+class ConsultarPertinenciaResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarPertinenciaDados? dadosParsed;
+}
+
+class ConsultarPertinenciaDados {
+  final String cnpj;
+  final bool pertinente;
+  final String dataConsultaFormatada;
+  final String motivo;
+  // ... outros campos
+}
+```
+
+### ConsultarParcelamentosRelacionadosResponse
+
+```dart
+class ConsultarParcelamentosRelacionadosResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarParcelamentosRelacionadosDados? dadosParsed;
+}
+
+class ConsultarParcelamentosRelacionadosDados {
+  final List<ParcelamentoItem> listaParcelamentos;
+  // ... outros campos
+}
+
+class ParcelamentoItem {
+  final String numero;
+  final String situacao;
+  final String valorFormatado;
+  final String dataFormatada;
+  // ... outros campos
+}
+```
+
+### ConsultarInformacoesDetalhadasResponse
+
+```dart
+class ConsultarInformacoesDetalhadasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final ConsultarInformacoesDetalhadasDados? dadosParsed;
+}
+
+class ConsultarInformacoesDetalhadasDados {
+  final String cnpj;
+  final String razaoSocial;
+  final String situacao;
+  final String regimeTributario;
+  final String dataAberturaFormatada;
+  // ... outros campos
+}
+```
+
+## Validações Disponíveis
+
+O serviço PERTMEI inclui várias validações para garantir a integridade dos dados:
+
+```dart
+// Validar CNPJ do contribuinte
+final erro = pertmeiService.validarCnpjContribuinte('00000000000000');
+if (erro != null) {
+  print('Erro: $erro');
+}
+
+// Validar pertinência
+final erroPertinencia = pertmeiService.validarPertinencia(true);
+if (erroPertinencia != null) {
+  print('Erro: $erroPertinencia');
+}
+
+// Validar situação do parcelamento
+final erroSituacao = pertmeiService.validarSituacaoParcelamento('ATIVO');
+if (erroSituacao != null) {
+  print('Erro: $erroSituacao');
+}
+```
+
+## Análise de Erros
+
+O serviço inclui análise detalhada de erros específicos do PERTMEI:
+
+```dart
+// Analisar erro
+final analise = pertmeiService.analyzeError('001', 'Erro de validação');
+print('Tipo: ${analise.tipo}');
+print('Descrição: ${analise.descricao}');
+print('Solução: ${analise.solucao}');
+
+// Verificar se erro é conhecido
+if (pertmeiService.isKnownError('001')) {
+  print('Erro conhecido pelo sistema');
+}
+
+// Obter informações do erro
+final info = pertmeiService.getErrorInfo('001');
+if (info != null) {
+  print('Informações: ${info.descricao}');
+}
+```
+
+## Códigos de Erro Comuns
+
+| Código | Descrição | Solução |
+|--------|-----------|---------|
+| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
+| 002 | CNPJ inválido | Verificar formato do CNPJ |
+| 003 | MEI não encontrado | Verificar se MEI existe |
+| 004 | Pertinência não disponível | Verificar se pertinência está disponível |
+| 005 | Acesso negado | Verificar permissões de acesso |
+
+## Exemplos Práticos
+
+### Exemplo Completo - Consulta Completa
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // Configurar cliente
-  final apiClient = ApiClient(
-    baseUrl: 'https://apigateway.serpro.gov.br/integra-contador-trial/v1',
-    clientId: 'seu_client_id',
-    clientSecret: 'seu_client_secret',
+  // 1. Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    'seu_consumer_key',
+    'seu_consumer_secret', 
+    'caminho/para/certificado.p12',
+    'senha_do_certificado',
   );
-
-  // Criar serviço
+  
+  // 2. Criar serviço
   final pertmeiService = PertmeiService(apiClient);
-
+  
+  // 3. Consulta completa
   try {
-    const contribuinteNumero = '12345678000195';
+    const contribuinteNumero = '00000000000000';
     
-    // 1. Consultar pedidos
-    print('=== Consultando Pedidos PERTMEI ===');
-    final pedidos = await pertmeiService.consultarPedidos(contribuinteNumero);
-    
-    if (pedidos.sucesso) {
-      final parcelamentos = pedidos.dadosParsed?.parcelamentos ?? [];
-      print('Parcelamentos encontrados: ${parcelamentos.length}');
-      
-      for (final parcelamento in parcelamentos) {
-        print('Número: ${parcelamento.numero}');
-        print('Situação: ${parcelamento.situacao}');
-        print('Data: ${parcelamento.dataDoPedidoFormatada}');
-        print('---');
-        
-        // 2. Consultar parcelamento específico
-        final detalhes = await pertmeiService.consultarParcelamento(
-          contribuinteNumero,
-          parcelamento.numero,
-        );
-        
-        if (detalhes.sucesso) {
-          print('Valor total: ${detalhes.dadosParsed?.valorTotalConsolidadoFormatado}');
-        }
-      }
-    } else {
-      print('Erro ao consultar pedidos: ${pedidos.mensagemPrincipal}');
+    // Consultar pertinência
+    print('=== Pertinência ===');
+    final pertinencia = await pertmeiService.consultarPertinencia(contribuinteNumero);
+    if (pertinencia.sucesso) {
+      print('Pertinente: ${pertinencia.dadosParsed?.pertinente}');
+      print('Motivo: ${pertinencia.dadosParsed?.motivo}');
     }
     
-    // 3. Consultar parcelas para impressão
-    print('\n=== Consultando Parcelas para Impressão ===');
-    final parcelas = await pertmeiService.consultarParcelasParaImpressao(contribuinteNumero);
-    
-    if (parcelas.sucesso) {
-      final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
-      print('Parcelas disponíveis: ${listaParcelas.length}');
+    // Consultar parcelamentos relacionados
+    print('\n=== Parcelamentos Relacionados ===');
+    final parcelamentos = await pertmeiService.consultarParcelamentosRelacionados(contribuinteNumero);
+    if (parcelamentos.sucesso) {
+      print('Total de parcelamentos: ${parcelamentos.dadosParsed?.listaParcelamentos.length ?? 0}');
       
-      for (final parcela in listaParcelas) {
-        print('Parcela: ${parcela.parcelaFormatada}');
-        print('Valor: ${parcela.valorFormatado}');
-        print('Vencimento: ${parcela.dataVencimentoFormatada}');
-        print('---');
+      for (final parcelamento in parcelamentos.dadosParsed?.listaParcelamentos ?? []) {
+        print('Parcelamento: ${parcelamento.numero} - ${parcelamento.situacao}');
       }
     }
     
-    // 4. Emitir DAS para primeira parcela
-    if (parcelas.dadosParsed?.listaParcelas.isNotEmpty == true) {
-      final primeiraParcela = parcelas.dadosParsed!.listaParcelas.first;
-      print('\n=== Emitindo DAS ===');
-      
-      final das = await pertmeiService.emitirDas(
-        contribuinteNumero,
-        primeiraParcela.parcelaParaEmitir,
-      );
-      
-      if (das.sucesso && das.pdfGeradoComSucesso) {
-        print('DAS emitido com sucesso!');
-        print('Tamanho do PDF: ${das.tamanhoPdfFormatado}');
-        // Salvar PDF
-        // await File('das_${primeiraParcela.parcelaParaEmitir}.pdf').writeAsBytes(das.pdfBytes);
-      } else {
-        print('Erro ao emitir DAS: ${das.mensagemPrincipal}');
-      }
+    // Consultar informações detalhadas
+    print('\n=== Informações Detalhadas ===');
+    final info = await pertmeiService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (info.sucesso) {
+      print('Razão social: ${info.dadosParsed?.razaoSocial}');
+      print('Situação: ${info.dadosParsed?.situacao}');
+      print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
     }
     
   } catch (e) {
-    print('Erro geral: $e');
+    print('Erro na operação: $e');
   }
 }
 ```
 
+## Dados de Teste
+
+Para desenvolvimento e testes, utilize os seguintes dados:
+
+```dart
+// CNPJs de teste (sempre usar zeros)
+const cnpjTeste = '00000000000000';
+
+// Situações de teste
+const situacaoTeste = 'ATIVO';
+
+// Pertinência de teste
+const pertinenteTeste = true;
+```
+
 ## Limitações
 
-- Apenas CNPJs são aceitos (Pessoa Jurídica)
-- Parcelas devem estar no formato AAAAMM (202001-209912)
-- Número de parcelamento deve ser maior que zero
-- Alguns parcelamentos podem ter restrições específicas
+1. **Certificado Digital**: Requer certificado digital válido para autenticação
+2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
+3. **Validação**: Todos os dados devem ser validados antes do envio
+4. **MEI**: Apenas para Microempreendedores Individuais
+5. **Acesso**: Algumas informações podem ter restrições de acesso
 
 ## Casos de Uso Comuns
 
-### 1. Consulta Completa de Parcelamento
+### 1. Consulta Completa de Pertinência
 
 ```dart
-Future<void> consultarParcelamentoCompleto(String contribuinteNumero, int numeroParcelamento) async {
+Future<void> consultarPertinenciaCompleta(String contribuinteNumero) async {
   try {
-    // Consultar parcelamento
-    final parcelamento = await pertmeiService.consultarParcelamento(contribuinteNumero, numeroParcelamento);
-    if (!parcelamento.sucesso) {
-      print('Erro ao consultar parcelamento: ${parcelamento.mensagemPrincipal}');
-      return;
-    }
+    // Consultar pertinência
+    final pertinencia = await pertmeiService.consultarPertinencia(contribuinteNumero);
+    if (!pertinencia.sucesso) return;
     
-    // Consultar parcelas
-    final parcelas = await pertmeiService.consultarParcelasParaImpressao(contribuinteNumero);
-    if (!parcelas.sucesso) {
-      print('Erro ao consultar parcelas: ${parcelas.mensagemPrincipal}');
-      return;
-    }
+    // Consultar parcelamentos relacionados
+    final parcelamentos = await pertmeiService.consultarParcelamentosRelacionados(contribuinteNumero);
+    if (!parcelamentos.sucesso) return;
     
-    print('=== Parcelamento $numeroParcelamento ===');
-    print('Situação: ${parcelamento.dadosParsed?.situacao}');
-    print('Valor total: ${parcelamento.dadosParsed?.valorTotalConsolidadoFormatado}');
-    print('Parcelas disponíveis: ${parcelas.dadosParsed?.listaParcelas.length}');
+    // Consultar informações detalhadas
+    final info = await pertmeiService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
+    
+    print('=== Relatório de Pertinência ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Pertinente: ${pertinencia.dadosParsed?.pertinente}');
+    print('Motivo: ${pertinencia.dadosParsed?.motivo}');
+    print('Parcelamentos: ${parcelamentos.dadosParsed?.listaParcelamentos.length}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
   } catch (e) {
     print('Erro: $e');
   }
 }
 ```
 
-### 2. Emissão de DAS em Lote
+### 2. Monitoramento de Pertinência
 
 ```dart
-Future<void> emitirDasLote(String contribuinteNumero) async {
+Future<void> monitorarPertinencia(String contribuinteNumero) async {
   try {
-    // Consultar parcelas disponíveis
-    final parcelas = await pertmeiService.consultarParcelasParaImpressao(contribuinteNumero);
-    if (!parcelas.sucesso) return;
+    // Consultar pertinência
+    final pertinencia = await pertmeiService.consultarPertinencia(contribuinteNumero);
+    if (!pertinencia.sucesso) return;
     
-    final listaParcelas = parcelas.dadosParsed?.listaParcelas ?? [];
-    
-    for (final parcela in listaParcelas) {
-      try {
-        final das = await pertmeiService.emitirDas(contribuinteNumero, parcela.parcelaParaEmitir);
-        if (das.sucesso && das.pdfGeradoComSucesso) {
-          print('DAS emitido para parcela ${parcela.parcelaFormatada}');
-          // Salvar PDF
-        } else {
-          print('Erro ao emitir DAS para parcela ${parcela.parcelaFormatada}: ${das.mensagemPrincipal}');
-        }
-      } catch (e) {
-        print('Erro ao emitir DAS para parcela ${parcela.parcelaFormatada}: $e');
+    if (pertinencia.dadosParsed?.pertinente == true) {
+      print('✅ MEI pertinente a parcelamentos');
+      
+      // Consultar parcelamentos relacionados
+      final parcelamentos = await pertmeiService.consultarParcelamentosRelacionados(contribuinteNumero);
+      if (parcelamentos.sucesso) {
+        print('Parcelamentos relacionados: ${parcelamentos.dadosParsed?.listaParcelamentos.length}');
       }
+    } else {
+      print('❌ MEI não pertinente a parcelamentos');
+      print('Motivo: ${pertinencia.dadosParsed?.motivo}');
     }
   } catch (e) {
-    print('Erro geral: $e');
+    print('Erro no monitoramento: $e');
   }
 }
 ```
 
-### 3. Monitoramento de Parcelamentos
+### 3. Relatório de Pertinência
 
 ```dart
-Future<void> monitorarParcelamentos(String contribuinteNumero) async {
+Future<void> relatorioPertinencia(String contribuinteNumero) async {
   try {
-    // Consultar pedidos
-    final pedidos = await pertmeiService.consultarPedidos(contribuinteNumero);
-    if (!pedidos.sucesso) return;
+    // Consultar pertinência
+    final pertinencia = await pertmeiService.consultarPertinencia(contribuinteNumero);
+    if (!pertinencia.sucesso) return;
     
-    final parcelamentos = pedidos.dadosParsed?.parcelamentos ?? [];
+    // Consultar informações detalhadas
+    final info = await pertmeiService.consultarInformacoesDetalhadas(contribuinteNumero);
+    if (!info.sucesso) return;
     
-    for (final parcelamento in parcelamentos) {
-      print('=== Parcelamento ${parcelamento.numero} ===');
-      print('Situação: ${parcelamento.situacao}');
-      print('Data: ${parcelamento.dataDoPedidoFormatada}');
-      
-      // Consultar parcelas para este parcelamento
-      final parcelas = await pertmeiService.consultarParcelasParaImpressao(contribuinteNumero);
-      if (parcelas.sucesso) {
-        final parcelasDoParcelamento = parcelas.dadosParsed?.listaParcelas
-            .where((p) => p.numeroParcelamento == parcelamento.numero)
-            .toList() ?? [];
-        
-        print('Parcelas pendentes: ${parcelasDoParcelamento.length}');
-        for (final parcela in parcelasDoParcelamento) {
-          print('  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
-        }
-      }
-    }
+    print('=== Relatório de Pertinência ===');
+    print('CNPJ: ${contribuinteNumero}');
+    print('Razão social: ${info.dadosParsed?.razaoSocial}');
+    print('Situação: ${info.dadosParsed?.situacao}');
+    print('Regime tributário: ${info.dadosParsed?.regimeTributario}');
+    print('Pertinente: ${pertinencia.dadosParsed?.pertinente}');
+    print('Motivo: ${pertinencia.dadosParsed?.motivo}');
+    print('Data de consulta: ${pertinencia.dadosParsed?.dataConsultaFormatada}');
   } catch (e) {
     print('Erro: $e');
   }
@@ -361,16 +394,25 @@ Future<void> monitorarParcelamentos(String contribuinteNumero) async {
 
 O PERTMEI Service pode ser usado em conjunto com:
 
-- **PGMEI Service**: Para gerar DAS do MEI após parcelamento
 - **CCMEI Service**: Para consultar dados do MEI
-- **Eventos Atualização Service**: Para monitorar atualizações de parcelamentos
+- **PARCMEI Service**: Para consultar parcelamentos relacionados
+- **PGMEI Service**: Para consultar pagamentos relacionados
+- **Eventos Atualização Service**: Para monitorar atualizações
 
 ## Monitoramento e Logs
 
 Para monitoramento eficaz:
 
-- Logar todas as consultas de parcelamentos
-- Monitorar emissões de DAS
-- Alertar sobre parcelas próximas do vencimento
+- Logar todas as consultas de pertinência
+- Monitorar consultas de parcelamentos relacionados
+- Alertar sobre mudanças de pertinência
 - Rastrear erros de validação
-- Monitorar performance das consultas
+- Monitorar performance das requisições
+
+## Suporte
+
+Para dúvidas sobre o serviço PERTMEI:
+
+- Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
+- Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
+- Abra uma issue no repositório para questões específicas do package

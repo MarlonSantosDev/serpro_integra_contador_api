@@ -1,33 +1,24 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarParcelamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelamentoResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarParcelamentoResponse({required this.status, required this.mensagens, required this.dados});
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List)
-          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -81,33 +72,17 @@ class ParcelamentoDetalhado {
   });
 
   factory ParcelamentoDetalhado.fromJson(String jsonString) {
-    final Map<String, dynamic> json =
-        jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
     return ParcelamentoDetalhado(
       numero: int.parse(json['numero'].toString()),
       dataDoPedido: int.parse(json['dataDoPedido'].toString()),
       situacao: json['situacao'].toString(),
       dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacoesOriginais:
-          (json['consolidacoesOriginais'] as List?)
-              ?.map(
-                (e) => ConsolidacaoOriginal.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
-      alteracoesDivida:
-          (json['alteracoesDivida'] as List?)
-              ?.map((e) => AlteracaoDivida.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+          (json['consolidacoesOriginais'] as List?)?.map((e) => ConsolidacaoOriginal.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      alteracoesDivida: (json['alteracoesDivida'] as List?)?.map((e) => AlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       demonstrativosPagamento:
-          (json['demonstrativosPagamento'] as List?)
-              ?.map(
-                (e) =>
-                    DemonstrativoPagamento.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
+          (json['demonstrativosPagamento'] as List?)?.map((e) => DemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     );
   }
 
@@ -117,13 +92,9 @@ class ParcelamentoDetalhado {
       'dataDoPedido': dataDoPedido,
       'situacao': situacao,
       'dataDaSituacao': dataDaSituacao,
-      'consolidacoesOriginais': consolidacoesOriginais
-          .map((e) => e.toJson())
-          .toList(),
+      'consolidacoesOriginais': consolidacoesOriginais.map((e) => e.toJson()).toList(),
       'alteracoesDivida': alteracoesDivida.map((e) => e.toJson()).toList(),
-      'demonstrativosPagamento': demonstrativosPagamento
-          .map((e) => e.toJson())
-          .toList(),
+      'demonstrativosPagamento': demonstrativosPagamento.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -131,7 +102,7 @@ class ParcelamentoDetalhado {
   String get dataDoPedidoFormatada {
     final data = dataDoPedido.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -140,7 +111,7 @@ class ParcelamentoDetalhado {
   String get dataDaSituacaoFormatada {
     final data = dataDaSituacao.toString();
     if (data.length == 8) {
-      return '${data.substring(6, 8)}/${data.substring(4, 6)}/${data.substring(0, 4)}';
+      return FormatterUtils.formatDateFromString(data);
     }
     return data;
   }
@@ -162,28 +133,18 @@ class ConsolidacaoOriginal {
   final String tipo;
   final List<DetalhesConsolidacao> detalhes;
 
-  ConsolidacaoOriginal({
-    required this.numero,
-    required this.tipo,
-    required this.detalhes,
-  });
+  ConsolidacaoOriginal({required this.numero, required this.tipo, required this.detalhes});
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List)
-          .map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      detalhes: (json['detalhes'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'numero': numero,
-      'tipo': tipo,
-      'detalhes': detalhes.map((e) => e.toJson()).toList(),
-    };
+    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -224,7 +185,7 @@ class DetalhesConsolidacao {
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalFormatado {
-    return 'R\$ ${valorTotal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotal);
   }
 }
 
@@ -233,30 +194,18 @@ class AlteracaoDivida {
   final String tipo;
   final List<DetalhesAlteracaoDivida> detalhes;
 
-  AlteracaoDivida({
-    required this.numero,
-    required this.tipo,
-    required this.detalhes,
-  });
+  AlteracaoDivida({required this.numero, required this.tipo, required this.detalhes});
 
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List)
-          .map(
-            (e) => DetalhesAlteracaoDivida.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+      detalhes: (json['detalhes'] as List).map((e) => DetalhesAlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'numero': numero,
-      'tipo': tipo,
-      'detalhes': detalhes.map((e) => e.toJson()).toList(),
-    };
+    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -297,7 +246,7 @@ class DetalhesAlteracaoDivida {
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalFormatado {
-    return 'R\$ ${valorTotal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotal);
   }
 }
 
@@ -306,32 +255,18 @@ class DemonstrativoPagamento {
   final String tipo;
   final List<DetalhesDemonstrativoPagamento> detalhes;
 
-  DemonstrativoPagamento({
-    required this.numero,
-    required this.tipo,
-    required this.detalhes,
-  });
+  DemonstrativoPagamento({required this.numero, required this.tipo, required this.detalhes});
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List)
-          .map(
-            (e) => DetalhesDemonstrativoPagamento.fromJson(
-              e as Map<String, dynamic>,
-            ),
-          )
-          .toList(),
+      detalhes: (json['detalhes'] as List).map((e) => DetalhesDemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'numero': numero,
-      'tipo': tipo,
-      'detalhes': detalhes.map((e) => e.toJson()).toList(),
-    };
+    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -372,6 +307,6 @@ class DetalhesDemonstrativoPagamento {
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalFormatado {
-    return 'R\$ ${valorTotal.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotal);
   }
 }

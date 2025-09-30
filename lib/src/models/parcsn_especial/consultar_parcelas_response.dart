@@ -1,33 +1,24 @@
 import 'dart:convert';
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarParcelasResponse {
   final String status;
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List)
-          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -68,15 +59,12 @@ class ConsultarParcelasResponse {
   double get valorTotalParcelas {
     final dadosParsed = this.dadosParsed;
     if (dadosParsed == null) return 0.0;
-    return dadosParsed.listaParcelas.fold(
-      0.0,
-      (sum, parcela) => sum + parcela.valor,
-    );
+    return dadosParsed.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
   }
 
   /// Valor total formatado como moeda brasileira
   String get valorTotalParcelasFormatado {
-    return 'R\$ ${valorTotalParcelas.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valorTotalParcelas);
   }
 
   @override
@@ -91,13 +79,8 @@ class ListaParcelasData {
   ListaParcelasData({required this.listaParcelas});
 
   factory ListaParcelasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json =
-        jsonDecode(jsonString) as Map<String, dynamic>;
-    return ListaParcelasData(
-      listaParcelas: (json['listaParcelas'] as List)
-          .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    return ListaParcelasData(listaParcelas: (json['listaParcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList());
   }
 
   Map<String, dynamic> toJson() {
@@ -112,10 +95,7 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(
-      parcela: int.parse(json['parcela'].toString()),
-      valor: (num.parse(json['valor'].toString())).toDouble(),
-    );
+    return Parcela(parcela: int.parse(json['parcela'].toString()), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {
@@ -133,7 +113,7 @@ class Parcela {
 
   /// Valor formatado como moeda brasileira
   String get valorFormatado {
-    return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',').replaceAll(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), r'$1.')}';
+    return FormatterUtils.formatCurrency(valor);
   }
 
   /// Ano da parcela
@@ -190,3 +170,4 @@ class Parcela {
     return 'Parcela(parcela: $parcelaFormatada, valor: $valorFormatado)';
   }
 }
+

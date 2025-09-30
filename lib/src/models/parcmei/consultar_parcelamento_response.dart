@@ -1,4 +1,5 @@
 import 'mensagem.dart';
+import '../../util/formatter_utils.dart';
 
 class ConsultarParcelamentoResponse {
   final String status;
@@ -247,7 +248,7 @@ class DetalhesConsolidacao {
   String get periodoApuracaoFormatado {
     final periodoStr = periodoApuracao.toString();
     if (periodoStr.length == 6) {
-      return '${periodoStr.substring(0, 4)}/${periodoStr.substring(4, 6)}';
+      return FormatterUtils.formatPeriodFromString(periodoStr);
     }
     return periodoStr;
   }
@@ -347,7 +348,7 @@ class DetalhesAlteracaoDivida {
   String get periodoApuracaoFormatado {
     final periodoStr = periodoApuracao.toString();
     if (periodoStr.length == 6) {
-      return '${periodoStr.substring(0, 4)}/${periodoStr.substring(4, 6)}';
+      return FormatterUtils.formatPeriodFromString(periodoStr);
     }
     return periodoStr;
   }

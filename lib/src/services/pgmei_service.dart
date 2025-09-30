@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/pgmei/gerar_das_response.dart';
-import 'package:serpro_integra_contador_api/src/util/validation_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
 
 class PgmeiService {
   final ApiClient _apiClient;
@@ -11,8 +11,8 @@ class PgmeiService {
 
   Future<GerarDasResponse> gerarDas(String cnpj, String periodoApuracao, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações
-    ValidationUtils.validateCNPJ(cnpj);
-    ValidationUtils.validatePeriodo(periodoApuracao);
+    DocumentUtils.validateCNPJ(cnpj);
+    DocumentUtils.validatePeriodo(periodoApuracao);
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,
@@ -35,8 +35,8 @@ class PgmeiService {
     String? autorPedidoDadosNumero,
   }) async {
     // Validações
-    ValidationUtils.validateCNPJ(cnpj);
-    ValidationUtils.validatePeriodo(periodoApuracao);
+    DocumentUtils.validateCNPJ(cnpj);
+    DocumentUtils.validatePeriodo(periodoApuracao);
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,
@@ -59,8 +59,8 @@ class PgmeiService {
     String? autorPedidoDadosNumero,
   }) async {
     // Validações
-    ValidationUtils.validateCNPJ(cnpj);
-    ValidationUtils.validatePeriodo(periodoApuracao);
+    DocumentUtils.validateCNPJ(cnpj);
+    DocumentUtils.validatePeriodo(periodoApuracao);
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,
@@ -78,8 +78,8 @@ class PgmeiService {
 
   Future<GerarDasResponse> consultarDividaAtiva(String cnpj, String ano, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações
-    ValidationUtils.validateCNPJ(cnpj);
-    ValidationUtils.validateAno(ano);
+    DocumentUtils.validateCNPJ(cnpj);
+    DocumentUtils.validateAno(ano);
 
     final request = BaseRequest(
       contribuinteNumero: cnpj,

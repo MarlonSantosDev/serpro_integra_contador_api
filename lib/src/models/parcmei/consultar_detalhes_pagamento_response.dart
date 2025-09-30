@@ -317,3 +317,4 @@ class DiscriminacaoDebito {
     return (juros / principal) * 100;
   }
 }
+
