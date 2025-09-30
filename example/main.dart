@@ -16,17 +16,19 @@ void main() async {
     contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
+
   // Exemplo de uso dos serviços
   //await exemplosCaixaPostal(apiClient);
   //await exemplosCcmei(apiClient);
   //await exemplosDctfWeb(apiClient);
-  await exemplosDefis(apiClient);
+  // await exemplosDefis(apiClient); Em teste
+  //await exemplosDte(apiClient);
+  await exemplosEventosAtualizacao(apiClient);
 
   //await exemplosPgmei(apiClient);
   // await exemplosCcmei(apiClient);
   // await exemplosPgdasd(apiClient);
   // await exemplosProcuracoes(apiClient);
-  // await exemplosDte(apiClient);
   // await exemplosSitfis(apiClient);
   // await exemplosPagtoWeb(apiClient);
   // await exemplosAutenticaProcurador(apiClient);
@@ -39,7 +41,6 @@ void main() async {
   // await exemplosPertmei(apiClient);
   // await exemplosParcsnEspecial(apiClient);
   // await exemplosMit(apiClient);
-  // await exemplosEventosAtualizacao(apiClient);
 }
 
 Future<void> exemplosCaixaPostal(ApiClient apiClient) async {
@@ -511,142 +512,584 @@ Future<void> exemplosDefis(ApiClient apiClient) async {
   final defisService = DefisService(apiClient);
 
   try {
-    print('\n--- 1. Transmitir Declaração Sócio Econômica ---');
-
-    // Criar uma declaração de exemplo usando os enums
-    final declaracao = defis.TransmitirDeclaracaoRequest(
-      ano: 2023,
-      situacaoEspecial: defis.SituacaoEspecial(tipoEvento: defis.TipoEventoSituacaoEspecial.cisaoParcial, dataEvento: 20230101),
-      inatividade: defis.RegraInatividade.atividadesMaiorZero,
-      empresa: defis.Empresa(
-        ganhoCapital: 0,
-        qtdEmpregadoInicial: 1,
-        qtdEmpregadoFinal: 1,
-        receitaExportacaoDireta: 0,
-        socios: [
-          defis.Socio(cpf: '00000000000', rendimentosIsentos: 10000, rendimentosTributaveis: 5000, participacaoCapitalSocial: 100, irRetidoFonte: 0),
-        ],
-        ganhoRendaVariavel: 0,
-        doacoesCampanhaEleitoral: [
-          defis.Doacao(
-            cnpjBeneficiario: '00000000000000',
-            tipoBeneficiario: defis.TipoBeneficiarioDoacao.candidatoCargoPolitico,
-            formaDoacao: defis.FormaDoacao.dinheiro,
-            valor: 1000.00,
+    /*
+    try {
+      
+      print('\n--- 1. Transmitir Declaração Sócio Econômica ---');
+      // Criar uma declaração de exemplo usando os enums
+      final declaracao = defis.TransmitirDeclaracaoRequest(
+        ano: 2021,
+        situacaoEspecial: defis.SituacaoEspecial(tipoEvento: defis.TipoEventoSituacaoEspecial.cisaoParcial, dataEvento: 20230101),
+        inatividade: defis.RegraInatividade.atividadesMaiorZero,
+        empresa: defis.Empresa(
+          ganhoCapital: 0,
+          qtdEmpregadoInicial: 1,
+          qtdEmpregadoFinal: 1,
+          receitaExportacaoDireta: 0,
+          socios: [
+            defis.Socio(
+              cpf: '00000000000',
+              rendimentosIsentos: 10000,
+              rendimentosTributaveis: 5000,
+              participacaoCapitalSocial: 100,
+              irRetidoFonte: 0,
+            ),
+          ],
+          ganhoRendaVariavel: 0,
+          doacoesCampanhaEleitoral: [
+            defis.Doacao(
+              cnpjBeneficiario: '00000000000000',
+              tipoBeneficiario: defis.TipoBeneficiarioDoacao.candidatoCargoPolitico,
+              formaDoacao: defis.FormaDoacao.dinheiro,
+              valor: 1000.00,
+            ),
+          ],
+          estabelecimentos: [
+            defis.Estabelecimento(
+              cnpjCompleto: '00000000000000',
+              estoqueInicial: 1000,
+              estoqueFinal: 2000,
+              saldoCaixaInicial: 5000,
+              saldoCaixaFinal: 15000,
+              aquisicoesMercadoInterno: 10000,
+              importacoes: 0,
+              totalEntradasPorTransferencia: 0,
+              totalSaidasPorTransferencia: 0,
+              totalDevolucoesVendas: 100,
+              totalEntradas: 10100,
+              totalDevolucoesCompras: 50,
+              totalDespesas: 8000,
+              operacoesInterestaduais: [defis.OperacaoInterestadual(uf: 'SP', valor: 5000.00, tipoOperacao: defis.TipoOperacao.entrada)],
+            ),
+          ],
+          naoOptante: defis.NaoOptante(
+            administracaoTributaria: defis.AdministracaoTributaria.federal,
+            uf: 'SP',
+            codigoMunicipio: '3550308',
+            numeroProcesso: '12345678901234567890',
           ),
-        ],
-        estabelecimentos: [
-          defis.Estabelecimento(
-            cnpjCompleto: '00000000000000',
-            estoqueInicial: 1000,
-            estoqueFinal: 2000,
-            saldoCaixaInicial: 5000,
-            saldoCaixaFinal: 15000,
-            aquisicoesMercadoInterno: 10000,
-            importacoes: 0,
-            totalEntradasPorTransferencia: 0,
-            totalSaidasPorTransferencia: 0,
-            totalDevolucoesVendas: 100,
-            totalEntradas: 10100,
-            totalDevolucoesCompras: 50,
-            totalDespesas: 8000,
-            operacoesInterestaduais: [defis.OperacaoInterestadual(uf: 'SP', valor: 5000.00, tipoOperacao: defis.TipoOperacao.entrada)],
-          ),
-        ],
-        naoOptante: defis.NaoOptante(
-          administracaoTributaria: defis.AdministracaoTributaria.federal,
-          uf: 'SP',
-          codigoMunicipio: '3550308',
-          numeroProcesso: '12345678901234567890',
         ),
-      ),
-    );
-
-    final transmitirResponse = await defisService.transmitirDeclaracao(contribuinteNumero: '00000000000000', declaracaoData: declaracao);
-
-    print('Status: ${transmitirResponse.status}');
-    print('Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
-    print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-    print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-
-    print('\n--- 2. Consultar Declarações Transmitidas ---');
-    final consultarDeclaracoesResponse = await defisService.consultarDeclaracoesTransmitidas(contribuinteNumero: '00000000000000');
-
-    print('Status: ${consultarDeclaracoesResponse.status}');
-    print('Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}');
-
-    for (var declaracao in consultarDeclaracoesResponse.dados) {
-      print('  - ID: ${declaracao.idDefis}, Ano: ${declaracao.ano}, Data: ${declaracao.dataTransmissao}, Situação: ${declaracao.situacao}');
-    }
-
-    print('\n--- 3. Consultar Última Declaração Transmitida ---');
-    final consultarUltimaResponse = await defisService.consultarUltimaDeclaracao(contribuinteNumero: '00000000000000', ano: 2023);
-
-    print('Status: ${consultarUltimaResponse.status}');
-    print('Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('ID DEFIS: ${consultarUltimaResponse.dados.idDefis}');
-    print('Ano: ${consultarUltimaResponse.dados.ano}');
-    print('Data Transmissão: ${consultarUltimaResponse.dados.dataTransmissao}');
-    print('Situação: ${consultarUltimaResponse.dados.situacao}');
-    print('Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf != null ? 'Disponível' : 'Não disponível'}');
-    print('Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf != null ? 'Disponível' : 'Não disponível'}');
-
-    print('\n--- 4. Consultar Declaração Específica ---');
-    final consultarEspecificaResponse = await defisService.consultarDeclaracaoEspecifica(
-      contribuinteNumero: '00000000000000',
-      idDefis: 12345, // Usar um ID real se disponível
-    );
-
-    print('Status: ${consultarEspecificaResponse.status}');
-    print('Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-    print('ID DEFIS: ${consultarEspecificaResponse.dados.idDefis}');
-    print('Ano: ${consultarEspecificaResponse.dados.ano}');
-    print('Data Transmissão: ${consultarEspecificaResponse.dados.dataTransmissao}');
-    print('Situação: ${consultarEspecificaResponse.dados.situacao}');
-
-    print('\n--- 5. Exemplo com Procurador ---');
-    // Exemplo usando token de procurador (se disponível)
-    if (apiClient.hasProcuradorToken) {
-      final procuradorResponse = await defisService.consultarDeclaracoesTransmitidas(
-        contribuinteNumero: '00000000000000',
-        procuradorToken: apiClient.procuradorToken,
       );
 
-      print('Status com procurador: ${procuradorResponse.status}');
-      print('Quantidade de declarações: ${procuradorResponse.dados.length}');
-    } else {
-      print('Token de procurador não disponível');
+      final transmitirResponse = await defisService.transmitirDeclaracao(
+        contratanteNumero: '00000000000000',
+        contribuinteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+        declaracaoData: declaracao,
+      );
+
+      print('Status: ${transmitirResponse.status}');
+      print('Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
+      print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+      print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    } catch (e) {
+      print('❌ Erro ao transmitir declaração: $e');
+    }
+    await Future.delayed(Duration(seconds: 10));
+    */
+
+    try {
+      print('\n--- 2. Consultar Declarações Transmitidas ---');
+      final consultarDeclaracoesResponse = await defisService.consultarDeclaracoesTransmitidas(
+        contribuinteNumero: '00000000000000',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
+      );
+
+      print('Status: ${consultarDeclaracoesResponse.status}');
+      print('Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}');
+
+      for (var declaracao in consultarDeclaracoesResponse.dados) {
+        print('  - ID: ${declaracao.idDefis}, Ano: ${declaracao.ano}, Data: ${declaracao.dataTransmissao}, Situação: ${declaracao.situacao}');
+      }
+    } catch (e) {
+      print('❌ Erro ao consultar declarações transmitidas: $e');
+    }
+    await Future.delayed(Duration(seconds: 10));
+    /*
+    try {
+      print('\n--- 3. Consultar Última Declaração Transmitida ---');
+      final consultarUltimaResponse = await defisService.consultarUltimaDeclaracao(contribuinteNumero: '00000000000000', ano: 2023);
+
+      print('Status: ${consultarUltimaResponse.status}');
+      print('Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('ID DEFIS: ${consultarUltimaResponse.dados.idDefis}');
+      print('Ano: ${consultarUltimaResponse.dados.ano}');
+      print('Data Transmissão: ${consultarUltimaResponse.dados.dataTransmissao}');
+      print('Situação: ${consultarUltimaResponse.dados.situacao}');
+      print('Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf != null ? 'Disponível' : 'Não disponível'}');
+      print('Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf != null ? 'Disponível' : 'Não disponível'}');
+    } catch (e) {
+      print('❌ Erro ao consultar última declaração transmitida: $e');
+    }
+    await Future.delayed(Duration(seconds: 10));
+
+    try {
+      print('\n--- 4. Consultar Declaração Específica ---');
+      final consultarEspecificaResponse = await defisService.consultarDeclaracaoEspecifica(
+        contribuinteNumero: '00000000000000',
+        idDefis: 12345, // Usar um ID real se disponível
+      );
+
+      print('Status: ${consultarEspecificaResponse.status}');
+      print('Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('ID DEFIS: ${consultarEspecificaResponse.dados.idDefis}');
+      print('Ano: ${consultarEspecificaResponse.dados.ano}');
+      print('Data Transmissão: ${consultarEspecificaResponse.dados.dataTransmissao}');
+      print('Situação: ${consultarEspecificaResponse.dados.situacao}');
+    } catch (e) {
+      print('❌ Erro ao consultar declaração específica: $e');
     }
 
-    print('\n--- 6. Exemplo de Validação de Enums ---');
-    print('Tipos de evento disponíveis:');
-    for (var tipo in defis.TipoEventoSituacaoEspecial.values) {
-      print('  ${tipo.codigo}: ${tipo.descricao}');
+    try {
+      print('\n--- 5. Exemplo com Procurador ---');
+      // Exemplo usando token de procurador (se disponível)
+      if (apiClient.hasProcuradorToken) {
+        final procuradorResponse = await defisService.consultarDeclaracoesTransmitidas(
+          contribuinteNumero: '00000000000000',
+          procuradorToken: apiClient.procuradorToken,
+        );
+
+        print('Status com procurador: ${procuradorResponse.status}');
+        print('Quantidade de declarações: ${procuradorResponse.dados.length}');
+      } else {
+        print('Token de procurador não disponível');
+      }
+    } catch (e) {
+      print('❌ Erro ao consultar declarações transmitidas com procurador: $e');
     }
 
-    print('Regras de inatividade disponíveis:');
-    for (var regra in defis.RegraInatividade.values) {
-      print('  ${regra.codigo}: ${regra.descricao}');
-    }
+    try {
+      print('\n--- 6. Exemplo de Validação de Enums ---');
+      print('Tipos de evento disponíveis:');
+      for (var tipo in defis.TipoEventoSituacaoEspecial.values) {
+        print('  ${tipo.codigo}: ${tipo.descricao}');
+      }
 
-    print('Tipos de beneficiário de doação:');
-    for (var tipo in defis.TipoBeneficiarioDoacao.values) {
-      print('  ${tipo.codigo}: ${tipo.descricao}');
-    }
+      print('Regras de inatividade disponíveis:');
+      for (var regra in defis.RegraInatividade.values) {
+        print('  ${regra.codigo}: ${regra.descricao}');
+      }
 
-    print('Formas de doação:');
-    for (var forma in defis.FormaDoacao.values) {
-      print('  ${forma.codigo}: ${forma.descricao}');
-    }
+      print('Tipos de beneficiário de doação:');
+      for (var tipo in defis.TipoBeneficiarioDoacao.values) {
+        print('  ${tipo.codigo}: ${tipo.descricao}');
+      }
 
-    print('Administrações tributárias:');
-    for (var admin in defis.AdministracaoTributaria.values) {
-      print('  ${admin.codigo}: ${admin.descricao}');
-    }
+      print('Formas de doação:');
+      for (var forma in defis.FormaDoacao.values) {
+        print('  ${forma.codigo}: ${forma.descricao}');
+      }
+
+      print('Administrações tributárias:');
+      for (var admin in defis.AdministracaoTributaria.values) {
+        print('  ${admin.codigo}: ${admin.descricao}');
+      }
+    } catch (e) {
+      print('❌ Erro ao consultar validação de enums: $e');
+    }*/
   } catch (e) {
     print('Erro no serviço DEFIS: $e');
+  }
+}
+
+Future<void> exemplosDte(ApiClient apiClient) async {
+  print('\n=== Exemplos DTE (Domicílio Tributário Eletrônico) ===');
+
+  final dteService = DteService(apiClient);
+
+  try {
+    // 1. Exemplo básico - Consultar indicador DTE com CNPJ válido
+    print('\n--- 1. Consultar Indicador DTE (CNPJ Válido) ---');
+    try {
+      final response = await dteService.obterIndicadorDte('11111111111111');
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+      print('Código: ${response.codigoMensagem}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador de enquadramento: ${dados.indicadorEnquadramento}');
+        print('Status de enquadramento: ${dados.statusEnquadramento}');
+        print('Descrição do indicador: ${dados.indicadorDescricao}');
+        print('É válido: ${dados.isIndicadorValido}');
+
+        // Análise do enquadramento
+        print('\nAnálise do enquadramento:');
+        print('  - É optante DTE: ${response.isOptanteDte}');
+        print('  - É optante Simples: ${response.isOptanteSimples}');
+        print('  - É optante DTE e Simples: ${response.isOptanteDteESimples}');
+        print('  - Não é optante: ${response.isNaoOptante}');
+        print('  - NI inválido: ${response.isNiInvalido}');
+      }
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 2. Exemplo com CNPJ da documentação (99999999999999)
+    print('\n--- 2. Consultar Indicador DTE (CNPJ da Documentação) ---');
+    try {
+      final response = await dteService.obterIndicadorDte('11111111111111');
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador: ${dados.indicadorEnquadramento}');
+        print('Status: ${dados.statusEnquadramento}');
+        print('Descrição: ${dados.indicadorDescricao}');
+      }
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 3. Exemplo com CNPJ formatado
+    print('\n--- 3. Consultar Indicador DTE (CNPJ Formatado) ---');
+    try {
+      final cnpjFormatado = '12.345.678/0001-95';
+      print('CNPJ formatado: $cnpjFormatado');
+      print('CNPJ limpo: ${dteService.limparCnpj(cnpjFormatado)}');
+
+      final response = await dteService.obterIndicadorDte(cnpjFormatado);
+
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+    } catch (e) {
+      print('Erro ao consultar DTE: $e');
+    }
+
+    // 4. Validação de CNPJ
+    print('\n--- 4. Validação de CNPJ ---');
+
+    final cnpjsParaTestar = [
+      '11111111111111', // Válido
+      '12.345.678/0001-95', // Válido formatado
+      '12345678000195', // Válido sem formatação
+      '123', // Inválido - muito curto
+      '123456789012345', // Inválido - muito longo
+      '11111111111112', // Inválido - dígito verificador
+      '', // Inválido - vazio
+    ];
+
+    for (final cnpj in cnpjsParaTestar) {
+      final isValid = dteService.validarCnpjDte(cnpj);
+      print('CNPJ "$cnpj" é válido: $isValid');
+
+      if (isValid) {
+        print('  Formatado: ${dteService.formatarCnpj(cnpj)}');
+      }
+    }
+
+    // 5. Tratamento de erros específicos
+    print('\n--- 5. Tratamento de Erros Específicos ---');
+
+    final codigosErro = ['Erro-DTE-04', 'Erro-DTE-05', 'Erro-DTE-991', 'Erro-DTE-992', 'Erro-DTE-993', 'Erro-DTE-994', 'Erro-DTE-995'];
+
+    for (final codigo in codigosErro) {
+      final isKnown = dteService.isErroConhecido(codigo);
+      print('Erro conhecido ($codigo): $isKnown');
+
+      if (isKnown) {
+        final info = dteService.obterInfoErro(codigo);
+        if (info != null) {
+          print('  Tipo: ${info['tipo']}');
+          print('  Descrição: ${info['descricao']}');
+          print('  Ação: ${info['acao']}');
+        }
+      }
+    }
+
+    // 6. Análise de resposta completa
+    print('\n--- 6. Análise de Resposta Completa ---');
+    try {
+      final response = await dteService.obterIndicadorDte('00000000000000');
+
+      final analise = dteService.analisarResposta(response);
+      print('Análise da resposta:');
+      for (final entry in analise.entries) {
+        print('  ${entry.key}: ${entry.value}');
+      }
+    } catch (e) {
+      print('Erro na análise: $e');
+    }
+
+    // 7. Exemplo com diferentes cenários de enquadramento
+    print('\n--- 7. Cenários de Enquadramento ---');
+
+    final cenarios = [
+      {'cnpj': '11111111111111', 'descricao': 'CNPJ de teste 1'},
+      {'cnpj': '22222222222222', 'descricao': 'CNPJ de teste 2'},
+      {'cnpj': '33333333333333', 'descricao': 'CNPJ de teste 3'},
+    ];
+
+    for (final cenario in cenarios) {
+      try {
+        print('\nTestando ${cenario['descricao']}:');
+        final response = await dteService.obterIndicadorDte(cenario['cnpj']!);
+
+        if (response.sucesso && response.dadosParsed != null) {
+          final dados = response.dadosParsed!;
+          print('  Indicador: ${dados.indicadorEnquadramento}');
+          print('  Status: ${dados.statusEnquadramento}');
+          print('  Descrição: ${dados.indicadorDescricao}');
+
+          // Interpretação do resultado
+          if (dados.indicadorEnquadramento == 0) {
+            print('  → Este contribuinte é OPTANTE DTE');
+          } else if (dados.indicadorEnquadramento == 1) {
+            print('  → Este contribuinte é OPTANTE SIMPLES NACIONAL');
+          } else if (dados.indicadorEnquadramento == 2) {
+            print('  → Este contribuinte é OPTANTE DTE E SIMPLES NACIONAL');
+          } else if (dados.indicadorEnquadramento == -1) {
+            print('  → Este contribuinte NÃO É OPTANTE');
+          } else if (dados.indicadorEnquadramento == -2) {
+            print('  → Este NI (Número de Identificação) é INVÁLIDO');
+          }
+        } else {
+          print('  Erro: ${response.mensagemPrincipal}');
+        }
+      } catch (e) {
+        print('  Erro: $e');
+      }
+    }
+
+    // 8. Exemplo de uso prático - Verificação de elegibilidade
+    print('\n--- 8. Verificação de Elegibilidade para DTE ---');
+    try {
+      final cnpjEmpresa = '11111111111111';
+      print('Verificando elegibilidade da empresa $cnpjEmpresa para DTE...');
+
+      final response = await dteService.obterIndicadorDte(cnpjEmpresa);
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+
+        print('\nResultado da verificação:');
+        print('Status: ${dados.statusEnquadramento}');
+
+        if (dados.indicadorEnquadramento == 0 || dados.indicadorEnquadramento == 2) {
+          print('✓ Esta empresa PODE utilizar o DTE');
+          print('✓ Sua Caixa Postal no e-CAC será considerada Domicílio Tributário');
+        } else if (dados.indicadorEnquadramento == 1) {
+          print('⚠ Esta empresa é optante do Simples Nacional');
+          print('⚠ Verifique se pode utilizar o DTE conforme legislação');
+        } else if (dados.indicadorEnquadramento == -1) {
+          print('✗ Esta empresa NÃO é optante');
+          print('✗ Não pode utilizar o DTE');
+        } else if (dados.indicadorEnquadramento == -2) {
+          print('✗ CNPJ inválido');
+          print('✗ Verifique o número do CNPJ');
+        }
+      } else {
+        print('✗ Erro na verificação: ${response.mensagemPrincipal}');
+      }
+    } catch (e) {
+      print('Erro na verificação de elegibilidade: $e');
+    }
+
+    // 9. Exemplo com dados da documentação oficial
+    print('\n--- 9. Exemplo com Dados da Documentação Oficial ---');
+
+    // Dados do exemplo da documentação
+    final exemploDocumentacao = {'contratante': '11111111111111', 'autorPedidoDados': '11111111111111', 'contribuinte': '99999999999999'};
+
+    print('Dados do exemplo da documentação:');
+    print('Contratante: ${exemploDocumentacao['contratante']}');
+    print('Autor do Pedido: ${exemploDocumentacao['autorPedidoDados']}');
+    print('Contribuinte: ${exemploDocumentacao['contribuinte']}');
+
+    try {
+      final response = await dteService.obterIndicadorDte(exemploDocumentacao['contribuinte']!);
+
+      print('\nResposta do exemplo da documentação:');
+      print('Status HTTP: ${response.status}');
+      print('Sucesso: ${response.sucesso}');
+      print('Mensagem: ${response.mensagemPrincipal}');
+
+      if (response.sucesso && response.dadosParsed != null) {
+        final dados = response.dadosParsed!;
+        print('Indicador: ${dados.indicadorEnquadramento}');
+        print('Status: ${dados.statusEnquadramento}');
+
+        // Simular o JSON de retorno da documentação
+        print('\nJSON de retorno (formato da documentação):');
+        print('{');
+        print('  "contratante": {');
+        print('    "numero": "${exemploDocumentacao['contratante']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "autorPedidoDados": {');
+        print('    "numero": "${exemploDocumentacao['autorPedidoDados']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "contribuinte": {');
+        print('    "numero": "${exemploDocumentacao['contribuinte']}",');
+        print('    "tipo": 2');
+        print('  },');
+        print('  "pedidoDados": {');
+        print('    "idSistema": "DTE",');
+        print('    "idServico": "CONSULTASITUACAODTE111",');
+        print('    "versaoSistema": "1.0",');
+        print('    "dados": ""');
+        print('  },');
+        print('  "status": ${response.status},');
+        print('  "dados": "${response.dados}",');
+        print('  "mensagens": [');
+        for (final mensagem in response.mensagens) {
+          print('    {');
+          print('      "codigo": "${mensagem.codigo}",');
+          print('      "texto": "${mensagem.texto}"');
+          print('    }');
+        }
+        print('  ]');
+        print('}');
+      }
+    } catch (e) {
+      print('Erro no exemplo da documentação: $e');
+    }
+
+    // 10. Resumo dos indicadores de enquadramento
+    print('\n--- 10. Resumo dos Indicadores de Enquadramento ---');
+    print('Conforme documentação DTE:');
+    print('  -2: NI inválido');
+    print('  -1: NI Não optante');
+    print('   0: NI Optante DTE');
+    print('   1: NI Optante Simples');
+    print('   2: NI Optante DTE e Simples');
+
+    // Testar todos os indicadores possíveis
+    for (int indicador = -2; indicador <= 2; indicador++) {
+      final descricao = dteService.obterDescricaoIndicador(indicador);
+      final isValid = dteService.isIndicadorValido(indicador);
+      print('Indicador $indicador: $descricao (válido: $isValid)');
+    }
+
+    print('\n=== Exemplos DTE Concluídos ===');
+  } catch (e) {
+    print('Erro geral no serviço DTE: $e');
+  }
+}
+
+Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
+  print('\n=== Exemplos Eventos de Atualização ===');
+
+  try {
+    final eventosService = EventosAtualizacaoService(apiClient);
+    // Exemplo 1: Solicitar eventos de Pessoa Física (DCTFWeb)
+    print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
+    final cpfsExemplo = ['00000000000', '11111111111', '22222222222', '33333333333'];
+
+    final solicitacaoPF = await eventosService.solicitarEventosPF(cpfs: cpfsExemplo, evento: TipoEvento.dctfWeb);
+
+    print('Status: ${solicitacaoPF.status}');
+    print('Protocolo: ${solicitacaoPF.dados.protocolo}');
+    print('Tempo espera médio: ${solicitacaoPF.dados.tempoEsperaMedioEmMs}ms');
+    print('Tempo limite: ${solicitacaoPF.dados.tempoLimiteEmMin}min');
+
+    for (final mensagem in solicitacaoPF.mensagens) {
+      print('Mensagem: ${mensagem.codigo} - ${mensagem.texto}');
+    }
+
+    // Exemplo 2: Obter eventos de Pessoa Física usando protocolo
+    print('\n--- Exemplo 2: Obter Eventos PF ---');
+    await Future.delayed(Duration(milliseconds: solicitacaoPF.dados.tempoEsperaMedioEmMs));
+
+    final eventosPF = await eventosService.obterEventosPF(protocolo: solicitacaoPF.dados.protocolo, evento: TipoEvento.dctfWeb);
+
+    print('Status: ${eventosPF.status}');
+    print('Total de eventos: ${eventosPF.dados.length}');
+
+    for (final evento in eventosPF.dados) {
+      if (evento.temAtualizacao) {
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CPF ${evento.cpf}: Sem atualizações');
+      } else {
+        print('CPF ${evento.cpf}: Sem dados');
+      }
+    }
+
+    // Exemplo 3: Solicitar eventos de Pessoa Jurídica (CaixaPostal)
+    print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
+    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222'];
+
+    final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
+
+    print('Status: ${solicitacaoPJ.status}');
+    print('Protocolo: ${solicitacaoPJ.dados.protocolo}');
+    print('Tempo espera médio: ${solicitacaoPJ.dados.tempoEsperaMedioEmMs}ms');
+    print('Tempo limite: ${solicitacaoPJ.dados.tempoLimiteEmMin}min');
+
+    // Exemplo 4: Método de conveniência - Solicitar e obter eventos PF automaticamente
+    print('\n--- Exemplo 4: Método de Conveniência PF ---');
+    final eventosPFConveniencia = await eventosService.solicitarEObterEventosPF(
+      cpfs: ['33333333333', '44444444444'],
+      evento: TipoEvento.pagamentoWeb,
+    );
+
+    print('Status: ${eventosPFConveniencia.status}');
+    print('Total de eventos: ${eventosPFConveniencia.dados.length}');
+
+    for (final evento in eventosPFConveniencia.dados) {
+      if (evento.temAtualizacao) {
+        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CPF ${evento.cpf}: Sem atualizações');
+      } else {
+        print('CPF ${evento.cpf}: Sem dados');
+      }
+    }
+
+    // Exemplo 5: Método de conveniência - Solicitar e obter eventos PJ automaticamente
+    print('\n--- Exemplo 5: Método de Conveniência PJ ---');
+    final eventosPJConveniencia = await eventosService.solicitarEObterEventosPJ(
+      cnpjs: ['33333333333333', '44444444444444'],
+      evento: TipoEvento.dctfWeb,
+    );
+
+    print('Status: ${eventosPJConveniencia.status}');
+    print('Total de eventos: ${eventosPJConveniencia.dados.length}');
+
+    for (final evento in eventosPJConveniencia.dados) {
+      if (evento.temAtualizacao) {
+        print('CNPJ ${evento.cnpj}: Última atualização em ${evento.dataFormatada}');
+      } else if (evento.semAtualizacao) {
+        print('CNPJ ${evento.cnpj}: Sem atualizações');
+      } else {
+        print('CNPJ ${evento.cnpj}: Sem dados');
+      }
+    }
+
+    // Exemplo 6: Demonstração dos tipos de eventos disponíveis
+    print('\n--- Exemplo 6: Tipos de Eventos Disponíveis ---');
+    for (final tipo in TipoEvento.values) {
+      print('Evento ${tipo.codigo}: ${tipo.sistema}');
+    }
+
+    // Exemplo 7: Demonstração dos tipos de contribuinte
+    print('\n--- Exemplo 7: Tipos de Contribuinte ---');
+    for (final tipo in TipoContribuinte.values) {
+      print('Tipo ${tipo.codigo}: ${tipo.descricao}');
+    }
+
+    // Exemplo 8: Validação de limites
+    print('\n--- Exemplo 8: Informações sobre Limites ---');
+    print('Máximo de contribuintes por lote: ${EventosAtualizacaoCommon.maxContribuintesPorLote}');
+    print('Máximo de requisições por dia: ${EventosAtualizacaoCommon.maxRequisicoesPorDia}');
+    print(
+      'Eventos disponíveis: ${EventosAtualizacaoCommon.eventoDCTFWeb}, ${EventosAtualizacaoCommon.eventoCaixaPostal}, ${EventosAtualizacaoCommon.eventoPagamentoWeb}',
+    );
+
+    print('\n=== Exemplos Eventos de Atualização Concluídos ===');
+  } catch (e) {
+    print('Erro nos exemplos de Eventos de Atualização: $e');
   }
 }
 
@@ -1285,288 +1728,6 @@ Future<void> exemplosProcuracoes(ApiClient apiClient) async {
     print('\n=== Exemplos PROCURAÇÕES Concluídos ===');
   } catch (e) {
     print('Erro geral no serviço de Procurações: $e');
-  }
-}
-
-Future<void> exemplosDte(ApiClient apiClient) async {
-  print('\n=== Exemplos DTE (Domicílio Tributário Eletrônico) ===');
-
-  final dteService = DteService(apiClient);
-
-  try {
-    // 1. Exemplo básico - Consultar indicador DTE com CNPJ válido
-    print('\n--- 1. Consultar Indicador DTE (CNPJ Válido) ---');
-    try {
-      final response = await dteService.obterIndicadorDte('11111111111111');
-
-      print('Status HTTP: ${response.status}');
-      print('Sucesso: ${response.sucesso}');
-      print('Mensagem: ${response.mensagemPrincipal}');
-      print('Código: ${response.codigoMensagem}');
-
-      if (response.sucesso && response.dadosParsed != null) {
-        final dados = response.dadosParsed!;
-        print('Indicador de enquadramento: ${dados.indicadorEnquadramento}');
-        print('Status de enquadramento: ${dados.statusEnquadramento}');
-        print('Descrição do indicador: ${dados.indicadorDescricao}');
-        print('É válido: ${dados.isIndicadorValido}');
-
-        // Análise do enquadramento
-        print('\nAnálise do enquadramento:');
-        print('  - É optante DTE: ${response.isOptanteDte}');
-        print('  - É optante Simples: ${response.isOptanteSimples}');
-        print('  - É optante DTE e Simples: ${response.isOptanteDteESimples}');
-        print('  - Não é optante: ${response.isNaoOptante}');
-        print('  - NI inválido: ${response.isNiInvalido}');
-      }
-    } catch (e) {
-      print('Erro ao consultar DTE: $e');
-    }
-
-    // 2. Exemplo com CNPJ da documentação (99999999999999)
-    print('\n--- 2. Consultar Indicador DTE (CNPJ da Documentação) ---');
-    try {
-      final response = await dteService.obterIndicadorDte('99999999999999');
-
-      print('Status HTTP: ${response.status}');
-      print('Sucesso: ${response.sucesso}');
-      print('Mensagem: ${response.mensagemPrincipal}');
-
-      if (response.sucesso && response.dadosParsed != null) {
-        final dados = response.dadosParsed!;
-        print('Indicador: ${dados.indicadorEnquadramento}');
-        print('Status: ${dados.statusEnquadramento}');
-        print('Descrição: ${dados.indicadorDescricao}');
-      }
-    } catch (e) {
-      print('Erro ao consultar DTE: $e');
-    }
-
-    // 3. Exemplo com CNPJ formatado
-    print('\n--- 3. Consultar Indicador DTE (CNPJ Formatado) ---');
-    try {
-      final cnpjFormatado = '12.345.678/0001-95';
-      print('CNPJ formatado: $cnpjFormatado');
-      print('CNPJ limpo: ${dteService.limparCnpj(cnpjFormatado)}');
-
-      final response = await dteService.obterIndicadorDte(cnpjFormatado);
-
-      print('Status HTTP: ${response.status}');
-      print('Sucesso: ${response.sucesso}');
-      print('Mensagem: ${response.mensagemPrincipal}');
-    } catch (e) {
-      print('Erro ao consultar DTE: $e');
-    }
-
-    // 4. Validação de CNPJ
-    print('\n--- 4. Validação de CNPJ ---');
-
-    final cnpjsParaTestar = [
-      '11111111111111', // Válido
-      '12.345.678/0001-95', // Válido formatado
-      '12345678000195', // Válido sem formatação
-      '123', // Inválido - muito curto
-      '123456789012345', // Inválido - muito longo
-      '11111111111112', // Inválido - dígito verificador
-      '', // Inválido - vazio
-    ];
-
-    for (final cnpj in cnpjsParaTestar) {
-      final isValid = dteService.validarCnpjDte(cnpj);
-      print('CNPJ "$cnpj" é válido: $isValid');
-
-      if (isValid) {
-        print('  Formatado: ${dteService.formatarCnpj(cnpj)}');
-      }
-    }
-
-    // 5. Tratamento de erros específicos
-    print('\n--- 5. Tratamento de Erros Específicos ---');
-
-    final codigosErro = ['Erro-DTE-04', 'Erro-DTE-05', 'Erro-DTE-991', 'Erro-DTE-992', 'Erro-DTE-993', 'Erro-DTE-994', 'Erro-DTE-995'];
-
-    for (final codigo in codigosErro) {
-      final isKnown = dteService.isErroConhecido(codigo);
-      print('Erro conhecido ($codigo): $isKnown');
-
-      if (isKnown) {
-        final info = dteService.obterInfoErro(codigo);
-        if (info != null) {
-          print('  Tipo: ${info['tipo']}');
-          print('  Descrição: ${info['descricao']}');
-          print('  Ação: ${info['acao']}');
-        }
-      }
-    }
-
-    // 6. Análise de resposta completa
-    print('\n--- 6. Análise de Resposta Completa ---');
-    try {
-      final response = await dteService.obterIndicadorDte('00000000000000');
-
-      final analise = dteService.analisarResposta(response);
-      print('Análise da resposta:');
-      for (final entry in analise.entries) {
-        print('  ${entry.key}: ${entry.value}');
-      }
-    } catch (e) {
-      print('Erro na análise: $e');
-    }
-
-    // 7. Exemplo com diferentes cenários de enquadramento
-    print('\n--- 7. Cenários de Enquadramento ---');
-
-    final cenarios = [
-      {'cnpj': '11111111111111', 'descricao': 'CNPJ de teste 1'},
-      {'cnpj': '22222222222222', 'descricao': 'CNPJ de teste 2'},
-      {'cnpj': '33333333333333', 'descricao': 'CNPJ de teste 3'},
-    ];
-
-    for (final cenario in cenarios) {
-      try {
-        print('\nTestando ${cenario['descricao']}:');
-        final response = await dteService.obterIndicadorDte(cenario['cnpj']!);
-
-        if (response.sucesso && response.dadosParsed != null) {
-          final dados = response.dadosParsed!;
-          print('  Indicador: ${dados.indicadorEnquadramento}');
-          print('  Status: ${dados.statusEnquadramento}');
-          print('  Descrição: ${dados.indicadorDescricao}');
-
-          // Interpretação do resultado
-          if (dados.indicadorEnquadramento == 0) {
-            print('  → Este contribuinte é OPTANTE DTE');
-          } else if (dados.indicadorEnquadramento == 1) {
-            print('  → Este contribuinte é OPTANTE SIMPLES NACIONAL');
-          } else if (dados.indicadorEnquadramento == 2) {
-            print('  → Este contribuinte é OPTANTE DTE E SIMPLES NACIONAL');
-          } else if (dados.indicadorEnquadramento == -1) {
-            print('  → Este contribuinte NÃO É OPTANTE');
-          } else if (dados.indicadorEnquadramento == -2) {
-            print('  → Este NI (Número de Identificação) é INVÁLIDO');
-          }
-        } else {
-          print('  Erro: ${response.mensagemPrincipal}');
-        }
-      } catch (e) {
-        print('  Erro: $e');
-      }
-    }
-
-    // 8. Exemplo de uso prático - Verificação de elegibilidade
-    print('\n--- 8. Verificação de Elegibilidade para DTE ---');
-    try {
-      final cnpjEmpresa = '11111111111111';
-      print('Verificando elegibilidade da empresa $cnpjEmpresa para DTE...');
-
-      final response = await dteService.obterIndicadorDte(cnpjEmpresa);
-
-      if (response.sucesso && response.dadosParsed != null) {
-        final dados = response.dadosParsed!;
-
-        print('\nResultado da verificação:');
-        print('Status: ${dados.statusEnquadramento}');
-
-        if (dados.indicadorEnquadramento == 0 || dados.indicadorEnquadramento == 2) {
-          print('✓ Esta empresa PODE utilizar o DTE');
-          print('✓ Sua Caixa Postal no e-CAC será considerada Domicílio Tributário');
-        } else if (dados.indicadorEnquadramento == 1) {
-          print('⚠ Esta empresa é optante do Simples Nacional');
-          print('⚠ Verifique se pode utilizar o DTE conforme legislação');
-        } else if (dados.indicadorEnquadramento == -1) {
-          print('✗ Esta empresa NÃO é optante');
-          print('✗ Não pode utilizar o DTE');
-        } else if (dados.indicadorEnquadramento == -2) {
-          print('✗ CNPJ inválido');
-          print('✗ Verifique o número do CNPJ');
-        }
-      } else {
-        print('✗ Erro na verificação: ${response.mensagemPrincipal}');
-      }
-    } catch (e) {
-      print('Erro na verificação de elegibilidade: $e');
-    }
-
-    // 9. Exemplo com dados da documentação oficial
-    print('\n--- 9. Exemplo com Dados da Documentação Oficial ---');
-
-    // Dados do exemplo da documentação
-    final exemploDocumentacao = {'contratante': '11111111111111', 'autorPedidoDados': '11111111111111', 'contribuinte': '99999999999999'};
-
-    print('Dados do exemplo da documentação:');
-    print('Contratante: ${exemploDocumentacao['contratante']}');
-    print('Autor do Pedido: ${exemploDocumentacao['autorPedidoDados']}');
-    print('Contribuinte: ${exemploDocumentacao['contribuinte']}');
-
-    try {
-      final response = await dteService.obterIndicadorDte(exemploDocumentacao['contribuinte']!);
-
-      print('\nResposta do exemplo da documentação:');
-      print('Status HTTP: ${response.status}');
-      print('Sucesso: ${response.sucesso}');
-      print('Mensagem: ${response.mensagemPrincipal}');
-
-      if (response.sucesso && response.dadosParsed != null) {
-        final dados = response.dadosParsed!;
-        print('Indicador: ${dados.indicadorEnquadramento}');
-        print('Status: ${dados.statusEnquadramento}');
-
-        // Simular o JSON de retorno da documentação
-        print('\nJSON de retorno (formato da documentação):');
-        print('{');
-        print('  "contratante": {');
-        print('    "numero": "${exemploDocumentacao['contratante']}",');
-        print('    "tipo": 2');
-        print('  },');
-        print('  "autorPedidoDados": {');
-        print('    "numero": "${exemploDocumentacao['autorPedidoDados']}",');
-        print('    "tipo": 2');
-        print('  },');
-        print('  "contribuinte": {');
-        print('    "numero": "${exemploDocumentacao['contribuinte']}",');
-        print('    "tipo": 2');
-        print('  },');
-        print('  "pedidoDados": {');
-        print('    "idSistema": "DTE",');
-        print('    "idServico": "CONSULTASITUACAODTE111",');
-        print('    "versaoSistema": "1.0",');
-        print('    "dados": ""');
-        print('  },');
-        print('  "status": ${response.status},');
-        print('  "dados": "${response.dados}",');
-        print('  "mensagens": [');
-        for (final mensagem in response.mensagens) {
-          print('    {');
-          print('      "codigo": "${mensagem.codigo}",');
-          print('      "texto": "${mensagem.texto}"');
-          print('    }');
-        }
-        print('  ]');
-        print('}');
-      }
-    } catch (e) {
-      print('Erro no exemplo da documentação: $e');
-    }
-
-    // 10. Resumo dos indicadores de enquadramento
-    print('\n--- 10. Resumo dos Indicadores de Enquadramento ---');
-    print('Conforme documentação DTE:');
-    print('  -2: NI inválido');
-    print('  -1: NI Não optante');
-    print('   0: NI Optante DTE');
-    print('   1: NI Optante Simples');
-    print('   2: NI Optante DTE e Simples');
-
-    // Testar todos os indicadores possíveis
-    for (int indicador = -2; indicador <= 2; indicador++) {
-      final descricao = dteService.obterDescricaoIndicador(indicador);
-      final isValid = dteService.isIndicadorValido(indicador);
-      print('Indicador $indicador: $descricao (válido: $isValid)');
-    }
-
-    print('\n=== Exemplos DTE Concluídos ===');
-  } catch (e) {
-    print('Erro geral no serviço DTE: $e');
   }
 }
 
@@ -4291,123 +4452,6 @@ Future<void> exemplosParcsn(ApiClient apiClient) async {
     print('\n=== Exemplos PARCSN Concluídos ===');
   } catch (e) {
     print('Erro nos exemplos PARCSN: $e');
-  }
-}
-
-Future<void> exemplosEventosAtualizacao(ApiClient apiClient) async {
-  print('\n=== Exemplos Eventos de Atualização ===');
-
-  try {
-    final eventosService = EventosAtualizacaoService(apiClient);
-
-    // Exemplo 1: Solicitar eventos de Pessoa Física (DCTFWeb)
-    print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
-    final cpfsExemplo = ['00000000000', '11111111111', '22222222222'];
-
-    final solicitacaoPF = await eventosService.solicitarEventosPF(cpfs: cpfsExemplo, evento: TipoEvento.dctfWeb);
-
-    print('Status: ${solicitacaoPF.status}');
-    print('Protocolo: ${solicitacaoPF.dados.protocolo}');
-    print('Tempo espera médio: ${solicitacaoPF.dados.tempoEsperaMedioEmMs}ms');
-    print('Tempo limite: ${solicitacaoPF.dados.tempoLimiteEmMin}min');
-
-    for (final mensagem in solicitacaoPF.mensagens) {
-      print('Mensagem: ${mensagem.codigo} - ${mensagem.texto}');
-    }
-
-    // Exemplo 2: Obter eventos de Pessoa Física usando protocolo
-    print('\n--- Exemplo 2: Obter Eventos PF ---');
-    await Future.delayed(Duration(milliseconds: solicitacaoPF.dados.tempoEsperaMedioEmMs));
-
-    final eventosPF = await eventosService.obterEventosPF(protocolo: solicitacaoPF.dados.protocolo, evento: TipoEvento.dctfWeb);
-
-    print('Status: ${eventosPF.status}');
-    print('Total de eventos: ${eventosPF.dados.length}');
-
-    for (final evento in eventosPF.dados) {
-      if (evento.temAtualizacao) {
-        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
-      } else if (evento.semAtualizacao) {
-        print('CPF ${evento.cpf}: Sem atualizações');
-      } else {
-        print('CPF ${evento.cpf}: Sem dados');
-      }
-    }
-
-    // Exemplo 3: Solicitar eventos de Pessoa Jurídica (CaixaPostal)
-    print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
-    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222'];
-
-    final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
-
-    print('Status: ${solicitacaoPJ.status}');
-    print('Protocolo: ${solicitacaoPJ.dados.protocolo}');
-    print('Tempo espera médio: ${solicitacaoPJ.dados.tempoEsperaMedioEmMs}ms');
-    print('Tempo limite: ${solicitacaoPJ.dados.tempoLimiteEmMin}min');
-
-    // Exemplo 4: Método de conveniência - Solicitar e obter eventos PF automaticamente
-    print('\n--- Exemplo 4: Método de Conveniência PF ---');
-    final eventosPFConveniencia = await eventosService.solicitarEObterEventosPF(
-      cpfs: ['33333333333', '44444444444'],
-      evento: TipoEvento.pagamentoWeb,
-    );
-
-    print('Status: ${eventosPFConveniencia.status}');
-    print('Total de eventos: ${eventosPFConveniencia.dados.length}');
-
-    for (final evento in eventosPFConveniencia.dados) {
-      if (evento.temAtualizacao) {
-        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
-      } else if (evento.semAtualizacao) {
-        print('CPF ${evento.cpf}: Sem atualizações');
-      } else {
-        print('CPF ${evento.cpf}: Sem dados');
-      }
-    }
-
-    // Exemplo 5: Método de conveniência - Solicitar e obter eventos PJ automaticamente
-    print('\n--- Exemplo 5: Método de Conveniência PJ ---');
-    final eventosPJConveniencia = await eventosService.solicitarEObterEventosPJ(
-      cnpjs: ['33333333333333', '44444444444444'],
-      evento: TipoEvento.dctfWeb,
-    );
-
-    print('Status: ${eventosPJConveniencia.status}');
-    print('Total de eventos: ${eventosPJConveniencia.dados.length}');
-
-    for (final evento in eventosPJConveniencia.dados) {
-      if (evento.temAtualizacao) {
-        print('CNPJ ${evento.cnpj}: Última atualização em ${evento.dataFormatada}');
-      } else if (evento.semAtualizacao) {
-        print('CNPJ ${evento.cnpj}: Sem atualizações');
-      } else {
-        print('CNPJ ${evento.cnpj}: Sem dados');
-      }
-    }
-
-    // Exemplo 6: Demonstração dos tipos de eventos disponíveis
-    print('\n--- Exemplo 6: Tipos de Eventos Disponíveis ---');
-    for (final tipo in TipoEvento.values) {
-      print('Evento ${tipo.codigo}: ${tipo.sistema}');
-    }
-
-    // Exemplo 7: Demonstração dos tipos de contribuinte
-    print('\n--- Exemplo 7: Tipos de Contribuinte ---');
-    for (final tipo in TipoContribuinte.values) {
-      print('Tipo ${tipo.codigo}: ${tipo.descricao}');
-    }
-
-    // Exemplo 8: Validação de limites
-    print('\n--- Exemplo 8: Informações sobre Limites ---');
-    print('Máximo de contribuintes por lote: ${EventosAtualizacaoCommon.maxContribuintesPorLote}');
-    print('Máximo de requisições por dia: ${EventosAtualizacaoCommon.maxRequisicoesPorDia}');
-    print(
-      'Eventos disponíveis: ${EventosAtualizacaoCommon.eventoDCTFWeb}, ${EventosAtualizacaoCommon.eventoCaixaPostal}, ${EventosAtualizacaoCommon.eventoPagamentoWeb}',
-    );
-
-    print('\n=== Exemplos Eventos de Atualização Concluídos ===');
-  } catch (e) {
-    print('Erro nos exemplos de Eventos de Atualização: $e');
   }
 }
 

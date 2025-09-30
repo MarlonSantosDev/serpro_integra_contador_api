@@ -6,37 +6,19 @@ class TransmitirDeclaracaoRequest {
   final RegraInatividade? inatividade;
   final Empresa empresa;
 
-  TransmitirDeclaracaoRequest({
-    required this.ano,
-    this.situacaoEspecial,
-    this.inatividade,
-    required this.empresa,
-  });
+  TransmitirDeclaracaoRequest({required this.ano, this.situacaoEspecial, this.inatividade, required this.empresa});
 
   factory TransmitirDeclaracaoRequest.fromJson(Map<String, dynamic> json) {
     return TransmitirDeclaracaoRequest(
       ano: int.parse(json['ano'].toString()),
-      situacaoEspecial: json['situacaoEspecial'] != null
-          ? SituacaoEspecial.fromJson(
-              json['situacaoEspecial'] as Map<String, dynamic>,
-            )
-          : null,
-      inatividade: json['inatividade'] != null
-          ? RegraInatividade.fromCodigo(
-              int.parse(json['inatividade'].toString()),
-            )
-          : null,
+      situacaoEspecial: json['situacaoEspecial'] != null ? SituacaoEspecial.fromJson(json['situacaoEspecial'] as Map<String, dynamic>) : null,
+      inatividade: json['inatividade'] != null ? RegraInatividade.fromCodigo(int.parse(json['inatividade'].toString())) : null,
       empresa: Empresa.fromJson(json['empresa'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ano': ano,
-      'situacaoEspecial': situacaoEspecial?.toJson(),
-      'inatividade': inatividade?.codigo,
-      'empresa': empresa.toJson(),
-    };
+    return {'ano': ano, 'situacaoEspecial': situacaoEspecial?.toJson(), 'inatividade': inatividade?.codigo, 'empresa': empresa.toJson()};
   }
 }
 
@@ -48,11 +30,7 @@ class SituacaoEspecial {
 
   factory SituacaoEspecial.fromJson(Map<String, dynamic> json) {
     return SituacaoEspecial(
-      tipoEvento:
-          TipoEventoSituacaoEspecial.fromCodigo(
-            int.parse(json['tipoEvento'].toString()),
-          ) ??
-          TipoEventoSituacaoEspecial.cisaoParcial,
+      tipoEvento: TipoEventoSituacaoEspecial.fromCodigo(int.parse(json['tipoEvento'].toString())) ?? TipoEventoSituacaoEspecial.cisaoParcial,
       dataEvento: int.parse(json['dataEvento'].toString()),
     );
   }
@@ -97,37 +75,18 @@ class Empresa {
       qtdEmpregadoInicial: int.parse(json['qtdEmpregadoInicial'].toString()),
       qtdEmpregadoFinal: int.parse(json['qtdEmpregadoFinal'].toString()),
       lucroContabil: (num.parse(json['lucroContabil'].toString())).toDouble(),
-      receitaExportacaoDireta: (num.parse(
-        json['receitaExportacaoDireta'].toString(),
-      )).toDouble(),
+      receitaExportacaoDireta: (num.parse(json['receitaExportacaoDireta'].toString())).toDouble(),
       comerciaisExportadoras: json['comerciaisExportadoras'] != null
-          ? (json['comerciaisExportadoras'] as List<dynamic>)
-                .map(
-                  (e) =>
-                      ComercialExportadora.fromJson(e as Map<String, dynamic>),
-                )
-                .toList()
+          ? (json['comerciaisExportadoras'] as List<dynamic>).map((e) => ComercialExportadora.fromJson(e as Map<String, dynamic>)).toList()
           : null,
-      socios: (json['socios'] as List<dynamic>)
-          .map((e) => Socio.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      participacaoCotasTesouraria: (num.parse(
-        json['participacaoCotasTesouraria'].toString(),
-      )).toDouble(),
-      ganhoRendaVariavel: (num.parse(
-        json['ganhoRendaVariavel'].toString(),
-      )).toDouble(),
+      socios: (json['socios'] as List<dynamic>).map((e) => Socio.fromJson(e as Map<String, dynamic>)).toList(),
+      participacaoCotasTesouraria: (num.parse(json['participacaoCotasTesouraria'].toString())).toDouble(),
+      ganhoRendaVariavel: (num.parse(json['ganhoRendaVariavel'].toString())).toDouble(),
       doacoesCampanhaEleitoral: json['doacoesCampanhaEleitoral'] != null
-          ? (json['doacoesCampanhaEleitoral'] as List<dynamic>)
-                .map((e) => Doacao.fromJson(e as Map<String, dynamic>))
-                .toList()
+          ? (json['doacoesCampanhaEleitoral'] as List<dynamic>).map((e) => Doacao.fromJson(e as Map<String, dynamic>)).toList()
           : null,
-      estabelecimentos: (json['estabelecimentos'] as List<dynamic>)
-          .map((e) => Estabelecimento.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      naoOptante: json['naoOptante'] != null
-          ? NaoOptante.fromJson(json['naoOptante'] as Map<String, dynamic>)
-          : null,
+      estabelecimentos: (json['estabelecimentos'] as List<dynamic>).map((e) => Estabelecimento.fromJson(e as Map<String, dynamic>)).toList(),
+      naoOptante: json['naoOptante'] != null ? NaoOptante.fromJson(json['naoOptante'] as Map<String, dynamic>) : null,
     );
   }
 
@@ -138,15 +97,11 @@ class Empresa {
       'qtdEmpregadoFinal': qtdEmpregadoFinal,
       'lucroContabil': lucroContabil,
       'receitaExportacaoDireta': receitaExportacaoDireta,
-      'comerciaisExportadoras': comerciaisExportadoras
-          ?.map((e) => e.toJson())
-          .toList(),
+      'comerciaisExportadoras': comerciaisExportadoras?.map((e) => e.toJson()).toList(),
       'socios': socios.map((e) => e.toJson()).toList(),
       'participacaoCotasTesouraria': participacaoCotasTesouraria,
       'ganhoRendaVariavel': ganhoRendaVariavel,
-      'doacoesCampanhaEleitoral': doacoesCampanhaEleitoral
-          ?.map((e) => e.toJson())
-          .toList(),
+      'doacoesCampanhaEleitoral': doacoesCampanhaEleitoral?.map((e) => e.toJson()).toList(),
       'estabelecimentos': estabelecimentos.map((e) => e.toJson()).toList(),
       'naoOptante': naoOptante?.toJson(),
     };
@@ -160,10 +115,7 @@ class ComercialExportadora {
   ComercialExportadora({required this.cnpjCompleto, required this.valor});
 
   factory ComercialExportadora.fromJson(Map<String, dynamic> json) {
-    return ComercialExportadora(
-      cnpjCompleto: json['cnpjCompleto'].toString(),
-      valor: (num.parse(json['valor'].toString())).toDouble(),
-    );
+    return ComercialExportadora(cnpjCompleto: json['cnpjCompleto'].toString(), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {
@@ -189,15 +141,9 @@ class Socio {
   factory Socio.fromJson(Map<String, dynamic> json) {
     return Socio(
       cpf: json['cpf'].toString(),
-      rendimentosIsentos: (num.parse(
-        json['rendimentosIsentos'].toString(),
-      )).toDouble(),
-      rendimentosTributaveis: (num.parse(
-        json['rendimentosTributaveis'].toString(),
-      )).toDouble(),
-      participacaoCapitalSocial: (num.parse(
-        json['participacaoCapitalSocial'].toString(),
-      )).toDouble(),
+      rendimentosIsentos: (num.parse(json['rendimentosIsentos'].toString())).toDouble(),
+      rendimentosTributaveis: (num.parse(json['rendimentosTributaveis'].toString())).toDouble(),
+      participacaoCapitalSocial: (num.parse(json['participacaoCapitalSocial'].toString())).toDouble(),
       irRetidoFonte: (num.parse(json['irRetidoFonte'].toString())).toDouble(),
     );
   }
@@ -219,35 +165,20 @@ class Doacao {
   final FormaDoacao formaDoacao;
   final double valor;
 
-  Doacao({
-    required this.cnpjBeneficiario,
-    required this.tipoBeneficiario,
-    required this.formaDoacao,
-    required this.valor,
-  });
+  Doacao({required this.cnpjBeneficiario, required this.tipoBeneficiario, required this.formaDoacao, required this.valor});
 
   factory Doacao.fromJson(Map<String, dynamic> json) {
     return Doacao(
       cnpjBeneficiario: json['cnpjBeneficiario'].toString(),
       tipoBeneficiario:
-          TipoBeneficiarioDoacao.fromCodigo(
-            int.parse(json['tipoBeneficiario'].toString()),
-          ) ??
-          TipoBeneficiarioDoacao.candidatoCargoPolitico,
-      formaDoacao:
-          FormaDoacao.fromCodigo(int.parse(json['formaDoacao'].toString())) ??
-          FormaDoacao.dinheiro,
+          TipoBeneficiarioDoacao.fromCodigo(int.parse(json['tipoBeneficiario'].toString())) ?? TipoBeneficiarioDoacao.candidatoCargoPolitico,
+      formaDoacao: FormaDoacao.fromCodigo(int.parse(json['formaDoacao'].toString())) ?? FormaDoacao.dinheiro,
       valor: (num.parse(json['valor'].toString())).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'cnpjBeneficiario': cnpjBeneficiario,
-      'tipoBeneficiario': tipoBeneficiario.codigo,
-      'formaDoacao': formaDoacao.codigo,
-      'valor': valor,
-    };
+    return {'cnpjBeneficiario': cnpjBeneficiario, 'tipoBeneficiario': tipoBeneficiario.codigo, 'formaDoacao': formaDoacao.codigo, 'valor': valor};
   }
 }
 
@@ -257,20 +188,12 @@ class NaoOptante {
   final String codigoMunicipio;
   final String numeroProcesso;
 
-  NaoOptante({
-    required this.administracaoTributaria,
-    required this.uf,
-    required this.codigoMunicipio,
-    required this.numeroProcesso,
-  });
+  NaoOptante({required this.administracaoTributaria, required this.uf, required this.codigoMunicipio, required this.numeroProcesso});
 
   factory NaoOptante.fromJson(Map<String, dynamic> json) {
     return NaoOptante(
       administracaoTributaria:
-          AdministracaoTributaria.fromCodigo(
-            int.parse(json['administracaoTributaria'].toString()),
-          ) ??
-          AdministracaoTributaria.federal,
+          AdministracaoTributaria.fromCodigo(int.parse(json['administracaoTributaria'].toString())) ?? AdministracaoTributaria.federal,
       uf: json['uf'].toString(),
       codigoMunicipio: json['codigoMunicipio'].toString(),
       numeroProcesso: json['numeroProcesso'].toString(),
@@ -335,74 +258,34 @@ class Estabelecimento {
       cnpjCompleto: json['cnpjCompleto'].toString(),
       estoqueInicial: (num.parse(json['estoqueInicial'].toString())).toDouble(),
       estoqueFinal: (num.parse(json['estoqueFinal'].toString())).toDouble(),
-      saldoCaixaInicial: (num.parse(
-        json['saldoCaixaInicial'].toString(),
-      )).toDouble(),
-      saldoCaixaFinal: (num.parse(
-        json['saldoCaixaFinal'].toString(),
-      )).toDouble(),
-      aquisicoesMercadoInterno: (num.parse(
-        json['aquisicoesMercadoInterno'].toString(),
-      )).toDouble(),
+      saldoCaixaInicial: (num.parse(json['saldoCaixaInicial'].toString())).toDouble(),
+      saldoCaixaFinal: (num.parse(json['saldoCaixaFinal'].toString())).toDouble(),
+      aquisicoesMercadoInterno: (num.parse(json['aquisicoesMercadoInterno'].toString())).toDouble(),
       importacoes: (num.parse(json['importacoes'].toString())).toDouble(),
-      totalEntradasPorTransferencia: (num.parse(
-        json['totalEntradasPorTransferencia'].toString(),
-      )).toDouble(),
-      totalSaidasPorTransferencia: (num.parse(
-        json['totalSaidasPorTransferencia'].toString(),
-      )).toDouble(),
-      totalDevolucoesVendas: (num.parse(
-        json['totalDevolucoesVendas'].toString(),
-      )).toDouble(),
+      totalEntradasPorTransferencia: (num.parse(json['totalEntradasPorTransferencia'].toString())).toDouble(),
+      totalSaidasPorTransferencia: (num.parse(json['totalSaidasPorTransferencia'].toString())).toDouble(),
+      totalDevolucoesVendas: (num.parse(json['totalDevolucoesVendas'].toString())).toDouble(),
       totalEntradas: (num.parse(json['totalEntradas'].toString())).toDouble(),
-      totalDevolucoesCompras: (num.parse(
-        json['totalDevolucoesCompras'].toString(),
-      )).toDouble(),
+      totalDevolucoesCompras: (num.parse(json['totalDevolucoesCompras'].toString())).toDouble(),
       totalDespesas: (num.parse(json['totalDespesas'].toString())).toDouble(),
       operacoesInterestaduais: json['operacoesInterestaduais'] != null
-          ? (json['operacoesInterestaduais'] as List<dynamic>)
-                .map(
-                  (e) =>
-                      OperacaoInterestadual.fromJson(e as Map<String, dynamic>),
-                )
-                .toList()
+          ? (json['operacoesInterestaduais'] as List<dynamic>).map((e) => OperacaoInterestadual.fromJson(e as Map<String, dynamic>)).toList()
           : null,
       issRetidosFonte: json['issRetidosFonte'] != null
-          ? (json['issRetidosFonte'] as List<dynamic>)
-                .map((e) => IssRetidoFonte.fromJson(e as Map<String, dynamic>))
-                .toList()
+          ? (json['issRetidosFonte'] as List<dynamic>).map((e) => IssRetidoFonte.fromJson(e as Map<String, dynamic>)).toList()
           : null,
       prestacoesServicoComunicacao: json['prestacoesServicoComunicacao'] != null
           ? (json['prestacoesServicoComunicacao'] as List<dynamic>)
-                .map(
-                  (e) => PrestacaoServicoComunicacao.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
+                .map((e) => PrestacaoServicoComunicacao.fromJson(e as Map<String, dynamic>))
                 .toList()
           : null,
       mudancaOutroMunicipio: json['mudancaOutroMunicipio'] != null
-          ? (json['mudancaOutroMunicipio'] as List<dynamic>)
-                .map(
-                  (e) =>
-                      MudancaOutroMunicipio.fromJson(e as Map<String, dynamic>),
-                )
-                .toList()
+          ? (json['mudancaOutroMunicipio'] as List<dynamic>).map((e) => MudancaOutroMunicipio.fromJson(e as Map<String, dynamic>)).toList()
           : null,
       prestacoesServicoTransporte: json['prestacoesServicoTransporte'] != null
-          ? (json['prestacoesServicoTransporte'] as List<dynamic>)
-                .map(
-                  (e) => PrestacaoServicoTransporte.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList()
+          ? (json['prestacoesServicoTransporte'] as List<dynamic>).map((e) => PrestacaoServicoTransporte.fromJson(e as Map<String, dynamic>)).toList()
           : null,
-      informacaoOpcional: json['informacaoOpcional'] != null
-          ? InformacaoOpcional.fromJson(
-              json['informacaoOpcional'] as Map<String, dynamic>,
-            )
-          : null,
+      informacaoOpcional: json['informacaoOpcional'] != null ? InformacaoOpcional.fromJson(json['informacaoOpcional'] as Map<String, dynamic>) : null,
     );
   }
 
@@ -421,19 +304,11 @@ class Estabelecimento {
       'totalEntradas': totalEntradas,
       'totalDevolucoesCompras': totalDevolucoesCompras,
       'totalDespesas': totalDespesas,
-      'operacoesInterestaduais': operacoesInterestaduais
-          ?.map((e) => e.toJson())
-          .toList(),
+      'operacoesInterestaduais': operacoesInterestaduais?.map((e) => e.toJson()).toList(),
       'issRetidosFonte': issRetidosFonte?.map((e) => e.toJson()).toList(),
-      'prestacoesServicoComunicacao': prestacoesServicoComunicacao
-          ?.map((e) => e.toJson())
-          .toList(),
-      'mudancaOutroMunicipio': mudancaOutroMunicipio
-          ?.map((e) => e.toJson())
-          .toList(),
-      'prestacoesServicoTransporte': prestacoesServicoTransporte
-          ?.map((e) => e.toJson())
-          .toList(),
+      'prestacoesServicoComunicacao': prestacoesServicoComunicacao?.map((e) => e.toJson()).toList(),
+      'mudancaOutroMunicipio': mudancaOutroMunicipio?.map((e) => e.toJson()).toList(),
+      'prestacoesServicoTransporte': prestacoesServicoTransporte?.map((e) => e.toJson()).toList(),
       'informacaoOpcional': informacaoOpcional?.toJson(),
     };
   }
@@ -444,19 +319,13 @@ class OperacaoInterestadual {
   final double valor;
   final TipoOperacao tipoOperacao;
 
-  OperacaoInterestadual({
-    required this.uf,
-    required this.valor,
-    required this.tipoOperacao,
-  });
+  OperacaoInterestadual({required this.uf, required this.valor, required this.tipoOperacao});
 
   factory OperacaoInterestadual.fromJson(Map<String, dynamic> json) {
     return OperacaoInterestadual(
       uf: json['uf'].toString(),
       valor: (num.parse(json['valor'].toString())).toDouble(),
-      tipoOperacao:
-          TipoOperacao.fromCodigo(int.parse(json['tipoOperacao'].toString())) ??
-          TipoOperacao.entrada,
+      tipoOperacao: TipoOperacao.fromCodigo(int.parse(json['tipoOperacao'].toString())) ?? TipoOperacao.entrada,
     );
   }
 
@@ -470,11 +339,7 @@ class IssRetidoFonte {
   final String codMunicipio;
   final double valor;
 
-  IssRetidoFonte({
-    required this.uf,
-    required this.codMunicipio,
-    required this.valor,
-  });
+  IssRetidoFonte({required this.uf, required this.codMunicipio, required this.valor});
 
   factory IssRetidoFonte.fromJson(Map<String, dynamic> json) {
     return IssRetidoFonte(
@@ -494,11 +359,7 @@ class PrestacaoServicoComunicacao {
   final String codMunicipio;
   final double valor;
 
-  PrestacaoServicoComunicacao({
-    required this.uf,
-    required this.codMunicipio,
-    required this.valor,
-  });
+  PrestacaoServicoComunicacao({required this.uf, required this.codMunicipio, required this.valor});
 
   factory PrestacaoServicoComunicacao.fromJson(Map<String, dynamic> json) {
     return PrestacaoServicoComunicacao(
@@ -518,11 +379,7 @@ class MudancaOutroMunicipio {
   final String codMunicipio;
   final double valor;
 
-  MudancaOutroMunicipio({
-    required this.uf,
-    required this.codMunicipio,
-    required this.valor,
-  });
+  MudancaOutroMunicipio({required this.uf, required this.codMunicipio, required this.valor});
 
   factory MudancaOutroMunicipio.fromJson(Map<String, dynamic> json) {
     return MudancaOutroMunicipio(
@@ -542,11 +399,7 @@ class PrestacaoServicoTransporte {
   final String codMunicipio;
   final double valor;
 
-  PrestacaoServicoTransporte({
-    required this.uf,
-    required this.codMunicipio,
-    required this.valor,
-  });
+  PrestacaoServicoTransporte({required this.uf, required this.codMunicipio, required this.valor});
 
   factory PrestacaoServicoTransporte.fromJson(Map<String, dynamic> json) {
     return PrestacaoServicoTransporte(

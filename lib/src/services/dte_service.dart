@@ -46,7 +46,12 @@ class DteService {
     );
 
     try {
-      final response = await _apiClient.post('/', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+      final response = await _apiClient.post(
+        '/Consultar',
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
       final dteResponse = DteResponse.fromJson(response);
 
       // Validação adicional da resposta
