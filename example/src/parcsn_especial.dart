@@ -4,11 +4,13 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   print('=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===');
 
   final parcsnEspecialService = ParcsnEspecialService(apiClient);
+  bool servicoOk = true;
 
+  // 1. Consultar Pedidos de Parcelamento Especial
   try {
     print('\n--- 1. Consultar Pedidos de Parcelamento Especial ---');
     final consultarPedidosResponse = await parcsnEspecialService.consultarPedidos();
-    print('Status: ${consultarPedidosResponse.status}');
+    print('✅ Status: ${consultarPedidosResponse.status}');
     print('Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarPedidosResponse.sucesso}');
     print('Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}');
@@ -22,10 +24,16 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
         print('    Ativo: ${parcelamento.isAtivo}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar pedidos de parcelamento especial: $e');
+    servicoOk = false;
+  }
 
+  // 2. Consultar Parcelamento Específico
+  try {
     print('\n--- 2. Consultar Parcelamento Específico ---');
     final consultarParcelamentoResponse = await parcsnEspecialService.consultarParcelamento(9001);
-    print('Status: ${consultarParcelamentoResponse.status}');
+    print('✅ Status: ${consultarParcelamentoResponse.status}');
     print('Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarParcelamentoResponse.sucesso}');
 
@@ -50,10 +58,16 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
       print('Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}');
       print('Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelamento específico: $e');
+    servicoOk = false;
+  }
 
+  // 3. Consultar Detalhes de Pagamento
+  try {
     print('\n--- 3. Consultar Detalhes de Pagamento ---');
     final consultarDetalhesResponse = await parcsnEspecialService.consultarDetalhesPagamento(9001, 201612);
-    print('Status: ${consultarDetalhesResponse.status}');
+    print('✅ Status: ${consultarDetalhesResponse.status}');
     print('Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarDetalhesResponse.sucesso}');
 
@@ -87,10 +101,16 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
         }
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar detalhes de pagamento: $e');
+    servicoOk = false;
+  }
 
+  // 4. Consultar Parcelas para Impressão
+  try {
     print('\n--- 4. Consultar Parcelas para Impressão ---');
     final consultarParcelasResponse = await parcsnEspecialService.consultarParcelas();
-    print('Status: ${consultarParcelasResponse.status}');
+    print('✅ Status: ${consultarParcelasResponse.status}');
     print('Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${consultarParcelasResponse.sucesso}');
     print('Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}');
@@ -106,10 +126,16 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
         print('    Mês passado: ${parcela.isMesPassado}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelas para impressão: $e');
+    servicoOk = false;
+  }
 
+  // 5. Emitir DAS
+  try {
     print('\n--- 5. Emitir DAS ---');
     final emitirDasResponse = await parcsnEspecialService.emitirDas(202306);
-    print('Status: ${emitirDasResponse.status}');
+    print('✅ Status: ${emitirDasResponse.status}');
     print('Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${emitirDasResponse.sucesso}');
     print('PDF gerado com sucesso: ${emitirDasResponse.pdfGeradoComSucesso}');
@@ -120,45 +146,57 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
       print('PDF em bytes: ${pdfBytes?.length ?? 0} bytes');
       print('PDF válido: ${pdfBytes != null}');
     }
+  } catch (e) {
+    print('❌ Erro ao emitir DAS: $e');
+    servicoOk = false;
+  }
 
+  // 6. Validações
+  try {
     print('\n--- 6. Validações ---');
-    print('Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}');
-    print('Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}');
-    print('Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}');
-    print('Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}');
-    print('Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}');
-    print('Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}');
-    print('Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}');
-    print('Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}');
+    print('✅ Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}');
+    print('✅ Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}');
+    print('✅ Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}');
+    print('✅ Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}');
+    print('✅ Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}');
+    print('✅ Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}');
+    print('✅ Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}');
+    print('✅ Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}');
+  } catch (e) {
+    print('❌ Erro nas validações: $e');
+    servicoOk = false;
+  }
 
+  // 7. Análise de Erros
+  try {
     print('\n--- 7. Análise de Erros ---');
     final avisos = parcsnEspecialService.getAvisos();
-    print('Avisos disponíveis: ${avisos.length}');
+    print('✅ Avisos disponíveis: ${avisos.length}');
     for (var aviso in avisos.take(3)) {
       print('  - ${aviso.codigo}: ${aviso.descricao}');
     }
 
     final entradasIncorretas = parcsnEspecialService.getEntradasIncorretas();
-    print('Entradas incorretas disponíveis: ${entradasIncorretas.length}');
+    print('✅ Entradas incorretas disponíveis: ${entradasIncorretas.length}');
     for (var entrada in entradasIncorretas.take(3)) {
       print('  - ${entrada.codigo}: ${entrada.descricao}');
     }
 
     final erros = parcsnEspecialService.getErros();
-    print('Erros disponíveis: ${erros.length}');
+    print('✅ Erros disponíveis: ${erros.length}');
     for (var erro in erros.take(3)) {
       print('  - ${erro.codigo}: ${erro.descricao}');
     }
 
     final sucessos = parcsnEspecialService.getSucessos();
-    print('Sucessos disponíveis: ${sucessos.length}');
+    print('✅ Sucessos disponíveis: ${sucessos.length}');
     for (var sucesso in sucessos.take(3)) {
       print('  - ${sucesso.codigo}: ${sucesso.descricao}');
     }
 
     // Exemplo de análise de erro
     final analiseErro = parcsnEspecialService.analyzeError('[Aviso-PARCSN-ESP-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
-    print('Análise de erro:');
+    print('✅ Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Tipo: ${analiseErro.tipo}');
     print('  Categoria: ${analiseErro.categoria}');
@@ -166,9 +204,18 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('  Crítico: ${analiseErro.isCritico}');
     print('  Permite retry: ${analiseErro.permiteRetry}');
     print('  Ação recomendada: ${analiseErro.acaoRecomendada}');
-
-    print('\n=== Exemplos PARCSN-ESP Concluídos ===');
   } catch (e) {
-    print('Erro nos exemplos do PARCSN-ESP: $e');
+    print('❌ Erro na análise de erros: $e');
+    servicoOk = false;
   }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO PARCSN-ESP ===');
+  if (servicoOk) {
+    print('✅ Serviço PARCSN-ESP: OK');
+  } else {
+    print('❌ Serviço PARCSN-ESP: ERRO');
+  }
+
+  print('\n=== Exemplos PARCSN-ESP Concluídos ===');
 }

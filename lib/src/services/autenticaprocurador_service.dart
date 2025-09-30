@@ -28,9 +28,7 @@ class AutenticaProcuradorService {
     String? certificadoPassword,
   }) async {
     final dataAssinaturaFinal = dataAssinatura ?? _formatarData(DateTime.now());
-    final dataVigenciaFinal =
-        dataVigencia ??
-        _formatarData(DateTime.now().add(const Duration(days: 365)));
+    final dataVigenciaFinal = dataVigencia ?? _formatarData(DateTime.now().add(const Duration(days: 365)));
 
     final termo = TermoAutorizacaoRequest(
       contratanteNumero: contratanteNumero,
@@ -46,9 +44,7 @@ class AutenticaProcuradorService {
     // Validar dados do termo
     final erros = termo.validarDados();
     if (erros.isNotEmpty) {
-      throw Exception(
-        'Dados inválidos do termo de autorização: ${erros.join(', ')}',
-      );
+      throw Exception('Dados inválidos do termo de autorização: ${erros.join(', ')}');
     }
 
     return termo;
@@ -78,11 +74,10 @@ class AutenticaProcuradorService {
     try {
       // Validar certificado se fornecido
       if (termo.certificadoPath != null && termo.certificadoPassword != null) {
-        final isValid =
-            await AssinaturaDigitalUtils.validarCertificadoICPBrasil(
-              certificadoPath: termo.certificadoPath!,
-              senha: termo.certificadoPassword!,
-            );
+        final isValid = await AssinaturaDigitalUtils.validarCertificadoICPBrasil(
+          certificadoPath: termo.certificadoPath!,
+          senha: termo.certificadoPassword!,
+        );
 
         if (!isValid) {
           throw Exception('Certificado digital inválido');
@@ -101,24 +96,16 @@ class AutenticaProcuradorService {
       // Assinar XML
       String xmlAssinado;
       if (termo.certificadoPath != null && termo.certificadoPassword != null) {
-        xmlAssinado = await AssinaturaDigitalUtils.assinarXml(
-          xml: xml,
-          certificadoPath: termo.certificadoPath!,
-          senha: termo.certificadoPassword!,
-        );
+        xmlAssinado = await AssinaturaDigitalUtils.assinarXml(xml: xml, certificadoPath: termo.certificadoPath!, senha: termo.certificadoPassword!);
       } else {
         // Assinatura simulada para demonstração
         xmlAssinado = await _assinarXmlSimulado(xml);
       }
 
       // Validar assinatura
-      final errosAssinatura = AssinaturaDigitalUtils.validarEstruturaAssinatura(
-        xmlAssinado,
-      );
+      final errosAssinatura = AssinaturaDigitalUtils.validarEstruturaAssinatura(xmlAssinado);
       if (errosAssinatura.isNotEmpty) {
-        throw Exception(
-          'Assinatura digital inválida: ${errosAssinatura.join(', ')}',
-        );
+        throw Exception('Assinatura digital inválida: ${errosAssinatura.join(', ')}');
       }
 
       return xmlAssinado;
@@ -132,16 +119,10 @@ class AutenticaProcuradorService {
     // Esta é uma implementação simulada - NÃO USE EM PRODUÇÃO
     final assinatura = _gerarAssinaturaSimulada(
       xml,
-      ConfiguracaoAssinatura.padraoICPBrasil(
-        tipoCertificado: TipoCertificado.ecnpj,
-        formatoCertificado: FormatoCertificado.a1,
-      ),
+      ConfiguracaoAssinatura.padraoICPBrasil(tipoCertificado: TipoCertificado.ecnpj, formatoCertificado: FormatoCertificado.a1),
     );
 
-    return xml.replaceAll(
-      '<!-- Assinatura digital será inserida aqui -->',
-      assinatura,
-    );
+    return xml.replaceAll('<!-- Assinatura digital será inserida aqui -->', assinatura);
   }
 
   /// Gera assinatura simulada para demonstração
@@ -200,14 +181,8 @@ class AutenticaProcuradorService {
       final termoResponse = TermoAutorizacaoResponse.fromJson(response);
 
       // Salvar cache se autenticação foi bem-sucedida
-      if (termoResponse.sucesso &&
-          termoResponse.autenticarProcuradorToken != null) {
-        await _salvarCache(
-          termoResponse.autenticarProcuradorToken!,
-          contratanteNumero,
-          autorPedidoDadosNumero,
-          response,
-        );
+      if (termoResponse.sucesso && termoResponse.autenticarProcuradorToken != null) {
+        await _salvarCache(termoResponse.autenticarProcuradorToken!, contratanteNumero, autorPedidoDadosNumero, response);
       }
 
       return termoResponse;
@@ -217,15 +192,9 @@ class AutenticaProcuradorService {
   }
 
   /// Verifica se existe token válido em cache
-  Future<CacheModel?> verificarCacheToken({
-    required String contratanteNumero,
-    required String autorPedidoDadosNumero,
-  }) async {
+  Future<CacheModel?> verificarCacheToken({required String contratanteNumero, required String autorPedidoDadosNumero}) async {
     try {
-      final chave = CacheUtils.gerarChaveCache(
-        contratanteNumero: contratanteNumero,
-        autorPedidoDadosNumero: autorPedidoDadosNumero,
-      );
+      final chave = CacheUtils.gerarChaveCache(contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
       final cache = await CacheUtils.carregarCache(chave);
       if (cache != null && cache.isTokenValido) {
@@ -285,10 +254,7 @@ class AutenticaProcuradorService {
   }) async {
     try {
       // Verificar cache primeiro
-      final cache = await verificarCacheToken(
-        contratanteNumero: contratanteNumero,
-        autorPedidoDadosNumero: autorPedidoDadosNumero,
-      );
+      final cache = await verificarCacheToken(contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
       if (cache != null && cache.isTokenValido) {
         return cache.token;
@@ -351,9 +317,7 @@ class AutenticaProcuradorService {
   }
 
   /// Valida assinatura digital
-  Future<Map<String, dynamic>> validarAssinaturaDigital(
-    String xmlAssinado,
-  ) async {
+  Future<Map<String, dynamic>> validarAssinaturaDigital(String xmlAssinado) async {
     try {
       return AssinaturaDigitalUtils.gerarRelatorioValidacao(xmlAssinado);
     } catch (e) {
@@ -362,32 +326,18 @@ class AutenticaProcuradorService {
   }
 
   /// Obtém informações do certificado
-  Future<Map<String, dynamic>> obterInfoCertificado({
-    required String certificadoPath,
-    required String senha,
-  }) async {
+  Future<Map<String, dynamic>> obterInfoCertificado({required String certificadoPath, required String senha}) async {
     try {
-      return await AssinaturaDigitalUtils.extrairInfoCertificado(
-        certificadoPath: certificadoPath,
-        senha: senha,
-      );
+      return await AssinaturaDigitalUtils.extrairInfoCertificado(certificadoPath: certificadoPath, senha: senha);
     } catch (e) {
       throw Exception('Erro ao obter informações do certificado: $e');
     }
   }
 
   /// Salva cache do token
-  Future<void> _salvarCache(
-    String token,
-    String contratanteNumero,
-    String autorPedidoDadosNumero,
-    Map<String, dynamic> response,
-  ) async {
+  Future<void> _salvarCache(String token, String contratanteNumero, String autorPedidoDadosNumero, Map<String, dynamic> response) async {
     try {
-      final chave = CacheUtils.gerarChaveCache(
-        contratanteNumero: contratanteNumero,
-        autorPedidoDadosNumero: autorPedidoDadosNumero,
-      );
+      final chave = CacheUtils.gerarChaveCache(contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
       // Extrair headers da resposta
       final headers = <String, String>{};
@@ -414,12 +364,7 @@ class AutenticaProcuradorService {
   BaseRequest _createBaseRequest(Map<String, dynamic> body) {
     return BaseRequest(
       contribuinteNumero: '00000000000100',
-      pedidoDados: PedidoDados(
-        idSistema: 'AUTENTICAPROCURADOR',
-        idServico: 'AUTENTICAR',
-        versaoSistema: '1.0',
-        dados: jsonEncode(body),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'AUTENTICAPROCURADOR', idServico: 'AUTENTICAR', versaoSistema: '1.0', dados: jsonEncode(body)),
     );
   }
 

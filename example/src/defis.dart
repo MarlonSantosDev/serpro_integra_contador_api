@@ -4,7 +4,9 @@ Future<void> Defis(ApiClient apiClient) async {
   print('=== Exemplos DEFIS ===');
 
   final defisService = DefisService(apiClient);
+  bool servicoOk = true;
 
+  // 1. Transmitir Declaração Sócio Econômica
   try {
     print('\n--- 1. Transmitir Declaração Sócio Econômica ---');
     // Criar uma declaração de exemplo usando os enums
@@ -75,163 +77,183 @@ Future<void> Defis(ApiClient apiClient) async {
       ),
     );
 
-    try {
-      final transmitirResponse = await defisService.transmitirDeclaracao(
-        contribuinteNumero: '00000000000000',
-        declaracaoData: declaracao,
-        contratanteNumero: '00000000000000',
-        autorPedidoDadosNumero: '00000000000000',
-      );
+    final transmitirResponse = await defisService.transmitirDeclaracao(
+      contribuinteNumero: '00000000000000',
+      declaracaoData: declaracao,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
-      print('Status: ${transmitirResponse.status}');
-      print('Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
-      print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-      print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-    } catch (e) {
-      print('❌ Erro ao transmitir declaração: $e');
-    }
-    await Future.delayed(Duration(seconds: 2));
+    print('✅ Status: ${transmitirResponse.status}');
+    print('Mensagens: ${transmitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
+    print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+  } catch (e) {
+    print('❌ Erro ao transmitir declaração: $e');
+    servicoOk = false;
+  }
+  await Future.delayed(Duration(seconds: 2));
 
+  // 2. Consultar Declarações Transmitidas
+  try {
     print('\n--- 2. Consultar Declarações Transmitidas ---');
-    try {
-      final consultarDeclaracoesResponse = await defisService.consultarDeclaracoesTransmitidas(
-        contribuinteNumero: '00000000000000',
-        contratanteNumero: '00000000000000',
-        autorPedidoDadosNumero: '00000000000000',
-      );
+    final consultarDeclaracoesResponse = await defisService.consultarDeclaracoesTransmitidas(
+      contribuinteNumero: '00000000000000',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
-      print('Status: ${consultarDeclaracoesResponse.status}');
-      print('Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      print('Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}');
+    print('✅ Status: ${consultarDeclaracoesResponse.status}');
+    print('Mensagens: ${consultarDeclaracoesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Quantidade de declarações: ${consultarDeclaracoesResponse.dados.length}');
 
-      for (var declaracao in consultarDeclaracoesResponse.dados) {
-        print('  - ID: ${declaracao.idDefis}, Ano: ${declaracao.anoCalendario}, Tipo: ${declaracao.tipo}, Data: ${declaracao.dataHora}');
-      }
-    } catch (e) {
-      print('❌ Erro ao consultar declarações transmitidas: $e');
-    }
-    await Future.delayed(Duration(seconds: 2));
-
-    print('\n--- 3. Consultar Última Declaração Transmitida ---');
-    try {
-      final consultarUltimaResponse = await defisService.consultarUltimaDeclaracao(
-        contribuinteNumero: '00000000000000',
-        ano: 2021,
-        contratanteNumero: '00000000000000',
-        autorPedidoDadosNumero: '00000000000000',
-      );
-
-      print('Status: ${consultarUltimaResponse.status}');
-      print('Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      print('ID DEFIS: ${consultarUltimaResponse.dados.idDefis}');
-      print('Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-      print('Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-    } catch (e) {
-      print('❌ Erro ao consultar última declaração transmitida: $e');
-    }
-    await Future.delayed(Duration(seconds: 2));
-
-    print('\n--- 4. Consultar Declaração Específica ---');
-    try {
-      final consultarEspecificaResponse = await defisService.consultarDeclaracaoEspecifica(
-        contribuinteNumero: '00000000000000',
-        idDefis: '000000002021002', // Usar um ID real se disponível
-        contratanteNumero: '00000000000000',
-        autorPedidoDadosNumero: '00000000000000',
-      );
-
-      print('Status: ${consultarEspecificaResponse.status}');
-      print('Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      print('Declaração PDF: ${consultarEspecificaResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-      print('Recibo PDF: ${consultarEspecificaResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-    } catch (e) {
-      print('❌ Erro ao consultar declaração específica: $e');
-    }
-    await Future.delayed(Duration(seconds: 2));
-
-    print('\n--- 5. Exemplo com Procurador ---');
-    try {
-      // Exemplo usando token de procurador (se disponível)
-      if (apiClient.hasProcuradorToken) {
-        final procuradorResponse = await defisService.consultarDeclaracoesTransmitidas(
-          contribuinteNumero: '00000000000000',
-          procuradorToken: apiClient.procuradorToken,
-        );
-
-        print('Status com procurador: ${procuradorResponse.status}');
-        print('Quantidade de declarações: ${procuradorResponse.dados.length}');
-      } else {
-        print('Token de procurador não disponível');
-      }
-    } catch (e) {
-      print('❌ Erro ao consultar declarações transmitidas com procurador: $e');
-    }
-    await Future.delayed(Duration(seconds: 2));
-
-    print('\n--- 6. Exemplo de Validação de Enums ---');
-    try {
-      print('Tipos de evento disponíveis:');
-      for (var tipo in TipoEventoSituacaoEspecial.values) {
-        print('  ${tipo.codigo}: ${tipo.descricao}');
-      }
-
-      print('\nRegras de inatividade disponíveis:');
-      for (var regra in RegraInatividade.values) {
-        print('  ${regra.codigo}: ${regra.descricao}');
-      }
-
-      print('\nTipos de beneficiário de doação:');
-      for (var tipo in TipoBeneficiarioDoacao.values) {
-        print('  ${tipo.codigo}: ${tipo.descricao}');
-      }
-
-      print('\nFormas de doação:');
-      for (var forma in FormaDoacao.values) {
-        print('  ${forma.codigo}: ${forma.descricao}');
-      }
-
-      print('\nTipos de operação:');
-      for (var tipo in TipoOperacao.values) {
-        print('  ${tipo.codigo}: ${tipo.descricao}');
-      }
-
-      print('\nAdministrações tributárias:');
-      for (var admin in AdministracaoTributaria.values) {
-        print('  ${admin.codigo}: ${admin.descricao}');
-      }
-    } catch (e) {
-      print('❌ Erro ao consultar validação de enums: $e');
-    }
-
-    print('\n--- 7. Exemplo de Criação de Informação Opcional ---');
-    try {
-      final informacaoOpcional = InformacaoOpcional(
-        vendasRevendedorAmbulante: [VendaRevendedorAmbulante(uf: 'SP', codigoMunicipio: '3550308', valor: 1000.0)],
-        preparosComercializacaoRefeicoes: [PreparoComercializacaoRefeicoes(uf: 'RJ', codigoMunicipio: '3304557', valor: 500.0)],
-        producoesRurais: [ProducaoRural(uf: 'MG', codigoMunicipio: '3106200', valor: 2000.0)],
-        aquisicoesProdutoresRurais: [AquisicaoProdutoresRurais(uf: 'RS', codigoMunicipio: '4314902', valor: 1500.0)],
-        aquisicoesDispensadosInscricao: [AquisicaoDispensadosInscricao(uf: 'PR', codigoMunicipio: '4106902', valor: 800.0)],
-        rateiosReceitaRegimeEspecial: [RateioReceitaRegimeEspecial(uf: 'SC', codigoMunicipio: '4205407', valor: 3000.0, numeroRegime: '123456')],
-        rateiosDecisaoJudicial: [
-          RateioDecisaoJudicial(uf: 'BA', codigoMunicipio: '2927408', valor: 1200.0, identificacaoDecisao: 'Processo 123456789'),
-        ],
-        rateiosReceitaOutrosRateios: [
-          RateioReceitaOutrosRateios(uf: 'CE', codigoMunicipio: '2304400', valor: 900.0, origemExigencia: 'Exigência especial'),
-        ],
-        saidaTransferenciaMercadoria: 5000.0,
-        autoInfracaoPago: 2000.0,
-      );
-
-      print('Informação opcional criada com sucesso!');
-      print('Total de vendas revendedor ambulante: ${informacaoOpcional.vendasRevendedorAmbulante?.length ?? 0}');
-      print('Total de preparos comercialização refeições: ${informacaoOpcional.preparosComercializacaoRefeicoes?.length ?? 0}');
-      print('Saída transferência mercadoria: ${informacaoOpcional.saidaTransferenciaMercadoria}');
-      print('Auto infração pago: ${informacaoOpcional.autoInfracaoPago}');
-    } catch (e) {
-      print('❌ Erro ao criar informação opcional: $e');
+    for (var declaracao in consultarDeclaracoesResponse.dados) {
+      print('  - ID: ${declaracao.idDefis}, Ano: ${declaracao.anoCalendario}, Tipo: ${declaracao.tipo}, Data: ${declaracao.dataHora}');
     }
   } catch (e) {
-    print('Erro no serviço DEFIS: $e');
+    print('❌ Erro ao consultar declarações transmitidas: $e');
+    servicoOk = false;
   }
+  await Future.delayed(Duration(seconds: 2));
+
+  // 3. Consultar Última Declaração Transmitida
+  try {
+    print('\n--- 3. Consultar Última Declaração Transmitida ---');
+    final consultarUltimaResponse = await defisService.consultarUltimaDeclaracao(
+      contribuinteNumero: '00000000000000',
+      ano: 2021,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
+
+    print('✅ Status: ${consultarUltimaResponse.status}');
+    print('Mensagens: ${consultarUltimaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('ID DEFIS: ${consultarUltimaResponse.dados.idDefis}');
+    print('Declaração PDF: ${consultarUltimaResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    print('Recibo PDF: ${consultarUltimaResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+  } catch (e) {
+    print('❌ Erro ao consultar última declaração transmitida: $e');
+    servicoOk = false;
+  }
+  await Future.delayed(Duration(seconds: 2));
+
+  // 4. Consultar Declaração Específica
+  try {
+    print('\n--- 4. Consultar Declaração Específica ---');
+    final consultarEspecificaResponse = await defisService.consultarDeclaracaoEspecifica(
+      contribuinteNumero: '00000000000000',
+      idDefis: '000000002021002', // Usar um ID real se disponível
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
+
+    print('✅ Status: ${consultarEspecificaResponse.status}');
+    print('Mensagens: ${consultarEspecificaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print('Declaração PDF: ${consultarEspecificaResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    print('Recibo PDF: ${consultarEspecificaResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+  } catch (e) {
+    print('❌ Erro ao consultar declaração específica: $e');
+    servicoOk = false;
+  }
+  await Future.delayed(Duration(seconds: 2));
+
+  // 5. Exemplo com Procurador
+  try {
+    print('\n--- 5. Exemplo com Procurador ---');
+    // Exemplo usando token de procurador (se disponível)
+    if (apiClient.hasProcuradorToken) {
+      final procuradorResponse = await defisService.consultarDeclaracoesTransmitidas(
+        contribuinteNumero: '00000000000000',
+        procuradorToken: apiClient.procuradorToken,
+      );
+
+      print('✅ Status com procurador: ${procuradorResponse.status}');
+      print('Quantidade de declarações: ${procuradorResponse.dados.length}');
+    } else {
+      print('⚠️ Token de procurador não disponível');
+    }
+  } catch (e) {
+    print('❌ Erro ao consultar declarações transmitidas com procurador: $e');
+    servicoOk = false;
+  }
+  await Future.delayed(Duration(seconds: 2));
+
+  // 6. Exemplo de Validação de Enums
+  try {
+    print('\n--- 6. Exemplo de Validação de Enums ---');
+    print('Tipos de evento disponíveis:');
+    for (var tipo in TipoEventoSituacaoEspecial.values) {
+      print('  ${tipo.codigo}: ${tipo.descricao}');
+    }
+
+    print('\nRegras de inatividade disponíveis:');
+    for (var regra in RegraInatividade.values) {
+      print('  ${regra.codigo}: ${regra.descricao}');
+    }
+
+    print('\nTipos de beneficiário de doação:');
+    for (var tipo in TipoBeneficiarioDoacao.values) {
+      print('  ${tipo.codigo}: ${tipo.descricao}');
+    }
+
+    print('\nFormas de doação:');
+    for (var forma in FormaDoacao.values) {
+      print('  ${forma.codigo}: ${forma.descricao}');
+    }
+
+    print('\nTipos de operação:');
+    for (var tipo in TipoOperacao.values) {
+      print('  ${tipo.codigo}: ${tipo.descricao}');
+    }
+
+    print('\nAdministrações tributárias:');
+    for (var admin in AdministracaoTributaria.values) {
+      print('  ${admin.codigo}: ${admin.descricao}');
+    }
+    print('✅ Validação de enums concluída');
+  } catch (e) {
+    print('❌ Erro ao consultar validação de enums: $e');
+    servicoOk = false;
+  }
+
+  // 7. Exemplo de Criação de Informação Opcional
+  try {
+    print('\n--- 7. Exemplo de Criação de Informação Opcional ---');
+    final informacaoOpcional = InformacaoOpcional(
+      vendasRevendedorAmbulante: [VendaRevendedorAmbulante(uf: 'SP', codigoMunicipio: '3550308', valor: 1000.0)],
+      preparosComercializacaoRefeicoes: [PreparoComercializacaoRefeicoes(uf: 'RJ', codigoMunicipio: '3304557', valor: 500.0)],
+      producoesRurais: [ProducaoRural(uf: 'MG', codigoMunicipio: '3106200', valor: 2000.0)],
+      aquisicoesProdutoresRurais: [AquisicaoProdutoresRurais(uf: 'RS', codigoMunicipio: '4314902', valor: 1500.0)],
+      aquisicoesDispensadosInscricao: [AquisicaoDispensadosInscricao(uf: 'PR', codigoMunicipio: '4106902', valor: 800.0)],
+      rateiosReceitaRegimeEspecial: [RateioReceitaRegimeEspecial(uf: 'SC', codigoMunicipio: '4205407', valor: 3000.0, numeroRegime: '123456')],
+      rateiosDecisaoJudicial: [
+        RateioDecisaoJudicial(uf: 'BA', codigoMunicipio: '2927408', valor: 1200.0, identificacaoDecisao: 'Processo 123456789'),
+      ],
+      rateiosReceitaOutrosRateios: [
+        RateioReceitaOutrosRateios(uf: 'CE', codigoMunicipio: '2304400', valor: 900.0, origemExigencia: 'Exigência especial'),
+      ],
+      saidaTransferenciaMercadoria: 5000.0,
+      autoInfracaoPago: 2000.0,
+    );
+
+    print('✅ Informação opcional criada com sucesso!');
+    print('Total de vendas revendedor ambulante: ${informacaoOpcional.vendasRevendedorAmbulante?.length ?? 0}');
+    print('Total de preparos comercialização refeições: ${informacaoOpcional.preparosComercializacaoRefeicoes?.length ?? 0}');
+    print('Saída transferência mercadoria: ${informacaoOpcional.saidaTransferenciaMercadoria}');
+    print('Auto infração pago: ${informacaoOpcional.autoInfracaoPago}');
+  } catch (e) {
+    print('❌ Erro ao criar informação opcional: $e');
+    servicoOk = false;
+  }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO DEFIS ===');
+  if (servicoOk) {
+    print('✅ Serviço DEFIS: OK');
+  } else {
+    print('❌ Serviço DEFIS: ERRO');
+  }
+
+  print('\n=== Exemplos DEFIS Concluídos ===');
 }

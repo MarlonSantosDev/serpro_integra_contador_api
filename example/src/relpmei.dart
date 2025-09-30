@@ -4,9 +4,10 @@ Future<void> Relpmei(ApiClient apiClient) async {
   print('\n=== Exemplos RELPMEI ===');
 
   final relpmeiService = RelpmeiService(apiClient);
+  bool servicoOk = true;
 
+  // Exemplo 1: Consultar Pedidos de Parcelamento
   try {
-    // Exemplo 1: Consultar Pedidos de Parcelamento
     print('\n--- Consultando Pedidos de Parcelamento ---');
     final consultarPedidosRequest = ConsultarPedidosRequest(
       contribuinteNumero: '12345678901',
@@ -35,7 +36,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final consultarPedidosResponse = await relpmeiService.consultarPedidos(consultarPedidosRequest);
-    print('Consulta de pedidos: ${consultarPedidosResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta de pedidos: ${consultarPedidosResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarPedidosResponse.sucesso) {
       print('Pedidos encontrados: ${consultarPedidosResponse.pedidos?.length ?? 0}');
     } else {
@@ -43,8 +44,13 @@ Future<void> Relpmei(ApiClient apiClient) async {
       print('Código: ${consultarPedidosResponse.codigoErro}');
       print('Detalhes: ${consultarPedidosResponse.detalhesErro}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar pedidos: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 2: Consultar Parcelamentos Existentes
+  // Exemplo 2: Consultar Parcelamentos Existentes
+  try {
     print('\n--- Consultando Parcelamentos Existentes ---');
     final consultarParcelamentoRequest = ConsultarParcelamentoRequest(
       contribuinteNumero: '12345678901',
@@ -73,7 +79,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final consultarParcelamentoResponse = await relpmeiService.consultarParcelamento(consultarParcelamentoRequest);
-    print('Consulta de parcelamentos: ${consultarParcelamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta de parcelamentos: ${consultarParcelamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarParcelamentoResponse.sucesso) {
       print('Parcelamentos encontrados: ${consultarParcelamentoResponse.parcelamentos?.length ?? 0}');
     } else {
@@ -81,8 +87,13 @@ Future<void> Relpmei(ApiClient apiClient) async {
       print('Código: ${consultarParcelamentoResponse.codigoErro}');
       print('Detalhes: ${consultarParcelamentoResponse.detalhesErro}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelamentos: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 3: Consultar Parcelas para Impressão
+  // Exemplo 3: Consultar Parcelas para Impressão
+  try {
     print('\n--- Consultando Parcelas para Impressão ---');
     final consultarParcelasImpressaoRequest = ConsultarParcelasImpressaoRequest(
       contribuinteNumero: '12345678901',
@@ -111,7 +122,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final consultarParcelasImpressaoResponse = await relpmeiService.consultarParcelasImpressao(consultarParcelasImpressaoRequest);
-    print('Consulta de parcelas para impressão: ${consultarParcelasImpressaoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta de parcelas para impressão: ${consultarParcelasImpressaoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarParcelasImpressaoResponse.sucesso) {
       print('Parcelas para impressão encontradas: ${consultarParcelasImpressaoResponse.parcelas?.length ?? 0}');
     } else {
@@ -119,8 +130,13 @@ Future<void> Relpmei(ApiClient apiClient) async {
       print('Código: ${consultarParcelasImpressaoResponse.codigoErro}');
       print('Detalhes: ${consultarParcelasImpressaoResponse.detalhesErro}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelas para impressão: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 4: Consultar Detalhes de Pagamento
+  // Exemplo 4: Consultar Detalhes de Pagamento
+  try {
     print('\n--- Consultando Detalhes de Pagamento ---');
     final consultarDetalhesPagamentoRequest = ConsultarDetalhesPagamentoRequest(
       contribuinteNumero: '12345678901',
@@ -149,7 +165,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final consultarDetalhesPagamentoResponse = await relpmeiService.consultarDetalhesPagamento(consultarDetalhesPagamentoRequest);
-    print('Consulta de detalhes de pagamento: ${consultarDetalhesPagamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta de detalhes de pagamento: ${consultarDetalhesPagamentoResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (consultarDetalhesPagamentoResponse.sucesso) {
       print('Detalhes de pagamento encontrados: ${consultarDetalhesPagamentoResponse.detalhes?.length ?? 0}');
     } else {
@@ -157,8 +173,13 @@ Future<void> Relpmei(ApiClient apiClient) async {
       print('Código: ${consultarDetalhesPagamentoResponse.codigoErro}');
       print('Detalhes: ${consultarDetalhesPagamentoResponse.detalhesErro}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar detalhes de pagamento: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 5: Emitir DAS
+  // Exemplo 5: Emitir DAS
+  try {
     print('\n--- Emitindo DAS ---');
     final emitirDasRequest = EmitirDasRequest(
       contribuinteNumero: '12345678901',
@@ -187,7 +208,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final emitirDasResponse = await relpmeiService.emitirDas(emitirDasRequest);
-    print('Emissão de DAS: ${emitirDasResponse.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Emissão de DAS: ${emitirDasResponse.sucesso ? 'Sucesso' : 'Erro'}');
     if (emitirDasResponse.sucesso) {
       print('DAS emitido: ${emitirDasResponse.das?.numeroDas ?? 'N/A'}');
       print('Valor: ${emitirDasResponse.das?.valor ?? 'N/A'}');
@@ -197,8 +218,13 @@ Future<void> Relpmei(ApiClient apiClient) async {
       print('Código: ${emitirDasResponse.codigoErro}');
       print('Detalhes: ${emitirDasResponse.detalhesErro}');
     }
+  } catch (e) {
+    print('❌ Erro ao emitir DAS: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 6: Teste de validação com CPF/CNPJ inválido
+  // Exemplo 6: Teste de validação com CPF/CNPJ inválido
+  try {
     print('\n--- Teste de Validação com CPF/CNPJ Inválido ---');
     final requestInvalido = ConsultarPedidosRequest(
       contribuinteNumero: '',
@@ -207,13 +233,18 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final responseInvalido = await relpmeiService.consultarPedidos(requestInvalido);
-    print('Validação de CPF vazio: ${responseInvalido.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Validação de CPF vazio: ${responseInvalido.sucesso ? 'Sucesso' : 'Erro'}');
     if (!responseInvalido.sucesso) {
       print('Erro esperado: ${responseInvalido.mensagem}');
       print('Código: ${responseInvalido.codigoErro}');
     }
+  } catch (e) {
+    print('❌ Erro no teste de validação: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 7: Teste com CNPJ
+  // Exemplo 7: Teste com CNPJ
+  try {
     print('\n--- Teste com CNPJ ---');
     final requestCnpj = ConsultarPedidosRequest(
       contribuinteNumero: '12345678000195',
@@ -225,14 +256,19 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final responseCnpj = await relpmeiService.consultarPedidos(requestCnpj);
-    print('Consulta com CNPJ: ${responseCnpj.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta com CNPJ: ${responseCnpj.sucesso ? 'Sucesso' : 'Erro'}');
     if (responseCnpj.sucesso) {
       print('Pedidos encontrados: ${responseCnpj.pedidos?.length ?? 0}');
     } else {
       print('Erro: ${responseCnpj.mensagem}');
     }
+  } catch (e) {
+    print('❌ Erro no teste com CNPJ: $e');
+    servicoOk = false;
+  }
 
-    // Exemplo 8: Teste com dados mínimos
+  // Exemplo 8: Teste com dados mínimos
+  try {
     print('\n--- Teste com Dados Mínimos ---');
     final requestMinimo = ConsultarPedidosRequest(
       contribuinteNumero: '12345678901',
@@ -241,15 +277,24 @@ Future<void> Relpmei(ApiClient apiClient) async {
     );
 
     final responseMinimo = await relpmeiService.consultarPedidos(requestMinimo);
-    print('Consulta com dados mínimos: ${responseMinimo.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ Consulta com dados mínimos: ${responseMinimo.sucesso ? 'Sucesso' : 'Erro'}');
     if (responseMinimo.sucesso) {
       print('Pedidos encontrados: ${responseMinimo.pedidos?.length ?? 0}');
     } else {
       print('Erro: ${responseMinimo.mensagem}');
     }
-
-    print('\n=== Exemplos RELPMEI Concluídos ===');
   } catch (e) {
-    print('Erro geral no serviço RELPMEI: $e');
+    print('❌ Erro no teste com dados mínimos: $e');
+    servicoOk = false;
   }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO RELPMEI ===');
+  if (servicoOk) {
+    print('✅ Serviço RELPMEI: OK');
+  } else {
+    print('❌ Serviço RELPMEI: ERRO');
+  }
+
+  print('\n=== Exemplos RELPMEI Concluídos ===');
 }

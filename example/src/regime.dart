@@ -4,12 +4,13 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 Future<void> Regime(ApiClient apiClient) async {
   print('\n=== SERVIÇO DE REGIME DE APURAÇÃO ===');
 
-  try {
-    // Inicializar o serviço
-    final regimeService = RegimeApuracaoService(apiClient);
-    final contribuinteNumero = '00000000000100'; // CNPJ de exemplo
+  // Inicializar o serviço
+  final regimeService = RegimeApuracaoService(apiClient);
+  final contribuinteNumero = '00000000000100'; // CNPJ de exemplo
+  bool servicoOk = true;
 
-    // 1. Consultar anos calendários com opções efetivadas
+  // 1. Consultar anos calendários com opções efetivadas
+  try {
     print('\n1. Consultando anos calendários com opções efetivadas...');
     final anosResponse = await regimeService.consultarAnosCalendarios(contribuinteNumero: contribuinteNumero);
 
@@ -29,8 +30,13 @@ Future<void> Regime(ApiClient apiClient) async {
         print('  ${mensagem.codigo}: ${mensagem.texto}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar anos calendários: $e');
+    servicoOk = false;
+  }
 
-    // 2. Consultar opção específica para um ano
+  // 2. Consultar opção específica para um ano
+  try {
     print('\n2. Consultando opção específica para o ano 2023...');
     final opcaoResponse = await regimeService.consultarOpcaoPorAno(contribuinteNumero: contribuinteNumero, anoCalendario: 2023);
 
@@ -54,8 +60,13 @@ Future<void> Regime(ApiClient apiClient) async {
         print('  ${mensagem.codigo}: ${mensagem.texto}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar opção por ano: $e');
+    servicoOk = false;
+  }
 
-    // 3. Consultar resolução para regime de caixa
+  // 3. Consultar resolução para regime de caixa
+  try {
     print('\n3. Consultando resolução para regime de caixa (ano 2021)...');
     final resolucaoResponse = await regimeService.consultarResolucaoPorAno(contribuinteNumero: contribuinteNumero, anoCalendario: 2021);
 
@@ -77,8 +88,13 @@ Future<void> Regime(ApiClient apiClient) async {
         print('  ${mensagem.codigo}: ${mensagem.texto}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar resolução por ano: $e');
+    servicoOk = false;
+  }
 
-    // 4. Exemplo usando consultarOpcaoRegime (método principal)
+  // 4. Exemplo usando consultarOpcaoRegime (método principal)
+  try {
     print('\n4. Exemplo usando consultarOpcaoRegime (método principal)...');
     final requestOpcao = ConsultarOpcaoRegimeRequest(anoCalendario: 2023);
     final opcaoResponsePrincipal = await regimeService.consultarOpcaoRegime(contribuinteNumero: contribuinteNumero, request: requestOpcao);
@@ -101,8 +117,13 @@ Future<void> Regime(ApiClient apiClient) async {
         print('  ${mensagem.codigo}: ${mensagem.texto}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar opção regime (método principal): $e');
+    servicoOk = false;
+  }
 
-    // 5. Exemplo usando consultarResolucao (método principal)
+  // 5. Exemplo usando consultarResolucao (método principal)
+  try {
     print('\n5. Exemplo usando consultarResolucao (método principal)...');
     final requestResolucao = ConsultarResolucaoRequest(anoCalendario: 2021);
     final resolucaoResponsePrincipal = await regimeService.consultarResolucao(contribuinteNumero: contribuinteNumero, request: requestResolucao);
@@ -125,8 +146,13 @@ Future<void> Regime(ApiClient apiClient) async {
         print('  ${mensagem.codigo}: ${mensagem.texto}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar resolução (método principal): $e');
+    servicoOk = false;
+  }
 
-    // 6. Exemplo de efetuar opção pelo regime de competência (comentado para evitar execução real)
+  // 6. Exemplo de efetuar opção pelo regime de competência (comentado para evitar execução real)
+  try {
     print('\n6. Exemplo de efetuar opção pelo regime de competência (comentado)...');
     print('// Código comentado para evitar execução real:');
     print('// final opcaoCompetenciaResponse = await regimeService.efetuarOpcaoCompetencia(');
@@ -141,8 +167,14 @@ Future<void> Regime(ApiClient apiClient) async {
     print('//     print("Data da opção: \${dados.dataOpcao}");');
     print('//   }');
     print('// }');
+    print('✅ Exemplo documentado (não executado)');
+  } catch (e) {
+    print('❌ Erro no exemplo comentado: $e');
+    servicoOk = false;
+  }
 
-    // 7. Exemplo de efetuar opção pelo regime de caixa (comentado para evitar execução real)
+  // 7. Exemplo de efetuar opção pelo regime de caixa (comentado para evitar execução real)
+  try {
     print('\n7. Exemplo de efetuar opção pelo regime de caixa (comentado)...');
     print('// Código comentado para evitar execução real:');
     print('// final opcaoCaixaResponse = await regimeService.efetuarOpcaoCaixa(');
@@ -159,8 +191,14 @@ Future<void> Regime(ApiClient apiClient) async {
     print('//     print("Tem texto resolução: \${dados.hasTextoResolucao}");');
     print('//   }');
     print('// }');
+    print('✅ Exemplo documentado (não executado)');
+  } catch (e) {
+    print('❌ Erro no exemplo comentado: $e');
+    servicoOk = false;
+  }
 
-    // 8. Exemplo usando efetuarOpcaoRegime (método principal) - comentado
+  // 8. Exemplo usando efetuarOpcaoRegime (método principal) - comentado
+  try {
     print('\n8. Exemplo usando efetuarOpcaoRegime (método principal) - comentado...');
     print('// Código comentado para evitar execução real:');
     print('// final requestCustomizado = EfetuarOpcaoRegimeRequest(');
@@ -181,25 +219,35 @@ Future<void> Regime(ApiClient apiClient) async {
     print('//     print("Data da opção: \${dados.dataOpcao}");');
     print('//   }');
     print('// }');
-
-    // Resumo dos métodos utilizados
-    print('\n=== RESUMO DOS MÉTODOS UTILIZADOS ===');
-    print('✅ Métodos executados (consultas):');
-    print('  1. consultarAnosCalendarios() - Consulta todos os anos com opções');
-    print('  2. consultarOpcaoPorAno() - Consulta opção específica por ano (conveniência)');
-    print('  3. consultarResolucaoPorAno() - Consulta resolução por ano (conveniência)');
-    print('  4. consultarOpcaoRegime() - Consulta opção usando request (método principal)');
-    print('  5. consultarResolucao() - Consulta resolução usando request (método principal)');
-    print('');
-    print('📝 Métodos documentados (comentados para evitar execução real):');
-    print('  6. efetuarOpcaoCompetencia() - Efetua opção pelo regime de competência');
-    print('  7. efetuarOpcaoCaixa() - Efetua opção pelo regime de caixa');
-    print('  8. efetuarOpcaoRegime() - Efetua opção usando request (método principal)');
-    print('');
-    print('📋 Todos os 8 métodos do RegimeApuracaoService foram demonstrados!');
-
-    print('\n=== FIM DOS EXEMPLOS DE REGIME DE APURAÇÃO ===');
+    print('✅ Exemplo documentado (não executado)');
   } catch (e) {
-    print('❌ Erro geral no serviço de Regime de Apuração: $e');
+    print('❌ Erro no exemplo comentado: $e');
+    servicoOk = false;
   }
+
+  // Resumo dos métodos utilizados
+  print('\n=== RESUMO DOS MÉTODOS UTILIZADOS ===');
+  print('✅ Métodos executados (consultas):');
+  print('  1. consultarAnosCalendarios() - Consulta todos os anos com opções');
+  print('  2. consultarOpcaoPorAno() - Consulta opção específica por ano (conveniência)');
+  print('  3. consultarResolucaoPorAno() - Consulta resolução por ano (conveniência)');
+  print('  4. consultarOpcaoRegime() - Consulta opção usando request (método principal)');
+  print('  5. consultarResolucao() - Consulta resolução usando request (método principal)');
+  print('');
+  print('📝 Métodos documentados (comentados para evitar execução real):');
+  print('  6. efetuarOpcaoCompetencia() - Efetua opção pelo regime de competência');
+  print('  7. efetuarOpcaoCaixa() - Efetua opção pelo regime de caixa');
+  print('  8. efetuarOpcaoRegime() - Efetua opção usando request (método principal)');
+  print('');
+  print('📋 Todos os 8 métodos do RegimeApuracaoService foram demonstrados!');
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO REGIME DE APURAÇÃO ===');
+  if (servicoOk) {
+    print('✅ Serviço REGIME DE APURAÇÃO: OK');
+  } else {
+    print('❌ Serviço REGIME DE APURAÇÃO: ERRO');
+  }
+
+  print('\n=== FIM DOS EXEMPLOS DE REGIME DE APURAÇÃO ===');
 }

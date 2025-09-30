@@ -4,9 +4,10 @@ Future<void> Sicalc(ApiClient apiClient) async {
   print('\n=== Exemplos SICALC (Sistema de Cálculo de Acréscimos Legais) ===');
 
   final sicalcService = SicalcService(apiClient);
+  bool servicoOk = true;
 
+  // 1. Consultar Código de Receita
   try {
-    // 1. Consultar Código de Receita
     print('\n--- 1. Consultando Código de Receita ---');
     final consultarReceitaResponse = await sicalcService.consultarCodigoReceita(
       contribuinteNumero: '00000000000100',
@@ -14,7 +15,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (consultarReceitaResponse.sucesso) {
-      print('✓ Receita consultada com sucesso');
+      print('✅ Receita consultada com sucesso');
       print('Status: ${consultarReceitaResponse.status}');
       print('Mensagem: ${consultarReceitaResponse.mensagemPrincipal}');
 
@@ -31,10 +32,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         }
       }
     } else {
-      print('✗ Erro ao consultar receita: ${consultarReceitaResponse.mensagemPrincipal}');
+      print('❌ Erro ao consultar receita: ${consultarReceitaResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar receita: $e');
+    servicoOk = false;
+  }
 
-    // 2. Gerar DARF para Pessoa Física (IRPF)
+  // 2. Gerar DARF para Pessoa Física (IRPF)
+  try {
     print('\n--- 2. Gerando DARF para Pessoa Física (IRPF) ---');
     final darfPfResponse = await sicalcService.gerarDarfPessoaFisica(
       contribuinteNumero: '00000000000',
@@ -48,7 +54,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfPfResponse.sucesso) {
-      print('✓ DARF gerado com sucesso');
+      print('✅ DARF gerado com sucesso');
       print('Status: ${darfPfResponse.status}');
       print('Mensagem: ${darfPfResponse.mensagemPrincipal}');
       print('Tem PDF: ${darfPfResponse.temPdf}');
@@ -67,10 +73,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Data de validade: ${dados.dataValidadeCalculo}');
       }
     } else {
-      print('✗ Erro ao gerar DARF PF: ${darfPfResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF PF: ${darfPfResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF PF: $e');
+    servicoOk = false;
+  }
 
-    // 3. Gerar DARF para Pessoa Jurídica (IRPJ)
+  // 3. Gerar DARF para Pessoa Jurídica (IRPJ)
+  try {
     print('\n--- 3. Gerando DARF para Pessoa Jurídica (IRPJ) ---');
     final darfPjResponse = await sicalcService.gerarDarfPessoaJuridica(
       contribuinteNumero: '00000000000100',
@@ -84,7 +95,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfPjResponse.sucesso) {
-      print('✓ DARF PJ gerado com sucesso');
+      print('✅ DARF PJ gerado com sucesso');
       print('Status: ${darfPjResponse.status}');
       print('Tem PDF: ${darfPjResponse.temPdf}');
 
@@ -94,10 +105,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF PJ: ${darfPjResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF PJ: ${darfPjResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF PJ: $e');
+    servicoOk = false;
+  }
 
-    // 4. Gerar DARF para PIS/PASEP
+  // 4. Gerar DARF para PIS/PASEP
+  try {
     print('\n--- 4. Gerando DARF para PIS/PASEP ---');
     final darfPisResponse = await sicalcService.gerarDarfPisPasep(
       contribuinteNumero: '00000000000100',
@@ -111,7 +127,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfPisResponse.sucesso) {
-      print('✓ DARF PIS/PASEP gerado com sucesso');
+      print('✅ DARF PIS/PASEP gerado com sucesso');
       print('Status: ${darfPisResponse.status}');
       print('Tem PDF: ${darfPisResponse.temPdf}');
 
@@ -121,10 +137,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF PIS/PASEP: ${darfPisResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF PIS/PASEP: ${darfPisResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF PIS/PASEP: $e');
+    servicoOk = false;
+  }
 
-    // 5. Gerar DARF para COFINS
+  // 5. Gerar DARF para COFINS
+  try {
     print('\n--- 5. Gerando DARF para COFINS ---');
     final darfCofinsResponse = await sicalcService.gerarDarfCofins(
       contribuinteNumero: '00000000000100',
@@ -138,7 +159,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfCofinsResponse.sucesso) {
-      print('✓ DARF COFINS gerado com sucesso');
+      print('✅ DARF COFINS gerado com sucesso');
       print('Status: ${darfCofinsResponse.status}');
       print('Tem PDF: ${darfCofinsResponse.temPdf}');
 
@@ -148,11 +169,27 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF COFINS: ${darfCofinsResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF COFINS: ${darfCofinsResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF COFINS: $e');
+    servicoOk = false;
+  }
 
-    // 6. Gerar código de barras para DARF já calculado
+  // 6. Gerar código de barras para DARF já calculado
+  try {
     print('\n--- 6. Gerando Código de Barras para DARF ---');
+    final darfPfResponse = await sicalcService.gerarDarfPessoaFisica(
+      contribuinteNumero: '00000000000',
+      uf: 'SP',
+      municipio: 7107,
+      dataPA: '12/2023',
+      vencimento: '2024-01-31T00:00:00',
+      valorImposto: 1000.00,
+      dataConsolidacao: '2024-02-15T00:00:00',
+      observacao: 'DARF calculado via SICALC',
+    );
+
     if (darfPfResponse.sucesso && darfPfResponse.dados != null) {
       final codigoBarrasResponse = await sicalcService.gerarCodigoBarrasDarf(
         contribuinteNumero: '00000000000',
@@ -160,7 +197,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
       );
 
       if (codigoBarrasResponse.sucesso) {
-        print('✓ Código de barras gerado com sucesso');
+        print('✅ Código de barras gerado com sucesso');
         print('Status: ${codigoBarrasResponse.status}');
         print('Tem código de barras: ${codigoBarrasResponse.temCodigoBarras}');
         print('Tamanho: ${codigoBarrasResponse.tamanhoCodigoBarrasFormatado}');
@@ -183,11 +220,18 @@ Future<void> Sicalc(ApiClient apiClient) async {
           print('  - Preview: ${info['preview']}');
         }
       } else {
-        print('✗ Erro ao gerar código de barras: ${codigoBarrasResponse.mensagemPrincipal}');
+        print('❌ Erro ao gerar código de barras: ${codigoBarrasResponse.mensagemPrincipal}');
       }
+    } else {
+      print('❌ Erro ao gerar DARF para código de barras: ${darfPfResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar código de barras: $e');
+    servicoOk = false;
+  }
 
-    // 7. Fluxo completo: Gerar DARF e código de barras
+  // 7. Fluxo completo: Gerar DARF e código de barras
+  try {
     print('\n--- 7. Fluxo Completo: DARF + Código de Barras ---');
     final fluxoCompletoResponse = await sicalcService.gerarDarfECodigoBarras(
       contribuinteNumero: '00000000000',
@@ -203,7 +247,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (fluxoCompletoResponse.sucesso) {
-      print('✓ Fluxo completo executado com sucesso');
+      print('✅ Fluxo completo executado com sucesso');
       print('Status: ${fluxoCompletoResponse.status}');
       print('Tem código de barras: ${fluxoCompletoResponse.temCodigoBarras}');
 
@@ -214,10 +258,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Tem QR Code: ${dados.temQrCode}');
       }
     } else {
-      print('✗ Erro no fluxo completo: ${fluxoCompletoResponse.mensagemPrincipal}');
+      print('❌ Erro no fluxo completo: ${fluxoCompletoResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro no fluxo completo: $e');
+    servicoOk = false;
+  }
 
-    // 8. Consultar informações detalhadas de receita
+  // 8. Consultar informações detalhadas de receita
+  try {
     print('\n--- 8. Consultando Informações Detalhadas de Receita ---');
     final infoReceita = await sicalcService.obterInfoReceita(
       contribuinteNumero: '00000000000100',
@@ -225,7 +274,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (infoReceita != null) {
-      print('✓ Informações da receita obtidas');
+      print('✅ Informações da receita obtidas');
       print('Código: ${infoReceita['codigoReceita']}');
       print('Descrição: ${infoReceita['descricaoReceita']}');
       print('Tipo de pessoa: ${infoReceita['tipoPessoa']}');
@@ -237,26 +286,36 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Observações: ${infoReceita['observacoes']}');
       }
     } else {
-      print('✗ Não foi possível obter informações da receita');
+      print('❌ Não foi possível obter informações da receita');
     }
+  } catch (e) {
+    print('❌ Erro ao obter informações da receita: $e');
+    servicoOk = false;
+  }
 
-    // 9. Validar compatibilidade de receita
+  // 9. Validar compatibilidade de receita
+  try {
     print('\n--- 9. Validando Compatibilidade de Receita ---');
     final isCompatible = await sicalcService.validarCompatibilidadeReceita(
       contribuinteNumero: '00000000000',
       codigoReceita: 190, // IRPF
     );
 
-    print('Receita 190 (IRPF) é compatível com CPF: $isCompatible');
+    print('✅ Receita 190 (IRPF) é compatível com CPF: $isCompatible');
 
     final isCompatiblePJ = await sicalcService.validarCompatibilidadeReceita(
       contribuinteNumero: '00000000000100',
       codigoReceita: 220, // IRPJ
     );
 
-    print('Receita 220 (IRPJ) é compatível com CNPJ: $isCompatiblePJ');
+    print('✅ Receita 220 (IRPJ) é compatível com CNPJ: $isCompatiblePJ');
+  } catch (e) {
+    print('❌ Erro ao validar compatibilidade de receita: $e');
+    servicoOk = false;
+  }
 
-    // 10. Exemplo com DARF manual (com multa e juros pré-calculados)
+  // 10. Exemplo com DARF manual (com multa e juros pré-calculados)
+  try {
     print('\n--- 10. Exemplo com DARF Manual (Multa e Juros Pré-calculados) ---');
     final darfManualResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000',
@@ -274,7 +333,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfManualResponse.sucesso) {
-      print('✓ DARF manual gerado com sucesso');
+      print('✅ DARF manual gerado com sucesso');
       print('Status: ${darfManualResponse.status}');
       print('Tem PDF: ${darfManualResponse.temPdf}');
 
@@ -287,10 +346,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor juros: ${dados.valorJurosFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF manual: ${darfManualResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF manual: ${darfManualResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF manual: $e');
+    servicoOk = false;
+  }
 
-    // 11. Exemplo com DARF de ganho de capital
+  // 11. Exemplo com DARF de ganho de capital
+  try {
     print('\n--- 11. Exemplo com DARF de Ganho de Capital ---');
     final darfGanhoCapitalResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000',
@@ -308,7 +372,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfGanhoCapitalResponse.sucesso) {
-      print('✓ DARF ganho de capital gerado com sucesso');
+      print('✅ DARF ganho de capital gerado com sucesso');
       print('Status: ${darfGanhoCapitalResponse.status}');
       print('Tem PDF: ${darfGanhoCapitalResponse.temPdf}');
 
@@ -318,10 +382,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF ganho de capital: ${darfGanhoCapitalResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF ganho de capital: ${darfGanhoCapitalResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF ganho de capital: $e');
+    servicoOk = false;
+  }
 
-    // 12. Exemplo com DARF com cota
+  // 12. Exemplo com DARF com cota
+  try {
     print('\n--- 12. Exemplo com DARF com Cota ---');
     final darfCotaResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000100',
@@ -338,7 +407,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfCotaResponse.sucesso) {
-      print('✓ DARF com cota gerado com sucesso');
+      print('✅ DARF com cota gerado com sucesso');
       print('Status: ${darfCotaResponse.status}');
       print('Tem PDF: ${darfCotaResponse.temPdf}');
 
@@ -348,10 +417,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF com cota: ${darfCotaResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF com cota: ${darfCotaResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF com cota: $e');
+    servicoOk = false;
+  }
 
-    // 13. Exemplo com DARF com CNO (Cadastro Nacional de Obras)
+  // 13. Exemplo com DARF com CNO (Cadastro Nacional de Obras)
+  try {
     print('\n--- 13. Exemplo com DARF com CNO ---');
     final darfCnoResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000100',
@@ -368,7 +442,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfCnoResponse.sucesso) {
-      print('✓ DARF com CNO gerado com sucesso');
+      print('✅ DARF com CNO gerado com sucesso');
       print('Status: ${darfCnoResponse.status}');
       print('Tem PDF: ${darfCnoResponse.temPdf}');
 
@@ -378,10 +452,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF com CNO: ${darfCnoResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF com CNO: ${darfCnoResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF com CNO: $e');
+    servicoOk = false;
+  }
 
-    // 14. Exemplo com DARF com CNPJ do prestador
+  // 14. Exemplo com DARF com CNPJ do prestador
+  try {
     print('\n--- 14. Exemplo com DARF com CNPJ do Prestador ---');
     final darfCnpjPrestadorResponse = await sicalcService.consolidarEGerarDarf(
       contribuinteNumero: '00000000000100',
@@ -398,7 +477,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
     );
 
     if (darfCnpjPrestadorResponse.sucesso) {
-      print('✓ DARF com CNPJ do prestador gerado com sucesso');
+      print('✅ DARF com CNPJ do prestador gerado com sucesso');
       print('Status: ${darfCnpjPrestadorResponse.status}');
       print('Tem PDF: ${darfCnpjPrestadorResponse.temPdf}');
 
@@ -408,10 +487,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('Valor total: ${dados.valorTotalFormatado}');
       }
     } else {
-      print('✗ Erro ao gerar DARF com CNPJ do prestador: ${darfCnpjPrestadorResponse.mensagemPrincipal}');
+      print('❌ Erro ao gerar DARF com CNPJ do prestador: ${darfCnpjPrestadorResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao gerar DARF com CNPJ do prestador: $e');
+    servicoOk = false;
+  }
 
-    // 15. Exemplo com diferentes tipos de período de apuração
+  // 15. Exemplo com diferentes tipos de período de apuração
+  try {
     print('\n--- 15. Exemplo com Diferentes Tipos de Período de Apuração ---');
 
     // Mensal
@@ -429,7 +513,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
       tipoPA: 'ME',
       observacao: 'DARF mensal',
     );
-    print('DARF mensal: ${darfMensal.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ DARF mensal: ${darfMensal.sucesso ? 'Sucesso' : 'Erro'}');
 
     // Trimestral
     print('Testando período trimestral...');
@@ -446,7 +530,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
       tipoPA: 'TR',
       observacao: 'DARF trimestral',
     );
-    print('DARF trimestral: ${darfTrimestral.sucesso ? 'Sucesso' : 'Erro'}');
+    print('✅ DARF trimestral: ${darfTrimestral.sucesso ? 'Sucesso' : 'Erro'}');
 
     // Anual
     print('Testando período anual...');
@@ -463,10 +547,17 @@ Future<void> Sicalc(ApiClient apiClient) async {
       tipoPA: 'AN',
       observacao: 'DARF anual',
     );
-    print('DARF anual: ${darfAnual.sucesso ? 'Sucesso' : 'Erro'}');
-
-    print('\n=== Exemplos SICALC Concluídos ===');
+    print('✅ DARF anual: ${darfAnual.sucesso ? 'Sucesso' : 'Erro'}');
   } catch (e) {
-    print('Erro geral no serviço SICALC: $e');
+    print('❌ Erro ao testar diferentes tipos de período: $e');
+    servicoOk = false;
+  }
+
+  // Resumo final
+  print('\n=== Resumo Final ===');
+  if (servicoOk) {
+    print('✅ SICALC: OK');
+  } else {
+    print('❌ SICALC: ERRO');
   }
 }

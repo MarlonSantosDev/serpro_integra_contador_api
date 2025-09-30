@@ -4,11 +4,13 @@ Future<void> Parcmei(ApiClient apiClient) async {
   print('\n=== Exemplos PARCMEI ===');
 
   final parcmeiService = ParcmeiService(apiClient);
+  bool servicoOk = true;
 
+  // 1. Consultar Pedidos de Parcelamento
   try {
     print('\n--- 1. Consultar Pedidos de Parcelamento ---');
     final pedidosResponse = await parcmeiService.consultarPedidos();
-    print('Status: ${pedidosResponse.status}');
+    print('✅ Status: ${pedidosResponse.status}');
     print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${pedidosResponse.sucesso}');
     print('Mensagem principal: ${pedidosResponse.mensagemPrincipal}');
@@ -31,10 +33,16 @@ Future<void> Parcmei(ApiClient apiClient) async {
       print('Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}');
       print('Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar pedidos de parcelamento: $e');
+    servicoOk = false;
+  }
 
+  // 2. Consultar Parcelamento Específico
+  try {
     print('\n--- 2. Consultar Parcelamento Específico ---');
     final parcelamentoResponse = await parcmeiService.consultarParcelamento(1);
-    print('Status: ${parcelamentoResponse.status}');
+    print('✅ Status: ${parcelamentoResponse.status}');
     print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${parcelamentoResponse.sucesso}');
     print('Mensagem principal: ${parcelamentoResponse.mensagemPrincipal}');
@@ -67,10 +75,16 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelamento específico: $e');
+    servicoOk = false;
+  }
 
+  // 3. Consultar Parcelas Disponíveis
+  try {
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
     final parcelasResponse = await parcmeiService.consultarParcelas();
-    print('Status: ${parcelasResponse.status}');
+    print('✅ Status: ${parcelasResponse.status}');
     print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${parcelasResponse.sucesso}');
     print('Mensagem principal: ${parcelasResponse.mensagemPrincipal}');
@@ -102,10 +116,16 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelas disponíveis: $e');
+    servicoOk = false;
+  }
 
+  // 4. Consultar Detalhes de Pagamento
+  try {
     print('\n--- 4. Consultar Detalhes de Pagamento ---');
     final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(1, 202107);
-    print('Status: ${detalhesResponse.status}');
+    print('✅ Status: ${detalhesResponse.status}');
     print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${detalhesResponse.sucesso}');
     print('Mensagem principal: ${detalhesResponse.mensagemPrincipal}');
@@ -152,10 +172,16 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar detalhes de pagamento: $e');
+    servicoOk = false;
+  }
 
+  // 5. Emitir DAS
+  try {
     print('\n--- 5. Emitir DAS ---');
     final emitirResponse = await parcmeiService.emitirDas(202107);
-    print('Status: ${emitirResponse.status}');
+    print('✅ Status: ${emitirResponse.status}');
     print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
     print('Sucesso: ${emitirResponse.sucesso}');
     print('Mensagem principal: ${emitirResponse.mensagemPrincipal}');
@@ -187,53 +213,65 @@ Future<void> Parcmei(ApiClient apiClient) async {
         });
       }
     }
+  } catch (e) {
+    print('❌ Erro ao emitir DAS: $e');
+    servicoOk = false;
+  }
 
+  // 6. Validações
+  try {
     print('\n--- 6. Validações ---');
-    print('Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}');
-    print('Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}');
-    print('Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}');
-    print('Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}');
-    print('Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}');
-    print('Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}');
-    print('Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}');
-    print('Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}');
-    print('Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}');
-    print('Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}');
-    print('Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}');
-    print('Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}');
-    print('Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}');
-    print('Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}');
-    print('Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}');
-    print('Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}');
+    print('✅ Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}');
+    print('✅ Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}');
+    print('✅ Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}');
+    print('✅ Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}');
+    print('✅ Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}');
+    print('✅ Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}');
+    print('✅ Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}');
+    print('✅ Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}');
+    print('✅ Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}');
+    print('✅ Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}');
+    print('✅ Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}');
+    print('✅ Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}');
+    print('✅ Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}');
+    print('✅ Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}');
+    print('✅ Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}');
+    print('✅ Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}');
+  } catch (e) {
+    print('❌ Erro nas validações: $e');
+    servicoOk = false;
+  }
 
+  // 7. Análise de Erros
+  try {
     print('\n--- 7. Análise de Erros ---');
     final avisos = parcmeiService.getAvisos();
-    print('Avisos disponíveis: ${avisos.length}');
+    print('✅ Avisos disponíveis: ${avisos.length}');
     for (var aviso in avisos.take(3)) {
       print('  - ${aviso.codigo}: ${aviso.descricao}');
     }
 
     final entradasIncorretas = parcmeiService.getEntradasIncorretas();
-    print('Entradas incorretas disponíveis: ${entradasIncorretas.length}');
+    print('✅ Entradas incorretas disponíveis: ${entradasIncorretas.length}');
     for (var entrada in entradasIncorretas.take(3)) {
       print('  - ${entrada.codigo}: ${entrada.descricao}');
     }
 
     final erros = parcmeiService.getErros();
-    print('Erros disponíveis: ${erros.length}');
+    print('✅ Erros disponíveis: ${erros.length}');
     for (var erro in erros.take(3)) {
       print('  - ${erro.codigo}: ${erro.descricao}');
     }
 
     final sucessos = parcmeiService.getSucessos();
-    print('Sucessos disponíveis: ${sucessos.length}');
+    print('✅ Sucessos disponíveis: ${sucessos.length}');
     for (var sucesso in sucessos.take(3)) {
       print('  - ${sucesso.codigo}: ${sucesso.descricao}');
     }
 
     // Exemplo de análise de erro
     final analiseErro = parcmeiService.analyzeError('[Sucesso-PARCMEI]', 'Requisição efetuada com sucesso.');
-    print('Análise de erro:');
+    print('✅ Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Mensagem: ${analiseErro.mensagem}');
     print('  Categoria: ${analiseErro.categoria}');
@@ -242,9 +280,18 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('  Erro: ${analiseErro.isErro}');
     print('  Aviso: ${analiseErro.isAviso}');
     print('  Solução: ${analiseErro.solucao ?? 'N/A'}');
-
-    print('\n=== Exemplos PARCMEI Concluídos ===');
   } catch (e) {
-    print('Erro nos exemplos do PARCMEI: $e');
+    print('❌ Erro na análise de erros: $e');
+    servicoOk = false;
   }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO PARCMEI ===');
+  if (servicoOk) {
+    print('✅ Serviço PARCMEI: OK');
+  } else {
+    print('❌ Serviço PARCMEI: ERRO');
+  }
+
+  print('\n=== Exemplos PARCMEI Concluídos ===');
 }

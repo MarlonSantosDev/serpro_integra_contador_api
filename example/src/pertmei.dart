@@ -5,12 +5,13 @@ Future<void> Pertmei(ApiClient apiClient) async {
 
   final pertmeiService = PertmeiService(apiClient);
   const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
+  bool servicoOk = true;
 
+  // 1. Consultar Pedidos de Parcelamento
   try {
-    // 1. Consultar Pedidos de Parcelamento
     print('\n1. Consultando pedidos de parcelamento...');
     final pedidosResponse = await pertmeiService.consultarPedidos(cnpjContribuinte);
-    print('Status: ${pedidosResponse.status}');
+    print('✅ Status: ${pedidosResponse.status}');
     print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (pedidosResponse.status == '200') {
@@ -20,12 +21,17 @@ Future<void> Pertmei(ApiClient apiClient) async {
         print('  - Número: ${parcelamento.numero}, Situação: ${parcelamento.situacao}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar pedidos de parcelamento: $e');
+    servicoOk = false;
+  }
 
-    // 2. Consultar Parcelamento Específico
+  // 2. Consultar Parcelamento Específico
+  try {
     print('\n2. Consultando parcelamento específico...');
     const numeroParcelamento = 9001; // Número de exemplo da documentação
     final parcelamentoResponse = await pertmeiService.consultarParcelamento(cnpjContribuinte, numeroParcelamento);
-    print('Status: ${parcelamentoResponse.status}');
+    print('✅ Status: ${parcelamentoResponse.status}');
     print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (parcelamentoResponse.status == '200') {
@@ -36,11 +42,16 @@ Future<void> Pertmei(ApiClient apiClient) async {
         print('Consolidação original: ${parcelamentoDetalhado.consolidacaoOriginal?.valorTotalConsolidadoDaDivida ?? 0.0}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelamento específico: $e');
+    servicoOk = false;
+  }
 
-    // 3. Consultar Parcelas para Impressão
+  // 3. Consultar Parcelas para Impressão
+  try {
     print('\n3. Consultando parcelas para impressão...');
     final parcelasResponse = await pertmeiService.consultarParcelasParaImpressao(cnpjContribuinte);
-    print('Status: ${parcelasResponse.status}');
+    print('✅ Status: ${parcelasResponse.status}');
     print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (parcelasResponse.status == '200') {
@@ -50,12 +61,18 @@ Future<void> Pertmei(ApiClient apiClient) async {
         print('  - Parcela: ${parcela.parcela}, Valor: R\$ ${parcela.valor.toStringAsFixed(2)}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelas para impressão: $e');
+    servicoOk = false;
+  }
 
-    // 4. Consultar Detalhes de Pagamento
+  // 4. Consultar Detalhes de Pagamento
+  try {
     print('\n4. Consultando detalhes de pagamento...');
+    const numeroParcelamento = 9001;
     const anoMesParcela = 201907; // Exemplo da documentação
     final detalhesResponse = await pertmeiService.consultarDetalhesPagamento(cnpjContribuinte, numeroParcelamento, anoMesParcela);
-    print('Status: ${detalhesResponse.status}');
+    print('✅ Status: ${detalhesResponse.status}');
     print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (detalhesResponse.status == '200') {
@@ -66,12 +83,17 @@ Future<void> Pertmei(ApiClient apiClient) async {
         print('Data pagamento: ${detalhesPagamento.dataPagamento}');
       }
     }
+  } catch (e) {
+    print('❌ Erro ao consultar detalhes de pagamento: $e');
+    servicoOk = false;
+  }
 
-    // 5. Emitir DAS
+  // 5. Emitir DAS
+  try {
     print('\n5. Emitindo DAS...');
     const parcelaParaEmitir = 202306; // Exemplo da documentação
     final emitirResponse = await pertmeiService.emitirDas(cnpjContribuinte, parcelaParaEmitir);
-    print('Status: ${emitirResponse.status}');
+    print('✅ Status: ${emitirResponse.status}');
     print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
     if (emitirResponse.status == '200') {
@@ -82,24 +104,38 @@ Future<void> Pertmei(ApiClient apiClient) async {
         // Em uma aplicação real, você converteria o base64 para PDF e salvaria/abriria o arquivo
       }
     }
+  } catch (e) {
+    print('❌ Erro ao emitir DAS: $e');
+    servicoOk = false;
+  }
 
-    // Exemplos de validação de erro
+  // 6. Testando validações
+  try {
     print('\n6. Testando validações...');
 
     // Teste com CNPJ vazio
     final erroResponse = await pertmeiService.consultarPedidos('');
-    print('Validação CNPJ vazio: ${erroResponse.status} - ${erroResponse.mensagens.first.texto}');
+    print('✅ Validação CNPJ vazio: ${erroResponse.status} - ${erroResponse.mensagens.first.texto}');
 
     // Teste com número de parcelamento inválido
     final erroParcelamento = await pertmeiService.consultarParcelamento(cnpjContribuinte, 0);
-    print('Validação parcelamento inválido: ${erroParcelamento.status} - ${erroParcelamento.mensagens.first.texto}');
+    print('✅ Validação parcelamento inválido: ${erroParcelamento.status} - ${erroParcelamento.mensagens.first.texto}');
 
     // Teste com formato de data inválido
     final erroData = await pertmeiService.emitirDas(cnpjContribuinte, 20230); // Formato inválido
-    print('Validação formato data inválido: ${erroData.status} - ${erroData.mensagens.first.texto}');
-
-    print('\n=== Exemplos PERTMEI Concluídos ===');
+    print('✅ Validação formato data inválido: ${erroData.status} - ${erroData.mensagens.first.texto}');
   } catch (e) {
-    print('Erro geral no serviço PERTMEI: $e');
+    print('❌ Erro nos testes de validação: $e');
+    servicoOk = false;
   }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO PERTMEI ===');
+  if (servicoOk) {
+    print('✅ Serviço PERTMEI: OK');
+  } else {
+    print('❌ Serviço PERTMEI: ERRO');
+  }
+
+  print('\n=== Exemplos PERTMEI Concluídos ===');
 }

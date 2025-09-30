@@ -1,199 +1,141 @@
 ---
 alwaysApply: true
 ---
-## 5. Dados de Domínio - Termo de Autorização
 
-### Estrutura do Termo de Autorização
+# Documentação da API Integra Contador - Autentica Procurador
 
-O Termo de Autorização é composto por três elementos textuais obrigatórios que devem estar presentes no XML assinado:
+## Cenários de Demonstração
 
-#### 1. Termo de Autorização (Texto Principal)
+### Cenários Autentica Procurador
 
-**Conteúdo obrigatório:**
+**IMPORTANTE**
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_autenticaprocurador/).
+
+Na chamada da API Trial o parâmetro do tipo header jwt_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt_token na seção [Como Autenticar na API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/cenarios_trial/cenarios_autenticaprocurador/).
+
+Essa simulação permite o envio de um documento XML assinado digitalmente pelo Autor Pedido de Dados (Procurador) para receber um TOKEN de autorização que permite o Contratante realizar as requisições em nome do Autor Pedido de Dados.
+
+**Informação**
+
+Nesta simulação é possível decodificar o conteúdo XML que está deve ser enviado como `base64`. O XML contém dados apenas para simulação.
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body:**
+
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {        "numero": "00000000000000",        "tipo": 2     },     "contribuinte": {        "numero": "11111111111111",        "tipo": 2     },     "pedidoDados": {         "idSistema": "AUTENTICAPROCURADOR",         "idServico": "ENVIOXMLASSINADO81",         "versaoSistema": "1.0",         "dados": "{\"xml\": \"PHRlcm1vRGVBdXRvcml6YWNhbz48ZGFkb3M+PHNpc3RlbWEgaWQ9IkFQSSBJbnRlZ3JhIENvbnRhZG9yIiAvPjx0ZXJtb3B0ZXh0bz0iQXV0b3Jpem8gYSBlbXByZXNhIENPTlRSQVRBTlRFLCBpZGVudGlmaWNhZGEgbmVzdGUgdGVybW8gZGUgYXV0b3JpemHDp8OjbyBjb21vIERFU1RJTkFUw4FSSU8sIGEgZXhlY3V0YXIgYXMgcmVxdWlzacOnw7VlcyBkb3Mgc2VydmnDp29zIHdlYiBkaXNwb25pYmlsaXphZG9zIHBlbGEgQVBJIElOVEVHUkEgQ09OVEFET1IsIG9uZGUgdGVyZWkgbyBwYXBlbCBkZSBBVVRPUiBQRURJRE8gREUgREFET1Mgbm8gY29ycG8gZGEgbWVuc2FnZW0gZW52aWFkYSBuYSByZXF1aXNpw6fDo28gZG8gc2VydmnDp28gd2ViLiBFc3NlIHRlcm1vIGRlIGF1dG9yaXphw6fDo28gZXN0w6EgYXNzaW5hZG8gZGlnaXRhbG1lbnRlIGNvbSBvIGNlcnRpZmljYWRvIGRpZ2l0YWwgZG8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFIHJlc3BvbnPDoXZlbCwgaWRlbnRpZmljYWRvIGNvbW8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TLiIgLz48YXZpc29MZWdhbCB0ZXh0bz0iTyBhY2Vzc28gYSBlc3RhcyBpbmZvcm1hw6fDtWVzIGZvaSBhdXRvcml6YWRvIHBlbG8gcHLDs3ByaW8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFLCByZXNwb25zw6F2ZWwgcGVsaSBpbmZvcm1hw6fDo28sIHZpYSBhc3NpbmF0dXJhIGRpZ2l0YWwuIMOJIGRldmVyIGRvIGRlc3RpbmF0w6FyaW8gZGEgYXV0b3JpemHDp8OjbyBlIGNvbnN1bWlkb3IgZGVzdGUgYWNlc3NvIG9ic2VydmFyIGEgYWRvw6fDo28gZGUgYmFzZSBsZWdhbCBwYXJhIG8gdHJhdGFtZW50byBkb3MgZGFkb3MgcmVjZWJpZG9zIGNvbmZvcm1lIGFydGlnb3MgN8K6IG91IDExwrogZGEgTEdQRCAoTGVpIG4uwrogMTMuNzA5LCBkZSAxNCBkZSBhZ29zdG8gZGUgMjAxOCksIGFvcyBkaXJlaXRvcyBkbyB0aXR1bGFyIGRvcyBkYWRvcyAoYXJ0LiA5wrosIDE3IGUgMTgsIGRhIExHUEQpIGUgYW9zIHByaW5jw61waW9zIHF1ZSBub3J0ZWlhbSB0b2RvcyBvcyB0cmF0YW1lbnRvcyBkZSBkYWRvcyBubyBCcmFzaWwgKGFydC4gNsK6LCBkYSBMR1BEKS4iIC8+PGZpbmFsaWRhZGUgdGV4dG89IkEgZmluYWxpZGFkZSDDum5pY2EgZSBleGNsdXNpdmEgZGVzc2UgVEVSTU8gREUgQVVUT1JJWkHDh8ODTywgw6kgZ2FyYW50aXIgcXVlIG8gQ09OVFJBVEFOVEUgYXByZXNlbnRlIGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZXNzZSBjb25zZW50aW1lbnRvIGRvIFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSBhc3NpbmFkbyBkaWdpdGFsbWVudGUsIHBhcmEgcXVlIHBvc3NhIHJlYWxpemFyIGFzIHJlcXVpc2nDp8O1ZXMgZG9zIHNlcnZpw6dvcyB3ZWIgZGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZW0gbm9tZSBkbyBBVVRPUiBQRURJRE8gREUgREFET1MgKFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSkuIiAvPjxkYXRhQXNzaW5hdHVyYSBkYXRhPSIyMDIyMDgwOCIgLz48dmlnZW5jaWEgZGF0YT0iMjAyMjEyMzEiIC8+PGRlc3RpbmF0YXJpbyBudW1lcm89Ijk5OTk5OTk5OTk5OTk5IiBub21lPSJOT01FIERBIEVNUFJFU0EgQ09OVFJBVEFOVEUiIHRpcG89IlBKIiBwYXBlbD0iY29udHJhdGFudGUiIC8+PGFzc2luYWRvUG9yIG51bWVybz0iMDAwMDAwMDAwMDAwMDAiIG5vbWU9Ik5PTUUgRE8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TIiB0aXBvPSJQSiIgcGFwZWw9ImF1dG9yIHBlZGlkbyBkZSBkYWRvcyIgLz48L2RhZG9zPjxTaWduYXR1cmUgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sc2lnIyI+PFNpZ25lZEluZm8+PENhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy14bWwtYzE0bi0yMDAxMDMxNSIgLz48U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxzaWctbW9yZSNOcnNhLXNoYTI1NiIgLz48UmVmZXJlbmNlIFVSSj0iIj48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIgLz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvVFIvMjAwMS9SRUMteG1sLWMxNG4tMjAwMTAzMTUiIC8+PC9UcmFuc2Zvcm1zPjxEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGEyNTYiIC8+PERpZ2VzdFZhbHVlPkFCQy4uc1hBPjwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT5WdmZLLi4uSEhoPT08L1NpZ25hdHVyZVZhbHVlPjxLZXlJbmZvPjxYNTA5RGF0YT48WDUwOUNlcnRpZmljYXRlPkFCQ0F3SUJMLi4uaGhoPT08L1g1MDlDZXJ0aWZpY2F0ZT48L1g1MDlEYXRhPjwvS2V5SW5mbz48L1NpZ25hdHVyZT48L3Rlcm1vRGVBdXRvcml6YWNhbz4=\"}"     }
+}
 ```
-Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS.
+
+**Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Apoiar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "contratante": {
+        "numero": "99999999999999",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "11111111111111",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "AUTENTICAPROCURADOR",
+        "idServico": "ENVIOXMLASSINADO81",
+        "versaoSistema": "1.0",
+        "dados": "{\"xml\": \"PHRlcm1vRGVBdXRvcml6YWNhbz48ZGFkb3M+PHNpc3RlbWEgaWQ9IkFQSSBJbnRlZ3JhIENvbnRhZG9yIiAvPjx0ZXJtbyB0ZXh0bz0iQXV0b3Jpem8gYSBlbXByZXNhIENPTlRSQVRBTlRFLCBpZGVudGlmaWNhZGEgbmVzdGUgdGVybW8gZGUgYXV0b3JpemHDp8OjbyBjb21vIERFU1RJTkFUw4FSSU8sIGEgZXhlY3V0YXIgYXMgcmVxdWlzacOnw7VlcyBkb3Mgc2VydmnDp29zIHdlYiBkaXNwb25pYmlsaXphZG9zIHBlbGEgQVBJIElOVEVHUkEgQ09OVEFET1IsIG9uZGUgdGVyZWkgbyBwYXBlbCBkZSBBVVRPUiBQRURJRE8gREUgREFET1Mgbm8gY29ycG8gZGEgbWVuc2FnZW0gZW52aWFkYSBuYSByZXF1aXNpw6fDo28gZG8gc2VydmnDp28gd2ViLiBFc3NlIHRlcm1vIGRlIGF1dG9yaXphw6fDo28gZXN0w6EgYXNzaW5hZG8gZGlnaXRhbG1lbnRlIGNvbSBvIGNlcnRpZmljYWRvIGRpZ2l0YWwgZG8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFIHJlc3BvbnPDoXZlbCwgaWRlbnRpZmljYWRvIGNvbW8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TLiIgLz48YXZpc29MZWdhbCB0ZXh0bz0iTyBhY2Vzc28gYSBlc3RhcyBpbmZvcm1hw6fDtWVzIGZvaSBhdXRvcml6YWRvIHBlbG8gcHLDs3ByaW8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFLCByZXNwb25zw6F2ZWwgcGVsaSBpbmZvcm1hw6fDo28sIHZpYSBhc3NpbmF0dXJhIGRpZ2l0YWwuIMOJIGRldmVyIGRvIGRlc3RpbmF0w6FyaW8gZGEgYXV0b3JpemHDp8OjbyBlIGNvbnN1bWlkb3IgZGVzdGUgYWNlc3NvIG9ic2VydmFyIGEgYWRvw6fDo28gZGUgYmFzZSBsZWdhbCBwYXJhIG8gdHJhdGFtZW50byBkb3MgZGFkb3MgcmVjZWJpZG9zIGNvbmZvcm1lIGFydGlnb3MgN8K6IG91IDExwrogZGEgTEdQRCAoTGVpIG4uwrogMTMuNzA5LCBkZSAxNCBkZSBhZ29zdG8gZGUgMjAxOCksIGFvcyBkaXJlaXRvcyBkbyB0aXR1bGFyIGRvcyBkYWRvcyAoYXJ0LiA5wrosIDE3IGUgMTgsIGRhIExHUEQpIGUgYW9zIHByaW5jw61waW9zIHF1ZSBub3J0ZWlhbSB0b2RvcyBvcyB0cmF0YW1lbnRvcyBkZSBkYWRvcyBubyBCcmFzaWwgKGFydC4gNsK6LCBkYSBMR1BEKS4iIC8+PGZpbmFsaWRhZGUgdGV4dG89IkEgZmluYWxpZGFkZSDDum5pY2EgZSBleGNsdXNpdmEgZGVzc2UgVEVSTU8gREUgQVVUT1JJWkHDh8ODTywgw6kgZ2FyYW50aXIgcXVlIG8gQ09OVFJBVEFOVEUgYXByZXNlbnRlIGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZXNzZSBjb25zZW50aW1lbnRvIGRvIFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSBhc3NpbmFkbyBkaWdpdGFsbWVudGUsIHBhcmEgcXVlIHBvc3NhIHJlYWxpemFyIGFzIHJlcXVpc2nDp8O1ZXMgZG9zIHNlcnZpw6dvcyB3ZWIgZGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZW0gbm9tZSBkbyBBVVRPUiBQRURJRE8gREUgREFET1MgKFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSkuIiAvPjxkYXRhQXNzaW5hdHVyYSBkYXRhPSIyMDIyMDgwOCIgLz48dmlnZW5jaWEgZGF0YT0iMjAyMjEyMzEiIC8+PGRlc3RpbmF0YXJpbyBudW1lcm89Ijk5OTk5OTk5OTk5OTk5IiBub21lPSJOT01FIERBIEVNUFJFU0EgQ09OVFJBVEFOVEUiIHRpcG89IlBKIiBwYXBlbD0iY29udHJhdGFudGUiIC8+PGFzc2luYWRvUG9yIG51bWVybz0iMDAwMDAwMDAwMDAwMDAiIG5vbWU9Ik5PTUUgRE8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TIiB0aXBvPSJQSiIgcGFwZWw9ImF1dG9yIHBlZGlkbyBkZSBkYWRvcyIgLz48L2RhZG9zPjxTaWduYXR1cmUgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sc2lnIyI+PFNpZ25lZEluZm8+PENhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy14bWwtYzE0bi0yMDAxMDMxNSIgLz48U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxzaWctbW9yZSNOcnNhLXNoYTI1NiIgLz48UmVmZXJlbmNlIFVSSj0iIj48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIgLz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvVFIvMjAwMS9SRUMteG1sLWMxNG4tMjAwMTAzMTUiIC8+PC9UcmFuc2Zvcm1zPjxEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGEyNTYiIC8+PERpZ2VzdFZhbHVlPkFCQy4uc1hBPjwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT5WdmZLLi4uSEhoPT08L1NpZ25hdHVyZVZhbHVlPjxLZXlJbmZvPjxYNTA5RGF0YT48WDUwOUNlcnRpZmljYXRlPkFCQ0F3SUJMLi4uaGhoPT08L1g1MDlDZXJ0aWZpY2F0ZT48L1g1MDlEYXRhPjwvS2V5SW5mbz48L1NpZ25hdHVyZT48L3Rlcm1vRGVBdXRvcml6YWNhbz4=\"}"
+    }
+}'
 ```
 
-#### 2. Aviso Legal (Conformidade LGPD)
+## Introdução
 
-**Conteúdo obrigatório:**
-```
-O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD).
-```
+### O que é o Autentica Procurador?
 
-#### 3. Finalidade
+É uma funcionalidade de apoio a segurança da API Integra Contador, que permite o Autor do Pedido de Dados autorizar o Contratante a enviar requisições em seu nome por meio de um Termo de Autorização em formato de documento XML assinado digitalmente com certificado digital. Em muitos casos o Autor do Pedido de Dados não é o Contratante da API, mas é um Procurador autorizado previamente pelo Contribuinte pelo portal eCAC.
 
-**Conteúdo obrigatório:**
-```
-A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE).
-```
+### Como funciona o uso via Integra Contador?
 
-### Características dos Textos
+Para acionar os serviços do Autentica-Procurador, é necessário utilizar a API Integra Contador, que irá gerenciar o pedido de dados que conterá o XML assinado eletronicamente pelo Autor do Pedido de Dados. Esse TERMO DE AUTORIZAÇÃO é validado, junto da autenticidade da assinatura digital e também do certificado digital do Autor do Pedido de Dados. O certificado digital aceito deve ser do tipo `eCPF` ou `eCNPJ` no padrão ICP-Brasil (A1 ou A3).
 
-| Elemento | Propósito | Obrigatoriedade |
-|----------|-----------|-----------------|
-| **Termo** | Define a autorização específica para uso da API | Obrigatório |
-| **Aviso Legal** | Garante conformidade com a LGPD | Obrigatório |
-| **Finalidade** | Especifica o uso exclusivo do termo | Obrigatório |
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
 
-### Observações Importantes
+Se o termo de autorização for válido, o Autentica-Procurador disponibiliza um `token` de acesso com um tempo de duração predeterminado. Esse token deve ser informado no `header` das requisições da API no parâmetro `autenticar_procurador_token`. Com isso o Contratante terá autorização para acionar a API em nome do Autor do Pedido de Dados com procuração eletrônica no `eCAC`. A estrutura básica de entrada deve conter os dados do Contratante, Autor do Pedido de Dados, o Contribuinte e os dados do Pedido de Dados. Tudo isso é informado pelo `Json` do corpo (body) da requisição via post.
 
-- Todos os textos devem ser incluídos exatamente como especificado na documentação
-- Os textos fazem parte da estrutura XML que será assinada digitalmente
-- A alteração de qualquer texto pode invalidar o termo de autorização
-- Os textos garantem conformidade legal com a Lei Geral de Proteção de Dados (LGPD)
+O documento TERMO DE AUTORIZAÇÃO deve ser assinado utilizando um assinador que siga os padrões XMLDSig do W3C. Após assinado esse XML deve ser submetido via `POST` como `string base64`. Esse padrão de assinatura digital segue o mesmo padrão adotado pelos sistemas NFe e eSocial da RFB.
 
----
+**SOBRE A VALIDADE DO TOKEN AUTENTICADO**
 
-## 6. Glossário de Termos Técnicos
+O token válido fica disponível até a meia-noite do dia seguinte. Portanto, após receber o token de autenticação, o cliente tem até a meia-noite (horário de Brasília) do dia seguinte para submeter as requisições dos serviços. Assim, se o cliente enviar o Termo de Autorização na madrugada, por exemplo, a meia-noite, o token poderá valer até 24 horas, sem necessidade de submeter o mesmo documento assinado repetidamente.
 
-### Definições Fundamentais
+Para mais informações sobre como realizar a assinatura do TERMO DE AUTORIZAÇÃO acesse a sessão [Padrões Técnicos de Assinatura de XML](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/autenticaprocurador/padroes_tecnicos_assinatura_xml/).
 
-| Termo | Descrição |
-|-------|-----------|
-| **base64** | Método para codificação de dados para transferência na Internet |
-| **Destinatário** | A quem se destina o termo de autorização (empresa contratante) |
-| **JSON** | JavaScript Object Notation - formato leve de troca de informações/dados entre sistemas |
-| **ICP-Brasil** | Infraestrutura de Chaves Públicas Brasileira - cadeia hierárquica de confiança que viabiliza a emissão de certificados digitais para identificação virtual do cidadão |
-| **XML** | eXtensible Markup Language - formato de arquivo universal usado para criar documentos com dados organizados |
-| **XMLdsig** | XML Signature - define uma sintaxe XML para assinaturas digitais conforme recomendação do W3C. Funcionalmente similar ao PKCS #7, mas mais extensível e voltado para assinatura de documentos XML |
+## Cache
 
-### Papéis e Responsabilidades
+### Cache do Termo de Autorização
 
-| Papel | Descrição |
-|-------|-----------|
-| **Papel Autor Pedido de Dados** | Contribuinte responsável pelo Pedido de dados. Esse autor precisa ser o titular dos dados do contribuinte ou procurador do contribuinte |
-| **Papel Contratante** | Contratante da API Integra Contador no e-Commerce do SERPRO |
+Todo Termo de Autorização válido é armazenado em um mecanismo interno de cache. Quando o cliente envia um Termo de Autorização repetido e que ainda esteja na situação validado/autenticado, o Integra Contador vai responder com o `status code 304 (not modified)` como uma resposta de sucesso.
 
-### Tipos de Pessoa
+Essa resposta ao cliente, se faz necessária para comunicar que não houve modificação da requisição anterior e que o Termo de Autorização ainda está válido, pois o token não expirou. Portanto, o token `"autenticar_procurador_token"` pode continuar sendo utilizado nas chamadas da API.
 
-| Tipo | Descrição |
-|------|-----------|
-| **PF** | Pessoa Física |
-| **PJ** | Pessoa Jurídica |
+**Atenção**
 
-### Documentos e Estruturas
+É importante a aplicação cliente utilizar esse recurso de cache. Esse mecanismo é seguro e ajuda a otimizar o ambiente computacional.
 
-| Documento | Descrição |
-|-----------|-----------|
-| **Termo de Autorização** | Documento XML contendo o termo de autorização com assinatura digital do autor pedido de dados |
+**Status Code**
 
-### Conceitos Técnicos Importantes
+`304 - Not Modified`
 
-#### Certificados Digitais
-- Devem seguir o padrão **ICP-Brasil**
-- Tipos aceitos: **eCPF** (Pessoa Física) ou **eCNPJ** (Pessoa Jurídica)
-- Formatos suportados: **A1** ou **A3**
-- Não podem ser autoassinados (self-signed)
-- Devem ter cadeia de certificação confiável até a raiz
+**Tempo de Expiração**
 
-#### Assinatura Digital
-- Segue padrão **XMLDSig do W3C**
-- Mesmo padrão usado em **NFe** e **eSocial** da RFB
-- Requer transformações específicas obrigatórias
-- Deve ser realizada sobre todo o documento XML
+O token válido fica disponível até a meia-noite do dia seguinte, horário de Brasília.
 
-#### Codificação
-- XML deve ser enviado como **string base64**
-- Formato JSON para estrutura de dados
-- Validação rigorosa de estrutura e conteúdo
-
----
-
-## 7. Sistema de Cache - Termo de Autorização
-
-### Funcionamento do Cache
-
-Todo Termo de Autorização válido é armazenado em um mecanismo interno de cache. Quando o cliente envia um Termo de Autorização repetido e que ainda esteja na situação validado/autenticado, o Integra Contador responde com o **status code 304 (Not Modified)** como uma resposta de sucesso.
-
-Esta resposta comunica ao cliente que não houve modificação da requisição anterior e que o Termo de Autorização ainda está válido, pois o token não expirou. Portanto, o token `autenticar_procurador_token` pode continuar sendo utilizado nas chamadas da API.
-
-### Importância do Cache
-
-**ATENÇÃO**: É importante que a aplicação cliente utilize esse recurso de cache. Esse mecanismo é seguro e ajuda a otimizar o ambiente computacional.
-
-### Status Code de Cache
-
-- **304 - Not Modified**: Indica que o Termo de Autorização ainda está válido em cache
-
-### Tempo de Expiração
-
-O token válido fica disponível até a **meia-noite do dia seguinte**, horário de Brasília.
-
-### Response Headers para Gerenciamento de Cache
-
-A aplicação cliente pode utilizar os headers abaixo para recuperar o token e adicionar a lógica para enviar um novo Termo de Autorização assinado digitalmente quando expira a validade do token de autenticação:
+A aplicação cliente pode utilizar os headers abaixo para recuperar o token e adicionar a lógica para enviar um novo Termo de Autorização assinado digitalmente quando expira a validade do token de autenticação.
 
 | Header | Descrição |
-|--------|-----------|
-| `cache-control` | Nome do mecanismo de cache |
-| `etag` | Contém o token `autenticar_procurador_token` em cache |
-| `expires` | Data e hora da expiração do token |
+| --- | --- |
+| `cache-control` | Nome do mecanismo de cache. |
+| `etag` | Contém o token `autenticar_procurador_token` em cache. |
+| `expires` | Data e hora da expiração do token. |
 
-### Exemplo de Response Headers
+`cache-control: termo_autorizacao  etag: "autenticar_procurador_token:ab87df0b-6d08-3d78-13d2-d474b90b05f3"  expires: Sat, 15 Oct 2022 00:00:01 GMT`
 
-```http
-cache-control: termo_autorizacao
-etag: "autenticar_procurador_token:ab87df0b-6d08-3d78-13d2-d474b90b05f3"
-expires: Sat, 15 Oct 2022 00:00:01 GMT
-```
+O `expires` no padrão da especificação `RFC 7231, sessão 7.1.1.2: Date`:
 
-### Formato do Header `expires`
+*   Dia da semana de (segunda-feira até domingo), ex. "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", ou "Sun".
+*   Um dia em número de 2 dígitos, ex. "04" ou "23".
+*   Um mês de (Janeiro até Dezembro), ex. "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec".
+*   Um ano em número de 4 dígitos, ex. "2022" ou "2023".
+*   Uma hora em número de 2 dígitos, ex. "09" ou "23".
+*   Minutos em número de 2 dígitos, ex. "04" ou "59".
+*   Segundos em número de 2 dígitos, ex. "04" ou "59".
+*   GMT: datas deste protocolo são expressadas em GMT.
 
-O `expires` segue o padrão da especificação **RFC 7231, seção 7.1.1.2: Date**:
+**Response Body (no content)**
 
-#### Componentes da Data
-- **Dia da semana**: "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", ou "Sun"
-- **Dia**: Número de 2 dígitos, ex. "04" ou "23"
-- **Mês**: "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-- **Ano**: Número de 4 dígitos, ex. "2022" ou "2023"
-- **Hora**: Número de 2 dígitos, ex. "09" ou "23"
-- **Minutos**: Número de 2 dígitos, ex. "04" ou "59"
-- **Segundos**: Número de 2 dígitos, ex. "04" ou "59"
-- **GMT**: Todas as datas deste protocolo são expressas em GMT
+`No content` significa que não é enviado um json com conteúdo de resposta.
 
-### Response Body
-
-Quando o status é **304 (Not Modified)**, o response body é **"No content"**, significando que não é enviado um JSON com conteúdo de resposta.
-
-### Estratégia de Implementação
-
-1. **Primeira requisição**: Enviar Termo de Autorização assinado
-2. **Requisições subsequentes**: Verificar se o token ainda está válido através do cache
-3. **Token expirado**: Enviar novo Termo de Autorização assinado
-4. **Otimização**: Usar headers de cache para gerenciar automaticamente a validade
-
----
-
-## 8. Padrões Técnicos de Assinatura do XML
-
-### Objetivo
-
-Prover as informações dos padrões técnicos utilizados na assinatura digital do documento XML. A sigla XML significa "eXtensible Markup Language" em inglês, que é um formato de arquivo universal usado para criar documentos com dados organizados.
-
-### Padrão de Documento XML
-
-A especificação do documento XML adotada é a recomendação W3C para XML 1.0, disponível em [http://www.w3.org/TR/REC-xml](http://www.w3.org/TR/REC-xml). A codificação dos caracteres será em UTF-8, assim todos os documentos XML serão iniciados com a seguinte declaração:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-```
-
-Cada arquivo XML somente poderá ter uma única declaração `<?xml version="1.0" encoding="UTF-8"?>`.
-
-### Caracteres de Escape
-
-| Caractere | Escape |
-|---|---|
-| > (sinal de maior) | `&gt;` |
-| < (sinal de menor) | `&lt;` |
-| & (e comercial) | `&amp;` |
-| " (aspas duplas) | `&quot;` |
-| ' (sinal de apóstrofe ou aspas simples) | `&apos;` |
+## Padrões Técnicos de Assinatura do XML
 
 ### Modelo do XML (Termo de Autorização)
 
-A seguir o modelo de documento XML para ser assinado digitalmente. Essa estrutura é obrigatória. A declaração do namespace da assinatura digital deverá ser realizada na própria tag `<Signature>`, conforme exemplo abaixo:
+A seguir o modelo de documento XML para ser assinado digitalmente. Essa estrutura é obrigatória.
+
+A declaração do namespace da assinatura digital deverá ser realizada na própria tag `<Signature>`, conforme exemplo abaixo:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -201,194 +143,155 @@ A seguir o modelo de documento XML para ser assinado digitalmente. Essa estrutur
     <dados>
         <sistema id="API Integra Contador" />
         <termo texto="Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS." />
-        <avisoLegal texto="O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD)." />
+        <avisoLegal texto="O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD)."/>
         <finalidade texto="A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE)." />
-        <dataAssinatura data="20220614" />
-        <vigencia data="20221231" />
-        <destinatario numero="33683111000107" nome="SERVICO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)" tipo="PJ" papel="contratante" />
-        <assinadoPor numero="00000000000000" nome="NOME DO CONTRIBUINTE" tipo="PJ" papel="autor pedido de dados"/>
+        <dataAssinatura data="20220614"/>
+        <vigencia data="20221231"/>
+        <destinatario numero="33683111000107"                        nome="SERVICO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)"                        tipo="PJ"                        papel="contratante"/>
+        <assinadoPor numero="00000000000000"                       nome="NOME DO CONTRIBUINTE"                       tipo="PJ"                       papel="autor pedido de dados"/>
     </dados>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        ...
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <Reference URI="" >
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>9QY...=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>W64q...==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>MIIGx...=</X509Certificate>
+            </X509Data>
+        </KeyInfo>
     </Signature>
 </termoDeAutorizacao>
 ```
 
-### Descrição das Tags e Atributos
+## Serviços
 
-*   **Termo de Autorização**: documento XML com os dados da autorização e assinado digitalmente.
-*   **Sistema**: identificação do sistema a ser utilizado esse termo de autorização.
-*   **Termo**: texto de autorização com o seguinte conteúdo:
-*   **Aviso Legal**: texto LGPD com o seguinte conteúdo:
-*   **Finalidade**: texto que define a finalidade do uso desse termo de autorização, contem o seguinte conteúdo:
-*   **Data da Assinatura**: data da assinatura deste termo de autorização, no formato AAAAMMDD (A = ano, M = mês e D = dia).
-*   **Vigência**: data de validade desse termo de autorização.
-*   **Destinatário**: pessoa jurídica que contratou o produto API Integra Contador no eCommerce da Loja Serpro e quer autenticar uma sessão com a assinatura do Autor do Pedido de Dados para consumir os serviços do API Integra Contador em nome do PROCURADOR ou OUTORGADO DO CONTRIBUINTE.
-    *   **Número**: com tamanho de 14 posições, o atributo número representa o CNPJ sem máscara e só é permitido números.
-    *   **Nome**: nome do contratante (razão social).
-    *   **Tipo**: PJ – pessoa jurídica
-    *   **Papel**: Contratante
-*   **Assinado Por**: pessoa física (PF) ou jurídica (PJ) que está assinando este documento XML com seu certificado digital. Dessa forma ele está autorizando o Contratante para poder consumir os serviços na API Integra Contador com o seu número de CPF ou CNPJ pelo período de vigência aqui indicado.
-    *   **Número**: com tamanho de 11 posições (CPF) quando pessoa física ou com tamanho de 14 posições (CNPJ) quando pessoa jurídica, sem máscara e só permitido números.
-    *   **Nome**: nome do autor do pedido de dados procurador.
-    *   **Tipo**: PF – pessoa física ou PJ – pessoa jurídica
-    *   **Papel**: autor pedido de dados
-*   **Signature**: assinatura digital deste documento XML.
+### Envio de XML assinado com o Termo de Autorização
 
-### Schema do XML
+Permite o envio de um documento XML assinado digitalmente pelo Autor Pedido de Dados (Procurador) para receber um TOKEN de autorização que permite o Contratante realizar as requisições em nome do Autor Pedido de Dados.
 
-A estrutura dos XML recebidos pelo Autentica-Procurado são especificadas e checadas por um Schema, que é uma linguagem que define a estrutura do documento XML, descrevendo os seus elementos e a sua organização, além de estabelecer regras de preenchimento de conteúdo e de obrigatoriedade de cada elemento ou grupo de informação. Este Schema A validação da estrutura XML da mensagem é realizada por um analisador sintático (parser) que verifica se a mensagem atende as definições e regras de seu Schema XML.
+Esse documento XML tem como conteúdo um TERMO DE AUTORIZAÇÃO estruturado na síntaxe XML que deve ser previamente assinado digitalmente por um assinador de documentos XML seguindo os padrões indicados na sessão [padrões técnicos de assinatura de XML](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/autenticaprocurador/servicos/envio_de_xml_assinado/).
 
-Qualquer divergência da estrutura XML da mensagem em relação ao seu Schema XML provoca um erro de validação.
+**Identificação no Pedido de Dados**
 
-### Padrão de Comunicação
+idSistema: AUTENTICAPROCURADOR
+idServico: ENVIOXMLASSINADO81
+versaoSistema: "1.0"
 
-A comunicação será baseada em Web Service, disponibilizados pelo serviço chamado Autenticação Procurador.
+**Dados de Entrada**
 
-A troca de mensagens será por meio de Json. Sendo que o XML após assinado será transformado em uma String codificada em `base64`.
+**Campo: dados**
 
-### Padrão de Certificado Digital
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| xml | Documento XML assinado previamente com certificado digital do Autor Pedido de Dados (eCPF ou eCNPJ - ICP-Brasil) nos padrões XMLDSig e codificado em `base64`. | `String` escapada | Sim |
 
-O certificado digital utilizado para assinar o documento XML deverá ser emitido por Autoridade Certificadora credenciada pela Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil.
+**Exemplo: conteúdo body json de entrada**
 
-Este deverá pertencer à série A. Existem duas séries as quais os certificados podem pertencer, a série A e a S. A série A reúne os certificados de assinatura digital utilizados na confirmação de identidade na Web, em e-mails, em redes privadas virtuais (VPN) e em documentos eletrônicos com verificação da integridade de suas informações. A série S reúne os certificados de sigilo que são utilizados na codificação de documentos, de bases de dados, de mensagens e de outras informações eletrônicas sigilosas. O certificado digital deverá ser do tipo A1 ou A3. Certificados digitais de tipo A1 ficam armazenados no próprio computador a partir do qual ele será utilizado. Certificados digitais do tipo A3 são armazenados em dispositivo portátil inviolável do tipo smart card ou token, que possuem um chip com capacidade de realizar a assinatura digital. Este tipo de dispositivo é bastante seguro, pois toda operação é realizada pelo chip existente no dispositivo, sem qualquer acesso externo à chave privada do certificado digital.
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {        "numero": "00000000000000",        "tipo": 2     },     "contribuinte": {        "numero": "11111111111111",        "tipo": 2     },     "pedidoDados": {         "idSistema": "AUTENTICAPROCURADOR",         "idServico": "ENVIOXMLASSINADO81",         "versaoSistema": "1.0",         "dados": "{\"xml\": \"PHRlcm1vRGVBdXRvcml6YWNhbz48ZGFkb3M+PHNpc3RlbWEgaWQ9IkFQSSBJbnRlZ3JhIENvbnRhZG9yIiAvPjx0ZXJtbyB0ZXh0bz0iQXV0b3Jpem8gYSBlbXByZXNhIENPTlRSQVRBTlRFLCBpZGVudGlmaWNhZGEgbmVzdGUgdGVybW8gZGUgYXV0b3JpemHDp8OjbyBjb21vIERFU1RJTkFUw4FSSU8sIGEgZXhlY3V0YXIgYXMgcmVxdWlzacOnw7VlcyBkb3Mgc2VydmnDp29zIHdlYiBkaXNwb25pYmlsaXphZG9zIHBlbGEgQVBJIElOVEVHUkEgQ09OVEFET1IsIG9uZGUgdGVyZWkgbyBwYXBlbCBkZSBBVVRPUiBQRURJRE8gREUgREFET1Mgbm8gY29ycG8gZGEgbWVuc2FnZW0gZW52aWFkYSBuYSByZXF1aXNpw6fDo28gZG8gc2VydmnDp28gd2ViLiBFc3NlIHRlcm1vIGRlIGF1dG9yaXphw6fDo28gZXN0w6EgYXNzaW5hZG8gZGlnaXRhbG1lbnRlIGNvbSBvIGNlcnRpZmljYWRvIGRpZ2l0YWwgZG8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFIHJlc3BvbnPDoXZlbCwgaWRlbnRpZmljYWRvIGNvbW8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TLiIgLz48YXZpc29MZWdhbCB0ZXh0bz0iTyBhY2Vzc28gYSBlc3RhcyBpbmZvcm1hw6fDtWVzIGZvaSBhdXRvcml6YWRvIHBlbG8gcHLDs3ByaW8gUFJPQ1VSQURPUiBvdSBPVVRPUkdBRE8gRE8gQ09OVFJJQlVJTlRFLCByZXNwb25zw6F2ZWwgcGVsaSBpbmZvcm1hw6fDo28sIHZpYSBhc3NpbmF0dXJhIGRpZ2l0YWwuIMOJIGRldmVyIGRvIGRlc3RpbmF0w6FyaW8gZGEgYXV0b3JpemHDp8OjbyBlIGNvbnN1bWlkb3IgZGVzdGUgYWNlc3NvIG9ic2VydmFyIGEgYWRvw6fDo28gZGUgYmFzZSBsZWdhbCBwYXJhIG8gdHJhdGFtZW50byBkb3MgZGFkb3MgcmVjZWJpZG9zIGNvbmZvcm1lIGFydGlnb3MgN8K6IG91IDExwrogZGEgTEdQRCAoTGVpIG4uwrogMTMuNzA5LCBkZSAxNCBkZSBhZ29zdG8gZGUgMjAxOCksIGFvcyBkaXJlaXRvcyBkbyB0aXR1bGFyIGRvcyBkYWRvcyAoYXJ0LiA5wrosIDE3IGUgMTgsIGRhIExHUEQpIGUgYW9zIHByaW5jw61waW9zIHF1ZSBub3J0ZWlhbSB0b2RvcyBvcyB0cmF0YW1lbnRvcyBkZSBkYWRvcyBubyBCcmFzaWwgKGFydC4gNsK6LCBkYSBMR1BEKS4iIC8+PGZpbmFsaWRhZGUgdGV4dG89IkEgZmluYWxpZGFkZSDDum5pY2EgZSBleGNsdXNpdmEgZGVzc2UgVEVSTU8gREUgQVVUT1JJWkHDh8ODTywgw6kgZ2FyYW50aXIgcXVlIG8gQ09OVFJBVEFOVEUgYXByZXNlbnRlIGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZXNzZSBjb25zZW50aW1lbnRvIGRvIFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSBhc3NpbmFkbyBkaWdpdGFsbWVudGUsIHBhcmEgcXVlIHBvc3NhIHJlYWxpemFyIGFzIHJlcXVpc2nDp8O1ZXMgZG9zIHNlcnZpw6dvcyB3ZWIgZGEgQVBJIElOVEVHUkEgQ09OVEFET1IgZW0gbm9tZSBkbyBBVVRPUiBQRURJRE8gREUgREFET1MgKFBST0NVUkFET1Igb3UgT1VUT1JHQURPIERPIENPTlRSSUJVSU5URSkuIiAvPjxkYXRhQXNzaW5hdHVyYSBkYXRhPSIyMDIyMDgwOCIgLz48dmlnZW5jaWEgZGF0YT0iMjAyMjEyMzEiIC8+PGRlc3RpbmF0YXJpbyBudW1lcm89Ijk5OTk5OTk5OTk5OTk5IiBub21lPSJOT01FIERBIEVNUFJFU0EgQ09OVFJBVEFOVEUiIHRpcG89IlBKIiBwYXBlbD0iY29udHJhdGFudGUiIC8+PGFzc2luYWRvUG9yIG51bWVybz0iMDAwMDAwMDAwMDAwMDAiIG5vbWU9Ik5PTUUgRE8gQVVUT1IgRE8gUEVESURPIERFIERBRE9TIiB0aXBvPSJQSiIgcGFwZWw9ImF1dG9yIHBlZGlkbyBkZSBkYWRvcyIgLz48L2RhZG9zPjxTaWduYXR1cmUgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sc2lnIyI+PFNpZ25lZEluZm8+PENhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy14bWwtYzE0bi0yMDAxMDMxNSIgLz48U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxzaWctbW9yZSNOcnNhLXNoYTI1NiIgLz48UmVmZXJlbmNlIFVSSj0iIj48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIgLz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvVFIvMjAwMS9SRUMteG1sLWMxNG4tMjAwMTAzMTUiIC8+PC9UcmFuc2Zvcm1zPjxEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGEyNTYiIC8+PERpZ2VzdFZhbHVlPkFCQy4uc1hBPjwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT5WdmZLLi4uSEhoPT08L1NpZ25hdHVyZVZhbHVlPjxLZXlJbmZvPjxYNTA5RGF0YT48WDUwOUNlcnRpZmljYXRlPkFCQ0F3SUJMLi4uaGhoPT08L1g1MDlDZXJ0aWZpY2F0ZT48L1g1MDlEYXRhPjwvS2V5SW5mbz48L1NpZ25hdHVyZT48L3Rlcm1vRGVBdXRvcml6YWNhbz4=\"}"         }
+}
+```
 
-Para que um certificado seja aceito na função de transmissor de solicitações este deverá ser do tipo e-CPF (e-PF) ou e-CNPJ (e-PJ).
+**Dados de Saída**
 
-O certificado digital é exigido no momento da assinatura do documento XML para envio ao login do serviço Autenticação Procurador.
-
-#### Padrões do Certificado Digital
-
-Para assinatura, utilizar o certificado digital do responsável que vai exercer o papel de PROCURADOR ou OUTORGADO DO CONTRIBUINTE, autor do pedido de dados.
-
-X.509 versão 3, emitido por Autoridade Certificadora credenciada pela Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil, do Padrão de certificado tipo A1 ou A3, devendo ser um e-CPF (e-PF) ou e-CNPJ (e-PJ).
-
-### Assinatura do Documento XML
-
-Os documentos XML são assinados digitalmente utilizando o certificado digital do Procurador para garantir autenticidade e a integridade das informações dos documentos eletrônicos. Este XML é assinado digitalmente seguindo a especificação descrita na sessão Padrão de assinatura digital.
-
-### Padrão de Assinatura Digital
-
-O sistema utiliza um subconjunto do padrão de assinatura XML definido pelo [http://www.w3.org/TR/xmldsig-core/](http://www.w3.org/TR/xmldsig-core/).
-
-1.  **Padrão de assinatura**: XML Digital Signature, utilizando o formato Enveloped [http://www.w3.org/TR/xmldsig-core/](http://www.w3.org/TR/xmldsig-core/)
-2.  **Certificado digital**: emitido por AC credenciada no ICP-Brasil [http://www.w3.org/2000/09/xmldsig#X509Data](http://www.w3.org/2000/09/xmldsig#X509Data)
-3.  **Cadeia de certificação**: EndCertOnly (Incluir na assinatura apenas o certificado do usuário final):
-    3.1. **Tipo do certificado**: A1 ou A3
-4.  **Tamanho da chave criptográfica**: compatível com os certificados A1 e A3 (2048 bits)
-5.  **Função criptográfica assimétrica**: RSA [http://www.w3.org/2001/04/xmldsigmore#rsa-sha256](http://www.w3.org/2001/04/xmldsigmore#rsa-sha256)
-6.  **Função de message digest**: SHA-256. [http://www.w3.org/2001/04/xmlenc#sha256](http://www.w3.org/2001/04/xmlenc#sha256)
-7.  **Codificação**: Base64 [http://www.w3.org/2000/09/xmldsig#base64](http://www.w3.org/2000/09/xmldsig#base64)
-8.  **Transformações exigidas**: útil para realizar a canonicalização do XML enviado para realizar a validação correta da assinatura digital. São elas:
-    8.1. Enveloped [http://www.w3.org/2000/09/xmldsig#enveloped-signature](http://www.w3.org/2000/09/xmldsig#enveloped-signature)
-
-As informações necessárias à identificação do assinante estão presentes dentro do certificado digital. O arquivo XML assinado deve conter apenas a tag X509Certificate nas informações que dizem respeito ao certificado.
-
-| Padrão da assinatura digital |
-| --- |
-| XML Digital Signature, Enveloped, com certificado digital X.509 versão 3, com chave privada de tamanho variável, conforme o padrão da ICP-Brasil (1024, 2048, ou mais bits), com padrões de criptografia assimétrica RSA, algoritmo message digest SHA-256 e utilização das transformações Enveloped e C14N. |
-
----
-
-## 9. Modelo de Assinador Digital - .NET
-
-### Introdução
-
-Aqui você encontra um programa de modelo, escrito na linguagem `C#` para servir de referência na implementação do assinador digital. Este exemplo, utiliza um subconjunto do padrão `XMLDSig` para assinatura de documentos XML.
-
-O assinador digital é necessário para assinar o documento `XML` Termo de Autorização. O certificado digital aqui disponibilizado, será utilizado para testes deste programa, sendo possível simular a assinatura como autor do pedido de dados, para ser submetido a um destinatário.
-
-### Componente
-
-`Serpro.Componentes.AssinaturaDigital`
-
-Realiza a assinatura digital de documento XML utilizando o padrão `W3C XMLDSig`.
-
-### Linguagem de programação
-
-`C# dotnet`
-
-| Versão | Autor | Código-fonte |
+| Campo | Descrição | Tipo |
 | --- | --- | --- |
-| 1.0.0 | SERPRO | [Serpro.Componentes.AssinaturaDigital.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/Serpro.Componentes.AssinaturaDigital.zip) |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno. | `String` escapada - `Object`: `Autentica` |
 
-### Certificado Digital
+**Object: Autentica**
 
-Como demonstração, está sendo disponibilizado este certificado digital que só funciona em ambiente de desenvolvimento e homologação:
-
-**Atenção**: Este certificado digital e-CNPJ disponibilizado é compatível somente com o ambiente de demonstração. Não possui valor em ambientes produtivos.
-
-*   **Certificado de homologação**: [eCNPJ-SERPRO-33683111000107.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/eCNPJ-SERPRO-33683111000107.zip)
-*   **Cadeias de certificação - homologação**: [https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b](https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b)
-*   **LCR**: [https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl](https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl)
-
-### Dependências
-
-Pacotes importados via [https://nuget.org](https://nuget.org) em `.Net Standard 2.0`:
-
-*   `microsoft.extensions.configuration.abstractions`
-*   `microsoft.extensions.dependencyinjection.abstractions`
-*   `netstandard.library`
-*   `system.security.cryptography.xml`
-
-### Créditos e Licença
-
-Esse componente foi criado pelas equipes do SERPRO.
-
-E foi utilizado [licença MIT](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_dotnet/licenca%20MIT).
-
-### Nota
-
-Os modelos de implementação aqui fornecidos são exemplos básicos destinados a orientar na implementação de soluções. Recomendamos utilizá-los como referência inicial, mas com cuidado ao considerar sua aplicação em um ambiente de produção. É essencial realizar testes completos para garantir o correto funcionamento e considerar possíveis ajustes e atualizações necessárias antes de utilizar o modelo em um ambiente de produção.
-
----
-
-## 10. Modelo de Assinador Digital - PHP
-
-### Introdução
-
-Aqui você encontra um programa de modelo, escrito em `PHP` para servir de referência na implementação do assinador digital. Este exemplo, utiliza um subconjunto do padrão `XMLDSig` para assinatura de documentos XML utilizando a biblioteca OpenSSL.
-
-O assinador digital é necessário para assinar o documento `XML` Termo de Autorização. O certificado digital aqui disponibilizado, será utilizado para testes deste programa, sendo possível simular a assinatura como autor do pedido de dados, para ser submetido a um destinatário.
-
-### Componente
-
-`Serpro.Componentes.AssinadorDigital.php`
-
-Realiza a assinatura digital de documento XML utilizando o padrão `W3C XMLDSig`.
-
-### Linguagem de programação
-
-`PHP`
-
-| Versão | Autor | Código-fonte |
+| Campo | Descrição | Tipo |
 | --- | --- | --- |
-| 1.0.0 | SERPRO | [Serpro.Componentes.AssinadorDigital.php.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/Serpro.Componentes.AssinadorDigital.php.zip) |
+| autenticar_procurador_token | Token de acesso para ser utilizado nas requisições do Integra Contador via http HEADER. | `String` |
+| data_hora_expiracao | Data e hora da expiração do token. | `String` representando a data e hora. Formato: `yyyy-MM-dd'T'HH:mm:ss` |
 
-### Certificado Digital
+**Exemplo: conteúdo payload json de saída**
 
-Como demonstração, está sendo disponibilizado este certificado digital que só funciona em ambiente de desenvolvimento e homologação:
+Json de exemplo: [retorno envio XML assinado e recebimento do token de acesso](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-contador-gerenciador/autenticaprocurador/servicos/envio_de_xml_assinado/)
 
-**Atenção**: Este certificado digital e-CNPJ disponibilizado é compatível somente com o ambiente de demonstração. Não possui valor em ambientes produtivos.
+## Mensagens
 
-*   **Certificado de homologação**: [eCNPJ-SERPRO-33683111000107.zip](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/eCNPJ-SERPRO-33683111000107.zip)
-*   **Cadeias de certificação - homologação**: [https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b](https://repositoriohom.serpro.gov.br/cadeias/serproacf5h1.p7b)
-*   **LCR**: [https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl](https://repositoriohom.serpro.gov.br/lcr/serproacf5h1.crl)
+### Mensagens de negócio
 
-### Dependências
+**Envio de XML Assinado (Termo de Autorização)**
 
-*   PHP 8.0+
-*   Extensão Openssl
-*   Um certificado digital do tipo ICPBrasil válido
+| Códigos | Mensagem | Ação |
+| --- | --- | --- |
+| \[Sucesso-AUTENTICAPROCURADOR\] | Requisição efetuada com sucesso. | HTTP STATUS: 200 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-002\] | Parâmetros de entrada inválidos. Campo xml nulo, vazio ou não encontrado. | Verifique os dados de entrada informados. HTTP STATUS: 400 |
+| \[Erro-AUTENTICAPROCURADOR-003\] | Erro ao efetuar login. | Verifique os dados de entrada informados. HTTP STATUS: 500 Verifique a mensagem e tente novamente, caso o problema persista deverá abrir um acionamento para verificar o problema. |
+| \[Erro-AUTENTICAPROCURADOR-008\] | Erro ao validar o certificado digital. | HTTP STATUS: 500 Verifique a mensagem e tente novamente, caso o problema persista deverá abrir um acionamento para verificar o problema. |
+| \[AcessoNegado-AUTENTICAPROCURADOR-009\] | Certificado Digital deve ser e-PF, e-CPF, e-PJ ou e-CNPJ. | HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-010\] | Certificado Digital está expirado. | HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-011\] | Acesso negado, NI do procurador diferente do NI do certificado. | HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-012\] | Acesso negado, NI do contratante diferente do NI do contratante do XML assinado. | HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-013\] | Acesso negado, XML assinado inválido: `{0}` | HTTP STATUS: 403 |
+| \[Erro-AUTENTICAPROCURADOR-014\] | Erro ao obter o CNPJ do certificado presente no XML assinado. | HTTP STATUS: 500 Verifique a mensagem e tente novamente, caso o problema persista deverá abrir um acionamento para verificar o problema. |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-015\] | Layout do XML inválido: tag {0} não encontrada. | tags existentes: `dados`, `assinadoPor`, `sistema`, `destinatario`, `vigencia`, `dataAssinatura`, `finalidade`, `avisoLegal`, `termo`, HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-016\] | Layout do XML inválido: atributo {0} da tag {1} inválido. | atributos: `id`, `data`, `nome`, `papel`, `numero`, `texto` HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-017\] | Layout do XML inválido: data de vigência deve ser maior ou igual que a data corrente. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-018\] | Layout do XML inválido: data de assinatura não deve ser posterior a data atual. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-019\] | Layout do XML inválido: tag raiz deve ser termoDeAutorizacao. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-020\] | A string fornecida do xml não é uma base64 válida. Conteúdo do xml: {0}. | HTTP STATUS: 400 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-021\] | Certificado fornecido não possui extensões da ICP-Brasil. | HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-023\] | O certificado informado não está autorizado. | HTTP STATUS: 403 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-025\] | Xml sem assinatura. A validação de estrutura deveria encontrar esse problema (Namespace: {0}). | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-026\] | Elemento 'CanonicalizationMethod' inválido: '{0}'. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-027\] | Elemento 'SignatureMethod' inválido: '{0}'. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-028\] | Apenas um Elemento 'Reference' é requerido/permitido. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-029\] | A assinatura do evento deverá ser realizada sobre todo documento Xml (Atributo 'URI' dever ser vazio). | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-030\] | Elemento 'DigestMethod' inválido: '{0}'. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-031\] | As seguintes transformações são exigidas. 'http://www.w3.org/2000/09/xmldsig#enveloped-signature' e 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315'. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-032\] | Apenas um Elemento 'KeyInfo/X509Data' é requerido/permitido. | HTTP STATUS: 400 |
+| \[EntradaIncorreta-AUTENTICAPROCURADOR-033\] | Ações Sugeridas: Verificar se houve alteração do evento após a assinatura. Verificar a validade da assinatura. | HTTP STATUS: 400 |
+| \[Erro-AUTENTICAPROCURADOR-034\] | Padrão de assinatura não reconhecido. | HTTP STATUS: 500 Verifique a mensagem e tente novamente, caso o problema persista deverá abrir um acionamento para verificar o problema. |
+| \[AcessoNegado-AUTENTICAPROCURADOR-037\] | O certificado digital do signatário ou do solicitante da informação encontra-se revogado. | HTTP STATUS: 403 Verifique a mensagem e informe um certificado válido. |
+| \[AcessoNegado-AUTENTICAPROCURADOR-038\] | Ocorreu um erro ao realizar a análise do XML. Verifique se o XML não está mal formado, e se não existem caracteres inválidos no documento. A primeira linha deve conter uma tag XML válida e não pode conter uma linha com espaço em branco ou caracteres ocultos de quebra de linha. | Verifique o conteúdo do documento XML enviado. HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-039\] | O certificado não foi considerado válido pelas verificações internas do conteúdo X509Certificate2. | Verifique se o certificado informado possui as características válidas do padrão ICP-Brasil. HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-040\] | A formação da cadeia de certificação até sua raiz deve ser confiável. | Verifique se o certificado informado possui as características válidas do padrão ICP-Brasil. HTTP STATUS: 403 |
+| \[AcessoNegado-AUTENTICAPROCURADOR-041\] | O certificado não pode ser do tipo autoassinado (self-signed). | Verifique se o certificado informado possui as características válidas do padrão ICP-Brasil. HTTP STATUS: 403 |
 
-### Créditos e Licença
+## Dados de Domínio
 
-Esse componente foi criado pelas equipes do SERPRO.
+### Termo de Autorização
 
-E foi utilizado [licença MIT](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/modelos/modelo_de_assinador_digital_php/licen%C3%A7a%20MIT) baseado no código open source no projeto do Github [XMLDSIG for PHP](https://github.com/xmlseclibs/xmlseclibs).
+**Termo:** texto de autorização com o seguinte conteúdo:
 
-### Nota
+`Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS.`
 
-Os modelos de implementação aqui fornecidos são exemplos básicos destinados a orientar na implementação de soluções. Recomendamos utilizá-los como referência inicial, mas com cuidado ao considerar sua aplicação em um ambiente de produção. É essencial realizar testes completos para garantir o correto funcionamento e considerar possíveis ajustes e atualizações necessárias antes de utilizar o modelo em um ambiente de produção.
+**Aviso Legal:** texto LGPD com o seguinte conteúdo:
 
----
+`O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD).`
+
+**Finalidade:** texto que define a finalidade do uso desse termo de autorização, contém o seguinte conteúdo:
+
+`A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE).`
+
+## Glossário
+
+| Termos | Descrição |
+| --- | --- |
+| base64 | Base64 é um método para codificação de dados para transferência na Internet. |
+| Destinatário | A quem se destina o termo de autorização (empresa contratante). |
+| Json | JSON é basicamente um formato leve de troca de informações/dados entre sistemas. JSON significa JavaScript Object Notation. |
+| ICP-Brasil | A Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil é uma cadeia hierárquica de confiança que viabiliza a emissão de certificados digitais para identificação virtual do cidadão. |
+| XML | A sigla XML significa “eXtensible Markup Language” em inglês, que é um formato de arquivo universal usado para criar documentos com dados organizados. |
+| XMLdsig | XML Signature define uma sintaxe XML para assinaturas digitais e é definida na recomendação do W3C XML Signature Syntax and Processing. Funcionalmente, tem muito em comum com o PKCS #7, mas é mais extensível e voltado para a assinatura de documentos XML. |
+| Papel Autor Pedido de Dados | Contribuinte responsável pelo Pedido de dados, esse autor precisa ser o titular dos dados do contribuinte ou procurador do contribuinte. |
+| Papel Contratante | Contratante da API Integra Contador no e-Commerce do Serpro |
+| PF | Pessoa Física |
+| PJ | Pessoa Jurídica |
+| Termo de Autorização | Documento XML contendo o termo de autorização com assinatura digital do autor pedido de dados. |
+

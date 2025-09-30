@@ -4,14 +4,15 @@ Future<void> Parcsn(ApiClient apiClient) async {
   print('=== Exemplos PARCSN ===');
 
   final parcsnService = ParcsnService(apiClient);
+  bool servicoOk = true;
 
+  // 1. Consultar pedidos de parcelamento
   try {
-    // 1. Consultar pedidos de parcelamento
     print('\n1. Consultando pedidos de parcelamento...');
     final pedidosResponse = await parcsnService.consultarPedidos();
 
     if (pedidosResponse.sucesso) {
-      print('Status: ${pedidosResponse.status}');
+      print('✅ Status: ${pedidosResponse.status}');
       print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
 
       if (pedidosResponse.temParcelamentos) {
@@ -29,41 +30,47 @@ Future<void> Parcsn(ApiClient apiClient) async {
         print('Nenhum parcelamento encontrado');
       }
     } else {
-      print('Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+      print('❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar pedidos de parcelamento: $e');
+    servicoOk = false;
+  }
 
-    // 2. Consultar parcelamento específico
+  // 2. Consultar parcelamento específico
+  try {
     print('\n2. Consultando parcelamento específico...');
-    try {
-      final parcelamentoResponse = await parcsnService.consultarParcelamento(1);
+    final parcelamentoResponse = await parcsnService.consultarParcelamento(1);
 
-      if (parcelamentoResponse.sucesso) {
-        print('Status: ${parcelamentoResponse.status}');
-        print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
+    if (parcelamentoResponse.sucesso) {
+      print('✅ Status: ${parcelamentoResponse.status}');
+      print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
 
-        final parcelamento = parcelamentoResponse.dadosParsed;
-        if (parcelamento != null) {
-          print('Parcelamento ${parcelamento.numero}:');
-          print('  Situação: ${parcelamento.situacao}');
-          print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
-          print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
-          print('  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}');
-          print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
-          print('  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}');
-        }
-      } else {
-        print('Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      final parcelamento = parcelamentoResponse.dadosParsed;
+      if (parcelamento != null) {
+        print('Parcelamento ${parcelamento.numero}:');
+        print('  Situação: ${parcelamento.situacao}');
+        print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
+        print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
+        print('  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}');
+        print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+        print('  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}');
       }
-    } catch (e) {
-      print('Erro na consulta de parcelamento: $e');
+    } else {
+      print('❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro na consulta de parcelamento: $e');
+    servicoOk = false;
+  }
 
-    // 3. Consultar parcelas disponíveis para impressão
+  // 3. Consultar parcelas disponíveis para impressão
+  try {
     print('\n3. Consultando parcelas disponíveis para impressão...');
     final parcelasResponse = await parcsnService.consultarParcelas();
 
     if (parcelasResponse.sucesso) {
-      print('Status: ${parcelasResponse.status}');
+      print('✅ Status: ${parcelasResponse.status}');
       print('Mensagem: ${parcelasResponse.mensagemPrincipal}');
 
       if (parcelasResponse.temParcelas) {
@@ -83,111 +90,123 @@ Future<void> Parcsn(ApiClient apiClient) async {
         print('Nenhuma parcela disponível para impressão');
       }
     } else {
-      print('Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      print('❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro ao consultar parcelas disponíveis: $e');
+    servicoOk = false;
+  }
 
-    // 4. Consultar detalhes de pagamento
+  // 4. Consultar detalhes de pagamento
+  try {
     print('\n4. Consultando detalhes de pagamento...');
-    try {
-      final detalhesResponse = await parcsnService.consultarDetalhesPagamento(1, 201612);
+    final detalhesResponse = await parcsnService.consultarDetalhesPagamento(1, 201612);
 
-      if (detalhesResponse.sucesso) {
-        print('Status: ${detalhesResponse.status}');
-        print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
+    if (detalhesResponse.sucesso) {
+      print('✅ Status: ${detalhesResponse.status}');
+      print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
 
-        final detalhes = detalhesResponse.dadosParsed;
-        if (detalhes != null) {
-          print('DAS: ${detalhes.numeroDas}');
-          print('Código de barras: ${detalhes.codigoBarras}');
-          print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
-          print('Data de pagamento: ${detalhes.dataPagamentoFormatada}');
-          print('Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
+      final detalhes = detalhesResponse.dadosParsed;
+      if (detalhes != null) {
+        print('DAS: ${detalhes.numeroDas}');
+        print('Código de barras: ${detalhes.codigoBarras}');
+        print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
+        print('Data de pagamento: ${detalhes.dataPagamentoFormatada}');
+        print('Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
 
-          for (final debito in detalhes.pagamentosDebitos) {
-            print('Débito ${debito.competencia}:');
-            print('  Tipo: ${debito.tipoDebito}');
-            print('  Valor total: ${debito.valorTotalFormatado}');
-            print('  Valor principal: ${debito.valorPrincipalFormatado}');
-            print('  Multa: ${debito.valorMultaFormatado}');
-            print('  Juros: ${debito.valorJurosFormatado}');
-            print('  Discriminações: ${debito.discriminacoes.length}');
-          }
+        for (final debito in detalhes.pagamentosDebitos) {
+          print('Débito ${debito.competencia}:');
+          print('  Tipo: ${debito.tipoDebito}');
+          print('  Valor total: ${debito.valorTotalFormatado}');
+          print('  Valor principal: ${debito.valorPrincipalFormatado}');
+          print('  Multa: ${debito.valorMultaFormatado}');
+          print('  Juros: ${debito.valorJurosFormatado}');
+          print('  Discriminações: ${debito.discriminacoes.length}');
         }
-      } else {
-        print('Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
       }
-    } catch (e) {
-      print('Erro na consulta de detalhes: $e');
+    } else {
+      print('❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro na consulta de detalhes: $e');
+    servicoOk = false;
+  }
 
-    // 5. Emitir DAS
+  // 5. Emitir DAS
+  try {
     print('\n5. Emitindo DAS...');
-    try {
-      final dasResponse = await parcsnService.emitirDas(202306);
+    final dasResponse = await parcsnService.emitirDas(202306);
 
-      if (dasResponse.sucesso) {
-        print('Status: ${dasResponse.status}');
-        print('Mensagem: ${dasResponse.mensagemPrincipal}');
+    if (dasResponse.sucesso) {
+      print('✅ Status: ${dasResponse.status}');
+      print('Mensagem: ${dasResponse.mensagemPrincipal}');
 
-        if (dasResponse.pdfGeradoComSucesso) {
-          final dasData = dasResponse.dadosParsed;
-          if (dasData != null) {
-            print('DAS emitido com sucesso!');
-            print('Número do DAS: ${dasData.numeroDas}');
-            print('Código de barras: ${dasData.codigoBarras}');
-            print('Valor: ${dasData.valorFormatado}');
-            print('Vencimento: ${dasData.dataVencimentoFormatada}');
-            print('Tamanho do PDF: ${dasData.tamanhoPdfFormatado}');
-            print('PDF disponível: ${dasData.temPdf}');
-          }
-        } else {
-          print('PDF não foi gerado');
+      if (dasResponse.pdfGeradoComSucesso) {
+        final dasData = dasResponse.dadosParsed;
+        if (dasData != null) {
+          print('DAS emitido com sucesso!');
+          print('Número do DAS: ${dasData.numeroDas}');
+          print('Código de barras: ${dasData.codigoBarras}');
+          print('Valor: ${dasData.valorFormatado}');
+          print('Vencimento: ${dasData.dataVencimentoFormatada}');
+          print('Tamanho do PDF: ${dasData.tamanhoPdfFormatado}');
+          print('PDF disponível: ${dasData.temPdf}');
         }
       } else {
-        print('Erro ao emitir DAS: ${dasResponse.mensagemPrincipal}');
+        print('PDF não foi gerado');
       }
-    } catch (e) {
-      print('Erro na emissão do DAS: $e');
+    } else {
+      print('❌ Erro ao emitir DAS: ${dasResponse.mensagemPrincipal}');
     }
+  } catch (e) {
+    print('❌ Erro na emissão do DAS: $e');
+    servicoOk = false;
+  }
 
-    // 6. Exemplos de validações
+  // 6. Exemplos de validações
+  try {
     print('\n6. Testando validações...');
 
     // Validar número de parcelamento
     final validacaoParcelamento = parcsnService.validarNumeroParcelamento(0);
     if (validacaoParcelamento != null) {
-      print('Validação parcelamento (0): $validacaoParcelamento');
+      print('✅ Validação parcelamento (0): $validacaoParcelamento');
     }
 
     // Validar ano/mês
     final validacaoAnoMes = parcsnService.validarAnoMesParcela(202313);
     if (validacaoAnoMes != null) {
-      print('Validação ano/mês (202313): $validacaoAnoMes');
+      print('✅ Validação ano/mês (202313): $validacaoAnoMes');
     }
 
     // Validar CNPJ
     final validacaoCnpj = parcsnService.validarCnpjContribuinte('12345678901234');
     if (validacaoCnpj != null) {
-      print('Validação CNPJ (12345678901234): $validacaoCnpj');
+      print('✅ Validação CNPJ (12345678901234): $validacaoCnpj');
     }
 
     // Validar tipo de contribuinte
     final validacaoTipo = parcsnService.validarTipoContribuinte(1);
     if (validacaoTipo != null) {
-      print('Validação tipo (1): $validacaoTipo');
+      print('✅ Validação tipo (1): $validacaoTipo');
     }
+  } catch (e) {
+    print('❌ Erro nas validações: $e');
+    servicoOk = false;
+  }
 
-    // 7. Exemplos de tratamento de erros
+  // 7. Exemplos de tratamento de erros
+  try {
     print('\n7. Testando tratamento de erros...');
 
     // Verificar se erro é conhecido
     final erroConhecido = parcsnService.isKnownError('[Sucesso-PARCSN]');
-    print('Erro conhecido ([Sucesso-PARCSN]): $erroConhecido');
+    print('✅ Erro conhecido ([Sucesso-PARCSN]): $erroConhecido');
 
     // Obter informações sobre erro
     final errorInfo = parcsnService.getErrorInfo('[Sucesso-PARCSN]');
     if (errorInfo != null) {
-      print('Informações do erro:');
+      print('✅ Informações do erro:');
       print('  Código: ${errorInfo.codigo}');
       print('  Tipo: ${errorInfo.tipo}');
       print('  Categoria: ${errorInfo.categoria}');
@@ -197,7 +216,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
 
     // Analisar erro
     final analysis = parcsnService.analyzeError('[Sucesso-PARCSN]', 'Requisição efetuada com sucesso.');
-    print('Análise do erro:');
+    print('✅ Análise do erro:');
     print('  Código: ${analysis.codigo}');
     print('  Tipo: ${analysis.tipo}');
     print('  Categoria: ${analysis.categoria}');
@@ -206,19 +225,28 @@ Future<void> Parcsn(ApiClient apiClient) async {
 
     // Obter listas de erros
     final avisos = parcsnService.getAvisos();
-    print('Avisos disponíveis: ${avisos.length}');
+    print('✅ Avisos disponíveis: ${avisos.length}');
 
     final errosEntrada = parcsnService.getEntradasIncorretas();
-    print('Erros de entrada incorreta: ${errosEntrada.length}');
+    print('✅ Erros de entrada incorreta: ${errosEntrada.length}');
 
     final erros = parcsnService.getErros();
-    print('Erros gerais: ${erros.length}');
+    print('✅ Erros gerais: ${erros.length}');
 
     final sucessos = parcsnService.getSucessos();
-    print('Sucessos: ${sucessos.length}');
-
-    print('\n=== Exemplos PARCSN Concluídos ===');
+    print('✅ Sucessos: ${sucessos.length}');
   } catch (e) {
-    print('Erro nos exemplos PARCSN: $e');
+    print('❌ Erro no tratamento de erros: $e');
+    servicoOk = false;
   }
+
+  // Resumo final
+  print('\n=== RESUMO DO SERVIÇO PARCSN ===');
+  if (servicoOk) {
+    print('✅ Serviço PARCSN: OK');
+  } else {
+    print('❌ Serviço PARCSN: ERRO');
+  }
+
+  print('\n=== Exemplos PARCSN Concluídos ===');
 }
