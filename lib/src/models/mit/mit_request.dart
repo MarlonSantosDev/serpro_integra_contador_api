@@ -28,48 +28,35 @@ class EncerrarApuracaoRequest extends MitRequest {
   void _validarCampos() {
     // Validar se para apuração sem movimento não deve ter débitos
     if (dadosIniciais.semMovimento && debitos != null) {
-      throw ArgumentError(
-        'Para apuração sem movimento não é permitido informar débitos',
-      );
+      throw ArgumentError('Para apuração sem movimento não é permitido informar débitos');
     }
 
     // Validar se para apuração com movimento deve ter débitos
     if (!dadosIniciais.semMovimento && debitos == null) {
-      throw ArgumentError(
-        'Para apuração com movimento é obrigatório informar débitos',
-      );
+      throw ArgumentError('Para apuração com movimento é obrigatório informar débitos');
     }
 
     // Validar transmissaoImediata apenas para apuração sem movimento
     if (transmissaoImediata != null && !dadosIniciais.semMovimento) {
-      throw ArgumentError(
-        'Campo transmissaoImediata só deve ser enviado para apuração sem movimento',
-      );
+      throw ArgumentError('Campo transmissaoImediata só deve ser enviado para apuração sem movimento');
     }
 
     // Validar eventos especiais (máximo 5)
     if (listaEventosEspeciais != null && listaEventosEspeciais!.length > 5) {
-      throw ArgumentError(
-        'São permitidos o total de 5 eventos especiais por apuração',
-      );
+      throw ArgumentError('São permitidos o total de 5 eventos especiais por apuração');
     }
   }
 
   @override
   Map<String, dynamic> toDados() {
-    final dados = <String, dynamic>{
-      'PeriodoApuracao': periodoApuracao.toJson(),
-      'DadosIniciais': dadosIniciais.toJson(),
-    };
+    final dados = <String, dynamic>{'PeriodoApuracao': periodoApuracao.toJson(), 'DadosIniciais': dadosIniciais.toJson()};
 
     if (debitos != null) {
       dados['Debitos'] = debitos!.toJson();
     }
 
     if (listaEventosEspeciais != null && listaEventosEspeciais!.isNotEmpty) {
-      dados['ListaEventosEspeciais'] = listaEventosEspeciais!
-          .map((e) => e.toJson())
-          .toList();
+      dados['ListaEventosEspeciais'] = listaEventosEspeciais!.map((e) => e.toJson()).toList();
     }
 
     if (transmissaoImediata != null) {
@@ -118,11 +105,7 @@ class ListarApuracaoesRequest extends MitRequest {
   final int? mesApuracao;
   final int? situacaoApuracao;
 
-  ListarApuracaoesRequest({
-    required this.anoApuracao,
-    this.mesApuracao,
-    this.situacaoApuracao,
-  }) {
+  ListarApuracaoesRequest({required this.anoApuracao, this.mesApuracao, this.situacaoApuracao}) {
     _validarCampos();
   }
 
@@ -135,8 +118,7 @@ class ListarApuracaoesRequest extends MitRequest {
       throw ArgumentError('Mês da apuração deve estar entre 1 e 12');
     }
 
-    if (situacaoApuracao != null &&
-        (situacaoApuracao! < 1 || situacaoApuracao! > 4)) {
+    if (situacaoApuracao != null && (situacaoApuracao! < 1 || situacaoApuracao! > 4)) {
       throw ArgumentError('Situação da apuração deve estar entre 1 e 4');
     }
   }
@@ -198,28 +180,20 @@ class DadosIniciais {
 
   void _validarCampos() {
     // Se não é sem movimento e qualificação não é estado/município, tributação do lucro é obrigatória
-    if (!semMovimento &&
-        qualificacaoPj != QualificacaoPj.estadoMunicipio &&
-        tributacaoLucro == null) {
-      throw ArgumentError(
-        'Tributação do lucro é obrigatória quando não é sem movimento e qualificação não é estado/município',
-      );
+    if (!semMovimento && qualificacaoPj != QualificacaoPj.estadoMunicipio && tributacaoLucro == null) {
+      throw ArgumentError('Tributação do lucro é obrigatória quando não é sem movimento e qualificação não é estado/município');
     }
 
     // Se não é sem movimento, variações monetárias é obrigatória
     if (!semMovimento && variacoesMonetarias == null) {
-      throw ArgumentError(
-        'Variações monetárias é obrigatória quando não é sem movimento',
-      );
+      throw ArgumentError('Variações monetárias é obrigatória quando não é sem movimento');
     }
 
     // Regime PIS/COFINS tem regras específicas baseadas na qualificação e tributação
     if (!semMovimento && regimePisCofins == null) {
       final precisaRegime = _precisaRegimePisCofins();
       if (precisaRegime) {
-        throw ArgumentError(
-          'Regime PIS/COFINS é obrigatório para esta configuração',
-        );
+        throw ArgumentError('Regime PIS/COFINS é obrigatório para esta configuração');
       }
     }
   }
@@ -228,12 +202,7 @@ class DadosIniciais {
     // Regras específicas do MIT para quando regime PIS/COFINS é obrigatório
     if (qualificacaoPj == QualificacaoPj.autarquiaFundacaoPublica) return true;
     if (qualificacaoPj == QualificacaoPj.pjEmGeral &&
-        [
-          TributacaoLucro.realAnual,
-          TributacaoLucro.realTrimestral,
-          TributacaoLucro.imuneIrpj,
-          TributacaoLucro.isentaIrpj,
-        ].contains(tributacaoLucro))
+        [TributacaoLucro.realAnual, TributacaoLucro.realTrimestral, TributacaoLucro.imuneIrpj, TributacaoLucro.isentaIrpj].contains(tributacaoLucro))
       return true;
     if ([
           QualificacaoPj.sociedadeCorretoraSeguros,
@@ -247,9 +216,7 @@ class DadosIniciais {
           TributacaoLucro.optanteSimplesNacional,
         ].contains(tributacaoLucro))
       return true;
-    if (qualificacaoPj == QualificacaoPj.maisDeUmaQualificacao &&
-        tributacaoLucro != TributacaoLucro.optanteSimplesNacional)
-      return true;
+    if (qualificacaoPj == QualificacaoPj.maisDeUmaQualificacao && tributacaoLucro != TributacaoLucro.optanteSimplesNacional) return true;
 
     return false;
   }
@@ -284,19 +251,12 @@ class ResponsavelApuracao {
   final String? emailResponsavel;
   final RegistroCrc? registroCrc;
 
-  ResponsavelApuracao({
-    required this.cpfResponsavel,
-    this.telResponsavel,
-    this.emailResponsavel,
-    this.registroCrc,
-  }) {
+  ResponsavelApuracao({required this.cpfResponsavel, this.telResponsavel, this.emailResponsavel, this.registroCrc}) {
     if (cpfResponsavel.length != 11) {
       throw ArgumentError('CPF do responsável deve ter 11 dígitos');
     }
     if (emailResponsavel != null && emailResponsavel!.length > 60) {
-      throw ArgumentError(
-        'E-mail do responsável deve ter no máximo 60 caracteres',
-      );
+      throw ArgumentError('E-mail do responsável deve ter no máximo 60 caracteres');
     }
   }
 
@@ -348,9 +308,7 @@ class RegistroCrc {
       throw ArgumentError('UF do registro deve ter 2 caracteres');
     }
     if (numRegistro.length < 6 || numRegistro.length > 11) {
-      throw ArgumentError(
-        'Número do registro deve ter entre 6 e 11 caracteres',
-      );
+      throw ArgumentError('Número do registro deve ter entre 6 e 11 caracteres');
     }
   }
 
@@ -372,8 +330,7 @@ class Debitos {
   final ListaDebitosCideCombustiveis? cideCombustiveis;
   final ListaDebitosCideRemessas? cideRemessas;
   final ListaDebitosCondecine? condecine;
-  final ListaDebitosContribuicaoConcursoPrognosticos?
-  contribuicaoConcursoPrognosticos;
+  final ListaDebitosContribuicaoConcursoPrognosticos? contribuicaoConcursoPrognosticos;
   final ListaDebitosCpss? cpss;
   final ListaDebitosRetPagamentoUnificado? retPagamentoUnificado;
   final ListaDebitosContribuicoesDiversas? contribuicoesDiversas;
@@ -444,8 +401,7 @@ class Debitos {
     }
 
     if (contribuicaoConcursoPrognosticos != null) {
-      dados['ContribuicaoConcursoPrognosticos'] =
-          contribuicaoConcursoPrognosticos!.toJson();
+      dados['ContribuicaoConcursoPrognosticos'] = contribuicaoConcursoPrognosticos!.toJson();
     }
 
     if (cpss != null) {
@@ -470,11 +426,7 @@ class EventoEspecial {
   final int diaEvento;
   final TipoEventoEspecial tipoEvento;
 
-  EventoEspecial({
-    required this.idEvento,
-    required this.diaEvento,
-    required this.tipoEvento,
-  }) {
+  EventoEspecial({required this.idEvento, required this.diaEvento, required this.tipoEvento}) {
     if (idEvento < 1 || idEvento > 5) {
       throw ArgumentError('ID do evento deve estar entre 1 e 5');
     }
@@ -484,11 +436,7 @@ class EventoEspecial {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'IdEvento': idEvento,
-      'DiaEvento': diaEvento,
-      'TipoEvento': tipoEvento.codigo,
-    };
+    return {'IdEvento': idEvento, 'DiaEvento': diaEvento, 'TipoEvento': tipoEvento.codigo};
   }
 }
 
@@ -698,11 +646,7 @@ class Debito {
   }
 
   Map<String, dynamic> toJson() {
-    final dados = <String, dynamic>{
-      'IdDebito': idDebito,
-      'CodigoDebito': codigoDebito,
-      'ValorDebito': valorDebito,
-    };
+    final dados = <String, dynamic>{'IdDebito': idDebito, 'CodigoDebito': codigoDebito, 'ValorDebito': valorDebito};
 
     if (cnpjScp != null) {
       dados['CnpjScp'] = cnpjScp;
