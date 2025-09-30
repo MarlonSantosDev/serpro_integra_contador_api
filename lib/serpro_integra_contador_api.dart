@@ -16,6 +16,7 @@
 /// - **Eventos de Atualização**: Consulta de eventos de atualização
 /// - **Procurações**: Gestão de procurações eletrônicas
 /// - **Caixa Postal**: Consulta de mensagens da Receita Federal
+/// - **Regime de Apuração**: Gestão de opções pelo regime de apuração do Simples Nacional
 ///
 /// ## Características Principais:
 /// - Autenticação automática com certificados cliente (mTLS)
@@ -290,6 +291,17 @@ export 'src/models/eventos_atualizacao/solicitar_eventos_pj_response.dart';
 export 'src/models/eventos_atualizacao/obter_eventos_pj_request.dart';
 export 'src/models/eventos_atualizacao/obter_eventos_pj_response.dart';
 
+// Regime de Apuração Models
+export 'src/models/regime_apuracao/regime_apuracao_enums.dart';
+export 'src/models/regime_apuracao/efetuar_opcao_request.dart';
+export 'src/models/regime_apuracao/efetuar_opcao_response.dart' hide MensagemNegocio;
+export 'src/models/regime_apuracao/consultar_anos_request.dart';
+export 'src/models/regime_apuracao/consultar_anos_response.dart' hide MensagemNegocio;
+export 'src/models/regime_apuracao/consultar_opcao_request.dart';
+export 'src/models/regime_apuracao/consultar_opcao_response.dart' hide RegimeApuracao, MensagemNegocio;
+export 'src/models/regime_apuracao/consultar_resolucao_request.dart';
+export 'src/models/regime_apuracao/consultar_resolucao_response.dart' hide MensagemNegocio;
+
 // Services
 export 'src/services/ccmei_service.dart';
 export 'src/services/pgdasd_service.dart';
@@ -313,3 +325,4 @@ export 'src/services/defis_service.dart';
 export 'src/services/mit_service.dart';
 export 'src/services/eventos_atualizacao_service.dart';
 export 'src/services/autenticaprocurador_service.dart';
+export 'src/services/regime_apuracao_service.dart';
