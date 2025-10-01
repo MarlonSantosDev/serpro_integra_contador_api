@@ -10,7 +10,7 @@ Future<void> Mit(ApiClient apiClient) async {
   try {
     print('\n--- 1. Encerrar Apuração ---');
     final response = await mitService.criarApuracaoSemMovimento(
-      contribuinteNumero: '12345678000195',
+      contribuinteNumero: '00000000000000',
       mesApuracao: 12,
       anoApuracao: 2024,
       qualificacaoPj: QualificacaoPj.pjEmGeral,
@@ -37,8 +37,10 @@ Future<void> Mit(ApiClient apiClient) async {
   try {
     print('\n--- 2. Consultar Situação Encerramento (Sem Avisos DCTFWeb) ---');
     final response = await mitService.consultarSituacaoEncerramento(
-      contribuinteNumero: '12345678000195',
-      protocoloEncerramento: 'PROTOCOLO_EXEMPLO_123',
+      contribuinteNumero: '00000000000000',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+      protocoloEncerramento: 'AuYb4wuDp0GvCij3GDOAsA==',
     );
 
     print('✅ Status: ${response.status}');
@@ -61,8 +63,10 @@ Future<void> Mit(ApiClient apiClient) async {
   try {
     print('\n--- 3. Consultar Situação Encerramento (Com Avisos DCTFWeb) ---');
     final response = await mitService.consultarSituacaoEncerramento(
-      contribuinteNumero: '12345678000195',
-      protocoloEncerramento: 'PROTOCOLO_COM_AVISOS_123',
+      contribuinteNumero: '11111111111111',
+      contratanteNumero: '11111111111111',
+      autorPedidoDadosNumero: '11111111111111',
+      protocoloEncerramento: 'ZuAb4wuDp0GvCij3GDOAsA==',
     );
 
     print('✅ Status: ${response.status}');
@@ -92,7 +96,12 @@ Future<void> Mit(ApiClient apiClient) async {
   // 4. Consultar Apuração
   try {
     print('\n--- 4. Consultar Apuração ---');
-    final response = await mitService.consultarApuracao(contribuinteNumero: '12345678000195', idApuracao: 12345);
+    final response = await mitService.consultarApuracao(
+      contribuinteNumero: '00000000000000',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+      idApuracao: 0,
+    );
 
     print('✅ Status: ${response.status}');
     print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
@@ -129,7 +138,12 @@ Future<void> Mit(ApiClient apiClient) async {
   try {
     print('\n--- 5. Listar Apuração por Mês e Ano (Situação Encerrada) ---');
     // Listar apurações encerradas de dezembro/2024
-    final response = await mitService.consultarApuracaoesEncerradas(contribuinteNumero: '12345678000195', anoApuracao: 2024);
+    final response = await mitService.consultarApuracaoesEncerradas(
+      contribuinteNumero: '00000000000000',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+      anoApuracao: 2025,
+    );
 
     print('✅ Status: ${response.status}');
     print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');

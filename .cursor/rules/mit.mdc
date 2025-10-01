@@ -1,7 +1,6 @@
 ---
 alwaysApply: true
 ---
-
 # Documentação da API Integra Contador - DCTFWeb MIT
 
 ## Introdução ao Integra Contador e MIT
@@ -26,73 +25,11 @@ Para utilizar os serviços do Integra DCTFWeb, é necessário fazer uma chamada 
 
 A chamada da API Trial é apenas para demonstração. As APIs disponíveis e seus respectivos endpoints para consumo em produção são disponibilizadas na seção de Referência da API. No ambiente Trial, o parâmetro `jwt_token` no header não é obrigatório, mas é essencial em produção.
 
-### Obter indicador DTE
-
-| header | valor |
-| --- | --- |
-| jwt_token | vazio (não precisa preencher) |
-| autenticar_procurador_token | vazio (não precisa preencher) |
-
-**Exemplo de Body JSON:**
-
-```json
-{
-  "contratante": {
-    "numero": "11111111111111",
-    "tipo": 2
-  },
-  "autorPedidoDados": {
-    "numero": "11111111111111",
-    "tipo": 2
-  },
-  "contribuinte": {
-    "numero": "99999999999999",
-    "tipo": 2
-  },
-  "pedidoDados": {
-    "idSistema": "DTE",
-    "idServico": "CONSULTASITUACAODTE111",
-    "versaoSistema": "1.0",
-    "dados": ""
-  }
-}
-```
-
-**Exemplo de requisição Curl:**
-
-```bash
-curl -X 'POST' \
-  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
-  -H 'accept: text/plain' \
-  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "contratante": {
-      "numero": "11111111111111",
-      "tipo": 2
-    },
-    "autorPedidoDados": {
-      "numero": "11111111111111",
-      "tipo": 2
-    },
-    "contribuinte": {
-      "numero": "99999999999999",
-      "tipo": 2
-    },
-    "pedidoDados": {
-      "idSistema": "DTE",
-      "idServico": "CONSULTASITUACAODTE111",
-      "versaoSistema": "1.0",
-      "dados": ""
-    }
-  }'
-```
-
 ## Serviços da API Integra Contador - DCTFWeb MIT
 
 ### Encerrar Apuração
 
-Este serviço inicia o processo de encerramento de uma apuração no Módulo de Inclusão de Tributos do sistema DCTFWeb. A apuração não é enviada imediatamente à DCTFWeb, mas sim processada automaticamente em um momento posterior. Para consultar o status do envio, utilize o serviço `Consultar Situação Encerramento` com o `protocoloEncerramento` retornado.
+Este serviço inicia o processo de encerramento de uma apuração no Módulo de Inclusão de Tributos do sistema DCTFWeb. A apuração **NÃO** será enviada à DCTFWeb no momento da requisição. O envio será feito automaticamente em momento posterior. Utilize o serviço `Consultar Situação Encerramento` gratuitamente, passando o `protocoloEncerramento` devolvido neste serviço para consultar o status do envio.
 
 **Identificação no Pedido de Dados:**
 
@@ -101,62 +38,140 @@ Este serviço inicia o processo de encerramento de uma apuração no Módulo de 
 
 **Dados de Entrada (Objeto `dados`):**
 
+**Período da Apuração**
+
 | Campo | Nível | Tipo | Descrição | Obrigatório |
 | --- | --- | --- | --- | --- |
 | PeriodoApuracao | 1 | `Object` | Período da apuração. | S |
 | MesApuracao | 2 | `Number` | Número do mês da apuração. Exemplo: 4. | S |
 | AnoApuracao | 2 | `Number` | Ano da apuração no formato AAAA. Exemplo: 2025. | S |
+
+**Eventos Especiais**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
 | ListaEventosEspeciais | 1 | `Array` | Lista dos eventos especiais da Apuração, informados em ordem cronológica e sem repetição do dia. Quantidade máxima: 5. | N |
 | (sem nome) | 2 | `Object` | Agrupa os dados do evento especial (pode ocorrer mais de uma vez). | Sim, se houver o array `ListaEventosEspeciais`. |
 | IdEvento | 3 | `Number` | Número de identificação do evento especial com 1 dígito. Número único e sequencial: de 1 a 5. Exemplo: 1. | Sim, para cada ocorrência de objeto em `ListaEventosEspeciais`. |
 | DiaEvento | 3 | `Number` | Dia do evento especial. Exemplo: 13. | Sim, para cada ocorrência de objeto em `ListaEventosEspeciais`. |
 | TipoEvento | 3 | `Number` | Tipo do evento especial, sendo: **1:** Extinção; **2:** Fusão; **3:** Cisão Total; **4:** Cisão Parcial; **5:** Incorporação (incorporada); **6:** Incorporação (incorporadora). | Sim, para cada ocorrência de objeto em `ListaEventosEspeciais`. |
+
+**Dados Iniciais**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
 | DadosIniciais | 1 | `Object` | Dados iniciais da apuração. | S |
 | SemMovimento | 2 | `Boolean` | Indicador de apuração sem movimento, sendo: **false**: Não; **true**: Sim. | S |
-| QualificacaoPj | 2 | `Number` | Qualificação da Pessoa Jurídica (códigos de 1 a 12). | S |
-| TributacaoLucro | 2 | `Number` | Forma de Tributação do Lucro (códigos de 1 a 7). | Sim, se `SemMovimento` for `false` e se `QualificacaoPj` for diferente de 11. |
-| VariacoesMonetarias | 2 | `Number` | Critério de reconhecimento das variações monetárias (códigos de 1 a 3). | Sim, se `SemMovimento` for `false`. |
-| RegimePisCofins | 2 | `Number` | Regime de apuração do PIS/Pasep e/ou da Cofins (códigos de 1 a 4). | Sim, se `SemMovimento` for `false` e outras condições específicas. |
+| QualificacaoPj | 2 | `Number` | Qualificação da Pessoa Jurídica, sendo: **1:** PJ em geral; **2:** Agência de Fomento, Banco ou outra PJ de que trata o § 1° do art. 22 da Lei n° 8.212/1991; **3:** Cooperativa de Crédito; **4:** Sociedade Corretora de Seguros; **5:** Sociedade Seguradora e de Capitalização ou Entidade Aberta de Previdência Complementar com fins lucrativos; **6:** Entidade Fechada de Previdência Complementar ou Entidade Aberta de Previdência Complementar sem fins lucrativos; **7:** Sociedade Cooperativa; **8:** Sociedade Cooperativa de Produção Agropecuária ou de Consumo; **9:** Autarquia ou Fundação Pública; **10:** Empresa Pública, Sociedade de Economia Mista ou PJ de que trata o inc. III do art. 34 da Lei n° 10.833/2003; **11:** Estado, Distrito Federal, Município ou Órgão Público da Administração Direta; **12:** Mais de uma qualificação durante o mês. | S |
+| TributacaoLucro | 2 | `Number` | Forma de Tributação do Lucro, sendo: **1:** Real Anual; **2:** Real Trimestral; **3:** Presumido; **4:** Arbitrado; **5:** Imune do IRPJ; **6:** Isenta do IRPJ; **7:** Optante pelo Simples Nacional. | Sim, se `SemMovimento` for `false` e se `QualificacaoPj` for diferente de 11. |
+| VariacoesMonetarias | 2 | `Number` | Critério de reconhecimento das variações monetárias, sendo: **1:** Regime de Caixa; **2:** Regime de Competência; **3:** Regime de Caixa - Elevada oscilação da taxa de câmbio. | Sim, se `SemMovimento` for `false`. |
+| RegimePisCofins | 2 | `Number` | Regime de apuração do PIS/Pasep e/ou da Cofins, sendo: **1:** Não-cumulativa; **2:** Cumulativa; **3:** Não-cumulativa e Cumulativa; **4:** Não se aplica. | Sim, se `SemMovimento` for `false` e (se `QualificacaoPj` for `9`) ou (se `QualificacaoPj` for `1` e se `TributacaoLucro` for `1, 2, 5 ou 6`) ou (se `QualificacaoPj` for `4, 8 ou 10` e se `TributacaoLucro` for diferente de `3, 4, 5 e 7`) ou (se `QualificacaoPj` for `12` e se `TributacaoLucro` for diferente de `7`). |
 | ResponsavelApuracao | 2 | `Object` | Dados do responsável pelo preenchimento da apuração. | S |
-| CpfResponsavel | 3 | `String (11)` | CPF do responsável com 11 dígitos. | S |
+| CpfResponsavel | 3 | `String (11)` | CPF do responsável com 11 dígitos. Exemplo: "12345678900". | S |
 | TelResponsavel | 3 | `Object` | Dados do telefone/celular do responsável. | N |
-| Ddd | 4 | `String (2)` | DDD do telefone/celular do responsável. | Sim, se houver `TelResponsavel`. |
-| NumTelefone | 4 | `String (9)` | Número do telefone/celular do responsável. | Sim, se houver `TelResponsavel`. |
-| EmailResponsavel | 3 | `String (60)` | E-mail do responsável. | N |
+| Ddd | 4 | `String (2)` | DDD do telefone/celular do responsável com 2 dígitos. Exemplo: "31". | Sim, se houver o objeto `TelResponsavel`. |
+| NumTelefone | 4 | `String (9)` | Número do telefone/celular do responsável com 8 ou 9 dígitos. Exemplo: "999999999". | Sim, se houver o objeto `TelResponsavel`. |
+| EmailResponsavel | 3 | `String (60)` | E-mail do responsável. Exemplo: "responsavel@mail.com". | N |
 | RegistroCrc | 3 | `Object` | Dados do registro profissional do responsável no Conselho Regional de Contabilidade. | N |
-| UfRegistro | 4 | `String (2)` | Sigla da unidade federativa do registro. | Sim, se houver `RegistroCrc`. |
-| NumRegistro | 4 | `String (11)` | Número do registro profissional do responsável. | Sim, se houver `RegistroCrc`. |
-| Debitos | 1 | `Object` | Dados dos débitos da Apuração, discriminados por grupo de tributo. | Sim, se `SemMovimento` for `false`. |
-| BalancoLucroReal | 2 | `Boolean` | Indicador de que a PJ levantou balanço/balancete de suspensão ou redução no mês. | Sim, se `TributacaoLucro` for 1 e outras condições. |
-| Irpj | 2 | `Object` | Dados dos débitos do grupo IRPJ. | Não, mas pode existir se houver `Debitos` e `QualificacaoPj` diferente de 11. |
-| Csll | 2 | `Object` | Dados dos débitos do grupo CSLL. | Não, mas pode existir se houver `Debitos`, `QualificacaoPj` diferente de 11 e `TributacaoLucro` diferente de 7. |
-| Irrf | 2 | `Object` | Dados dos débitos do grupo IRRF. | Não, mas pode existir se houver `Debitos`, `QualificacaoPj` diferente de 9 e 11 e `TributacaoLucro` diferente de 7. |
-| Ipi | 2 | `Object` | Dados dos débitos do grupo IPI. | Não, mas pode existir se houver `Debitos`, `QualificacaoPj` diferente de 2, 3, 4, 5 e 6 e `TributacaoLucro` diferente de 7. |
-| Iof | 2 | `Object` | Dados dos débitos do grupo IOF. | Não, mas pode existir se houver `Debitos`. |
-| PisPasep | 2 | `Object` | Dados dos débitos do grupo PIS/PASEP. | Não, mas pode existir se houver `Debitos`. |
-| Cofins | 2 | `Object` | Dados dos débitos do grupo COFINS. | Não, mas pode existir se houver `Debitos`. |
-| ContribuicoesDiversas | 2 | `Object` | Dados dos débitos do grupo CONTRIBUIÇÕES DIVERSAS. | Não, mas pode existir se houver `Debitos`. |
-| Cpss | 2 | `Object` | Dados dos débitos do grupo CPSS. | Não, mas pode existir se houver `Debitos`, `QualificacaoPj` for 2, 9, 11 ou 12 e `TributacaoLucro` diferente de 7. |
-| Cprb | 2 | `Object` | Dados dos débitos do grupo CPRB. | Não, mas pode existir se houver `Debitos`, `QualificacaoPj` diferente de 11 e `TributacaoLucro` diferente de 7. |
-| OutrasReceitas | 2 | `Object` | Dados dos débitos do grupo OUTRAS RECEITAS. | Não, mas pode existir se houver `Debitos`. |
+| UfRegistro | 4 | `String (2)` | Sigla da unidade federativa do registro provisório ou definitivo originário do responsável, com letras maiúsculas. Exemplo: "SP". | Sim, se houver o objeto `RegistroCrc`. |
+| NumRegistro | 4 | `String (11)` | Número do registro profissional do responsável, podendo incluir sufixo no caso de registro transferido ou secundário, com tamanho de 6 a 11 dígitos. Exemplos: "123456", "SP123456", "123456O3", "123456TMG", "SP123456O3" e "123456O3TMG". | Sim, se houver o objeto `RegistroCrc`. |
+
+**Débitos**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
+| Debitos | 1 | `Object` | Dados dos débitos da Apuração, discriminados por grupo de tributo, os quais devem ser informados na ordem de apresentação desta tabela. Na Apuração com movimento, deve ser informado ao menos um débito. | Sim, se `SemMovimento` for `false`. |
+| BalancoLucroReal | 2 | `Boolean` | Indicador de que a PJ levantou balanço/balancete de suspensão ou redução no mês, sendo: **false**: Não; **true**: Sim. | Sim, se `TributacaoLucro` for 1, se não houver objeto na `ListaEventosEspeciais` com `TipoEvento` igual a 1, 2, 3 ou 5 e se não houver objeto na `ListaEventosEspeciais` com `TipoEvento` igual a 4 ou 6 e `DiaEvento` igual ao último dia do mês. |
+| Irpj | 2 | `Object` | Dados dos débitos do grupo IRPJ. | Não, mas pode existir somente se houver o objeto `Debitos` e se `QualificacaoPj` for diferente de `11`. |
+| Csll | 2 | `Object` | Dados dos débitos do grupo CSLL. | Não, mas pode existir somente se houver o objeto `Debitos`, se `QualificacaoPj` for diferente de `11` e se `TributacaoLucro` for diferente de `7`. |
+| Irrf | 2 | `Object` | Dados dos débitos do grupo IRRF. | Não, mas pode existir somente se houver o objeto `Debitos`, se `QualificacaoPj` for diferente de `9 e 11` e se `TributacaoLucro` for diferente de 7. |
+| Ipi | 2 | `Object` | Dados dos débitos do grupo IPI. | Não, mas pode existir somente se houver o objeto `Debitos`, se `QualificacaoPj` for diferente de `2, 3, 4, 5 e 6` e se `TributacaoLucro` for diferente de 7. |
+| Iof | 2 | `Object` | Dados dos débitos do grupo IOF. | Não, mas pode existir somente se houver o objeto `Debitos`. |
+| PisPasep | 2 | `Object` | Dados dos débitos do grupo PIS/PASEP. | Não, mas pode existir somente se houver o objeto `Debitos`. |
+| Cofins | 2 | `Object` | Dados dos débitos do grupo COFINS. | Não, mas pode existir somente se houver o objeto `Debitos`. |
+| ContribuicoesDiversas | 2 | `Object` | Dados dos débitos do grupo CONTRIBUIÇÕES DIVERSAS. | Não, mas pode existir somente se houver o objeto `Debitos`. |
+| Cpss | 2 | `Object` | Dados dos débitos do grupo CPSS. | Não, mas pode existir somente se houver o objeto `Debitos`, se `QualificacaoPj` for `2, 9, 11 ou 12` e se `TributacaoLucro` for diferente de 7. |
+| Cprb | 2 | `Object` | Dados dos débitos do grupo CPRB. | Não, mas pode existir somente se houver o objeto `Debitos`, se `QualificacaoPj` for diferente de `11` e se `TributacaoLucro` for diferente de 7. |
+| OutrasReceitas | 2 | `Object` | Dados dos débitos do grupo OUTRAS RECEITAS. | Não, mas pode existir somente se houver o objeto `Debitos`. |
+
+**Créditos**
+
+| Campo | Nível | Tipo | Descrição | Obrigatório |
+| --- | --- | --- | --- | --- |
 | Creditos | 1 | `Object` | Dados dos créditos da Apuração. | N |
-| CreditosIrpj | 2 | `Object` | Dados dos créditos do grupo IRPJ. | Não, mas pode existir se houver `Creditos` e `QualificacaoPj` diferente de 11. |
-| CreditosCsll | 2 | `Object` | Dados dos créditos do grupo CSLL. | Não, mas pode existir se houver `Creditos`, `QualificacaoPj` diferente de 11 e `TributacaoLucro` diferente de 7. |
-| CreditosIrrf | 2 | `Object` | Dados dos créditos do grupo IRRF. | Não, mas pode existir se houver `Creditos`, `QualificacaoPj` diferente de 9 e 11 e `TributacaoLucro` diferente de 7. |
-| CreditosIpi | 2 | `Object` | Dados dos créditos do grupo IPI. | Não, mas pode existir se houver `Creditos`, `QualificacaoPj` diferente de 2, 3, 4, 5 e 6 e `TributacaoLucro` diferente de 7. |
-| CreditosIof | 2 | `Object` | Dados dos créditos do grupo IOF. | Não, mas pode existir se houver `Creditos`. |
-| CreditosPisPasep | 2 | `Object` | Dados dos créditos do grupo PIS/PASEP. | Não, mas pode existir se houver `Creditos`. |
-| CreditosCofins | 2 | `Object` | Dados dos créditos do grupo COFINS. | Não, mas pode existir se houver `Creditos`. |
-| CreditosContribuicoesDiversas | 2 | `Object` | Dados dos créditos do grupo CONTRIBUIÇÕES DIVERSAS. | Não, mas pode existir se houver `Creditos`. |
-| CreditosCpss | 2 | `Object` | Dados dos créditos do grupo CPSS. | Não, mas pode existir se houver `Creditos`, `QualificacaoPj` for 2, 9, 11 ou 12 e `TributacaoLucro` diferente de 7. |
-| CreditosCprb | 2 | `Object` | Dados dos créditos do grupo CPRB. | Não, mas pode existir se houver `Creditos`, `QualificacaoPj` diferente de 11 e `TributacaoLucro` diferente de 7. |
-| CreditosOutrasReceitas | 2 | `Object` | Dados dos créditos do grupo OUTRAS RECEITAS. | Não, mas pode existir se houver `Creditos`. |
+| CreditosIrpj | 2 | `Object` | Dados dos créditos do grupo IRPJ. | Não, mas pode existir somente se houver o objeto `Creditos` e se `QualificacaoPj` for diferente de `11`. |
+| CreditosCsll | 2 | `Object` | Dados dos créditos do grupo CSLL. | Não, mas pode existir somente se houver o objeto `Creditos`, se `QualificacaoPj` for diferente de `11` e se `TributacaoLucro` for diferente de `7`. |
+| CreditosIrrf | 2 | `Object` | Dados dos créditos do grupo IRRF. | Não, mas pode existir somente se houver o objeto `Creditos`, se `QualificacaoPj` for diferente de `9 e 11` e se `TributacaoLucro` for diferente de `7`. |
+| CreditosIpi | 2 | `Object` | Dados dos créditos do grupo IPI. | Não, mas pode existir somente se houver o objeto `Creditos`, se `QualificacaoPj` for diferente de `2, 3, 4, 5 e 6` e se `TributacaoLucro` for diferente de `7`. |
+| CreditosIof | 2 | `Object` | Dados dos créditos do grupo IOF. | Não, mas pode existir somente se houver o objeto `Creditos`. |
+| CreditosPisPasep | 2 | `Object` | Dados dos créditos do grupo PIS/PASEP. | Não, mas pode existir somente se houver o objeto `Creditos`. |
+| CreditosCofins | 2 | `Object` | Dados dos créditos do grupo COFINS. | Não, mas pode existir somente se houver o objeto `Creditos`. |
+| CreditosContribuicoesDiversas | 2 | `Object` | Dados dos créditos do grupo CONTRIBUIÇÕES DIVERSAS. | Não, mas pode existir somente se houver o objeto `Creditos`. |
+| CreditosCpss | 2 | `Object` | Dados dos créditos do grupo CPSS. | Não, mas pode existir somente se houver o objeto `Creditos`, se `QualificacaoPj` for `2, 9, 11 ou 12` e se `TributacaoLucro` for diferente de `7`. |
+| CreditosCprb | 2 | `Object` | Dados dos créditos do grupo CPRB. | Não, mas pode existir somente se houver o objeto `Creditos`, se `QualificacaoPj` for diferente de `11` e se `TributacaoLucro` for diferente de `7`. |
+| CreditosOutrasReceitas | 2 | `Object` | Dados dos créditos do grupo OUTRAS RECEITAS. | Não, mas pode existir somente se houver o objeto `Creditos`. |
 
 **Dados de Saída:**
 
 | Campo | Nível | Tipo | Descrição | Obrigatório |
 | --- | --- | --- | --- | --- |
 | protocoloEncerramento | 1 | `String (36)` | Protocolo de encerramento da apuração. | S |
+
+**Exemplo de Body JSON de entrada:**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "MIT",
+    "idServico": "ENCAPURACAO314",
+    "versaoSistema": "1.0",
+    "dados": "{\"PeriodoApuracao\":{\"MesApuracao\":1,\"AnoApuracao\":2025},\"DadosIniciais\":{\"SemMovimento\":false,\"QualificacaoPj\":1,\"TributacaoLucro\":2,\"VariacoesMonetarias\":1,\"RegimePisCofins\":1,\"ResponsavelApuracao\":{\"CpfResponsavel\":\"00000000000\"}},\"Debitos\":{\"Irpj\":{\"ListaDebitos\":[{\"IdDebito\":1,\"CodigoDebito\":\"236208\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":100.00}]},\"Csll\":{\"ListaDebitos\":[{\"IdDebito\":2,\"CodigoDebito\":\"248408\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":220.00}]},\"PisPasep\":{\"ListaDebitos\":[{\"IdDebito\":3,\"CodigoDebito\":\"067904\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":300.00}]},\"Cofins\":{\"ListaDebitos\":[{\"IdDebito\":4,\"CodigoDebito\":\"092902\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":444.00}]}}}"
+  }
+}
+```
+
+**Exemplo de requisição Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Declarar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "contratante": {
+      "numero": "00000000000000",
+      "tipo": 2
+    },
+    "autorPedidoDados": {
+      "numero": "00000000000000",
+      "tipo": 2
+    },
+    "contribuinte": {
+      "numero": "00000000000000",
+      "tipo": 2
+    },
+    "pedidoDados": {
+      "idSistema": "MIT",
+      "idServico": "ENCAPURACAO314",
+      "versaoSistema": "1.0",
+      "dados": "{\"PeriodoApuracao\":{\"MesApuracao\":1,\"AnoApuracao\":2025},\"DadosIniciais\":{\"SemMovimento\":false,\"QualificacaoPj\":1,\"TributacaoLucro\":2,\"VariacoesMonetarias\":1,\"RegimePisCofins\":1,\"ResponsavelApuracao\":{\"CpfResponsavel\":\"00000000000\"}},\"Debitos\":{\"Irpj\":{\"ListaDebitos\":[{\"IdDebito\":1,\"CodigoDebito\":\"236208\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":100.00}]},\"Csll\":{\"ListaDebitos\":[{\"IdDebito\":2,\"CodigoDebito\":\"248408\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":220.00}]},\"PisPasep\":{\"ListaDebitos\":[{\"IdDebito\":3,\"CodigoDebito\":\"067904\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":300.00}]},\"Cofins\":{\"ListaDebitos\":[{\"IdDebito\":4,\"CodigoDebito\":\"092902\",\"CnpjScp\":\"88888888888888\",\"ValorDebito\":444.00}]}}}"
+    }
+  }
+'
+```
 
 ### Consultar Situação Encerramento
 
