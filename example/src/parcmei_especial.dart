@@ -32,6 +32,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 2. Consultar parcelamento específico
   try {
@@ -88,6 +89,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
     print('❌ Erro na consulta do parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 3. Consultar parcelas disponíveis para impressão
   try {
@@ -118,6 +120,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelas disponíveis: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 4. Consultar detalhes de pagamento
   try {
@@ -172,6 +175,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
     print('❌ Erro na consulta dos detalhes: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 5. Emitir DAS
   try {
@@ -207,109 +211,6 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
     }
   } catch (e) {
     print('❌ Erro na emissão do DAS: $e');
-    servicoOk = false;
-  }
-
-  // 6. Testando validações
-  try {
-    print('\n6. Testando validações...');
-
-    // Validar número de parcelamento
-    final validacaoParcelamento = parcmeiEspecialService.validarNumeroParcelamento(9001);
-    print('✅ Validação parcelamento 9001: $validacaoParcelamento');
-
-    final validacaoParcelamentoInvalido = parcmeiEspecialService.validarNumeroParcelamento(-1);
-    print('✅ Validação parcelamento -1: $validacaoParcelamentoInvalido');
-
-    // Validar ano/mês da parcela
-    final validacaoAnoMes = parcmeiEspecialService.validarAnoMesParcela(202111);
-    print('✅ Validação ano/mês 202111: $validacaoAnoMes');
-
-    final validacaoAnoMesInvalido = parcmeiEspecialService.validarAnoMesParcela(123);
-    print('✅ Validação ano/mês 123: $validacaoAnoMesInvalido');
-
-    // Validar parcela para emissão
-    final validacaoParcela = parcmeiEspecialService.validarParcelaParaEmitir(202107);
-    print('✅ Validação parcela 202107: $validacaoParcela');
-
-    // Validar CNPJ
-    final validacaoCnpj = parcmeiEspecialService.validarCnpjContribuinte('12345678000195');
-    print('✅ Validação CNPJ válido: $validacaoCnpj');
-
-    final validacaoCnpjInvalido = parcmeiEspecialService.validarCnpjContribuinte('123');
-    print('✅ Validação CNPJ inválido: $validacaoCnpjInvalido');
-
-    // Validar tipo de contribuinte
-    final validacaoTipo = parcmeiEspecialService.validarTipoContribuinte(2);
-    print('✅ Validação tipo 2: $validacaoTipo');
-
-    final validacaoTipoInvalido = parcmeiEspecialService.validarTipoContribuinte(1);
-    print('✅ Validação tipo 1: $validacaoTipoInvalido');
-  } catch (e) {
-    print('❌ Erro nas validações: $e');
-    servicoOk = false;
-  }
-
-  // 7. Testando análise de erros
-  try {
-    print('\n7. Testando análise de erros...');
-
-    // Verificar se erro é conhecido
-    final erroConhecido = parcmeiEspecialService.isKnownError('[Sucesso-PARCMEI-ESP]');
-    print('✅ Erro conhecido: $erroConhecido');
-
-    // Obter informações sobre erro
-    final errorInfo = parcmeiEspecialService.getErrorInfo('[Sucesso-PARCMEI-ESP]');
-    if (errorInfo != null) {
-      print('✅ Informações do erro:');
-      print('  Código: ${errorInfo.codigo}');
-      print('  Tipo: ${errorInfo.tipo}');
-      print('  Categoria: ${errorInfo.categoria}');
-      print('  Detalhes: ${errorInfo.detalhes}');
-      print('  Solução: ${errorInfo.solucao}');
-      print('  Crítico: ${errorInfo.isCritico}');
-      print('  Validação: ${errorInfo.isValidacao}');
-      print('  Aviso: ${errorInfo.isAviso}');
-      print('  Sucesso: ${errorInfo.isSucesso}');
-      print('  Requer ação: ${errorInfo.requerAcaoUsuario}');
-      print('  Temporário: ${errorInfo.isTemporario}');
-    }
-
-    // Analisar erro
-    final analysis = parcmeiEspecialService.analyzeError('[Sucesso-PARCMEI-ESP]', 'Requisição efetuada com sucesso.');
-    print('✅ Análise do erro:');
-    print('  Código: ${analysis.codigo}');
-    print('  Mensagem: ${analysis.mensagem}');
-    print('  Tipo: ${analysis.tipo}');
-    print('  Categoria: ${analysis.categoria}');
-    print('  Solução: ${analysis.solucao}');
-    print('  Detalhes: ${analysis.detalhes}');
-    print('  Crítico: ${analysis.isCritico}');
-    print('  Validação: ${analysis.isValidacao}');
-    print('  Aviso: ${analysis.isAviso}');
-    print('  Sucesso: ${analysis.isSucesso}');
-    print('  Requer ação: ${analysis.requerAcaoUsuario}');
-    print('  Temporário: ${analysis.isTemporario}');
-    print('  Pode ser ignorado: ${analysis.podeSerIgnorado}');
-    print('  Deve ser reportado: ${analysis.deveSerReportado}');
-    print('  Prioridade: ${analysis.prioridade}');
-    print('  Cor: ${analysis.cor}');
-    print('  Ícone: ${analysis.icone}');
-
-    // Obter listas de erros
-    final avisos = parcmeiEspecialService.getAvisos();
-    print('✅ Avisos disponíveis: ${avisos.length}');
-
-    final errosEntrada = parcmeiEspecialService.getEntradasIncorretas();
-    print('✅ Erros de entrada incorreta: ${errosEntrada.length}');
-
-    final erros = parcmeiEspecialService.getErros();
-    print('✅ Erros gerais: ${erros.length}');
-
-    final sucessos = parcmeiEspecialService.getSucessos();
-    print('✅ Sucessos: ${sucessos.length}');
-  } catch (e) {
-    print('❌ Erro na análise de erros: $e');
     servicoOk = false;
   }
 

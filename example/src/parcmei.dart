@@ -37,6 +37,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 2. Consultar Parcelamento Específico
   try {
@@ -79,6 +80,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelamento específico: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 3. Consultar Parcelas Disponíveis
   try {
@@ -120,6 +122,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelas disponíveis: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 4. Consultar Detalhes de Pagamento
   try {
@@ -176,6 +179,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('❌ Erro ao consultar detalhes de pagamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 5. Emitir DAS
   try {
