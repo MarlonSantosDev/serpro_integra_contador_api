@@ -25,7 +25,7 @@ void main() async {
   //await EventosAtualizacao(apiClient);
   await Mit(apiClient);
 
-  //await PagtoWeb(apiClient);
+  // await PagtoWeb(apiClient);
   // await ParcmeiEspecial(apiClient);
   // await Parcmei(apiClient);
   // await ParcsnEspecial(apiClient);
@@ -38,6 +38,6 @@ void main() async {
   // await Regime(apiClient);
   // await Relpmei(apiClient);
   // await Relpsn(apiClient);
-  // await Sicalc(apiClient);
-  //await Sitfis(apiClient);
+  // await Sicalc(apiClient); (Refazer arquivo mdc e serviço completo)
+  // await Sitfis(apiClient);
 }

@@ -77,7 +77,6 @@ export 'src/models/base/tipo_documento.dart';
 export 'src/util/document_utils.dart';
 export 'src/util/formatter_utils.dart';
 export 'src/util/dctfweb_utils.dart';
-export 'src/util/sicalc_utils.dart';
 export 'src/util/assinatura_digital_utils.dart';
 export 'src/util/cache_utils.dart';
 export 'src/util/xml_utils.dart';
@@ -255,15 +254,6 @@ export 'src/models/relpmei/relpmei_request.dart';
 export 'src/models/relpmei/relpmei_response.dart'
     hide ConsultarPedidosResponse, ConsultarParcelamentoResponse, ConsultarDetalhesPagamentoResponse, EmitirDasResponse, Parcelamento, Parcela;
 
-// Sicalc Models
-export 'src/models/sicalc/sicalc_response.dart';
-export 'src/models/sicalc/consolidar_darf_request.dart';
-export 'src/models/sicalc/consolidar_darf_response.dart';
-export 'src/models/sicalc/consultar_receita_request.dart';
-export 'src/models/sicalc/consultar_receita_response.dart';
-export 'src/models/sicalc/gerar_codigo_barras_request.dart';
-export 'src/models/sicalc/gerar_codigo_barras_response.dart';
-
 // PAGTOWEB Models
 export 'src/models/pagtoweb/pagtoweb_request.dart';
 export 'src/models/pagtoweb/pagtoweb_response.dart';
@@ -323,7 +313,6 @@ export 'src/services/parcmei_service.dart';
 export 'src/services/parcmei_especial_service.dart';
 export 'src/services/pertmei_service.dart';
 export 'src/services/relpmei_service.dart';
-export 'src/services/sicalc_service.dart';
 export 'src/services/pagtoweb_service.dart';
 export 'src/services/sitfis_service.dart';
 export 'src/services/defis_service.dart';

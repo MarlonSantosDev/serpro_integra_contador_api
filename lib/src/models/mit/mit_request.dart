@@ -12,6 +12,7 @@ class EncerrarApuracaoRequest extends MitRequest {
   final PeriodoApuracao periodoApuracao;
   final DadosIniciais dadosIniciais;
   final Debitos? debitos;
+  final Creditos? creditos;
   final List<EventoEspecial>? listaEventosEspeciais;
   final bool? transmissaoImediata;
 
@@ -19,6 +20,7 @@ class EncerrarApuracaoRequest extends MitRequest {
     required this.periodoApuracao,
     required this.dadosIniciais,
     this.debitos,
+    this.creditos,
     this.listaEventosEspeciais,
     this.transmissaoImediata,
   }) {
@@ -45,6 +47,17 @@ class EncerrarApuracaoRequest extends MitRequest {
     if (listaEventosEspeciais != null && listaEventosEspeciais!.length > 5) {
       throw ArgumentError('São permitidos o total de 5 eventos especiais por apuração');
     }
+
+    // Validar sequência dos eventos especiais
+    if (listaEventosEspeciais != null) {
+      final ids = listaEventosEspeciais!.map((e) => e.idEvento).toList();
+      ids.sort();
+      for (int i = 0; i < ids.length; i++) {
+        if (ids[i] != i + 1) {
+          throw ArgumentError('Os valores de IdEvento devem ser uma sequência numérica começando em 1');
+        }
+      }
+    }
   }
 
   @override
@@ -53,6 +66,10 @@ class EncerrarApuracaoRequest extends MitRequest {
 
     if (debitos != null) {
       dados['Debitos'] = debitos!.toJson();
+    }
+
+    if (creditos != null) {
+      dados['Creditos'] = creditos!.toJson();
     }
 
     if (listaEventosEspeciais != null && listaEventosEspeciais!.isNotEmpty) {
@@ -201,9 +218,17 @@ class DadosIniciais {
   bool _precisaRegimePisCofins() {
     // Regras específicas do MIT para quando regime PIS/COFINS é obrigatório
     if (qualificacaoPj == QualificacaoPj.autarquiaFundacaoPublica) return true;
+
     if (qualificacaoPj == QualificacaoPj.pjEmGeral &&
-        [TributacaoLucro.realAnual, TributacaoLucro.realTrimestral, TributacaoLucro.imuneIrpj, TributacaoLucro.isentaIrpj].contains(tributacaoLucro))
+        [
+          TributacaoLucro.realAnual,
+          TributacaoLucro.realTrimestral,
+          TributacaoLucro.imuneIrpj,
+          TributacaoLucro.isentaIrpj,
+        ].contains(tributacaoLucro)) {
       return true;
+    }
+
     if ([
           QualificacaoPj.sociedadeCorretoraSeguros,
           QualificacaoPj.sociedadeCooperativaAgropecuaria,
@@ -214,9 +239,13 @@ class DadosIniciais {
           TributacaoLucro.arbitrado,
           TributacaoLucro.imuneIrpj,
           TributacaoLucro.optanteSimplesNacional,
-        ].contains(tributacaoLucro))
+        ].contains(tributacaoLucro)) {
       return true;
-    if (qualificacaoPj == QualificacaoPj.maisDeUmaQualificacao && tributacaoLucro != TributacaoLucro.optanteSimplesNacional) return true;
+    }
+
+    if (qualificacaoPj == QualificacaoPj.maisDeUmaQualificacao && tributacaoLucro != TributacaoLucro.optanteSimplesNacional) {
+      return true;
+    }
 
     return false;
   }
@@ -252,13 +281,12 @@ class ResponsavelApuracao {
   final RegistroCrc? registroCrc;
 
   ResponsavelApuracao({required this.cpfResponsavel, this.telResponsavel, this.emailResponsavel, this.registroCrc}) {
-    /*
-    if (cpfResponsavel.length != 11) {
-      throw ArgumentError('CPF do responsável deve ter 11 dígitos');
+    if (cpfResponsavel.isEmpty) {
+      throw ArgumentError('CPF do responsável é obrigatório');
     }
     if (emailResponsavel != null && emailResponsavel!.length > 60) {
       throw ArgumentError('E-mail do responsável deve ter no máximo 60 caracteres');
-    }*/
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -415,6 +443,103 @@ class Debitos {
 
     if (contribuicoesDiversas != null) {
       dados['ContribuicoesDiversas'] = contribuicoesDiversas!.toJson();
+    }
+
+    return dados;
+  }
+}
+
+/// Créditos da apuração
+class Creditos {
+  final ListaCreditosIrpj? creditosIrpj;
+  final ListaCreditosCsll? creditosCsll;
+  final ListaCreditosPisPasep? creditosPisPasep;
+  final ListaCreditosCofins? creditosCofins;
+  final ListaCreditosIrrf? creditosIrrf;
+  final ListaCreditosIpi? creditosIpi;
+  final ListaCreditosIof? creditosIof;
+  final ListaCreditosCideCombustiveis? creditosCideCombustiveis;
+  final ListaCreditosCideRemessas? creditosCideRemessas;
+  final ListaCreditosCondecine? creditosCondecine;
+  final ListaCreditosContribuicaoConcursoPrognosticos? creditosContribuicaoConcursoPrognosticos;
+  final ListaCreditosCpss? creditosCpss;
+  final ListaCreditosRetPagamentoUnificado? creditosRetPagamentoUnificado;
+  final ListaCreditosContribuicoesDiversas? creditosContribuicoesDiversas;
+
+  Creditos({
+    this.creditosIrpj,
+    this.creditosCsll,
+    this.creditosPisPasep,
+    this.creditosCofins,
+    this.creditosIrrf,
+    this.creditosIpi,
+    this.creditosIof,
+    this.creditosCideCombustiveis,
+    this.creditosCideRemessas,
+    this.creditosCondecine,
+    this.creditosContribuicaoConcursoPrognosticos,
+    this.creditosCpss,
+    this.creditosRetPagamentoUnificado,
+    this.creditosContribuicoesDiversas,
+  });
+
+  Map<String, dynamic> toJson() {
+    final dados = <String, dynamic>{};
+
+    if (creditosIrpj != null) {
+      dados['CreditosIrpj'] = creditosIrpj!.toJson();
+    }
+
+    if (creditosCsll != null) {
+      dados['CreditosCsll'] = creditosCsll!.toJson();
+    }
+
+    if (creditosPisPasep != null) {
+      dados['CreditosPisPasep'] = creditosPisPasep!.toJson();
+    }
+
+    if (creditosCofins != null) {
+      dados['CreditosCofins'] = creditosCofins!.toJson();
+    }
+
+    if (creditosIrrf != null) {
+      dados['CreditosIrrf'] = creditosIrrf!.toJson();
+    }
+
+    if (creditosIpi != null) {
+      dados['CreditosIpi'] = creditosIpi!.toJson();
+    }
+
+    if (creditosIof != null) {
+      dados['CreditosIof'] = creditosIof!.toJson();
+    }
+
+    if (creditosCideCombustiveis != null) {
+      dados['CreditosCideCombustiveis'] = creditosCideCombustiveis!.toJson();
+    }
+
+    if (creditosCideRemessas != null) {
+      dados['CreditosCideRemessas'] = creditosCideRemessas!.toJson();
+    }
+
+    if (creditosCondecine != null) {
+      dados['CreditosCondecine'] = creditosCondecine!.toJson();
+    }
+
+    if (creditosContribuicaoConcursoPrognosticos != null) {
+      dados['CreditosContribuicaoConcursoPrognosticos'] = creditosContribuicaoConcursoPrognosticos!.toJson();
+    }
+
+    if (creditosCpss != null) {
+      dados['CreditosCpss'] = creditosCpss!.toJson();
+    }
+
+    if (creditosRetPagamentoUnificado != null) {
+      dados['CreditosRetPagamentoUnificado'] = creditosRetPagamentoUnificado!.toJson();
+    }
+
+    if (creditosContribuicoesDiversas != null) {
+      dados['CreditosContribuicoesDiversas'] = creditosContribuicoesDiversas!.toJson();
     }
 
     return dados;
@@ -615,6 +740,180 @@ class ListaDebitosContribuicoesDiversas implements ListaDebitosBase {
   }
 }
 
+// Classes para listas de créditos específicas por tributo
+abstract class ListaCreditosBase {
+  List<Credito> get listaCreditos;
+  Map<String, dynamic> toJson();
+}
+
+class ListaCreditosIrpj implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosIrpj({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCsll implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCsll({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosPisPasep implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosPisPasep({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCofins implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCofins({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosIrrf implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosIrrf({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosIpi implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosIpi({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosIof implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosIof({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCideCombustiveis implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCideCombustiveis({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCideRemessas implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCideRemessas({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCondecine implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCondecine({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosContribuicaoConcursoPrognosticos implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosContribuicaoConcursoPrognosticos({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosCpss implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosCpss({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosRetPagamentoUnificado implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosRetPagamentoUnificado({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
+class ListaCreditosContribuicoesDiversas implements ListaCreditosBase {
+  @override
+  final List<Credito> listaCreditos;
+
+  ListaCreditosContribuicoesDiversas({required this.listaCreditos});
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'ListaCreditos': listaCreditos.map((c) => c.toJson()).toList()};
+  }
+}
+
 /// Débito individual
 class Debito {
   final int idDebito;
@@ -648,6 +947,56 @@ class Debito {
 
   Map<String, dynamic> toJson() {
     final dados = <String, dynamic>{'IdDebito': idDebito, 'CodigoDebito': codigoDebito, 'ValorDebito': valorDebito};
+
+    if (cnpjScp != null) {
+      dados['CnpjScp'] = cnpjScp;
+    }
+
+    if (estabelecimento != null) {
+      dados['Estabelecimento'] = estabelecimento;
+    }
+
+    if (municipioEstabelecimento != null) {
+      dados['MunicipioEstabelecimento'] = municipioEstabelecimento;
+    }
+
+    return dados;
+  }
+}
+
+/// Crédito individual
+class Credito {
+  final int idCredito;
+  final String codigoCredito;
+  final String? cnpjScp;
+  final double valorCredito;
+  final String? estabelecimento;
+  final String? municipioEstabelecimento;
+
+  Credito({
+    required this.idCredito,
+    required this.codigoCredito,
+    this.cnpjScp,
+    required this.valorCredito,
+    this.estabelecimento,
+    this.municipioEstabelecimento,
+  }) {
+    if (idCredito <= 0) {
+      throw ArgumentError('ID do crédito deve ser um número positivo');
+    }
+    if (codigoCredito.isEmpty) {
+      throw ArgumentError('Código do crédito é obrigatório');
+    }
+    if (valorCredito <= 0) {
+      throw ArgumentError('Valor do crédito deve ser maior que zero');
+    }
+    if (cnpjScp != null && cnpjScp!.length != 14) {
+      throw ArgumentError('CNPJ SCP deve ter 14 dígitos');
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final dados = <String, dynamic>{'IdCredito': idCredito, 'CodigoCredito': codigoCredito, 'ValorCredito': valorCredito};
 
     if (cnpjScp != null) {
       dados['CnpjScp'] = cnpjScp;

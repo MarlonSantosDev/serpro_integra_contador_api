@@ -166,3 +166,101 @@ enum PeriodicidadeTributo {
     return null;
   }
 }
+
+/// Códigos de receita mais comuns para cada tributo
+class CodigosReceitaMit {
+  // IRPJ - Códigos mais comuns
+  static const List<String> irpj = [
+    '0220-01', // IRPJ - PJ OBRIGADA AO LUCRO REAL - ENTIDADE NÃO FINANCEIRA - APURAÇÃO TRIMESTRAL
+    '0231-01', // IRPJ - GANHOS LIQUIDOS EM OPERAÇOES NA BOLSA - LUCRO PRESUMIDO OU ARBITRADO
+    '3225-01', // IRPJ - GANHOS LÍQUIDOS EM OPERAÇÕES NA BOLSA - SIMPLES NACIONAL
+  ];
+
+  // CSLL - Códigos mais comuns
+  static const List<String> csll = [
+    '248408', // CSLL - Contribuição Social sobre o Lucro Líquido
+  ];
+
+  // PIS/PASEP - Códigos mais comuns
+  static const List<String> pisPasep = [
+    '236208', // PIS/PASEP - Contribuição para os Programas de Integração Social
+  ];
+
+  // COFINS - Códigos mais comuns
+  static const List<String> cofins = [
+    '237208', // COFINS - Contribuição para o Financiamento da Seguridade Social
+  ];
+
+  // IRRF - Códigos mais comuns
+  static const List<String> irrf = [
+    '056108', // IRRF - Imposto sobre a Renda Retido na Fonte
+  ];
+
+  // IPI - Códigos mais comuns
+  static const List<String> ipi = [
+    '057108', // IPI - Imposto sobre Produtos Industrializados
+  ];
+
+  // IOF - Códigos mais comuns
+  static const List<String> iof = [
+    '058108', // IOF - Imposto sobre Operações de Crédito, Câmbio e Seguro
+  ];
+
+  /// Obtém códigos de receita por tributo
+  static List<String> obterCodigosPorTributo(GrupoTributo tributo) {
+    switch (tributo) {
+      case GrupoTributo.irpj:
+        return irpj;
+      case GrupoTributo.csll:
+        return csll;
+      case GrupoTributo.pisPasep:
+        return pisPasep;
+      case GrupoTributo.cofins:
+        return cofins;
+      case GrupoTributo.irrf:
+        return irrf;
+      case GrupoTributo.ipi:
+        return ipi;
+      case GrupoTributo.iof:
+        return iof;
+      default:
+        return [];
+    }
+  }
+}
+
+/// Validações específicas do MIT
+class ValidacoesMit {
+  /// Valida se o código de débito é válido para o tributo
+  static bool validarCodigoDebito(String codigoDebito, GrupoTributo tributo) {
+    final codigosValidos = CodigosReceitaMit.obterCodigosPorTributo(tributo);
+    return codigosValidos.contains(codigoDebito);
+  }
+
+  /// Valida se a qualificação PJ permite o tributo
+  static bool validarTributoParaQualificacao(GrupoTributo tributo, QualificacaoPj qualificacao) {
+    // Estado/Município não pode ter IRPJ, CSLL, IRRF, IPI
+    if (qualificacao == QualificacaoPj.estadoMunicipio) {
+      return ![GrupoTributo.irpj, GrupoTributo.csll, GrupoTributo.irrf, GrupoTributo.ipi].contains(tributo);
+    }
+
+    // Outras validações específicas podem ser adicionadas aqui
+    return true;
+  }
+
+  /// Valida se a tributação do lucro permite o tributo
+  static bool validarTributoParaTributacao(GrupoTributo tributo, TributacaoLucro tributacao) {
+    // Simples Nacional tem regras específicas
+    if (tributacao == TributacaoLucro.optanteSimplesNacional) {
+      return [
+        GrupoTributo.iof,
+        GrupoTributo.cideCombustiveis,
+        GrupoTributo.cideRemessas,
+        GrupoTributo.condecine,
+        GrupoTributo.contribuicaoConcursoPrognosticos,
+      ].contains(tributo);
+    }
+
+    return true;
+  }
+}
