@@ -62,7 +62,7 @@ class MitService {
     );
 
     final response = await _apiClient.post(
-      '/Consultar',
+      '/Declarar',
       baseRequest,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,

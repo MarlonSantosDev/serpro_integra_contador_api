@@ -9,13 +9,47 @@ Future<void> Mit(ApiClient apiClient) async {
   // 1. Encerrar Apuração
   try {
     print('\n--- 1. Encerrar Apuração ---');
-    final response = await mitService.criarApuracaoSemMovimento(
-      contribuinteNumero: '00000000000000',
-      mesApuracao: 12,
-      anoApuracao: 2024,
+
+    // Criar período da apuração (baseado no JSON fornecido)
+    final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
+
+    // Criar responsável pela apuração
+    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '00000000000');
+
+    // Criar dados iniciais (baseado no JSON fornecido)
+    final dadosIniciais = DadosIniciais(
+      semMovimento: false,
       qualificacaoPj: QualificacaoPj.pjEmGeral,
-      cpfResponsavel: '12345678901',
-      emailResponsavel: 'contador@empresa.com',
+      tributacaoLucro: TributacaoLucro.realAnual,
+      variacoesMonetarias: VariacoesMonetarias.regimeCaixa,
+      regimePisCofins: RegimePisCofins.cumulativa,
+      responsavelApuracao: responsavelApuracao,
+    );
+
+    // Criar débitos (baseado no JSON fornecido)
+    final debitos = Debitos(
+      irpj: ListaDebitosIrpj(
+        listaDebitos: [Debito(idDebito: 1, codigoDebito: '236208', cnpjScp: '88888888888888', valorDebito: 100.00)],
+      ),
+      csll: ListaDebitosCsll(
+        listaDebitos: [Debito(idDebito: 2, codigoDebito: '248408', cnpjScp: '88888888888888', valorDebito: 220.00)],
+      ),
+      pisPasep: ListaDebitosPisPasep(
+        listaDebitos: [Debito(idDebito: 3, codigoDebito: '067904', cnpjScp: '88888888888888', valorDebito: 300.00)],
+      ),
+      cofins: ListaDebitosCofins(
+        listaDebitos: [Debito(idDebito: 4, codigoDebito: '092902', cnpjScp: '88888888888888', valorDebito: 444.00)],
+      ),
+    );
+
+    // Encerrar apuração usando método principal
+    final response = await mitService.encerrarApuracao(
+      contribuinteNumero: '00000000000000',
+      periodoApuracao: periodoApuracao,
+      dadosIniciais: dadosIniciais,
+      debitos: debitos,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('✅ Status: ${response.status}');

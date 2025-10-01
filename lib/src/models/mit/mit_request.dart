@@ -284,6 +284,12 @@ class ResponsavelApuracao {
     if (cpfResponsavel.isEmpty) {
       throw ArgumentError('CPF do responsável é obrigatório');
     }
+    if (cpfResponsavel.length != 11) {
+      throw ArgumentError('CPF do responsável deve ter 11 dígitos');
+    }
+    if (!RegExp(r'^\d{11}$').hasMatch(cpfResponsavel)) {
+      throw ArgumentError('CPF do responsável deve conter apenas números');
+    }
     if (emailResponsavel != null && emailResponsavel!.length > 60) {
       throw ArgumentError('E-mail do responsável deve ter no máximo 60 caracteres');
     }
@@ -314,11 +320,23 @@ class TelefoneResponsavel {
   final String numTelefone;
 
   TelefoneResponsavel({required this.ddd, required this.numTelefone}) {
+    if (ddd.isEmpty) {
+      throw ArgumentError('DDD é obrigatório');
+    }
     if (ddd.length != 2) {
       throw ArgumentError('DDD deve ter 2 dígitos');
     }
+    if (!RegExp(r'^\d{2}$').hasMatch(ddd)) {
+      throw ArgumentError('DDD deve conter apenas números');
+    }
+    if (numTelefone.isEmpty) {
+      throw ArgumentError('Número do telefone é obrigatório');
+    }
     if (numTelefone.length < 8 || numTelefone.length > 9) {
       throw ArgumentError('Número do telefone deve ter 8 ou 9 dígitos');
+    }
+    if (!RegExp(r'^\d{8,9}$').hasMatch(numTelefone)) {
+      throw ArgumentError('Número do telefone deve conter apenas números');
     }
   }
 
@@ -333,8 +351,17 @@ class RegistroCrc {
   final String numRegistro;
 
   RegistroCrc({required this.ufRegistro, required this.numRegistro}) {
+    if (ufRegistro.isEmpty) {
+      throw ArgumentError('UF do registro é obrigatória');
+    }
     if (ufRegistro.length != 2) {
       throw ArgumentError('UF do registro deve ter 2 caracteres');
+    }
+    if (!RegExp(r'^[A-Z]{2}$').hasMatch(ufRegistro)) {
+      throw ArgumentError('UF do registro deve conter apenas letras maiúsculas');
+    }
+    if (numRegistro.isEmpty) {
+      throw ArgumentError('Número do registro é obrigatório');
     }
     if (numRegistro.length < 6 || numRegistro.length > 11) {
       throw ArgumentError('Número do registro deve ter entre 6 e 11 caracteres');
