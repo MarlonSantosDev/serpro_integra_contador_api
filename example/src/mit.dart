@@ -4,13 +4,13 @@ Future<void> Mit(ApiClient apiClient) async {
   print('\n=== Exemplos MIT (Módulo de Inclusão de Tributos) ===');
 
   final mitService = MitService(apiClient);
-  const cnpjContribuinte = '00000000000000'; // CNPJ de exemplo
+  const cnpjContribuinte = '11111111111111'; // CNPJ de exemplo
   bool servicoOk = true;
 
   // 1. Criar Apuração Sem Movimento
   try {
     print('\n1. Criando apuração sem movimento...');
-    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '12345678901', emailResponsavel: 'responsavel@exemplo.com');
+    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '00000000000000', emailResponsavel: 'responsavel@exemplo.com');
 
     final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
 
@@ -18,6 +18,8 @@ Future<void> Mit(ApiClient apiClient) async {
       contribuinteNumero: cnpjContribuinte,
       periodoApuracao: periodoApuracao,
       responsavelApuracao: responsavelApuracao,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
     );
 
     print('✅ Status: ${apuracaoSemMovimento.status}');
@@ -73,7 +75,7 @@ Future<void> Mit(ApiClient apiClient) async {
     print('\n3. Consultando situação de encerramento...');
     final situacaoResponse = await mitService.consultarSituacaoEncerramento(
       contribuinteNumero: cnpjContribuinte,
-      protocoloEncerramento: 'protocolo_exemplo',
+      protocoloEncerramento: 'ZuAb4wuDp0GvCij3GDOAsA==',
     );
 
     print('✅ Status: ${situacaoResponse.status}');

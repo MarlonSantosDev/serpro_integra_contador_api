@@ -252,12 +252,13 @@ class ResponsavelApuracao {
   final RegistroCrc? registroCrc;
 
   ResponsavelApuracao({required this.cpfResponsavel, this.telResponsavel, this.emailResponsavel, this.registroCrc}) {
+    /*
     if (cpfResponsavel.length != 11) {
       throw ArgumentError('CPF do responsável deve ter 11 dígitos');
     }
     if (emailResponsavel != null && emailResponsavel!.length > 60) {
       throw ArgumentError('E-mail do responsável deve ter no máximo 60 caracteres');
-    }
+    }*/
   }
 
   Map<String, dynamic> toJson() {

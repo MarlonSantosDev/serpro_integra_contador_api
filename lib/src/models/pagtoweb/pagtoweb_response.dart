@@ -78,7 +78,7 @@ class ContarPagamentosResponse extends PagtoWebResponse {
 
     return ContarPagamentosResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((msg) => MensagemNegocio.fromJson(msg as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List).map((msg) => MensagemNegocio.fromJson(msg)).toList(),
       quantidade: quantidade,
     );
   }

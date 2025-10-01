@@ -9,7 +9,11 @@ Future<void> Sitfis(ApiClient apiClient) async {
   // 1. Solicitar Protocolo do Relatório
   try {
     print('\n--- 1. Solicitar Protocolo do Relatório ---');
-    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio('99999999999');
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(
+      '99999999999',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
     print('✅ Status: ${protocoloResponse.status}');
     print('Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
@@ -37,7 +41,11 @@ Future<void> Sitfis(ApiClient apiClient) async {
   // 2. Emitir Relatório (se protocolo disponível)
   try {
     print('\n--- 2. Emitir Relatório (se protocolo disponível) ---');
-    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio('99999999999');
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(
+      '99999999999',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     if (protocoloResponse.hasProtocolo) {
       final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
@@ -89,6 +97,8 @@ Future<void> Sitfis(ApiClient apiClient) async {
     print('\n--- 3. Fluxo Completo com Retry Automático ---');
     final relatorioCompleto = await sitfisService.obterRelatorioCompleto(
       '99999999999',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
       maxTentativas: 3,
       callbackProgresso: (etapa, tempoEspera) {
         print('Progresso: $etapa');
@@ -125,7 +135,12 @@ Future<void> Sitfis(ApiClient apiClient) async {
     print('✅ Cache válido: ${cacheSimulado.isValid}');
     print('Tempo restante: ${cacheSimulado.tempoRestanteEmSegundos}s');
 
-    final protocoloComCache = await sitfisService.solicitarProtocoloComCache('99999999999', cache: cacheSimulado);
+    final protocoloComCache = await sitfisService.solicitarProtocoloComCache(
+      '99999999999',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+      cache: cacheSimulado,
+    );
 
     if (protocoloComCache == null) {
       print('✅ Usando cache existente - não fez nova solicitação');
@@ -140,13 +155,19 @@ Future<void> Sitfis(ApiClient apiClient) async {
   // 5. Exemplo com Emissão com Retry
   try {
     print('\n--- 5. Exemplo com Emissão com Retry ---');
-    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio('99999999999');
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(
+      '99999999999',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     if (protocoloResponse.hasProtocolo) {
       final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
 
       final relatorioComRetry = await sitfisService.emitirRelatorioComRetry(
         '99999999999',
+        contratanteNumero: '00000000000000',
+        autorPedidoDadosNumero: '00000000000000',
         protocolo,
         maxTentativas: 2,
         callbackProgresso: (tentativa, tempoEspera) {
