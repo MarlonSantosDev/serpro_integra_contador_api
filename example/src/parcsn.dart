@@ -36,6 +36,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 2. Consultar parcelamento específico
   try {
@@ -63,6 +64,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
     print('❌ Erro na consulta de parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 3. Consultar parcelas disponíveis para impressão
   try {
@@ -96,6 +98,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelas disponíveis: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 4. Consultar detalhes de pagamento
   try {
@@ -131,6 +134,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
     print('❌ Erro na consulta de detalhes: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 5. Emitir DAS
   try {

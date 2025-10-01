@@ -27,12 +27,12 @@ void main() async {
   //await PagtoWeb(apiClient);
   //await ParcmeiEspecial(apiClient);
   //await Parcmei(apiClient);
-  await ParcsnEspecial(apiClient);
+  //await ParcsnEspecial(apiClient);
+  //await Parcsn(apiClient);
+  //await Pertmei(apiClient);
+  //await Pertsn(apiClient);
+  await Pgdasd(apiClient);
 
-  // await Parcsn(apiClient);
-  // await Pertmei(apiClient);
-  // await Pertsn(apiClient);
-  // await Pgdasd(apiClient);
   // await Pgmei(apiClient);
   // await Procuracoes(apiClient);
   // await Regime(apiClient);
