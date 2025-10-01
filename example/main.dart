@@ -23,8 +23,8 @@ void main() async {
   //await Defis(apiClient);
   //await Dte(apiClient);
   //await EventosAtualizacao(apiClient);
-  //await Mit(apiClient);
-  await PagtoWeb(apiClient);
+  //await Mit(apiClient);// Daqui para baixo tem exatamente o o metado de cada serviço
+  //await PagtoWeb(apiClient);
 
   // await ParcmeiEspecial(apiClient);
   // await Parcmei(apiClient);

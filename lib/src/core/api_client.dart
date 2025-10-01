@@ -160,6 +160,7 @@ class ApiClient {
           "idSistema": requestBody['pedidoDados']['idSistema'],
           "idServico": requestBody['pedidoDados']['idServico'],
           "mensagens": "${responseBody['mensagens'][0]['texto']}",
+          "body": json.encode(requestBody),
         };
         throw Exception(responseBody);
       }

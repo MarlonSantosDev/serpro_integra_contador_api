@@ -9,7 +9,6 @@ O `PagtoWebService` é responsável pela integração com o sistema PAGTOWEB da 
 - **Consultar Pagamentos**: Consulta pagamentos com filtros opcionais
 - **Contar Pagamentos**: Conta pagamentos com filtros opcionais
 - **Emitir Comprovante**: Emite comprovante de pagamento
-- **Métodos de Conveniência**: Operações simplificadas para casos comuns
 
 ## Serviços Disponíveis
 
@@ -19,7 +18,9 @@ O `PagtoWebService` é responsável pela integração com o sistema PAGTOWEB da 
 
 ## Métodos Disponíveis
 
-### 1. Consultar Pagamentos
+### Métodos Principais (Genéricos)
+
+#### 1. Consultar Pagamentos
 
 ```dart
 Future<ConsultarPagamentosResponse> consultarPagamentos({
@@ -63,7 +64,7 @@ final response = await pagtoWebService.consultarPagamentos(
 );
 ```
 
-### 2. Contar Pagamentos
+#### 2. Contar Pagamentos
 
 ```dart
 Future<ContarPagamentosResponse> contarPagamentos({
@@ -89,7 +90,7 @@ final response = await pagtoWebService.contarPagamentos(
 );
 ```
 
-### 3. Emitir Comprovante
+#### 3. Emitir Comprovante
 
 ```dart
 Future<EmitirComprovanteResponse> emitirComprovante({
@@ -108,12 +109,12 @@ final response = await pagtoWebService.emitirComprovante(
 );
 ```
 
-## Métodos de Conveniência
+### Métodos Específicos por Serviço
 
-### 1. Consultar Pagamentos por Data
+#### 1. Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
 
 ```dart
-Future<ConsultarPagamentosResponse> consultarPagamentosPorData({
+Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloDataArrecadacao({
   required String contribuinteNumero,
   required String dataInicial,
   required String dataFinal,
@@ -124,10 +125,10 @@ Future<ConsultarPagamentosResponse> consultarPagamentosPorData({
 })
 ```
 
-### 2. Consultar Pagamentos por Receita
+#### 2. Consulta Pagamento: quando pesquisado por codigoReceitaLista
 
 ```dart
-Future<ConsultarPagamentosResponse> consultarPagamentosPorReceita({
+Future<ConsultarPagamentosResponse> consultarPagamentosPorCodigoReceitaLista({
   required String contribuinteNumero,
   required List<String> codigoReceitaLista,
   int primeiroDaPagina = 0,
@@ -137,10 +138,10 @@ Future<ConsultarPagamentosResponse> consultarPagamentosPorReceita({
 })
 ```
 
-### 3. Consultar Pagamentos por Valor
+#### 3. Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
 
 ```dart
-Future<ConsultarPagamentosResponse> consultarPagamentosPorValor({
+Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloValorTotalDocumento({
   required String contribuinteNumero,
   required double valorInicial,
   required double valorFinal,
@@ -151,14 +152,47 @@ Future<ConsultarPagamentosResponse> consultarPagamentosPorValor({
 })
 ```
 
-### 4. Consultar Pagamentos por Documento
+#### 4. Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
 
 ```dart
-Future<ConsultarPagamentosResponse> consultarPagamentosPorDocumento({
+Future<ContarPagamentosResponse> contarPagamentosPorIntervaloDataArrecadacao({
   required String contribuinteNumero,
-  required List<String> numeroDocumentoLista,
-  int primeiroDaPagina = 0,
-  int tamanhoDaPagina = 100,
+  required String dataInicial,
+  required String dataFinal,
+  String? contratanteNumero,
+  String? autorPedidoDadosNumero,
+})
+```
+
+#### 5. Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
+
+```dart
+Future<ContarPagamentosResponse> contarPagamentosPorCodigoReceitaLista({
+  required String contribuinteNumero,
+  required List<String> codigoReceitaLista,
+  String? contratanteNumero,
+  String? autorPedidoDadosNumero,
+})
+```
+
+#### 6. Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+
+```dart
+Future<ContarPagamentosResponse> contarPagamentosPorIntervaloValorTotalDocumento({
+  required String contribuinteNumero,
+  required double valorInicial,
+  required double valorFinal,
+  String? contratanteNumero,
+  String? autorPedidoDadosNumero,
+})
+```
+
+#### 7. Emitir Comprovante de Pagamento
+
+```dart
+Future<EmitirComprovanteResponse> emitirComprovantePagamento({
+  required String contribuinteNumero,
+  required String numeroDocumento,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 })
@@ -183,21 +217,21 @@ void main() async {
   try {
     const contribuinteNumero = '12345678000195';
     
-    // 1. Contar pagamentos do mês
+    // 1. Contar pagamentos do mês (Serviço 4)
     print('=== Contando Pagamentos ===');
-    final contagem = await pagtoWebService.contarPagamentosPorData(
+    final contagem = await pagtoWebService.contarPagamentosPorIntervaloDataArrecadacao(
       contribuinteNumero: contribuinteNumero,
       dataInicial: '2024-01-01',
       dataFinal: '2024-01-31',
     );
     
     if (contagem.sucesso) {
-      print('Total de pagamentos: ${contagem.dados.totalPagamentos}');
+      print('Total de pagamentos: ${contagem.quantidade}');
     }
     
-    // 2. Consultar pagamentos
+    // 2. Consultar pagamentos (Serviço 1)
     print('\n=== Consultando Pagamentos ===');
-    final pagamentos = await pagtoWebService.consultarPagamentosPorData(
+    final pagamentos = await pagtoWebService.consultarPagamentosPorIntervaloDataArrecadacao(
       contribuinteNumero: contribuinteNumero,
       dataInicial: '2024-01-01',
       dataFinal: '2024-01-31',
@@ -205,27 +239,27 @@ void main() async {
     );
     
     if (pagamentos.sucesso) {
-      print('Pagamentos encontrados: ${pagamentos.dados.pagamentos.length}');
-      for (final pagamento in pagamentos.dados.pagamentos) {
+      print('Pagamentos encontrados: ${pagamentos.dados.length}');
+      for (final pagamento in pagamentos.dados) {
         print('Documento: ${pagamento.numeroDocumento}');
-        print('Valor: ${pagamento.valor}');
-        print('Data: ${pagamento.dataPagamento}');
+        print('Valor: ${pagamento.valorTotal}');
+        print('Data: ${pagamento.dataArrecadacao}');
         print('---');
       }
     }
     
-    // 3. Emitir comprovante
-    if (pagamentos.dados.pagamentos.isNotEmpty) {
+    // 3. Emitir comprovante (Serviço 7)
+    if (pagamentos.dados.isNotEmpty) {
       print('\n=== Emitindo Comprovante ===');
-      final primeiroPagamento = pagamentos.dados.pagamentos.first;
-      final comprovante = await pagtoWebService.emitirComprovante(
+      final primeiroPagamento = pagamentos.dados.first;
+      final comprovante = await pagtoWebService.emitirComprovantePagamento(
         contribuinteNumero: contribuinteNumero,
         numeroDocumento: primeiroPagamento.numeroDocumento,
       );
       
       if (comprovante.sucesso) {
         print('Comprovante emitido com sucesso!');
-        print('PDF: ${comprovante.dados.pdfBase64}');
+        print('PDF disponível: ${comprovante.pdfBase64 != null}');
       }
     }
     
@@ -280,7 +314,7 @@ Future<void> relatorioMensal(String contribuinteNumero, int ano, int mes) async 
   final dataInicial = '$ano-${mes.toString().padLeft(2, '0')}-01';
   final dataFinal = '$ano-${mes.toString().padLeft(2, '0')}-31';
   
-  final pagamentos = await pagtoWebService.consultarPagamentosPorData(
+  final pagamentos = await pagtoWebService.consultarPagamentosPorIntervaloDataArrecadacao(
     contribuinteNumero: contribuinteNumero,
     dataInicial: dataInicial,
     dataFinal: dataFinal,
@@ -289,11 +323,11 @@ Future<void> relatorioMensal(String contribuinteNumero, int ano, int mes) async 
   if (pagamentos.sucesso) {
     print('=== Relatório Mensal ===');
     print('Período: $dataInicial a $dataFinal');
-    print('Total de pagamentos: ${pagamentos.dados.pagamentos.length}');
+    print('Total de pagamentos: ${pagamentos.dados.length}');
     
     double valorTotal = 0;
-    for (final pagamento in pagamentos.dados.pagamentos) {
-      valorTotal += pagamento.valor;
+    for (final pagamento in pagamentos.dados) {
+      valorTotal += pagamento.valorTotal;
     }
     print('Valor total: R\$ ${valorTotal.toStringAsFixed(2)}');
   }
@@ -304,13 +338,13 @@ Future<void> relatorioMensal(String contribuinteNumero, int ano, int mes) async 
 
 ```dart
 Future<void> consultarPorReceita(String contribuinteNumero, List<String> codigos) async {
-  final pagamentos = await pagtoWebService.consultarPagamentosPorReceita(
+  final pagamentos = await pagtoWebService.consultarPagamentosPorCodigoReceitaLista(
     contribuinteNumero: contribuinteNumero,
     codigoReceitaLista: codigos,
   );
   
   if (pagamentos.sucesso) {
-    print('Pagamentos por receita: ${pagamentos.dados.pagamentos.length}');
+    print('Pagamentos por receita: ${pagamentos.dados.length}');
   }
 }
 ```
@@ -321,7 +355,7 @@ Future<void> consultarPorReceita(String contribuinteNumero, List<String> codigos
 Future<void> emitirComprovantesLote(String contribuinteNumero, List<String> documentos) async {
   for (final documento in documentos) {
     try {
-      final comprovante = await pagtoWebService.emitirComprovante(
+      final comprovante = await pagtoWebService.emitirComprovantePagamento(
         contribuinteNumero: contribuinteNumero,
         numeroDocumento: documento,
       );
@@ -372,7 +406,7 @@ class PagtoWebCache {
       return _cache[chave]!;
     }
     
-    final response = await service.consultarPagamentosPorData(
+    final response = await service.consultarPagamentosPorIntervaloDataArrecadacao(
       contribuinteNumero: contribuinteNumero,
       dataInicial: dataInicial,
       dataFinal: dataFinal,

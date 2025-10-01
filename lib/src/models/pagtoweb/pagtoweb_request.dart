@@ -1,11 +1,10 @@
 import '../base/base_request.dart';
+import 'dart:convert';
 
 /// Classe base para requests do PAGTOWEB
 abstract class PagtoWebRequest extends BaseRequest {
-  PagtoWebRequest({
-    required String contribuinteNumero,
-    required PedidoDados pedidoDados,
-  }) : super(contribuinteNumero: contribuinteNumero, pedidoDados: pedidoDados);
+  PagtoWebRequest({required String contribuinteNumero, required PedidoDados pedidoDados})
+    : super(contribuinteNumero: contribuinteNumero, pedidoDados: pedidoDados);
 }
 
 /// Request para consultar pagamentos (PAGAMENTOS71)
@@ -36,7 +35,6 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
          pedidoDados: PedidoDados(
            idSistema: 'PAGTOWEB',
            idServico: 'PAGAMENTOS71',
-           versaoSistema: '1.0',
            dados: _buildDadosJson(
              dataInicial: dataInicial,
              dataFinal: dataFinal,
@@ -97,8 +95,7 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null &&
-        codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
@@ -106,7 +103,7 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
     dados['primeiroDaPagina'] = primeiroDaPagina;
     dados['tamanhoDaPagina'] = tamanhoDaPagina;
 
-    return _mapToJsonString(dados);
+    return jsonEncode(dados);
   }
 }
 
@@ -191,12 +188,11 @@ class ContarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null &&
-        codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
-    return _mapToJsonString(dados);
+    return jsonEncode(dados);
   }
 }
 
@@ -204,57 +200,14 @@ class ContarPagamentosRequest extends PagtoWebRequest {
 class EmitirComprovanteRequest extends PagtoWebRequest {
   final String numeroDocumento;
 
-  EmitirComprovanteRequest({
-    required String contribuinteNumero,
-    required this.numeroDocumento,
-  }) : super(
-         contribuinteNumero: contribuinteNumero,
-         pedidoDados: PedidoDados(
-           idSistema: 'PAGTOWEB',
-           idServico: 'EMITECOMPROVANTEPAGAMENTO72',
-           versaoSistema: '1.0',
-           dados: _mapToJsonString({'numeroDocumento': numeroDocumento}),
-         ),
-       );
-}
-
-/// Utilitário para converter Map para JSON String
-String _mapToJsonString(Map<String, dynamic> map) {
-  final buffer = StringBuffer();
-  buffer.write('{');
-
-  final entries = map.entries.toList();
-  for (int i = 0; i < entries.length; i++) {
-    final entry = entries[i];
-    buffer.write('"${entry.key}":');
-
-    if (entry.value is String) {
-      buffer.write('"${entry.value}"');
-    } else if (entry.value is List) {
-      buffer.write('[');
-      final list = entry.value as List;
-      for (int j = 0; j < list.length; j++) {
-        buffer.write('"${list[j]}"');
-        if (j < list.length - 1) buffer.write(',');
-      }
-      buffer.write(']');
-    } else if (entry.value is Map) {
-      buffer.write('{');
-      final subMap = entry.value as Map<String, dynamic>;
-      final subEntries = subMap.entries.toList();
-      for (int k = 0; k < subEntries.length; k++) {
-        final subEntry = subEntries[k];
-        buffer.write('"${subEntry.key}":"${subEntry.value}"');
-        if (k < subEntries.length - 1) buffer.write(',');
-      }
-      buffer.write('}');
-    } else {
-      buffer.write(entry.value.toString());
-    }
-
-    if (i < entries.length - 1) buffer.write(',');
-  }
-
-  buffer.write('}');
-  return buffer.toString();
+  EmitirComprovanteRequest({required String contribuinteNumero, required this.numeroDocumento})
+    : super(
+        contribuinteNumero: contribuinteNumero,
+        pedidoDados: PedidoDados(
+          idSistema: 'PAGTOWEB',
+          idServico: 'EMITECOMPROVANTEPAGAMENTO72',
+          versaoSistema: '1.0',
+          dados: jsonEncode({'numeroDocumento': numeroDocumento}),
+        ),
+      );
 }

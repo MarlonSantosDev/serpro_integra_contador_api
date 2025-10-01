@@ -53,7 +53,6 @@ class PagtoWebService {
       primeiroDaPagina: primeiroDaPagina,
       tamanhoDaPagina: tamanhoDaPagina,
     );
-
     final response = await _apiClient.post(
       '/Consultar',
       request,
@@ -133,10 +132,10 @@ class PagtoWebService {
     return EmitirComprovanteResponse.fromJson(response);
   }
 
-  // ===== MÉTODOS DE CONVENIÊNCIA =====
+  // ===== MÉTODOS ESPECÍFICOS PARA CADA SERVIÇO =====
 
-  /// Consulta pagamentos por intervalo de data
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorData({
+  /// 1. Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+  Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloDataArrecadacao({
     required String contribuinteNumero,
     required String dataInicial,
     required String dataFinal,
@@ -156,8 +155,8 @@ class PagtoWebService {
     );
   }
 
-  /// Consulta pagamentos por códigos de receita
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorReceita({
+  /// 2. Consulta Pagamento: quando pesquisado por codigoReceitaLista
+  Future<ConsultarPagamentosResponse> consultarPagamentosPorCodigoReceitaLista({
     required String contribuinteNumero,
     required List<String> codigoReceitaLista,
     int primeiroDaPagina = 0,
@@ -175,8 +174,8 @@ class PagtoWebService {
     );
   }
 
-  /// Consulta pagamentos por intervalo de valor
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorValor({
+  /// 3. Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+  Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
@@ -196,27 +195,8 @@ class PagtoWebService {
     );
   }
 
-  /// Consulta pagamentos por números de documento
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorDocumento({
-    required String contribuinteNumero,
-    required List<String> numeroDocumentoLista,
-    int primeiroDaPagina = 0,
-    int tamanhoDaPagina = 100,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    return consultarPagamentos(
-      contribuinteNumero: contribuinteNumero,
-      numeroDocumentoLista: numeroDocumentoLista,
-      primeiroDaPagina: primeiroDaPagina,
-      tamanhoDaPagina: tamanhoDaPagina,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Conta pagamentos por intervalo de data
-  Future<ContarPagamentosResponse> contarPagamentosPorData({
+  /// 4. Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+  Future<ContarPagamentosResponse> contarPagamentosPorIntervaloDataArrecadacao({
     required String contribuinteNumero,
     required String dataInicial,
     required String dataFinal,
@@ -232,8 +212,8 @@ class PagtoWebService {
     );
   }
 
-  /// Conta pagamentos por códigos de receita
-  Future<ContarPagamentosResponse> contarPagamentosPorReceita({
+  /// 5. Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
+  Future<ContarPagamentosResponse> contarPagamentosPorCodigoReceitaLista({
     required String contribuinteNumero,
     required List<String> codigoReceitaLista,
     String? contratanteNumero,
@@ -247,8 +227,8 @@ class PagtoWebService {
     );
   }
 
-  /// Conta pagamentos por intervalo de valor
-  Future<ContarPagamentosResponse> contarPagamentosPorValor({
+  /// 6. Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+  Future<ContarPagamentosResponse> contarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
@@ -264,16 +244,16 @@ class PagtoWebService {
     );
   }
 
-  /// Conta pagamentos por números de documento
-  Future<ContarPagamentosResponse> contarPagamentosPorDocumento({
+  /// 7. Emitir Comprovante de Pagamento
+  Future<EmitirComprovanteResponse> emitirComprovantePagamento({
     required String contribuinteNumero,
-    required List<String> numeroDocumentoLista,
+    required String numeroDocumento,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    return contarPagamentos(
+    return emitirComprovante(
       contribuinteNumero: contribuinteNumero,
-      numeroDocumentoLista: numeroDocumentoLista,
+      numeroDocumento: numeroDocumento,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
