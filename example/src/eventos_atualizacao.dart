@@ -5,7 +5,6 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
 
   final eventosService = EventosAtualizacaoService(apiClient);
   bool servicoOk = true;
-
   // Exemplo 1: Solicitar eventos de Pessoa Física (DCTFWeb)
   try {
     print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
@@ -36,7 +35,7 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
     print('\n--- Exemplo 2: Obter Eventos PF ---');
     await Future.delayed(Duration(milliseconds: 1000)); // Simulação de espera
 
-    final eventosPF = await eventosService.obterEventosPF(protocolo: 'protocolo_exemplo', evento: TipoEvento.dctfWeb);
+    final eventosPF = await eventosService.obterEventosPF(protocolo: 'a65f3455-fa91-419b-b0ad-c4ac50695abf', evento: TipoEvento.dctfWeb);
 
     print('✅ Status: ${eventosPF.status}');
     print('Total de eventos: ${eventosPF.dados.length}');
@@ -58,7 +57,7 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
   // Exemplo 3: Solicitar eventos de Pessoa Jurídica (CaixaPostal)
   try {
     print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
-    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222'];
+    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222', '33333333333333'];
 
     final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
 
@@ -95,13 +94,14 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
     print('❌ Erro no método de conveniência PF: $e');
     servicoOk = false;
   }
-
   // Exemplo 5: Método de conveniência - Solicitar e obter eventos PJ automaticamente
   try {
     print('\n--- Exemplo 5: Método de Conveniência PJ ---');
     final eventosPJConveniencia = await eventosService.solicitarEObterEventosPJ(
-      cnpjs: ['33333333333333', '44444444444444'],
-      evento: TipoEvento.dctfWeb,
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999999',
+      cnpjs: ['99999999999999', '99999999999999'],
+      evento: TipoEvento.caixaPostal,
     );
 
     print('✅ Status: ${eventosPJConveniencia.status}');

@@ -1,4 +1,5 @@
 import 'mensagem_eventos_atualizacao.dart';
+import 'dart:convert';
 
 /// Modelo de resposta para solicitar eventos de atualização de Pessoa Física
 class SolicitarEventosPFResponse {
@@ -11,8 +12,8 @@ class SolicitarEventosPFResponse {
   factory SolicitarEventosPFResponse.fromJson(Map<String, dynamic> json) {
     return SolicitarEventosPFResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemEventosAtualizacao.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: SolicitarEventosPFDados.fromJson(json['dados'] as Map<String, dynamic>),
+      mensagens: (json['mensagens'] as List).map((e) => MensagemEventosAtualizacao.fromJson(e)).toList(),
+      dados: SolicitarEventosPFDados.fromJson(jsonDecode(json['dados'])),
     );
   }
 

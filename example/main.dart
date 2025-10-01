@@ -22,9 +22,9 @@ void main() async {
   //await DctfWeb(apiClient);
   //await Defis(apiClient);
   //await Dte(apiClient);
-  await EventosAtualizacao(apiClient);
+  //await EventosAtualizacao(apiClient);
+  await Mit(apiClient);
 
-  //await Mit(apiClient);
   //await PagtoWeb(apiClient);
   // await ParcmeiEspecial(apiClient);
   // await Parcmei(apiClient);

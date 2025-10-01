@@ -199,7 +199,6 @@ class EventosAtualizacaoService {
   Future<ObterEventosPJResponse> solicitarEObterEventosPJ({
     required List<String> cnpjs,
     required TipoEvento evento,
-    Duration? tempoEsperaCustomizado,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
@@ -210,10 +209,6 @@ class EventosAtualizacaoService {
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
-
-    // Aguardar o tempo estimado (ou customizado)
-    final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
-    await Future.delayed(tempoEspera);
 
     // Obter resultados
     return obterEventosPJ(
