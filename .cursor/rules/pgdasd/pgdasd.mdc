@@ -1,0 +1,1322 @@
+---
+alwaysApply: true
+---
+
+# Consultar Declarações Transmitidas por Ano-Calendário ou Período de Apuração
+
+Essa consulta lista um índice com todas as declarações transmitidas na base de dados da RFB de um contribuinte para um determinado ano-calendário ou período de apuração mensal do PGDAS-D por tipo de operação (Declaração Original, Declaração Retificadora, Geração de DAS, DAS Avulso, DAS Medida Judicial).
+
+## PedidoDados
+
+- **idSistema**: PGDASD
+- **idServico**: CONSDECLARACAO13
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+### Pesquisa por ano-calendário
+
+**Objeto Dados:**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| anoCalendario | Ano-calendário da declaração. Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `String` (4) | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSDECLARACAO13",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": \"2018\" }"
+  }
+}
+```
+
+### Pesquisa por período de apuração
+
+**Objeto Dados:**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período da apuração mensal. Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `String` (6) | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSDECLARACAO13",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"201801\" }"
+  }
+}
+```
+
+## Dados de Saída
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto DeclaracoesEntregues. | `String` |
+
+### Objeto: DeclaracoesEntregues
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| anoCalendario | Ano-calendário. | `Number` |
+| periodos | Contém uma lista de declarações em um determinado período de apuração (PA). Quando for utilizado o ano-calendário no parâmetro da realização da consulta. | `Array` de `Object` Periodo |
+| periodo | Contém apenas um período de apuração (PA). Quando for utilizado o periodo da apuração no parâmetro da realização da consulta. | `Object` |
+
+### Objeto: Periodo
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período da apuração, formato AAAAMM. | `Number` |
+| operacoes | Lista todas as operações realizadas no período de apuração. | `Array` de `Object` Operacao |
+
+### Objeto: Operacao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| tipoOperacao | Tipo da operação realizada: (Declaração Original; Declaração Retificadora; Geração de DAS; DAS Avulso, DAS Medida Judicial ou DAS Cobrança). | `String` (30) |
+| indiceDeclaracao | Estrutura de dados da declaração.Objeto: IndiceDeclaracao indiceDas Estrutura de dados do DAS. | `Object` |
+
+### Objeto: IndiceDeclaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| dataHoraTransmissao | Data e hora da entrega à RFB. Formato yyyyMMddHHmmss. | `Number` |
+| malha | Situação da malha quando aplicável: (Retida em Malha; Liberada, Intimada ou Rejeitada). A situação Liberada contempla 3 situações diferentes, liberada sem análise, liberada por alteração de parâmetros e aceita. Quando não está em Malha o campo retorna null. | `String` (30) |
+
+### Objeto: IndiceDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS (Documento de Arrecadação do Simples Nacional). | `String` (17) |
+| dataHoraEmissaoDas | Data e hora da emissão do DAS. Formato yyyyMMddHHmmss. | `Number` |
+| dasPago | Informa se houve ou não pagamento do DAS até o momento da consulta. Pago (true) e não consta pagamento até o momento (false). | `Boolean` |
+
+**Exemplo de saída (JSON):**
+
+[índice de declarações recibo]()
+
+# Consultar Declaração/Recibo
+
+Consulta uma declaração/recibo específica com o número identificador da declaração. Nos casos de Multa de Atraso na Entrega da Declaração (MAED) a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGDASD
+- **idServico**: CONSDECREC15
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+**Campo: dados**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDeclaracao | Número identificador único da declaração. | `String` (17) | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSDECREC15",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"
+  }
+}
+```
+
+## Dados de Saída (retorno)
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+### Objeto: Declaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String` (17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+### Objeto: ArquivoRecibo
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+### Objeto: ArquivoDeclaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+### Objeto: ArquivoMaed
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**Exemplo de saída (JSON):**
+
+[consultar declaração recibo]()
+# Consultar Extrato do DAS
+
+Essa funcionalidade consulta um extrato detalhado específico do DAS gerado.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGDASD
+- **idServico**: CONSEXTRATO16
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+**Campo: dados**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| numeroDas | Número do DAS que se deseja fazer a consulta do Extrato. | `String` (17) | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSEXTRATO16",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroDas\": \"07202136999997159\" }"
+  }
+}
+```
+
+## Dados de Saída
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto ExtratoDas. | `String` |
+
+### Objeto: ExtratoDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDas | Número do DAS (Documento de Arrecadação do Simples Nacional). | `String` (17) |
+| extrato | Estrutura de dados do Extrato do DAS. A saída é um PDF. | `Object` |
+
+### Objeto: ArquivoExtrato
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do extrato para ser utilizado no processo de decodificação do base64. Ex. “extrato-pgdasd-{numeroDeclaracao}.pdf”. | `String` (50) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+**Exemplo de saída (JSON):**
+
+[retorno consultar extrato do DAS]()
+# Consultar a Última Declaração/Recibo transmitida
+
+Consulta uma cópia da última declaração com o recibo de entrega transmitida em um determinado período de apuração mensal. Nos casos de declaração original que incidiu Multa por Atraso na Entrega da Declaração (MAED), a Notificação e o DARF da MAED serão apresentados nos dados de saída.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGDASD
+- **idServico**: CONSULTIMADECREC14
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+**Campo: dados**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração mensal. Formato: AAAAMM. | `String` (6) | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSULTIMADECREC14",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"201801\" }"
+  }
+}
+```
+
+## Dados de Saída (retorno)
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto de tamanho 5 que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao. | `String` |
+
+### Objeto: Declaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDeclaracao | Identificador único da declaração transmitida. | `String`(17) |
+| recibo | Estrutura de dados do Recibo de entrega da declaração. A saída é um PDF. | `Object` |
+| declaracao | Estrutura de dados completa da declaração entregue. A saída é um PDF. | `Object` |
+| maed | Nos casos de declaração original entregue fora do prazo, o PGDAS-D gera uma MAED. Essa estrutura representa os documentos de Notificação e DARF da MAED. | `Object` |
+
+### Objeto: ArquivoRecibo
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo do recibo para ser utilizado no processo de decodificação do base64. Ex. “recibo-pgdasd-{numeroDeclaracao}.pdf” | `String` (28) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+### Objeto: ArquivoDeclaracao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivo | Nome do arquivo da declaracao para ser utilizado no processo de decodificação do base64. Ex. “dec-pgdasd-{numeroDeclaracao}.pdf” | `String` (25) |
+| pdf | Obtém o arquivo em base 64 para conversão em PDF. | `String` |
+
+### Objeto: ArquivoMaed
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| nomeArquivoNotificacao | Nome do arquivo da notificação da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “notificacao-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfNotificacao | Obtém o arquivo em base 64 para conversão em PDF da notificação da MAED. | `String` |
+| nomeArquivoDarf | Nome do arquivo do DARF da multa da declaracao entregue em atraso. para ser utilizado no processo de decodificação do base64. Ex. “darf-maed-pgdasd-{numeroDeclaracao}.pdf” | `String` (50) |
+| pdfDarf | Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED. | `String` |
+
+**Exemplo de saída (JSON):**
+
+[consultar declaração recibo]()
+# Entregar Declaração Mensal - Entrada
+
+Serviço que permite a transmissão de uma Declaração do Simples Nacional, original ou retificadora.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGDASD
+- **idServico**: TRANSDECLARACAO11
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+**Objeto Dados:**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj completo sem formatação | `String` (14) | SIM |
+| pa | Período de apuração da declaração em formato AAAAMM | `Number` | SIM |
+| indicadorTransmissao | Indica se a declaração deve ser transmitida. No caso de "false", serão devolvidos os valores devidos sem transmissão | `Boolean` | SIM |
+| indicadorComparacao | Indica se há a necessidade de comparação dos valoresParaComparacao enviados na entrada com os valores calculados antes da transmissão. Ver [regra](). | `Boolean` | SIM |
+| declaracao | Objeto contendo os dados da declaração. Ver [declaracao](). | `Object` | SIM |
+| valoresParaComparacao | Valores para comparação com o valor apurado pelo sistema. Obrigatório, exceto quando não há valor devido. Ver [regra](). | `Array` de `Object` [valorDevido]() | NÃO |
+
+### Objeto [Declaracao:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| tipoDeclaracao | [Tipo da declaração]() | `Number` | SIM |
+| receitaPaCompetenciaInterno | Receita do mercado interno no pa de regime de competência | `Number` | SIM |
+| receitaPaCompetenciaExterno | Receita do mercado externo no pa de regime de competência | `Number` | SIM |
+| receitaPaCaixaInterno | Receita do mercado interno no pa de regime de caixa | `Number` | NÃO |
+| receitaPaCaixaExterno | Receita do mercado externo no pa de regime de caixa | `Number` | NÃO |
+| valorFixoIcms | Valor fixo de ICMS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| valorFixoIss | valor fixo de ISS, deve ser maior que zero e obedecer às regras de negócio | `Number` | NÃO |
+| receitasBrutasAnteriores | Lista de receita bruta anterior. Ver [regra](). | `Array` de `Object` [ReceitaBrutaAnterior]() | NÃO |
+| folhasSalario | Valores de folha de salário. | `Array` de `Object` [FolhaSalario]() | NÃO |
+| naoOptante | Informações de não optante | `Object` | NÃO |
+| estabelecimentos | Estabelecimentos da declaração. Deve conter todos os estabelecimentos vigentes à época do período de apuração da declaração. | `Array` de `Object` [Estabelecimento]() | SIM |
+
+### Objeto [ReceitaBrutaAnterior:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valorInterno | Valor no mercado interno | `Number` | SIM |
+| valorExterno | Valor no mercado externo | `Number` | SIM |
+
+### Objeto [FolhaSalario:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| pa | Período de Apuração em formato AAAAMM | `Number` | SIM |
+| valor | Valor | `Number` | SIM |
+
+### Objeto [NaoOptante:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| esferaAdm | 1 = Federal, 2= Distrital, 3 = Estadual, 4 = Municipal | `String` (1) | SIM |
+| uf | Uf do processo | `String` (2) | SIM |
+| codMunicipio | Código do município do processo | `String` (4) | SIM |
+| processo | Número do processo sem formatação | `String` | SIM |
+
+### Objeto [Estabelecimento:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| cnpjCompleto | Cnpj do estabelecimento sem formatação | `String` (14) | SIM |
+| atividades | Atividades do estabelecimento. Se não houve atividade para o estabelecimento, não enviar esta lista. | `Array` de `Object` [Atividade]() | NÃO |
+
+### Objeto [Atividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| idAtividade | Id da [atividade]() | `Number` | SIM |
+| valorAtividade | Valor da atividade | `Number` | SIM |
+| receitasAtividade | Parcela de receita da atividade. | `Array` de `Object` [ReceitaAtividade]() | SIM |
+
+### Objeto [ReceitaAtividade:]()
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| valor | Valor da parcela | `Number` | SIM |
+| codigoOutroMunicipio | Código do município no caso de atividade em outro município | `String` | NÃO |
+| outraUf | UF no caso de atividade em outro município/UF | `String` | NÃO |
+| isencoes | Informações de Isencao. | `Array` de `Object` [Isencao]() | NÃO |
+| reducoes | Informações de Reducao. | `Array` de `Object` [Reducao]() | NÃO |
+| qualificacoesTributarias | Informações de qualificacao. | `Array` de `Object` [qualificacao]() | NÃO |
+| exigibilidadesSuspensas | Informações de Exigibilidade Suspensa. | `Array` de `Object` [Exigibilidade Suspensa]() | NÃO |
+
+## Regras
+
+**a)** Para efeitos de receitas e tipo de declaração, será considerado o que já foi transmitido. Se no momento da chamada do Integra SN, ocorra uma transmissão pela Web, a declaração pelo IntegraSN deverá ser retificadora, mesmo que a transmissão anterior tenha ocorrido segundos antes.
+
+**b)** No caso de qualquer erro encontrado, nenhum dado será salvo.
+
+**c)** As mensagens de negócio do PGDASD 2018 foram preservadas e podem ser apresentadas (estouros de limite, atividades sem preenchimento de qualificação tributária obrigatória, valores possíveis em valores fixos, entre outros). Consulte o [manual]() do PGDASD.
+
+**d)** As [receitas brutas:]() são obrigatórias na primeira declaração em relação aos períodos anteriores ao início de opção ou anteriores ao primeiro PA após decadência (5 anos atrás) e para períodos anteriores onde o contribuinte não foi optante.  
+Não serão consideradas as receitas enviadas para API que já foram informadas em outra transmissão ou períodos onde houve transmissão de declaração. Mesmo se enviados, serão ignoradas e serão utilizadas as receitas já armazenadas na base. Receitas brutas para períodos de não optante ou na primeira declaração de PA após decadência (5 anos atrás) poderão ser enviados e os valores serão considerados no cálculo. É o mesmo comportamento do PGDASD WEB. Para períodos habilitados na tela de coleta do RBT, poderá ser enviado o novo valor de RBT. Para períodos desabilitados na tela de coleta do RBT, mesmo que enviados na API, serão ignorados.
+
+**e)** Valores decimais devem ser enviados com o valor mínimo zero.
+
+**f)** Se o indicadorComparacao for enviado como true, serão comparados os valores devidos calculados pelo sistema com os valores enviados na lista valorParaComparacao. A lista de [valoresParaComparacao]() deve ser exatamente igual ao que for calculado pelo sistema. Diferença de 0,01, por exemplo, não permitirá a transmissão.
+# Entregar Declaração Mensal - Saída
+
+## **Dados de Saída**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [DeclaracaoTransmitida](). | `String` |
+
+### Objeto [DeclaracaoTransmitida:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| idDeclaracao | Id da Declaração que foi transmitida | `String` |
+| dataHoraTransmissao | Data e hora da transmissão no formato AAAAMMDDHHmmSS | `String` |
+| valoresDevidos | Valor devidos calculados pelo sistema. | `Array` de object [ValorDevido]() |
+| declaracao | PDF da declaração no formato Base64 | `String` |
+| recibo | PDF do recibo no formato Base64 | `String` |
+| notificacaoMaed | PDF da notificação MAED. No caso de não ter MAED este campo é nulo | `String` |
+| darf | PDF do DARF. No caso de não ter MAED este campo é nulo | `String` |
+| detalhamentoDarfMaed | Detalhamento dos valores do Darf. Ver [Detalhamento](). | `Object` |
+
+### Objeto [ValorDevido:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoTributo | [Código do tributo]() | `Number` |
+| valor | Valor devido do tributo | `Number` |
+
+### Objeto [Detalhamento:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores contidos no DARF. Ver [Valores](). | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Por se tratar de DARF, este campo não possui informação | `Null` |
+
+### Objeto [Valores:]()
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+**Exemplo de saída (JSON):**
+
+[retorno entregar declaração]()
+# Exemplo de Json de retorno - Consultar Declaração por Ano-Calendário ou Período de Apuração
+
+Consultar índice de declarações por ano-calendário ou período de apuração.
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSDECLARACAO13",
+    "versaoSistema": "1.0",
+    "dados": "{ \"anoCalendario\": \"2018\" }"
+  },
+  "status": 200,
+  "dados": "{\"anoCalendario\":2018,\"periodos\":[{\"periodoApuracao\":201801,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201801001\",\"dataHoraTransmissao\":\"20220331032512\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Geração de DAS\",\"indiceDeclaracao\":null,\"indiceDas\":{\"numeroDas\":\"07202215764027873\",\"datahoraEmissaoDas\":\"20220606033456\",\"dasPago\":false}}]},{\"periodoApuracao\":201802,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201802001\",\"dataHoraTransmissao\":\"20220331032533\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201802002\",\"dataHoraTransmissao\":\"20220606033046\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Geração de DAS\",\"indiceDeclaracao\":null,\"indiceDas\":{\"numeroDas\":\"07202215964030940\",\"datahoraEmissaoDas\":\"20220608111510\",\"dasPago\":false}},{\"tipoOperacao\":\"Geração de DAS\",\"indiceDeclaracao\":null,\"indiceDas\":{\"numeroDas\":\"07202215964031106\",\"datahoraEmissaoDas\":\"20220608112922\",\"dasPago\":false}}]},{\"periodoApuracao\":201803,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201803001\",\"dataHoraTransmissao\":\"20220331032551\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201803002\",\"dataHoraTransmissao\":\"20220606033107\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201804,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201804001\",\"dataHoraTransmissao\":\"20220331032613\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201804002\",\"dataHoraTransmissao\":\"20220606033124\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201805,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201805001\",\"dataHoraTransmissao\":\"20220331033215\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201805002\",\"dataHoraTransmissao\":\"20220606033145\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201806,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201806001\",\"dataHoraTransmissao\":\"20220331033333\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201806002\",\"dataHoraTransmissao\":\"20220606033206\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Geração de DAS\",\"indiceDeclaracao\":null,\"indiceDas\":{\"numeroDas\":\"07202215964032307\",\"datahoraEmissaoDas\":\"20220608020457\",\"dasPago\":false}}]},{\"periodoApuracao\":201807,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201807001\",\"dataHoraTransmissao\":\"20220331033354\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201807002\",\"dataHoraTransmissao\":\"20220606033230\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201808,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201808001\",\"dataHoraTransmissao\":\"20220331033413\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201808002\",\"dataHoraTransmissao\":\"20220606033248\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201809,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201809001\",\"dataHoraTransmissao\":\"20220331033430\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201809002\",\"dataHoraTransmissao\":\"20220606033305\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201810,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201810001\",\"dataHoraTransmissao\":\"20220331033444\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201810002\",\"dataHoraTransmissao\":\"20220606033329\",\"malha\":\"\"},\"indiceDas\":null}]},{\"periodoApuracao\":201811,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201811001\",\"dataHoraTransmissao\":\"20220331033458\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201811002\",\"dataHoraTransmissao\":\"20220606033349\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Geração de DAS\",\"indiceDeclaracao\":null,\"indiceDas\":{\"numeroDas\":\"07202215964032170\",\"datahoraEmissaoDas\":\"20220608020204\",\"dasPago\":false}}]},{\"periodoApuracao\":201812,\"operacoes\":[{\"tipoOperacao\":\"Original\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201812001\",\"dataHoraTransmissao\":\"20220331033515\",\"malha\":\"\"},\"indiceDas\":null},{\"tipoOperacao\":\"Retificadora\",\"indiceDeclaracao\":{\"numeroDeclaracao\":\"00000000201812002\",\"dataHoraTransmissao\":\"20220606033407\",\"malha\":\"\"},\"indiceDas\":null}]}],\"mensagens\":null}"
+}
+```
+# Exemplo de Json de retorno - Consultar Declaração/Recibo
+
+Consulta declaração e recibo com os arquivos pdf codificados em base64.
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSDECREC15",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroDeclaracao\": \"00000000201801001\" }"
+  },
+  "status": 200,
+  "mensagens": [
+    {
+      "codigo": "Sucesso-PGDASD",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ],
+  "dados": "{\"numeroDeclaracao\": \"00000000201801001\", \"recibo\": {\"nomeArquivo\": \"PGDASD-RECIBO-00000000201801001.pdf\", \"pdf\": \"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...2895480 bytes truncated..."}"
+}
+```
+# Exemplo de Json de retorno - Consultar Extrato do DAS
+
+Consultar o extrato da apuração do DAS.
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSEXTRATO16",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroDas\": \"07202136999997159\" }"
+  },
+  "status": 200,
+  "dados": "{\"numeroDas\":\"07202136999997159\",\"extrato\":{\"nomeArquivo\":\"PGDASD-EXTRATO-07202136999997159.pdf\",\"pdf\":\"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...2895480 bytes truncated..."}"
+}
+```
+# Exemplo de Json de retorno - Consultar Última Declaração/Recibo
+
+Consulta declaração e recibo com os arquivos pdf codificados em base64.
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "CONSULTIMADECREC14",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"201801\" }"
+  },
+  "status": 200,
+  "mensagens": [
+    {
+      "codigo": "Sucesso-PGDASD",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ],
+  "dados": "{\"numeroDeclaracao\": \"00000000201801001\", \"recibo\": {\"nomeArquivo\": \"PGDASD-RECIBO-00000000201801001.pdf\", \"pdf\": \"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...2895475 bytes truncated..."}"
+}
+```
+# Exemplo de Json de retorno - Entregar Declaração Mensal
+
+Exemplo de uma declaração transmitida.
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "TRANSDECLARACAO11",
+    "versaoSistema": "1.0",
+    "dados": "{\"cnpjCompleto\":\"00000000000100\",\"pa\":202101,\"indicadorTransmissao\":true,\"indicadorComparacao\":true,\"declaracao\":{\"tipoDeclaracao\":1,\"receitaPaCompetenciaInterno\":10000.00,\"receitaPaCompetenciaExterno\":0.00,\"receitaPaCaixaInterno\":null,\"receitaPaCaixaExterno\":null,\"valorFixoIcms\":100.00,\"valorFixoIss\":null,\"receitasBrutasAnteriores\":[{\"pa\":202001,\"valorInterno\":100.00,\"valorExterno\":200.00},{\"pa\":202002,\"valorInterno\":300.00,\"valorExterno\":0.00},{\"pa\":202003,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202004,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202005,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202006,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202007,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202008,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202009,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202010,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202011,\"valorInterno\":0.00,\"valorExterno\":0.00},{\"pa\":202012,\"valorInterno\":0.00,\"valorExterno\":0.00}],\"folhasSalario\":[{\"pa\":202001,\"valor\":2000.00},{\"pa\":202002,\"valor\":2000.00},{\"pa\":202003,\"valor\":2000.00},{\"pa\":202004,\"valor\":2000.00},{\"pa\":202005,\"valor\":0.00},{\"pa\":202006,\"valor\":0.00},{\"pa\":202007,\"valor\":0.00},{\"pa\":202008,\"valor\":0.00},{\"pa\":202009,\"valor\":0.00},{\"pa\":202010,\"valor\":0.00},{\"pa\":202011,\"valor\":0.00},{\"pa\":202012,\"valor\":0.00}],\"naoOptante\":null,\"estabelecimentos\":[{\"cnpjCompleto\":\"0000000000100\",\"atividades\":[{\"idAtividade\":1,\"valorAtividade\":4000.00,\"receitasAtividade\":[{\"valor\":4000.00,\"codigoOutroMunicipio\":null,\"outraUf\":null,\"isencoes\":[{\"codTributo\":1007,\"valor\":100.00,\"identificador\":1}],\"reducoes\":[{\"codTributo\":1007,\"valor\":1500.00,\"percentualReducao\":50.00,\"identificador\":1}],\"qualificacoesTributarias\":[],\"exigibilidadesSuspensas\":null}]},{\"idAtividade\":10,\"valorAtividade\":6000.00,\"receitasAtividade\":[{\"valor\":6000.00,\"codigoOutroMunicipio\":9701,\"outraUf\":\"DF\",\"isencoes\":null,\"reducoes\":null,\"qualificacoesTributarias\":null,\"exigibilidadesSuspensas\":null}]}]}]},\"valoresParaComparacao\":[{\"codigoTributo\":1001,\"valor\":23.20},{\"codigoTributo\":1002,\"valor\":18.20},{\"codigoTributo\":1004,\"valor\":66.53},{\"codigoTributo\":1005,\"valor\":14.43},{\"codigoTributo\":1006,\"valor\":222.64},{\"codigoTributo\":1007,\"valor\":100.00},{\"codigoTributo\":1010,\"valor\":120.60}]}"
+  },
+  "status": "200",
+  "mensagens": [
+    {
+      "codigo": "Sucesso-PGDASD",
+      "texto": "Requisição efetuada com sucesso."
+    },
+    {
+      "codigo": "Aviso-PGDASD-MSG_ISN_034",
+      "texto": "A declaração do período 04/2021 da empresa TESTE, CNPJ 00.000.000/0001-00 foi transmitida com sucesso. Entretanto, foi entregue fora do prazo, o que ensejou a aplicação de multa. "
+    }
+  ],
+  "dados": "{\"idDeclaracao\":\"00000000202104001\",\"dataHoraTransmissao\":\"20220803044803\",\"valoresDevidos\":[{\"codigoTributo\":1001,\"valor\":44.00},{\"codigoTributo\":1002,\"valor\":28.00},{\"codigoTributo\":1004,\"valor\":101.92},{\"codigoTributo\":1005,\"valor\":22.08},{\"codigoTributo\":1006,\"valor\":332.00},{\"codigoTributo\":1007,\"valor\":272.00}],\"declaracao\":\"JVBERi0xLjUKJafj8fEKMiAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgNCAwIFIKL0Fjcm9Gb3JtIDUgMCBSCi9WZXJzaW9uIC8xIzJFNQo+PgplbmRvYmoKMTEgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTIgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTMgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTQgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTYgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTcgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMAo+PgpzdHJlYW0NCnicK+QCAADuAHwNCmVuZHN0cmVhbQplbmRvYmoKMTggMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAyMDU5Cj4+CnN0cmVhbQ0KeJzdWt1v2zYQf/dfwYc9JMDm8JvSUAxI/TFsWLu2C4Y97EVLvM5DHKeKsxb963dHkY4l8igFKPYwBI5lHX939zsej6SoD7OXVzPDmaslu7qZcfaN0eFCxDtCJxc8veXihY0XT7cMXlysJROcXf05Ewz/2vezM3bOrv6GJu/hw3utT35r8UX0SPt/U7O6mr2dffAfyX6Eu9/7a6FRzplSzAjmTM2ud7OL7e49Z8s9tIAeF76BiPKrXQCB0m+OV6D+pKmUYm6ZcxW2vliDkxLdfWG4k3ZtHfwXdmmF5NpZ439pu3ZScvyGu/DfKmegjbEr5++BxIBEOAntjVUeI1Zupez6OyR/NG4cGrcWjb/oFBpla7t03C7AnAI1K4DjvbXFq4XkcunNouKFFeiS02sF33VQ32doJHPAPdCrPbs+vPMMlK69EgcfbyoqG/bFiXJRublhQLTTL4N+wzFWqyU43Y8Id+bJorrMuCvr+lSjCPlzxsUF1xfAXrCGKR5/nGd9/AD/8QpD/dHfMRqUCgmqd74w+Mvb2S8AezuMFo7+XTZ358fcLYcFtNi67jN4oYRcQRBqDIZPldpa+KinDggppbCvnfadISG1at/aTOgOSHxb9fvibPH6zY/sVXNot5+/Pc/EW+q5NE+wkCKDHAK9Tvf1vt7vNmyzu283D027bW5LyiOWVG5FX/myOTTsZsOaPzbt4bFt2N2eIZGSkaiDNKKrvpGf7w/N3WHD7je3e/bLdnd/u3lgr5vr7f6uTEdXI5aUGYwHrAM4rpY4Dp4zGoLFqPA4gDFHsEoYp1eXMFyxQojc6AdvpOx7o1cvL70XYlhIJngSlZHced13FdNeoSWlV4brYBlLm0//BTpua/ztsOZC0QvDw5c/oAbfzvtqp/oKbpjaDtJ1c/fX4655Tr0wFY/1orvM1wtTyS9QL4w1w3oh5WqYJLFGjM0SU2oF2NT9vjqTc8GW24frdrvb3jWH7T97HITvNteb7aF5yMcOA/PRx0hpJjXOB0KxdgOx6kSyxnsorWQiVBWnRNpKGof2IBWDPZmxB9IOJxN7eVGwlxeiPR7tSZ6xxwOuL/T28qJgLy8Ee7oq2UMpYY8QdfYIIdqzRXuWtpcXBXt5IdpTvJAvKCXyhRAFe0PhcEKGodqvRFf7Q3N7Oq7Yy/YRv34/e/fV7+eZeUdxibUXNM2PE0vldb3atNfNzZ79APNYe7fPYSs9d0Xs6hOF1bUg7HoOGQTylbrXtpv8sKjXXRnXsCyGmhZLOlYzmAxhMVcZ6a/qsMadOscppedVYvdM8jnn/GvOc8y0mKsUQrWGNekzDWAghOy3D/3N/sDuZs314+7xtrnBtc0Du9l/3rDd5gFWILgmabd7WFedn24WUCP3Hpw1e/bmEtPl5ZWQ+YxRNewsDK/6HtSjERkiKHpcP1O/wTB+6YDo6jQg9+3+ft92y7ftZ1QUQnSfjRHinSznqj3NVdFt9OCz6LZ0fnmy9hL8Xvqt3gKXL1avRLcjA6nCDaPfCj6t40+dsB0JdPaS6E1McG0H0ZZmrDsTSDHBn2UAHTf/RfREWAz6304m0dMn0aPCh4NB6wE7Nxq9IaI4GJ6jH/1Wg8HwE6y5YDMC80LbGxbDrM4WeShFOlUJWcNLRRCmlXoailjyQY9C7mTWSgpmfV0nqza/t0eZ85uJvhD2BDhTEVApFUIocDeJE1ilHQnUUkS9GaR2PPqUAyNTWEOTTEFWYpqHRqYEODDNYz1TAhiZ5pGRKQFGprCQIZmCrMQ0D41MCXBgmsd6pgQwMs0jI1MCjEylopmCrMQ0D41MCXBgmsd6pgQwMs0jI1MCjEyFyA9gWVdkCFBWCAEBDSGgwF0ICCyGgAKGEBDIEAIKjEwrQzMFWYlpHhqZEuDANI/1TAlgZJpHRqYEGJk6uiijrMQ0D41MCXBgmsd6pgQwMs0jI1MCjEwNXZRRVmKah0amBDgwzWM9UwIYmeaRkWkCHm4yVZU8yYGNQbLDvDyupOnNJmpzbrAQnMu5AH3j201E28GTYi7wUX1uBSIMnwuTQeQXLMLpbjYeNpeUAQmdWk/WD1VinlOvKPXK2TnPIFRh0SVlt94YGtGUkW5xngB0cXmpzOCJOjdjnZAgyp2QNLcjnTBRf+iEpLUjOwHGnp3uf+yApHlFGTAwRvVk/Rh8NThp4PVY8BNEOfjD5oKPBH+i/hD8RD05gmPwJ+qPwU8MkCM4BH+ifgy+NLnyI3LRlMDWpIjCtjd2QGJEUkZCBySAYgckrRWlPnbARP0YIJhEkuouT6o7/UAQ0Zw/t7oniHJok+Zj1X2i/hDapDVd3UNoJ+qPuZ00Jyt7yO2J+iH4cni4O1rVU0Qx+Gnzkao+VX8X/LT1WFWfqj8EP20+UtWn6sfgD0/AR6t6iigHf9h8rKpP1R+Cn6gfq+pT9cfgJwZGqvpU/Rj84RsChaoegp8gysFPmo9U9Kn6Q/CT1mMVvaifeB5nueq288Q2QYr+mwv+jFkpPHHR1q7twlbxoN2fMQu7iE9i/Snz4Flsd/aM5zZSyzp/EA96nnEQf2QiYM9UYiJs/z0EmMQ0TGHr5rBvWZvPIRGPu48vQlh8d6p7nQs/Ck+dVt05O76GgE+f/Rm7f0snf6Z+9LgWZYe5HTpswOFfm1u/HVtvP+0f8m7XauD1qIeAPzZ/ekjNurfATm4of8NTOo4Grqyfk/zbdb/9KbqX6/4F+ZqCzQ0KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDg0Cj4+CnN0cmVhbQ0KeJwL5HIK4TJQCCni0ndJLctMTg1yd1JILgYKgWBxMpe+m7GCpUJIGpchWMRQwcjIRMHMwlwhJJdLw8BAzwCC9YHYUNfQQFMhJAtinmsIFwDe1hQLDQplbmRzdHJlYW0KZW5kb2JqCjIwIDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzkKPj4Kc3RyZWFtDQp4nAvkcgrhMlAIKeLSd0kty0xODXJ3UkguBgqBYHEyl76bsYKlQkgalyFYxFDByMhEwczcRCEkl0vDNcLVN8DH...290945 bytes truncated..."}"
+}
+```
+# Exemplo de Json de retorno - Gerar DAS
+
+Exemplo de uma emissão de DAS (Documento de Arrecadação do Simples Nacional).
+
+## Json de retorno completo
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000100",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "GERARDAS12",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"201801\", \"dataConsolidacao\": \"20220831\" }"
+  },
+  "status": 200,
+  "dados": "[{\"pdf\":\"JVBERi0xLjQKJb/3ov4KMSAwIG9iago8PCAvTmFtZXMgMyAwIFIgL1BhZ2VzIDQgMCBSIC9UeXBlIC9DYXRhbG9nIC9WaWV3ZXJQcmVmZXJlbmNlcyA8PCAvUHJpbnRTY2FsaW5nIC9BcHBEZWZhdWx0ID4+ID4+CmVuZG9iagoyIDAgb2JqCjw8IC9DcmVhdGlvbkRhdGUgKEQ6MjAyMjA4MDIxMjU4MjYtMDMnMDAnKSAvQ3JlYXRvciAoSmFzcGVyUmVwb3J0cyBcKGRhZVwpKSAvTW9kRGF0ZSAoRDoyMDIyMDgwMjEyNTgyNi0wMycwMCcpIC9Qcm9kdWNlciAoaVRleHQgMi4xLjcgYnkgMVQzWFQpID4+CmVuZG9iagozIDAgb2JqCjw8IC9EZXN0cyA1IDAgUiA+PgplbmRvYmoKNCAwIG9iago8PCAvQ291bnQgMSAvSVRYVCAoMi4xLjcpIC9LaWRzIFsgNiAwIFIgXSAvVHlwZSAvUGFnZXMgPj4KZW5kb2JqCjUgMCBvYmoKPDwgL05hbWVzIFsgKEpSX1BBR0VfQU5DSE9SXzBfMSkgNyAwIFIgXSA+PgplbmRvYmoKNiAwIG9iago8PCAvQ29udGVudHMgWyA4IDAgUiA5IDAgUiAxMCAwIFIgXSAvR3JvdXAgPDwgL0NTIC9EZXZpY2VSR0IgL1MgL1RyYW5zcGFyZW5jeSAvVHlwZSAvR3JvdXAgPj4gL01lZGlhQm94IFsgMCAwIDU5NSA4NDIgXSAvUGFyZW50IDQgMCBSIC9SZXNvdXJjZXMgPDwgL0NvbG9yU3BhY2UgPDwgL0NTIC9EZXZpY2VSR0IgPj4gL0ZvbnQgPDwgL0YxIDExIDAgUiAvRjIgMTIgMCBSIC9GMyAxMyAwIFIgL0Y0IDE0IDAgUiAvRjUgMTUgMCBSID4+IC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdIC9YT2JqZWN0IDw8IC9GeDEgMTYgMCBSIC9YZjEgMTcgMCBSIC9pbWcwIDE4IDAgUiAvaW1nMSAxOSAwIFIgL2ltZzIgMjAgMCBSIC9pbWczIDIxIDAgUiAvaW1nNCAyMiAwIFIgPj4gPj4gL1R5cGUgL1BhZ2UgPj4KZW5kb2JqCjcgMCBvYmoKWyA2IDAgUiAvWFlaIDAgODU0IDAgXQplbmRvYmoKOCAwIG9iago8PCAvTGVuZ3RoIDEwIC9GaWx0ZXIgL0ZsYXRlRGVjb2RlID4+CnN0cmVhbQp4nCvkAgAA7gB8ZW5kc3RyZWFtCmVuZG9iago5IDAgb2JqCjw8IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9MZW5ndGggMjUyNyA+PgpzdHJlYW0KeJzVW81yG7kRvvMpcPRW0SP8A+ObImlTUtmUbDGurcrmwIxoFVOkKFNStiqPlz2k8hgpH7b2kFMql5zS3QD4Jw840gy3LMs2miMAX6PxdaPBAT73fjfsKcs8t2x41TsZ9t73JDvDp4Jx+MH/vZZsOOsdfC+YAOlT79V3w79gXfgMP4vrHi+cYT9RS2hUCGl0CaUy1lv24fe9P/4JurnqwUPhPZv1jLYkTXvGiMJI+mAMPCxloZPoWdVDyXJFNVHyWDs2skIx7AnLCjtHYdrTCrtAWZWpBUlYCwTseBoEAgv1UYOoX9X79HJUvUzGXc0XZ9VsfQaV0IVgzslCxInEUeBEPp4smMxXx/PqYTa+uZ+zqzE7XCzG1ehq9MuXOc46Z9erfp0rhGUOhhgY8vXurubscjK7nY7v2GBUTeY3o2nq6WS4rXYcDDLpM5OgLz43ZQE20Io5WRZWQD12MJldC3Y8Z+/XR7qqAtqE1sDq10vpOZzVzJYWiCC0IGkKkiqcpQ8C57T0hdQkOg7K9UgSmmqiZLF2bOQETBz0hGWFnaDARBDYBcow0NiCJB2IgB0TESJYqI8aRP2Isy9F1Qac1aYwDqqXhRFLzorIWfhBYnFecPhnvT+AUrzmvBGvnsoAYUW0KzhztKsxS7uSs4ehohjsShLZNUhkpdgITYc9Bbti78GzwtmRYsWJPMQPUrP0LiUpTWVoRBMc9UQqvDydG3BCmHIHI4Ynl8MTdnzOLgd7oQIy2PHkYSCtPAw+kIdBlI0eZqHL4GGW1o/ggHzNw2ypWPBVFTwMheRhKJMX8ehhluI9CtBx8LAAFuuDBlG/FAxehKpNggEsoN4UPq5eitn6xetivPj3/CosXbcPi/V1q/uoQAaW1kUDS1smA0sn05iDiAYmiQxMUjBXagQ2pJ7IwMEv1MrDyP5mNSvGRiOQxFYOklz3MJzpqOcyKrwonZtEBcubs+N4dD9Canwc31QTynH2Qg7pbTS0VsnQWi0NrfXS0EE05FPJ0CQFm6VGYEnqiQxNvZOhpVfJ0NKL5eygSIYmiQwdpDC3sRHOeNQTyfHydG5ADul1c3IM/jcbLyByzNkyA27IjtrMW4L2aCydS2NcITlUk5Cmc+G5sO61bwmsPeRFYHsvG0bN0fVowcZ392MYfsr+R/e/NlIDOiolbAQAMvTLNWw5sF+RfOXrNdYWVgPzZHzKV4xfy1dM2GRZy1O+Yq1K+y1n037L+bV8xQJ1qCePmQ317jELpSYsQPBB4y4sNAqiJUKX1Ps0SgSZGoEiSU9aYV+czk2WWq+L0mF/hXdLxmpkzjIIvlLigPsDyaXcW5YFXhMDEUirQAQfKNJIvQxE0qVAZGUKRFavByJwBOrJupi6gLBMXUDG9CS0IEnG1EW6mLpEsFCfNKAiZVkvQtWGWRbutJvEi/M/340Xfx398t/xXdtIBajar5ONb4bHkztYssez28X4bsQGP5+zf7Lzi+HhABL92/H08XcLxXMU6r7ihk8JMB0M0zYLxh9H0/mCDef3o+nTF6OugjGxmsIRsTrFKClDNAtEC6JLgU3zFNi0XA9s2oTApk0KbNqsBTb4QJErNAoiT4GNqB0kvR7YkNxmzRFfnM4NPNKIsiipv0wwNr4vTHsndEJ8hZ3RB48GF2ctIXDznsX4MPrbF/DmeTVp+P1gPZazhW6RdJ2NbsaTxRwWMdE215JCFaXfgSf5AZfN0b4aGETDtZOL5Ab0zUtiNBcsfkW9dANukxuIpRuIDTcQ0Q2EiQuSMKsFCWRcdEILknhckLiNC1IAi/W5YFG/tHa+CFWbrJ2gJWxRtE3z7+rD+9F/ribXrXcWMBLtmoNeLCaw471t71pPGOjx+GY+m9w84SuY2kCoTKGaA9PS2dbAuC99wmDfPUzvR23DsLFFaZpjnj0s5q3zLwjE3DzCg3XHcs+2S+LvfHY7v5vArG3kJzUvi56rFpgeX1jFZU8vzRDjqeBcdEDlHMTph4sz9ppdnr67eHtyyQaHR6fng8O3rb8SMAXkIw7mU9cAy75s+iajnr1yFwrva92ar+VuFGM7cP4dKKq9xZANsHWuZQMXXeQKSGvYBuRo3XRPnRtIDuLo8u3bvdFa6/pJEn3dEa1zKLwvW09SoHUeRXVE6xyK7PO2LopsUPq3oLXMOA/QuouB5CCOzr8/HVzujdjC10+T6YuOiJ1DEf3WoSESO48iy26InUNxfd3F6s39b0BsXWbcB4jddu/tdkBcnO6N1RpYl2FCR6zOokC47obVu1DaMiGweofFbAdZiPaZnLQ7VtuM7wCr265ubgcExOq90BoGZ21immy7OYqszsGovuqI1TkU3Zdto6hROwwmdV+oDrhgMhlpd6TW+R2j62AgOYjTo3f7IrXO7H6E6ozUORjZdx2ROoei+rrtikqkzhqs7LsuuKAy+ejlBTChG2YjlFhBmW0o/Lpr0vZ7IGIZX+Vsj1A07zc+YFk//yYPInj7lxmRyjkY334oRLIcRhfvZYwIJ79VemeyTbKTwfEh+/HVx/Hi7sv8jSlEIX78rvXZkR2oXKbX/0zIN8a/kW03d4q7QuxAbbvUKWH3CyAdZIg+j3Hxr+vJzehNB1/+G5VHOmjLAozUwuHNgQjgt3zIeMfDH9Y2WxR4TiqLZrwwXEkv8WVuWzTYbuXRILI75LcE7267HZbW7UCLh768c+3HpqUoJFDDqUK5hLd9pOLwD8OTwfD06PAfP5+zdydHfx+A3PB0AR7g4bUvIYGXTBQmNMB7K0rBkxm9rgvydPU6bVcYZwKPk+vlK1X59Csr7LmXT2rOLsHP2rtWzsoST1hzj8I0CZtFRY8FTxVQ2i4r7CtUicJmUUWsaSzX/6dXqd+IJk3elFr0Bi47jSu750qgJ5OJvIwmCsJmUdHjaKIobZcVdRbrRGm7rBLgNAmbBZ3G/tZUanLYGk+qZqfvOYG6wfR5H2wlIZDQGKKwWVT0ONghSdtlRZ0le0b2b5VVApwmYbOg6fvWVGoyfWHly0zf01e+z73PEIqhEShB/UQZYoLFuuzgh0/xpt57vNNXhjt9mv6CAeJlPvX4Mh/9Gi/ylcuLfOX6Rb7aEMNLvJCIw3R1S+5zr47VrlbaMu9r8cLR8tZ5X2kL7nI4+zhLjkOD7KUOMhwdH93/2nZ0uGUvfQ7qyeeOc0OyvBaHDmC2Ho7ldHivHuYpO8TdIVJaGeKRUnGFjsJmUdHjEGuStF1W1FmMWVHaLqsEOE3CZkFXSr41lZrcGLF+R4jsMl1HIiKWL9MN+y0wPHnZnomlg0Ue9nPLM6T2kQs/jFk1n7E5uzj9oeHtbGvoMRS6hFCtUiTXjyN5+D2AUxuM5EkAjP8Ddf3h4GVuZHN0cmVhbQplbmRvYmoKMTAgMCBvYmoKPDwgL0xlbmd0aCAzMiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeJzjCuQq5DJUMABCCJmcy6XvVmGo4JLPFcgFAFX4BfNlbmRzdHJlYW0KZW5kb2JqCjExIDAgb2JqCjw8IC9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udCA+PgplbmRvYmoKMTIgMCBvYmoKPDwgL0Jhc2VGb250IC9SVVhEWVYrQXJpYWwtQm9sZE1UIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9GaXJzdENoYXIgMzIgL0ZvbnREZXNjcmlwdG9yIDIzIDAgUiAvTGFzdENoYXIgMjQzIC9TdWJ0eXBlIC9UcnVlVHlwZSAvVHlwZSAvRm9udCAvV2lkdGhzIFsgMjc3IDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAyNzcgMzMzIDI3NyAyNzcgNTU2IDU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2IDU1NiA1NTYgMCAwIDAgMCAwIDAgMCAwIDcyMiAwIDcyMiA3MjIgNjY2IDAgMCAwIDI3NyA1NTYgMCAwIDgzMyA3MjIgNzc3IDY2NiAwIDAgNjY2IDYxMCAwIDAgMCA2NjYgMCAwIDAgMCAwIDAgMCAwIDU1NiAwIDU1NiA2MTAgNTU2IDAgNjEwIDAgMjc3IDAgMCAyNzcgODg5IDYxMCA2MTAgNjEwIDAgMzg5IDU1NiAzMzMgNjEwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCA3MjIgMCAwIDAgMCAwIDY2NiAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDU1NiAwIDAgMCA1NTYgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDYxMCBdID4+CmVuZG9iagoxMyAwIG9iago8PCAvQmFzZUZvbnQgL1pZQUpNVitBcmlhbE1UIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9GaXJzdENoYXIgMzIgL0ZvbnREZXNjcmlwdG9yIDIzIDAgUiAvTGFzdENoYXIgMjUwIC9TdWJ0eXBlIC9UcnVlVHlwZSAvVHlwZSAvRm9udCAvV2lkdGhzIFsgMjc3IDAgMCAwIDAgMCAwIDAgMzMzIDMzMyAwIDAgMjc3IDMzMyAyNzcgMjc3IDU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2IDU1NiAyNzcgMCAwIDAgMCAwIDAgNjY2IDAgNzIyIDcyMiA2NjYgMCAwIDAgMjc3IDUwMCAwIDAgODMzIDcyMiA3NzcgNjY2IDAgNzIyIDY2NiA2MTAgNzIyIDY2NiAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDU1NiA1NTYgNTAwIDU1NiA1NTYgMCA1NTYgMCAyMjIgMCAwIDIyMiA4MzMgNTU2IDU1NiA1NTYgMCAzMzMgNTAwIDI3NyA1NTYgNTAwIDAgMCAwIDUwMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgNjY2IDY2NiAwIDAgMCA3MjIgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCA1NTYgMCA1NTYgMCAwIDAgNTAwIDAgNTU2IDAgMCAwIDI3NyAwIDAgMCAwIDAgMCAwIDU1NiAwIDAgMCAwIDU1NiBdID4+CmVuZG9iagoxNCAwIG9iago8PCAvQmFzZUZvbnQgL1BVRVBGUCtMaWJlcmF0aW9uTW9ubyAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvRmlyc3RDaGFyIDMyIC9Gb250RGVzY3JpcHRvciAyNSAwIFIgL0xhc3RDaGFyIDgzIC9TdWJ0eXBlIC9UcnVlVHlwZSAvVHlwZSAvRm9udCAvV2lkdGhzIFsgNjAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCA2MDAgNjAwIDAgNjAwIDYwMCA2MDAgNjAwIDYwMCA2MDAgNjAwIDYwMCA2MDAgNjAwIDYwMCAwIDAgMCAwIDAgMCAwIDYwMCAwIDYwMCAwIDYwMCA2MDAgMCAwIDYwMCA2MDAgMCA2MDAgNjAwIDYwMCA2MDAgNjAwIDAgNjAwIDYwMCBdID4+CmVuZG9iagoxNSA...414304 bytes truncated...\"",
+  "mensagens": [
+    {
+      "codigo": "Sucesso-PGDASD",
+      "texto": "Requisição efetuada com sucesso."
+    }
+  ]
+}
+```
+# Gerar DAS
+
+Essa funcionalidade permite a geração do DAS de uma declaração previamente transmitida. É possível também a geração de um DAS para data de consolidação posterior.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGDASD
+- **idServico**: GERARDAS12
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+**Objeto Dados:**
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) | SIM |
+| dataConsolidacao | Data de consolidação no formato AAAAMMDD - Data futura | `String` (8) | NÃO |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "GERARDAS12",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"201801\", \"dataConsolidacao\": \"20220831\" }"
+  }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista com o objeto [Das](). | `String` |
+
+### Objeto: Das
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS. Ver [DetalhamentoDas](). | `Object` |
+
+### Objeto: DetalhamentoDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos valores | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+### Objeto: Valores
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+### Objeto: Composicao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo. Ver [Valores](). | `Object` |
+
+**Exemplo de saída (JSON):**
+
+[retorno gerar DAS]()
+# Emitir DAS Avulso
+
+Esta funcionalidade gera um DAS Avulso.
+
+## PedidoDados
+
+- **idSistema**: PGDASD
+- **idServico**: GERARDASAVULSO19
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração que se deseja gerar o DAS Avulso no formato AAAAMM | `String` (6) | SIM |
+| listaTributos | Lista de tributos para serem incluídos no DAS Avulso. | `Array` de `Object` [Tributo]() | SIM |
+| dataConsolidacao | Data que se deseja emitir o DAS. Caso a emissão seja no próprio dia não informar este campo. | `Number` | NÃO |
+| prorrogacaoEspecial | Indicador de [Prorrogação Especial](). Somente utilizar para os períodos prorrogados entre 03/2020 e 05/2020 ou 03/2021 e 05/2021 | `Number` | NÃO |
+
+### Objeto: Tributo
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codigo | [Código do tributo]() | `Number` | SIM |
+| valor | Valor do tributo para ser gerado o DAS | `Number` | SIM |
+| codMunicipio | Código de município TOM. Obrigatório para tributo ISS | `Number` | NÃO |
+| uf | Destino da UF. Obrigatório para ICMS | `String` (2) | NÃO |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "GERARDASAVULSO19",
+    "versaoSistema": "1.0",
+    "dados": "{\"PeriodoApuracao\":202401,\"ListaTributos\":[{\"Codigo\":1010,\"Valor\":111.22,\"CodMunicipio\":0375,\"uf\":\"PA\"},{\"Codigo\":1007,\"Valor\":20.50,\"uf\":\"RJ\"},{\"Codigo\":1001,\"Valor\":100}]}"
+  }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto [Das](). | `String` |
+
+### Objeto: Das
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS | `Object` |
+
+### Objeto: DetalhamentoDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos [Valores]() | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+### Objeto: Valores
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+### Objeto: Composicao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo | `Object` |
+
+**Exemplo de saída (JSON):**
+
+[retorno gerar DAS avulso]()
+# Emitir DAS Cobrança
+
+Esta funcionalidade gera um DAS (Documento de Arrecadação) com os débitos em sistema de cobrança.
+
+## PedidoDados
+
+- **idSistema**: PGDASD
+- **idServico**: GERARDASCOBRANCA17
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração que se deseja gerar o DAS de Cobrança no formato AAAAMM | `Number` | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "GERARDASCOBRANCA17",
+    "versaoSistema": "1.0",
+    "dados": "{ \"periodoApuracao\": \"202301\" }"
+  }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto [Das](). | `String` |
+
+### Objeto: Das
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS | `Object` |
+
+### Objeto: DetalhamentoDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos [Valores](). | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+### Objeto: Valores
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+### Objeto: Composicao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo | `Object` |
+
+**Exemplo de saída (JSON):**
+
+[retorno gerar DAS Cobrança]()
+# Emitir DAS de Processo
+
+Esta funcionalidade gera um DAS (Documento de Arrecadação) com os débitos de processo em sistema de cobrança.
+
+## PedidoDados
+
+- **idSistema**: PGDASD
+- **idServico**: GERARDASPROCESSO18
+- **versaoSistema**: "1.0"
+
+## Dados de Entrada
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| periodoApuracao | Período de apuração que se deseja gerar o DAS de Cobrança no formato AAAAMM | `Number` | SIM |
+
+**Exemplo de entrada (JSON):**
+
+```json
+{
+  "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "contribuinte": {
+    "numero": "00000000000000",
+    "tipo": 2
+  },
+  "pedidoDados": {
+    "idSistema": "PGDASD",
+    "idServico": "GERARDASPROCESSO18",
+    "versaoSistema": "1.0",
+    "dados": "{ \"numeroProcesso\": \"00000000000000000\" }"
+  }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados do DAS emitido.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | `Number` |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio. | `Array` |
+| dados | Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto [Das](). | `String` |
+
+### Objeto: Das
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| pdf | Pdf do DAS no formato Texto Base 64 | `String` |
+| cnpjCompleto | Número do cnpj sem formatação | `String` |
+| detalhamento | Detalhamento do DAS | `Object` |
+
+### Objeto: DetalhamentoDas
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de Apuração no formato AAAAMM. No caso de mais de um período contido no DAS será retornado o texto Diversos | `String` (6) |
+| numeroDocumento | Número do documento gerado | `String` (17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD. No caso de mais de um período contido no DAS este campo poderá estar em branco. | `String` (8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | `String` (8) |
+| valores | Discriminação dos [Valores]() | `Object` |
+| observacao1 | Observação 1 | `String` |
+| observacao2 | Observação 2 | `String` |
+| observacao3 | Observação 3 | `String` |
+| composicao | Composição do DAS gerado. | `Array` de `Object` [Composicao]() |
+
+### Objeto: Valores
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| principal | Valor do principal | `Number` |
+| multa | Valor da multa | `Number` |
+| juros | Valor dos juros | `Number` |
+| total | Valor total | `Number` |
+
+### Objeto: Composicao
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | `String` (6) |
+| codigo | [Código do tributo]() | `String` |
+| denominacao | Descrição do nome/destino do tributo | `String` |
+| valores | Discriminação dos valores do tributo | `Object` |
+
+**Exemplo de saída (JSON):**
+
+[retorno gerar DAS de Processo]()
+# Dados de domínio
+
+## Códigos de Tributo
+
+| Código | Descrição |
+| --- | --- |
+| 1001 | IRPJ |
+| 1002 | CSLL |
+| 1004 | COFINS |
+| 1005 | PIS |
+| 1006 | INSS/CPP |
+| 1007 | ICMS |
+| 1008 | IPI |
+| 1010 | ISS |
+
+## Tipos de declaração
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Original |
+| 2 | Retificadora |
+
+## Atividades
+
+| Id | Descrição |
+| --- | --- |
+| 1 | Revenda de mercadorias, exceto para o exterior - Sem substituição tributária/tributação monofásica/antecipação com encerramento de tributação (o substituto tributário do ICMS deve utilizar essa opção) |
+| 2 | Revenda de mercadorias, exceto para o exterior - Com substituição tributária/tributação monofásica/antecipação com encerramento de tributação (o substituído tributário do ICMS deve utilizar essa opção) |
+| 3 | Revenda de mercadorias para o exterior |
+| 4 | Venda de mercadorias industrializadas pelo contribuinte, exceto para o exterior - Sem substituição tributária/tributação monofásica/antecipação com encerramento de tributação (o substituto tributário do ICMS deve utilizar essa opção) |
+| 5 | Venda de mercadorias industrializadas pelo contribuinte, exceto para o exterior - Com substituição tributária/tributação monofásica/antecipação com encerramento de tributação (o substituído tributário do ICMS deve utilizar essa opção) |
+| 6 | Venda de mercadorias industrializadas pelo contribuinte para o exterior |
+| 7 | Locação de bens móveis, exceto para o exterior |
+| 8 | Locação de bens móveis para o exterior |
+| 9 | Prestação de serviços, exceto para o exterior - Escritórios de serviços contábeis autorizados pela legislação municipal a pagar o ISS em valor fixo em guia do Município |
+| 10 | Prestação de serviços, exceto para o exterior - Sujeitos ao fator “r”, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 11 | Prestação de serviços, exceto para o exterior - Sujeitos ao fator “r”, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 12 | Prestação de serviços, exceto para o exterior - Sujeitos ao fator “r”, com retenção/substituição tributária de ISS |
+| 13 | Prestação de serviços, exceto para o exterior - Não sujeitos ao fator “r” e tributados pelo Anexo III, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 14 | Prestação de serviços, exceto para o exterior - Não sujeitos ao fator “r” e tributados pelo Anexo III, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 15 | Prestação de serviços, exceto para o exterior - Não sujeitos ao fator “r” e tributados pelo Anexo III, com retenção/substituição tributária de ISS |
+| 16 | Prestação de serviços, exceto para o exterior - Sujeitos ao Anexo IV, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 17 | Prestação de serviços, exceto para o exterior - Sujeitos ao Anexo IV, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 18 | Prestação de serviços, exceto para o exterior - Sujeitos ao Anexo IV, com retenção/substituição tributária de ISS |
+| 19 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo III, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 20 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo III, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 21 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo III, com retenção/substituição tributária de ISS |
+| 22 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo IV, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 23 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo IV, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 24 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo IV, com retenção/substituição tributária de ISS |
+| 25 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços de transporte coletivo municipal rodoviário, metroviário, ferroviário e aquaviário de passageiros, sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 26 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços de transporte coletivo municipal rodoviário, metroviário, ferroviário e aquaviário de passageiros, sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 27 | Prestação de Serviços relacionados nos subitens 7.02, 7.05 e 16.1 da lista anexa à LC 116/2003, exceto para o exterior - Serviços de transporte coletivo municipal rodoviário, metroviário, ferroviário e aquaviário de passageiros, com retenção/substituição tributária de ISS |
+| 28 | Prestação de serviços para o exterior - Escritórios de serviços contábeis autorizados pela legislação municipal a pagar o ISS em valor fixo em guia do Município |
+| 29 | Prestação de serviços para o exterior - Sujeitos ao fator “r” |
+| 30 | Prestação de serviços para o exterior - Não sujeitos ao fator “r” e tributados pelo Anexo III |
+| 31 | Prestação de serviços para o exterior - Sujeitos ao Anexo IV |
+| 32 | Prestação de Serviços relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003, para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo III |
+| 33 | Prestação de Serviços relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003, para o exterior - Serviços da área da construção civil relacionados nos subitens 7.02 e 7.05 da lista anexa à LC 116/2003 e tributados pelo Anexo IV |
+| 34 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, exceto para o exterior - Transporte sem substituição tributária de ICMS (o substituto tributário deve utilizar essa opção) |
+| 35 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, exceto para o exterior - Transporte com substituição tributária de ICMS (o substituído tributário deve utilizar essa opção) |
+| 36 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, exceto para o exterior - Comunicação sem substituição tributária de ICMS (o substituto tributário deve utilizar essa opção) |
+| 37 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, exceto para o exterior - Comunicação com substituição tributária de ICMS (o substituído tributário deve utilizar essa opção) |
+| 38 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, para o exterior - Transporte |
+| 39 | Serviços de comunicação; de transporte intermunicipal e interestadual de carga; e de transporte intermunicipal e interestadual de passageiros autorizados no inciso VI do art. 17 da LC 123, para o exterior - Comunicação |
+| 40 | Atividades com incidência simultânea de IPI e de ISS, exceto para o exterior - Sem retenção/substituição tributária de ISS, com ISS devido a outro(s) Município(s) |
+| 41 | Atividades com incidência simultânea de IPI e de ISS, exceto para o exterior - Sem retenção/substituição tributária de ISS, com ISS devido ao próprio Município do estabelecimento |
+| 42 | Atividades com incidência simultânea de IPI e de ISS, exceto para o exterior - Com retenção/substituição tributária de ISS |
+| 43 | Atividades com incidência simultânea de IPI e de ISS para o exterior |
+
+## Tipo de Redução
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Normal |
+| 2 | Cesta básica |
+
+## Tipo de Isenção
+
+| Código | Descrição |
+| --- | --- | 
+| 1 | Imunidade |
+| 3 | Lançamento de Ofício |
+| 8 | Substituição Tributária |
+| 9 | Tributação Monofásica |
+| 10 | Antecipação com Encerramento de Tributação |
+| 11 | Retenção de ISS |
+
+## Tipo de Exigibilidade Suspensa
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Liminar em Mandado de Segurança |
+| 2 | Depósito Judicial |
+| 3 | Antecipação de Tutela |
+| 4 | Liminar em Medida Cautelar |
+| 5 | Depósito Administrativo |
+| 6 | Outros |
+
+## Tipo de Prorrogação Especial
+
+| Código | Descrição |
+| --- | --- |
+| 1 | Quota 1 - Para períodos 03, 04 e 05/2021 |
+| 2 | Quota 2 - Para períodos 03, 04 e 05/2021 |
+| 3 | Federal - Para períodos 03, 04 e 05/2020 |
+| 4 | Regional - Para períodos 03, 04 e 05/2020 |
+# Glossário
+
+## Siglas
+
+Principais siglas utilizadas no PGDAS-D 2018.
+
+Fonte: [Manual do PGDAS-D 2018]()
+
+| Sigla | Descrição |
+| --- | --- |
+| CGSN | Comitê Gestor do Simples Nacional |
+| CNAE | Classificação Nacional de Atividades Econômicas |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| Cofins | Contribuição para o Financiamento da Seguridade Social |
+| CPF | Cadastro de Pessoa Física |
+| CPP | Contribuição Patronal Previdenciária para a Seguridade Social |
+| CSLL | Contribuição Social sobre o Lucro Líquido |
+| DAS | Documento de Arrecadação do Simples Nacional |
+| DF | Distrito Federal |
+| EPP | Empresa de Pequeno Porte |
+| FS12 | Folha de Salários, incluindo encargos, acumulada da empresa nos 12 meses anteriores ao PA |
+| ICMS | Imposto sobre Operações Relativas à Circulação de Mercadorias e sobre Prestação de Serviços de Transporte Interestaduais e Intermunicipais e de Comunicação |
+| IN | Instrução Normativa |
+| INSS | Instituto Nacional do Seguro Social |
+| IPI | Imposto sobre Produtos Industrializados |
+| IRPJ | Imposto sobre a Renda da Pessoa Jurídica |
+| ISS | Imposto Sobre Serviços |
+| ME | Microempresa |
+| PA | Período de Apuração |
+| PGDAS-D | Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório |
+| PIS | Programa de Integração Social |
+| PJ | Pessoa Jurídica |
+| r | (Fator) Relação entre a FS12 e a RBT12 |
+| RBA | Receita Bruta Acumulada no ano-calendário corrente (mercado interno + mercado externo) |
+| RBA int | Receita Bruta Acumulada no ano-calendário corrente no mercado interno |
+| RBA ext | Receita Bruta Acumulada no ano-calendário corrente no mercado externo |
+| RBAA | Receita Bruta Acumulada no ano-calendário anterior (mercado interno + mercado externo) |
+| RBAA int | Receita Bruta Acumulada no ano-calendário anterior no mercado interno |
+| RBAA ext | Receita Bruta Acumulada no ano-calendário anterior no mercado externo |
+| RPA | Receita Bruta Total do PA |
+| RPA int | Receita Bruta Total do PA no mercado interno |
+| RPA ext | Receita Bruta Total do PA no mercado externo |
+| RBT12 | Receita Bruta Acumulada da empresa nos 12 meses anteriores ao PA (mercado interno + mercado externo) |
+| RBT12 int | Receita bruta acumulada nos doze meses anteriores ao PA no mercado interno |
+| RBT12 ext | Receita bruta acumulada nos doze meses anteriores ao PA no mercado externo |
+| RBT12 int prop | Receita bruta acumulada nos doze meses anteriores ao PA no mercado interno proporcionalizada |
+| RBT12 ext prop | Receita bruta acumulada nos doze meses anteriores ao PA no mercado externo proporcionalizada |
+| RFB | Secretaria da Receita Federal do Brasil |
+| SE | Secretaria Executiva |
+| Selic | Sistema Especial de Liquidação e Custódia (juros) |
+| SPE | Sociedade de Propósito Específico |
+| UF | Unidade da Federação |
+# Introdução ao PGDASD
+
+## O que é o Integra PGDAS-D?
+
+É uma solução integrada ao sistema Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório (PGDAS-D 2018) que é um sistema eletrônico para a realização do cálculo do Simples Nacional para os períodos de apuração (PA) a partir de janeiro de 2018, conforme determinam a Lei Complementar nº 123, de 14 de dezembro de 2006 (e alterações) e Resolução CGSN nº 140, de 22 de maio de 2018.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra PGDASD, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PGDASD, garantindo a integridade e a confidencialidade das informações transmitidas.
+# Mensagens específicas para o Integra Simples Nacional
+
+| Códigos | Mensagem | Ação | Exemplo |
+| --- | --- | --- | --- |
+| \[Erro-PGDASD-MSG\_ISN\_001\] | Erro ao utilizar o Integra Contador SN. Tente novamente mais tarde. | Erro interno. Efetuar nova tentativa. | |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_002\] | Parâmetros de entrada inválidos."Detalhes do problema". | Problema de formatação do json de entrada ou entrada inválida ao negócio. Enviar novamente com os dados corretos. Exceto para o Declarar que possui mensagens específicas devido à complexidade. | |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_012\] | Houve um problema no processamento das informações. | Problema interno na aplicação. Tentar novamente em outro momento. | |
+| \[Erro-PGDASD-MSG\_ISN\_022\] | Houve um erro ao entregar a declaração. | Erro interno do sistema. Fazer nova tentativa em outro horário. | |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_031\] | Houve um problema na transmissão. Tente novamente mais tarde. | Erro interno durante a transmissão. Tente novamente mais tarde. | |
+| \[EntradaIncorreta-PGDASD-MSG\_ISN\_035\] | Os valores devidos enviados não são iguais aos valores devidos calculados. Transmissão interrompida. Valores devidos (Tributo:Valor): {valores}. Valores Calculados (Tributo:Valor): {valores}. | Foi solicitada transmissão pelo indicadorTransmissao porém a lista com os valores devidos não é igual aos valores calculados. A transmissão não ocorreu. |
