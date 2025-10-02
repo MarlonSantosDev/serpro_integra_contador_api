@@ -31,7 +31,7 @@ void main() async {
   //await Parcsn(apiClient);
   //await Pertmei(apiClient);
   //await Pertsn(apiClient);
-  await Pgdasd(apiClient); // Em validação
+  await Pgdasd(apiClient); // (Refazer arquivo mdc e serviço completo)
 
   //await Pgmei(apiClient);
   //await Procuracoes(apiClient);
