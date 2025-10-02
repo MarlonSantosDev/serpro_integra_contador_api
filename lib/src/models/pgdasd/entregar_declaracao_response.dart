@@ -11,11 +11,7 @@ class EntregarDeclaracaoResponse {
   /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida
   final String dados;
 
-  EntregarDeclaracaoResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  EntregarDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -31,19 +27,13 @@ class EntregarDeclaracaoResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
   }
 
   factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
     return EntregarDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List)
-          .map((m) => Mensagem.fromJson(m))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
       dados: json['dados'].toString(),
     );
   }
@@ -64,10 +54,7 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 }
 
@@ -112,8 +99,7 @@ class DeclaracaoTransmitida {
   bool get temMaed => notificacaoMaed != null && darf != null;
 
   /// Valor total devido
-  double get valorTotalDevido =>
-      valoresDevidos.fold(0.0, (sum, valor) => sum + valor.valor);
+  double get valorTotalDevido => valoresDevidos.fold(0.0, (sum, valor) => sum + valor.valor);
 
   Map<String, dynamic> toJson() {
     return {
@@ -124,8 +110,7 @@ class DeclaracaoTransmitida {
       'recibo': recibo,
       if (notificacaoMaed != null) 'notificacaoMaed': notificacaoMaed,
       if (darf != null) 'darf': darf,
-      if (detalhamentoDarfMaed != null)
-        'detalhamentoDarfMaed': detalhamentoDarfMaed!.toJson(),
+      if (detalhamentoDarfMaed != null) 'detalhamentoDarfMaed': detalhamentoDarfMaed!.toJson(),
     };
   }
 
@@ -133,16 +118,12 @@ class DeclaracaoTransmitida {
     return DeclaracaoTransmitida(
       idDeclaracao: json['idDeclaracao'].toString(),
       dataHoraTransmissao: json['dataHoraTransmissao'].toString(),
-      valoresDevidos: (json['valoresDevidos'] as List)
-          .map((v) => ValorDevido.fromJson(v))
-          .toList(),
+      valoresDevidos: (json['valoresDevidos'] as List).map((v) => ValorDevido.fromJson(v)).toList(),
       declaracao: json['declaracao'].toString(),
       recibo: json['recibo'].toString(),
       notificacaoMaed: json['notificacaoMaed']?.toString(),
       darf: json['darf']?.toString(),
-      detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null
-          ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed'])
-          : null,
+      detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed']) : null,
     );
   }
 }
@@ -162,10 +143,7 @@ class ValorDevido {
   }
 
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
-    return ValorDevido(
-      codigoTributo: int.parse(json['codigoTributo'].toString()),
-      valor: (num.parse(json['valor'].toString())).toDouble(),
-    );
+    return ValorDevido(codigoTributo: int.parse(json['codigoTributo'].toString()), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 }
 
@@ -253,20 +231,10 @@ class ValoresDarf {
   /// Valor total
   final double total;
 
-  ValoresDarf({
-    required this.principal,
-    required this.multa,
-    required this.juros,
-    required this.total,
-  });
+  ValoresDarf({required this.principal, required this.multa, required this.juros, required this.total});
 
   Map<String, dynamic> toJson() {
-    return {
-      'principal': principal,
-      'multa': multa,
-      'juros': juros,
-      'total': total,
-    };
+    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
   }
 
   factory ValoresDarf.fromJson(Map<String, dynamic> json) {

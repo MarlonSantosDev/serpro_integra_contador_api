@@ -31,10 +31,10 @@ void main() async {
   //await Parcsn(apiClient);
   //await Pertmei(apiClient);
   //await Pertsn(apiClient);
-  await Pgdasd(apiClient);
+  await Pgdasd(apiClient); // Em validação
 
-  // await Pgmei(apiClient);
-  // await Procuracoes(apiClient);
+  //await Pgmei(apiClient);
+  //await Procuracoes(apiClient);
   // await Regime(apiClient);
   // await Relpmei(apiClient);
   // await Relpsn(apiClient);

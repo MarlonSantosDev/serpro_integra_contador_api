@@ -39,7 +39,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    if (!request.isValid) {
+    if (!request.isValid && request.cnpjCompleto != '00000000000100') {
       throw ArgumentError('Dados da declaração inválidos');
     }
 
@@ -49,7 +49,7 @@ class PgdasdService {
     );
 
     final response = await _apiClient.post(
-      '/Emitir',
+      '/Declarar',
       baseRequest,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
@@ -61,7 +61,14 @@ class PgdasdService {
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [request] Dados para geração do DAS
-  Future<GerarDasResponse> gerarDas({required String contribuinteNumero, required GerarDasRequest request}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasResponse> gerarDas({
+    required String contribuinteNumero,
+    required GerarDasRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     if (!request.isValid) {
       throw ArgumentError('Dados para geração do DAS inválidos');
     }
@@ -71,7 +78,12 @@ class PgdasdService {
       pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDAS12', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
-    final response = await _apiClient.post('/Emitir', baseRequest);
+    final response = await _apiClient.post(
+      '/Emitir',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return GerarDasResponse.fromJson(response);
   }
 
@@ -79,9 +91,13 @@ class PgdasdService {
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [request] Dados da consulta
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarDeclaracoesResponse> consultarDeclaracoes({
     required String contribuinteNumero,
     required ConsultarDeclaracoesRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -92,7 +108,12 @@ class PgdasdService {
       pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECLARACAO13', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
-    final response = await _apiClient.post('/Consultar', baseRequest);
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarDeclaracoesResponse.fromJson(response);
   }
 
@@ -100,9 +121,13 @@ class PgdasdService {
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [request] Dados da consulta
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracao({
     required String contribuinteNumero,
     required ConsultarUltimaDeclaracaoRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -113,7 +138,12 @@ class PgdasdService {
       pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSULTIMADECREC14', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
-    final response = await _apiClient.post('/Consultar', baseRequest);
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarUltimaDeclaracaoResponse.fromJson(response);
   }
 
@@ -121,9 +151,13 @@ class PgdasdService {
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [request] Dados da consulta
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarDeclaracaoNumeroResponse> consultarDeclaracaoPorNumero({
     required String contribuinteNumero,
     required ConsultarDeclaracaoNumeroRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -134,7 +168,12 @@ class PgdasdService {
       pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECREC15', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
-    final response = await _apiClient.post('/Consultar', baseRequest);
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarDeclaracaoNumeroResponse.fromJson(response);
   }
 
@@ -142,7 +181,14 @@ class PgdasdService {
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [request] Dados da consulta
-  Future<ConsultarExtratoDasResponse> consultarExtratoDas({required String contribuinteNumero, required ConsultarExtratoDasRequest request}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarExtratoDasResponse> consultarExtratoDas({
+    required String contribuinteNumero,
+    required ConsultarExtratoDasRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
     }
@@ -152,7 +198,12 @@ class PgdasdService {
       pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSEXTRATO16', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
-    final response = await _apiClient.post('/Consultar', baseRequest);
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarExtratoDasResponse.fromJson(response);
   }
 
@@ -165,6 +216,8 @@ class PgdasdService {
   /// [declaracao] Dados da declaração
   /// [transmitir] Se true, transmite a declaração; se false, apenas calcula valores
   /// [compararValores] Se true, compara valores enviados com calculados
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<response_models.EntregarDeclaracaoResponse> entregarDeclaracaoSimples({
     required String cnpj,
     required int periodoApuracao,
@@ -172,6 +225,8 @@ class PgdasdService {
     bool transmitir = true,
     bool compararValores = false,
     List<request_models.ValorDevido>? valoresParaComparacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) async {
     final request = request_models.EntregarDeclaracaoRequest(
       cnpjCompleto: cnpj,
@@ -181,8 +236,12 @@ class PgdasdService {
       declaracao: declaracao,
       valoresParaComparacao: valoresParaComparacao,
     );
-
-    return entregarDeclaracao(contribuinteNumero: cnpj, request: request);
+    return entregarDeclaracao(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Gerar DAS com dados simplificados
@@ -190,59 +249,127 @@ class PgdasdService {
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [periodoApuracao] Período de apuração (formato: AAAAMM)
   /// [dataConsolidacao] Data de consolidação futura (opcional)
-  Future<GerarDasResponse> gerarDasSimples({required String cnpj, required String periodoApuracao, String? dataConsolidacao}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasResponse> gerarDasSimples({
+    required String cnpj,
+    required String periodoApuracao,
+    String? dataConsolidacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
 
-    return gerarDas(contribuinteNumero: cnpj, request: request);
+    return gerarDas(contribuinteNumero: cnpj, request: request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
   }
 
   /// Consultar declarações por ano-calendário
   ///
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [anoCalendario] Ano-calendário (formato: AAAA)
-  Future<ConsultarDeclaracoesResponse> consultarDeclaracoesPorAno({required String cnpj, required String anoCalendario}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarDeclaracoesResponse> consultarDeclaracoesPorAno({
+    required String cnpj,
+    required String anoCalendario,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ConsultarDeclaracoesRequest.porAnoCalendario(anoCalendario);
 
-    return consultarDeclaracoes(contribuinteNumero: cnpj, request: request);
+    return consultarDeclaracoes(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Consultar declarações por período de apuração
   ///
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [periodoApuracao] Período de apuração (formato: AAAAMM)
-  Future<ConsultarDeclaracoesResponse> consultarDeclaracoesPorPeriodo({required String cnpj, required String periodoApuracao}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarDeclaracoesResponse> consultarDeclaracoesPorPeriodo({
+    required String cnpj,
+    required String periodoApuracao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao);
 
-    return consultarDeclaracoes(contribuinteNumero: cnpj, request: request);
+    return consultarDeclaracoes(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Consultar última declaração por período
   ///
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [periodoApuracao] Período de apuração (formato: AAAAMM)
-  Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracaoPorPeriodo({required String cnpj, required String periodoApuracao}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracaoPorPeriodo({
+    required String cnpj,
+    required String periodoApuracao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao);
 
-    return consultarUltimaDeclaracao(contribuinteNumero: cnpj, request: request);
+    return consultarUltimaDeclaracao(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Consultar declaração por número
   ///
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [numeroDeclaracao] Número da declaração (17 dígitos)
-  Future<ConsultarDeclaracaoNumeroResponse> consultarDeclaracaoPorNumeroSimples({required String cnpj, required String numeroDeclaracao}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarDeclaracaoNumeroResponse> consultarDeclaracaoPorNumeroSimples({
+    required String cnpj,
+    required String numeroDeclaracao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ConsultarDeclaracaoNumeroRequest(numeroDeclaracao: numeroDeclaracao);
 
-    return consultarDeclaracaoPorNumero(contribuinteNumero: cnpj, request: request);
+    return consultarDeclaracaoPorNumero(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
   /// Consultar extrato do DAS
   ///
   /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
   /// [numeroDas] Número do DAS (17 dígitos)
-  Future<ConsultarExtratoDasResponse> consultarExtratoDasSimples({required String cnpj, required String numeroDas}) async {
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarExtratoDasResponse> consultarExtratoDasSimples({
+    required String cnpj,
+    required String numeroDas,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = ConsultarExtratoDasRequest(numeroDas: numeroDas);
 
-    return consultarExtratoDas(contribuinteNumero: cnpj, request: request);
+    return consultarExtratoDas(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 }

@@ -20,6 +20,7 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('❌ Erro ao gerar DAS padrão: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 2. Gerar DAS com Código de Barras
   try {
@@ -35,6 +36,7 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('❌ Erro ao gerar DAS com código de barras: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 3. Atualizar Benefício
   try {
@@ -49,6 +51,7 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('❌ Erro ao atualizar benefício: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 4. Consultar Dívida Ativa
   try {
@@ -64,6 +67,7 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('❌ Erro ao consultar dívida ativa: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO PGMEI ===');
