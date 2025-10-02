@@ -35,9 +35,9 @@ void main() async {
 
   //await Pgmei(apiClient);
   //await Procuracoes(apiClient);
-  // await Regime(apiClient);
-  // await Relpmei(apiClient);
-  // await Relpsn(apiClient);
-  //await Sicalc(apiClient); (Refazer arquivo mdc e serviço completo)
-  // await Sitfis(apiClient);
+  //await Regime(apiClient);
+  //await Relpmei(apiClient);
+  //await Relpsn(apiClient);
+  //await Sicalc(apiClient);
+  //await Sitfis(apiClient);
 }

@@ -81,6 +81,7 @@ export 'src/util/assinatura_digital_utils.dart';
 export 'src/util/cache_utils.dart';
 export 'src/util/xml_utils.dart';
 export 'src/util/eventos_atualizacao_utils.dart';
+export 'src/util/sicalc_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';
@@ -315,6 +316,11 @@ export 'src/models/regime_apuracao/consultar_opcao_response.dart' hide RegimeApu
 export 'src/models/regime_apuracao/consultar_resolucao_request.dart';
 export 'src/models/regime_apuracao/consultar_resolucao_response.dart' hide MensagemNegocio;
 
+// SICALC Models
+export 'src/models/sicalc/sicalc_enums.dart' hide TipoContribuinte;
+export 'src/models/sicalc/sicalc_request.dart';
+export 'src/models/sicalc/sicalc_response.dart';
+
 // Services
 export 'src/services/ccmei_service.dart';
 export 'src/services/pgdasd_service.dart';
@@ -338,3 +344,4 @@ export 'src/services/mit_service.dart';
 export 'src/services/eventos_atualizacao_service.dart';
 export 'src/services/autenticaprocurador_service.dart';
 export 'src/services/regime_apuracao_service.dart';
+export 'src/services/sicalc_service.dart';
