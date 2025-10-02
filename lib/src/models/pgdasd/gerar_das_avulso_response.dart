@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para gerar DAS Avulso PGDASD
 ///
 /// Representa a resposta do serviço GERARDASAVULSO19
@@ -19,8 +21,9 @@ class GerarDasAvulsoResponse {
   /// Parse dos dados JSON retornados
   List<DasAvulso>? get dadosParsed {
     try {
-      final dadosJson = dados as List;
-      return dadosJson.map((d) => DasAvulso.fromJson(d)).toList();
+      // Primeiro converte a string JSON para List
+      final dadosList = jsonDecode(dados) as List;
+      return dadosList.map((d) => DasAvulso.fromJson(d)).toList();
     } catch (e) {
       return null;
     }
@@ -213,4 +216,3 @@ class ComposicaoDasAvulso {
     );
   }
 }
-

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para entrega de declaração PGDASD
 ///
 /// Representa a resposta do serviço TRANSDECLARACAO11
@@ -19,8 +21,17 @@ class EntregarDeclaracaoResponse {
   /// Parse dos dados JSON retornados
   List<DeclaracaoTransmitida>? get dadosParsed {
     try {
-      final dadosJson = dados as List;
-      return dadosJson.map((d) => DeclaracaoTransmitida.fromJson(d)).toList();
+      // Primeiro converte a string JSON para Map
+      final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
+
+      // Se for uma lista, retorna a lista
+      if (dadosMap.containsKey('dados') && dadosMap['dados'] is List) {
+        final lista = dadosMap['dados'] as List;
+        return lista.map((d) => DeclaracaoTransmitida.fromJson(d)).toList();
+      }
+
+      // Se for um objeto único, retorna como lista com um item
+      return [DeclaracaoTransmitida.fromJson(dadosMap)];
     } catch (e) {
       return null;
     }

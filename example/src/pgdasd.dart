@@ -9,6 +9,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   bool servicoOk = true;
 
   // 1. Entregar Declaração Mensal (TRANSDECLARACAO11)
+  /*
   try {
     print('\n--- 1. Entregando Declaração Mensal ---');
 
@@ -56,14 +57,33 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
       print('🆔 ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
       print('📅 Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
-      print('💰 Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido}');
+      print('💰 Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido.toStringAsFixed(2)}');
       print('📋 Tem MAED: ${declaracaoTransmitida.temMaed}');
+
+      // Detalhamento dos valores devidos
+      print('\n📊 Valores Devidos por Tributo:');
+      for (final valor in declaracaoTransmitida.valoresDevidos) {
+        print('  • Tributo ${valor.codigoTributo}: R\$ ${valor.valor.toStringAsFixed(2)}');
+      }
+
+      // Detalhamento MAED se houver
+      if (declaracaoTransmitida.temMaed && declaracaoTransmitida.detalhamentoDarfMaed != null) {
+        final maed = declaracaoTransmitida.detalhamentoDarfMaed!;
+        print('\n📋 Detalhamento MAED:');
+        print('  📄 Número Documento: ${maed.numeroDocumento}');
+        print('  📅 Data Vencimento: ${maed.dataVencimento}');
+        print('  💰 Principal: R\$ ${maed.valores.principal.toStringAsFixed(2)}');
+        print('  💰 Multa: R\$ ${maed.valores.multa.toStringAsFixed(2)}');
+        print('  💰 Juros: R\$ ${maed.valores.juros.toStringAsFixed(2)}');
+        print('  💰 Total MAED: R\$ ${maed.valores.total.toStringAsFixed(2)}');
+      }
     }
   } catch (e) {
     print('❌ Erro ao entregar declaração mensal: $e');
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
+  */
 
   // 2. Gerar DAS (GERARDAS12)
   try {
@@ -72,7 +92,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     final gerarDasResponse = await pgdasdService.gerarDasSimples(
       cnpj: '00000000000100',
       periodoApuracao: '202101',
-      dataConsolidacao: '20220831', // Data futura para consolidação
+      //dataConsolidacao: '20220831', // Data futura para consolidação
     );
 
     print('✅ Status: ${gerarDasResponse.status}');
@@ -84,8 +104,28 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${das.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${das.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${das.detalhamento.dataVencimento}');
-      print('💰 Valor Total: R\$ ${das.detalhamento.valores.total}');
+      print('📅 Data Limite Acolhimento: ${das.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${das.pdf.isNotEmpty}');
+
+      // Detalhamento dos valores
+      print('\n📊 Composição dos Valores:');
+      print('  💰 Principal: R\$ ${das.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${das.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${das.detalhamento.valores.juros.toStringAsFixed(2)}');
+
+      // Composição por tributo se disponível
+      if (das.detalhamento.composicao != null && das.detalhamento.composicao!.isNotEmpty) {
+        print('\n📋 Composição por Tributo:');
+        for (final composicao in das.detalhamento.composicao!) {
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
+        }
+      }
+
+      // Observações se houver
+      if (das.detalhamento.observacao1 != null) print('📝 Observação 1: ${das.detalhamento.observacao1}');
+      if (das.detalhamento.observacao2 != null) print('📝 Observação 2: ${das.detalhamento.observacao2}');
+      if (das.detalhamento.observacao3 != null) print('📝 Observação 3: ${das.detalhamento.observacao3}');
     }
   } catch (e) {
     print('❌ Erro ao gerar DAS: $e');
@@ -121,10 +161,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
           if (operacao.isDeclaracao) {
             print('      📄 Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
             print('      🔍 Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}');
+            print('      📅 Transmissão: ${operacao.indiceDeclaracao!.dataHoraTransmissao}');
           }
           if (operacao.isDas) {
             print('      💰 DAS: ${operacao.indiceDas!.numeroDas}');
-            print('      ✅ Pago: ${operacao.indiceDas!.foiPago}');
+            print('      ✅ Pago: ${operacao.indiceDas!.foiPago ? 'Sim' : 'Não'}');
+            print('      📅 Emissão: ${operacao.indiceDas!.dataHoraEmissaoDas}');
           }
         }
       }
@@ -208,14 +250,21 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('🏢 CNPJ: ${extrato.cnpjCompleto}');
       print('📅 Período: ${extrato.periodoApuracao}');
       print('📅 Data Vencimento: ${extrato.dataVencimento}');
-      print('💰 Valor Total: R\$ ${extrato.valorTotal}');
+      print('📅 Data Limite Acolhimento: ${extrato.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${extrato.valorTotal.toStringAsFixed(2)}');
       print('📊 Status Pagamento: ${extrato.statusPagamento}');
-      print('✅ Foi Pago: ${extrato.foiPago}');
-      print('⏰ Está Vencido: ${extrato.estaVencido}');
+      print('✅ Foi Pago: ${extrato.foiPago ? 'Sim' : 'Não'}');
+      print('⏰ Está Vencido: ${extrato.estaVencido ? 'Sim' : 'Não'}');
       print('📋 Composição: ${extrato.composicao.length} tributos');
 
       for (final composicao in extrato.composicao.take(3)) {
-        print('  ${composicao.nomeTributo}: R\$ ${composicao.valorTributo} (${composicao.percentual}%)');
+        print(
+          '  • ${composicao.nomeTributo} (${composicao.codigoTributo}): R\$ ${composicao.valorTributo.toStringAsFixed(2)} (${composicao.percentual.toStringAsFixed(2)}%)',
+        );
+      }
+
+      if (extrato.dataPagamento != null) {
+        print('📅 Data Pagamento: ${extrato.dataPagamento}');
       }
     }
   } catch (e) {
@@ -346,8 +395,23 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${dasCobranca.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasCobranca.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${dasCobranca.detalhamento.dataVencimento}');
-      print('💰 Valor Total: R\$ ${dasCobranca.detalhamento.valores.total}');
+      print('📅 Data Limite Acolhimento: ${dasCobranca.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${dasCobranca.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasCobranca.pdf.isNotEmpty}');
+
+      // Detalhamento dos valores
+      print('\n📊 Composição dos Valores:');
+      print('  💰 Principal: R\$ ${dasCobranca.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasCobranca.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasCobranca.detalhamento.valores.juros.toStringAsFixed(2)}');
+
+      // Composição por tributo se disponível
+      if (dasCobranca.detalhamento.composicao != null && dasCobranca.detalhamento.composicao!.isNotEmpty) {
+        print('\n📋 Composição por Tributo:');
+        for (final composicao in dasCobranca.detalhamento.composicao!) {
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
+        }
+      }
     }
   } catch (e) {
     print('❌ Erro ao gerar DAS Cobrança: $e');
@@ -368,10 +432,27 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('🏢 CNPJ: ${dasProcesso.cnpjCompleto}');
       print('📅 Período: ${dasProcesso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasProcesso.detalhamento.numeroDocumento}');
+      if (dasProcesso.detalhamento.dataVencimento != null) {
+        print('📅 Data Vencimento: ${dasProcesso.detalhamento.dataVencimento}');
+      }
       print('📅 Data Limite Acolhimento: ${dasProcesso.detalhamento.dataLimiteAcolhimento}');
-      print('💰 Valor Total: R\$ ${dasProcesso.detalhamento.valores.total}');
+      print('💰 Valor Total: R\$ ${dasProcesso.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasProcesso.pdf.isNotEmpty}');
-      print('🔄 Múltiplos Períodos: ${dasProcesso.detalhamento.temMultiplosPeriodos}');
+      print('🔄 Múltiplos Períodos: ${dasProcesso.detalhamento.temMultiplosPeriodos ? 'Sim' : 'Não'}');
+
+      // Detalhamento dos valores
+      print('\n📊 Composição dos Valores:');
+      print('  💰 Principal: R\$ ${dasProcesso.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasProcesso.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasProcesso.detalhamento.valores.juros.toStringAsFixed(2)}');
+
+      // Composição por tributo se disponível
+      if (dasProcesso.detalhamento.composicao != null && dasProcesso.detalhamento.composicao!.isNotEmpty) {
+        print('\n📋 Composição por Tributo:');
+        for (final composicao in dasProcesso.detalhamento.composicao!) {
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
+        }
+      }
     }
   } catch (e) {
     print('❌ Erro ao gerar DAS de Processo: $e');
@@ -418,13 +499,21 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${dasAvulso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasAvulso.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${dasAvulso.detalhamento.dataVencimento}');
-      print('💰 Valor Total: R\$ ${dasAvulso.detalhamento.valores.total}');
+      print('📅 Data Limite Acolhimento: ${dasAvulso.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${dasAvulso.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasAvulso.pdf.isNotEmpty}');
       print('📋 Composição: ${dasAvulso.detalhamento.composicao?.length ?? 0} tributos');
 
+      // Detalhamento dos valores
+      print('\n📊 Composição dos Valores:');
+      print('  💰 Principal: R\$ ${dasAvulso.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasAvulso.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasAvulso.detalhamento.valores.juros.toStringAsFixed(2)}');
+
       if (dasAvulso.detalhamento.composicao != null) {
+        print('\n📋 Composição por Tributo:');
         for (final composicao in dasAvulso.detalhamento.composicao!.take(3)) {
-          print('  ${composicao.denominacao}: R\$ ${composicao.valores.total}');
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
         }
       }
     }

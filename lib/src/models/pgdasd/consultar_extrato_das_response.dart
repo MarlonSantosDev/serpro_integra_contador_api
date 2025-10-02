@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para consultar extrato do DAS PGDASD
 ///
 /// Representa a resposta do serviço CONSEXTRATO16
@@ -11,11 +13,7 @@ class ConsultarExtratoDasResponse {
   /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto ExtratoDas
   final String dados;
 
-  ConsultarExtratoDasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarExtratoDasResponse({required this.status, required this.mensagens, required this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -23,27 +21,22 @@ class ConsultarExtratoDasResponse {
   /// Parse dos dados JSON retornados
   ExtratoDas? get dadosParsed {
     try {
-      final dadosJson = dados as Map<String, dynamic>;
-      return ExtratoDas.fromJson(dadosJson);
+      // Primeiro converte a string JSON para Map
+      final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
+      return ExtratoDas.fromJson(dadosMap);
     } catch (e) {
       return null;
     }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
   }
 
   factory ConsultarExtratoDasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarExtratoDasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List)
-          .map((m) => Mensagem.fromJson(m))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
       dados: json['dados'].toString(),
     );
   }
@@ -64,10 +57,7 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 }
 
@@ -153,9 +143,7 @@ class ExtratoDas {
       valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
       statusPagamento: json['statusPagamento'].toString(),
       dataPagamento: json['dataPagamento']?.toString(),
-      composicao: (json['composicao'] as List)
-          .map((c) => ComposicaoExtratoDas.fromJson(c))
-          .toList(),
+      composicao: (json['composicao'] as List).map((c) => ComposicaoExtratoDas.fromJson(c)).toList(),
     );
   }
 }
@@ -174,20 +162,10 @@ class ComposicaoExtratoDas {
   /// Percentual aplicado
   final double percentual;
 
-  ComposicaoExtratoDas({
-    required this.codigoTributo,
-    required this.nomeTributo,
-    required this.valorTributo,
-    required this.percentual,
-  });
+  ComposicaoExtratoDas({required this.codigoTributo, required this.nomeTributo, required this.valorTributo, required this.percentual});
 
   Map<String, dynamic> toJson() {
-    return {
-      'codigoTributo': codigoTributo,
-      'nomeTributo': nomeTributo,
-      'valorTributo': valorTributo,
-      'percentual': percentual,
-    };
+    return {'codigoTributo': codigoTributo, 'nomeTributo': nomeTributo, 'valorTributo': valorTributo, 'percentual': percentual};
   }
 
   factory ComposicaoExtratoDas.fromJson(Map<String, dynamic> json) {

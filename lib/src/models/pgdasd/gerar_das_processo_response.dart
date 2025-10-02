@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para gerar DAS de Processo PGDASD
 ///
 /// Representa a resposta do serviço GERARDASPROCESSO18
@@ -19,8 +21,9 @@ class GerarDasProcessoResponse {
   /// Parse dos dados JSON retornados
   List<DasProcesso>? get dadosParsed {
     try {
-      final dadosJson = dados as List;
-      return dadosJson.map((d) => DasProcesso.fromJson(d)).toList();
+      // Primeiro converte a string JSON para List
+      final dadosList = jsonDecode(dados) as List;
+      return dadosList.map((d) => DasProcesso.fromJson(d)).toList();
     } catch (e) {
       return null;
     }
@@ -216,4 +219,3 @@ class ComposicaoDasProcesso {
     );
   }
 }
-

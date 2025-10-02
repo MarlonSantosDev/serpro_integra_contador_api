@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para consultar última declaração PGDASD
 ///
 /// Representa a resposta do serviço CONSULTIMADECREC14
@@ -11,11 +13,7 @@ class ConsultarUltimaDeclaracaoResponse {
   /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao
   final String dados;
 
-  ConsultarUltimaDeclaracaoResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarUltimaDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -23,29 +21,22 @@ class ConsultarUltimaDeclaracaoResponse {
   /// Parse dos dados JSON retornados
   DeclaracaoCompleta? get dadosParsed {
     try {
-      final dadosJson = dados as Map<String, dynamic>;
-      return DeclaracaoCompleta.fromJson(dadosJson);
+      // Primeiro converte a string JSON para Map
+      final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
+      return DeclaracaoCompleta.fromJson(dadosMap);
     } catch (e) {
       return null;
     }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
   }
 
-  factory ConsultarUltimaDeclaracaoResponse.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory ConsultarUltimaDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarUltimaDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List)
-          .map((m) => Mensagem.fromJson(m))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
       dados: json['dados'].toString(),
     );
   }
@@ -66,10 +57,7 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 }
 
@@ -88,12 +76,7 @@ class DeclaracaoCompleta {
   /// Essa estrutura representa os documentos de Notificação e DARF da MAED
   final ArquivoMaed? maed;
 
-  DeclaracaoCompleta({
-    required this.numeroDeclaracao,
-    required this.recibo,
-    required this.declaracao,
-    this.maed,
-  });
+  DeclaracaoCompleta({required this.numeroDeclaracao, required this.recibo, required this.declaracao, this.maed});
 
   /// Indica se há MAED (Multa por Atraso na Entrega da Declaração)
   bool get temMaed => maed != null;
@@ -133,10 +116,7 @@ class ArquivoRecibo {
   }
 
   factory ArquivoRecibo.fromJson(Map<String, dynamic> json) {
-    return ArquivoRecibo(
-      nomeArquivo: json['nomeArquivo'].toString(),
-      pdf: json['pdf'].toString(),
-    );
+    return ArquivoRecibo(nomeArquivo: json['nomeArquivo'].toString(), pdf: json['pdf'].toString());
   }
 }
 
@@ -156,10 +136,7 @@ class ArquivoDeclaracao {
   }
 
   factory ArquivoDeclaracao.fromJson(Map<String, dynamic> json) {
-    return ArquivoDeclaracao(
-      nomeArquivo: json['nomeArquivo'].toString(),
-      pdf: json['pdf'].toString(),
-    );
+    return ArquivoDeclaracao(nomeArquivo: json['nomeArquivo'].toString(), pdf: json['pdf'].toString());
   }
 }
 
@@ -181,12 +158,7 @@ class ArquivoMaed {
   /// Obtém o arquivo em base 64 para conversão em PDF da DARF da MAED
   final String pdfDarf;
 
-  ArquivoMaed({
-    required this.nomeArquivoNotificacao,
-    required this.pdfNotificacao,
-    required this.nomeArquivoDarf,
-    required this.pdfDarf,
-  });
+  ArquivoMaed({required this.nomeArquivoNotificacao, required this.pdfNotificacao, required this.nomeArquivoDarf, required this.pdfDarf});
 
   Map<String, dynamic> toJson() {
     return {

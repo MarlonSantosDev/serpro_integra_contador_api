@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de resposta para gerar DAS Cobrança PGDASD
 ///
 /// Representa a resposta do serviço GERARDASCOBRANCA17
@@ -19,8 +21,9 @@ class GerarDasCobrancaResponse {
   /// Parse dos dados JSON retornados
   List<DasCobranca>? get dadosParsed {
     try {
-      final dadosJson = dados as List;
-      return dadosJson.map((d) => DasCobranca.fromJson(d)).toList();
+      // Primeiro converte a string JSON para List
+      final dadosList = jsonDecode(dados) as List;
+      return dadosList.map((d) => DasCobranca.fromJson(d)).toList();
     } catch (e) {
       return null;
     }
@@ -213,4 +216,3 @@ class ComposicaoDasCobranca {
     );
   }
 }
-
