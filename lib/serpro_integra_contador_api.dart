@@ -92,9 +92,27 @@ export 'src/models/ccmei/consultar_situacao_cadastral_ccmei_response.dart';
 
 // PGDASD Models
 export 'src/models/pgdasd/declarar_response.dart';
+export 'src/models/pgdasd/entregar_declaracao_request.dart' hide Atividade, Estabelecimento, Declaracao;
+export 'src/models/pgdasd/entregar_declaracao_response.dart' hide Mensagem, ValorDevido;
+export 'src/models/pgdasd/gerar_das_request.dart';
+export 'src/models/pgdasd/gerar_das_response.dart' hide Mensagem, DetalhamentoDas, Das;
+export 'src/models/pgdasd/consultar_declaracoes_request.dart';
+export 'src/models/pgdasd/consultar_declaracoes_response.dart' hide Mensagem;
+export 'src/models/pgdasd/consultar_ultima_declaracao_request.dart';
+export 'src/models/pgdasd/consultar_ultima_declaracao_response.dart' hide Mensagem;
+export 'src/models/pgdasd/consultar_declaracao_numero_request.dart';
+export 'src/models/pgdasd/consultar_declaracao_numero_response.dart' hide Mensagem, DeclaracaoCompleta, ArquivoRecibo, ArquivoDeclaracao, ArquivoMaed;
+export 'src/models/pgdasd/consultar_extrato_das_request.dart';
+export 'src/models/pgdasd/consultar_extrato_das_response.dart' hide Mensagem;
+export 'src/models/pgdasd/gerar_das_avulso_request.dart';
+export 'src/models/pgdasd/gerar_das_avulso_response.dart' hide Mensagem;
+export 'src/models/pgdasd/gerar_das_cobranca_request.dart';
+export 'src/models/pgdasd/gerar_das_cobranca_response.dart' hide Mensagem;
+export 'src/models/pgdasd/gerar_das_processo_request.dart';
+export 'src/models/pgdasd/gerar_das_processo_response.dart' hide Mensagem;
 
 // PGMEI Models
-export 'src/models/pgmei/gerar_das_response.dart';
+export 'src/models/pgmei/gerar_das_response.dart' hide GerarDasResponse;
 
 // DCTFWeb Models
 export 'src/models/dctfweb/dctfweb_response.dart';
@@ -259,11 +277,11 @@ export 'src/models/pagtoweb/pagtoweb_request.dart';
 export 'src/models/pagtoweb/pagtoweb_response.dart';
 
 // DEFIS Models
-export 'src/models/defis/transmitir_declaracao_request.dart';
+export 'src/models/defis/transmitir_declaracao_request.dart' hide NaoOptante;
 export 'src/models/defis/transmitir_declaracao_response.dart';
-export 'src/models/defis/consultar_declaracoes_response.dart';
-export 'src/models/defis/consultar_ultima_declaracao_request.dart';
-export 'src/models/defis/consultar_ultima_declaracao_response.dart';
+export 'src/models/defis/consultar_declaracoes_response.dart' hide ConsultarDeclaracoesResponse;
+export 'src/models/defis/consultar_ultima_declaracao_request.dart' hide ConsultarUltimaDeclaracaoRequest;
+export 'src/models/defis/consultar_ultima_declaracao_response.dart' hide ConsultarUltimaDeclaracaoResponse;
 export 'src/models/defis/consultar_declaracao_especifica_request.dart';
 export 'src/models/defis/consultar_declaracao_especifica_response.dart';
 export 'src/models/defis/defis_enums.dart';

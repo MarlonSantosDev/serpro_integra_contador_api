@@ -1,4 +1,5 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis show NaoOptante;
 
 Future<void> Defis(ApiClient apiClient) async {
   print('=== Exemplos DEFIS ===');
@@ -68,7 +69,7 @@ Future<void> Defis(ApiClient apiClient) async {
             totalDespesas: 10000.0,
           ),
         ],
-        naoOptante: NaoOptante(
+        naoOptante: defis.NaoOptante(
           administracaoTributaria: AdministracaoTributaria.federal,
           uf: 'SP',
           codigoMunicipio: '3550308',

@@ -1,0 +1,906 @@
+---
+alwaysApply: true
+---
+
+# Documentação da API SICALC - SERPRO
+
+Documentação abrangente da API SICALC do SERPRO, com foco em cenários de uso, serviços, exemplos de entrada e saída, mensagens de negócio, dados de domínio e glossário. Este documento foi elaborado para auxiliar desenvolvedores que utilizam o Cursor AI Code Editor.
+
+## Introdução
+
+
+
+## O que é o Integra SICALC?
+
+O Sicalc foi desenvolvido para auxiliar o contribuinte no cálculo de acréscimos legais e emissão do Darf para pagamento de tributos federais administrados pela Secretaria Especial da Receita Federal do Brasil.
+
+## Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra Sicalc, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+*   Contratante
+*   Autor do Pedido de Dados
+*   Contribuinte
+*   Pedido de Dados
+
+> ⚠️ **Importante:** O sistema aceita contribuintes do tipo 1 (Pessoa Física) e 2 (Pessoa Jurídica).
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema SICALC, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+
+
+
+## Cenários SICALC
+
+A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/referencia_api/).
+
+Na chamada da API Trial o parâmetro do tipo header `jwt_token` não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o `jwt_token` na seção [Como Autenticar na API](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/autenticacao/).
+
+### DARF de Pessoa Física
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body de Entrada:**
+
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999",         "tipo": 1     },     "contribuinte": {         "numero": "99999999999",         "tipo": 1     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSOLIDARGERARDARF51",         "versaoSistema": "2.9",         "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0190\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"     } }
+```
+
+**Exemplo Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999",
+            "tipo": 1
+        },
+        "contribuinte": {
+            "numero": "99999999999",
+            "tipo": 1
+        },
+        "pedidoDados": {
+            "idSistema": "SICALC",
+            "idServico": "CONSOLIDARGERARDARF51",
+            "versaoSistema": "2.9",
+            "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0190\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+        }
+    }'
+```
+
+### DARF de Pessoa Jurídica de um débito com cotas
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body de Entrada:**
+
+```json
+{      "contratante":{
+       "numero":"00000000000000",
+       "tipo":2
+      },
+      "autorPedidoDados":{
+       "numero":"99999999999999",
+       "tipo":2
+      },
+      "contribuinte":{
+       "numero":"99999999999999",
+       "tipo":2
+      },
+      "pedidoDados":{
+       "idSistema":"SICALC",
+       "idServico":"CONSOLIDARGERARDARF51",
+       "versaoSistema":"2.9",
+       "dados":"{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0220\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"TR\", \"dataPA\": \"04/2021\", \"cota\": \"1\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+      }  }
+```
+
+**Exemplo Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+          "contratante":{
+           "numero":"00000000000000",
+           "tipo":2
+          },
+          "autorPedidoDados":{
+           "numero":"99999999999999",
+           "tipo":2
+          },
+          "contribuinte":{
+           "numero":"99999999999999",
+           "tipo":2
+          },
+          "pedidoDados":{
+           "idSistema":"SICALC",
+           "idServico":"CONSOLIDARGERARDARF51",
+           "versaoSistema":"2.9",
+           "dados":"{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0220\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"TR\", \"dataPA\": \"04/2021\", \"cota\": \"1\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+          }
+      }'
+```
+
+### DARF de Pessoa Jurídica - com código de barras e com numeração - QRCODE
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body de Entrada:**
+
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSOLIDARGERARDARF51",         "versaoSistema": "2.9",         "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"     }  }
+```
+
+**Exemplo Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "SICALC",
+            "idServico": "CONSOLIDARGERARDARF51",
+            "versaoSistema": "2.9",
+            "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+        }
+    }'
+```
+
+### Consultar Receitas do SICALC
+
+Esta simulação consulta as receitas de apoio do SICALC.
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body de Entrada:**
+
+```json
+{   "contratante": {
+    "numero": "00000000000000",
+    "tipo": 2
+   },
+   "autorPedidoDados": {
+    "numero": "00000000000000",
+    "tipo": 2
+   },
+   "contribuinte": {
+    "numero": "00000000000",
+    "tipo": 1
+   },
+   "pedidoDados": {
+    "idSistema": "SICALC",
+    "idServico": "CONSULTAAPOIORECEITAS52",
+    "versaoSistema": "2.9",
+    "dados": "{\"codigoReceita\": \"6106\"}"
+   }  }
+```
+
+**Exemplo Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Apoiar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+       "contratante": {
+        "numero": "00000000000000",
+        "tipo": 2
+       },
+       "autorPedidoDados": {
+        "numero": "00000000000000",
+        "tipo": 2
+       },
+       "contribuinte": {
+        "numero": "00000000000",
+        "tipo": 1
+       },
+       "pedidoDados": {
+        "idSistema": "SICALC",
+        "idServico": "CONSULTAAPOIORECEITAS52",
+        "versaoSistema": "2.9",
+        "dados": "{\"codigoReceita\": \"6106\"}"
+       }
+  }'
+```
+
+### Consolidação e emissão de DARF com código de barras.
+
+| header | valor |
+| --- | --- |
+| jwt_token | vazio (não precisa preencher) |
+| autenticar_procurador_token | vazio (não precisa preencher) |
+
+**Body de Entrada:**
+
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSOLIDARGERARDARF51",         "versaoSistema": "2.9",         "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"     }  }
+```
+
+**Exemplo Curl:**
+
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "99999999999999",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "SICALC",
+            "idServico": "CONSOLIDARGERARDARF51",
+            "versaoSistema": "2.9",
+            "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"
+        }
+    }'
+```
+
+
+
+
+## Consolidar e Emitir um DARF
+
+Baseado nos parâmetros de entrada fornecidos pelo chamador, o serviço:
+
+*   Monta uma chamada para a funcionalidade de consolidação (cálculo da multa e dos juros);
+*   Gera o documento PDF do DARF a partir do resultado da consolidação;
+*   Devolve ao chamador:
+    a) o resultado do cálculo em uma propriedade de nome _consolidado_;
+    b) a propriedade _darf_, com o PDF do DARF;
+    c) a propriedade _numeroDocumento_, com o número do documento do DARF.
+
+**Observação:** Este serviço retorna apenas o documento DARF. Caso precise do código de barras, é preciso acionar o serviço [GERARDARFCODBARRA53](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-sicalc/sicalc/servicos/consolidar_emitir_codbarras/).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: SICALC
+*   `idServico`: CONSOLIDARGERARDARF51
+*   `versaoSistema`: "2.9"
+
+### Dados de Entrada
+
+Objeto `ct`:
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| uf | Unidade Federativa | texto | SIM |
+| município | Código do Município | numérico | SIM | Código baseado na Tabela de Órgãos e Municípios da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| codigoReceita | Código da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| codigoReceitaExtensao | Código da Extensão da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| numeroReferencia | Número de referência utilizado no preenchimento do DARF | numérico | NÃO | veja o item: [Dados de domínio](#dados-de-domínio) |
+| tipoPA | Tipo do período de apuração | texto | NÃO | veja o item: [Dados de domínio](#dados-de-domínio) |
+| dataPA | Data do período de apuração | texto | SIM | veja o item: [Dados de domínio](#dados-de-domínio) |
+| vencimento | Data de vencimento do tributo | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| cota | Número da cota (para os débitos que possuem cotas) | numérico | NÃO |
+| valorImposto | Valor do Imposto | numérico | SIM |
+| valorMulta | Valor da multa - Preenchido somente no caso de DARF manual | numérico | NÃO |
+| valorJuros | Valor dos juros - Preenchido somente no caso de DARF manual | numérico | NÃO |
+| ganhoCapital | Indicador de ganho de capital | boolean | NÃO |
+| dataAlienacao | Data da Alienação referente ao Ganho de Capital | boolean | NÃO | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| dataConsolidacao | Data da Consolidação (Data do Pagamento) | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| observacao | Campo observação do DARF | texto | NÃO |
+| cno | Número do cadastro nacional de obras | numérico | NÃO |
+| cnpjPrestador | Número do Cadastro Nacional Pessoa Jurídica do prestador | numérico | NÃO |
+
+### Dados de Saída
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: XXXXXX) |
+
+No atributo `dados`, será retornado os seguintes objetos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorPrincipalMoedaCorrente | Valor principal calculado | texto |
+| valorTotalConsolidado | Valor total do débito calculado | texto |
+| valorMultaMora | Valor de multa de mora calculada | texto |
+| percentualMultaMora | Percentual de multa de mora calculada | numérico |
+| valorJuros | Valor de juros calculada | texto |
+| percentualJuros | Percentual de juros calculado | numérico |
+| termoInicialJuros | Data no qual começa a incidência de juros no débito | texto |
+| dataArrecadacaoConsolidacao | Data de Arrecadação/Consolidação considerada no resultado de cálculo | texto |
+| dataValidadeCalculo | Data em que o resultado de calculo é válido | texto |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| darf | Conteúdo binário Base64 contendo o PDF do DARF | base64 |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDocumento | Número do documento | numérico |
+
+
+
+
+### Exemplo de Retorno: DARF de Pessoa Física
+
+**JSON de Retorno Completo:**
+```json
+{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1         },         "contribuinte": {             "numero": "99999999999",             "tipo": 1         },         "pedidoDados": {             "idSistema": "SICALC",             "idServico": "CONSOLIDARGERARDARF51",             "versaoSistema": "2.9",             "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0190\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"         },         "status": 200,         "dados": "{\"consolidado\":{\"valorPrincipalMoedaCorrente\":1000.00,\"valorTotalConsolidado\":1458.30,\"valorMultaMora\":200.00,\"percentualMultaMora\":20.00,\"valorJuros\":258.30,\"percentualJuros\":25.83,\"termoInicialJuros\":\"2018-02-01T00:00:00\",\"dataArrecadacaoConsolidacao\":\"2022-08-08T00:00:00\",\"dataValidadeCalculo\":\"2022-08-31T00:00:00\"},\"darf\":\"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...\",\"numeroDocumento\":\"9999999999999999\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1458.30,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 258.30,                 "percentualJuros": 25.83,                 "termoInicialJuros": "2018-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "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...\",\"numeroDocumento\":\"9999999999999999\"}",         "mensagens": null     }
+```
+
+
+
+
+### Exemplo de Retorno: DARF de Pessoa Jurídica com Cotas
+
+**JSON de Retorno Completo:**
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSOLIDARGERARDARF51",         "versaoSistema": "2.9",         "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"0220\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"TR\", \"dataPA\": \"04/2021\", \"cota\": \"1\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"     },     "status": 200,     "dados": "{\"consolidado\": {\"valorPrincipalMoedaCorrente\":1000.00,\"valorTotalConsolidado\":1266.00,\"valorMultaMora\":200.00,\"percentualMultaMora\":20.00,\"valorJuros\":66.00,\"percentualJuros\":6.60,\"termoInicialJuros\":\"2022-02-01T00:00:00\",\"dataArrecadacaoConsolidacao\":\"2022-08-08T00:00:00\",\"dataValidadeCalculo\":\"2022-08-31T00:00:00\"}, \"darf\": \"JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkgMCBSL0ltYWdlODkgMjI5IDAgUi9JbWFnZTkxIDIzOSAwIFIvSW1hZ2U5MyAyNDkgMCBSL0ltYWdlOTUgMjU5IDAgUi9JbWFnZTk3IDI2OSAwIFI+Pi9Qcm9jU2V0Wy9QREYvVGV4dC9JbWFnZUIvSW1hZ2VDL0ltYWdlSV0gPj4vTWVkaWFCb3hbIDAgMCA1OTQuOTYgODQyLjA0XSAvQ29udGVudHMgNCAwIFIvR3JvdXA8PC9UeXBlL0dyb3VwL1MvVHJhbnNwYXJlbmN5L0NTL0RldmljZVJHQj4+L1RhYnMvUy9TdHJ1Y3RQYXJlbnRzIDA+Pg0KZW5kb2JqDQo0IDAgb2JqDQo8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDEwNjA2Pj4NCnN0cmVhbQ0KeJytfcuOHEly7Z4A/yGXVcIwK/ztLggCqkn2NFvTbIpk9wzQ0qKmyKEI8NFiV+vi6pP0GVcLfcfFLAZ3cVeCNlrJzjGPSM/KiIzMyGygi2ke7h7mZub28kdcXX+5e/+nm9u71d/8zdX13d3N7T+9fbP66er155//8er1//757dWLm3fvP93cvf/86erVr3+8Q9E3b2/evP3yt3+7+urJ49XVb1+F1btfHj7o1im41buHD0xJ6+RWNmQpWX1EQV5HKAVpXezKlLK2BPR3SgLEdQir24cPbNetXZCCsM5lBYiPw9pKk86sO3Tj17FoZbN2WmASH3tAbp20cjCEpEq1HPBeuy6Bj10mFDMho5DPqG0KXWep7KVnwTJ79uwCsDEpro30bNPaG1ZOYS092rjO8tBjJACEGCa5tc2EUtSqdt05FhR52hEj6ShL3Sjk8gKVddRuvWCjpJC6Rl4qQLZrU1a5rHP0K9flim/O666snOnWNq5ykqpOIAN0s7wqSF3jUAV1BZmMAr+2BZW7kAUSEntAMUZCmfwo8nIZgbMeYzadx+udsyCeMUTQ+W4tyABjKUBrKZAXACqOUEFlYUSFklYWPiksFBZkDIGUCUStWrkh6Bh9kQEpAhjsXAG9hS7CBQBWKWxkQNKvyxASQMDByT+CvsngKqDOauUC1J2LkEXbgVlOuCyvBSQkcM6jCepakZjCAiPcEijLUJ0T1hsrXM0EhLmsKwRKpJPIIKBgCJkKoaUBu2vlkFjgPB97R0iGAcgC6vC2SgpvyY9OXiwCIMLiZJTCPCNSnCkEvrLDoJKDcBcOSCSvmHXBWwrFVMRJp5KRUc7orAgS5NYbvNYWj2EYrySVyWirZMr7tBBoDwgCJpB0CagEhRQLn9fOaGXBwisLMM2F5L6Q5ALVjgvngGiFLO8NHV4PCK8JhlNHdElWIksB5q4UCOsN5i4qJ2Kh096WCIFkZc8ZLvIM0QzkKiBMb5lhnoP1tW6AxNri1hnvjYqFI42hqYROoh+SyqYUsCvLAQlULKmcs0IEwlBXxBAFRp9CuZWOsomOFUpKCxk9tKjoHtBCNBEUYiogghFxF85aUS+m9IST4UYLcTaxo64QinSqZaRf4WjlR0qoKnyQuQvNpipGlK4RvITQ6MUG1YKm9ur1qSACSAgABQnNBmjQmDFogaAg1Or0sVdICtmxjk1ozceGQxcoJkJCASNMEUVhZRBFxwYdVFgAMRCWZqBcoCO2TY1U/qeHD/70V6LsveqeTtgECwRFTiFU9euDyq/B4AUokTJY1AT5yEkFERUcBSpVJAUJTIVAyBmtnEhrEULggceGEGqhI0eRdLnv2ThKZdIXU2L5fmAIGgmkOsR6h7kJsYTgCsSeHWYRhgeDBConrWxUsqiAAXmFPJDq+mfVEkKxOhaAhSJLlHYL+QZU5ZvSAtiqmHs8zTBktvJaIKv9VMqJtoqqF2C7o9I1K1cFJdFNERaPTC29VsB86ZTIOdCQi/4Hi2NBS/Sr+h8FndQSyEFMqaoAYTACmb4uNFtMlClAnpDoCNYVIEIH1LoUtUifQyC4FzFg2gOJ6AmpYUEBRhs9JqgV6xUyIbQRU4epHN1QmQoAEg/dIRD4LgIOvptOcTKwv/RMis4s5VNXdGbR/thOBWuYDSgwha2NdNKltc4cSJIARmeoqS6PKquozoxAkEpBErh2geIdSVpyJFKmskiY6IUE/DFDpKVJmawUC6LiZiK9J2fppsghIqqdZhXmLoIjz9JVo3jzNtci+h0FzUNoOE6XQvMmwAEXb20ILS5+pmC1VDqCYCbEjSmS1yHBdYDSiPhZIjUZvOAUqse9ZppMToxEi0YAxFxXpgIaH8nYwGrVnGgYXqq3nWADBO7G0Bw4+aTX2KuhSQCzFABEokUBBP7HaNyGYVxAoZroQAllLi4yRB5KPdQsEDT3BYjkaX74kEQIpQug9JOgSr3Sj/of7JL/EM+0sHZOouEZSGvVgrSJtshOJMGoz4cWIfVDfDyYVCCYacKOuMqCskMezAk1aK2NCSwEQrFDu0CWhTCgMlfFiKYAzIhBGkw2NRaCjCqhUNBwkx2UaeBpy9OzUdHvKqUA597Zb5osTuyb/wKh6PFb7JiFHp1CtmyC+Thxi+EdB/ZQctW6GvgdUbaEYHPhlqLwCAPMiPUEihIyBgHH97IC/hKgBTw0FD/MKtpkSh8HU2IET24keiZhodGMxV6SQk1A6hq9m+vkMP1jmIWaqZRu2+XG1ZfEaQ5jpNTl5KqrzoxagU3h4lg4gGOEpCJj7mLvwrFVB5jqzC21Q9vo4M7ISyEV1rdW6SUEMLEDYAg4o1GnlTD87hr5uNup4ez6F3RAfVGIDQF4h1SBWAy6nARd0OToW153BYKFd6XTUdAQ0EBIZQoyJSAf61WqQmfSZIhFoSFAAjSpilklNo1EiyIYQRi2bihUIURi1YrZFjRQSp48rptd4SbWjej3gMCoXWhdAFlCsPgEKICzwWzMfO/SlbniiT+Lkdab6btR9XhS96mh5vTeqEqR/EWYviq24wW0KUqA6rFDLALKJUKxQ7JW/SBwLDL0qpxBikEIlhp7r+Ap9RxRg+IKdcBhQp6RJAtg2no1SYMjazigWBhmAjvGQR1xSxZsi7IWzEMbOQVN7oy4HIk9PyNTKHurIS+jjLa0ZH0ewn7YtEVJ9joIYSar6WOnm9XcgUN0uFKAqY1BAopoAwUMQKCjU28wMHQ1+IHRDbCVAR96JOoAaK8xGVJ/X+V4rcHTyONGKwH/IKlB1Lpmsypb2FzNd3gvNDO/OkaRQKEpigYPCiQ+zU4UIf81Q2gDp6Bw8elaF52d7VSr+LiBMj0zLyLoMZ6lp8VbH2D5bvkUNJrSYElgKSqLShvOFqRup3okEZz0sQ3UToSESC+AVObIUdgWzW+N2DDWFwQGNLDD0ToFEYnYFEHS0QL0X3GlXgQMSyFpCdKA5y11iOFUrW8JwnQSAahPIar8E+qHBhsLBhNLN6M1FhntweJ0adLXDICJQQkzh9LQzlldXSxRM0VRKZQZcvKKZAKd6rWjiQoiWmORCRxq2oaD2jAgZg1IvC24mElBJoaoxAwwrC6TnpB6Lpw4DlPWZElgoW5/KgASAL+PVAxee0Fvw8EhZl+beeYqasNd4mhaMdcvQbAwQXCyrU6RjKIYCkREvtgwaFT6GQtB7wlXfhSon8MdkkCiAfG8gw5rUOh3t/K12C3UnBZB4uBSAHGkaGMECsn1dQcZ3G5dQIYhAIFM88oNJK1NjY1oDX8/0HCCrvigneakuExwrpHqkIKg71imE2YI8SSKk1EQBCKjqHUYf/muhrQXkFHI6Ps8oGAVexSBqz2ij8SyQUg8ExjFAgUPRIUqE/g4aJIgcYzgpVR3GAqMFVuOoopACkUCdYJni4T2ThQ5qD+rQ4bUwz0a9OA1rUFC9Pjjx8IsdIa8QJCt3FQsWqD+JAW0gpxDVX66+PD0BrypD+4JrDNEFxAwMoKC0QCpW3Vqw18J/owJBxzpvUu9zO3jgMndAYevVwQ00z1bnrkxC1QooAKOhPvgUiTZoD+TmNMGXfLXaKACD4WtaZv36n1576FQcpKDz2s7RyYu1z0zI6bPqCubMmESMStD8efE0THDqrJo/N0xbS/+XBVEfe4WCQk4hVTQB4q0JeyEMrFBWpSYThHM01SyO6+dPJIM7jeWgC1HZccwIZ1QapMAxYkmrzW9ba0ZGV6q8UAA3XQrA/E5fHijEgIJCzvc4MC6yNHsya+FIBkbATC7o/Pa1ZwZGgVlmS0+F4aIlAOvgBxtVNLPqmSAGZBRiXoW5BUA1r1OYf2VkqumdrI9tIhRUUygSKDBVkTjme+DN4sWakPTESYMqTEBH0XWawsPU7NSBMHTOPA06PQaO2TvKJTIOQnfvaCaQcYBP42JN1qEgQgSyPhNvCBlFzVTEQKjaKMOQwCNcCHwpXE6vaSbDRRrvfa8eDFUYCpDREtcMHhpU1YoODX+Xim7B/PRQc1gPQQQFAAJpQBgAvk8qwbEVmMLr4GNV+4ownYCr+acIVxLvB4OhRFDXMX2I+NoQqo4egmd4plEz4UZ9TyYZkbQy6sGrM40C6Iaiiy7Q5kWDIUCFkKpeZMNMoleLtZ1UMUqaAGJY4pPrZzGUtJpyRC7ySp/oLCFygU1Sc8yaEdrNJ00OCSSoQ5fyt3jAPpuavkYB3pnr8lGkAw63Ttvhka/JMk1XA4ajFtTtF88VqS1BSKahRwRcY6tChzzTNUPOSbSVzyrzSPtKR0P2GgWwFEh1a85JHCFA8OyRNDOEdN0IBRgtIqiiKTcFgmbjitatHesQCu0znCanr0FmMCoNBQtNJzFjqGghHIxFR1u4NpBU8HOucoYwR96kaTmnouWYfN32YRrfxtEOBcOFAvg2nmm/IAFndakcIM8ozlOHhI7eenUsMojCbBDdIiVRVXegJzIAWpduKrgYVVdCg6eieSlmFiA5VdWiK4E16RI0ABPSFPVBRBC9UFXXfYCjMMgjKWjo2EF4o1FfRxWO8D1Vh8xgoN7TcYcPDKYiHQCD6ygPyHixbnIaQyY1hkz7AQI9E6MTTL00VGb4GTmZeiiozXWUABtU0RG2hOnruz6SjfoaZ/vAlZUtDaN1igWz2IhOkSpJTJwAUsuHAqhUa7Qylx8ByWsgOjqrNZpDgcss8BocEEeNMSJEioTaycgUCeJaOChIwWnYC98QmWmrlRXjGHV4tEuAvPYFaxThvACofpCQHgqOXhoyF1HVCaQbYWYRabNV2rjUFyiMMGHZKKRLK9AdgFIfiWeq+9DR/wcUKNRYbkPMJ0JtuuofI2lfRK5hj9AVzVoQ3c9VMYdawZo+HVAULavL7mLugIVlOFEYlwRw0vQmWDRsEEbT6BatG6kIdVzOCjbVBAacBtGpwTJx7DpGQoCiavOsgPJZKcUCx3Vw4SlbRi6lZu1Yl4jheZVELLJ6hRi91VjeMpDFaExlSAeJDsJpZCUdXTvQwmiibKMsVIlwlbeQDYE7JfoehdbQCZBjNKGgApNc2EEdBnL/AcGQYRY0GKaKkbSS3sKwhs9tAUYLEqkhNAMEHdVxhRTc630k5qnwlqCeWkTPutLfcSEb+NQIpqMUEF31ksQWhE6ZyYH5um6NWKFAbWtOQQgkCgY2C86b44TzmFKqDp...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1266.00,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 66.00,                 "percentualJuros": 6.60,                 "termoInicialJuros": "2022-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkg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...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1266.00,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 66.00,                 "percentualJuros": 6.60,                 "termoInicialJuros": "2022-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkg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...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+
+
+
+### Exemplo de Retorno: DARF de Pessoa Jurídica com QR Code
+
+**JSON de Retorno Completo:**
+```json
+{     "contratante": {         "numero": "99999999999999",         "tipo": 2     },     "autorPedidoDados": {         "numero": "99999999999999",         "tipo": 2     },     "contribuinte": {         "numero": "99999999999999",         "tipo": 2     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSOLIDARGERARDARF51",         "versaoSistema": "2.9",         "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1162\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"01/2022\", \"vencimento\": \"2022-02-18T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"     },     "status": 200,     "dados": "{\"consolidado\": {\"valorPrincipalMoedaCorrente\":1000.00,\"valorTotalConsolidado\":1266.00,\"valorMultaMora\":200.00,\"percentualMultaMora\":20.00,\"valorJuros\":66.00,\"percentualJuros\":6.60,\"termoInicialJuros\":\"2022-02-01T00:00:00\",\"dataArrecadacaoConsolidacao\":\"2022-08-08T00:00:00\",\"dataValidadeCalculo\":\"2022-08-31T00:00:00\"}, \"darf\": \"JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkg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...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1266.00,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 66.00,                 "percentualJuros": 6.60,                 "termoInicialJuros": "2022-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkg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...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1266.00,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 66.00,                 "percentualJuros": 6.60,                 "termoInicialJuros": "2022-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA0NyAwIFIvSW1hZ2U0OSAxNDkgMCBSL0ltYWdlNTEgNTkgMCBSL0ltYWdlNTMgNjkgMCBSL0ltYWdlNTUgNzkgMCBSL0ltYWdlNTcgODkgMCBSL0ltYWdlNTkgOTkgMCBSL0ltYWdlNjEgMTA5IDAgUi9JbWFnZTYzIDExOSAwIFIvSW1hZ2U2NyAxMjkgMCBSL0ltYWdlNjkgMTM5IDAgUi9JbWFnZTcxIDE0OSAwIFIvSW1hZ2U3MyAxNTkgMCBSL0ltYWdlNzUgMTY5IDAgUi9JbWFnZTc3IDE3OSAwIFIvSW1hZ2U3OSAxODkgMCBSL0ltYWdlODMgMTk5IDAgUi9JbWFnZTg1IDIwOSAwIFIvSW1hZ2U4NyAyMTkg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...758993 bytes truncated...\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {                 "valorPrincipalMoedaCorrente": 1000.00,                 "valorTotalConsolidado": 1266.00,                 "valorMultaMora": 200.00,                 "percentualMultaMora": 20.00,                 "valorJuros": 66.00,                 "percentualJuros": 6.60,                 "termoInicialJuros": "2022-02-01T00:00:00",                 "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",                 "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "darf": "JVBERi0xLjUNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFuZyhwdC1CUikgL1N0cnVjdFRyZWVSb290IDEwMiAwIFIvTWFya0luZm88PC9NYXJrZWQgdHJ1ZT4+Pj4NCmVuZG9iag0KMiAwIG9ib2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDIvS2lkc1sgMyAwIFIgOTkgMCBSXSA+Pg0KZW5kb2JqDQozIDAgb2JqDQo8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0V4dEdTdGF0ZTw8L0dTNSA1IDAgIFIvR1M4IDggMCBSL0dTOSA5IDAgUj4+L0ZvbnQ8PC9GMSA2IDAgUi9GMiAxMiAwIFIvRjMgMjMgMCBSL0Y0IDY1IDAgUi9FNSA4MSAwIFI+Pi9YT2JqZWN0PDwvSW1hZ2UxMCAxMCAwIFIvSW1hZ2UxNCAxNCAwIFIvSW1hZ2UxNiAxNiAwIFIvSW1hZ2UxNyAxNyAwIFIvSW1hZ2UxOSAxOSAwIFIvSW1hZ2UyMSAyMSAwIFIvSW1hZ2UyNSAyNSAwIFIvSW1hZ2UyNyAyNyAwIFIvSW1hZ2UyOSAyOSAwIFIvSW1hZ2UzMSAzMSAwIFIvSW1hZ2UzMyAzMyAwIFIvSW1hZ2UzNSAzNSAwIFIvSW1hZ2UzNyAzNyAwIFIvSW1hZ2UzOSAzOSAwIFIvSW1hZ2U0MSA0MSAwIFIvSW1hZ2U0MyA0MyAwIFIvSW1hZ2U0NSA0NSAwIFIvSW1hZ2U0NyA03..."}",         "mensagens": null     }
+```
+
+
+
+
+## Consultar Código Receita Sicalc
+
+Baseado nos parâmetros de entrada fornecidos pelo chamador, o serviço:
+
+*   Monta uma chamada ao serviço que consulta a base do cadastro de receitas administradas pela Receita Federal do Brasil
+*   Devolve ao chamador um array de 3 ocorrências informando quais são os atributos obrigatórios, opcionais e informativos em relação ao serviço “Consolidar e emitir um DARF”
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: SICALC
+*   `idServico`: CONSULTAAPOIORECEITAS52
+*   `versaoSistema`: "2.9"
+
+### Dados de Entrada
+
+Objeto `dados`:
+
+| Campo | Descrição | Tipo | Obrigatório |
+| --- | --- | --- | --- |
+| codigoReceita | Código da Receita | numérico | SIM |
+
+**Exemplo: Body JSON de Entrada**
+
+```json
+{      "contratante":{
+       "numero":"00000000000000",
+       "tipo":2
+      },
+      "autorPedidoDados":{
+       "numero":"00000000000000",
+       "tipo":2
+      },
+      "contribuinte":{
+       "numero":"00000000000",
+       "tipo":1
+      },
+      "pedidoDados":{
+       "idSistema":"SICALC",
+       "idServico":"CONSULTAAPOIORECEITAS52",
+       "versaoSistema":"2.9",
+       "dados":"{\"codigoReceita\": \"6106\"}"
+      }  }
+```
+
+### Dados de Saída
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: XXXXXX) |
+
+No atributo `dados`, será retornado os seguintes objetos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoReceita | Código de receita informado na chamada | numérico |
+| descricaoReceita | Nome descritivo do código de receita | texto |
+| extensoes | Dentro das 3 estruturas previstas, serão informados os atributos relativos ao código de receita, pertinentes ao nome de cada estrutura | array |
+
+**Detalhes das Extensões:**
+
+**Campos Obrigatórios:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| codigoReceita | Indica se o envio do campo é obrigatório. | boolean |
+| codigoReceitaExtensao | Indica se o envio do campo é obrigatório. | boolean |
+| cota | Indica se o envio do campo é obrigatório. | boolean |
+| dataConsolidacao | Indica se o envio do campo é obrigatório. | boolean |
+| dataPA | Indica se o envio do campo é obrigatório. | boolean |
+| referencia | Indica se o envio do campo é obrigatório. | boolean |
+| tipoPA | Indica se o envio do campo é obrigatório. | boolean |
+| valorImposto | Indica se o envio do campo é obrigatório. | boolean |
+| vencimento | Indica se o envio do campo é obrigatório. | boolean |
+
+**Campos Opcionais:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| cno | Indica se o envio do campo é opcional | boolean |
+| cnpjPrestador | Indica se o envio do campo é opcional | boolean |
+| dataAlienacao | Indica se o envio do campo é opcional | boolean |
+| ganhoCapital | Indica se o envio do campo é opcional | boolean |
+| municipio | Indica se o envio do campo é opcional | boolean |
+| observacao | Indica se o envio do campo é opcional | boolean |
+| referencia | Indica se o envio do campo é opcional | boolean |
+| uf | Indica se o envio do campo é opcional | boolean |
+| valorJuros | Indica se o envio do campo é opcional | boolean |
+| valorMulta | Indica se o envio do campo é opcional | boolean |
+
+**Informações Adicionais:**
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| calculado | Informa que o débito pode ter os acréscimos legais calculados pelo sistema de cálculo | boolean |
+| codigoBarras | Informa se a receita permite a emissão do DARF com código de barras | boolean |
+| codigoReceitaExtensao | Informa a extensão da receita | numérico |
+| criacao | Informa a data de criação da receita | texto |
+| descricaoReceitaExtensao | Informa a descrição do código de extensão da receita | texto |
+| descricaoReferencia | Informa que tipo de dado é aguardado pelo atributo referência | texto |
+| exigeMatriz | Informa que somente pode ser utilizado o CNPJ da Matriz para débito | boolean |
+| manual | Informa que o débito não pode ter os acréscimos legais calculados pelo sistema de cálculo e deve ter todos os seus atributos preenchidos pelo usuário (incluindo os de valores) | boolean |
+| pf | Informa que o código de receita pode ser utilizado num débito de pessoa física | boolean |
+| pj | Informa que o código de receita pode ser utilizado num débito de pessoa jurídica | boolean |
+| vedaValor | Informa se o valor total do DARF pode ser inferior a R$ 10,00 | boolean |
+
+### Exemplo de Retorno: Consulta de Receitas do SICALC
+
+**JSON de Retorno Completo:**
+```json
+{     "contratante": {         "numero": "00000000000000",         "tipo": 2     },     "autorPedidoDados": {         "numero": "00000000000",         "tipo": 1     },     "contribuinte": {         "numero": "00000000000",         "tipo": 1     },     "pedidoDados": {         "idSistema": "SICALC",         "idServico": "CONSULTAAPOIORECEITAS52",         "versaoSistema": "2.9",         "dados": "{\"codigoReceita\": \"6106\"}"     },     "status": 200,     "dados": "{\"receita\": {\"codigoReceita\":6106,\"descricaoReceita\":\"Simples - Pagamento de Micro Empresa e Empresa de Pequamento de Micro Empresa e Empresa de Pequeno Porte\",\"extensoes\":[{\"obrigatorios\":{\"codigoReceita\":true,\"codigoReceitaExtensao\":true,\"cota\":false,\"dataConsolidacao\":true,\"dataPA\":true,\"referencia\":false,\"tipoPA\":true,\"valorImposto\":true,\"vencimento\":false},\"informacoes\":{\"calculado\":true,\"codigoBarras\":true,\"codigoReceitaExtensao\":1,\"criacao\":\"1997-01-01T00:00:00\",\"descricaoReceitaExtensao\":\"SIMPLES - PAGAMENTO ME/EPP\",\"descricaoReferencia\":\"SEM REFERÊNCIA\",\"exigeMatriz\":true,\"extincao\":\"2007-06-30T00:00:00\",\"manual\":false,\"pf\":false,\"pj\":false,\"tipoPeriodoApuracao\":\"ME\",\"vedaValor\":true},\"opcionais\":{\"cno\":false,\"cnpjPrestador\":false,\"municipio\":true,\"observacao\":true,\"referencia\":true,\"uf\":true,\"valorJuros\":false,\"valorMulta\":false}},{\"obrigatorios\":{\"codigoReceita\":true,\"codigoReceitaExtensao\":true,\"cota\":false,\"dataConsolidacao\":true,\"dataPA\":true,\"referencia\":false,\"tipoPA\":true,\"valorImposto\":true,\"vencimento\":true},\"informacoes\":{\"calculado\":true,\"codigoBarras\":true,\"codigoReceitaExtensao\":2,\"criacao\":\"2006-07-01T00:00:00\",\"descricaoReceitaExtensao\":\"SIMPLES - PAGAMENTO ME-EPP\",\"descricaoReferencia\":\"SEM REFERÊNCIA\",\"exigeMatriz\":true,\"extincao\":\"2007-06-30T00:00:00\",\"manual\":false,\"pf\":false,\"pj\":false,\"tipoPeriodoApuracao\":\"ME\",\"vedaValor\":true},\"opcionais\":{\"cno\":false,\"cnpjPrestador\":false,\"municipio\":true,\"observacao\":true,\"referencia\":true,\"uf\":true,\"valorJuros\":false,\"valorMulta\":false}}]}}",     "mensagens":[{"codigo":"[Sucesso-SICALC]",     "texto":"Requisição efetuada com sucesso."  }]
+}
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{      "dados": {
+       "receita": {
+        "codigoReceita": 6106,
+        "descricaoReceita": "Simples - Pagamento de Micro Empresa e Empresa de Pequeno Porte",
+        "extensoes": [{
+         "obrigatorios": {
+          "codigoReceita": true,
+          "codigoReceitaExtensao": true,
+          "cota": false,
+          "dataConsolidacao": true,
+          "dataPA": true,
+          "referencia": false,
+          "tipoPA": true,
+          "valorImposto": true,
+          "vencimento": false
+         },
+         "informacoes": {
+          "calculado": true,
+          "codigoBarras": true,
+          "codigoReceitaExtensao": 1,
+          "criacao": "1997-01-01T00:00:00",
+          "descricaoReceitaExtensao": "SIMPLES - PAGAMENTO ME/EPP",
+          "descricaoReferencia": "SEM REFERÊNCIA",
+          "exigeMatriz": true,
+          "extincao": "2007-06-30T00:00:00",
+          "manual": false,
+          "pf": false,
+          "pj": false,
+          "tipoPeriodoApuracao": "ME",
+          "vedaValor": true
+         },
+         "opcionais": {
+          "cno": false,
+          "cnpjPrestador": false,
+          "municipio": true,
+          "observacao": true,
+          "referencia": true,
+          "uf": true,
+          "valorJuros": false,
+          "valorMulta": false
+         }
+        }, {
+         "obrigatorios": {
+          "codigoReceita": true,
+          "codigoReceitaExtensao": true,
+          "cota": false,
+          "dataConsolidacao": true,
+          "dataPA": true,
+          "referencia": false,
+          "tipoPA": true,
+          "valorImposto": true,
+          "vencimento": true
+         },
+         "informacoes": {
+          "calculado": true,
+          "codigoBarras": true,
+          "codigoReceitaExtensao": 2,
+          "criacao": "2006-07-01T00:00:00",
+          "descricaoReceitaExtensao": "SIMPLES - PAGAMENTO ME-EPP",
+          "descricaoReferencia": "SEM REFERÊNCIA",
+          "exigeMatriz": true,
+          "extincao": "2007-06-30T00:00:00",
+          "manual": false,
+          "pf": false,
+          "pj": false,
+          "tipoPeriodoApuracao": "ME",
+          "vedaValor": true
+         },
+         "opcionais": {
+          "cno": false,
+          "cnpjPrestador": false,
+          "municipio": true,
+          "observacao": true,
+          "referencia": true,
+          "uf": true,
+          "valorJuros": false,
+          "valorMulta": false
+         }
+        }]
+       }
+      }
+     }
+```
+
+
+
+
+## Consolidar e Emitir o Código de Barras do DARF calculado
+
+**Regras:**
+
+a) Só é possível emitir código de barras caso a receita e extensão estejam habilitadas para emissão, esta ação é de responsabilidade única da Receita Federal. Em caso de dúvidas, acionar os canais de atendimento da Receita Federal.
+
+b) É possível verificar se determinado código de receita e extensão permite a emissão do código de barras através do serviço [CONSULTAAPOIORECEITAS52](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-sicalc/sicalc/servicos/apoio_consulta_receitas_do_sicalc/).
+
+Baseado nos parâmetros de entrada fornecidos pelo chamador, o serviço:
+
+*   Monta uma chamada para a funcionalidade de consolidação (cálculo de multa e juros);
+*   Gera o código de barras do DARF a partir do resultado da consolidação;
+*   Devolve ao chamador:
+    a) o resultado do cálculo em uma propriedade de nome _consolidado_;
+    b) a propriedade _codigoDeBarras_, com os campos do código de barras;
+    c) a propriedade _numeroDocumento_, com o número do documento do DARF.
+
+**Observação:** Este serviço retorna apenas o código de barras. Caso precise do PDF, é preciso acionar o serviço [CONSOLIDARGERARDARF51](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/solucoes/integra-sicalc/sicalc/servicos/consolidar_emitir_um_darf/).
+
+**Identificação no Pedido de Dados:**
+
+*   `idSistema`: SICALC
+*   `idServico`: GERARDARFCODBARRA53
+*   `versaoSistema`: "2.9"
+
+### Dados de Entrada
+
+Objeto `ct`:
+
+| Campo | Descrição | Tipo | Obrigatório | Observação |
+| --- | --- | --- | --- | --- |
+| uf | Unidade Federativa | texto | SIM |
+| município | Código do Município | numérico | SIM | Código baseado na Tabela de Órgãos e Municípios da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| codigoReceita | Código da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| codigoReceitaExtensao | Código da Extensão da Receita | numérico | SIM | Código baseado na Tabela de Receitas da RFB (veja o item: [Dados de domínio](#dados-de-domínio)) |
+| numeroReferencia | Número de referência utilizado no preenchimento do DARF | numérico | NÃO | veja o item: [Dados de domínio](#dados-de-domínio) |
+| tipoPA | Tipo do período de apuração | texto | NÃO | veja o item: [Dados de domínio](#dados-de-dominio) |
+| dataPA | Data do período de apuração | texto | SIM | veja o item: [Dados de domínio](#dados-de-domínio) |
+| vencimento | Data de vencimento do tributo | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| cota | Número da cota (para os débitos que possuem cotas) | numérico | NÃO |
+| valorImposto | Valor do Imposto | numérico | SIM |
+| valorMulta | Valor da multa - Preenchido somente no caso de DARF manual | numérico | NÃO |
+| valorJuros | Valor dos juros - Preenchido somente no caso de DARF manual | numérico | NÃO |
+| ganhoCapital | Indicador de ganho de capital | boolean | NÃO |
+| dataAlienacao | Data da Alienação referente ao Ganho de Capital | boolean | NÃO | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| dataConsolidacao | Data da Consolidação (Data do Pagamento) | texto | SIM | Utilizar o formato ISO 8601 (`aaaa-mm-ddThh:mm:ss`) |
+| observacao | Campo observação do DARF | texto | NÃO |
+| cno | Número do cadastro nacional de obras | numérico | NÃO |
+| cnpjPrestador | Número do Cadastro Nacional Pessoa Jurídica do prestador | numérico | NÃO |
+
+### Dados de Saída
+
+A estrutura de dados retornada é a mesma nos casos de pesquisa por ano-calendário ou período de apuração. O que muda é a quantidade itens retornados.
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| status | Status HTTP retornado no acionamento do serviço. | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é uma string de tamanho 5 que representa um código interno do negócio. | Array of String |
+| dados | Estrutura de dados de retorno. | String (SCAPED STRING JSON: XXXXXX) |
+
+No atributo `dados`, será retornado os seguintes objetos:
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| valorPrincipalMoedaCorrente | Valor principal calculado | texto |
+| valorTotalConsolidado | Valor total do débito calculado | texto |
+| valorMultaMora | Valor de multa de mora calculada | texto |
+| percentualMultaMora | Percentual de multa de mora calculada | numérico |
+| valorJuros | Valor de juros calculada | texto |
+| percentualJuros | Percentual de juros calculado | numérico |
+| termoInicialJuros | Data no qual começa a incidência de juros no débito | texto |
+| dataArrecadacaoConsolidacao | Data de Arrecadação/Consolidação considerada no resultado de cálculo | texto |
+| dataValidadeCalculo | Data em que o resultado de calculo é válido | texto |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| campo1ComDV | código do campo 01 com dígito verificador | numérico |
+| campo2ComDV | código do campo 02 com dígito verificador | numérico |
+| campo3ComDV | código do campo 03 com dígito verificador | numérico |
+| campo4ComDV | código do campo 04 com dígito verificador | numérico |
+| codigo44 | código de barras com 44 caracteres sem os dígitos verificadores | numérico |
+
+| Campo | Descrição | Tipo |
+| --- | --- | --- |
+| numeroDocumento | Número do documento | numérico |
+
+### Exemplo de Retorno: DARF com Código de Barras
+
+**JSON de Retorno Completo:**
+```json
+{         "contratante": {             "numero": "99999999999999",             "tipo": 2         },         "autorPedidoDados": {             "numero": "99999999999",             "tipo": 1         },         "contribuinte": {             "numero": "99999999999",             "tipo": 1         },         "pedidoDados": {             "idSistema": "SICALC",             "idServico": "GERARDARFCODBARRA53",             "versaoSistema": "2.9",             "dados": "{\"uf\": \"SP\", \"municipio\": \"7107\", \"codigoReceita\": \"1394\", \"codigoReceitaExtensao\": \"01\", \"tipoPA\": \"ME\", \"dataPA\": \"12/2017\", \"vencimento\": \"2018-01-31T00:00:00\", \"valorImposto\": \"1000.00\", \"dataConsolidacao\": \"2022-08-08T00:00:00\", \"observacao\": \"Darf calculado\"}"         },         "status": 200,         "dados": "{\"consolidado\": {\"valorPrincipalMoedaCorrente\":1000.00,\"valorTotalConsolidado\":1458.30,\"valorMultaMora\":200.00,\"percentualMultaMora\":20.00,\"valorJuros\":258.30,\"percentualJuros\":25.83,\"termoInicialJuros\":\"2018-02-01T00:00:00\",\"dataArrecadacaoConsolidacao\":\"2022-08-08T00:00:00\",\"dataValidadeCalculo\":\"2022-08-31T00:00:00\"},         \"codigoDeBarras\": {\"campo1ComDV\":\"858200000104\",\"campo2ComDV\":\"000003852334\",\"campo3ComDV\":\"130701233131\",\"campo4ComDV\":\"019056427906\",\"codigo44\":\"85820000010000003852331307012331301905642790\"},\"numeroDocumento\":\"9999999999999999\"}",         "mensagens": null     }
+```
+
+**JSON do campo "dados" (formatado):**
+```json
+{         "dados": {             "consolidado": {             "valorPrincipalMoedaCorrente": 1000.00,             "valorTotalConsolidado": 1458.30,             "valorMultaMora": 200.00,             "percentualMultaMora": 20.00,             "valorJuros": 258.30,             "percentualJuros": 25.83,             "termoInicialJuros": "2018-02-01T00:00:00",             "dataArrecadacaoConsolidacao": "2022-08-08T00:00:00",             "dataValidadeCalculo": "2022-08-31T00:00:00"             },             "codigoDeBarras": {             "campo1ComDV":"858200000104",             "campo2ComDV":"000003852334",             "campo3ComDV":"130701233131",             "campo4ComDV":"019056427906",             "codigo44":"85820000010000003852331307012331301905642790"             },             "numeroDocumento":"9999999999999999"     }
+```
+
+
+
+
+## Mensagens de Negócio
+
+Conforme as mensagens já exibidas pelo sistema Sicalc:
+
+| Código | Mensagem | Ação |
+| --- | --- | --- |
+| \[EntradaIncorreta-SICALC\] | Contribuinte não encontrado. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | Contribuinte não encontrado. Verifique se o CPF e Data de Nascimento estão corretos. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | Contribuinte não encontrado. Verifique se o CNPJ estão correto. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | Contribuinte inválido. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | Não é permitida a impressão por estrangeiro. | Verificar no JSON de entrada se o número de identificação do contribuinte está correto ou com formatação inconsistente. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa jurídica. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[EntradaIncorreta-SICALC\] | A receita não permite o uso por pessoa física. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[EntradaIncorreta-SICALC\] | Receita de uso por matriz. | Verificar nos JSON de entrada se os atributos de número de identificação do contribuinte está coerente com o código de receita informado. |
+| \[EntradaIncorreta-SICALC\] | A data de vencimento não foi informada. | Verificar no JSON de entrada se o atributo foi informado. |
+| \[EntradaIncorreta-SICALC\] | Darf fora de validade. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Valor total da quota inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor total consolidado não pode ser superior a R$999.999.999,99. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Valor total inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Pagamento inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Crédito Tributário inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Receita inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Código de receita não foi encontrado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Período de Apuração inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O período de Apuração não pode ser posterior ao limite. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Período de Apuração não foi encontrado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Condição de pagamento inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de vencimento da multa é anterior ao vencimento. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de alienação é anterior ao limite. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de consolidação é anterior ao limite. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de consolidação é posterior ao limite. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Data de vencimento da multa inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor total consolidado é maior que o limite. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O período de Apuração não pode ser anterior a criação da receita. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O período de Apuração não pode ser maior que o encerramento da receita. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Data de vencimento inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor total da quota não pode ser inferior a R$50,00. O valor total da quota única não pode ser inferior a R$10,00. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor total não pode ser inferior a R$10,00. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Informe o valor da multa, juros e/ou encargos DL-1.025/69. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Número do CNO inválido. | Verificar no JSON de entrada se o atributo foi informado. |
+| \[EntradaIncorreta-SICALC\] | Número do CNPJ do prestador inválido. | Verificar no JSON de entrada se o atributo foi informado. |
+| \[EntradaIncorreta-SICALC\] | O Número do CNO não deve ser informado. | Verificar no JSON de entrada se o atributo foi informado. |
+| \[EntradaIncorreta-SICALC\] | O Número do CNPJ do prestador não deve ser informado. | Verificar no JSON de entrada se o atributo foi informado. |
+| \[EntradaIncorreta-SICALC\] | O CNPJ do prestador não pode ser o mesmo do contribuinte. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A multa não deve ser informada para esta receita. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Os juros e/ou encargos DL-1.025/69A não devem ser informados para esta receita. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | Número de referência inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O número de referência não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O número de referência é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O tipo de período de apuração é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O tipo de período de apuração não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O tipo de período de apuração inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de alienação é obrigatória. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de alienação não deve ser informada. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A data de alienação inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O indicador de ganho de capital é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O indicador de ganho de capital não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O indicador de ganho de capital inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A cota é obrigatória. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A cota não deve ser informada. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A cota inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O código de receita extensão é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O código de receita extensão não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O código de receita extensão inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O município é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O município não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O município inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A UF é obrigatória. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A UF não deve ser informada. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | A UF inválida. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor do imposto é obrigatório. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor do imposto não deve ser informado. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[EntradaIncorreta-SICALC\] | O valor do imposto inválido. | Verificar no JSON de entrada se os atributos informados estão coerentes com o que é previsto com a legislação. |
+| \[Sucesso-SICALC\] | Requisição efetuada com sucesso. | Mensagem de sucesso. |
+| \[Erro-SICALC\] | Erro interno do sistema. | Entrar em contato com o suporte técnico. |
+| \[Erro-SICALC\] | Serviço indisponível. | Tentar novamente mais tarde. |
+| \[Erro-SICALC\] | Parâmetros inválidos. | Verificar a documentação da API para os parâmetros corretos. |
+| \[Erro-SICALC\] | Erro de autenticação. | Verificar as credenciais de autenticação. |
+| \[Erro-SICALC\] | Limite de requisições excedido. | Aguardar o período de tempo para novas requisições. |
+| \[Erro-SICALC\] | Recurso não encontrado. | Verificar a URL da requisição. |
+| \[Erro-SICALC\] | Método não permitido. | Verificar o método HTTP da requisição. |
+| \[Erro-SICALC\] | Formato de requisição inválido. | Verificar o Content-Type da requisição. |
+| \[Erro-SICALC\] | Erro de conexão. | Verificar a conexão com a internet. |
+| \[Erro-SICALC\] | Tempo limite excedido. | Tentar novamente mais tarde. |
+| \[Erro-SICALC\] | Erro desconhecido. | Entrar em contato com o suporte técnico. |
+
+
+
+
+## Dados de Domínio
+
+### Tipo do Período de Apuração
+
+Cada receita/extensão tem um formato de tipo de período de apuração esperado (atributo `tipoPA`):
+
+| Código | Descrição |
+| --- | --- |
+| AN | anual |
+| TR | trimestral |
+| ME | mensal |
+| QZ | quinzenal |
+| DC | decendial |
+| SM | semanal |
+| DI | diário |
+
+### Data do Período de Apuração
+
+Enviar o valor no formato esperado de acordo com o tipo de PA informado:
+
+| Se o tipo for | Formato |
+| --- | --- |
+| anual | aaaa |
+| trimestral | trimestre/ano (01 a 04) |
+| mensal | mm/aaaa |
+| quinzenal | quinzena/mm/ano (01 ou 02) |
+| decendial | decêndio/mm/ano (01 a 03) |
+| semanal | semana/mm/aaaa (01 a 05) |
+| diário | dd/mm/aaaa |
+
+### Código do Município
+
+O serviço utiliza a codificação da Tabela de Órgãos e Municípios da Receita Federal do Brasil.
+
+Deve ser informado somente o código do município, o dígito verificador é ignorado. Por exemplo: para 9701-2 (Brasília), só 9701 deve ser informado.
+
+Link para consulta [Tabela de Órgãos e Municípios](https://www.gov.br/receitafederal/pt-br/servicos/cadastros/tabelas/tabela-de-orgaos-e-municipios)
+
+### Códigos da Receita e Extensão
+
+O serviço utiliza a codificação da Tabela de Códigos de Receitas da Receita Federal do Brasil. Link para consulta [Tabela de Receitas](https://www.gov.br/receitafederal/pt-br/servicos/cadastros/tabelas/tabela-de-codigos-de-receitas)
+
+### Número de Referência
+
+Informação complementar do pagamento efetuado que é encaminhada para a cobrança e arrecadação da Receita Federal.
+
+O envio do campo pode ser opcional ou obrigatório. O serviço [Apoio de consulta receitas do Sicalc](#consultar-código-receita-sicalc) retorna a descrição do campo referência e se o seu envio é opcional ou obrigatório para a receita informada.
+
+Caso o envio seja opcional, não são feitas nenhuma validações no valor informado, o cliente deve se certificar de estar informando um valor correto.
+
+Na tabela abaixo, você pode conferir os valores esperados neste campo para alguns códigos de receita.
+
+| Receita/Extensão | Descrição | Informação aguardada | Formato |
+| --- | --- | --- | --- |
+| 1070-01 | Imposto Territorial Rural (até 2021) | Enviar o NIRF numérico | 9999999 |
+| 1070-02 | Imposto Territorial Rural (a partir de 2022) | Enviar o NIRF/CIB alfanumérico | 9999999/AAAAAAAA |
+
+
+
+
+## Glossário
+
+### Siglas
+
+Principais siglas utilizadas no Sicalc.
+
+| Sigla | Descrição |
+| --- | --- |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| CT | Crédito tributário – são as informações básicas do débito do contribuinte |
+| Darf | Documento de Arrecadação de Receitas Federais |
+| PA | Período de Apuração |
+| RFB | Secretaria Especial da Receita Federal do Brasil |
+| UF | Unidade da Federação |
+| Nirf | Número do Imóvel na Receita Federal |
+| Cib | Cadastro Imobiliário Brasileiro |

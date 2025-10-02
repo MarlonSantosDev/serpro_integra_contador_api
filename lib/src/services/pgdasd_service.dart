@@ -12,6 +12,12 @@ import 'package:serpro_integra_contador_api/src/models/pgdasd/consultar_declarac
 import 'package:serpro_integra_contador_api/src/models/pgdasd/consultar_declaracao_numero_response.dart';
 import 'package:serpro_integra_contador_api/src/models/pgdasd/consultar_extrato_das_request.dart';
 import 'package:serpro_integra_contador_api/src/models/pgdasd/consultar_extrato_das_response.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_avulso_request.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_avulso_response.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_cobranca_request.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_cobranca_response.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_processo_request.dart';
+import 'package:serpro_integra_contador_api/src/models/pgdasd/gerar_das_processo_response.dart';
 
 /// Serviço para integração com PGDASD (Programa Gerador do DAS do Simples Nacional)
 ///
@@ -22,6 +28,9 @@ import 'package:serpro_integra_contador_api/src/models/pgdasd/consultar_extrato_
 /// - Consultar Última Declaração/Recibo (CONSULTIMADECREC14)
 /// - Consultar Declaração/Recibo por Número (CONSDECREC15)
 /// - Consultar Extrato do DAS (CONSEXTRATO16)
+/// - Gerar DAS Cobrança (GERARDASCOBRANCA17)
+/// - Gerar DAS de Processo (GERARDASPROCESSO18)
+/// - Gerar DAS Avulso (GERARDASAVULSO19)
 class PgdasdService {
   final ApiClient _apiClient;
 
@@ -207,6 +216,96 @@ class PgdasdService {
     return ConsultarExtratoDasResponse.fromJson(response);
   }
 
+  /// Gerar DAS Cobrança com débitos em sistema de cobrança
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [request] Dados para geração do DAS Cobrança
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasCobrancaResponse> gerarDasCobranca({
+    required String contribuinteNumero,
+    required GerarDasCobrancaRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    if (!request.isValid) {
+      throw ArgumentError('Dados para geração do DAS Cobrança inválidos');
+    }
+
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASCOBRANCA17', versaoSistema: '1.0', dados: request.toJson().toString()),
+    );
+
+    final response = await _apiClient.post(
+      '/Emitir',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+    return GerarDasCobrancaResponse.fromJson(response);
+  }
+
+  /// Gerar DAS de Processo com débitos de processo em sistema de cobrança
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [request] Dados para geração do DAS de Processo
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasProcessoResponse> gerarDasProcesso({
+    required String contribuinteNumero,
+    required GerarDasProcessoRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    if (!request.isValid) {
+      throw ArgumentError('Dados para geração do DAS de Processo inválidos');
+    }
+
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASPROCESSO18', versaoSistema: '1.0', dados: request.toJson().toString()),
+    );
+
+    final response = await _apiClient.post(
+      '/Emitir',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+    return GerarDasProcessoResponse.fromJson(response);
+  }
+
+  /// Gerar DAS Avulso
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [request] Dados para geração do DAS Avulso
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasAvulsoResponse> gerarDasAvulso({
+    required String contribuinteNumero,
+    required GerarDasAvulsoRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    if (!request.isValid) {
+      throw ArgumentError('Dados para geração do DAS Avulso inválidos');
+    }
+
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASAVULSO19', versaoSistema: '1.0', dados: request.toJson().toString()),
+    );
+
+    final response = await _apiClient.post(
+      '/Emitir',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+    return GerarDasAvulsoResponse.fromJson(response);
+  }
+
   // ===== MÉTODOS DE CONVENIÊNCIA =====
 
   /// Entregar declaração com dados simplificados
@@ -366,6 +465,83 @@ class PgdasdService {
     final request = ConsultarExtratoDasRequest(numeroDas: numeroDas);
 
     return consultarExtratoDas(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Gerar DAS Cobrança com dados simplificados
+  ///
+  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
+  /// [periodoApuracao] Período de apuração (formato: AAAAMM)
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasCobrancaResponse> gerarDasCobrancaSimples({
+    required String cnpj,
+    required String periodoApuracao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final request = GerarDasCobrancaRequest(periodoApuracao: periodoApuracao);
+
+    return gerarDasCobranca(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Gerar DAS de Processo com dados simplificados
+  ///
+  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
+  /// [numeroProcesso] Número do processo (17 dígitos)
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasProcessoResponse> gerarDasProcessoSimples({
+    required String cnpj,
+    required String numeroProcesso,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final request = GerarDasProcessoRequest(numeroProcesso: numeroProcesso);
+
+    return gerarDasProcesso(
+      contribuinteNumero: cnpj,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Gerar DAS Avulso com dados simplificados
+  ///
+  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
+  /// [periodoApuracao] Período de apuração (formato: AAAAMM)
+  /// [listaTributos] Lista de tributos para serem incluídos no DAS Avulso
+  /// [dataConsolidacao] Data que se deseja emitir o DAS (opcional)
+  /// [prorrogacaoEspecial] Indicador de Prorrogação Especial (opcional)
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<GerarDasAvulsoResponse> gerarDasAvulsoSimples({
+    required String cnpj,
+    required String periodoApuracao,
+    required List<TributoAvulso> listaTributos,
+    String? dataConsolidacao,
+    int? prorrogacaoEspecial,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final request = GerarDasAvulsoRequest(
+      periodoApuracao: periodoApuracao,
+      listaTributos: listaTributos,
+      dataConsolidacao: dataConsolidacao,
+      prorrogacaoEspecial: prorrogacaoEspecial,
+    );
+
+    return gerarDasAvulso(
       contribuinteNumero: cnpj,
       request: request,
       contratanteNumero: contratanteNumero,
