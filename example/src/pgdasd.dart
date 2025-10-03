@@ -131,7 +131,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-  */
+  
   // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
   try {
     print('\n--- 3. Consultando Declarações por Ano ---');
@@ -182,13 +182,19 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(
       cnpj: '00000000000000',
-      periodoApuracao: '2018',
+      periodoApuracao: '201801',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
     );
 
     print('✅ Status: ${consultarPeriodoResponse.status}');
     print('✅ Sucesso: ${consultarPeriodoResponse.sucesso}');
+
+    if (consultarPeriodoResponse.dadosParsed != null) {
+      final declaracoes = consultarPeriodoResponse.dadosParsed!;
+      print('📅 Ano Calendário: ${declaracoes.anoCalendario}');
+      print('🔍 Períodos encontrados: ${declaracoes.listaPeriodos.length}');
+    }
   } catch (e) {
     print('❌ Erro ao consultar declarações por período: $e');
     servicoOk = false;
@@ -199,7 +205,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 5. Consultando Última Declaração ---');
 
-    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(
+      cnpj: '00000000000000',
+      periodoApuracao: '201801',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${ultimaDeclaracaoResponse.status}');
     print('✅ Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
@@ -228,48 +239,44 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumeroSimples(
       cnpj: '00000000000000',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
       numeroDeclaracao: '00000000201801001',
     );
 
     print('✅ Status: ${declaracaoNumeroResponse.status}');
     print('✅ Sucesso: ${declaracaoNumeroResponse.sucesso}');
+
+    if (declaracaoNumeroResponse.dadosParsed != null) {
+      final declaracao = declaracaoNumeroResponse.dadosParsed!;
+      print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
+      print('📄 Nome do arquivo: ${declaracao.declaracao.nomeArquivo}');
+      print('📄 Arquivo Recibo: ${declaracao.recibo.pdf.isNotEmpty}');
+      print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
+      print('📋 Tem MAED: ${declaracao.temMaed}');
+    }
   } catch (e) {
     print('❌ Erro ao consultar declaração por número: $e');
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-
+*/
   // 7. Consultar Extrato do DAS (CONSEXTRATO16)
   try {
     print('\n--- 7. Consultando Extrato do DAS ---');
 
-    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(cnpj: '00000000000000', numeroDas: '07202136999997159');
+    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(
+      cnpj: '00000000000000',
+      numeroDas: '07202136999997159',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${extratoDasResponse.status}');
     print('✅ Sucesso: ${extratoDasResponse.sucesso}');
 
-    if (extratoDasResponse.dadosParsed != null) {
-      final extrato = extratoDasResponse.dadosParsed!;
-      print('💰 Número DAS: ${extrato.numeroDas}');
-      print('🏢 CNPJ: ${extrato.cnpjCompleto}');
-      print('📅 Período: ${extrato.periodoApuracao}');
-      print('📅 Data Vencimento: ${extrato.dataVencimento}');
-      print('📅 Data Limite Acolhimento: ${extrato.dataLimiteAcolhimento}');
-      print('💰 Valor Total: R\$ ${extrato.valorTotal.toStringAsFixed(2)}');
-      print('📊 Status Pagamento: ${extrato.statusPagamento}');
-      print('✅ Foi Pago: ${extrato.foiPago ? 'Sim' : 'Não'}');
-      print('⏰ Está Vencido: ${extrato.estaVencido ? 'Sim' : 'Não'}');
-      print('📋 Composição: ${extrato.composicao.length} tributos');
-
-      for (final composicao in extrato.composicao.take(3)) {
-        print(
-          '  • ${composicao.nomeTributo} (${composicao.codigoTributo}): R\$ ${composicao.valorTributo.toStringAsFixed(2)} (${composicao.percentual.toStringAsFixed(2)}%)',
-        );
-      }
-
-      if (extrato.dataPagamento != null) {
-        print('📅 Data Pagamento: ${extrato.dataPagamento}');
-      }
+    if (extratoDasResponse.dados.isNotEmpty) {
+      print('✅ Dados: ${extratoDasResponse.dados}');
     }
   } catch (e) {
     print('❌ Erro ao consultar extrato do DAS: $e');

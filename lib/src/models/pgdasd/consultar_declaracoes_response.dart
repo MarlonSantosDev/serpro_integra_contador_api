@@ -166,7 +166,6 @@ class Operacao {
   }
 
   factory Operacao.fromJson(Map<String, dynamic> json) {
-    print('JSON Operacao;;;;;;');
     return Operacao(
       tipoOperacao: json['tipoOperacao'].toString(),
       indiceDeclaracao: json['indiceDeclaracao'] != null ? IndiceDeclaracao.fromJson(json['indiceDeclaracao']) : null,
@@ -181,7 +180,7 @@ class IndiceDeclaracao {
   final String numeroDeclaracao;
 
   /// Data e hora da entrega à RFB. Formato yyyyMMddHHmmss
-  final int dataHoraTransmissao;
+  final String dataHoraTransmissao;
 
   /// Situação da malha quando aplicável: (Retida em Malha; Liberada, Intimada ou Rejeitada)
   /// A situação Liberada contempla 3 situações diferentes, liberada sem análise, liberada por alteração de parâmetros e aceita
@@ -204,10 +203,9 @@ class IndiceDeclaracao {
   }
 
   factory IndiceDeclaracao.fromJson(Map<String, dynamic> json) {
-    print('JSON IndiceDeclaracao');
     return IndiceDeclaracao(
       numeroDeclaracao: json['numeroDeclaracao'].toString(),
-      dataHoraTransmissao: int.parse(json['dataHoraTransmissao'].toString()),
+      dataHoraTransmissao: json['dataHoraTransmissao'].toString(),
       malha: json['malha']?.toString(),
     );
   }
@@ -219,7 +217,7 @@ class IndiceDas {
   final String numeroDas;
 
   /// Data e hora da emissão do DAS. Formato yyyyMMddHHmmss
-  final int dataHoraEmissaoDas;
+  final String dataHoraEmissaoDas;
 
   /// Informa se houve ou não pagamento do DAS até o momento da consulta
   /// Pago (true) e não consta pagamento até o momento (false)
@@ -237,7 +235,7 @@ class IndiceDas {
   factory IndiceDas.fromJson(Map<String, dynamic> json) {
     return IndiceDas(
       numeroDas: json['numeroDas'].toString(),
-      dataHoraEmissaoDas: int.parse(json['dataHoraEmissaoDas'].toString()),
+      dataHoraEmissaoDas: json['dataHoraEmissaoDas'].toString(),
       dasPago: json['dasPago'] as bool,
     );
   }

@@ -25,6 +25,7 @@ class ConsultarExtratoDasResponse {
       final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
       return ExtratoDas.fromJson(dadosMap);
     } catch (e) {
+      print('Erro ao parsear dados: $e');
       return null;
     }
   }
