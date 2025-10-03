@@ -260,7 +260,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-*/
+
   // 7. Consultar Extrato do DAS (CONSEXTRATO16)
   try {
     print('\n--- 7. Consultando Extrato do DAS ---');
@@ -275,15 +275,17 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${extratoDasResponse.status}');
     print('✅ Sucesso: ${extratoDasResponse.sucesso}');
 
-    if (extratoDasResponse.dados.isNotEmpty) {
-      print('✅ Dados: ${extratoDasResponse.dados}');
+    if (extratoDasResponse.dados.extrato.pdf.isNotEmpty) {
+      print('✅ Número do DAS: ${extratoDasResponse.dados.numeroDas}');
+      print('✅ Nome do arquivo: ${extratoDasResponse.dados.extrato.nomeArquivo}');
+      print('✅ PDF: ${extratoDasResponse.dados.extrato.pdf.isNotEmpty}');
     }
   } catch (e) {
     print('❌ Erro ao consultar extrato do DAS: $e');
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-
+*/
   // 8. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
   try {
     print('\n--- 8. Exemplo com Declaração Complexa ---');
