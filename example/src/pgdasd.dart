@@ -83,7 +83,6 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-  */
 
   // 2. Gerar DAS (GERARDAS12)
   try {
@@ -132,7 +131,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-
+  */
   // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
   try {
     print('\n--- 3. Consultando Declarações por Ano ---');
@@ -181,7 +180,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 4. Consultando Declarações por Período ---');
 
-    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(cnpj: '00000000000000', periodoApuracao: '201801');
+    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(
+      cnpj: '00000000000000',
+      periodoApuracao: '2018',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${consultarPeriodoResponse.status}');
     print('✅ Sucesso: ${consultarPeriodoResponse.sucesso}');

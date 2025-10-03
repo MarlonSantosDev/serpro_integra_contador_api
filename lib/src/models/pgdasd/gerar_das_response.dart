@@ -25,6 +25,7 @@ class GerarDasResponse {
       final dadosList = jsonDecode(dados) as List;
       return dadosList.map((d) => Das.fromJson(d)).toList();
     } catch (e) {
+      print('Erro ao fazer parse dos dados GERARDAS12: $e');
       return null;
     }
   }
@@ -82,7 +83,7 @@ class Das {
     return Das(
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
-      detalhamento: DetalhamentoDas.fromJson(json['detalhamento']),
+      detalhamento: DetalhamentoDas.fromJson(json['detalhamentoDas']),
     );
   }
 }

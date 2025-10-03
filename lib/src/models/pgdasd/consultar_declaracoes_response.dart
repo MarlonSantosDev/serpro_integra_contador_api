@@ -25,6 +25,7 @@ class ConsultarDeclaracoesResponse {
       final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
       return DeclaracoesEntregues.fromJson(dadosMap);
     } catch (e) {
+      print('Erro ao parsear dados: $e');
       return null;
     }
   }
@@ -93,7 +94,7 @@ class DeclaracoesEntregues {
 
   factory DeclaracoesEntregues.fromJson(Map<String, dynamic> json) {
     return DeclaracoesEntregues(
-      anoCalendario: int.parse(json['anoCalendario'].toString()),
+      anoCalendario: int.parse(json['anocalendario'].toString()),
       periodos: json['periodos'] != null ? (json['periodos'] as List).map((p) => Periodo.fromJson(p)).toList() : null,
       periodo: json['periodo'] != null ? Periodo.fromJson(json['periodo']) : null,
     );
@@ -165,6 +166,7 @@ class Operacao {
   }
 
   factory Operacao.fromJson(Map<String, dynamic> json) {
+    print('JSON Operacao;;;;;;');
     return Operacao(
       tipoOperacao: json['tipoOperacao'].toString(),
       indiceDeclaracao: json['indiceDeclaracao'] != null ? IndiceDeclaracao.fromJson(json['indiceDeclaracao']) : null,
@@ -202,6 +204,7 @@ class IndiceDeclaracao {
   }
 
   factory IndiceDeclaracao.fromJson(Map<String, dynamic> json) {
+    print('JSON IndiceDeclaracao');
     return IndiceDeclaracao(
       numeroDeclaracao: json['numeroDeclaracao'].toString(),
       dataHoraTransmissao: int.parse(json['dataHoraTransmissao'].toString()),
