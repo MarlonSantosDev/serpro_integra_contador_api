@@ -19,12 +19,13 @@ class GerarDasCobrancaResponse {
   bool get sucesso => status == 200;
 
   /// Parse dos dados JSON retornados
-  List<DasCobranca>? get dadosParsed {
+  DasCobranca? get dadosParsed {
     try {
       // Primeiro converte a string JSON para List
-      final dadosList = jsonDecode(dados) as List;
-      return dadosList.map((d) => DasCobranca.fromJson(d)).toList();
+      final dadosList = jsonDecode(dados);
+      return DasCobranca.fromJson(dadosList);
     } catch (e) {
+      print("Erro ao fazer parse dos dados GERARDASCOBRANCA17: $e");
       return null;
     }
   }
@@ -82,7 +83,7 @@ class DasCobranca {
     return DasCobranca(
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
-      detalhamento: DetalhamentoDasCobranca.fromJson(json['detalhamento']),
+      detalhamento: DetalhamentoDasCobranca.fromJson(json['detalhamentoDas']),
     );
   }
 }

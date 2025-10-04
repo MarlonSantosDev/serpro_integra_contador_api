@@ -19,12 +19,13 @@ class GerarDasProcessoResponse {
   bool get sucesso => status == 200;
 
   /// Parse dos dados JSON retornados
-  List<DasProcesso>? get dadosParsed {
+  DasProcesso? get dadosParsed {
     try {
       // Primeiro converte a string JSON para List
-      final dadosList = jsonDecode(dados) as List;
-      return dadosList.map((d) => DasProcesso.fromJson(d)).toList();
+      final dadosList = jsonDecode(dados);
+      return DasProcesso.fromJson(dadosList);
     } catch (e) {
+      print("Erro ao fazer parse dos dados GERARDASPROCESSO18: $e");
       return null;
     }
   }
@@ -82,7 +83,7 @@ class DasProcesso {
     return DasProcesso(
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
-      detalhamento: DetalhamentoDasProcesso.fromJson(json['detalhamento']),
+      detalhamento: DetalhamentoDasProcesso.fromJson(json['detalhamentoDas']),
     );
   }
 }

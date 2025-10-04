@@ -9,7 +9,6 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   bool servicoOk = true;
 
   // 1. Entregar Declaração Mensal (TRANSDECLARACAO11)
-  /*
   try {
     print('\n--- 1. Entregando Declaração Mensal ---');
 
@@ -131,7 +130,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-  
+
   // 3. Consultar Declarações por Ano-Calendário (CONSDECLARACAO13)
   try {
     print('\n--- 3. Consultando Declarações por Ano ---');
@@ -285,7 +284,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
   await Future.delayed(Duration(seconds: 5));
-*/
+
   // 8. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
   try {
     print('\n--- 8. Exemplo com Declaração Complexa ---');
@@ -347,55 +346,9 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
 
-  // 9. Exemplo de validação de dados
+  // 9. Gerar DAS Cobrança (GERARDASCOBRANCA17)
   try {
-    print('\n--- 9. Exemplo de Validação de Dados ---');
-
-    // CNPJ inválido
-    try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '123', // CNPJ inválido
-        pa: 202101,
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: pgdasd_models.Declaracao(
-          tipoDeclaracao: 1,
-          receitaPaCompetenciaInterno: 50000.00,
-          receitaPaCompetenciaExterno: 10000.00,
-          estabelecimentos: [],
-        ),
-      );
-      print('❌ CNPJ inválido detectado: ${!requestInvalido.isCnpjValido}');
-    } catch (e) {
-      print('⚠️ Erro esperado na validação: $e');
-    }
-
-    // Período inválido
-    try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '00000000000100',
-        pa: 201701, // Período anterior a 2018
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: pgdasd_models.Declaracao(
-          tipoDeclaracao: 1,
-          receitaPaCompetenciaInterno: 50000.00,
-          receitaPaCompetenciaExterno: 10000.00,
-          estabelecimentos: [],
-        ),
-      );
-      print('❌ Período inválido detectado: ${!requestInvalido.isPaValido}');
-    } catch (e) {
-      print('⚠️ Erro esperado na validação: $e');
-    }
-  } catch (e) {
-    print('❌ Erro na validação de dados: $e');
-    servicoOk = false;
-  }
-
-  // 8. Gerar DAS Cobrança (GERARDASCOBRANCA17)
-  try {
-    print('\n--- 8. Gerando DAS Cobrança ---');
+    print('\n--- 9. Gerando DAS Cobrança ---');
 
     final dasCobrancaResponse = await pgdasdService.gerarDasCobrancaSimples(cnpj: '00000000000100', periodoApuracao: '202301');
 
@@ -403,7 +356,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Sucesso: ${dasCobrancaResponse.sucesso}');
 
     if (dasCobrancaResponse.dadosParsed != null) {
-      final dasCobranca = dasCobrancaResponse.dadosParsed!.first;
+      final dasCobranca = dasCobrancaResponse.dadosParsed!;
       print('🏢 CNPJ: ${dasCobranca.cnpjCompleto}');
       print('📅 Período: ${dasCobranca.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasCobranca.detalhamento.numeroDocumento}');
@@ -430,18 +383,19 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('❌ Erro ao gerar DAS Cobrança: $e');
     servicoOk = false;
   }
+  await Future.delayed(Duration(seconds: 5));
 
-  // 9. Gerar DAS de Processo (GERARDASPROCESSO18)
+  // 10. Gerar DAS de Processo (GERARDASPROCESSO18)
   try {
-    print('\n--- 9. Gerando DAS de Processo ---');
+    print('\n--- 10. Gerando DAS de Processo ---');
 
-    final dasProcessoResponse = await pgdasdService.gerarDasProcessoSimples(cnpj: '00000000000100', numeroProcesso: '00000000000000001');
+    final dasProcessoResponse = await pgdasdService.gerarDasProcessoSimples(cnpj: '00000000000100', numeroProcesso: '00000000000000000');
 
     print('✅ Status: ${dasProcessoResponse.status}');
     print('✅ Sucesso: ${dasProcessoResponse.sucesso}');
 
     if (dasProcessoResponse.dadosParsed != null) {
-      final dasProcesso = dasProcessoResponse.dadosParsed!.first;
+      final dasProcesso = dasProcessoResponse.dadosParsed!;
       print('🏢 CNPJ: ${dasProcesso.cnpjCompleto}');
       print('📅 Período: ${dasProcesso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasProcesso.detalhamento.numeroDocumento}');
@@ -471,10 +425,11 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('❌ Erro ao gerar DAS de Processo: $e');
     servicoOk = false;
   }
+  await Future.delayed(Duration(seconds: 5));
 
-  // 10. Gerar DAS Avulso (GERARDASAVULSO19)
+  // 11. Gerar DAS Avulso (GERARDASAVULSO19)
   try {
-    print('\n--- 10. Gerando DAS Avulso ---');
+    print('\n--- 11. Gerando DAS Avulso ---');
 
     // Criar lista de tributos para DAS Avulso
     final listaTributos = [
@@ -499,7 +454,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       cnpj: '00000000000100',
       periodoApuracao: '202401',
       listaTributos: listaTributos,
-      dataConsolidacao: '20241231', // Data futura para consolidação
+      dataConsolidacao: '20251231', // Data futura para consolidação
       prorrogacaoEspecial: 1, // Indicador de prorrogação especial
     );
 
@@ -507,7 +462,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Sucesso: ${dasAvulsoResponse.sucesso}');
 
     if (dasAvulsoResponse.dadosParsed != null) {
-      final dasAvulso = dasAvulsoResponse.dadosParsed!.first;
+      final dasAvulso = dasAvulsoResponse.dadosParsed!;
       print('🏢 CNPJ: ${dasAvulso.cnpjCompleto}');
       print('📅 Período: ${dasAvulso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasAvulso.detalhamento.numeroDocumento}');
@@ -534,10 +489,11 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('❌ Erro ao gerar DAS Avulso: $e');
     servicoOk = false;
   }
+  await Future.delayed(Duration(seconds: 5));
 
-  // 11. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
+  // 12. Exemplo com declaração complexa (receitas brutas anteriores, folha de salário, etc.)
   try {
-    print('\n--- 11. Exemplo com Declaração Complexa ---');
+    print('\n--- 12. Exemplo com Declaração Complexa ---');
 
     final declaracaoComplexa = pgdasd_models.Declaracao(
       tipoDeclaracao: 1, // Original
@@ -593,64 +549,6 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     );
   } catch (e) {
     print('❌ Erro ao criar declaração complexa: $e');
-    servicoOk = false;
-  }
-
-  // 12. Exemplo de validação de dados
-  try {
-    print('\n--- 12. Exemplo de Validação de Dados ---');
-
-    // CNPJ inválido
-    try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '123', // CNPJ inválido
-        pa: 202101,
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: pgdasd_models.Declaracao(
-          tipoDeclaracao: 1,
-          receitaPaCompetenciaInterno: 50000.00,
-          receitaPaCompetenciaExterno: 10000.00,
-          estabelecimentos: [],
-        ),
-      );
-      print('❌ CNPJ inválido detectado: ${!requestInvalido.isCnpjValido}');
-    } catch (e) {
-      print('⚠️ Erro esperado na validação: $e');
-    }
-
-    // Período inválido
-    try {
-      final requestInvalido = pgdasd_models.EntregarDeclaracaoRequest(
-        cnpjCompleto: '00000000000100',
-        pa: 201701, // Período anterior a 2018
-        indicadorTransmissao: true,
-        indicadorComparacao: false,
-        declaracao: pgdasd_models.Declaracao(
-          tipoDeclaracao: 1,
-          receitaPaCompetenciaInterno: 50000.00,
-          receitaPaCompetenciaExterno: 10000.00,
-          estabelecimentos: [],
-        ),
-      );
-      print('❌ Período inválido detectado: ${!requestInvalido.isPaValido}');
-    } catch (e) {
-      print('⚠️ Erro esperado na validação: $e');
-    }
-
-    // Validação de DAS Avulso
-    try {
-      final tributoInvalido = pgdasd_avulso_models.TributoAvulso(
-        codigo: 0, // Código inválido
-        valor: -100.00, // Valor negativo
-        uf: 'ABC', // UF inválida
-      );
-      print('❌ Tributo inválido detectado: ${!tributoInvalido.isValid}');
-    } catch (e) {
-      print('⚠️ Erro esperado na validação: $e');
-    }
-  } catch (e) {
-    print('❌ Erro na validação de dados: $e');
     servicoOk = false;
   }
 

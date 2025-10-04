@@ -19,12 +19,13 @@ class GerarDasAvulsoResponse {
   bool get sucesso => status == 200;
 
   /// Parse dos dados JSON retornados
-  List<DasAvulso>? get dadosParsed {
+  DasAvulso? get dadosParsed {
     try {
       // Primeiro converte a string JSON para List
-      final dadosList = jsonDecode(dados) as List;
-      return dadosList.map((d) => DasAvulso.fromJson(d)).toList();
+      final dadosList = jsonDecode(dados);
+      return DasAvulso.fromJson(dadosList);
     } catch (e) {
+      print("Erro ao fazer parse dos dados GERARDASAVULSO19: $e");
       return null;
     }
   }
@@ -82,7 +83,7 @@ class DasAvulso {
     return DasAvulso(
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
-      detalhamento: DetalhamentoDasAvulso.fromJson(json['detalhamento']),
+      detalhamento: DetalhamentoDasAvulso.fromJson(json['detalhamentoDas']),
     );
   }
 }
