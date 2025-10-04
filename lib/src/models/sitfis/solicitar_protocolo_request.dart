@@ -8,7 +8,7 @@ class SolicitarProtocoloRequest extends BaseRequest {
         pedidoDados: PedidoDados(
           idSistema: 'SITFIS',
           idServico: 'SOLICITARPROTOCOLO91',
-          versaoSistema: '2.0',
+          versaoSistema: '1.0',
           dados: '', // Campo dados deve ser enviado vazio
         ),
       );

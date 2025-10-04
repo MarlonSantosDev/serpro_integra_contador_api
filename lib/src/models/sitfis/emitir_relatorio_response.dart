@@ -60,7 +60,7 @@ class EmitirRelatorioDados {
       final Map<String, dynamic> json = _parseJsonString(jsonString);
       return EmitirRelatorioDados(
         pdf: json['pdf']?.toString(),
-        tempoEspera: int.parse(json['tempoEspera'].toString()),
+        tempoEspera: json['tempoEspera'] != null ? int.tryParse(json['tempoEspera'].toString()) : null,
       );
     } catch (e) {
       return EmitirRelatorioDados();
