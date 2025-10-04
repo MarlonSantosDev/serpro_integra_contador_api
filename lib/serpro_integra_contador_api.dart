@@ -81,7 +81,6 @@ export 'src/util/assinatura_digital_utils.dart';
 export 'src/util/cache_utils.dart';
 export 'src/util/xml_utils.dart';
 export 'src/util/eventos_atualizacao_utils.dart';
-export 'src/util/sicalc_utils.dart';
 export 'src/util/pgmei_validator.dart';
 
 // Base Models

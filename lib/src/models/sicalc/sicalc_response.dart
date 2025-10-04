@@ -1,4 +1,5 @@
 import '../base/common.dart';
+import 'dart:convert';
 
 /// Modelo para resposta de consolidação e emissão de DARF
 class ConsolidarEmitirDarfResponse {
@@ -28,7 +29,7 @@ class ConsolidarEmitirDarfResponse {
     if (json['dados'] != null) {
       final dadosStr = json['dados'] as String;
       try {
-        final dados = _parseDadosString(dadosStr);
+        final dados = jsonDecode(dadosStr);
 
         if (dados['consolidado'] != null) {
           consolidado = ConsolidadoDarf.fromJson(dados['consolidado']);
@@ -48,12 +49,6 @@ class ConsolidarEmitirDarfResponse {
       darf: darf,
       numeroDocumento: numeroDocumento,
     );
-  }
-
-  static Map<String, dynamic> _parseDadosString(String dadosStr) {
-    // Remover caracteres de escape e converter para Map
-    final cleanStr = dadosStr.replaceAll('\\"', '"');
-    return Map<String, dynamic>.from(cleanStr as Map);
   }
 }
 
@@ -133,7 +128,7 @@ class ConsultarReceitasResponse {
     if (json['dados'] != null) {
       final dadosStr = json['dados'] as String;
       try {
-        final dados = ConsolidarEmitirDarfResponse._parseDadosString(dadosStr);
+        final dados = jsonDecode(dadosStr);
 
         if (dados['receita'] != null) {
           receita = ReceitaInfo.fromJson(dados['receita']);
@@ -355,7 +350,7 @@ class GerarCodigoBarrasResponse {
     if (json['dados'] != null) {
       final dadosStr = json['dados'] as String;
       try {
-        final dados = ConsolidarEmitirDarfResponse._parseDadosString(dadosStr);
+        final dados = jsonDecode(dadosStr);
 
         if (dados['consolidado'] != null) {
           consolidado = ConsolidadoDarf.fromJson(dados['consolidado']);

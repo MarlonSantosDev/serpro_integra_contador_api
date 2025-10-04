@@ -1,7 +1,6 @@
 import '../core/api_client.dart';
 import '../models/sicalc/sicalc_request.dart';
 import '../models/sicalc/sicalc_response.dart';
-import '../util/sicalc_utils.dart';
 
 /// Serviço para integração com SICALC (Sistema de Cálculo de Acréscimos Legais)
 class SicalcService {
@@ -27,11 +26,8 @@ class SicalcService {
         throw Exception('Dados inválidos: ${erros.join(', ')}');
       }
 
-      // Obter endpoint correto
-      final endpoint = SicalcUtils.obterEndpoint(request.pedidoDados.idServico);
-
       // Fazer a requisição
-      final response = await _apiClient.post(endpoint, request);
+      final response = await _apiClient.post('/Emitir', request);
 
       // Processar resposta
       return ConsolidarEmitirDarfResponse.fromJson(response);
@@ -56,11 +52,8 @@ class SicalcService {
         throw Exception('Dados inválidos: ${erros.join(', ')}');
       }
 
-      // Obter endpoint correto
-      final endpoint = SicalcUtils.obterEndpoint(request.pedidoDados.idServico);
-
       // Fazer a requisição
-      final response = await _apiClient.post(endpoint, request);
+      final response = await _apiClient.post('/Apoiar', request);
 
       // Processar resposta
       return ConsultarReceitasResponse.fromJson(response);
@@ -87,11 +80,8 @@ class SicalcService {
         throw Exception('Dados inválidos: ${erros.join(', ')}');
       }
 
-      // Obter endpoint correto
-      final endpoint = SicalcUtils.obterEndpoint(request.pedidoDados.idServico);
-
       // Fazer a requisição
-      final response = await _apiClient.post(endpoint, request);
+      final response = await _apiClient.post("/Emitir", request);
 
       // Processar resposta
       return GerarCodigoBarrasResponse.fromJson(response);

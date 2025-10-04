@@ -1,83 +1,20 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 Future<void> Sicalc(ApiClient apiClient) async {
-  print("=== TESTE DOS SERVIÇOS SICALC ===\n");
+  print('=== TESTANDO TODOS OS SERVIÇOS SICALC ===\n');
 
   final sicalcService = SicalcService(apiClient);
+  int erros = 0;
 
+  // ========================================
+  // 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física
+  // ========================================
   try {
-    // Teste 1: Consultar receitas do SICALC
-    await testarConsultarReceitas(sicalcService);
+    print('📋 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física');
+    print('   Contribuinte: 99999999999');
+    print('   UF: SP, Município: 7107');
+    print('   Código Receita: 0190');
 
-    // Teste 2: Consolidar e emitir DARF de pessoa física
-    await testarConsolidarEmitirDarfPessoaFisica(sicalcService);
-
-    // Teste 3: Consolidar e emitir DARF de pessoa jurídica
-    await testarConsolidarEmitirDarfPessoaJuridica(sicalcService);
-
-    // Teste 4: Gerar código de barras do DARF
-    await testarGerarCodigoBarras(sicalcService);
-
-    // Teste 5: Verificar se receita permite código de barras
-    await testarReceitaPermiteCodigoBarras(sicalcService);
-
-    // Teste 6: Obter informações da receita
-    await testarObterInfoReceita(sicalcService);
-  } catch (e) {
-    print("❌ Erro geral nos testes SICALC: $e");
-  }
-
-  print("\n=== FIM DOS TESTES SICALC ===");
-}
-
-/// Teste 1: Consultar receitas do SICALC
-Future<void> testarConsultarReceitas(SicalcService sicalcService) async {
-  print("🔍 Teste 1: Consultar receitas do SICALC");
-
-  try {
-    final request = SicalcService.criarConsultaReceitas(contribuinteNumero: '00000000000', codigoReceita: '6106');
-
-    final response = await sicalcService.consultarReceitas(request);
-
-    print("✅ Status: ${response.status}");
-
-    if (response.mensagens != null) {
-      print("📝 Mensagens:");
-      for (final mensagem in response.mensagens!) {
-        print("   - ${mensagem.codigo}: ${mensagem.texto}");
-      }
-    }
-
-    if (response.receita != null) {
-      print("📋 Receita encontrada:");
-      print("   - Código: ${response.receita!.codigoReceita}");
-      print("   - Descrição: ${response.receita!.descricaoReceita}");
-      print("   - Extensões: ${response.receita!.extensoes.length}");
-
-      for (int i = 0; i < response.receita!.extensoes.length; i++) {
-        final extensao = response.receita!.extensoes[i];
-        print("   - Extensão ${i + 1}:");
-        print("     * Código: ${extensao.informacoes.codigoReceitaExtensao}");
-        print("     * Descrição: ${extensao.informacoes.descricaoReceitaExtensao}");
-        print("     * Permite código de barras: ${extensao.informacoes.codigoBarras}");
-        print("     * Calculado: ${extensao.informacoes.calculado}");
-        print("     * Manual: ${extensao.informacoes.manual}");
-        print("     * PF: ${extensao.informacoes.pf}");
-        print("     * PJ: ${extensao.informacoes.pj}");
-      }
-    }
-  } catch (e) {
-    print("❌ Erro ao consultar receitas: $e");
-  }
-
-  print("");
-}
-
-/// Teste 2: Consolidar e emitir DARF de pessoa física
-Future<void> testarConsolidarEmitirDarfPessoaFisica(SicalcService sicalcService) async {
-  print("👤 Teste 2: Consolidar e emitir DARF de pessoa física");
-
-  try {
     final request = SicalcService.criarDarfPessoaFisica(
       contribuinteNumero: '99999999999',
       uf: 'SP',
@@ -94,47 +31,61 @@ Future<void> testarConsolidarEmitirDarfPessoaFisica(SicalcService sicalcService)
 
     final response = await sicalcService.consolidarEmitirDarf(request);
 
-    print("✅ Status: ${response.status}");
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: DARF consolidado e emitido');
 
-    if (response.mensagens != null) {
-      print("📝 Mensagens:");
-      for (final mensagem in response.mensagens!) {
-        print("   - ${mensagem.codigo}: ${mensagem.texto}");
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
       }
-    }
 
-    if (response.consolidado != null) {
-      print("💰 Dados consolidados:");
-      print("   - Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}");
-      print("   - Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}");
-      print("   - Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}");
-      print("   - Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%");
-      print("   - Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}");
-      print("   - Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%");
-      print("   - Termo inicial juros: ${response.consolidado!.termoInicialJuros}");
-      print("   - Data arrecadação: ${response.consolidado!.dataArrecadacaoConsolidacao}");
-      print("   - Data validade: ${response.consolidado!.dataValidadeCalculo}");
-    }
+      if (response.consolidado != null) {
+        print('   💰 Dados consolidados:');
+        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
+        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
+        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
+        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
+        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
+        print('      Termo inicial juros: ${response.consolidado!.termoInicialJuros}');
+        print('      Data arrecadação: ${response.consolidado!.dataArrecadacaoConsolidacao}');
+        print('      Data validade: ${response.consolidado!.dataValidadeCalculo}');
+      }
 
-    if (response.darf != null) {
-      print("📄 PDF do DARF gerado: ${response.darf!.length} caracteres");
-    }
+      if (response.darf != null) {
+        print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+      }
 
-    if (response.numeroDocumento != null) {
-      print("🔢 Número do documento: ${response.numeroDocumento}");
+      if (response.numeroDocumento != null) {
+        print('   🔢 Número do documento: ${response.numeroDocumento}');
+      }
+    } else {
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
     }
   } catch (e) {
-    print("❌ Erro ao consolidar e emitir DARF PF: $e");
+    print('   ❌ Exceção: $e');
+    erros++;
   }
 
-  print("");
-}
+  await Future.delayed(const Duration(seconds: 3));
 
-/// Teste 3: Consolidar e emitir DARF de pessoa jurídica
-Future<void> testarConsolidarEmitirDarfPessoaJuridica(SicalcService sicalcService) async {
-  print("🏢 Teste 3: Consolidar e emitir DARF de pessoa jurídica");
-
+  // ========================================
+  // 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas
+  // ========================================
   try {
+    print('\n📋 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas');
+    print('   Contribuinte: 99999999999999');
+    print('   UF: SP, Município: 7107');
+    print('   Código Receita: 0220');
+
     final request = SicalcService.criarDarfPessoaJuridica(
       contribuinteNumero: '99999999999999',
       uf: 'SP',
@@ -152,46 +103,60 @@ Future<void> testarConsolidarEmitirDarfPessoaJuridica(SicalcService sicalcServic
 
     final response = await sicalcService.consolidarEmitirDarf(request);
 
-    print("✅ Status: ${response.status}");
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: DARF consolidado e emitido');
 
-    if (response.mensagens != null) {
-      print("📝 Mensagens:");
-      for (final mensagem in response.mensagens!) {
-        print("   - ${mensagem.codigo}: ${mensagem.texto}");
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
       }
-    }
 
-    if (response.consolidado != null) {
-      print("💰 Dados consolidados:");
-      print("   - Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}");
-      print("   - Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}");
-      print("   - Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}");
-      print("   - Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%");
-      print("   - Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}");
-      print("   - Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%");
-    }
+      if (response.consolidado != null) {
+        print('   💰 Dados consolidados:');
+        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
+        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
+        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
+        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
+        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
+      }
 
-    if (response.darf != null) {
-      print("📄 PDF do DARF gerado: ${response.darf!.length} caracteres");
-    }
+      if (response.darf != null) {
+        print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+      }
 
-    if (response.numeroDocumento != null) {
-      print("🔢 Número do documento: ${response.numeroDocumento}");
+      if (response.numeroDocumento != null) {
+        print('   🔢 Número do documento: ${response.numeroDocumento}');
+      }
+    } else {
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
     }
   } catch (e) {
-    print("❌ Erro ao consolidar e emitir DARF PJ: $e");
+    print('   ❌ Exceção: $e');
+    erros++;
   }
 
-  print("");
-}
+  await Future.delayed(const Duration(seconds: 3));
 
-/// Teste 4: Gerar código de barras do DARF
-Future<void> testarGerarCodigoBarras(SicalcService sicalcService) async {
-  print("📊 Teste 4: Gerar código de barras do DARF");
-
+  // ========================================
+  // 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE
+  // ========================================
   try {
+    print('\n📋 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE');
+    print('   Contribuinte: 99999999999999');
+    print('   UF: SP, Município: 7107');
+    print('   Código Receita: 1394');
+
     final request = SicalcService.criarCodigoBarras(
-      contribuinteNumero: '99999999999',
+      contribuinteNumero: '99999999999999',
       uf: 'SP',
       municipio: 7107,
       codigoReceita: '1394',
@@ -201,94 +166,253 @@ Future<void> testarGerarCodigoBarras(SicalcService sicalcService) async {
       vencimento: '2018-01-31T00:00:00',
       valorImposto: 1000.00,
       dataConsolidacao: '2022-08-08T00:00:00',
-      observacao: 'Código de barras calculado',
+      observacao: 'DARF com código de barras e QRCODE - Pessoa Jurídica',
     );
 
     final response = await sicalcService.gerarCodigoBarras(request);
 
-    print("✅ Status: ${response.status}");
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: DARF com código de barras e QRCODE gerado');
 
-    if (response.mensagens != null) {
-      print("📝 Mensagens:");
-      for (final mensagem in response.mensagens!) {
-        print("   - ${mensagem.codigo}: ${mensagem.texto}");
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
       }
-    }
 
-    if (response.consolidado != null) {
-      print("💰 Dados consolidados:");
-      print("   - Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}");
-      print("   - Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}");
-    }
+      if (response.consolidado != null) {
+        print('   💰 Dados consolidados:');
+        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
+        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+      }
 
-    if (response.codigoDeBarras != null) {
-      print("📊 Código de barras gerado:");
-      print("   - Campo 1 com DV: ${response.codigoDeBarras!.campo1ComDV}");
-      print("   - Campo 2 com DV: ${response.codigoDeBarras!.campo2ComDV}");
-      print("   - Campo 3 com DV: ${response.codigoDeBarras!.campo3ComDV}");
-      print("   - Campo 4 com DV: ${response.codigoDeBarras!.campo4ComDV}");
-      print("   - Código 44: ${response.codigoDeBarras!.codigo44}");
-    }
+      if (response.codigoDeBarras != null) {
+        print('   📊 Código de barras gerado:');
+        print('      Campo 1 com DV: ${response.codigoDeBarras!.campo1ComDV}');
+        print('      Campo 2 com DV: ${response.codigoDeBarras!.campo2ComDV}');
+        print('      Campo 3 com DV: ${response.codigoDeBarras!.campo3ComDV}');
+        print('      Campo 4 com DV: ${response.codigoDeBarras!.campo4ComDV}');
+        print('      Código 44: ${response.codigoDeBarras!.codigo44}');
+      }
 
-    if (response.numeroDocumento != null) {
-      print("🔢 Número do documento: ${response.numeroDocumento}");
-    }
-  } catch (e) {
-    print("❌ Erro ao gerar código de barras: $e");
-  }
-
-  print("");
-}
-
-/// Teste 5: Verificar se receita permite código de barras
-Future<void> testarReceitaPermiteCodigoBarras(SicalcService sicalcService) async {
-  print("🔍 Teste 5: Verificar se receita permite código de barras");
-
-  try {
-    final codigosReceita = ['0190', '0220', '1162', '1394', '6106'];
-
-    for (final codigo in codigosReceita) {
-      final permite = await sicalcService.receitaPermiteCodigoBarras(codigo);
-      print("   - Receita $codigo: ${permite ? '✅ Permite' : '❌ Não permite'} código de barras");
-    }
-  } catch (e) {
-    print("❌ Erro ao verificar receitas: $e");
-  }
-
-  print("");
-}
-
-/// Teste 6: Obter informações da receita
-Future<void> testarObterInfoReceita(SicalcService sicalcService) async {
-  print("📋 Teste 6: Obter informações da receita");
-
-  try {
-    final info = await sicalcService.obterInfoReceita('6106');
-
-    if (info != null) {
-      print("✅ Informações da receita ${info['codigoReceita']}:");
-      print("   - Descrição: ${info['descricaoReceita']}");
-      print("   - Extensões: ${info['extensoes'].length}");
-
-      for (int i = 0; i < info['extensoes'].length; i++) {
-        final extensao = info['extensoes'][i];
-        print("   - Extensão ${i + 1}:");
-        print("     * Código: ${extensao['informacoes']['codigoReceitaExtensao']}");
-        print("     * Descrição: ${extensao['informacoes']['descricaoReceitaExtensao']}");
-        print("     * Permite código de barras: ${extensao['informacoes']['codigoBarras']}");
-        print("     * Calculado: ${extensao['informacoes']['calculado']}");
-        print("     * Manual: ${extensao['informacoes']['manual']}");
-        print("     * PF: ${extensao['informacoes']['pf']}");
-        print("     * PJ: ${extensao['informacoes']['pj']}");
-        print("     * Exige matriz: ${extensao['informacoes']['exigeMatriz']}");
-        print("     * Veda valor: ${extensao['informacoes']['vedaValor']}");
+      if (response.numeroDocumento != null) {
+        print('   🔢 Número do documento: ${response.numeroDocumento}');
       }
     } else {
-      print("❌ Não foi possível obter informações da receita");
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
     }
   } catch (e) {
-    print("❌ Erro ao obter informações da receita: $e");
+    print('   ❌ Exceção: $e');
+    erros++;
   }
 
-  print("");
+  await Future.delayed(const Duration(seconds: 3));
+
+  // ========================================
+  // 4. CONSULTAR RECEITAS - Consultar receitas do SICALC
+  // ========================================
+  try {
+    print('\n📋 4. CONSULTAR RECEITAS - Consultar receitas do SICALC');
+    print('   Contribuinte: 00000000000');
+    print('   Código Receita: 6106');
+
+    final request = SicalcService.criarConsultaReceitas(contribuinteNumero: '00000000000', codigoReceita: '6106');
+    final response = await sicalcService.consultarReceitas(request);
+
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: Consulta realizada com sucesso');
+
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+
+      if (response.receita != null) {
+        print('   📋 Receita encontrada:');
+        print('      Código: ${response.receita!.codigoReceita}');
+        print('      Descrição: ${response.receita!.descricaoReceita}');
+        print('      Extensões: ${response.receita!.extensoes.length}');
+
+        for (int i = 0; i < response.receita!.extensoes.length; i++) {
+          final extensao = response.receita!.extensoes[i];
+          print('      Extensão ${i + 1}:');
+          print('        Código: ${extensao.informacoes.codigoReceitaExtensao}');
+          print('        Descrição: ${extensao.informacoes.descricaoReceitaExtensao}');
+          print('        Permite código de barras: ${extensao.informacoes.codigoBarras}');
+          print('        Calculado: ${extensao.informacoes.calculado}');
+          print('        Manual: ${extensao.informacoes.manual}');
+          print('        PF: ${extensao.informacoes.pf}');
+          print('        PJ: ${extensao.informacoes.pj}');
+        }
+      }
+    } else {
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
+    }
+  } catch (e) {
+    print('   ❌ Exceção: $e');
+    erros++;
+  }
+
+  await Future.delayed(const Duration(seconds: 3));
+
+  // ========================================
+  // 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras
+  // ========================================
+  try {
+    print('\n📋 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras');
+    print('   Contribuinte: 99999999999999');
+    print('   UF: SP, Município: 7107');
+    print('   Código Receita: 1162');
+
+    final request = SicalcService.criarCodigoBarras(
+      contribuinteNumero: '99999999999999',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: '1162',
+      codigoReceitaExtensao: '01',
+      tipoPA: 'TR',
+      dataPA: '03/2021',
+      vencimento: '2021-04-30T00:00:00',
+      valorImposto: 1500.00,
+      dataConsolidacao: '2022-08-08T00:00:00',
+      observacao: 'DARF com código de barras - Pessoa Jurídica',
+    );
+
+    final response = await sicalcService.gerarCodigoBarras(request);
+
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: DARF com código de barras gerado');
+
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+
+      if (response.consolidado != null) {
+        print('   💰 Dados consolidados:');
+        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
+        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+      }
+
+      if (response.codigoDeBarras != null) {
+        print('   📊 Código de barras gerado:');
+        print('      Campo 1 com DV: ${response.codigoDeBarras!.campo1ComDV}');
+        print('      Campo 2 com DV: ${response.codigoDeBarras!.campo2ComDV}');
+        print('      Campo 3 com DV: ${response.codigoDeBarras!.campo3ComDV}');
+        print('      Campo 4 com DV: ${response.codigoDeBarras!.campo4ComDV}');
+        print('      Código 44: ${response.codigoDeBarras!.codigo44}');
+      }
+
+      if (response.numeroDocumento != null) {
+        print('   🔢 Número do documento: ${response.numeroDocumento}');
+      }
+    } else {
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
+    }
+  } catch (e) {
+    print('   ❌ Exceção: $e');
+    erros++;
+  }
+
+  await Future.delayed(const Duration(seconds: 3));
+
+  // ========================================
+  // 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras
+  // ========================================
+  try {
+    print('\n📋 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras');
+    print('   Contribuinte: 99999999999999');
+    print('   UF: SP, Município: 7107');
+    print('   Código Receita: 0190');
+
+    final request = SicalcService.criarDarfPessoaJuridica(
+      contribuinteNumero: '99999999999999',
+      uf: 'SP',
+      municipio: 7107,
+      codigoReceita: '0190',
+      codigoReceitaExtensao: '01',
+      tipoPA: 'ME',
+      dataPA: '05/2021',
+      vencimento: '2021-06-30T00:00:00',
+      valorImposto: 2000.00,
+      dataConsolidacao: '2022-08-08T00:00:00',
+      observacao: 'DARF manual com código de barras - Pessoa Jurídica',
+    );
+
+    final response = await sicalcService.consolidarEmitirDarf(request);
+
+    if (response.status == 'OK') {
+      print('   ✅ Sucesso: DARF manual consolidado e emitido');
+
+      if (response.mensagens != null) {
+        print('   📝 Mensagens:');
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+
+      if (response.consolidado != null) {
+        print('   💰 Dados consolidados:');
+        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
+        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
+        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
+        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
+        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
+      }
+
+      if (response.darf != null) {
+        print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+      }
+
+      if (response.numeroDocumento != null) {
+        print('   🔢 Número do documento: ${response.numeroDocumento}');
+      }
+    } else {
+      print('   ❌ Erro: Status ${response.status}');
+      if (response.mensagens != null) {
+        for (final mensagem in response.mensagens!) {
+          print('      ${mensagem.codigo}: ${mensagem.texto}');
+        }
+      }
+      erros++;
+    }
+  } catch (e) {
+    print('   ❌ Exceção: $e');
+    erros++;
+  }
+
+  // ============================================
+  // RESUMO FINAL DOS TESTES
+  // ============================================
+
+  if (erros == 0) {
+    print('🎉✅ TODOS OS SERVIÇOS SICALC FUNCIONANDO PERFEITAMENTE!');
+  } else {
+    print('🚨 Muitos erros detectados, verificar configuração da API');
+  }
+  print('\n🏁 Testes SICALC concluídos!');
 }
