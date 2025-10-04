@@ -36,8 +36,8 @@ void main() async {
   //await Procuracoes(apiClient);
   //await Regime(apiClient);
   //await Relpmei(apiClient);
-  await Relpsn(apiClient);
+  //await Relpsn(apiClient);
+  await Sicalc(apiClient);
 
-  //await Sicalc(apiClient);
   //await Sitfis(apiClient);
 }

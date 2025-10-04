@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarParcelasResponse {
@@ -5,28 +6,18 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final String dados;
 
-  ConsultarParcelasResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-  });
+  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List)
-          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e)).toList(),
       dados: json['dados'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 
   /// Dados parseados do JSON string
@@ -36,6 +27,7 @@ class ConsultarParcelasResponse {
       final parsed = ListaParcelasData.fromJson(dadosJson);
       return parsed;
     } catch (e) {
+      print('Erro ao parsear JSON consultar parcelas: $e');
       return null;
     }
   }
@@ -58,12 +50,8 @@ class ListaParcelasData {
   ListaParcelasData({required this.listaParcelas});
 
   factory ListaParcelasData.fromJson(String jsonString) {
-    final json = jsonString as Map<String, dynamic>;
-    return ListaParcelasData(
-      listaParcelas: (json['listaParcelas'] as List)
-          .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+    final json = jsonDecode(jsonString);
+    return ListaParcelasData(listaParcelas: (json['listaParcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList());
   }
 
   Map<String, dynamic> toJson() {
@@ -90,13 +78,9 @@ class ListaParcelasData {
     if (listaParcelas.isEmpty) return null;
 
     final hoje = DateTime.now();
-    final anoMesAtual = int.parse(
-      '${hoje.year}${hoje.month.toString().padLeft(2, '0')}',
-    );
+    final anoMesAtual = int.parse('${hoje.year}${hoje.month.toString().padLeft(2, '0')}');
 
-    final parcelasFuturas = listaParcelas
-        .where((p) => p.parcelaInt >= anoMesAtual)
-        .toList();
+    final parcelasFuturas = listaParcelas.where((p) => p.parcelaInt >= anoMesAtual).toList();
 
     if (parcelasFuturas.isEmpty) return null;
 
@@ -112,10 +96,7 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(
-      parcela: json['parcela'].toString(),
-      valor: (num.parse(json['valor'].toString())).toDouble(),
-    );
+    return Parcela(parcela: json['parcela'].toString(), valor: (num.parse(json['valor'].toString())).toDouble());
   }
 
   Map<String, dynamic> toJson() {
@@ -175,4 +156,3 @@ class Parcela {
     return 'Parcela ${parcelaFormatada} - ${valorFormatado} - Vencimento: ${dataVencimentoEstimada.day}/${dataVencimentoEstimada.month}/${dataVencimentoEstimada.year}';
   }
 }
-

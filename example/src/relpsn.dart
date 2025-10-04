@@ -32,11 +32,12 @@ Future<void> Relpsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar pedidos: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 3));
 
   // 2. Consultar Parcelamento Específico
   try {
     print('\n--- 2. Consultar Parcelamento Específico ---');
-    const numeroParcelamento = 123456; // Número de exemplo
+    const numeroParcelamento = 9131; // Número de exemplo
 
     final parcelamentoResponse = await relpsnService.consultarParcelamento(numeroParcelamento);
 
@@ -54,7 +55,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
         final consolidacao = parcelamento.consolidacaoOriginal;
         if (consolidacao != null) {
           print('Consolidação original:');
-          print('  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDaEntrada.toStringAsFixed(2)}');
+          print('  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDeEntrada.toStringAsFixed(2)}');
           print('  Data: ${consolidacao.dataConsolidacaoFormatada}');
           print('  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}');
           print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}');
@@ -105,25 +106,21 @@ Future<void> Relpsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelamento: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 3));
 
   // 3. Consultar Parcelas Disponíveis
   try {
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
-    const numeroParcelamento = 123456; // Número de exemplo
 
-    final parcelasResponse = await relpsnService.consultarParcelas(numeroParcelamento);
+    final parcelasResponse = await relpsnService.consultarParcelasParaImpressao();
 
     if (parcelasResponse.sucesso) {
       print('✅ Parcelas consultadas com sucesso');
       final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
-
       print('Total de parcelas: ${parcelas.length}');
-      print('Valor total: R\$ ${relpsnService.consultarParcelas(numeroParcelamento).then((r) => r.dadosParsed?.valorTotalParcelas ?? 0.0)}');
 
-      // Parcelas ordenadas
-      final parcelasOrdenadas = parcelasResponse.dadosParsed?.parcelasOrdenadas ?? [];
       print('Parcelas ordenadas:');
-      for (final parcela in parcelasOrdenadas) {
+      for (final parcela in parcelas) {
         print('  - ${parcela.descricaoCompleta}');
         print('    Vencida: ${parcela.isVencida ? 'Sim' : 'Não'}');
         print('    Dias até vencimento: ${parcela.diasAteVencimento}');
@@ -141,12 +138,13 @@ Future<void> Relpsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar parcelas: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 3));
 
   // 4. Consultar Detalhes de Pagamento
   try {
     print('\n--- 4. Consultar Detalhes de Pagamento ---');
-    const numeroParcelamento = 123456; // Número de exemplo
-    const anoMesParcela = 202401; // Janeiro de 2024
+    const numeroParcelamento = 9131; // Número de exemplo
+    const anoMesParcela = 201806; // Janeiro de 2024
 
     final detalhesResponse = await relpsnService.consultarDetalhesPagamento(numeroParcelamento, anoMesParcela);
 
@@ -193,14 +191,13 @@ Future<void> Relpsn(ApiClient apiClient) async {
     print('❌ Erro ao consultar detalhes: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 3));
 
   // 5. Emitir DAS
   try {
     print('\n--- 5. Emitir DAS ---');
-    const numeroParcelamento = 123456; // Número de exemplo
-    const parcelaParaEmitir = 202401; // Janeiro de 2024
 
-    final dasResponse = await relpsnService.emitirDas(numeroParcelamento, parcelaParaEmitir);
+    final dasResponse = await relpsnService.emitirDas(202308);
 
     if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
       print('✅ DAS emitido com sucesso');
@@ -220,99 +217,6 @@ Future<void> Relpsn(ApiClient apiClient) async {
     }
   } catch (e) {
     print('❌ Erro ao emitir DAS: $e');
-    servicoOk = false;
-  }
-
-  // 6. Validações
-  try {
-    print('\n--- 6. Validações ---');
-    const numeroParcelamento = 123456; // Número de exemplo
-    const anoMesParcela = 202401; // Janeiro de 2024
-    const parcelaParaEmitir = 202401; // Janeiro de 2024
-
-    // Validar número do parcelamento
-    final validacaoParcelamento = relpsnService.validarNumeroParcelamento(numeroParcelamento);
-    print('✅ Validação parcelamento: ${validacaoParcelamento ?? 'Válido'}');
-
-    // Validar ano/mês da parcela
-    final validacaoAnoMes = relpsnService.validarAnoMesParcela(anoMesParcela);
-    print('✅ Validação ano/mês: ${validacaoAnoMes ?? 'Válido'}');
-
-    // Validar parcela para emitir
-    final validacaoParcela = relpsnService.validarParcelaParaEmitir(parcelaParaEmitir);
-    print('✅ Validação parcela para emitir: ${validacaoParcela ?? 'Válido'}');
-
-    // Validar prazo de emissão
-    final validacaoPrazo = relpsnService.validarPrazoEmissaoParcela(parcelaParaEmitir);
-    print('✅ Validação prazo de emissão: ${validacaoPrazo ?? 'Válido'}');
-  } catch (e) {
-    print('❌ Erro nas validações: $e');
-    servicoOk = false;
-  }
-
-  // 7. Tratamento de Erros
-  try {
-    print('\n--- 7. Tratamento de Erros ---');
-
-    // Verificar se um erro é conhecido
-    const codigoErroExemplo = '[Aviso-RELPSN-ER_E001]';
-    final isKnown = relpsnService.isKnownError(codigoErroExemplo);
-    print('✅ Erro conhecido ($codigoErroExemplo): ${isKnown ? 'Sim' : 'Não'}');
-
-    // Obter informações sobre um erro
-    final errorInfo = relpsnService.getErrorInfo(codigoErroExemplo);
-    if (errorInfo != null) {
-      print('✅ Informações do erro:');
-      print('  - Código: ${errorInfo.codigo}');
-      print('  - Mensagem: ${errorInfo.mensagem}');
-      print('  - Ação: ${errorInfo.acao}');
-      print('  - Tipo: ${errorInfo.tipo}');
-    }
-
-    // Analisar um erro
-    final analysis = relpsnService.analyzeError(codigoErroExemplo, 'Não há parcelamento ativo para o contribuinte.');
-    print('✅ Análise do erro:');
-    print('  - Resumo: ${analysis.summary}');
-    print('  - Ação recomendada: ${analysis.recommendedAction}');
-    print('  - Severidade: ${analysis.severity}');
-    print('  - Pode tentar novamente: ${analysis.canRetry ? 'Sim' : 'Não'}');
-    print('  - Requer ação do usuário: ${analysis.requiresUserAction ? 'Sim' : 'Não'}');
-    print('  - É crítico: ${analysis.isCritical ? 'Sim' : 'Não'}');
-    print('  - É ignorável: ${analysis.isIgnorable ? 'Sim' : 'Não'}');
-    print('  - É erro de validação: ${analysis.isValidationError ? 'Sim' : 'Não'}');
-    print('  - É erro de sistema: ${analysis.isSystemError ? 'Sim' : 'Não'}');
-    print('  - É aviso: ${analysis.isWarning ? 'Sim' : 'Não'}');
-  } catch (e) {
-    print('❌ Erro no tratamento de erros: $e');
-    servicoOk = false;
-  }
-
-  // 8. Listar Erros por Tipo
-  try {
-    print('\n--- 8. Listar Erros por Tipo ---');
-
-    final avisos = relpsnService.getAvisos();
-    print('✅ Total de avisos: ${avisos.length}');
-    for (final aviso in avisos.take(3)) {
-      // Mostrar apenas os primeiros 3
-      print('  - ${aviso.codigo}: ${aviso.mensagem}');
-    }
-
-    final errosEntrada = relpsnService.getEntradasIncorretas();
-    print('✅ Total de erros de entrada: ${errosEntrada.length}');
-    for (final erro in errosEntrada.take(3)) {
-      // Mostrar apenas os primeiros 3
-      print('  - ${erro.codigo}: ${erro.mensagem}');
-    }
-
-    final erros = relpsnService.getErros();
-    print('✅ Total de erros gerais: ${erros.length}');
-    for (final erro in erros.take(3)) {
-      // Mostrar apenas os primeiros 3
-      print('  - ${erro.codigo}: ${erro.mensagem}');
-    }
-  } catch (e) {
-    print('❌ Erro ao listar erros por tipo: $e');
     servicoOk = false;
   }
 
