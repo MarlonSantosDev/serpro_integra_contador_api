@@ -32,10 +32,10 @@ void main() async {
   //await Pertmei(apiClient);
   //await Pertsn(apiClient);
   //await Pgdasd(apiClient);
-  await Pgmei(apiClient);
-
+  //await Pgmei(apiClient);
   //await Procuracoes(apiClient);
-  //await Regime(apiClient);
+  await Regime(apiClient);
+
   //await Relpmei(apiClient);
   //await Relpsn(apiClient);
   //await Sicalc(apiClient);

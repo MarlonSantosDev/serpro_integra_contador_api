@@ -82,6 +82,7 @@ export 'src/util/cache_utils.dart';
 export 'src/util/xml_utils.dart';
 export 'src/util/eventos_atualizacao_utils.dart';
 export 'src/util/sicalc_utils.dart';
+export 'src/util/pgmei_validator.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';
@@ -113,7 +114,12 @@ export 'src/models/pgdasd/gerar_das_processo_request.dart';
 export 'src/models/pgdasd/gerar_das_processo_response.dart' hide Mensagem;
 
 // PGMEI Models
-export 'src/models/pgmei/gerar_das_response.dart' hide GerarDasResponse;
+export 'src/models/pgmei/base_response.dart' hide Mensagem;
+export 'src/models/pgmei/gerar_das_response.dart' hide GerarDasResponse, ValoresDas, Das, ComposicaoDas;
+export 'src/models/pgmei/gerar_das_codigo_barras_response.dart';
+export 'src/models/pgmei/atualizar_beneficio_response.dart';
+export 'src/models/pgmei/consultar_divida_ativa_response.dart' hide Debito;
+export 'src/models/pgmei/pgmei_requests.dart' hide GerarDasRequest;
 
 // DCTFWeb Models
 export 'src/models/dctfweb/dctfweb_response.dart';

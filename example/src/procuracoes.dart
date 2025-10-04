@@ -1,277 +1,202 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 Future<void> Procuracoes(ApiClient apiClient) async {
-  print('\n=== Exemplos PROCURAÇÕES (Procurações Eletrônicas) ===');
+  print('\n=== 🏢 TESTES PRINCIPAIS - SERPRO PROCURAÇÕES ELETRÔNICAS ===');
+  print('PF→PF, PJ→PJ, PF→PJ com análise detalhada');
 
   final procuracoesService = ProcuracoesService(apiClient);
   bool servicoOk = true;
 
-  // 1. Exemplo básico - Obter procuração entre duas pessoas físicas
+  // Dados de teste conforme documentação SERPRO
+  const dadosTesteSerpro = <String, dynamic>{
+    'contratante': '99999999999999', // CNPJ conforme documentação
+    'autorPedidoDados': '99999999999999', // CNPJ conforme documentação
+    'cpfTeste': '99999999999',
+    'cnpjTeste': '99999999999999',
+  };
+
   try {
-    print('\n--- 1. Obter Procuração PF para PF ---');
-    final responsePf = await procuracoesService.obterProcuracaoPf(
-      '99999999999', // CPF do outorgante
-      '88888888888', // CPF do procurador
+    print('\n📋 === 1. TESTE PF → PF ===');
+
+    final responsePfPf = await procuracoesService.obterProcuracaoPf(
+      dadosTesteSerpro['cpfTeste'] as String,
+      dadosTesteSerpro['cpfTeste'] as String,
+      contratanteNumero: dadosTesteSerpro['contratante'] as String,
+      autorPedidoDadosNumero: dadosTesteSerpro['autorPedidoDados'] as String,
     );
 
-    print('✅ Status: ${responsePf.status}');
-    print('Sucesso: ${responsePf.sucesso}');
-    print('Mensagem: ${responsePf.mensagemPrincipal}');
-    print('Código: ${responsePf.codigoMensagem}');
+    print('✅ Status HTTP: ${responsePfPf.status}');
+    print('✅ Sucesso: ${responsePfPf.sucesso}');
+    print('✅ Mensagem: ${responsePfPf.mensagemPrincipal}');
+    print('✅ Código Mensagem: ${responsePfPf.codigoMensagem}');
 
-    if (responsePf.sucesso && responsePf.dadosParsed != null) {
-      final procuracoes = responsePf.dadosParsed!;
-      print('Total de procurações encontradas: ${procuracoes.length}');
+    if (responsePfPf.sucesso && responsePfPf.dadosParsed != null) {
+      print('\n📊 📋 RESULTADOS DETALHADOS PF→PF:');
+      final procuracoes = responsePfPf.dadosParsed!;
+      print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
 
       for (int i = 0; i < procuracoes.length; i++) {
         final proc = procuracoes[i];
-        print('\nProcuração ${i + 1}:');
-        print('  Data de expiração: ${proc.dataExpiracaoFormatada}');
-        print('  Quantidade de sistemas: ${proc.nrsistemas}');
-        print('  Sistemas: ${proc.sistemasFormatados}');
-        print('  Está expirada: ${proc.isExpirada ? 'Sim' : 'Não'}');
-        print('  Expira em breve: ${proc.expiraEmBreve ? 'Sim' : 'Não'}');
-      }
-    }
-  } catch (e) {
-    print('❌ Erro ao obter procuração PF: $e');
-    servicoOk = false;
-  }
-
-  // 2. Exemplo - Obter procuração entre duas pessoas jurídicas
-  try {
-    print('\n--- 2. Obter Procuração PJ para PJ ---');
-    final responsePj = await procuracoesService.obterProcuracaoPj(
-      '99999999999999', // CNPJ do outorgante
-      '88888888888888', // CNPJ do procurador
-    );
-
-    print('✅ Status: ${responsePj.status}');
-    print('Sucesso: ${responsePj.sucesso}');
-    print('Mensagem: ${responsePj.mensagemPrincipal}');
-
-    if (responsePj.sucesso && responsePj.dadosParsed != null) {
-      final procuracoes = responsePj.dadosParsed!;
-      print('Total de procurações encontradas: ${procuracoes.length}');
-
-      for (final proc in procuracoes) {
-        print('  Data de expiração: ${proc.dataExpiracaoFormatada}');
-        print('  Sistemas: ${proc.sistemas.join(', ')}');
-      }
-    }
-  } catch (e) {
-    print('❌ Erro ao obter procuração PJ: $e');
-    servicoOk = false;
-  }
-
-  // 3. Exemplo - Obter procuração mista (PF para PJ)
-  try {
-    print('\n--- 3. Obter Procuração Mista (PF para PJ) ---');
-    final responseMista = await procuracoesService.obterProcuracaoMista(
-      '99999999999', // CPF do outorgante
-      '88888888888888', // CNPJ do procurador
-      false, // outorgante é PF
-      true, // procurador é PJ
-    );
-
-    print('✅ Status: ${responseMista.status}');
-    print('Sucesso: ${responseMista.sucesso}');
-    print('Mensagem: ${responseMista.mensagemPrincipal}');
-  } catch (e) {
-    print('❌ Erro ao obter procuração mista: $e');
-    servicoOk = false;
-  }
-
-  // 4. Exemplo - Obter procuração com tipos específicos
-  try {
-    print('\n--- 4. Obter Procuração com Tipos Específicos ---');
-    final responseTipos = await procuracoesService.obterProcuracaoComTipos(
-      '99999999999', // CPF do outorgante
-      '1', // Tipo 1 = CPF
-      '88888888888888', // CNPJ do procurador
-      '2', // Tipo 2 = CNPJ
-    );
-
-    print('✅ Status: ${responseTipos.status}');
-    print('Sucesso: ${responseTipos.sucesso}');
-    print('Mensagem: ${responseTipos.mensagemPrincipal}');
-  } catch (e) {
-    print('❌ Erro ao obter procuração com tipos: $e');
-    servicoOk = false;
-  }
-
-  // 5. Exemplo - Obter procuração automática (detecta tipos)
-  try {
-    print('\n--- 5. Obter Procuração Automática (Detecta Tipos) ---');
-    final responseAuto = await procuracoesService.obterProcuracao(
-      '99999999999', // CPF do outorgante (detecta automaticamente)
-      '88888888888888', // CNPJ do procurador (detecta automaticamente)
-    );
-
-    print('✅ Status: ${responseAuto.status}');
-    print('Sucesso: ${responseAuto.sucesso}');
-    print('Mensagem: ${responseAuto.mensagemPrincipal}');
-  } catch (e) {
-    print('❌ Erro ao obter procuração automática: $e');
-    servicoOk = false;
-  }
-
-  // 6. Exemplo - Validação de documentos
-  try {
-    print('\n--- 6. Validação de Documentos ---');
-
-    // Validar CPF
-    final cpfValido = '12345678901';
-    final cpfInvalido = '123';
-    print('✅ CPF $cpfValido é válido: ${procuracoesService.isCpfValido(cpfValido)}');
-    print('❌ CPF $cpfInvalido é válido: ${procuracoesService.isCpfValido(cpfInvalido)}');
-
-    // Validar CNPJ
-    final cnpjValido = '12345678000195';
-    final cnpjInvalido = '123';
-    print('✅ CNPJ $cnpjValido é válido: ${procuracoesService.isCnpjValido(cnpjValido)}');
-    print('❌ CNPJ $cnpjInvalido é válido: ${procuracoesService.isCnpjValido(cnpjInvalido)}');
-
-    // Detectar tipo de documento
-    print('Tipo do documento $cpfValido: ${procuracoesService.detectarTipoDocumento(cpfValido)} (1=CPF, 2=CNPJ)');
-    print('Tipo do documento $cnpjValido: ${procuracoesService.detectarTipoDocumento(cnpjValido)} (1=CPF, 2=CNPJ)');
-  } catch (e) {
-    print('❌ Erro na validação de documentos: $e');
-    servicoOk = false;
-  }
-
-  // 7. Exemplo - Formatação de documentos
-  try {
-    print('\n--- 7. Formatação de Documentos ---');
-
-    final cpfSemFormatacao = '12345678901';
-    final cnpjSemFormatacao = '12345678000195';
-
-    print('CPF sem formatação: $cpfSemFormatacao');
-    print('CPF formatado: ${procuracoesService.formatarCpf(cpfSemFormatacao)}');
-
-    print('CNPJ sem formatação: $cnpjSemFormatacao');
-    print('CNPJ formatado: ${procuracoesService.formatarCnpj(cnpjSemFormatacao)}');
-  } catch (e) {
-    print('❌ Erro na formatação de documentos: $e');
-    servicoOk = false;
-  }
-
-  // 8. Exemplo - Limpeza de documentos
-  try {
-    print('\n--- 8. Limpeza de Documentos ---');
-
-    final cpfComPontuacao = '123.456.789-01';
-    final cnpjComPontuacao = '12.345.678/0001-95';
-
-    print('CPF com pontuação: $cpfComPontuacao');
-    print('CPF limpo: ${procuracoesService.limparDocumento(cpfComPontuacao)}');
-
-    print('CNPJ com pontuação: $cnpjComPontuacao');
-    print('CNPJ limpo: ${procuracoesService.limparDocumento(cnpjComPontuacao)}');
-  } catch (e) {
-    print('❌ Erro na limpeza de documentos: $e');
-    servicoOk = false;
-  }
-
-  // 9. Exemplo - Tratamento de erros
-  try {
-    print('\n--- 9. Tratamento de Erros ---');
-
-    // Tentar com dados inválidos
-    await procuracoesService.obterProcuracaoPf('123', '456'); // CPFs inválidos
-  } catch (e) {
-    print('✅ Erro capturado (esperado): $e');
-  }
-
-  // 10. Exemplo - Análise de procurações
-  try {
-    print('\n--- 10. Análise de Procurações ---');
-    final responseAnalise = await procuracoesService.obterProcuracaoPf('99999999999', '88888888888');
-
-    if (responseAnalise.sucesso && responseAnalise.dadosParsed != null) {
-      final procuracoes = responseAnalise.dadosParsed!;
-
-      print('Análise das procurações:');
-      print('  Total encontradas: ${procuracoes.length}');
-
-      int expiradas = 0;
-      int expiramEmBreve = 0;
-      int ativas = 0;
-
-      for (final proc in procuracoes) {
-        if (proc.isExpirada) {
-          expiradas++;
-        } else if (proc.expiraEmBreve) {
-          expiramEmBreve++;
-        } else {
-          ativas++;
+        print('\n📄 Procuração ${i + 1}:');
+        print('   📅 Data de expiração: ${proc.dataExpiracaoFormatada}');
+        print('   🔢 Quantidade de sistemas: ${proc.nrsistemas}');
+        print('   📂 Status: ${proc.status.value}');
+        print('   ⚠️  Está expirada: ${proc.isExpirada ? 'Sim' : 'Não'}');
+        print('   ⏰ Expira em breve: ${proc.expiraEmBreve ? 'Sim' : 'Não'}');
+        print('   🛠️  Sistemas: ${proc.sistemasFormatados}');
+        if (proc.dataExpiracaoDateTime != null) {
+          print('   📆 Data como DateTime: ${proc.dataExpiracaoDateTime}');
         }
       }
 
-      print('  Procurações ativas: $ativas');
-      print('  Procurações que expiram em breve: $expiramEmBreve');
-      print('  Procurações expiradas: $expiradas');
+      // Análise completa das procurações PF→PF
+      print('\n📈 ANÁLISE ESTATÍSTICA PF→PF:');
+      final analisePf = procuracoesService.analisarProcuracoes(responsePfPf);
+      print('   🔢 Total: ${analisePf['total']}');
+      print('   ✅ Ativas: ${analisePf['ativas']}');
+      print('   ⚠️  Expirando em breve: ${analisePf['expiramEmBreve']}');
+      print('   ❌ Expiradas: ${analisePf['expiradas']}');
+      print('   🛠️  Sistemas únicos: ${analisePf['totalSistemasUnicos']}');
 
-      // Mostrar sistemas únicos
-      final sistemasUnicos = <String>{};
-      for (final proc in procuracoes) {
-        sistemasUnicos.addAll(proc.sistemas);
-      }
-      print('  Sistemas únicos encontrados: ${sistemasUnicos.length}');
-      for (final sistema in sistemasUnicos) {
-        print('    - $sistema');
-      }
+      // Relatório completo PF→PF
+      print('\n📊 RELATÓRIO COMPLETO PF→PF:');
+      print(procuracoesService.gerarRelatorio(responsePfPf));
+    } else {
+      print('ℹ️ Nenhuma procuração encontrada PF→PF');
     }
   } catch (e) {
-    print('❌ Erro na análise: $e');
+    print('❌ Erro no teste PF → PF: $e');
     servicoOk = false;
   }
 
-  // 11. Exemplo - Diferentes cenários de uso
+  await Future.delayed(Duration(seconds: 3));
+
   try {
-    print('\n--- 11. Cenários de Uso ---');
+    print('\n📋 === 2. TESTE PJ → PJ ===');
 
-    // Cenário 1: Contador consultando procurações de seu cliente
-    print('Cenário 1: Contador consultando procurações de cliente');
-    final responseContador = await procuracoesService.obterProcuracaoPf(
-      '99999999999', // CPF do cliente
-      '88888888888', // CPF do contador
-      contratanteNumero: '77777777777777', // CNPJ da empresa contratante
-      autorPedidoDadosNumero: '88888888888', // CPF do contador como autor
+    final responsePjPj = await procuracoesService.obterProcuracaoPj(
+      dadosTesteSerpro['cnpjTeste'] as String,
+      dadosTesteSerpro['cnpjTeste'] as String,
+      contratanteNumero: dadosTesteSerpro['contratante'] as String,
+      autorPedidoDadosNumero: dadosTesteSerpro['autorPedidoDados'] as String,
     );
-    print('  ✅ Status: ${responseContador.status}');
-    print('  Sucesso: ${responseContador.sucesso}');
 
-    // Cenário 2: Empresa consultando procurações de seus procuradores
-    print('Cenário 2: Empresa consultando procurações de procuradores');
-    final responseEmpresa = await procuracoesService.obterProcuracaoPj(
-      '99999999999999', // CNPJ da empresa
-      '88888888888888', // CNPJ do procurador
-    );
-    print('  ✅ Status: ${responseEmpresa.status}');
-    print('  Sucesso: ${responseEmpresa.sucesso}');
+    print('✅ Status HTTP: ${responsePjPj.status}');
+    print('✅ Sucesso: ${responsePjPj.sucesso}');
+    print('✅ Mensagem: ${responsePjPj.mensagemPrincipal}');
+    print('✅ Código Mensagem: ${responsePjPj.codigoMensagem}');
 
-    // Cenário 3: Pessoa física consultando suas procurações
-    print('Cenário 3: Pessoa física consultando suas procurações');
-    final responsePfConsulta = await procuracoesService.obterProcuracaoPf(
-      '99999999999', // CPF da pessoa
-      '99999999999', // Mesmo CPF (consulta própria)
-    );
-    print('  ✅ Status: ${responsePfConsulta.status}');
-    print('  Sucesso: ${responsePfConsulta.sucesso}');
+    if (responsePjPj.sucesso && responsePjPj.dadosParsed != null) {
+      print('\n📊 📋 RESULTADOS DETALHADOS PJ→PJ:');
+      final procuracoes = responsePjPj.dadosParsed!;
+      print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
+
+      for (int i = 0; i < procuracoes.length; i++) {
+        final proc = procuracoes[i];
+        print('\n📄 Procuração ${i + 1}:');
+        print('   📅 Data de expiração: ${proc.dataExpiracaoFormatada}');
+        print('   🔢 Quantidade de sistemas: ${proc.nrsistemas}');
+        print('   📂 Status: ${proc.status.value}');
+        print('   ⚠️  Está expirada: ${proc.isExpirada ? 'Sim' : 'Não'}');
+        print('   ⏰ Expira em breve: ${proc.expiraEmBreve ? 'Sim' : 'Não'}');
+        print('   🛠️  Sistemas: ${proc.sistemasFormatados}');
+        if (proc.dataExpiracaoDateTime != null) {
+          print('   📆 Data como DateTime: ${proc.dataExpiracaoDateTime}');
+        }
+      }
+
+      // Análise completa das procurações PJ→PJ
+      print('\n📈 ANÁLISE ESTATÍSTICA PJ→PJ:');
+      final analisePj = procuracoesService.analisarProcuracoes(responsePjPj);
+      print('   🔢 Total: ${analisePj['total']}');
+      print('   ✅ Ativas: ${analisePj['ativas']}');
+      print('   ⚠️  Expirando em breve: ${analisePj['expiramEmBreve']}');
+      print('   ❌ Expiradas: ${analisePj['expiradas']}');
+      print('   🛠️  Sistemas únicos: ${analisePj['totalSistemasUnicos']}');
+
+      // Relatório completo PJ→PJ
+      print('\n📊 RELATÓRIO COMPLETO PJ→PJ:');
+      print(procuracoesService.gerarRelatorio(responsePjPj));
+    } else {
+      print('ℹ️ Nenhuma procuração encontrada PJ→PJ');
+    }
   } catch (e) {
-    print('❌ Erro nos cenários de uso: $e');
+    print('❌ Erro no teste PJ → PJ: $e');
+    servicoOk = false;
+  }
+
+  await Future.delayed(Duration(seconds: 3));
+
+  try {
+    print('\n📋 === 3. TESTE PF → PJ (MISTA) ===');
+
+    final responseMista = await procuracoesService.obterProcuracaoMista(
+      dadosTesteSerpro['cpfTeste'] as String,
+      dadosTesteSerpro['cnpjTeste'] as String,
+      false, // outorgante é PF
+      true, // procurador é PJ
+      contratanteNumero: dadosTesteSerpro['contratante'] as String,
+      autorPedidoDadosNumero: dadosTesteSerpro['autorPedidoDados'] as String,
+    );
+
+    print('✅ Status HTTP: ${responseMista.status}');
+    print('✅ Sucesso: ${responseMista.sucesso}');
+    print('✅ Mensagem: ${responseMista.mensagemPrincipal}');
+    print('✅ Código Mensagem: ${responseMista.codigoMensagem}');
+
+    if (responseMista.sucesso && responseMista.dadosParsed != null) {
+      print('\n📊 📋 RESULTADOS DETALHADOS PF→PJ:');
+      final procuracoes = responseMista.dadosParsed!;
+      print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
+
+      for (int i = 0; i < procuracoes.length; i++) {
+        final proc = procuracoes[i];
+        print('\n📄 Procuração ${i + 1}:');
+        print('   📅 Data de expiração: ${proc.dataExpiracaoFormatada}');
+        print('   🔢 Quantidade de sistemas: ${proc.nrsistemas}');
+        print('   📂 Status: ${proc.status.value}');
+        print('   ⚠️  Está expirada: ${proc.isExpirada ? 'Sim' : 'Não'}');
+        print('   ⏰ Expira em breve: ${proc.expiraEmBreve ? 'Sim' : 'Não'}');
+        print('   🛠️  Sistemas: ${proc.sistemasFormatados}');
+        if (proc.dataExpiracaoDateTime != null) {
+          print('   📆 Data como DateTime: ${proc.dataExpiracaoDateTime}');
+        }
+      }
+
+      // Análise completa das procurações PF→PJ
+      print('\n📈 ANÁLISE ESTATÍSTICA PF→PJ:');
+      final analiseMista = procuracoesService.analisarProcuracoes(responseMista);
+      print('   🔢 Total: ${analiseMista['total']}');
+      print('   ✅ Ativas: ${analiseMista['ativas']}');
+      print('   ⚠️  Expirando em breve: ${analiseMista['expiramEmBreve']}');
+      print('   ❌ Expiradas: ${analiseMista['expiradas']}');
+      print('   🛠️  Sistemas únicos: ${analiseMista['totalSistemasUnicos']}');
+
+      // Relatório completo PF→PJ
+      print('\n📊 RELATÓRIO COMPLETO PF→PJ:');
+      print(procuracoesService.gerarRelatorio(responseMista));
+    } else {
+      print('ℹ️ Nenhuma procuração encontrada PF→PJ');
+    }
+  } catch (e) {
+    print('❌ Erro no teste PF → PJ: $e');
     servicoOk = false;
   }
 
   // Resumo final
-  print('\n=== RESUMO DO SERVIÇO PROCURAÇÕES ===');
+  print('\n🎯 === RESUMO FINAL DO SERVIÇO PROCURAÇÕES ===');
   if (servicoOk) {
-    print('✅ Serviço PROCURAÇÕES: OK');
+    print('   🎉 ✅ SERVIÇO PROCURAÇÕES: FUNCIONAL');
+    print('      📊 PF→PF: Analisado');
+    print('      📊 PJ→PJ: Analisado');
+    print('      📊 PF→PJ: Analisado');
+    print('      📊 Todos os testes com análise detalhada');
   } else {
-    print('❌ Serviço PROCURAÇÕES: ERRO');
+    print('   ⚠️ ❌ SERVIÇO PROCURAÇÕES: REQUER ATENÇÃO');
+    print('      🔧 Alguns testes falharam');
+    print('      📋 Verifique logs acima para detalhes');
   }
 
-  print('\n=== Exemplos PROCURAÇÕES Concluídos ===');
+  print('\n🏁 === TESTES PROCURAÇÕES CONCLUÍDOS ===\n');
+  print('📚 Análise completa disponível nos relatórios acima');
 }

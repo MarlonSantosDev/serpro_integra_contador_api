@@ -1,5 +1,6 @@
 import 'dart:convert';
 import '../../util/document_utils.dart';
+import 'procuracoes_enums.dart';
 
 /// Request para obter procurações eletrônicas
 class ObterProcuracaoRequest {
@@ -25,6 +26,26 @@ class ObterProcuracaoRequest {
     return DocumentUtils.detectDocumentType(document).toString();
   }
 
+  /// Valida dados mas lança exceção ao invés de retornar lista de erros
+  void validateWithException() {
+    final erros = validate();
+    if (erros.isNotEmpty) {
+      throw ArgumentError('Dados inválidos: ${erros.join(', ')}');
+    }
+  }
+
+  /// Valida e limpa documentos automaticamente
+  ObterProcuracaoRequest validatedAndCleaned() {
+    validateWithException();
+
+    return ObterProcuracaoRequest(
+      outorgante: DocumentUtils.cleanDocumentNumber(outorgante),
+      tipoOutorgante: tipoOutorgante,
+      outorgado: DocumentUtils.cleanDocumentNumber(outorgado),
+      tipoOutorgado: tipoOutorgado,
+    );
+  }
+
   /// Valida os dados da requisição
   List<String> validate() {
     final errors = <String>[];
@@ -33,10 +54,10 @@ class ObterProcuracaoRequest {
     if (outorgante.isEmpty) {
       errors.add('Outorgante é obrigatório');
     } else {
-      if (tipoOutorgante == '1' && !DocumentUtils.isValidCpf(outorgante)) {
-        errors.add('CPF do outorgante inválido');
-      } else if (tipoOutorgante == '2' && !DocumentUtils.isValidCnpj(outorgante)) {
-        errors.add('CNPJ do outorgante inválido');
+      if (tipoOutorgante == ProcuracoesConstants.tipoCpf && !DocumentUtils.isValidCpf(outorgante)) {
+        errors.add('CPF do outorgante inválido!');
+      } else if (tipoOutorgante == ProcuracoesConstants.tipoCnpj && !DocumentUtils.isValidCnpj(outorgante)) {
+        errors.add('CNPJ do outorgante inválido!');
       }
     }
 
@@ -44,20 +65,20 @@ class ObterProcuracaoRequest {
     if (outorgado.isEmpty) {
       errors.add('Outorgado é obrigatório');
     } else {
-      if (tipoOutorgado == '1' && !DocumentUtils.isValidCpf(outorgado)) {
-        errors.add('CPF do outorgado inválido');
-      } else if (tipoOutorgado == '2' && !DocumentUtils.isValidCnpj(outorgado)) {
-        errors.add('CNPJ do outorgado inválido');
+      if (tipoOutorgado == ProcuracoesConstants.tipoCpf && !DocumentUtils.isValidCpf(outorgado)) {
+        errors.add('CPF do outorgado inválido!');
+      } else if (tipoOutorgado == ProcuracoesConstants.tipoCnpj && !DocumentUtils.isValidCnpj(outorgado)) {
+        errors.add('CNPJ do outorgado inválido!');
       }
     }
 
     // Validar tipos
-    if (tipoOutorgante != '1' && tipoOutorgante != '2') {
-      errors.add('Tipo do outorgante deve ser 1 (CPF) ou 2 (CNPJ)');
+    if (!ProcuracoesConstants.isTipoPessoaValido(tipoOutorgante)) {
+      errors.add('Tipo NI do outorgante inválido!');
     }
 
-    if (tipoOutorgado != '1' && tipoOutorgado != '2') {
-      errors.add('Tipo do outorgado deve ser 1 (CPF) ou 2 (CNPJ)');
+    if (!ProcuracoesConstants.isTipoPessoaValido(tipoOutorgado)) {
+      errors.add('Tipo NI do outorgado inválido!');
     }
 
     return errors;

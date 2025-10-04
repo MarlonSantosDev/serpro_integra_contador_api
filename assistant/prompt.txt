@@ -18,8 +18,8 @@ Após tudo add todos os métodos criado para teste no arquivo de exemplo XXXX.da
 
 Terminal para manus:
 Faça um arquivo sicalc.mdc com o máximo de informação da pagina para Cursor the Ai code Edtor
-Quero exemplo de entrada e saida para cada serviço. para o Cursor the Ai code Edtor pode utilizar para gerar o codigo.
-Faça o acesso a todo os link para pode extrair o máximo de informação possivel com exemplo de valores, variaveis, parametros,entrada, saida, retorno, mensagens, dados de dominio, glossario, etc.
+Quero exemplo de entrada e saida para cada serviço para o Cursor the Ai code Edtor pode utilizar para gerar o codigo.
+Faça o acesso a todo os link para pode extrair o máximo de informação possivel com exemplo de valores, variaveis, parametros,entrada, saida, retorno, mensagens, dados, dominio, glossario, exemplo de retorno, etc.
 
 
 PGDASD
