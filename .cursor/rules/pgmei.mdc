@@ -1,0 +1,990 @@
+---
+alwaysApply: true
+---
+
+# Cenários PGMEI - API Integra Contador
+
+## Informações Gerais
+
+- **URL Trial**: https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/
+- **Headers Trial**: jwt_token e autenticar_procurador_token não são obrigatórios (apenas em produção)
+- **Authorization**: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e (token trial)
+
+## Serviços Disponíveis
+
+### 1. Gerar DAS (GERARDASPDF21)
+
+**Endpoint**: POST /Emitir
+
+**Headers**:
+- jwt_token: vazio (não precisa preencher)
+- autenticar_procurador_token: vazio (não precisa preencher)
+- Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e
+- Content-Type: application/json
+- Accept: text/plain
+
+**Body**:
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "versaoSistema": "1.0",
+        "idServico": "GERARDASPDF21",
+        "dados": "{ \"periodoApuracao\": \"201901\" }"
+    }
+}
+```
+
+**Curl**:
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "PGMEI",
+            "idServico": "GERARDASPDF21",
+            "versaoSistema": "1.0",
+            "dados": "{ \"periodoApuracao\": \"201901\" }"
+        }
+   }'
+```
+
+### 2. Gerar DAS Código de Barras (GERARDASCODBARRA22)
+
+**Endpoint**: POST /Emitir
+
+**Headers**:
+- jwt_token: vazio (não precisa preencher)
+- autenticar_procurador_token: vazio (não precisa preencher)
+- Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e
+- Content-Type: application/json
+- Accept: text/plain
+
+**Body**:
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "GERARDASCODBARRA22",
+        "versaoSistema": "1.0",
+        "dados": "{ \"periodoApuracao\": \"201901\" }"
+    }
+}
+```
+
+**Curl**:
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "PGMEI",
+            "idServico": "GERARDASCODBARRA22",
+            "versaoSistema": "1.0",
+            "dados": "{ \"periodoApuracao\": \"201901\" }"
+        }
+   }'
+```
+
+### 3. Atualizar Benefício (ATUBENEFICIO23)
+
+**Endpoint**: POST /Emitir
+
+**Headers**:
+- jwt_token: vazio (não precisa preencher)
+- autenticar_procurador_token: vazio (não precisa preencher)
+- Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e
+- Content-Type: application/json
+- Accept: text/plain
+
+**Body**:
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "ATUBENEFICIO23",
+        "versaoSistema": "1.0",
+        "dados": "{\"anoCalendario\":2021,\"infoBeneficio\":[{\"periodoApuracao\":\"202101\",\"indicadorBeneficio\":true},{\"periodoApuracao\":\"202102\",\"indicadorBeneficio\":true}]}"
+    }
+}
+```
+
+**Curl**:
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Emitir' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "PGMEI",
+            "idServico": "ATUBENEFICIO23",
+            "versaoSistema": "1.0",
+            "dados": "{\"anoCalendario\":2021,\"infoBeneficio\":[{\"periodoApuracao\":\"202101\",\"indicadorBeneficio\":true},{\"periodoApuracao\":\"202102\",\"indicadorBeneficio\":true}]}"
+        }
+   }'
+```
+
+### 4. Consultar Dívida Ativa (DIVIDAATIVA24)
+
+**Endpoint**: POST /Consultar
+
+**Headers**:
+- jwt_token: vazio (não precisa preencher)
+- autenticar_procurador_token: vazio (não precisa preencher)
+- Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e
+- Content-Type: application/json
+- Accept: text/plain
+
+**Body**:
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "DIVIDAATIVA24",
+        "versaoSistema": "1.0",
+        "dados": "{ \"anoCalendario\": \"2020\" }"
+    }
+}
+```
+
+**Curl**:
+```bash
+curl -X 'POST' \
+  'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1/Consultar' \
+  -H 'accept: text/plain' \
+  -H "Authorization: Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e" \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "contratante": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "autorPedidoDados": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "contribuinte": {
+            "numero": "00000000000100",
+            "tipo": 2
+        },
+        "pedidoDados": {
+            "idSistema": "PGMEI",
+            "idServico": "DIVIDAATIVA24",
+            "versaoSistema": "1.0",
+            "dados": "{ \"anoCalendario\": \"2020\" }"
+        }
+   }'
+```
+
+
+## Introdução ao PGMEI
+
+### O que é o Integra PGMEI?
+
+O PGMEI - Programa Gerador do DAS para o MEI - é um sistema eletrônico que permite realizar a apuração, gerar o Documento de Arrecadação do Simples Nacional (DAS) para o Microempreendedor Individual (MEI) e consultar pendências de dívida Ativa.
+
+### Como funciona o uso via Integra Contador?
+
+Para utilizar os serviços do Integra PGMEI, é necessário fazer uma chamada à API por meio do Integra Contador, que é responsável por gerenciar o envio e o recebimento dos dados.
+
+A requisição deve ser feita via método `POST`, com um corpo (`body`) em formato `JSON`, contendo as seguintes informações:
+
+- **Contratante**: Informações sobre quem está contratando o serviço
+- **Autor do Pedido de Dados**: Quem está solicitando os dados
+- **Contribuinte**: Informações do MEI (Microempreendedor Individual)
+- **Pedido de Dados**: Detalhes do serviço solicitado
+
+**⚠️ IMPORTANTE**: O sistema aceita apenas contribuintes do tipo 2 (Pessoa Jurídica). Pedidos com outros tipos de contribuinte não serão processados.
+
+O Integra Contador estabelece um canal seguro de comunicação com o sistema PGMEI, garantindo a integridade e a confidencialidade das informações transmitidas.
+
+# Serviço: Gerar DAS com Código de Barras e sem PDF
+
+## Descrição
+
+Este serviço permite a geração de DAS para um contribuinte MEI, contendo apenas código de barras, sem o PDF.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGMEI
+- **idServico**: GERARDASCODBARRA22
+- **versaoSistema**: 1.0
+
+## Dados de Entrada
+
+### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| periodoApuracao | Período de apuração no formato AAAAMM | String | SIM |
+| dataConsolidacao | Data de consolidação no formato AAAAMMDD | String | NÃO |
+
+### Exemplo: Conteúdo body JSON de entrada
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "GERARDASCODBARRA22",
+        "versaoSistema": "1.0",
+        "dados": "{ \"periodoApuracao\": \"201901\" }"
+    }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados do DAS emitido.
+
+### Estrutura de Resposta Principal
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| status | Status HTTP retornado no acionamento do serviço | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio | Array de String |
+| dados | Estrutura de dados de retorno | String (String escapada: Array de Object Das) |
+
+### Objeto: Das
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| cnpjCompleto | Número do cnpj sem formatação | String |
+| detalhamento | Detalhamento do DAS | Object DetalhamentoDas |
+
+### Objeto: DetalhamentoDas
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| periodoApuracao | Período de Apuração no formato AAAAMM ou "Diversos" no caso de mais de um período acumulado | String(8) |
+| numeroDocumento | Número do documento gerado | String(17) |
+| dataVencimento | Data de vencimento no formato AAAAMMDD | String(8) |
+| dataLimiteAcolhimento | Data limite para acolhimento no formato AAAAMMDD | String(8) |
+| valores | Discriminação dos valores | Object Valores |
+| codigoDeBarras | Lista de códigos de barras gerados. Cada item representa um conjunto de números do código de barras | Array de String |
+| observacao1 | Observação 1 | String |
+| observacao2 | Observação 2 | String |
+| observacao3 | Observação 3 | String |
+| composicao | Composição do DAS gerado | Array de Object Composicao |
+
+### Objeto: Valores
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| principal | Valor do principal | Number |
+| multa | Valor da multa | Number |
+| juros | Valor dos juros | Number |
+| total | Valor total | Number |
+
+### Objeto: Composicao
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| periodoApuracao | Período de apuração do tributo no formato AAAAMM | String(6) |
+| codigo | Código do tributo | String |
+| denominacao | Descrição do nome/destino do tributo | String |
+| valores | Discriminação dos valores do tributo | Object Valores |
+
+## Exemplo: Conteúdo payload JSON de saída
+
+Ver exemplo completo em: retorno gerar DAS Código de Barras
+# Serviço: Atualizar Benefício
+
+## Descrição
+
+Este serviço permite que seja registrado benefício para determinada apuração do PGMEI.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGMEI
+- **idServico**: ATUBENEFICIO23
+- **versaoSistema**: 1.0
+
+## Dados de Entrada
+
+### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| anoCalendario | Ano calendário no formato AAAA | Number | SIM |
+| infoBeneficio | Informação sobre o benefício | Array de Object Beneficio | SIM |
+
+### Objeto: Beneficio
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| periodoApuracao | Período de apuração no formato AAAAMM | String | SIM |
+| indicadorBeneficio | Indica se houve benefício | Boolean | SIM |
+
+### Exemplo: Conteúdo body JSON de entrada
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "ATUBENEFICIO23",
+        "versaoSistema": "1.0",
+        "dados": "{\"anoCalendario\":2021,\"infoBeneficio\":[{\"periodoApuracao\":\"202101\",\"indicadorBeneficio\":true},{\"periodoApuracao\":\"202102\",\"indicadorBeneficio\":true}]}"
+    }
+}
+```
+
+## Dados de Saída
+
+O retorno é a confirmação que os benefícios foram inseridos com sucesso.
+
+### Estrutura de Resposta Principal
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| status | Status HTTP retornado no acionamento do serviço | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio | Array de String |
+| dados | Estrutura de dados de retorno | String (String escapada: Array de Object AtualizarBeneficioIntegraMei) |
+
+### Objeto: AtualizarBeneficioIntegraMei
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| paOriginal | Período de apuração original | String |
+| indicadorBeneficio | Indica se há benefício no período | Boolean |
+| paAgrupado | PA que possui os períodos agrupados para emissão de DAS. Formato AAAAMM | String |
+
+## Exemplo: Conteúdo payload JSON de saída
+
+Ver exemplo completo em: retorno Atualizar Benefício
+# Serviço: Consultar Dívida Ativa
+
+## Descrição
+
+Este serviço consulta a informação se o contribuinte está em dívida ativa.
+
+## Identificação no Pedido de Dados
+
+- **idSistema**: PGMEI
+- **idServico**: DIVIDAATIVA24
+- **versaoSistema**: 1.0
+
+## Dados de Entrada
+
+### Objeto Dados
+
+| Campo | Descrição | Tipo | Obrigatório |
+|-------|-----------|------|-------------|
+| anoCalendario | Ano calendário no formato AAAA | String | SIM |
+
+### Exemplo: Conteúdo body JSON de entrada
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000101",
+        "tipo": 1
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000101",
+        "tipo": 1
+    },
+    "contribuinte": {
+        "numero": "00000000000101",
+        "tipo": 1
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "DIVIDAATIVA24",
+        "versaoSistema": "1.0",
+        "dados": "{ \"anoCalendario\": \"2020\" }"
+    }
+}
+```
+
+## Dados de Saída
+
+São retornados os dados dos períodos onde há inscrição em Dívida Ativa.
+
+### Estrutura de Resposta Principal
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| status | Status HTTP retornado no acionamento do serviço | Number(3) |
+| mensagens | Mensagem explicativa retornada no acionamento do serviço. É um array composto de Código e texto da mensagem. O campo Código é um Texto que representa um código interno do negócio | Array de String |
+| dados | Estrutura de dados de retorno | String (String escapada: Array de Object Debito) |
+
+### Objeto: Debito
+
+| Campo | Descrição | Tipo |
+|-------|-----------|------|
+| periodoApuracao | Período de apuração em formato AAAAMM | String |
+| tributo | Nome do tributo com débito em Dívida Ativa. Exemplo: "INSS" | String |
+| valor | Valor do tributo | Number |
+| enteFederado | Nome do ente federado onde há o débito. Exemplo: "União" | String |
+| situacaoDebito | Texto descrevendo a situação da dívida do tributo. Exemplo: "Enviado à PFN" | String |
+
+## Exemplo: Conteúdo payload JSON de saída
+
+Ver exemplo completo em: retorno Consultar Dívida Ativa
+# Exemplo de JSON de Retorno - Gerar DAS Código de Barras
+
+Exemplo de uma emissão de DAS somente com código de barras, sem o PDF.
+
+## JSON de retorno completo
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000100",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "GERARDASCODBARRA22",
+        "dados": "{ \"periodoApuracao\": \"201901\" }"
+    },
+    "status": "200",
+    "mensagens": [
+        {
+            "codigo": "Sucesso-PGMEI",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "dados": "[{\"cnpjCompleto\":\"00000000000100\",\"razaoSocial\":\"EXEMPLO\",\"detalhamento\":[{\"periodoApuracao\":\"201901\",\"numeroDocumento\":\"00000000000000000\",\"dataVencimento\":\"20190220\",\"dataLimiteAcolhimento\":\"20220831\",\"valores\":{\"principal\":55.90,\"multa\":11.18,\"juros\":10.71,\"total\":77.79},\"codigoDeBarras\":[\"000000000000\",\"000000000000\",\"000000000000\",\"000000000000\"],\"observacao1\":\"CPF: 000.000.000-00\",\"observacao2\":\"Tributos (R$): INSS 49,90 ICMS 1,00 ISS 5,00\",\"observacao3\":\"PGMEI(Versao:3.8.0)\",\"composicao\":[{\"periodoApuracao\":201901,\"codigo\":\"0151\",\"denominacao\":\"INSS - SIMPLES NACIONAL - MEI - 01/2019\",\"valores\":{\"principal\":49.90,\"multa\":9.98,\"juros\":9.56,\"total\":69.44}},{\"periodoApuracao\":201901,\"codigo\":\"0083\",\"denominacao\":\"ICMS - SIMPLES NACIONAL - MEI - PB - 01/2019\",\"valores\":{\"principal\":1.00,\"multa\":0.20,\"juros\":0.19,\"total\":1.39}},{\"periodoApuracao\":201901,\"codigo\":\"0125\",\"denominacao\":\"ISS - SIMPLES NACIONAL - MEI - SUME (PB) - 01/2019\",\"valores\":{\"principal\":5.00,\"multa\":1.00,\"juros\":0.96,\"total\":6.96}}]}]}]"
+}
+```
+
+## JSON do campo "dados" (formatado)
+
+Nesse exemplo o JSON está formatado e sem o escaped string.
+
+```json
+[{
+    "cnpjCompleto": "00000000000100",
+    "razaoSocial": "EXEMPLO",
+    "detalhamento": [{
+        "periodoApuracao": "201901",
+        "numeroDocumento": "00000000000000000",
+        "dataVencimento": "20190220",
+        "dataLimiteAcolhimento": "20220831",
+        "valores": {
+            "principal": 55.90,
+            "multa": 11.18,
+            "juros": 10.71,
+            "total": 77.79
+        },
+        "codigoDeBarras": ["000000000000", "000000000000", "000000000000", "000000000000"],
+        "observacao1": "CPF: 000.000.000-00",
+        "observacao2": "Tributos (R$): INSS 49,90 ICMS 1,00 ISS 5,00",
+        "observacao3": "PGMEI(Versao:3.8.0)",
+        "composicao": [{
+            "periodoApuracao": 201901,
+            "codigo": "0151",
+            "denominacao": "INSS - SIMPLES NACIONAL - MEI - 01/2019",
+            "valores": {
+                "principal": 49.90,
+                "multa": 9.98,
+                "juros": 9.56,
+                "total": 69.44
+            }
+        }, {
+            "periodoApuracao": 201901,
+            "codigo": "0083",
+            "denominacao": "ICMS - SIMPLES NACIONAL - MEI - PB - 01/2019",
+            "valores": {
+                "principal": 1.00,
+                "multa": 0.20,
+                "juros": 0.19,
+                "total": 1.39
+            }
+        }, {
+            "periodoApuracao": 201901,
+            "codigo": "0125",
+            "denominacao": "ISS - SIMPLES NACIONAL - MEI - SUME (PB) - 01/2019",
+            "valores": {
+                "principal": 5.00,
+                "multa": 1.00,
+                "juros": 0.96,
+                "total": 6.96
+            }
+        }]
+    }]
+}]
+```
+# Exemplo de JSON de Retorno - Atualizar Benefício
+
+## JSON de retorno completo
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "ATUBENEFICIO23",
+        "versaoSistema": "1.0",
+        "dados": "{\"anoCalendario\":2021,\"infoBeneficio\":[{\"periodoApuracao\":\"202101\",\"indicadorBeneficio\":true},{\"periodoApuracao\":\"202102\",\"indicadorBeneficio\":true}]}"
+    },
+    "status": "200",
+    "mensagens": [
+        {
+            "codigo": "Sucesso-PGMEI",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "dados": "[{\"paOriginal\":\"202101\",\"indicadorBeneficio\":true,\"paAgrupado\":\"202102\"},{\"paOriginal\":\"202102\",\"indicadorBeneficio\":true,\"paAgrupado\":\"202101\"}]"
+}
+```
+
+## JSON do campo "dados" (formatado)
+
+```json
+[
+    {
+        "paOriginal": "202101",
+        "indicadorBeneficio": true,
+        "paAgrupado": "202102"
+    },
+    {
+        "paOriginal": "202102",
+        "indicadorBeneficio": true,
+        "paAgrupado": "202101"
+    }
+]
+```
+# Exemplo de JSON de Retorno - Consultar Dívida Ativa
+
+## JSON de retorno completo
+
+```json
+{
+    "contratante": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "autorPedidoDados": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "contribuinte": {
+        "numero": "00000000000101",
+        "tipo": 2
+    },
+    "pedidoDados": {
+        "idSistema": "PGMEI",
+        "idServico": "DIVIDAATIVA24",
+        "versaoSistema": "1.0",
+        "dados": "{ \"anoCalendario\": \"2020\" }"
+    },
+    "status": "200",
+    "mensagens": [
+        {
+            "codigo": "Sucesso-PGMEI",
+            "texto": "Requisição efetuada com sucesso."
+        }
+    ],
+    "dados": "[{\"periodoApuracao\":\"201901\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201902\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201903\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201904\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201905\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201906\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201907\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201908\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201909\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201910\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201911\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"},{\"periodoApuracao\":\"201912\",\"tributo\":\"INSS\",\"valor\":49.90,\"enteFederado\":\"Uniao\",\"situacaoDebito\":\"ENVIADO A  PFN\"}]"
+}
+```
+
+## JSON do campo "dados" (formatado)
+
+```json
+[
+    {
+        "periodoApuracao": "201901",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201902",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201903",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201904",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201905",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201906",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201907",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201908",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201909",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201910",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201911",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    },
+    {
+        "periodoApuracao": "201912",
+        "tributo": "INSS",
+        "valor": 49.90,
+        "enteFederado": "Uniao",
+        "situacaoDebito": "ENVIADO A  PFN"
+    }
+]
+```
+# Mensagens de Negócio - PGMEI
+
+## Mensagens de Aviso
+
+| Código | Mensagem | Ação |
+|--------|----------|------|
+| [Aviso-PGMEI-MSG_13011] | Não é permitida a emissão do DAS. Débito enviado para inscrição em Dívida Ativa | Em dívida ativa não é possível gerar o DAS. HTTP STATUS: 200 |
+| [Aviso-PGMEI-MSG_13012] | Existe débito enviado para inscrição em dívida ativa. (0). DAS gerado apenas com os valores que estão em cobrança na RFB. | DAS emitido sem os tributos enviados à PGFN. HTTP STATUS: 200 |
+| [Aviso-PGMEI-MSG_23004] | Taxa Selic ainda não cadastrada. Favor informar uma data para pagamento dentro do mês atual. | Informar data válida. HTTP STATUS: 200 |
+
+## Mensagens de Erro
+
+| Código | Mensagem | Ação |
+|--------|----------|------|
+| [Erro-PGMEI-MSG_23001] | Falha no acesso ao sistema PGMEI. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23002] | Falha na recuperação dos tributos. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23003] | Sistema TACO indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23005] | Sistema SIDAT indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23006] | Contribuinte não encontrado no Cadastro CNPJ. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23007] | Base CNPJ indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23008] | Contribuinte não optante pelo SIMEI. | Informar CNPJ optante. HTTP STATUS: 200 |
+| [Erro-PGMEI-MSG_23009] | Base SIMPLES/MEI indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23010] | Sistema PGMEI indisponível. Tente novamente mais tarde. | Efetue nova tentativa. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23013] | Empresa baixada para o ano escolhido. | Informar outro período. HTTP STATUS: 200 |
+| [Erro-PGMEI-MSG_23015] | Sr. Contribuinte antes da geração do(s) documento(s) é necessário realizar a entrega da declaração do ano calendário de (ano). | Transmitir DASNSIMEI antes de realizar esta operação. HTTP STATUS: 200 |
+| [Erro-PGMEI-MSG_23016] | Não há valor cadastrado para o salário mínimo. Tente novamente no próximo dia útil. | A solicitação foi feita para um período que não existe o salário mínimo pré-definido pela RFB. Deve tentar novamente no |
+| [Erro-PGMEI-MSG_23020] | Erro na geração do documento de arrecadação. Falha na execução do sistema SENDA na emissão do Documento de Arrecadação. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23021] | Falha na geração do documento de arrecadação. Erro de validação dos dados de entrada via sistema SENDA. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23022] | Falha no acionamento ao sistema SENDA. Falha ao emitir o documento de arrecadação. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23025] | Não foi encontrada nenhuma CNAE anual para esse CNPJ no ano-calendário indicado. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23026] | Base SINAC indisponível. Tente novamente mais tarde. | Efetuar nova tentativa. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23027] | Falha ao recuperar as descrições dos tributos. Tente novamente mais tarde. | Efetuar nova tentativa. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23028] | Número máximo de Apurações PGMEI para o Ano Calendário excedido. Entre em contato com o canal Fale Conosco - Receita Federal | O limite de emissões de DAS excedeu o permitido. Contate a RFB. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23029] | Sistema TOM indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_23030] | Parâmetro de entrada inválido. | Verifique o detalhamento: Período Apuração Inválido; Período de Apuração futuro; Período de Apuração decadente; Data da Consolidação inválida ou anterior à data atual. Efetuar nova tentativa com os parâmetros corretos. HTTP STATUS: 400 |
+| [Erro-PGMEI-MSG_23999] | Falha ao Gerar a Apuração, limite máximo excedido! | Atingiu o limite máximo de apurações retificadoras no ano-calendário. Abra um chamado junto do Fale Conosco da RFB para realizar um procedimento de liberação. HTTP STATUS: 500 |
+| [Erro-PGMEI-25000] | Houve um erro na consulta de dívida ativa. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_40000] | Sistema RDOC indisponível. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_50000] | Falha no acesso ao sistema FISCEL. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_60000] | Falha no acesso ao sistema PARCMEI. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_61000] | Falha no acesso ao sistema PERTMEI. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_80000] | Falha no acesso ao sistema DasnSimei. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_80001] | Não foi possível transmitir DASN-Simei retificadora de forma automática. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_90000] | Falha no acesso ao sistema Cadastro CNPJ. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+| [Erro-PGMEI-MSG_92000] | Falha no acesso ao sistema SINAC Qualificação. Tente novamente mais tarde. | Uma das integrações internas necessárias a esta operação está indisponível. Tente novamente em outro momento. HTTP STATUS: 500 |
+
+## Mensagens de Entrada/Incorreta
+
+| Código | Mensagem | Ação |
+|--------|----------|------|
+| [EntradaIncorreta-PGMEI-MSG_23008] | Contribuinte não optante pelo SIMEI. | Informar CNPJ optante. HTTP STATUS: 200 |
+| [EntradaIncorreta-PGMEI-MSG_23013] | Empresa baixada para o ano escolhido. | Informar outro período. HTTP STATUS: 200 |
+| [EntradaIncorreta-PGMEI-MSG_23015] | Sr. Contribuinte antes da geração do(s) documento(s) é necessário realizar a entrega da declaração do ano calendário de (ano). | Transmitir DASNSIMEI antes de realizar esta operação. HTTP STATUS: 200 |
+| [EntradaIncorreta-PGMEI-MSG_23016] | Não há valor cadastrado para o salário mínimo. Tente novamente no próximo dia útil. | A solicitação foi feita para um período que não existe o salário mínimo pré-definido pela RFB. Deve tentar novamente no |
+# Dados de Domínio - PGMEI
+
+## Códigos de Tributo
+
+| Código | Descrição |
+|--------|-----------|
+| 0151 | INSS |
+| 0083 | ICMS |
+| 0125 | ISS |
+| 0164 | INSS MULTA |
+| 0096 | ICMS MULTA |
+| 0136 | ISS MULTA |
+| 0177 | INSS JUROS |
+| 0112 | ICMS JUROS |
+| 0149 | ISS JUROS |
+# Glossário - PGMEI
+
+## Siglas
+
+Principais siglas utilizadas no PGMEI.
+
+Fonte: Manual do PGMEI
+
+| Sigla | Descrição |
+|-------|-----------|
+| CGSN | Comitê Gestor do Simples Nacional |
+| CNAE | Classificação Nacional de Atividades Econômicas |
+| CNPJ | Cadastro Nacional de Pessoa Jurídica |
+| CPF | Cadastro de Pessoa Física |
+| CPP | Contribuição Patronal Previdenciária para a Seguridade Social |
+| CSLL | Contribuição Social sobre o Lucro Líquido |
+| DAS | Documento de Arrecadação do Simples Nacional |
+| DF | Distrito Federal |
+| ICMS | Imposto sobre Operações Relativas à Circulação de Mercadorias e sobre Prestação de Serviços de Transporte Interestaduais e Intermunicipais e de Comunicação |
+| IN | Instrução Normativa |
+| INSS | Instituto Nacional do Seguro Social |
+| ISS | Imposto Sobre Serviços |
+| ME | Microempresa |
+| PA | Período de Apuração |
+| PGMEI | Programa Gerador do DAS para o MEI |
+| PJ | Pessoa Jurídica |
+| RFB | Secretaria da Receita Federal do Brasil |
+| SE | Secretaria Executiva |
+| Selic | Sistema Especial de Liquidação e Custódia (juros) |
+| SPE | Sociedade de Propósito Específico |
+| UF | Unidade da Federação |
+# Resumo do Manual PGMEI 2018
+
+## Fonte
+Manual PGMEI 2018 - Receita Federal do Brasil
+Versão: Março/2024
+
+## 1. Introdução
+
+### 1.1 Apresentação do Programa
+O PGMEI - Programa Gerador do DAS para o MEI - é um sistema eletrônico que permite realizar a apuração, gerar o Documento de Arrecadação do Simples Nacional (DAS) para o Microempreendedor Individual (MEI) e consultar pendências e extratos.
+
+**Acesso**: Portal do Simples Nacional - www8.receita.fazenda.gov.br/SimplesNacional
+
+### 1.2 Versões do PGMEI
+
+A partir de dezembro/2017, o programa possui duas versões:
+
+1. **PGMEI - Programa Gerador do DAS para o MEI**: permite realizar a apuração mensal, inclusive retificação, e gerar o DAS. Não é exigido código de acesso.
+
+2. **PGMEI - Programa Gerador do DAS para o MEI (versão completa)**: permite realizar a apuração mensal, inclusive retificação, gerar o DAS e consultar pendências e extratos. Essa versão exige código de acesso ou certificado digital.
+
+### 1.3 A Quem Se Destina
+
+O programa se destina aos MEI optantes pelo Sistema de Recolhimento em Valores Fixos Mensais dos Tributos abrangidos pelo Simples Nacional (SIMEI), conforme Resolução CGSN nº 140/2018.
+
+### 1.4 Tributos Abrangidos pelo SIMEI
+
+O SIMEI implica o recolhimento mensal, por meio de DAS, dos seguintes impostos e contribuições:
+
+| Tributo | Descrição | Valor |
+|---------|-----------|-------|
+| INSS | Contribuição para a Seguridade Social, relativa à pessoa do empresário | 5% do salário-mínimo (a partir de 05/2011) |
+| INSS (Transportador) | Para transportador autônomo de cargas | 12% do limite mínimo mensal do salário de contribuição (a partir de abril/2022) |
+| ICMS | Imposto sobre operações relativas à circulação de mercadorias e sobre prestações de serviços de transporte interestadual e intermunicipal e de comunicação | Conforme atividade |
+| ISS | Imposto sobre serviços de qualquer natureza | Conforme atividade |
+
+### 1.5 Quando Utilizar
+
+Este programa deverá ser utilizado pelo contribuinte para:
+- Realizar a apuração mensal ou retificá-la
+- Gerar o DAS para o recolhimento dos valores fixos mensais
+- Consultar pendências (omissão de declaração, atraso no recolhimento do parcelamento e existência de débitos de SIMEI em cobrança na RFB)
+- Consultar DAS emitidos
+- Consultar os extratos das apurações mensais
+
+### 1.6 Regras Importantes
+
+**ATENÇÃO:**
+- Ainda que o MEI não tenha faturamento ou se encontre inativo, deve gerar e pagar os DAS mensalmente.
+- O recolhimento do valor devido deverá ser efetuado até o dia 20 (vinte) do mês subsequente ao período de apuração.
+- Quando não houver expediente bancário no dia 20, o recolhimento deverá ser efetuado até o dia útil imediatamente posterior.
+- O valor não pago até a data do vencimento sujeitar-se-á à incidência de encargos legais.
+- Os valores são devidos desde o mês da abertura da empresa até o mês da baixa, mesmo que esta tenha ocorrido no 1º dia do mês.
+
+### 1.7 Microempreendedor Individual (MEI) - Definição
+
+O MEI é o empresário individual que atenda, cumulativamente, às seguintes condições:
+- Tenha auferido receita bruta acumulada de até R$ 81.000,00 (a partir de 01/01/2018) ou R$ 251.600,00 para o transportador autônomo de cargas (a partir de 01/01/2022)
+- Seja optante pelo Simples Nacional e SIMEI
+- Exerça atividades constantes do Anexo XI da Resolução CGSN nº 140/2018
+- Possua um único estabelecimento
+- Não participe de outra empresa como titular, sócio ou administrador
+
+## 2. Funcionalidades Principais
+
+### 2.1 Emitir Guia de Pagamento (DAS)
+- Geração do DAS mensal
+- Atualização de valores com juros e multa
+- Informar data para pagamento
+- Pagamento online
+
+### 2.2 Consulta Extrato/Pendências
+- Consulta pendências no SIMEI
+- Consulta extrato de apurações
+- Consulta DAS emitidos
+
+### 2.3 Funcionalidades Especiais
+- Benefício Previdenciário
+- DASN-SIMEI Retificadora Automática
+- Período de Apuração Parcelado
+- Débito Enviado para Inscrição em Dívida Ativa
+- MEI Transportador Autônomo de Cargas
