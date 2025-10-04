@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Modelo de dados de resposta para consultar resolução do regime de caixa
 ///
 /// Representa a resposta do serviço CONSULTARRESOLUCAO104
@@ -33,7 +35,7 @@ class ConsultarResolucaoResponse {
     return ConsultarResolucaoResponse(
       status: json['status'] as int,
       mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? ResolucaoRegimeCaixa.fromJson(json['dados']) : null,
+      dados: json['dados'] != null ? ResolucaoRegimeCaixa.fromJson(jsonDecode(json['dados'])) : null,
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:serpro_integra_contador_api/src/models/regime_apuracao/consultar
 import 'package:serpro_integra_contador_api/src/models/regime_apuracao/consultar_opcao_response.dart';
 import 'package:serpro_integra_contador_api/src/models/regime_apuracao/consultar_resolucao_request.dart';
 import 'package:serpro_integra_contador_api/src/models/regime_apuracao/consultar_resolucao_response.dart';
+import 'package:serpro_integra_contador_api/src/models/regime_apuracao/regime_apuracao_enums.dart';
 
 /// Serviço para integração com Regime de Apuração do Simples Nacional
 ///
@@ -26,10 +27,42 @@ class RegimeApuracaoService {
   /// efetuem a opção anual pelo regime de apuração (Competência ou Caixa).
   ///
   /// [contribuinteNumero] CNPJ do contribuinte
-  /// [request] Dados da opção pelo regime de apuração
+  /// [anoOpcao] Ano da opção (YYYY)
+  /// [tipoRegime] Tipo do regime (TipoRegime.competencia ou TipoRegime.caixa)
+  /// [deAcordoResolucao] Confirmação obrigatória para efetivar a opção
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<EfetuarOpcaoRegimeResponse> efetuarOpcaoRegime({
+    required String contribuinteNumero,
+    required int anoOpcao,
+    required TipoRegime tipoRegime,
+    required bool deAcordoResolucao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return efetuarOpcaoRegimeWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: EfetuarOpcaoRegimeRequest(
+        anoOpcao: anoOpcao,
+        tipoRegime: tipoRegime.codigo,
+        descritivoRegime: tipoRegime.descricao,
+        deAcordoResolucao: deAcordoResolucao,
+      ),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Efetuar opção pelo regime de apuração de receitas (versão com objeto request)
+  ///
+  /// Este serviço permite que empresas optantes pelo Simples Nacional
+  /// efetuem a opção anual pelo regime de apuração (Competência ou Caixa).
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [request] Dados da opção pelo regime de apuração
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<EfetuarOpcaoRegimeResponse> efetuarOpcaoRegimeWithRequest({
     required String contribuinteNumero,
     required EfetuarOpcaoRegimeRequest request,
     String? contratanteNumero,

@@ -5,7 +5,7 @@ import 'regime_apuracao_enums.dart';
 /// Representa os dados necessários para consultar a opção pelo regime de apuração
 /// através do serviço CONSULTAROPCAOREGIME103
 class ConsultarOpcaoRegimeRequest {
-  /// Ano calendário para consulta (formato: YYYY)
+  /// Ano Calendário (SIM - Obligatório)
   final int anoCalendario;
 
   ConsultarOpcaoRegimeRequest({required this.anoCalendario});

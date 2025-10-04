@@ -5,17 +5,17 @@ import 'regime_apuracao_enums.dart';
 /// Representa os dados necessários para efetuar a opção pelo regime de apuração
 /// através do serviço EFETUAROPCAOREGIME101
 class EfetuarOpcaoRegimeRequest {
-  /// Ano da opção (formato: YYYY)
+  /// Ano Opção (SIM - Obligatório)
   final int anoOpcao;
 
-  /// Tipo da opção (0 = Competência, 1 = Caixa)
+  /// Tipo da opção (SIM - Obligatório) (0 = Competência, 1 = Caixa)
   final int tipoRegime;
 
-  /// Descritivo do regime ("COMPETENCIA" ou "CAIXA")
+  /// Descritivo do Regime (SIM - Obligatório) ("COMPETENCIA" ou "CAIXA")
   final String descritivoRegime;
 
-  /// Confirmação obrigatória para efetivar a opção
-  /// Deve ser true para que a opção seja efetivada
+  /// Confirmação obrigatória para efetivar a opção (SIM - Obligatório)
+  /// Este campo deve ser enviado como true para ser efetivada a opção
   final bool deAcordoResolucao;
 
   EfetuarOpcaoRegimeRequest({required this.anoOpcao, required this.tipoRegime, required this.descritivoRegime, required this.deAcordoResolucao});

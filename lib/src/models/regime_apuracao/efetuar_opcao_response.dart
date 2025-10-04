@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'regime_apuracao_enums.dart';
 
 /// Modelo de dados de resposta para efetuar opção pelo regime de apuração
@@ -32,7 +33,7 @@ class EfetuarOpcaoRegimeResponse {
     return EfetuarOpcaoRegimeResponse(
       status: json['status'] as int,
       mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? RegimeApuracao.fromJson(json['dados']) : null,
+      dados: json['dados'] != null ? RegimeApuracao.fromJson(jsonDecode(json['dados'])) : null,
     );
   }
 }
@@ -41,8 +42,8 @@ class EfetuarOpcaoRegimeResponse {
 ///
 /// Representa as informações do regime de apuração efetivado
 class RegimeApuracao {
-  /// CNPJ da matriz
-  final String cnpjMatriz;
+  /// CNPJ da matriz (Number conforme documentação)
+  final int cnpjMatriz;
 
   /// Ano calendário solicitado
   final int anoCalendario;
@@ -109,7 +110,7 @@ class RegimeApuracao {
 
   factory RegimeApuracao.fromJson(Map<String, dynamic> json) {
     return RegimeApuracao(
-      cnpjMatriz: json['cnpjMatriz'].toString(),
+      cnpjMatriz: int.parse(json['cnpjMatriz'].toString()),
       anoCalendario: int.parse(json['anoCalendario'].toString()),
       regimeEscolhido: json['regimeEscolhido'].toString(),
       dataHoraOpcao: int.parse(json['dataHoraOpcao'].toString()),

@@ -7,19 +7,25 @@ Future<void> Regime(ApiClient apiClient) async {
   // Inicializar o serviço
   final regimeService = RegimeApuracaoService(apiClient);
   bool servicoOk = true;
-
   // 1. Efetuar opção pelo regime de competência
   try {
     print('\n1. Efetuando opção pelo regime de competência (comentado)...');
-    print('Código comentado para evitar execução real:');
-    final requestCompetencia = EfetuarOpcaoRegimeRequest.competencia(anoOpcao: 2024);
-    final opcaoCompetenciaResponse = await regimeService.efetuarOpcaoRegime(contribuinteNumero: '00000000000000', request: requestCompetencia);
+    final opcaoCompetenciaResponse = await regimeService.efetuarOpcaoRegime(
+      contribuinteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+      contratanteNumero: '00000000000000',
+      anoOpcao: 2023,
+      tipoRegime: TipoRegime.caixa,
+      deAcordoResolucao: true,
+    );
     if (opcaoCompetenciaResponse.isSuccess) {
       print("✅ Opção pelo regime de competência efetivada com sucesso!");
       if (opcaoCompetenciaResponse.dados != null) {
         final dados = opcaoCompetenciaResponse.dados!;
+        print("CNPJ Matriz: ${dados.cnpjMatriz}");
         print("Regime escolhido: ${dados.regimeEscolhido}");
         print("Data da opção: ${dados.dataOpcao}");
+        print("Demonstrativo PDF: ${dados.demonstrativoPdf?.isEmpty}");
       }
     }
     print('✅ Exemplo documentado (não executado)');
@@ -27,6 +33,7 @@ Future<void> Regime(ApiClient apiClient) async {
     print('❌ Erro no exemplo comentado: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
   // 2. Consultar anos calendários com opções efetivadas
   try {
@@ -53,8 +60,9 @@ Future<void> Regime(ApiClient apiClient) async {
     print('❌ Erro ao consultar anos calendários: $e');
     servicoOk = false;
   }
+  await Future.delayed(const Duration(seconds: 5));
 
-  // 4. Consultar opção específica para um ano
+  // 3. Consultar opção específica para um ano
   try {
     print('\n3. Consultando opção específica para o ano 2023...');
     final requestOpcao = ConsultarOpcaoRegimeRequest(anoCalendario: 2023);
@@ -85,7 +93,7 @@ Future<void> Regime(ApiClient apiClient) async {
     servicoOk = false;
   }
 
-  // 5. Consultar resolução para regime de caixa
+  // 4. Consultar resolução para regime de caixa
   try {
     print('\n4. Consultando resolução para regime de caixa (ano 2021)...');
     final requestResolucao = ConsultarResolucaoRequest(anoCalendario: 2021);
@@ -113,16 +121,6 @@ Future<void> Regime(ApiClient apiClient) async {
     print('❌ Erro ao consultar resolução: $e');
     servicoOk = false;
   }
-
-  // Resumo dos métodos utilizados
-  print('\n=== RESUMO DOS MÉTODOS UTILIZADOS ===');
-  print('✅ Métodos executados (consultas):');
-  print('  1. efetuarOpcaoRegime() - Efetua opção pelo regime de competência');
-  print('  2. consultarAnosCalendarios() - Consulta todos os anos com opções');
-  print('  3. consultarOpcaoRegime() - Consulta opção específica por ano');
-  print('  4. consultarResolucao() - Consulta resolução para regime de caixa');
-  print('');
-  print('📋 Todos os 4 métodos principais do RegimeApuracaoService foram demonstrados!');
 
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO REGIME DE APURAÇÃO ===');

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'regime_apuracao_enums.dart';
 
 /// Modelo de dados de resposta para consultar anos calendários
@@ -39,7 +40,7 @@ class ConsultarAnosCalendariosResponse {
     return ConsultarAnosCalendariosResponse(
       status: json['status'] as int,
       mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? (json['dados'] as List).map((d) => AnoCalendarioRegime.fromJson(d)).toList() : null,
+      dados: json['dados'] != null ? (jsonDecode(json['dados']) as List).map((d) => AnoCalendarioRegime.fromJson(d)).toList() : null,
     );
   }
 }

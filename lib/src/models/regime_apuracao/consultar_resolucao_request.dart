@@ -1,11 +1,11 @@
 import 'regime_apuracao_enums.dart';
 
-/// Modelo de dados para consultar resolução do regime de caixa
+/// Modelo de dados para consultar resolução do Regime de Caixa
 ///
 /// Representa os dados necessários para consultar a resolução para o regime de caixa
 /// através do serviço CONSULTARRESOLUCAO104
 class ConsultarResolucaoRequest {
-  /// Ano calendário para consulta da resolução (formato: YYYY)
+  /// Ano (SIM - Obligatório)
   final int anoCalendario;
 
   ConsultarResolucaoRequest({required this.anoCalendario});
