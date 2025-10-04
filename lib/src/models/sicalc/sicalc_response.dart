@@ -27,7 +27,7 @@ class ConsolidarEmitirDarfResponse {
 
     // Processar dados se existirem
     if (json['dados'] != null) {
-      final dadosStr = json['dados'] as String;
+      final dadosStr = json['dados'].toString();
       try {
         final dados = jsonDecode(dadosStr);
 
@@ -35,15 +35,16 @@ class ConsolidarEmitirDarfResponse {
           consolidado = ConsolidadoDarf.fromJson(dados['consolidado']);
         }
 
-        darf = dados['darf'] as String?;
-        numeroDocumento = dados['numeroDocumento'] as String?;
+        darf = dados['darf']?.toString();
+        numeroDocumento = dados['numeroDocumento']?.toString();
       } catch (e) {
+        print('Erro ao processar dados: $e');
         // Ignorar erro de parsing, manter campos como null
       }
     }
 
     return ConsolidarEmitirDarfResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
       consolidado: consolidado,
       darf: darf,
@@ -95,15 +96,15 @@ class ConsolidadoDarf {
 
   factory ConsolidadoDarf.fromJson(Map<String, dynamic> json) {
     return ConsolidadoDarf(
-      valorPrincipalMoedaCorrente: (json['valorPrincipalMoedaCorrente'] as num).toDouble(),
-      valorTotalConsolidado: (json['valorTotalConsolidado'] as num).toDouble(),
-      valorMultaMora: (json['valorMultaMora'] as num).toDouble(),
-      percentualMultaMora: (json['percentualMultaMora'] as num).toDouble(),
-      valorJuros: (json['valorJuros'] as num).toDouble(),
-      percentualJuros: (json['percentualJuros'] as num).toDouble(),
-      termoInicialJuros: json['termoInicialJuros'] as String,
-      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao'] as String,
-      dataValidadeCalculo: json['dataValidadeCalculo'] as String,
+      valorPrincipalMoedaCorrente: double.parse(json['valorPrincipalMoedaCorrente'].toString()),
+      valorTotalConsolidado: double.parse(json['valorTotalConsolidado'].toString()),
+      valorMultaMora: double.parse(json['valorMultaMora'].toString()),
+      percentualMultaMora: double.parse(json['percentualMultaMora'].toString()),
+      valorJuros: double.parse(json['valorJuros'].toString()),
+      percentualJuros: double.parse(json['percentualJuros'].toString()),
+      termoInicialJuros: json['termoInicialJuros'].toString(),
+      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao'].toString(),
+      dataValidadeCalculo: json['dataValidadeCalculo'].toString(),
     );
   }
 }
@@ -139,7 +140,7 @@ class ConsultarReceitasResponse {
     }
 
     return ConsultarReceitasResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
       receita: receita,
     );
@@ -161,8 +162,8 @@ class ReceitaInfo {
 
   factory ReceitaInfo.fromJson(Map<String, dynamic> json) {
     return ReceitaInfo(
-      codigoReceita: json['codigoReceita'] as int,
-      descricaoReceita: json['descricaoReceita'] as String,
+      codigoReceita: int.parse(json['codigoReceita'].toString()),
+      descricaoReceita: json['descricaoReceita'].toString(),
       extensoes: (json['extensoes'] as List).map((e) => ExtensaoReceita.fromJson(e)).toList(),
     );
   }
@@ -307,16 +308,16 @@ class InformacoesAdicionais {
     return InformacoesAdicionais(
       calculado: json['calculado'] as bool,
       codigoBarras: json['codigoBarras'] as bool,
-      codigoReceitaExtensao: json['codigoReceitaExtensao'] as int,
-      criacao: json['criacao'] as String,
-      descricaoReceitaExtensao: json['descricaoReceitaExtensao'] as String,
-      descricaoReferencia: json['descricaoReferencia'] as String,
+      codigoReceitaExtensao: int.parse(json['codigoReceitaExtensao'].toString()),
+      criacao: json['criacao'].toString(),
+      descricaoReceitaExtensao: json['descricaoReceitaExtensao'].toString(),
+      descricaoReferencia: json['descricaoReferencia'].toString(),
       exigeMatriz: json['exigeMatriz'] as bool,
-      extincao: json['extincao'] as String?,
+      extincao: json['extincao']?.toString(),
       manual: json['manual'] as bool,
       pf: json['pf'] as bool,
       pj: json['pj'] as bool,
-      tipoPeriodoApuracao: json['tipoPeriodoApuracao'] as String,
+      tipoPeriodoApuracao: json['tipoPeriodoApuracao'].toString(),
       vedaValor: json['vedaValor'] as bool,
     );
   }
@@ -360,14 +361,14 @@ class GerarCodigoBarrasResponse {
           codigoDeBarras = CodigoBarras.fromJson(dados['codigoDeBarras']);
         }
 
-        numeroDocumento = dados['numeroDocumento'] as String?;
+        numeroDocumento = dados['numeroDocumento']?.toString();
       } catch (e) {
         // Ignorar erro de parsing, manter campos como null
       }
     }
 
     return GerarCodigoBarrasResponse(
-      status: json['status'] as int,
+      status: int.parse(json['status'].toString()),
       mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
       consolidado: consolidado,
       codigoDeBarras: codigoDeBarras,
@@ -397,11 +398,11 @@ class CodigoBarras {
 
   factory CodigoBarras.fromJson(Map<String, dynamic> json) {
     return CodigoBarras(
-      campo1ComDV: json['campo1ComDV'] as String,
+      campo1ComDV: json['campo1ComDV'].toString(),
       campo2ComDV: json['campo2ComDV'] as String,
-      campo3ComDV: json['campo3ComDV'] as String,
-      campo4ComDV: json['campo4ComDV'] as String,
-      codigo44: json['codigo44'] as String,
+      campo3ComDV: json['campo3ComDV'].toString(),
+      campo4ComDV: json['campo4ComDV'].toString(),
+      codigo44: json['codigo44'].toString(),
     );
   }
 }

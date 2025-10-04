@@ -11,9 +11,6 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // ========================================
   try {
     print('📋 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física');
-    print('   Contribuinte: 99999999999');
-    print('   UF: SP, Município: 7107');
-    print('   Código Receita: 0190');
 
     final request = SicalcService.criarDarfPessoaFisica(
       contribuinteNumero: '99999999999',
@@ -28,10 +25,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
       dataConsolidacao: '2022-08-08T00:00:00',
       observacao: 'DARF calculado - Pessoa Física',
     );
+    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999');
 
-    final response = await sicalcService.consolidarEmitirDarf(request);
-
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: DARF consolidado e emitido');
 
       if (response.mensagens != null) {
@@ -62,7 +58,7 @@ Future<void> Sicalc(ApiClient apiClient) async {
         print('   🔢 Número do documento: ${response.numeroDocumento}');
       }
     } else {
-      print('   ❌ Erro: Status ${response.status}');
+      print('  ❌ Erro: Status ${response.status}');
       if (response.mensagens != null) {
         for (final mensagem in response.mensagens!) {
           print('      ${mensagem.codigo}: ${mensagem.texto}');
@@ -82,9 +78,6 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // ========================================
   try {
     print('\n📋 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas');
-    print('   Contribuinte: 99999999999999');
-    print('   UF: SP, Município: 7107');
-    print('   Código Receita: 0220');
 
     final request = SicalcService.criarDarfPessoaJuridica(
       contribuinteNumero: '99999999999999',
@@ -101,9 +94,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF calculado - Pessoa Jurídica com cota',
     );
 
-    final response = await sicalcService.consolidarEmitirDarf(request);
+    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '00000000000000', autorPedidoDadosNumero: '99999999999999');
 
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: DARF consolidado e emitido');
 
       if (response.mensagens != null) {
@@ -151,9 +144,6 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // ========================================
   try {
     print('\n📋 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE');
-    print('   Contribuinte: 99999999999999');
-    print('   UF: SP, Município: 7107');
-    print('   Código Receita: 1394');
 
     final request = SicalcService.criarCodigoBarras(
       contribuinteNumero: '99999999999999',
@@ -169,9 +159,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF com código de barras e QRCODE - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.gerarCodigoBarras(request);
+    final response = await sicalcService.gerarCodigoBarras(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
 
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: DARF com código de barras e QRCODE gerado');
 
       if (response.mensagens != null) {
@@ -214,19 +204,16 @@ Future<void> Sicalc(ApiClient apiClient) async {
   }
 
   await Future.delayed(const Duration(seconds: 3));
-
   // ========================================
   // 4. CONSULTAR RECEITAS - Consultar receitas do SICALC
   // ========================================
   try {
     print('\n📋 4. CONSULTAR RECEITAS - Consultar receitas do SICALC');
-    print('   Contribuinte: 00000000000');
-    print('   Código Receita: 6106');
 
     final request = SicalcService.criarConsultaReceitas(contribuinteNumero: '00000000000', codigoReceita: '6106');
-    final response = await sicalcService.consultarReceitas(request);
+    final response = await sicalcService.consultarReceitas(request, contratanteNumero: '00000000000000', autorPedidoDadosNumero: '00000000000000');
 
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: Consulta realizada com sucesso');
 
       if (response.mensagens != null) {
@@ -275,9 +262,6 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // ========================================
   try {
     print('\n📋 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras');
-    print('   Contribuinte: 99999999999999');
-    print('   UF: SP, Município: 7107');
-    print('   Código Receita: 1162');
 
     final request = SicalcService.criarCodigoBarras(
       contribuinteNumero: '99999999999999',
@@ -293,9 +277,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF com código de barras - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.gerarCodigoBarras(request);
+    final response = await sicalcService.gerarCodigoBarras(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
 
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: DARF com código de barras gerado');
 
       if (response.mensagens != null) {
@@ -344,9 +328,6 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // ========================================
   try {
     print('\n📋 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras');
-    print('   Contribuinte: 99999999999999');
-    print('   UF: SP, Município: 7107');
-    print('   Código Receita: 0190');
 
     final request = SicalcService.criarDarfPessoaJuridica(
       contribuinteNumero: '99999999999999',
@@ -362,9 +343,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF manual com código de barras - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.consolidarEmitirDarf(request);
+    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
 
-    if (response.status == 'OK') {
+    if (response.status == 200) {
       print('   ✅ Sucesso: DARF manual consolidado e emitido');
 
       if (response.mensagens != null) {

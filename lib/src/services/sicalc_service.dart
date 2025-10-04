@@ -16,9 +16,15 @@ class SicalcService {
   /// - Devolve o resultado do cálculo e o PDF do DARF
   ///
   /// [request]: Dados da requisição para consolidação e emissão do DARF
+  /// [contratanteNumero]: CNPJ da empresa contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero]: CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna: ConsolidarEmitirDarfResponse com os dados consolidados e PDF do DARF
-  Future<ConsolidarEmitirDarfResponse> consolidarEmitirDarf(ConsolidarEmitirDarfRequest request) async {
+  Future<ConsolidarEmitirDarfResponse> consolidarEmitirDarf(
+    ConsolidarEmitirDarfRequest request, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     try {
       // Validar dados da requisição
       final erros = request.validarDados();
@@ -27,7 +33,12 @@ class SicalcService {
       }
 
       // Fazer a requisição
-      final response = await _apiClient.post('/Emitir', request);
+      final response = await _apiClient.post(
+        '/Emitir',
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       // Processar resposta
       return ConsolidarEmitirDarfResponse.fromJson(response);
@@ -42,9 +53,15 @@ class SicalcService {
   /// códigos de receita e obter informações sobre campos obrigatórios/opcionais.
   ///
   /// [request]: Dados da requisição para consulta de receitas
+  /// [contratanteNumero]: CNPJ da empresa contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero]: CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna: ConsultarReceitasResponse com informações da receita
-  Future<ConsultarReceitasResponse> consultarReceitas(ConsultarReceitasRequest request) async {
+  Future<ConsultarReceitasResponse> consultarReceitas(
+    ConsultarReceitasRequest request, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     try {
       // Validar dados da requisição
       final erros = request.validarDados();
@@ -53,7 +70,12 @@ class SicalcService {
       }
 
       // Fazer a requisição
-      final response = await _apiClient.post('/Apoiar', request);
+      final response = await _apiClient.post(
+        '/Apoiar',
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       // Processar resposta
       return ConsultarReceitasResponse.fromJson(response);
@@ -70,9 +92,15 @@ class SicalcService {
   /// - Devolve o resultado do cálculo e os campos do código de barras
   ///
   /// [request]: Dados da requisição para geração do código de barras
+  /// [contratanteNumero]: CNPJ da empresa contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero]: CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
   /// Retorna: GerarCodigoBarrasResponse com os dados consolidados e código de barras
-  Future<GerarCodigoBarrasResponse> gerarCodigoBarras(GerarCodigoBarrasRequest request) async {
+  Future<GerarCodigoBarrasResponse> gerarCodigoBarras(
+    GerarCodigoBarrasRequest request, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     try {
       // Validar dados da requisição
       final erros = request.validarDados();
@@ -81,7 +109,12 @@ class SicalcService {
       }
 
       // Fazer a requisição
-      final response = await _apiClient.post("/Emitir", request);
+      final response = await _apiClient.post(
+        "/Emitir",
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       // Processar resposta
       return GerarCodigoBarrasResponse.fromJson(response);
@@ -103,6 +136,8 @@ class SicalcService {
     required double valorImposto,
     required String dataConsolidacao,
     String? observacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) {
     return ConsolidarEmitirDarfRequest(
       contribuinteNumero: contribuinteNumero,
@@ -133,6 +168,8 @@ class SicalcService {
     required String dataConsolidacao,
     int? cota,
     String? observacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) {
     return ConsolidarEmitirDarfRequest(
       contribuinteNumero: contribuinteNumero,
@@ -163,6 +200,8 @@ class SicalcService {
     required double valorImposto,
     required String dataConsolidacao,
     String? observacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
   }) {
     return GerarCodigoBarrasRequest(
       contribuinteNumero: contribuinteNumero,
@@ -180,19 +219,26 @@ class SicalcService {
   }
 
   /// Método auxiliar para criar requisição de consulta de receitas
-  static ConsultarReceitasRequest criarConsultaReceitas({required String contribuinteNumero, required String codigoReceita}) {
+  static ConsultarReceitasRequest criarConsultaReceitas({
+    required String contribuinteNumero,
+    required String codigoReceita,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) {
     return ConsultarReceitasRequest(contribuinteNumero: contribuinteNumero, codigoReceita: codigoReceita);
   }
 
   /// Valida se uma receita permite código de barras
-  Future<bool> receitaPermiteCodigoBarras(String codigoReceita) async {
+  Future<bool> receitaPermiteCodigoBarras(String codigoReceita, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     try {
       final request = criarConsultaReceitas(
         contribuinteNumero: '00000000000', // CPF genérico para consulta
         codigoReceita: codigoReceita,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
       );
 
-      final response = await consultarReceitas(request);
+      final response = await consultarReceitas(request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
       if (response.receita?.extensoes.isNotEmpty == true) {
         return response.receita!.extensoes.any((extensao) => extensao.informacoes.codigoBarras);
@@ -205,14 +251,16 @@ class SicalcService {
   }
 
   /// Obtém informações sobre campos obrigatórios de uma receita
-  Future<Map<String, dynamic>?> obterInfoReceita(String codigoReceita) async {
+  Future<Map<String, dynamic>?> obterInfoReceita(String codigoReceita, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     try {
       final request = criarConsultaReceitas(
         contribuinteNumero: '00000000000', // CPF genérico para consulta
         codigoReceita: codigoReceita,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
       );
 
-      final response = await consultarReceitas(request);
+      final response = await consultarReceitas(request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
       if (response.receita != null) {
         return {
