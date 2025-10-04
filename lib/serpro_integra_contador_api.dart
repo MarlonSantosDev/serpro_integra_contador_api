@@ -273,11 +273,10 @@ export 'src/models/pertmei/pertmei_response.dart'
         DiscriminacaoDebito,
         EmitirDasResponse;
 
-// RELPMEI Models
-export 'src/models/relpmei/relpmei_base_request.dart';
-export 'src/models/relpmei/relpmei_request.dart';
-export 'src/models/relpmei/relpmei_response.dart'
-    hide ConsultarPedidosResponse, ConsultarParcelamentoResponse, ConsultarDetalhesPagamentoResponse, EmitirDasResponse, Parcelamento, Parcela;
+// RELPMEI Models - Padrão dos outros serviços
+export 'src/models/relpmei/relpmei_requests.dart';
+export 'src/models/relpmei/relpmei_base_response.dart';
+export 'src/models/relpmei/relpmei_responses.dart';
 
 // PAGTOWEB Models
 export 'src/models/pagtoweb/pagtoweb_request.dart';

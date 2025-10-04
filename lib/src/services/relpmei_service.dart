@@ -1,231 +1,241 @@
-import '../core/api_client.dart';
-import '../models/relpmei/relpmei_request.dart';
-import '../models/relpmei/relpmei_response.dart';
+import 'package:serpro_integra_contador_api/src/core/api_client.dart';
+import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
+import 'package:serpro_integra_contador_api/src/models/relpmei/relpmei_requests.dart';
+import 'package:serpro_integra_contador_api/src/models/relpmei/relpmei_responses.dart';
 
-/// Serviço para integração com RELPMEI (Receita Federal)
+/// Serviço para integração com RELPMEI (Regime Especial de Regularização Tributária para o Microempreendedor Individual)
 ///
-/// Este serviço implementa todos os métodos disponíveis para:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos existentes
-/// - Consultar parcelas para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS (Documento de Arrecadação Simplificada)
+/// Implementa todos os serviços disponíveis do Integra RELPMEI:
+/// - Consultar Pedidos de Parcelamento (PEDIDOSPARC233)
+/// - Consultar Parcelamento Específico (OBTERPARC234)
+/// - Consultar Parcelas para Impressão (PARCELASPARAGERAR232)
+/// - Consultar Detalhes de Pagamento (DETPAGTOPARC235)
+/// - Emitir DAS (GERARDAS231)
 class RelpmeiService {
   final ApiClient _apiClient;
 
   RelpmeiService(this._apiClient);
 
-  /// Consulta pedidos de parcelamento RELPMEI
+  /// Consultar Pedidos de Parcelamento (PEDIDOSPARC233)
   ///
-  /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
+  /// Este serviço retorna uma lista contendo todos os parcelamentos
+  /// do tipo RELPMEI para um contribuinte.
   ///
-  /// Retorna lista de pedidos encontrados ou erro detalhado
-  Future<ConsultarPedidosResponse> consultarPedidos(
-    ConsultarPedidosRequest request,
-  ) async {
-    try {
-      // Validação dos dados obrigatórios
-      if (request.cpfCnpj?.isEmpty ?? true) {
-        return ConsultarPedidosResponse(
-          sucesso: false,
-          mensagem: 'CPF/CNPJ é obrigatório',
-          codigoErro: 'VALIDATION_ERROR',
-          detalhesErro: 'Campo cpfCnpj não pode estar vazio',
-        );
-      }
-
-      // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post('/relpmei/pedidos', request);
-
-      if (response['status'] == 200) {
-        return ConsultarPedidosResponse.fromJson(response);
-      } else {
-        return ConsultarPedidosResponse(
-          sucesso: false,
-          mensagem: 'Erro na consulta de pedidos',
-          codigoErro: 'HTTP_ERROR',
-          detalhesErro: 'Status: ${response['status']} - ${response['body']}',
-        );
-      }
-    } catch (e) {
-      return ConsultarPedidosResponse(
-        sucesso: false,
-        mensagem: 'Erro interno na consulta de pedidos',
-        codigoErro: 'INTERNAL_ERROR',
-        detalhesErro: e.toString(),
-      );
-    }
+  /// [contribuinteNumero] CNPJ do contribuinte (obrigatório para RELPMEI)
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  Future<ConsultarPedidosRelpmeiResponse> consultarPedidos({
+    required String contribuinteNumero,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return consultarPedidosWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: ConsultarPedidosRelpmeiRequest(),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
-  /// Consulta parcelamentos existentes RELPMEI
-  ///
-  /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
-  ///
-  /// Retorna lista de parcelamentos encontrados ou erro detalhado
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(
-    ConsultarParcelamentoRequest request,
-  ) async {
-    try {
-      // Validação dos dados obrigatórios
-      if (request.cpfCnpj?.isEmpty ?? true) {
-        return ConsultarParcelamentoResponse(
-          sucesso: false,
-          mensagem: 'CPF/CNPJ é obrigatório',
-          codigoErro: 'VALIDATION_ERROR',
-          detalhesErro: 'Campo cpfCnpj não pode estar vazio',
-        );
-      }
+  /// Versão com request específico para consultar pedidos de parcelamento
+  Future<ConsultarPedidosRelpmeiResponse> consultarPedidosWithRequest({
+    required String contribuinteNumero,
+    required ConsultarPedidosRelpmeiRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'PEDIDOSPARC233', versaoSistema: '1.0', dados: request.toJsonString()),
+    );
 
-      // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post('/relpmei/parcelamentos', request);
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
-      if (response['status'] == 200) {
-        return ConsultarParcelamentoResponse.fromJson(response);
-      } else {
-        return ConsultarParcelamentoResponse(
-          sucesso: false,
-          mensagem: 'Erro na consulta de parcelamentos',
-          codigoErro: 'HTTP_ERROR',
-          detalhesErro: 'Status: ${response['status']} - ${response['body']}',
-        );
-      }
-    } catch (e) {
-      return ConsultarParcelamentoResponse(
-        sucesso: false,
-        mensagem: 'Erro interno na consulta de parcelamentos',
-        codigoErro: 'INTERNAL_ERROR',
-        detalhesErro: e.toString(),
-      );
-    }
+    return ConsultarPedidosRelpmeiResponse.fromJson(response);
   }
 
-  /// Consulta parcelas para impressão RELPMEI
+  /// Consultar Parcelamento Específico (OBTERPARC234)
   ///
-  /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
+  /// Esta consulta retorna informações de um parcelamento específico
+  /// na modalidade RELPMEI.
   ///
-  /// Retorna lista de parcelas para impressão ou erro detalhado
-  Future<ConsultarParcelasImpressaoResponse> consultarParcelasImpressao(
-    ConsultarParcelasImpressaoRequest request,
-  ) async {
-    try {
-      // Validação dos dados obrigatórios
-      if (request.cpfCnpj?.isEmpty ?? true) {
-        return ConsultarParcelasImpressaoResponse(
-          sucesso: false,
-          mensagem: 'CPF/CNPJ é obrigatório',
-          codigoErro: 'VALIDATION_ERROR',
-          detalhesErro: 'Campo cpfCnpj não pode estar vazio',
-        );
-      }
-
-      // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post(
-        '/relpmei/parcelas-impressao',
-        request,
-      );
-
-      if (response['status'] == 200) {
-        return ConsultarParcelasImpressaoResponse.fromJson(response);
-      } else {
-        return ConsultarParcelasImpressaoResponse(
-          sucesso: false,
-          mensagem: 'Erro na consulta de parcelas para impressão',
-          codigoErro: 'HTTP_ERROR',
-          detalhesErro: 'Status: ${response['status']} - ${response['body']}',
-        );
-      }
-    } catch (e) {
-      return ConsultarParcelasImpressaoResponse(
-        sucesso: false,
-        mensagem: 'Erro interno na consulta de parcelas para impressão',
-        codigoErro: 'INTERNAL_ERROR',
-        detalhesErro: e.toString(),
-      );
-    }
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [numeroParcelamento] Número do parcelamento a ser consultado
+  /// [contratanteNumero] CNPJ do contratante (opcional)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
+  Future<ConsultarParcelamentoRelpmeiResponse> consultarParcelamento({
+    required String contribuinteNumero,
+    required int numeroParcelamento,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return consultarParcelamentoWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: ConsultarParcelamentoRelpmeiRequest(numeroParcelamento: numeroParcelamento),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 
-  /// Consulta detalhes de pagamento RELPMEI
-  ///
-  /// [request] - Dados da consulta incluindo CPF/CNPJ obrigatório
-  ///
-  /// Retorna lista de detalhes de pagamento ou erro detalhado
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
-    ConsultarDetalhesPagamentoRequest request,
-  ) async {
-    try {
-      // Validação dos dados obrigatórios
-      if (request.cpfCnpj?.isEmpty ?? true) {
-        return ConsultarDetalhesPagamentoResponse(
-          sucesso: false,
-          mensagem: 'CPF/CNPJ é obrigatório',
-          codigoErro: 'VALIDATION_ERROR',
-          detalhesErro: 'Campo cpfCnpj não pode estar vazio',
-        );
-      }
+  /// Versão com request específico para consultar parcelamento específico
+  Future<ConsultarParcelamentoRelpmeiResponse> consultarParcelamentoWithRequest({
+    required String contribuinteNumero,
+    required ConsultarParcelamentoRelpmeiRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'OBTERPARC234', versaoSistema: '1.0', dados: request.toJsonString()),
+    );
 
-      // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post(
-        '/relpmei/detalhes-pagamento',
-        request,
-      );
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
-      if (response['status'] == 200) {
-        return ConsultarDetalhesPagamentoResponse.fromJson(response);
-      } else {
-        return ConsultarDetalhesPagamentoResponse(
-          sucesso: false,
-          mensagem: 'Erro na consulta de detalhes de pagamento',
-          codigoErro: 'HTTP_ERROR',
-          detalhesErro: 'Status: ${response['status']} - ${response['body']}',
-        );
-      }
-    } catch (e) {
-      return ConsultarDetalhesPagamentoResponse(
-        sucesso: false,
-        mensagem: 'Erro interno na consulta de detalhes de pagamento',
-        codigoErro: 'INTERNAL_ERROR',
-        detalhesErro: e.toString(),
-      );
-    }
+    return ConsultarParcelamentoRelpmeiResponse.fromJson(response);
   }
 
-  /// Emite DAS (Documento de Arrecadação Simplificada) RELPMEI
+  /// Consultar Parcelas para Impressão (PARCELASPARAGERAR232)
   ///
-  /// [request] - Dados para emissão incluindo CPF/CNPJ obrigatório
+  /// Esta consulta retorna parcelas disponíveis para impressão do DAS
+  /// na modalidade RELPMEI.
   ///
-  /// Retorna DAS emitido ou erro detalhado
-  Future<EmitirDasResponse> emitirDas(EmitirDasRequest request) async {
-    try {
-      // Validação dos dados obrigatórios
-      if (request.cpfCnpj?.isEmpty ?? true) {
-        return EmitirDasResponse(
-          sucesso: false,
-          mensagem: 'CPF/CNPJ é obrigatório',
-          codigoErro: 'VALIDATION_ERROR',
-          detalhesErro: 'Campo cpfCnpj não pode estar vazio',
-        );
-      }
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [contratanteNumero] CNPJ do contratante (opcional)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
+  Future<ConsultarParcelasImpressaoRelpmeiResponse> consultarParcelasImpressao({
+    required String contribuinteNumero,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return consultarParcelasImpressaoWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: ConsultarParcelasImpressaoRelpmeiRequest(),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
 
-      // Fazer requisição para o endpoint RELPMEI
-      final response = await _apiClient.post('/relpmei/emitir-das', request);
+  /// Versão com request específico para consultar parcelas para impressão
+  Future<ConsultarParcelasImpressaoRelpmeiResponse> consultarParcelasImpressaoWithRequest({
+    required String contribuinteNumero,
+    required ConsultarParcelasImpressaoRelpmeiRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'PARCELASPARAGERAR232', versaoSistema: '1.0', dados: request.toJsonString()),
+    );
 
-      if (response['status'] == 200) {
-        return EmitirDasResponse.fromJson(response);
-      } else {
-        return EmitirDasResponse(
-          sucesso: false,
-          mensagem: 'Erro na emissão de DAS',
-          codigoErro: 'HTTP_ERROR',
-          detalhesErro: 'Status: ${response['status']} - ${response['body']}',
-        );
-      }
-    } catch (e) {
-      return EmitirDasResponse(
-        sucesso: false,
-        mensagem: 'Erro interno na emissão de DAS',
-        codigoErro: 'INTERNAL_ERROR',
-        detalhesErro: e.toString(),
-      );
-    }
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    return ConsultarParcelasImpressaoRelpmeiResponse.fromJson(response);
+  }
+
+  /// Consultar Detalhes de Pagamento (DETPAGTOPARC235)
+  ///
+  /// Esta consulta retorna informações detalhadas de pagamento
+  /// de uma parcela na modalidade RELPMEI.
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [numeroParcelamento] Número do parcelamento
+  /// [anoMesParcela] Mês da parcela paga (AAAAMM)
+  /// [contratanteNumero] CNPJ do contratante (opcional)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
+  Future<ConsultarDetalhesPagamentoRelpmeiResponse> consultarDetalhesPagamento({
+    required String contribuinteNumero,
+    required int numeroParcelamento,
+    required int anoMesParcela,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return consultarDetalhesPagamentoWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: ConsultarDetalhesPagamentoRelpmeiRequest(numeroParcelamento: numeroParcelamento, anoMesParcela: anoMesParcela),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Versão com request específico para consultar detalhes de pagamento
+  Future<ConsultarDetalhesPagamentoRelpmeiResponse> consultarDetalhesPagamentoWithRequest({
+    required String contribuinteNumero,
+    required ConsultarDetalhesPagamentoRelpmeiRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'DETPAGTOPARC235', versaoSistema: '1.0', dados: request.toJsonString()),
+    );
+
+    final response = await _apiClient.post(
+      '/Consultar',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    return ConsultarDetalhesPagamentoRelpmeiResponse.fromJson(response);
+  }
+
+  /// Emitir DAS (GERARDAS231)
+  ///
+  /// Este serviço realiza a emissão de DAS para a modalidade RELPMEI.
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [parcelaParaEmitir] Período da parcela para emissão do DAS (AAAAMM)
+  /// [contratanteNumero] CNPJ do contratante (opcional)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
+  Future<EmitirDasRelpmeiResponse> emitirDas({
+    required String contribuinteNumero,
+    required int parcelaParaEmitir,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    return emitirDasWithRequest(
+      contribuinteNumero: contribuinteNumero,
+      request: EmitirDasRelpmeiRequest(parcelaParaEmitir: parcelaParaEmitir),
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+  }
+
+  /// Versão com request específico para emitir DAS
+  Future<EmitirDasRelpmeiResponse> emitirDasWithRequest({
+    required String contribuinteNumero,
+    required EmitirDasRelpmeiRequest request,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final baseRequest = BaseRequest(
+      contribuinteNumero: contribuinteNumero,
+      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'GERARDAS231', versaoSistema: '1.0', dados: request.toJsonString()),
+    );
+
+    // Nota: DAS usa endpoint Emitir, não Consultar
+    final response = await _apiClient.post(
+      '/Emitir',
+      baseRequest,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    return EmitirDasRelpmeiResponse.fromJson(response);
   }
 }
