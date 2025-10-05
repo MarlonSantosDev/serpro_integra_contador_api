@@ -1,5 +1,5 @@
-import 'validations_utils.dart';
-import 'service_catalog_utils.dart';
+import 'validacoes_utils.dart';
+import 'catalogo_servicos_utils.dart';
 
 /// Gerador do identificador de requisições (X-Request-Tag)
 ///
@@ -23,15 +23,15 @@ class RequestTagGenerator {
   /// Retorna o identificador no formato: TAAAAAAAAAAAAAATCCCCCCCCCCCCCCFF
   static String generateRequestTag({required String autorPedidoDadosNumero, required String contribuinteNumero, required String idServico}) {
     // Limpar e padronizar os números de documento
-    final autorLimpo = DocumentUtils.cleanDocumentNumber(autorPedidoDadosNumero);
-    final contribuinteLimpo = DocumentUtils.cleanDocumentNumber(contribuinteNumero);
+    final autorLimpo = ValidacoesUtils.cleanDocumentNumber(autorPedidoDadosNumero);
+    final contribuinteLimpo = ValidacoesUtils.cleanDocumentNumber(contribuinteNumero);
 
     // Detectar tipos de documento
-    final autorTipo = DocumentUtils.detectDocumentType(autorLimpo);
-    final contribuinteTipo = DocumentUtils.detectDocumentType(contribuinteLimpo);
+    final autorTipo = ValidacoesUtils.detectDocumentType(autorLimpo);
+    final contribuinteTipo = ValidacoesUtils.detectDocumentType(contribuinteLimpo);
 
     // Obter código da funcionalidade
-    final codigoFuncionalidade = ServiceCatalogUtils.getFunctionCode(idServico);
+    final codigoFuncionalidade = CatalogoServicosUtils.getFunctionCode(idServico);
 
     // Padronizar documentos para 14 posições (completar com zeros à esquerda)
     final autorPadronizado = autorLimpo.padLeft(14, '0');

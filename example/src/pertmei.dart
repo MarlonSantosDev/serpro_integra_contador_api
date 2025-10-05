@@ -103,7 +103,7 @@ Future<void> Pertmei(ApiClient apiClient) async {
         print('Tamanho do PDF (base64): ${dasGerado.docArrecadacaoPdfB64.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
           dasGerado.docArrecadacaoPdfB64,
           'das_pertmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

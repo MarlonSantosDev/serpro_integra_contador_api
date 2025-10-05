@@ -194,7 +194,12 @@ PDF salvo em arquivo: Sim
 === Exemplos DEFIS ===
 
 --- 1. Transmitir Declaração Sócio Econômica ---
-❌ Erro ao transmitir declaração: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Status: 200
+Mensagens: [Sucesso-DEFIS]: Requisição efetuada com sucesso.
+ID DEFIS: 000000002021002
+Declaração PDF: Disponível
+Recibo PDF: Disponível
+PDF salvo em arquivo: Sim
 
 --- 2. Consultar Declarações Transmitidas ---
 ✅ Status: 200
@@ -218,24 +223,43 @@ Declaração PDF: Disponível
 Recibo PDF: Disponível
 
 === RESUMO DO SERVIÇO DEFIS ===
-❌ Serviço DEFIS: ERRO
+✅ Serviço DEFIS: OK
 
 === Exemplos DEFIS Concluídos ===
 
 === Exemplos DTE (Domicílio Tributário Eletrônico) ===
 
 --- 1. Consultar Indicador DTE (CNPJ Válido) ---
-❌ Erro ao consultar DTE: Exception: Erro ao consultar indicador DTE: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Status HTTP: 200
+Sucesso: true
+Mensagem: Requisição efetuada com sucesso
+Código: Sucesso-DTE-00
+Indicador de enquadramento: 1
+Status de enquadramento: CNPJ Optante Simples
+Descrição do indicador: NI Optante Simples
+É válido: true
+
+Análise do enquadramento:
+  - É optante DTE: false
+  - É optante Simples: true
+  - É optante DTE e Simples: false
+  - Não é optante: false
+  - NI inválido: false
 
 === RESUMO DO SERVIÇO DTE ===
-❌ Serviço DTE: ERRO
+✅ Serviço DTE: OK
 
 === Exemplos DTE Concluídos ===
 
 === Exemplos Eventos de Atualização ===
 
 --- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---
-❌ Erro ao solicitar eventos PF: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Status: 200
+Protocolo: a65f3455-fa91-419b-b0ad-c4ac50695abf
+Tempo espera médio: 277ms
+Tempo limite: 5min
+Mensagem: [Sucesso-EVENTOSATUALIZACAO] - Requisição efetuada com sucesso.
+Mensagem: [Aviso-EVENTOSATUALIZACAO-001] - 209 requisições restantes para consultas de eventos do tipo E0301 para PF.
 
 --- Exemplo 2: Obter Eventos PF ---
 ✅ Status: 200
@@ -252,10 +276,15 @@ Tempo espera médio: 277ms
 Tempo limite: 5min
 
 --- Exemplo 4: Método de Conveniência PF ---
-❌ Erro no método de conveniência PF: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Status: 200
+Total de eventos: 4
+CPF 00000000000: Sem dados
+CPF 11111111111: Última atualização em 07/04/2023
+CPF 22222222222: Última atualização em 08/04/2023
+CPF 33333333333: Sem dados
 
 === RESUMO DO SERVIÇO EVENTOS ATUALIZAÇÃO ===
-❌ Serviço EVENTOS ATUALIZAÇÃO: ERRO
+✅ Serviço EVENTOS ATUALIZAÇÃO: OK
 
 === Exemplos Eventos de Atualização Concluídos ===
 === Exemplos MIT (Módulo de Inclusão de Tributos) ===
@@ -752,39 +781,7 @@ PDF salvo em arquivo: Sim
 === Exemplos PARCSN ===
 
 1. Consultando pedidos de parcelamento...
-✅ Status: 200
-Mensagem: Requisição efetuada com sucesso.
-Quantidade de parcelamentos: 6
-Parcelamento 1:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 11/02/2016
-  Data da situação: 25/01/2017
-  Ativo: false
-Parcelamento 2:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 26/01/2017
-  Data da situação: 08/01/2018
-  Ativo: false
-Parcelamento 3:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 09/01/2018
-  Data da situação: 25/06/2018
-  Ativo: false
-Parcelamento 4:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 02/01/2019
-  Data da situação: 11/05/2022
-  Ativo: false
-Parcelamento 5:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 29/09/2022
-  Data da situação: 17/01/2023
-  Ativo: false
-Parcelamento 6:
-  Situação: Encerrado a Pedido do Contribuinte
-  Data do pedido: 31/01/2023
-  Data da situação: 09/02/2023
-  Ativo: false
+❌ Erro ao consultar pedidos de parcelamento: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
 
 2. Consultando parcelamento específico...
 ✅ Status: 200
@@ -842,7 +839,7 @@ PDF não foi gerado
 ✅ Sucessos: 1
 
 === RESUMO DO SERVIÇO PARCSN ===
-✅ Serviço PARCSN: OK
+❌ Serviço PARCSN: ERRO
 
 === Exemplos PARCSN Concluídos ===
 
@@ -867,8 +864,8 @@ Parcelas disponíveis: 0
 Mensagens: [Erro-PERTMEI-VALIDATION]: Ano/mês da parcela deve estar no formato AAAAMM (ex: 202306)
 
 5. Emitindo DAS...
-✅ Status: 500
-Mensagens: [Erro-PERTMEI-INTERNAL]: Erro interno: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Status: 200
+Mensagens: [Sucesso-PERTMEI]: Requisição efetuada com sucesso.
 
 6. Testando validações...
 ✅ Validação CNPJ vazio: 400 - CNPJ do contribuinte é obrigatório
@@ -882,9 +879,7 @@ Mensagens: [Erro-PERTMEI-INTERNAL]: Erro interno: Exception: Falha na requisiç�
 === Exemplos PERTSN ===
 
 1. Consultando pedidos de parcelamento...
-✅ Status: 200
-Mensagem: Requisição efetuada com sucesso.
-Nenhum parcelamento encontrado
+❌ Erro ao consultar pedidos de parcelamento: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
 
 2. Consultando parcelamento específico...
 ✅ Status: 200
@@ -927,7 +922,7 @@ Erros gerais: 1
 Sucessos: 1
 
 === RESUMO DO SERVIÇO PERTSN ===
-✅ Serviço PERTSN: OK
+❌ Serviço PERTSN: ERRO
 
 === Exemplos PERTSN Concluídos ===
 === Exemplos PGDASD ===
@@ -1482,14 +1477,16 @@ Dados da opção:
   - Tem Texto Resolução: true
 
 4. Consultando resolução para regime de caixa (ano 2021)...
-❌ Erro ao consultar resolução: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
+✅ Consulta de resolução realizada com sucesso!
+Resolução disponível: true
+Texto da resolução (primeiros 100 caracteres):
+  Resolução CGSN nº 140, de 22 de maio de 2018. Dispõe sobre o Simples Nacional e dá outras providênci...
 
 === RESUMO DO SERVIÇO REGIME DE APURAÇÃO ===
-❌ Serviço REGIME DE APURAÇÃO: ERRO
+✅ Serviço REGIME DE APURAÇÃO: OK
 
 === FIM DOS EXEMPLOS DE REGIME DE APURAÇÃO ===
-=== TESTANDO TODOS OS SERVIÇOS RELPMEI ===
-est
+=== TESTANDO TODOS OS SERVIÇOS RELPMEI ===est
 📋 1. PEDIDOSPARC233 - Consultar Pedidos de Parcelamento
    CNPJ: 00000000000000
    ✅ Sucesso: Requisição efetuada com sucesso.
@@ -1777,21 +1774,7 @@ Informações do PDF:
 === TESTANDO TODOS OS SERVIÇOS SICALC ===
 
 📋 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física
-   ✅ Sucesso: DARF consolidado e emitido
-   📝 Mensagens:
-      [Sucesso-SICALC]: Requisição efetuada com sucesso.
-   💰 Dados consolidados:
-      Valor principal: R$ 1000.00
-      Valor total consolidado: R$ 1458.30
-      Valor multa: R$ 200.00
-      Percentual multa: 20.00%
-      Valor juros: R$ 258.30
-      Percentual juros: 25.83%
-      Termo inicial juros: 2018-02-01T00:00:00
-      Data arrecadação: 2022-08-08T00:00:00
-      Data validade: 2022-08-31T00:00:00
-   📄 PDF do DARF gerado: 65268 caracteres
-   PDF salvo em arquivo: Sim
+   ❌ Exceção: Exception: Erro ao consolidar e emitir DARF: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
 
 📋 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas
    ✅ Sucesso: DARF consolidado e emitido
@@ -1853,17 +1836,13 @@ Informações do PDF:
       Percentual juros: 5.84%
    📄 PDF do DARF gerado: 382344 caracteres
    PDF salvo em arquivo: Sim
-🎉✅ TODOS OS SERVIÇOS SICALC FUNCIONANDO PERFEITAMENTE!
+🚨 Muitos erros detectados, verificar configuração da API
 
 🏁 Testes SICALC concluídos!
 === Exemplos SITFIS ===
 SITFIS - Sistema de Relatório de Situação Fiscal
 --- 1. Solicitar Protocolo do Relatório ---
-Status: 200
-Mensagens: [Sucesso-Sitfis-SC01]: A requisição foi efetuada com sucesso.
-✅ Sucesso ao solicitar protocolo
-Protocolo obtido: +S7N6c04XNZUVzmxWT7S...
-Tempo de espera: 4000ms (4s)
+❌ Erro ao solicitar protocolo: Exception: Falha na requisição: 429 - {"code":"900807","message":"Message throttled out","description":"You have exceeded your quota"}
 
 --- 2. Emitir Relatório de Situação Fiscal ---
 Usando protocolo: +S7N6c04XNZUVzmxWT7S...
@@ -1876,4 +1855,4 @@ PDF disponível: true
 PDF salvo em arquivo: Sim
 
 === Resumo Final ===
-✅ SITFIS: Todos os serviços executados com sucesso
+❌ SITFIS: Alguns serviços apresentaram erro

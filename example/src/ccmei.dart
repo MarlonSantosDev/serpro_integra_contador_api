@@ -19,7 +19,7 @@ Future<void> Ccmei(ApiClient apiClient) async {
     print('🏢 CNPJ: ${emitirResponse.dados.cnpj}');
     print('📄 PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
     print('📏 Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
-    final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+    final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
       emitirResponse.dados.pdf,
       'relatorio_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
     );
@@ -74,7 +74,7 @@ Future<void> Ccmei(ApiClient apiClient) async {
     print('📄 Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
     print('📱 QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
     if (consultarResponse.dados.qrcode != null) {
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         consultarResponse.dados.qrcode!,
         'qrcode_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );

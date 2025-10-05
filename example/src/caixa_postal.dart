@@ -68,7 +68,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         print('\n📧 Mensagem ${i + 1}:');
         print('  🆔 ISN: ${msg.isn}');
         print('  📝 Assunto: ${msg.assuntoProcessado}');
-        print('  📅 Data envio: ${FormatterUtils.formatDateFromString(msg.dataEnvio)}');
+        print('  📅 Data envio: ${FormatadorUtils.formatDateFromString(msg.dataEnvio)}');
         print('  👁️ Foi lida: ${msg.foiLida}');
         print('  ⭐ É favorita: ${msg.isFavorita}');
         print('  📈 Relevância: ${msg.relevancia}');

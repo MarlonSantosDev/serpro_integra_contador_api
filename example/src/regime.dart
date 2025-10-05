@@ -29,7 +29,7 @@ Future<void> Regime(ApiClient apiClient) async {
 
         // Salvar PDF em arquivo se disponível
         if (dados.demonstrativoPdf != null && dados.demonstrativoPdf!.isNotEmpty) {
-          final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
             dados.demonstrativoPdf!,
             'demonstrativo_regime_${DateTime.now().millisecondsSinceEpoch}.pdf',
           );

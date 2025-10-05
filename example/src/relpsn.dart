@@ -206,7 +206,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
 
       // Salvar PDF em arquivo
       if (dasResponse.dadosParsed?.pdfDisponivel == true && dasResponse.dadosParsed?.docArrecadacaoPdfB64 != null) {
-        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
           dasResponse.dadosParsed!.docArrecadacaoPdfB64,
           'das_relpsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

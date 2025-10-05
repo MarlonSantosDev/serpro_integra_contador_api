@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
+import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.dart';
-import 'package:serpro_integra_contador_api/src/util/validations_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/validacoes_utils.dart';
 import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart';
-import 'package:serpro_integra_contador_api/src/models/autenticaprocurador/cache_model.dart';
+import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/model/cache_model.dart';
 
 /// Cliente principal para comunicação com a API do SERPRO Integra Contador
 ///
@@ -118,9 +118,9 @@ class ApiClient {
     // Cria o JSON completo usando os dados de autenticação (padrão ou customizados)
     final requestBody = request.toJsonWithAuth(
       contratanteNumero: finalContratanteNumero,
-      contratanteTipo: DocumentUtils.detectDocumentType(finalContratanteNumero),
+      contratanteTipo: ValidacoesUtils.detectDocumentType(finalContratanteNumero),
       autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
-      autorPedidoDadosTipo: DocumentUtils.detectDocumentType(finalAutorPedidoDadosNumero),
+      autorPedidoDadosTipo: ValidacoesUtils.detectDocumentType(finalAutorPedidoDadosNumero),
     );
 
     // Preparar headers obrigatórios para autenticação com a API

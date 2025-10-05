@@ -28,7 +28,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
         for (final parcelamento in parcelamentos) {
           print('     - Número: ${parcelamento.numero}');
           print('       Situação: ${parcelamento.situacao}');
-          print('       Data Pedido: ${FormatterUtils.formatDateFromString(parcelamento.dataDoPedido.toString())}');
+          print('       Data Pedido: ${FormatadorUtils.formatDateFromString(parcelamento.dataDoPedido.toString())}');
         }
       } else {
         print('   ℹ️ Nenhum parcelamento encontrado');
@@ -62,8 +62,8 @@ Future<void> Relpmei(ApiClient apiClient) async {
         print('   📋 Parcelamento:');
         print('     - Número: ${parcelamento.numero}');
         print('     - Situação: ${parcelamento.situacao}');
-        print('     - Data Pedido: ${FormatterUtils.formatDateFromString(parcelamento.dataDoPedido.toString())}');
-        print('     - Data Situação: ${FormatterUtils.formatDateFromString(parcelamento.dataDaSituacao.toString())}');
+        print('     - Data Pedido: ${FormatadorUtils.formatDateFromString(parcelamento.dataDoPedido.toString())}');
+        print('     - Data Situação: ${FormatadorUtils.formatDateFromString(parcelamento.dataDaSituacao.toString())}');
 
         if (parcelamento.consolidacaoOriginal != null) {
           final consolidacao = parcelamento.consolidacaoOriginal!;
@@ -137,8 +137,8 @@ Future<void> Relpmei(ApiClient apiClient) async {
       if (detalhes != null) {
         print('   📋 Detalhes do Pagamento:');
         print('     - Número DAS: ${detalhes.numeroDas}');
-        print('     - Vencimento: ${FormatterUtils.formatDateFromString(detalhes.dataVencimento.toString())}');
-        print('     - Pagamento: ${FormatterUtils.formatDateFromString(detalhes.dataPagamento.toString())}');
+        print('     - Vencimento: ${FormatadorUtils.formatDateFromString(detalhes.dataVencimento.toString())}');
+        print('     - Pagamento: ${FormatadorUtils.formatDateFromString(detalhes.dataPagamento.toString())}');
         print('     - Banco/Agência: ${detalhes.bancoAgencia}');
         print('     - Valor Pago: R\$ ${detalhes.valorPagoArrecadacao.toStringAsFixed(2)}');
       }
@@ -172,7 +172,7 @@ Future<void> Relpmei(ApiClient apiClient) async {
         print('     - PDF em Base64: ${das.docArrecadacaoPdfB64.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
           das.docArrecadacaoPdfB64,
           'das_relpmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

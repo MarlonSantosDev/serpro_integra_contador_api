@@ -1,28 +1,23 @@
 Terminal para o Cursor:
-Com base nos arquivos mdc faça todos os serviço de @ARQUIVO 
-segundo o padrão do projeto de forma organizada. 
-Caso tenha duvida faça preguntas. 
-Antes de seguir faça um resumo de como será feito é oq você entendeu para eu conformar ou ajuste antes de seguir.  
-Após tudo add todos os métodos criado para teste no arquivo de exemplo main.dart
+Com base nos arquivos MDC, faça todos os serviços de @ARQUIVO 
+seguindo o padrão do projeto de forma organizada. 
+Caso tenha dúvidas, faça perguntas. 
+Antes de seguir, faça um resumo de como será feito e o que você entendeu para eu confirmar ou ajustar antes de prosseguir.  
+Após tudo, adicione todos os métodos criados para teste no arquivo de exemplo main.dart
 
-Terminal para o Cursor Update de doc:
-Com base nos arquivos mdc faça todos os serviço @ARQUIVO
+
+Terminal para o Cursor - Update de documentação:
+Com base nos arquivos MDC, faça todos os serviços @ARQUIVO
 seguindo o padrão do projeto de forma organizada.
-Caso já tenha faça atualização revisão completa dos serviços XXXX (model, entrada, saida, metados, validadores. funções)
-Após faça a remoção de código e arquivos desnecessário apenas da pasta sobre serviço mit apos os ajuste feito
-Caso tenha duvida faça preguntas. 
-Antes de seguir faça um resumo de como será feito é oq você entendeu para eu conformar ou ajuste antes de seguir.  
-Após tudo add todos os métodos criado para teste no arquivo de exemplo XXXX.dart  com o json de teste disponivel na documentação. 
+Caso já existam, faça atualização e revisão completa dos serviços XXXX (model, entrada, saída, métodos, validadores, funções)
+Após isso, faça a remoção de código e arquivos desnecessários apenas da pasta sobre serviço MIT após os ajustes feitos
+Caso tenha dúvidas, faça perguntas. 
+Antes de seguir, faça um resumo de como será feito e o que você entendeu para eu confirmar ou ajustar antes de prosseguir.  
+Após tudo, adicione todos os métodos criados para teste no arquivo de exemplo XXXX.dart com o JSON de teste disponível na documentação. 
 
 
-Terminal para manus:
-Faça um arquivo sicalc.mdc com o máximo de informação da pagina para Cursor the Ai code Edtor
-Quero exemplo de entrada e saida para cada serviço para o Cursor the Ai code Edtor pode utilizar para gerar o codigo.
-Faça o acesso a todo os link para pode extrair o máximo de informação possivel com exemplo de valores, variaveis, parametros,entrada, saida, retorno, mensagens, dados, dominio, glossario, exemplo de retorno, etc.
+Terminal para manuais:
+Faça um arquivo XXX.mdc com o máximo de informação da página para o Cursor AI Code Editor
+Quero exemplos de entrada e saída para cada serviço para que o Cursor AI Code Editor possa utilizar para gerar o código.
+Faça o acesso a todos os links para poder extrair o máximo de informação possível com exemplos de valores, variáveis, parâmetros, entrada, saída, retorno, mensagens, dados, domínio, glossário, exemplo de retorno, etc.
 
-1) Otimizar arquivo e codigo
-2) Validar a utilização das funções e metodos criados util
-2) Funções com parametros, anotações, tipos, retornos, etc.
-2) Remover arquivos desnecessários é codigos desnecessários que não serão utilizados
-3) Remover comentarios desnecessários add comentarios importantes
-4) atualizar arquivo doc e .mdc

@@ -69,120 +69,121 @@ export 'src/core/api_client.dart';
 export 'src/core/auth/authentication_model.dart';
 
 // Common Models (Classes base consolidadas)
-export 'src/models/base/mensagem_negocio.dart';
-export 'src/models/base/mensagem.dart';
-export 'src/models/base/tipo_documento.dart';
+export 'src/base/mensagem_negocio.dart';
+export 'src/base/mensagem.dart';
+export 'src/base/tipo_documento.dart';
 
 // Utilities
-export 'src/util/validations_utils.dart';
-export 'src/util/formatter_utils.dart';
-export 'src/models/pgmei/pgmei_validations.dart';
-export 'src/util/pdf_file_utils.dart';
+export 'src/util/validacoes_utils.dart';
+export 'src/util/formatador_utils.dart';
+export 'src/services/pgmei/model/pgmei_validations.dart';
+export 'src/util/arquivo_utils.dart';
 
 // Base Models
-export 'src/models/base/base_request.dart';
+export 'src/base/base_request.dart';
 // CCMEI Models
-export 'src/models/ccmei/mensagem_ccmei.dart';
-export 'src/models/ccmei/emitir_ccmei_response.dart';
-export 'src/models/ccmei/consultar_dados_ccmei_response.dart';
-export 'src/models/ccmei/consultar_situacao_cadastral_ccmei_response.dart';
+export 'src/services/ccmei/model/mensagem_ccmei.dart';
+export 'src/services/ccmei/model/emitir_ccmei_response.dart';
+export 'src/services/ccmei/model/consultar_dados_ccmei_response.dart';
+export 'src/services/ccmei/model/consultar_situacao_cadastral_ccmei_response.dart';
 
 // PGDASD Models
-export 'src/models/pgdasd/declarar_response.dart';
-export 'src/models/pgdasd/entregar_declaracao_request.dart' hide Atividade, Estabelecimento, Declaracao;
-export 'src/models/pgdasd/entregar_declaracao_response.dart' hide Mensagem, ValorDevido;
-export 'src/models/pgdasd/gerar_das_request.dart';
-export 'src/models/pgdasd/gerar_das_response.dart' hide Mensagem, DetalhamentoDas, Das;
-export 'src/models/pgdasd/consultar_declaracoes_request.dart';
-export 'src/models/pgdasd/consultar_declaracoes_response.dart' hide Mensagem;
-export 'src/models/pgdasd/consultar_ultima_declaracao_request.dart';
-export 'src/models/pgdasd/consultar_ultima_declaracao_response.dart' hide Mensagem;
-export 'src/models/pgdasd/consultar_declaracao_numero_request.dart';
-export 'src/models/pgdasd/consultar_declaracao_numero_response.dart' hide Mensagem, DeclaracaoCompleta, ArquivoRecibo, ArquivoDeclaracao, ArquivoMaed;
-export 'src/models/pgdasd/consultar_extrato_das_request.dart';
-export 'src/models/pgdasd/consultar_extrato_das_response.dart' hide Mensagem;
-export 'src/models/pgdasd/gerar_das_avulso_request.dart';
-export 'src/models/pgdasd/gerar_das_avulso_response.dart' hide Mensagem;
-export 'src/models/pgdasd/gerar_das_cobranca_request.dart';
-export 'src/models/pgdasd/gerar_das_cobranca_response.dart' hide Mensagem;
-export 'src/models/pgdasd/gerar_das_processo_request.dart';
-export 'src/models/pgdasd/gerar_das_processo_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/declarar_response.dart';
+export 'src/services/pgdasd/model/entregar_declaracao_request.dart' hide Atividade, Estabelecimento, Declaracao;
+export 'src/services/pgdasd/model/entregar_declaracao_response.dart' hide Mensagem, ValorDevido;
+export 'src/services/pgdasd/model/gerar_das_request.dart';
+export 'src/services/pgdasd/model/gerar_das_response.dart' hide Mensagem, DetalhamentoDas, Das;
+export 'src/services/pgdasd/model/consultar_declaracoes_request.dart';
+export 'src/services/pgdasd/model/consultar_declaracoes_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/consultar_ultima_declaracao_request.dart';
+export 'src/services/pgdasd/model/consultar_ultima_declaracao_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/consultar_declaracao_numero_request.dart';
+export 'src/services/pgdasd/model/consultar_declaracao_numero_response.dart'
+    hide Mensagem, DeclaracaoCompleta, ArquivoRecibo, ArquivoDeclaracao, ArquivoMaed;
+export 'src/services/pgdasd/model/consultar_extrato_das_request.dart';
+export 'src/services/pgdasd/model/consultar_extrato_das_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/gerar_das_avulso_request.dart';
+export 'src/services/pgdasd/model/gerar_das_avulso_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/gerar_das_cobranca_request.dart';
+export 'src/services/pgdasd/model/gerar_das_cobranca_response.dart' hide Mensagem;
+export 'src/services/pgdasd/model/gerar_das_processo_request.dart';
+export 'src/services/pgdasd/model/gerar_das_processo_response.dart' hide Mensagem;
 
 // PGMEI Models
-export 'src/models/pgmei/base_response.dart' hide Mensagem;
-export 'src/models/pgmei/gerar_das_response.dart' hide GerarDasResponse, ValoresDas, Das, ComposicaoDas;
-export 'src/models/pgmei/gerar_das_codigo_barras_response.dart';
-export 'src/models/pgmei/atualizar_beneficio_response.dart';
-export 'src/models/pgmei/consultar_divida_ativa_response.dart' hide Debito;
-export 'src/models/pgmei/pgmei_requests.dart' hide GerarDasRequest;
+export 'src/services/pgmei/model/base_response.dart' hide Mensagem;
+export 'src/services/pgmei/model/gerar_das_response.dart' hide GerarDasResponse, ValoresDas, Das, ComposicaoDas;
+export 'src/services/pgmei/model/gerar_das_codigo_barras_response.dart';
+export 'src/services/pgmei/model/atualizar_beneficio_response.dart';
+export 'src/services/pgmei/model/consultar_divida_ativa_response.dart' hide Debito;
+export 'src/services/pgmei/model/pgmei_requests.dart' hide GerarDasRequest;
 
 // DCTFWeb Models
-export 'src/models/dctfweb/dctfweb_response.dart';
-export 'src/models/dctfweb/dctfweb_request.dart';
-export 'src/models/dctfweb/dctfweb_common.dart';
-export 'src/models/dctfweb/consultar_xml_response.dart';
-export 'src/models/dctfweb/gerar_guia_response.dart';
-export 'src/models/dctfweb/transmitir_declaracao_response.dart';
-export 'src/models/dctfweb/consultar_relatorio_response.dart';
+export 'src/services/dctfweb/model/dctfweb_response.dart';
+export 'src/services/dctfweb/model/dctfweb_request.dart';
+export 'src/services/dctfweb/model/dctfweb_common.dart';
+export 'src/services/dctfweb/model/consultar_xml_response.dart';
+export 'src/services/dctfweb/model/gerar_guia_response.dart';
+export 'src/services/dctfweb/model/transmitir_declaracao_response.dart';
+export 'src/services/dctfweb/model/consultar_relatorio_response.dart';
 
 // Procurações Models
-export 'src/models/procuracoes/obter_procuracao_request.dart';
-export 'src/models/procuracoes/obter_procuracao_response.dart';
-export 'src/models/procuracoes/mensagem_negocio.dart';
-export 'src/models/procuracoes/procuracoes_enums.dart';
+export 'src/services/procuracoes/model/obter_procuracao_request.dart';
+export 'src/services/procuracoes/model/obter_procuracao_response.dart';
+export 'src/services/procuracoes/model/mensagem_negocio.dart';
+export 'src/services/procuracoes/model/procuracoes_enums.dart';
 
 // Autenticação de Procurador Models
-export 'src/models/autenticaprocurador/termo_autorizacao_request.dart';
-export 'src/models/autenticaprocurador/termo_autorizacao_response.dart';
-export 'src/models/autenticaprocurador/assinatura_digital_model.dart';
-export 'src/models/autenticaprocurador/cache_model.dart';
+export 'src/services/autenticaprocurador/model/termo_autorizacao_request.dart';
+export 'src/services/autenticaprocurador/model/termo_autorizacao_response.dart';
+export 'src/services/autenticaprocurador/model/assinatura_digital_model.dart';
+export 'src/services/autenticaprocurador/model/cache_model.dart';
 
 // Caixa Postal Models
-export 'src/models/caixa_postal/mensagem_negocio.dart';
-export 'src/models/caixa_postal/lista_mensagens_response.dart';
-export 'src/models/caixa_postal/detalhes_mensagem_response.dart';
-export 'src/models/caixa_postal/indicador_mensagens_response.dart';
+export 'src/services/caixa_postal/model/mensagem_negocio.dart';
+export 'src/services/caixa_postal/model/lista_mensagens_response.dart';
+export 'src/services/caixa_postal/model/detalhes_mensagem_response.dart';
+export 'src/services/caixa_postal/model/indicador_mensagens_response.dart';
 
 // DTE Models
-export 'src/models/dte/dte_response.dart';
+export 'src/services/dte/model/dte_response.dart';
 
 // SITFIS Models
-export 'src/models/sitfis/solicitar_protocolo_request.dart';
-export 'src/models/sitfis/solicitar_protocolo_response.dart';
-export 'src/models/sitfis/emitir_relatorio_request.dart';
-export 'src/models/sitfis/emitir_relatorio_response.dart';
-export 'src/models/sitfis/sitfis_mensagens.dart';
-export 'src/models/sitfis/sitfis_cache.dart';
+export 'src/services/sitfis/model/solicitar_protocolo_request.dart';
+export 'src/services/sitfis/model/solicitar_protocolo_response.dart';
+export 'src/services/sitfis/model/emitir_relatorio_request.dart';
+export 'src/services/sitfis/model/emitir_relatorio_response.dart';
+export 'src/services/sitfis/model/sitfis_mensagens.dart';
+export 'src/services/sitfis/model/sitfis_cache.dart';
 
 // PARCSN Models
-export 'src/models/parcsn/parcsn_response.dart';
-export 'src/models/parcsn/mensagem.dart';
-export 'src/models/parcsn/consultar_pedidos_response.dart';
-export 'src/models/parcsn/consultar_parcelamento_response.dart';
-export 'src/models/parcsn/consultar_detalhes_pagamento_response.dart';
-export 'src/models/parcsn/consultar_parcelas_response.dart';
-export 'src/models/parcsn/emitir_das_response.dart';
-export 'src/models/parcsn/parcsn_validations.dart';
-export 'src/models/parcsn/parcsn_errors.dart';
+export 'src/services/parcsn/model/parcsn_response.dart';
+export 'src/services/parcsn/model/mensagem.dart';
+export 'src/services/parcsn/model/consultar_pedidos_response.dart';
+export 'src/services/parcsn/model/consultar_parcelamento_response.dart';
+export 'src/services/parcsn/model/consultar_detalhes_pagamento_response.dart';
+export 'src/services/parcsn/model/consultar_parcelas_response.dart';
+export 'src/services/parcsn/model/emitir_das_response.dart';
+export 'src/services/parcsn/model/parcsn_validations.dart';
+export 'src/services/parcsn/model/parcsn_errors.dart';
 
 // PARCSN ESPECIAL Models
-export 'src/models/parcsn_especial/parcsn_especial_response.dart';
-export 'src/models/parcsn_especial/mensagem.dart';
-export 'src/models/parcsn_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
-export 'src/models/parcsn_especial/consultar_parcelamento_response.dart'
+export 'src/services/parcsn_especial/model/parcsn_especial_response.dart';
+export 'src/services/parcsn_especial/model/mensagem.dart';
+export 'src/services/parcsn_especial/model/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/services/parcsn_especial/model/consultar_parcelamento_response.dart'
     hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
-export 'src/models/parcsn_especial/consultar_detalhes_pagamento_response.dart'
+export 'src/services/parcsn_especial/model/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
-export 'src/models/parcsn_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/parcsn_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/parcsn_especial/parcsn_especial_validations.dart';
-export 'src/models/parcsn_especial/parcsn_especial_errors.dart';
+export 'src/services/parcsn_especial/model/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/services/parcsn_especial/model/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/services/parcsn_especial/model/parcsn_especial_validations.dart';
+export 'src/services/parcsn_especial/model/parcsn_especial_errors.dart';
 
 // PERTSN Models
-export 'src/models/pertsn/pertsn_response.dart';
-export 'src/models/pertsn/mensagem.dart';
-export 'src/models/pertsn/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
-export 'src/models/pertsn/consultar_parcelamento_response.dart'
+export 'src/services/pertsn/model/pertsn_response.dart';
+export 'src/services/pertsn/model/mensagem.dart';
+export 'src/services/pertsn/model/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/services/pertsn/model/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
         ParcelamentoDetalhado,
@@ -191,30 +192,30 @@ export 'src/models/pertsn/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/pertsn/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/pertsn/consultar_detalhes_pagamento_response.dart'
+export 'src/services/pertsn/model/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/services/pertsn/model/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
-export 'src/models/pertsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/pertsn/pertsn_validations.dart' hide PertsnValidations;
-export 'src/models/pertsn/pertsn_errors.dart' hide PertsnErrors, PertsnErrorInfo, PertsnErrorAnalysis;
+export 'src/services/pertsn/model/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/services/pertsn/model/pertsn_validations.dart' hide PertsnValidations;
+export 'src/services/pertsn/model/pertsn_errors.dart' hide PertsnErrors, PertsnErrorInfo, PertsnErrorAnalysis;
 
 // RELPSN Models
-export 'src/models/relpsn/mensagem.dart' hide Mensagem;
-export 'src/models/relpsn/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
-export 'src/models/relpsn/consultar_parcelamento_response.dart'
+export 'src/services/relpsn/model/mensagem.dart' hide Mensagem;
+export 'src/services/relpsn/model/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/services/relpsn/model/consultar_parcelamento_response.dart'
     hide ConsultarParcelamentoResponse, ParcelamentoDetalhado, ConsolidacaoOriginal, DetalhesConsolidacao, AlteracaoDivida, DemonstrativoPagamento;
-export 'src/models/relpsn/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/relpsn/consultar_detalhes_pagamento_response.dart'
+export 'src/services/relpsn/model/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/services/relpsn/model/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
-export 'src/models/relpsn/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/relpsn/relpsn_validations.dart';
-export 'src/models/relpsn/relpsn_errors.dart';
+export 'src/services/relpsn/model/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/services/relpsn/model/relpsn_validations.dart';
+export 'src/services/relpsn/model/relpsn_errors.dart';
 
 // PARCMEI Models
-export 'src/models/parcmei/parcmei_response.dart';
-export 'src/models/parcmei/mensagem.dart';
-export 'src/models/parcmei/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
-export 'src/models/parcmei/consultar_parcelamento_response.dart'
+export 'src/services/parcmei/model/parcmei_response.dart';
+export 'src/services/parcmei/model/mensagem.dart';
+export 'src/services/parcmei/model/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/services/parcmei/model/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
         ParcelamentoDetalhado,
@@ -223,18 +224,18 @@ export 'src/models/parcmei/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/parcmei/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/parcmei/consultar_detalhes_pagamento_response.dart'
+export 'src/services/parcmei/model/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/services/parcmei/model/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
-export 'src/models/parcmei/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/parcmei/parcmei_validations.dart';
-export 'src/models/parcmei/parcmei_errors.dart';
+export 'src/services/parcmei/model/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/services/parcmei/model/parcmei_validations.dart';
+export 'src/services/parcmei/model/parcmei_errors.dart';
 
 // PARCMEI ESPECIAL Models
-export 'src/models/parcmei_especial/parcmei_especial_response.dart';
-export 'src/models/parcmei_especial/mensagem.dart';
-export 'src/models/parcmei_especial/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
-export 'src/models/parcmei_especial/consultar_parcelamento_response.dart'
+export 'src/services/parcmei_especial/model/parcmei_especial_response.dart';
+export 'src/services/parcmei_especial/model/mensagem.dart';
+export 'src/services/parcmei_especial/model/consultar_pedidos_response.dart' hide ConsultarPedidosResponse, ParcelamentosData, Parcelamento;
+export 'src/services/parcmei_especial/model/consultar_parcelamento_response.dart'
     hide
         ConsultarParcelamentoResponse,
         ParcelamentoDetalhado,
@@ -243,15 +244,15 @@ export 'src/models/parcmei_especial/consultar_parcelamento_response.dart'
         AlteracaoDivida,
         DetalhesAlteracaoDivida,
         DemonstrativoPagamento;
-export 'src/models/parcmei_especial/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
-export 'src/models/parcmei_especial/consultar_detalhes_pagamento_response.dart'
+export 'src/services/parcmei_especial/model/consultar_parcelas_response.dart' hide ConsultarParcelasResponse, ListaParcelasData, Parcela;
+export 'src/services/parcmei_especial/model/consultar_detalhes_pagamento_response.dart'
     hide ConsultarDetalhesPagamentoResponse, DetalhesPagamentoData, PagamentoDebito, DiscriminacaoDebito;
-export 'src/models/parcmei_especial/emitir_das_response.dart' hide EmitirDasResponse, DasData;
-export 'src/models/parcmei_especial/parcmei_especial_validations.dart';
-export 'src/models/parcmei_especial/parcmei_especial_errors.dart';
+export 'src/services/parcmei_especial/model/emitir_das_response.dart' hide EmitirDasResponse, DasData;
+export 'src/services/parcmei_especial/model/parcmei_especial_validations.dart';
+export 'src/services/parcmei_especial/model/parcmei_especial_errors.dart';
 
 // PERTMEI Models
-export 'src/models/pertmei/pertmei_response.dart'
+export 'src/services/pertmei/model/pertmei_response.dart'
     hide
         Mensagem,
         ConsultarPedidosResponse,
@@ -269,79 +270,79 @@ export 'src/models/pertmei/pertmei_response.dart'
         EmitirDasResponse;
 
 // RELPMEI Models - Padrão dos outros serviços
-export 'src/models/relpmei/relpmei_requests.dart';
-export 'src/models/relpmei/relpmei_base_response.dart';
-export 'src/models/relpmei/relpmei_responses.dart';
+export 'src/services/relpmei/model/relpmei_requests.dart';
+export 'src/services/relpmei/model/relpmei_base_response.dart';
+export 'src/services/relpmei/model/relpmei_responses.dart';
 
 // PAGTOWEB Models
-export 'src/models/pagtoweb/pagtoweb_request.dart';
-export 'src/models/pagtoweb/pagtoweb_response.dart';
+export 'src/services/pagtoweb/model/pagtoweb_request.dart';
+export 'src/services/pagtoweb/model/pagtoweb_response.dart';
 
 // DEFIS Models
-export 'src/models/defis/transmitir_declaracao_request.dart' hide NaoOptante;
-export 'src/models/defis/transmitir_declaracao_response.dart';
-export 'src/models/defis/consultar_declaracoes_response.dart' hide ConsultarDeclaracoesResponse;
-export 'src/models/defis/consultar_ultima_declaracao_request.dart' hide ConsultarUltimaDeclaracaoRequest;
-export 'src/models/defis/consultar_ultima_declaracao_response.dart' hide ConsultarUltimaDeclaracaoResponse;
-export 'src/models/defis/consultar_declaracao_especifica_request.dart';
-export 'src/models/defis/consultar_declaracao_especifica_response.dart';
-export 'src/models/defis/defis_enums.dart';
-export 'src/models/defis/defis_response.dart';
+export 'src/services/defis/model/transmitir_declaracao_request.dart' hide NaoOptante;
+export 'src/services/defis/model/transmitir_declaracao_response.dart';
+export 'src/services/defis/model/consultar_declaracoes_response.dart' hide ConsultarDeclaracoesResponse;
+export 'src/services/defis/model/consultar_ultima_declaracao_request.dart' hide ConsultarUltimaDeclaracaoRequest;
+export 'src/services/defis/model/consultar_ultima_declaracao_response.dart' hide ConsultarUltimaDeclaracaoResponse;
+export 'src/services/defis/model/consultar_declaracao_especifica_request.dart';
+export 'src/services/defis/model/consultar_declaracao_especifica_response.dart';
+export 'src/services/defis/model/defis_enums.dart';
+export 'src/services/defis/model/defis_response.dart';
 
 // MIT Models
-export 'src/models/mit/mit_enums.dart';
-export 'src/models/mit/mit_request.dart';
-export 'src/models/mit/mit_response.dart';
+export 'src/services/mit/model/mit_enums.dart';
+export 'src/services/mit/model/mit_request.dart';
+export 'src/services/mit/model/mit_response.dart';
 
 // Eventos Atualização Models
-export 'src/models/eventos_atualizacao/eventos_atualizacao_common.dart';
-export 'src/models/eventos_atualizacao/mensagem_eventos_atualizacao.dart';
-export 'src/models/eventos_atualizacao/solicitar_eventos_pf_request.dart';
-export 'src/models/eventos_atualizacao/solicitar_eventos_pf_response.dart';
-export 'src/models/eventos_atualizacao/obter_eventos_pf_request.dart';
-export 'src/models/eventos_atualizacao/obter_eventos_pf_response.dart';
-export 'src/models/eventos_atualizacao/solicitar_eventos_pj_request.dart';
-export 'src/models/eventos_atualizacao/solicitar_eventos_pj_response.dart';
-export 'src/models/eventos_atualizacao/obter_eventos_pj_request.dart';
-export 'src/models/eventos_atualizacao/obter_eventos_pj_response.dart';
+export 'src/services/eventos_atualizacao/model/eventos_atualizacao_common.dart';
+export 'src/services/eventos_atualizacao/model/mensagem_eventos_atualizacao.dart';
+export 'src/services/eventos_atualizacao/model/solicitar_eventos_pf_request.dart';
+export 'src/services/eventos_atualizacao/model/solicitar_eventos_pf_response.dart';
+export 'src/services/eventos_atualizacao/model/obter_eventos_pf_request.dart';
+export 'src/services/eventos_atualizacao/model/obter_eventos_pf_response.dart';
+export 'src/services/eventos_atualizacao/model/solicitar_eventos_pj_request.dart';
+export 'src/services/eventos_atualizacao/model/solicitar_eventos_pj_response.dart';
+export 'src/services/eventos_atualizacao/model/obter_eventos_pj_request.dart';
+export 'src/services/eventos_atualizacao/model/obter_eventos_pj_response.dart';
 
 // Regime de Apuração Models
-export 'src/models/regime_apuracao/regime_apuracao_enums.dart';
-export 'src/models/regime_apuracao/efetuar_opcao_request.dart';
-export 'src/models/regime_apuracao/efetuar_opcao_response.dart' hide MensagemNegocio;
-export 'src/models/regime_apuracao/consultar_anos_request.dart';
-export 'src/models/regime_apuracao/consultar_anos_response.dart' hide MensagemNegocio;
-export 'src/models/regime_apuracao/consultar_opcao_request.dart';
-export 'src/models/regime_apuracao/consultar_opcao_response.dart' hide RegimeApuracao, MensagemNegocio;
-export 'src/models/regime_apuracao/consultar_resolucao_request.dart';
-export 'src/models/regime_apuracao/consultar_resolucao_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/regime_apuracao_enums.dart';
+export 'src/services/regime_apuracao/model/efetuar_opcao_request.dart';
+export 'src/services/regime_apuracao/model/efetuar_opcao_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_anos_request.dart';
+export 'src/services/regime_apuracao/model/consultar_anos_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_opcao_request.dart';
+export 'src/services/regime_apuracao/model/consultar_opcao_response.dart' hide RegimeApuracao, MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_resolucao_request.dart';
+export 'src/services/regime_apuracao/model/consultar_resolucao_response.dart' hide MensagemNegocio;
 
 // SICALC Models
-export 'src/models/sicalc/sicalc_enums.dart' hide TipoContribuinte;
-export 'src/models/sicalc/sicalc_request.dart';
-export 'src/models/sicalc/sicalc_response.dart';
+export 'src/services/sicalc/model/sicalc_enums.dart' hide TipoContribuinte;
+export 'src/services/sicalc/model/sicalc_request.dart';
+export 'src/services/sicalc/model/sicalc_response.dart';
 
 // Services
-export 'src/services/ccmei_service.dart';
-export 'src/services/pgdasd_service.dart';
-export 'src/services/pgmei_service.dart';
-export 'src/services/dctfweb_service.dart';
-export 'src/services/procuracoes_service.dart';
-export 'src/services/caixa_postal_service.dart';
-export 'src/services/dte_service.dart';
-export 'src/services/parcsn_service.dart';
-export 'src/services/parcsn_especial_service.dart';
-export 'src/services/pertsn_service.dart';
-export 'src/services/relpsn_service.dart';
-export 'src/services/parcmei_service.dart';
-export 'src/services/parcmei_especial_service.dart';
-export 'src/services/pertmei_service.dart';
-export 'src/services/relpmei_service.dart';
-export 'src/services/pagtoweb_service.dart';
-export 'src/services/sitfis_service.dart';
-export 'src/services/defis_service.dart';
-export 'src/services/mit_service.dart';
-export 'src/services/eventos_atualizacao_service.dart';
-export 'src/services/autenticaprocurador_service.dart';
-export 'src/services/regime_apuracao_service.dart';
-export 'src/services/sicalc_service.dart';
+export 'src/services/ccmei/ccmei_service.dart';
+export 'src/services/pgdasd/pgdasd_service.dart';
+export 'src/services/pgmei/pgmei_service.dart';
+export 'src/services/dctfweb/dctfweb_service.dart';
+export 'src/services/procuracoes/procuracoes_service.dart';
+export 'src/services/caixa_postal/caixa_postal_service.dart';
+export 'src/services/dte/dte_service.dart';
+export 'src/services/parcsn/parcsn_service.dart';
+export 'src/services/parcsn_especial/parcsn_especial_service.dart';
+export 'src/services/pertsn/pertsn_service.dart';
+export 'src/services/relpsn/relpsn_service.dart';
+export 'src/services/parcmei/parcmei_service.dart';
+export 'src/services/parcmei_especial/parcmei_especial_service.dart';
+export 'src/services/pertmei/pertmei_service.dart';
+export 'src/services/relpmei/relpmei_service.dart';
+export 'src/services/pagtoweb/pagtoweb_service.dart';
+export 'src/services/sitfis/sitfis_service.dart';
+export 'src/services/defis/defis_service.dart';
+export 'src/services/mit/mit_service.dart';
+export 'src/services/eventos_atualizacao/eventos_atualizacao_service.dart';
+export 'src/services/autenticaprocurador/autenticaprocurador_service.dart';
+export 'src/services/regime_apuracao/regime_apuracao_service.dart';
+export 'src/services/sicalc/sicalc_service.dart';

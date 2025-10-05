@@ -1,4 +1,4 @@
-import '../../util/validations_utils.dart';
+import '../../util/validacoes_utils.dart';
 
 class AuthenticationModel {
   final String accessToken;
@@ -19,8 +19,8 @@ class AuthenticationModel {
     required this.expiresIn,
     required this.contratanteNumero,
     required this.autorPedidoDadosNumero,
-  }) : contratanteTipo = DocumentUtils.detectDocumentType(contratanteNumero),
-       autorPedidoDadosTipo = DocumentUtils.detectDocumentType(autorPedidoDadosNumero);
+  }) : contratanteTipo = ValidacoesUtils.detectDocumentType(contratanteNumero),
+       autorPedidoDadosTipo = ValidacoesUtils.detectDocumentType(autorPedidoDadosNumero);
 
   factory AuthenticationModel.fromJson(Map<String, dynamic> json) {
     return AuthenticationModel(

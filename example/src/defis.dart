@@ -1,5 +1,5 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-import 'package:serpro_integra_contador_api/src/models/defis/transmitir_declaracao_request.dart' as defis show NaoOptante;
+import 'package:serpro_integra_contador_api/src/services/defis/model/transmitir_declaracao_request.dart' as defis show NaoOptante;
 
 Future<void> Defis(ApiClient apiClient) async {
   print('=== Exemplos DEFIS ===');
@@ -90,7 +90,7 @@ Future<void> Defis(ApiClient apiClient) async {
     print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
     print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
     print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
-    final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+    final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
       transmitirResponse.dados.declaracaoPdf,
       'declaracao_defis_${DateTime.now().millisecondsSinceEpoch}.pdf',
     );

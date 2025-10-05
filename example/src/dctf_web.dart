@@ -21,7 +21,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (darfGeralResponse.sucesso) {
       print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
       print('Mensagens: ${darfGeralResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darfGeralResponse.pdfBase64!,
         'darf_geral_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );
@@ -42,7 +42,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (darfPfResponse.sucesso) {
       print('✅ DARF PF Mensal: ${darfPfResponse.sucesso}');
       print('Mensagens: ${darfPfResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darfPfResponse.pdfBase64!,
         'darf_pf_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );
@@ -63,7 +63,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (darf13Response.sucesso) {
       print('✅ DARF 13º Salário: ${darf13Response.sucesso}');
       print('Mensagens: ${darf13Response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darf13Response.pdfBase64!,
         'darf_13_salario_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );
@@ -93,7 +93,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (espetaculoResponse.sucesso) {
       print('✅ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
       print('Mensagens: ${espetaculoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         espetaculoResponse.xmlBase64!,
         'espetaculo_desportivo_${DateTime.now().millisecondsSinceEpoch}.xml',
       );
@@ -123,7 +123,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (afericaoResponse.sucesso) {
       print('✅ XML Aferição: ${afericaoResponse.sucesso}');
       print('Mensagens: ${afericaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         afericaoResponse.xmlBase64!,
         'afericao_${DateTime.now().millisecondsSinceEpoch}.xml',
       );
@@ -152,7 +152,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     if (reclamatoriaResponse.sucesso) {
       print('✅ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
       print('Mensagens: ${reclamatoriaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
-      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         reclamatoriaResponse.pdfBase64!,
         'recibo_reclamatoria_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );

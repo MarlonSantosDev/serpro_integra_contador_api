@@ -309,13 +309,13 @@ O package suporta certificados ICP-Brasil nos formatos:
 
 ```dart
 // Validar CNPJ
-final isValidCnpj = DocumentUtils.isValidCnpj('12345678000195');
+final isValidCnpj = ValidacoesUtils.isValidCnpj('12345678000195');
 
 // Validar CPF
-final isValidCpf = DocumentUtils.isValidCpf('12345678901');
+final isValidCpf = ValidacoesUtils.isValidCpf('12345678901');
 
 // Formatar documento
-final cnpjFormatado = DocumentUtils.formatCnpj('12345678000195');
+final cnpjFormatado = ValidacoesUtils.formatCnpj('12345678000195');
 // Resultado: 12.345.678/0001-95
 ```
 
