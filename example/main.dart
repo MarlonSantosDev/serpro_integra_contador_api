@@ -38,5 +38,5 @@ void main() async {
   //await Relpmei(apiClient);
   //await Relpsn(apiClient);
   //await Sicalc(apiClient);
-  await Sitfis(apiClient);
+  //await Sitfis(apiClient);
 }

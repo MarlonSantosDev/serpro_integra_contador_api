@@ -308,27 +308,6 @@ Future<void> AutenticaProcurador(ApiClient apiClient) async {
     servicoOk = false;
   }
 
-  // 15. Exemplo de fluxo completo
-  try {
-    print('\n--- 15. Exemplo de Fluxo Completo ---');
-    print('Este exemplo demonstra o fluxo completo de autenticação de procurador:');
-    print('1. ✅ Criar termo de autorização');
-    print('2. ✅ Validar dados do termo');
-    print('3. ✅ Criar XML do termo');
-    print('4. ✅ Validar estrutura do XML');
-    print('5. ✅ Assinar termo digitalmente');
-    print('6. ✅ Validar assinatura digital');
-    print('7. ✅ Autenticar procurador');
-    print('8. ✅ Verificar cache de token');
-    print('9. ✅ Obter token válido');
-    print('10. ✅ Gerenciar cache');
-    print('11. ✅ Usar com ApiClient');
-    print('✅ Fluxo completo demonstrado');
-  } catch (e) {
-    print('❌ Erro no exemplo de fluxo completo: $e');
-    servicoOk = false;
-  }
-
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO AUTENTICAÇÃO DE PROCURADOR ===');
   if (servicoOk) {
