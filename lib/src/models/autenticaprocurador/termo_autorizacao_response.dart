@@ -1,4 +1,5 @@
 import '../base/mensagem_negocio.dart';
+import 'dart:convert';
 
 /// Modelo para resposta da autenticação de procurador
 class TermoAutorizacaoResponse {
@@ -63,8 +64,8 @@ class TermoAutorizacaoResponse {
       status: int.parse(json['status'].toString()),
       mensagens: mensagens,
       dados: json['dados']?.toString(),
-      autenticarProcuradorToken: json['autenticar_procurador_token']?.toString(),
-      dataExpiracao: json['data_expiracao'] != null ? DateTime.tryParse(json['data_expiracao'].toString()) : null,
+      autenticarProcuradorToken: jsonDecode(json['dados'])['autenticar_procurador_token']?.toString(),
+      dataExpiracao: DateTime.parse(jsonDecode(json['dados'])['data_hora_expiracao'].toString()),
     );
   }
 
