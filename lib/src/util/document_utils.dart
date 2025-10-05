@@ -209,7 +209,7 @@ class DocumentUtils {
 
   /// Valida e lança exceção se inválido
   static void validateCNPJ(String cnpj, {String? fieldName}) {
-    List<String> cnpjDeTeste = ['00000000000100', '99999999999', '99999999999999'];
+    List<String> cnpjDeTeste = ['00000000000100', '99999999999', '99999999999999', '00000000000000'];
     if (cnpjDeTeste.contains(cnpj)) {
       return;
     }

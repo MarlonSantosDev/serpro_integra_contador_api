@@ -255,7 +255,6 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao listar mensagens com filtros específicos: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
 
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO CAIXA POSTAL ===');

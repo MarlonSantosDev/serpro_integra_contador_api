@@ -25,7 +25,7 @@ Future<void> Ccmei(ApiClient apiClient) async {
     print('❌ Erro ao emitir CCMEI: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 2. Consultar Dados CCMEI
   try {
@@ -70,11 +70,18 @@ Future<void> Ccmei(ApiClient apiClient) async {
     }
     print('📄 Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
     print('📱 QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
+    if (consultarResponse.dados.qrcode != null) {
+      final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+        consultarResponse.dados.qrcode!,
+        'qrcode_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
   } catch (e) {
     print('❌ Erro ao consultar dados CCMEI: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 3. Consultar Situação Cadastral por CPF
   try {

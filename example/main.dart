@@ -17,9 +17,9 @@ void main() async {
 
   // Exemplo de uso dos serviços
   //await AutenticaProcurador(apiClient); // Verfunção  assinatura digital com certificado
-  await CaixaPostal(apiClient);
+  //await CaixaPostal(apiClient);
   //await Ccmei(apiClient);
-  //await DctfWeb(apiClient);
+  await DctfWeb(apiClient);
   //await Defis(apiClient);
   //await Dte(apiClient);
   //await EventosAtualizacao(apiClient);
