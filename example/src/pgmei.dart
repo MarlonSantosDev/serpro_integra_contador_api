@@ -34,6 +34,10 @@ Future<void> Pgmei(ApiClient apiClient) async {
           print('   💰 Valor total: R\$ ${detalhe.valores.total.toStringAsFixed(2)}');
           print('   📅 Vencimento: ${formatarData(detalhe.dataVencimento)}');
 
+          // Salvar PDF em arquivo
+          final sucessoSalvamento = await PdfFileUtils.salvarPdf(das.pdf, 'das_pgmei_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+
           if (detalhe.composicao != null) {
             print('   📊 Tributos:');
             for (final comp in detalhe.composicao!) {

@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/sitfis/solicitar_protocolo_request.dart';
 import 'package:serpro_integra_contador_api/src/models/sitfis/solicitar_protocolo_response.dart';
@@ -59,48 +56,5 @@ class SitfisService {
 
     final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return EmitirRelatorioResponse.fromJson(response);
-  }
-
-  /// Salva PDF do relatório em arquivo
-  ///
-  /// [response] - Response com o PDF
-  /// [caminhoArquivo] - Caminho onde salvar o arquivo
-  ///
-  /// Retorna true se salvou com sucesso
-  Future<bool> salvarPdfEmArquivo(EmitirRelatorioResponse response, String caminhoArquivo) async {
-    if (!response.hasPdf) {
-      return false;
-    }
-
-    try {
-      final bytes = base64Decode(response.dados!.pdf!);
-      final arquivo = File(caminhoArquivo);
-      await arquivo.writeAsBytes(bytes);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Obtém informações sobre o PDF do relatório
-  ///
-  /// [response] - Response com o PDF
-  ///
-  /// Retorna mapa com informações do PDF
-  Map<String, dynamic> obterInformacoesPdf(EmitirRelatorioResponse response) {
-    if (!response.hasPdf) {
-      return {'disponivel': false};
-    }
-
-    final pdf = response.dados!.pdf!;
-    final tamanhoBytes = response.dados!.pdfSizeInBytes ?? 0;
-
-    return {
-      'disponivel': true,
-      'tamanhoBytes': tamanhoBytes,
-      'tamanhoKB': (tamanhoBytes / 1024).round(),
-      'tamanhoMB': (tamanhoBytes / (1024 * 1024)).toStringAsFixed(2),
-      'tamanhoBase64': pdf.length,
-    };
   }
 }

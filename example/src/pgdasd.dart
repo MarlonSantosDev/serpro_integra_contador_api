@@ -106,6 +106,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('💰 Valor Total: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${das.pdf.isNotEmpty}');
 
+      // Salvar PDF em arquivo
+      if (das.pdf.isNotEmpty) {
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(das.pdf, 'das_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+
       // Detalhamento dos valores
       print('\n📊 Composição dos Valores:');
       print('  💰 Principal: R\$ ${das.detalhamento.valores.principal.toStringAsFixed(2)}');
@@ -219,11 +225,39 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
       print('📄 Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
       print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
+
+      // Salvar PDFs em arquivo
+      if (declaracao.recibo.pdf.isNotEmpty) {
+        final sucessoRecibo = await PdfFileUtils.salvarPdf(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
+      }
+
+      if (declaracao.declaracao.pdf.isNotEmpty) {
+        final sucessoDeclaracao = await PdfFileUtils.salvarPdf(
+          declaracao.declaracao.pdf,
+          'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}');
+      }
       print('📋 Tem MAED: ${declaracao.temMaed}');
 
       if (declaracao.temMaed) {
         print('  📋 Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
         print('  💰 DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
+
+        // Salvar PDFs MAED em arquivo
+        if (declaracao.maed!.pdfNotificacao.isNotEmpty) {
+          final sucessoNotificacao = await PdfFileUtils.salvarPdf(
+            declaracao.maed!.pdfNotificacao,
+            'notificacao_maed_${DateTime.now().millisecondsSinceEpoch}.pdf',
+          );
+          print('  Notificação MAED PDF salvo em arquivo: ${sucessoNotificacao ? 'Sim' : 'Não'}');
+        }
+
+        if (declaracao.maed!.pdfDarf.isNotEmpty) {
+          final sucessoDarf = await PdfFileUtils.salvarPdf(declaracao.maed!.pdfDarf, 'darf_maed_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          print('  DARF MAED PDF salvo em arquivo: ${sucessoDarf ? 'Sim' : 'Não'}');
+        }
       }
     }
   } catch (e) {
@@ -252,6 +286,20 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📄 Nome do arquivo: ${declaracao.declaracao.nomeArquivo}');
       print('📄 Arquivo Recibo: ${declaracao.recibo.pdf.isNotEmpty}');
       print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
+
+      // Salvar PDFs em arquivo
+      if (declaracao.recibo.pdf.isNotEmpty) {
+        final sucessoRecibo = await PdfFileUtils.salvarPdf(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
+      }
+
+      if (declaracao.declaracao.pdf.isNotEmpty) {
+        final sucessoDeclaracao = await PdfFileUtils.salvarPdf(
+          declaracao.declaracao.pdf,
+          'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}');
+      }
       print('📋 Tem MAED: ${declaracao.temMaed}');
     }
   } catch (e) {

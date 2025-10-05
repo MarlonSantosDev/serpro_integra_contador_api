@@ -3,10 +3,6 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 Future<void> Sitfis(ApiClient apiClient) async {
   print('=== Exemplos SITFIS ===');
   print('SITFIS - Sistema de Relatório de Situação Fiscal');
-  print('Serviços disponíveis:');
-  print('1. Solicitar protocolo do relatório de situação fiscal');
-  print('2. Emitir relatório de situação fiscal');
-  print('');
 
   final sitfisService = SitfisService(apiClient);
   bool servicoOk = true;
@@ -43,6 +39,7 @@ Future<void> Sitfis(ApiClient apiClient) async {
     print('❌ Erro ao solicitar protocolo: $e');
     servicoOk = false;
   }
+  await Future.delayed(Duration(seconds: 5));
 
   // 2. Emitir Relatório (se protocolo disponível)
   try {
@@ -81,13 +78,9 @@ Future<void> Sitfis(ApiClient apiClient) async {
       print('PDF disponível: ${emitirResponse.hasPdf}');
 
       if (emitirResponse.hasPdf) {
-        final infoPdf = sitfisService.obterInformacoesPdf(emitirResponse);
-        print('✅ Relatório PDF obtido com sucesso!');
-        print('Tamanho: ${infoPdf['tamanhoKB']} KB (${infoPdf['tamanhoMB']} MB)');
-
         // Salvar PDF em arquivo (opcional)
-        final sucessoSalvamento = await sitfisService.salvarPdfEmArquivo(
-          emitirResponse,
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+          emitirResponse.dados!.pdf!,
           'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');

@@ -101,7 +101,13 @@ Future<void> Pertmei(ApiClient apiClient) async {
       if (dasGerado != null) {
         print('DAS gerado com sucesso!');
         print('Tamanho do PDF (base64): ${dasGerado.docArrecadacaoPdfB64.length} caracteres');
-        // Em uma aplicação real, você converteria o base64 para PDF e salvaria/abriria o arquivo
+
+        // Salvar PDF em arquivo
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+          dasGerado.docArrecadacaoPdfB64,
+          'das_pertmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
     }
   } catch (e) {

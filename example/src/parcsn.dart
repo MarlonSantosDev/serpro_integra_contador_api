@@ -155,6 +155,15 @@ Future<void> Parcsn(ApiClient apiClient) async {
           print('Vencimento: ${dasData.dataVencimentoFormatada}');
           print('Tamanho do PDF: ${dasData.tamanhoPdfFormatado}');
           print('PDF disponível: ${dasData.temPdf}');
+
+          // Salvar PDF em arquivo
+          if (dasData.temPdf) {
+            final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+              dasData.docArrecadacaoPdfB64,
+              'das_parcsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
+            );
+            print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+          }
         }
       } else {
         print('PDF não foi gerado');

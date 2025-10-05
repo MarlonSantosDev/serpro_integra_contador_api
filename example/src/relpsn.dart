@@ -204,6 +204,15 @@ Future<void> Relpsn(ApiClient apiClient) async {
       print('Tamanho do PDF: ${dasResponse.tamanhoPdfFormatado}');
       print('PDF disponível: ${dasResponse.dadosParsed?.pdfDisponivel == true ? 'Sim' : 'Não'}');
 
+      // Salvar PDF em arquivo
+      if (dasResponse.dadosParsed?.pdfDisponivel == true && dasResponse.dadosParsed?.docArrecadacaoPdfB64 != null) {
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+          dasResponse.dadosParsed!.docArrecadacaoPdfB64,
+          'das_relpsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+
       final pdfInfo = dasResponse.dadosParsed?.pdfInfo;
       if (pdfInfo != null) {
         print('Informações do PDF:');

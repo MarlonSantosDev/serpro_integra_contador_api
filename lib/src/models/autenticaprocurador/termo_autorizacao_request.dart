@@ -54,17 +54,13 @@ class TermoAutorizacaoRequest {
     final erros = <String>[];
 
     // Validar CNPJ/CPF do contratante
-    if (!DocumentUtils.isValidCnpj(contratanteNumero) &&
-        !DocumentUtils.isValidCpf(contratanteNumero)) {
+    if (!DocumentUtils.isValidCnpj(contratanteNumero) && !DocumentUtils.isValidCpf(contratanteNumero)) {
       erros.add('CNPJ/CPF do contratante inválido: $contratanteNumero');
     }
 
     // Validar CNPJ/CPF do autor do pedido
-    if (!DocumentUtils.isValidCnpj(autorPedidoDadosNumero) &&
-        !DocumentUtils.isValidCpf(autorPedidoDadosNumero)) {
-      erros.add(
-        'CNPJ/CPF do autor do pedido inválido: $autorPedidoDadosNumero',
-      );
+    if (!DocumentUtils.isValidCnpj(autorPedidoDadosNumero) && !DocumentUtils.isValidCpf(autorPedidoDadosNumero)) {
+      erros.add('CNPJ/CPF do autor do pedido inválido: $autorPedidoDadosNumero');
     }
 
     // Validar nome do contratante
@@ -79,16 +75,12 @@ class TermoAutorizacaoRequest {
 
     // Validar formato da data de assinatura (AAAAMMDD)
     if (!_isValidDateFormat(dataAssinatura)) {
-      erros.add(
-        'Data de assinatura deve estar no formato AAAAMMDD: $dataAssinatura',
-      );
+      erros.add('Data de assinatura deve estar no formato AAAAMMDD: $dataAssinatura');
     }
 
     // Validar formato da data de vigência (AAAAMMDD)
     if (!_isValidDateFormat(dataVigencia)) {
-      erros.add(
-        'Data de vigência deve estar no formato AAAAMMDD: $dataVigencia',
-      );
+      erros.add('Data de vigência deve estar no formato AAAAMMDD: $dataVigencia');
     }
 
     // Validar se data de vigência é posterior à data de assinatura

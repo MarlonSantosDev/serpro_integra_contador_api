@@ -157,6 +157,13 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
 
     if (emitirComprovanteResponse.pdfBase64 != null) {
       print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
+
+      // Salvar PDF em arquivo
+      final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+        emitirComprovanteResponse.pdfBase64!,
+        'comprovante_pagto_web_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
     }
   } catch (e) {
     print('❌ Erro ao emitir comprovante de pagamento: $e');

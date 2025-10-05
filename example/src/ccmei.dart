@@ -19,6 +19,8 @@ Future<void> Ccmei(ApiClient apiClient) async {
     print('🏢 CNPJ: ${emitirResponse.dados.cnpj}');
     print('📄 PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
     print('📏 Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
+    final sucessoSalvamento = await PdfFileUtils.salvarPdf(emitirResponse.dados.pdf, 'relatorio_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf');
+    print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
   } catch (e) {
     print('❌ Erro ao emitir CCMEI: $e');
     servicoOk = false;

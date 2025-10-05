@@ -209,6 +209,15 @@ Future<void> Parcmei(ApiClient apiClient) async {
       print('PDF válido: ${emitirResponse.pdfValido}');
       print('Hash do PDF: ${emitirResponse.pdfHash}');
 
+      // Salvar PDF em arquivo
+      if (pdfBytes != null) {
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+          emitirResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
+          'das_parcmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+
       final pdfInfo = emitirResponse.pdfInfo;
       if (pdfInfo != null) {
         print('Informações do PDF:');

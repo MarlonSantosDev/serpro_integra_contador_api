@@ -206,6 +206,10 @@ Future<void> Pertsn(ApiClient apiClient) async {
         if (pdfBase64 != null) {
           print('PDF Base64 disponível: ${pdfBase64.length} caracteres');
 
+          // Salvar PDF em arquivo
+          final sucessoSalvamento = await PdfFileUtils.salvarPdf(pdfBase64, 'das_pertsn_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+
           final dadosParsed = dasResponse.dadosParsed;
           if (dadosParsed != null) {
             print('Nome sugerido: ${dadosParsed.nomeArquivoSugerido}');

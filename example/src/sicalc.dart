@@ -52,6 +52,10 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+
+        // Salvar PDF em arquivo
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(response.darf!, 'darf_pessoa_fisica_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
       if (response.numeroDocumento != null) {
@@ -118,6 +122,10 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+
+        // Salvar PDF em arquivo
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(response.darf!, 'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
       if (response.numeroDocumento != null) {
@@ -367,6 +375,10 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
+
+        // Salvar PDF em arquivo
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(response.darf!, 'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
       if (response.numeroDocumento != null) {

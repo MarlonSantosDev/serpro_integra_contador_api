@@ -90,6 +90,11 @@ Future<void> Defis(ApiClient apiClient) async {
     print('ID DEFIS: ${transmitirResponse.dados.idDefis}');
     print('Declaração PDF: ${transmitirResponse.dados.declaracaoPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
     print('Recibo PDF: ${transmitirResponse.dados.reciboPdf.isNotEmpty ? 'Disponível' : 'Não disponível'}');
+    final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+      transmitirResponse.dados.declaracaoPdf,
+      'relatorio_defis_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
+    print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
   } catch (e) {
     print('❌ Erro ao transmitir declaração: $e');
     servicoOk = false;

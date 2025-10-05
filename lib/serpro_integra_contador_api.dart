@@ -82,6 +82,7 @@ export 'src/util/cache_utils.dart';
 export 'src/util/xml_utils.dart';
 export 'src/util/eventos_atualizacao_utils.dart';
 export 'src/util/pgmei_validator.dart';
+export 'src/util/pdf_file_utils.dart';
 
 // Base Models
 export 'src/models/base/base_request.dart';

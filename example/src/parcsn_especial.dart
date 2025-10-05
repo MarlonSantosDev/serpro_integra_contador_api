@@ -149,6 +149,15 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
       final pdfBytes = emitirDasResponse.pdfBytes;
       print('PDF em bytes: ${pdfBytes?.length ?? 0} bytes');
       print('PDF válido: ${pdfBytes != null}');
+
+      // Salvar PDF em arquivo
+      if (pdfBytes != null) {
+        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+          emitirDasResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
+          'das_parcsn_especial_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
     }
   } catch (e) {
     print('❌ Erro ao emitir DAS: $e');

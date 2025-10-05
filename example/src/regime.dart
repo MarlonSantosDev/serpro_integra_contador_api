@@ -26,6 +26,15 @@ Future<void> Regime(ApiClient apiClient) async {
         print("Regime escolhido: ${dados.regimeEscolhido}");
         print("Data da opção: ${dados.dataOpcao}");
         print("Demonstrativo PDF: ${dados.demonstrativoPdf?.isEmpty}");
+
+        // Salvar PDF em arquivo se disponível
+        if (dados.demonstrativoPdf != null && dados.demonstrativoPdf!.isNotEmpty) {
+          final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+            dados.demonstrativoPdf!,
+            'demonstrativo_regime_${DateTime.now().millisecondsSinceEpoch}.pdf',
+          );
+          print("PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}");
+        }
       }
     }
     print('✅ Exemplo documentado (não executado)');

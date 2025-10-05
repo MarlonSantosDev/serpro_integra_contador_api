@@ -204,6 +204,10 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
         final pdfBytes = dadosDas.pdfBytes;
         if (pdfBytes != null) {
           print('  PDF convertido para bytes: ${pdfBytes.length} bytes');
+
+          // Salvar PDF em arquivo
+          final sucessoSalvamento = await PdfFileUtils.salvarPdf(dadosDas.docArrecadacaoPdfB64, dadosDas.nomeArquivoSugerido);
+          print('  PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
         }
       }
     } else {
