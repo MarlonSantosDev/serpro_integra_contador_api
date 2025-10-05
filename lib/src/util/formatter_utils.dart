@@ -1,4 +1,4 @@
-import 'document_utils.dart';
+import 'validations_utils.dart';
 
 /// Utilitários centralizados para formatação de dados
 ///
@@ -213,5 +213,55 @@ class FormatterUtils {
   /// [month] - Mês
   static String formatPeriodReverse(int year, int month) {
     return '${month.toString().padLeft(2, '0')}/$year';
+  }
+
+  // ===== FORMATAÇÕES ESPECÍFICAS PARA DCTFWEB =====
+
+  /// Formata data de apuração no formato legível baseado nos parâmetros fornecidos
+  ///
+  /// [ano] - Ano com 4 dígitos
+  /// [mes] - Mês com 2 dígitos (opcional)
+  /// [dia] - Dia com 2 dígitos (opcional)
+  static String formatDataApuracao(String ano, String? mes, String? dia) {
+    if (mes == null || mes.isEmpty) {
+      return ano; // Apenas ano para categorias anuais
+    }
+
+    if (dia == null || dia.isEmpty) {
+      return '$mes/$ano'; // Mês/Ano para categorias mensais
+    }
+
+    return '$dia/$mes/$ano'; // Dia/Mês/Ano para categorias diárias
+  }
+
+  /// Converte data DateTime para formato AAAAMMDD
+  ///
+  /// [data] - Data a ser convertida
+  static int converterDataParaAcolhimento(DateTime data) {
+    final ano = data.year.toString().padLeft(4, '0');
+    final mes = data.month.toString().padLeft(2, '0');
+    final dia = data.day.toString().padLeft(2, '0');
+    return int.parse('$ano$mes$dia');
+  }
+
+  /// Converte formato AAAAMMDD para DateTime
+  ///
+  /// [dataAcolhimento] - Data no formato AAAAMMDD
+  static DateTime? converterAcolhimentoParaData(int dataAcolhimento) {
+    final dataStr = dataAcolhimento.toString();
+
+    if (dataStr.length != 8) return null;
+
+    final ano = int.tryParse(dataStr.substring(0, 4));
+    final mes = int.tryParse(dataStr.substring(4, 6));
+    final dia = int.tryParse(dataStr.substring(6, 8));
+
+    if (ano == null || mes == null || dia == null) return null;
+
+    try {
+      return DateTime(ano, mes, dia);
+    } catch (e) {
+      return null;
+    }
   }
 }

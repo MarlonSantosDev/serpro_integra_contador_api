@@ -5,7 +5,7 @@ import 'package:serpro_integra_contador_api/src/models/dctfweb/consultar_xml_res
 import 'package:serpro_integra_contador_api/src/models/dctfweb/gerar_guia_response.dart';
 import 'package:serpro_integra_contador_api/src/models/dctfweb/transmitir_declaracao_response.dart';
 import 'package:serpro_integra_contador_api/src/models/dctfweb/consultar_relatorio_response.dart';
-import 'package:serpro_integra_contador_api/src/util/dctfweb_utils.dart';
+import 'dart:convert';
 
 /// Serviço para integração com DCTFWeb
 ///
@@ -63,9 +63,7 @@ class DctfWebService {
       contribuinteNumero: contribuinteNumero,
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIA31', dados: dctfRequest.toDadosJson()),
     );
-
-    final endpoint = DctfWebUtils.obterEndpoint('GERARGUIA31');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -106,8 +104,12 @@ class DctfWebService {
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSRECIBO32', dados: dctfRequest.toDadosJson()),
     );
 
-    final endpoint = DctfWebUtils.obterEndpoint('CONSRECIBO32');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -147,9 +149,12 @@ class DctfWebService {
       contribuinteNumero: contribuinteNumero,
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSDECCOMPLETA33', dados: dctfRequest.toDadosJson()),
     );
-
-    final endpoint = DctfWebUtils.obterEndpoint('CONSDECCOMPLETA33');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarRelatorioResponse.fromJson(response);
   }
 
@@ -193,8 +198,12 @@ class DctfWebService {
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSXMLDECLARACAO38', dados: dctfRequest.toDadosJson()),
     );
 
-    final endpoint = DctfWebUtils.obterEndpoint('CONSXMLDECLARACAO38');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return ConsultarXmlResponse.fromJson(response);
   }
 
@@ -223,7 +232,7 @@ class DctfWebService {
     String? autorPedidoDadosNumero,
   }) async {
     // Validar XML antes de enviar
-    if (!DctfWebUtils.validarXmlBase64(xmlAssinadoBase64)) {
+    if (!validarXmlBase64(xmlAssinadoBase64)) {
       throw ArgumentError('XML Base64 inválido ou mal formado');
     }
 
@@ -240,9 +249,12 @@ class DctfWebService {
       contribuinteNumero: contribuinteNumero,
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'TRANSDECLARACAO310', dados: dctfRequest.toDadosJson()),
     );
-
-    final endpoint = DctfWebUtils.obterEndpoint('TRANSDECLARACAO310');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Declarar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return TransmitirDeclaracaoDctfResponse.fromJson(response);
   }
 
@@ -282,9 +294,7 @@ class DctfWebService {
       contribuinteNumero: contribuinteNumero,
       pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIAANDAMENTO313', dados: dctfRequest.toDadosJson()),
     );
-
-    final endpoint = DctfWebUtils.obterEndpoint('GERARGUIAANDAMENTO313');
-    final response = await _apiClient.post(endpoint, request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -414,5 +424,20 @@ class DctfWebService {
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
+  }
+
+  bool validarXmlBase64(String xmlBase64) {
+    if (xmlBase64.isEmpty) return false;
+
+    try {
+      // Tentar decodificar Base64
+      final decoded = base64.decode(xmlBase64);
+
+      // Verificar se contém caracteres XML básicos
+      final xmlString = String.fromCharCodes(decoded);
+      return xmlString.contains('<?xml') && xmlString.contains('<ConteudoDeclaracao') && xmlString.contains('</ConteudoDeclaracao>');
+    } catch (e) {
+      return false;
+    }
   }
 }

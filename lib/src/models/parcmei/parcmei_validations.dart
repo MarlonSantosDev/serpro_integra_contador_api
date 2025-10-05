@@ -1,4 +1,4 @@
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 
 class ParcmeiValidations {
   /// Valida um número de parcelamento

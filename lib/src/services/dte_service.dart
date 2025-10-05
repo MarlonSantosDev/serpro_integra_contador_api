@@ -1,7 +1,7 @@
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/dte/dte_response.dart';
-import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/validations_utils.dart';
 
 /// Serviço para consultas do DTE - Domicílio Tributário Eletrônico
 class DteService {

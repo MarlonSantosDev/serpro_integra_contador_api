@@ -5,8 +5,8 @@ import '../models/pgmei/gerar_das_codigo_barras_response.dart';
 import '../models/pgmei/atualizar_beneficio_response.dart';
 import '../models/pgmei/consultar_divida_ativa_response.dart';
 import '../models/pgmei/pgmei_requests.dart';
-import '../util/document_utils.dart';
-import '../util/pgmei_validator.dart';
+import '../util/validations_utils.dart';
+import '../models/pgmei/pgmei_validations.dart';
 
 /// Serviço para integração com PGMEI (Programa Gerador do DAS para o MEI)
 ///
@@ -39,9 +39,11 @@ class PgmeiService {
   }) async {
     // Validações de entrada
     DocumentUtils.validateCNPJ(cnpj);
-    PgmeiValidator.validatePeriodoApuracao(periodoApuracao);
+    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(periodoApuracao);
+    if (validacaoPeriodo != null) throw ArgumentError(validacaoPeriodo);
     if (dataConsolidacao != null) {
-      PgmeiValidator.validateDataConsolidacao(dataConsolidacao);
+      final validacao = PgmeiValidations.validarDataConsolidacao(dataConsolidacao);
+      if (validacao != null) throw ArgumentError(validacao);
     }
 
     // Criação dos dados de entrada
@@ -78,9 +80,11 @@ class PgmeiService {
   }) async {
     // Validações de entrada
     DocumentUtils.validateCNPJ(cnpj);
-    PgmeiValidator.validatePeriodoApuracao(periodoApuracao);
+    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(periodoApuracao);
+    if (validacaoPeriodo != null) throw ArgumentError(validacaoPeriodo);
     if (dataConsolidacao != null) {
-      PgmeiValidator.validateDataConsolidacao(dataConsolidacao);
+      final validacao = PgmeiValidations.validarDataConsolidacao(dataConsolidacao);
+      if (validacao != null) throw ArgumentError(validacao);
     }
 
     // Criação dos dados de entrada
@@ -116,8 +120,18 @@ class PgmeiService {
   }) async {
     // Validações de entrada
     DocumentUtils.validateCNPJ(cnpj);
-    PgmeiValidator.validateAnoCalendarioInt(anoCalendario);
-    PgmeiValidator.validateInfoBeneficio(beneficios);
+    // Valida ano (1900-2099)
+    if (anoCalendario < 1900 || anoCalendario > 2099) {
+      throw ArgumentError('Ano calendário deve estar entre 1900 e 2099');
+    }
+
+    // Verifica se não é ano muito futuro
+    final anoAtual = DateTime.now().year;
+    if (anoCalendario > anoAtual + 1) {
+      print('Aviso: Ano calendário é futuro ($anoCalendario)');
+    }
+    final validacaoBeneficios = PgmeiValidations.validarInfoBeneficio(beneficios);
+    if (validacaoBeneficios != null) throw ArgumentError(validacaoBeneficios);
 
     // Criação dos dados de entrada
     final requestData = AtualizarBeneficioRequest(anoCalendario: anoCalendario, infoBeneficio: beneficios);
@@ -150,7 +164,32 @@ class PgmeiService {
   }) async {
     // Validações de entrada
     DocumentUtils.validateCNPJ(cnpj);
-    PgmeiValidator.validateAnoCalendario(anoCalendario);
+
+    if (anoCalendario.isEmpty) {
+      throw ArgumentError('Ano calendário não pode estar vazio');
+    }
+
+    // Verifica se tem exatamente 4 caracteres
+    if (anoCalendario.length != 4) {
+      throw ArgumentError('Ano calendário deve ter formato AAAA');
+    }
+
+    // Verifica se são apenas números
+    if (!RegExp(r'^\d{4}$').hasMatch(anoCalendario)) {
+      throw ArgumentError('Ano calendário deve conter apenas números no formato AAAA');
+    }
+
+    // Valida ano (1900-2099)
+    final ano = int.parse(anoCalendario);
+    if (ano < 1900 || ano > 2099) {
+      throw ArgumentError('Ano calendário deve estar entre 1900 e 2099');
+    }
+
+    // Verifica se não é ano muito futuro
+    final anoAtual = DateTime.now().year;
+    if (ano > anoAtual + 1) {
+      print('Aviso: Ano calendário é futuro ($anoCalendario)');
+    }
 
     // Criação dos dados de entrada
     final requestData = ConsultarDividaAtivaRequest(anoCalendario: anoCalendario);

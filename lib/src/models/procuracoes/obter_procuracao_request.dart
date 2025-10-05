@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 import 'procuracoes_enums.dart';
 
 /// Request para obter procurações eletrônicas

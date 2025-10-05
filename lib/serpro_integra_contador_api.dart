@@ -74,14 +74,9 @@ export 'src/models/base/mensagem.dart';
 export 'src/models/base/tipo_documento.dart';
 
 // Utilities
-export 'src/util/document_utils.dart';
+export 'src/util/validations_utils.dart';
 export 'src/util/formatter_utils.dart';
-export 'src/util/dctfweb_utils.dart';
-export 'src/util/assinatura_digital_utils.dart';
-export 'src/util/cache_utils.dart';
-export 'src/util/xml_utils.dart';
-export 'src/util/eventos_atualizacao_utils.dart';
-export 'src/util/pgmei_validator.dart';
+export 'src/models/pgmei/pgmei_validations.dart';
 export 'src/util/pdf_file_utils.dart';
 
 // Base Models

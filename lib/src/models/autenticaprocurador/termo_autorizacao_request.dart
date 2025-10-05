@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 
 /// Modelo para criação do Termo de Autorização XML
 class TermoAutorizacaoRequest {

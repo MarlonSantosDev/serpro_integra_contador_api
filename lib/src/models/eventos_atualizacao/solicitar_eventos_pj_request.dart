@@ -1,5 +1,5 @@
 import 'eventos_atualizacao_common.dart';
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 
 /// Modelo de requisição para solicitar eventos de atualização de Pessoa Jurídica
 class SolicitarEventosPJRequest {

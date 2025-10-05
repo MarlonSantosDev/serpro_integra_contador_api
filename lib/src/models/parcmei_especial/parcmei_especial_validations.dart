@@ -1,4 +1,4 @@
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 
 /// Validações específicas para os serviços PARCMEI-ESP
 class ParcmeiEspecialValidations {

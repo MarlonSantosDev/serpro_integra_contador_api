@@ -3,7 +3,7 @@ import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/consultar_dados_ccmei_response.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/consultar_situacao_cadastral_ccmei_response.dart';
 import 'package:serpro_integra_contador_api/src/models/ccmei/emitir_ccmei_response.dart';
-import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/validations_utils.dart';
 
 /// Serviço para operações relacionadas ao CCMEI (Cadastro Centralizado de Microempreendedor Individual)
 ///

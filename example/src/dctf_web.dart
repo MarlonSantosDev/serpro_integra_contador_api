@@ -19,7 +19,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       idsSistemaOrigem: [SistemaOrigem.esocial, SistemaOrigem.mit],
     );
     print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
-    await Future.delayed(Duration(seconds: 10));
+    await Future.delayed(Duration(seconds: 5));
 
     // DARF Pessoa Física Mensal
     final darfPfResponse = await dctfWebService.gerarDarfPfMensal(
@@ -45,7 +45,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     print('❌ Erro nos métodos de conveniência: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 2. Exemplo com categoria específica - Espetáculo Desportivo
   try {
@@ -64,7 +64,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     print('❌ Erro no exemplo espetáculo desportivo: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 3. Exemplo com categoria Aferição
   try {
@@ -83,7 +83,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     print('❌ Erro no exemplo aferição: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 4. Exemplo com categoria Reclamatória Trabalhista
   try {
@@ -102,7 +102,7 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     print('❌ Erro no exemplo reclamatória trabalhista: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 5. Exemplo de transmissão completa (simulada)
   try {

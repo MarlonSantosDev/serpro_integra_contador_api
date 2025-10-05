@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:serpro_integra_contador_api/src/models/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.dart';
-import 'package:serpro_integra_contador_api/src/util/document_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/validations_utils.dart';
 import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart';
 import 'package:serpro_integra_contador_api/src/models/autenticaprocurador/cache_model.dart';
 

@@ -3,7 +3,7 @@ import '../core/api_client.dart';
 import '../models/base/base_request.dart';
 import '../models/autenticaprocurador/termo_autorizacao_request.dart';
 import '../models/autenticaprocurador/termo_autorizacao_response.dart';
-import '../util/document_utils.dart';
+import '../util/validations_utils.dart';
 
 /// Serviço para autenticação de procurador
 /// Funcionalidade principal: Envio de XML assinado com o Termo de Autorização

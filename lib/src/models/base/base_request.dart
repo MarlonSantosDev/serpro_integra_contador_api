@@ -1,4 +1,4 @@
-import '../../util/document_utils.dart';
+import '../../util/validations_utils.dart';
 
 /// Classe base para todas as requisições à API do SERPRO Integra Contador
 ///
