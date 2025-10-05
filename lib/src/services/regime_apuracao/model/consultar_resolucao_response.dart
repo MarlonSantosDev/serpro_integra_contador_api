@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../../base/mensagem_negocio.dart';
 
 /// Modelo de dados de resposta para consultar resolução do regime de caixa
 ///
@@ -58,24 +59,5 @@ class ResolucaoRegimeCaixa {
 
   factory ResolucaoRegimeCaixa.fromJson(Map<String, dynamic> json) {
     return ResolucaoRegimeCaixa(textoResolucao: json['textoResolucao'].toString());
-  }
-}
-
-/// Modelo de mensagem de negócio específica para regime de apuração
-class MensagemNegocio {
-  /// Código da mensagem
-  final String codigo;
-
-  /// Texto da mensagem
-  final String texto;
-
-  MensagemNegocio({required this.codigo, required this.texto});
-
-  Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'texto': texto};
-  }
-
-  factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 }

@@ -2,7 +2,35 @@ import '../../core/api_client.dart';
 import 'model/sicalc_request.dart';
 import 'model/sicalc_response.dart';
 
-/// Serviço para integração com SICALC (Sistema de Cálculo de Acréscimos Legais)
+/// **Serviço:** SICALC (Sistema de Cálculo de Acréscimos Legais)
+///
+/// O SICALC é um sistema para cálculo de multa e juros sobre débitos tributários.
+///
+/// **Este serviço permite:**
+/// - Consolidar e emitir DARF (CONSOLEMITEDARF111)
+/// - Calcular valor sem emissão (CALCULOSICALC112)
+/// - Consultar códigos de receita (CONSCODIGOSRECEITA113)
+/// - Consultar pagamentos (CONSPAGAMENTOS114)
+/// - Consultar saldo de parcelamento (CONSSALDOPARC115)
+///
+/// **Documentação oficial:** `.cursor/rules/sicalc.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final sicalcService = SicalcService(apiClient);
+///
+/// // Consolidar e emitir DARF
+/// final darf = await sicalcService.consolidarEmitirDarf(
+///   ConsolidarEmitirDarfRequest(
+///     codigoReceita: '1850',
+///     valorPrincipal: 1000.00,
+///     dataVencimento: DateTime(2024, 1, 20),
+///     dataPagamento: DateTime(2024, 3, 15),
+///   ),
+/// );
+/// print('Valor consolidado: R\$ ${darf.valorConsolidado}');
+/// print('DARF PDF: ${darf.pdfBase64}');
+/// ```
 class SicalcService {
   final ApiClient _apiClient;
 

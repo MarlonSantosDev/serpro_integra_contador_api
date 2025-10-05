@@ -7,15 +7,33 @@ import 'package:serpro_integra_contador_api/src/services/dctfweb/model/transmiti
 import 'package:serpro_integra_contador_api/src/services/dctfweb/model/consultar_relatorio_response.dart';
 import 'dart:convert';
 
-/// Serviço para integração com DCTFWeb
+/// **Serviço:** DCTFWeb (Declaração de Débitos e Créditos Tributários Federais)
 ///
-/// Implementa todos os serviços disponíveis do Integra DCTFWeb:
+/// Serviço para declaração e apuração de débitos e créditos tributários federais.
+/// A DCTFWeb substituiu a DCTF para empresas do Simples Nacional e outras.
+///
+/// **Este serviço permite:**
 /// - Gerar Documento de Arrecadação (DARF/DAE)
 /// - Consultar Recibo de transmissão
 /// - Consultar Declaração Completa
 /// - Consultar/Gerar XML da declaração
 /// - Transmitir declaração
-/// - Gerar Documento de Arrecadação para declaração em andamento
+/// - Gerar Documento para declaração em andamento
+///
+/// **Documentação oficial:** `.cursor/rules/dctfweb.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final dctfwebService = DctfWebService(apiClient);
+///
+/// // Gerar guia de pagamento
+/// final guia = await dctfwebService.gerarDocumentoArrecadacao(
+///   contribuinteNumero: '12345678000190',
+///   categoria: CategoriaDctf.mensal,
+///   anoPA: '2024',
+///   mesPA: '03',
+/// );
+/// ```
 class DctfWebService {
   final ApiClient _apiClient;
 

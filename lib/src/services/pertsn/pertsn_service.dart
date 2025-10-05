@@ -8,14 +8,34 @@ import 'package:serpro_integra_contador_api/src/services/pertsn/model/emitir_das
 import 'package:serpro_integra_contador_api/src/services/pertsn/model/pertsn_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/pertsn/model/pertsn_errors.dart';
 
-/// Serviço para integração com o sistema PERTSN (Parcelamento do Simples Nacional)
+/// **Serviço:** PERTSN (Parcelamento Especial de Regularização Tributária do Simples Nacional)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// O PERTSN é uma modalidade especial de parcelamento para regularização tributária do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC71)
+/// - Consultar parcelamento específico (OBTERPARC72)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR70)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC73)
+/// - Emitir DAS para parcelas (GERARDAS69)
+///
+/// **Documentação oficial:** `.cursor/rules/pertsn.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final pertsnService = PertsnService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await pertsnService.consultarPedidos();
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await pertsnService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class PertsnService {
   final ApiClient _apiClient;
 

@@ -2,12 +2,36 @@ import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/services/pagtoweb/model/pagtoweb_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pagtoweb/model/pagtoweb_response.dart';
 
-/// Serviço para integração com PAGTOWEB
+/// **Serviço:** PAGTOWEB (Sistema de Pagamentos do Simples Nacional)
 ///
-/// Implementa todos os serviços disponíveis do Integra PAGTOWEB:
-/// - Consultar Pagamentos (PAGAMENTOS71)
-/// - Contar Pagamentos (CONTACONSDOCARRPG73)
-/// - Emitir Comprovante de Pagamento (EMITECOMPROVANTEPAGAMENTO72)
+/// O PAGTOWEB é o sistema para consulta de pagamentos do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Consultar pagamentos (PAGAMENTOS71)
+/// - Emitir comprovante de pagamento (EMITECOMPROVANTEPAGAMENTO72)
+/// - Contar documentos de pagamento (CONTACONSDOCARRPG73)
+///
+/// **Documentação oficial:** `.cursor/rules/pagtoweb.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final pagtoWebService = PagtoWebService(apiClient);
+///
+/// // Consultar pagamentos
+/// final pagamentos = await pagtoWebService.consultarPagamentos(
+///   contribuinteNumero: '12345678000190',
+///   dataInicial: '2024-01-01',
+///   dataFinal: '2024-12-31',
+/// );
+/// print('Total de pagamentos: ${pagamentos.totalRegistros}');
+///
+/// // Emitir comprovante
+/// final comprovante = await pagtoWebService.emitirComprovante(
+///   numeroDocumento: '123456789',
+///   codigoTipoDocumento: '001',
+/// );
+/// print('Comprovante PDF: ${comprovante.pdfBase64}');
+/// ```
 class PagtoWebService {
   final ApiClient _apiClient;
 

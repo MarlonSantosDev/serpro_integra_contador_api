@@ -4,11 +4,37 @@ import 'package:serpro_integra_contador_api/src/services/sitfis/model/solicitar_
 import 'package:serpro_integra_contador_api/src/services/sitfis/model/emitir_relatorio_request.dart';
 import 'package:serpro_integra_contador_api/src/services/sitfis/model/emitir_relatorio_response.dart';
 
-/// Serviço para integração com o SITFIS (Situação Fiscal)
+/// **Serviço:** SITFIS (Situação Fiscal)
 ///
-/// O SITFIS é um sistema que fornece relatórios de situação fiscal
-/// de contribuintes Pessoa Jurídica e Pessoa Física no âmbito da
-/// Receita Federal do Brasil e Procuradoria-Geral da Fazenda Nacional.
+/// Serviço para emissão de relatórios de situação fiscal de contribuintes
+/// (Pessoa Física e Jurídica) na Receita Federal e Procuradoria-Geral da Fazenda Nacional.
+///
+/// **Este serviço permite:**
+/// - Solicitar protocolo para geração do relatório (APOIAR)
+/// - Emitir relatório de situação fiscal em PDF (EMITIR)
+///
+/// **Fluxo de uso:**
+/// 1. Solicitar protocolo (retorna tempo de espera)
+/// 2. Aguardar tempo indicado
+/// 3. Emitir relatório com o protocolo
+///
+/// **Documentação oficial:** `.cursor/rules/sitfis/`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final sitfisService = SitfisService(apiClient);
+///
+/// // 1. Solicitar protocolo
+/// final protocolo = await sitfisService.solicitarProtocoloRelatorio('12345678901');
+/// await Future.delayed(Duration(seconds: protocolo.tempoEspera));
+///
+/// // 2. Emitir relatório
+/// final relatorio = await sitfisService.emitirRelatorioSituacaoFiscal(
+///   '12345678901',
+///   protocolo.numeroProtocolo,
+/// );
+/// print('PDF: ${relatorio.pdfBase64}');
+/// ```
 class SitfisService {
   final ApiClient _apiClient;
 

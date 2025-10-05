@@ -8,13 +8,30 @@ import 'model/pgmei_requests.dart';
 import '../../util/validacoes_utils.dart';
 import 'model/pgmei_validations.dart';
 
-/// Serviço para integração com PGMEI (Programa Gerador do DAS para o MEI)
+/// **Serviço:** PGMEI (Programa Gerador do DAS para o MEI)
 ///
-/// Oferece funcionalidades para:
-/// - GERARDASPDF21: Gerar DAS com PDF completa
+/// Serviço para geração e consulta de DAS (Documento de Arrecadação do Simples Nacional)
+/// para contribuintes Microempreendedores Individuais (MEI).
+///
+/// **Este serviço permite:**
+/// - GERARDASPDF21: Gerar DAS com PDF completo
 /// - GERARDASCODBARRA22: Gerar DAS apenas com código de barras
-/// - ATUBENEFICIO23: Atualizar benefícios
-/// - DIVIDAATIVA24: Consultar dívida ativa
+/// - ATUBENEFICIO23: Atualizar informações de benefícios
+/// - DIVIDAATIVA24: Consultar dívida ativa do MEI
+///
+/// **Documentação oficial:** `.cursor/rules/pgmei.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final pgmeiService = PgmeiService(apiClient);
+///
+/// // Gerar DAS com PDF
+/// final das = await pgmeiService.gerarDas(
+///   cnpj: '12345678000190',
+///   periodoApuracao: '202403',
+/// );
+/// print('PDF: ${das.pdfBase64}');
+/// ```
 class PgmeiService {
   final ApiClient _apiClient;
 

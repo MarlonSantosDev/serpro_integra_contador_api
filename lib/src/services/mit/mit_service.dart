@@ -4,13 +4,36 @@ import 'package:serpro_integra_contador_api/src/services/mit/model/mit_request.d
 import 'package:serpro_integra_contador_api/src/services/mit/model/mit_response.dart';
 import 'package:serpro_integra_contador_api/src/services/mit/model/mit_enums.dart';
 
-/// Serviço para integração com MIT (Módulo de Inclusão de Tributos)
+/// **Serviço:** MIT (Módulo de Inclusão de Tributos)
 ///
-/// Implementa todos os serviços disponíveis do Integra MIT:
-/// - Encerrar Apuração (ENCAPURACAO314)
-/// - Consultar Situação Encerramento (SITUACAOENC315)
-/// - Consultar Apuração (CONSAPURACAO316)
-/// - Listar Apurações (LISTAAPURACOES317)
+/// O MIT é um módulo para apuração de tributos no sistema DCTFWeb.
+///
+/// **Este serviço permite:**
+/// - Encerrar apuração (ENCAPURACAO314)
+/// - Consultar situação do encerramento (SITUACAOENC315)
+/// - Consultar apuração específica (CONSAPURACAO316)
+/// - Listar todas as apurações (LISTAAPURACOES317)
+///
+/// **Documentação oficial:** `.cursor/rules/mit.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final mitService = MitService(apiClient);
+///
+/// // Encerrar apuração
+/// final resultado = await mitService.encerrarApuracao(
+///   contribuinteNumero: '12345678000190',
+///   anoMes: 202401,
+/// );
+/// print('Protocolo: ${resultado.protocoloEncerramento}');
+///
+/// // Consultar situação do encerramento
+/// final situacao = await mitService.consultarSituacaoEncerramento(
+///   contribuinteNumero: '12345678000190',
+///   protocoloEncerramento: resultado.protocoloEncerramento,
+/// );
+/// print('Situação: ${situacao.situacao}');
+/// ```
 class MitService {
   final ApiClient _apiClient;
 

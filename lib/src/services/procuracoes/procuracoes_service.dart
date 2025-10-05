@@ -4,7 +4,28 @@ import 'package:serpro_integra_contador_api/src/services/procuracoes/model/obter
 import 'package:serpro_integra_contador_api/src/services/procuracoes/model/obter_procuracao_response.dart';
 import 'package:serpro_integra_contador_api/src/services/procuracoes/model/procuracoes_enums.dart';
 
-/// Serviço para operações de Procurações Eletrônicas
+/// **Serviço:** PROCURACOES (Procurações Eletrônicas)
+///
+/// O serviço de procurações eletrônicas permite consultar procurações outorgadas e validar poderes.
+///
+/// **Este serviço permite:**
+/// - Obter procurações eletrônicas (OBTERPROCURACAO281)
+///
+/// **Documentação oficial:** `.cursor/rules/procuracoes.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final procuracoesService = ProcuracoesService(apiClient);
+///
+/// // Obter procurações
+/// final procuracao = await procuracoesService.obterProcuracao(
+///   outorgante: '12345678000190',
+///   outorgado: '12345678901',
+/// );
+/// if (procuracao.sucesso) {
+///   print('Procuração encontrada: ${procuracao.numeroProcuracao}');
+/// }
+/// ```
 class ProcuracoesService {
   final ApiClient _apiClient;
 

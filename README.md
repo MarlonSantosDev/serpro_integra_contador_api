@@ -9,13 +9,15 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 
 - **Autenticação automática** com certificados cliente (mTLS)
 - **Cache inteligente** de tokens de procurador
-- **Validação automática** de documentos (CPF/CNPJ)
+- **Validação automática** de documentos (CPF/CNPJ) com utilitários centralizados
 - **Tratamento de erros** padronizado e robusto
 - **Suporte completo** a procurações eletrônicas
 - **Modelos de dados** type-safe para todas as operações
 - **Flexibilidade de contratante e autor do pedido**: Todos os serviços suportam parâmetros opcionais `contratanteNumero` e `autorPedidoDadosNumero`
-- **Documentação completa** com exemplos práticos
+- **Documentação completa** com exemplos práticos e anotações `@formatador_utils` e `@validacoes_utils`
 - **Suporte a múltiplos ambientes** (trial e produção)
+- **Utilitários centralizados** para validações e formatação
+- **Exemplos completos** para todos os serviços com entrada e saída detalhadas
 
 ## 📋 Serviços Disponíveis
 
@@ -87,6 +89,7 @@ void main() async {
     certPassword: 'senha_do_certificado',
     contratanteNumero: '12345678000100',
     autorPedidoDadosNumero: '12345678000100',
+    ambiente: 'trial', // ou 'producao'
   );
 }
 ```
@@ -152,6 +155,62 @@ final mensagens = await caixaPostalService.listarTodasMensagens(
 );
 ```
 
+## 🛠️ Utilitários Centralizados
+
+### Validações Utilitárias
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+// Validar CNPJ
+final isValidCnpj = ValidacoesUtils.isValidCnpj('12345678000195');
+
+// Validar CPF
+final isValidCpf = ValidacoesUtils.isValidCpf('12345678901');
+
+// Validar número de parcelamento
+final error = ValidacoesUtils.validarNumeroParcelamento(123456);
+if (error != null) {
+  print('Erro: $error');
+}
+
+// Validar ano/mês
+final errorAnoMes = ValidacoesUtils.validarAnoMes(202401);
+if (errorAnoMes != null) {
+  print('Erro: $errorAnoMes');
+}
+
+// Validar valor monetário
+final errorValor = ValidacoesUtils.validarValorMonetario(1000.50);
+if (errorValor != null) {
+  print('Erro: $errorValor');
+}
+```
+
+### Formatação Utilitária
+
+```dart
+// Formatar CNPJ
+final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
+// Resultado: 12.345.678/0001-95
+
+// Formatar CPF
+final cpfFormatado = FormatadorUtils.formatCpf('12345678901');
+// Resultado: 123.456.789-01
+
+// Formatar moeda
+final valorFormatado = FormatadorUtils.formatCurrency(1234.56);
+// Resultado: R$ 1.234,56
+
+// Formatar data
+final dataFormatada = FormatadorUtils.formatDateFromString('20240115');
+// Resultado: 15/01/2024
+
+// Formatar período
+final periodoFormatado = FormatadorUtils.formatPeriodFromString('202401');
+// Resultado: Janeiro/2024
+```
+
 ## 📚 Documentação Completa
 
 ### Documentação dos Serviços
@@ -167,8 +226,17 @@ final mensagens = await caixaPostalService.listarTodasMensagens(
 - [PagtoWeb Service](doc/pagtoweb_service.md) - Consulta de pagamentos
 - [PARCMEI Service](doc/parcmei_service.md) - Parcelamento do MEI
 - [PARCMEI Especial Service](doc/parcmei_especial_service.md) - Parcelamento Especial do MEI
+- [PARCSN Service](doc/parcsn_service.md) - Parcelamento do Simples Nacional
 - [PARCSN Especial Service](doc/parcsn_especial_service.md) - Parcelamento Especial do Simples Nacional
+- [PERTMEI Service](doc/pertmei_service.md) - Pertinência do MEI
+- [PERTSN Service](doc/pertsn_service.md) - Pertinência do Simples Nacional
+- [PGDASD Service](doc/pgdasd_service.md) - Pagamento de DAS por Débito Direto Autorizado
+- [PGMEI Service](doc/pgmei_service.md) - Pagamento de DAS do MEI
+- [Procurações Service](doc/procuracoes_service.md) - Gestão de procurações eletrônicas
+- [RELPMEI Service](doc/relpmei_service.md) - Relatório de Pagamentos do MEI
+- [RELPSN Service](doc/relpsn_service.md) - Relatório de Pagamentos do Simples Nacional
 - [SICALC Service](doc/sicalc_service.md) - Sistema de Cálculo de Impostos
+- [SITFIS Service](doc/sitfis_service.md) - Sistema de Informações Tributárias Fiscais
 
 ### Guias de Início Rápido
 
@@ -185,6 +253,7 @@ void main() async {
     consumerSecret: 'seu_consumer_secret',
     certPath: 'caminho/para/certificado.p12',
     certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
 
   // Consultar CCMEI
@@ -194,6 +263,15 @@ void main() async {
   if (response.sucesso) {
     print('CCMEI emitido com sucesso!');
     print('Número: ${response.dados?.numeroCertificado}');
+    
+    // Salvar PDF
+    if (response.dados?.pdf.isNotEmpty == true) {
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados!.pdf,
+        'ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
@@ -213,6 +291,7 @@ void main() async {
     consumerSecret: 'seu_consumer_secret',
     certPath: 'caminho/para/certificado.p12',
     certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
 
   // Gerar DARF
@@ -248,6 +327,7 @@ void main() async {
     consumerSecret: 'seu_consumer_secret',
     certPath: 'caminho/para/certificado.p12',
     certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
 
   // Consultar caixa postal
@@ -270,13 +350,23 @@ void main() async {
 
 ```dart
 // Ambiente Trial (desenvolvimento)
-final apiClient = ApiClient(
-  baseUrl: 'https://apigateway.serpro.gov.br/integra-contador-trial/v1',
+final apiClient = ApiClient();
+
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certPath: 'caminho/para/certificado.p12',
+  certPassword: 'senha_do_certificado',
+  ambiente: 'trial', // Usa URL de trial
 );
 
 // Ambiente Produção
-final apiClient = ApiClient(
-  baseUrl: 'https://apigateway.serpro.gov.br/integra-contador/v1',
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certPath: 'caminho/para/certificado.p12',
+  certPassword: 'senha_do_certificado',
+  ambiente: 'producao', // Usa URL de produção
 );
 ```
 
@@ -315,7 +405,7 @@ final isValidCnpj = ValidacoesUtils.isValidCnpj('12345678000195');
 final isValidCpf = ValidacoesUtils.isValidCpf('12345678901');
 
 // Formatar documento
-final cnpjFormatado = ValidacoesUtils.formatCnpj('12345678000195');
+final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
 // Resultado: 12.345.678/0001-95
 ```
 
@@ -328,7 +418,7 @@ class ApiResponse<T> {
   final bool sucesso;
   final String? mensagemErro;
   final T? dados;
-  final List<Mensagem> mensagens;
+  final List<MensagemNegocio> mensagens;
 }
 ```
 
@@ -485,21 +575,10 @@ final apiClient = ApiClient(
 - [ ] Suporte a webhooks
 - [ ] Interface gráfica para testes
 
-### Versões
-
-- **v1.0.0**: Versão inicial com todos os serviços básicos
-- **v1.1.0**: Melhorias de performance e cache
-- **v1.2.0**: Novos serviços e funcionalidades
 
 ## 🤝 Contribuição
 
-Contribuições são bem-vindas! Por favor, siga estas diretrizes:
-
-1. Fork o repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+Contribuições são bem-vindas!
 
 ### Padrões de Código
 

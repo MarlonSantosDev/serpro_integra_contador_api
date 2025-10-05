@@ -8,14 +8,34 @@ import 'package:serpro_integra_contador_api/src/services/relpsn/model/emitir_das
 import 'package:serpro_integra_contador_api/src/services/relpsn/model/relpsn_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/relpsn/model/relpsn_errors.dart';
 
-/// Serviço para integração com o sistema RELPSN (Parcelamento do Simples Nacional)
+/// **Serviço:** RELPSN (Regime Especial de Regularização Tributária para o Simples Nacional)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// O RELPSN é um regime especial para regularização tributária de débitos do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC61)
+/// - Consultar parcelamento específico (OBTERPARC62)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR60)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC63)
+/// - Emitir DAS para parcelas (GERARDAS59)
+///
+/// **Documentação oficial:** `.cursor/rules/relpsn.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final relpsnService = RelpsnService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await relpsnService.consultarPedidos();
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await relpsnService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class RelpsnService {
   final ApiClient _apiClient;
 

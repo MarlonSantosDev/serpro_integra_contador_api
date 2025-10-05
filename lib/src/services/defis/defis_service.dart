@@ -10,13 +10,30 @@ import 'package:serpro_integra_contador_api/src/services/defis/model/consultar_u
 import 'package:serpro_integra_contador_api/src/services/defis/model/consultar_declaracao_especifica_request.dart';
 import 'package:serpro_integra_contador_api/src/services/defis/model/consultar_declaracao_especifica_response.dart';
 
-/// Serviço para integração com DEFIS (Declaração de Informações Socioeconômicas e Fiscais)
+/// **Serviço:** DEFIS (Declaração de Informações Socioeconômicas e Fiscais)
 ///
-/// Implementa todos os serviços disponíveis do Integra DEFIS:
-/// - Transmitir Declaração Sócio Econômica (TRANSDECLARACAO141)
-/// - Consultar Declarações Transmitidas (CONSDECLARACAO142)
-/// - Consultar Última Declaração Transmitida (CONSULTIMADECREC143)
-/// - Consultar Declaração Específica (CONSDECREC144)
+/// Serviço para transmissão e consulta da DEFIS, declaração obrigatória para
+/// empresas optantes pelo Simples Nacional que encerraram atividades no ano-calendário.
+///
+/// **Este serviço permite:**
+/// - TRANSDECLARACAO141: Transmitir Declaração Sócio Econômica
+/// - CONSDECLARACAO142: Consultar Declarações Transmitidas
+/// - CONSULTIMADECREC143: Consultar Última Declaração Transmitida
+/// - CONSDECREC144: Consultar Declaração Específica
+///
+/// **Documentação oficial:** `.cursor/rules/defis.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final defisService = DefisService(apiClient);
+///
+/// // Transmitir declaração
+/// final resultado = await defisService.transmitirDeclaracao(
+///   contribuinteNumero: '12345678000190',
+///   declaracaoData: TransmitirDeclaracaoRequest(...),
+/// );
+/// print('Recibo: ${resultado.numeroRecibo}');
+/// ```
 class DefisService {
   final ApiClient _apiClient;
 

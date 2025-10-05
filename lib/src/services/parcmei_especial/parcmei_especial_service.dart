@@ -8,14 +8,34 @@ import 'package:serpro_integra_contador_api/src/services/parcmei_especial/model/
 import 'package:serpro_integra_contador_api/src/services/parcmei_especial/model/parcmei_especial_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/parcmei_especial/model/parcmei_especial_errors.dart';
 
-/// Serviço para integração com o sistema PARCMEI-ESP (Parcelamento do MEI Especial)
+/// **Serviço:** PARCMEI-ESP (Parcelamento Especial do MEI)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// O PARCMEI-ESP é uma modalidade especial de parcelamento de débitos tributários federais do MEI.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC253)
+/// - Consultar parcelamento específico (OBTERPARC254)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR252)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC255)
+/// - Emitir DAS para parcelas (GERARDAS251)
+///
+/// **Documentação oficial:** `.cursor/rules/parcmei_especial.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final parcmeiEspecialService = ParcmeiEspecialService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await parcmeiEspecialService.consultarPedidos();
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await parcmeiEspecialService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class ParcmeiEspecialService {
   final ApiClient _apiClient;
 

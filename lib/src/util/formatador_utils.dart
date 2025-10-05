@@ -11,7 +11,21 @@ class FormatadorUtils {
   // Padrões regex para formatação
   static final RegExp _currencyRegex = RegExp(r'(\d)(?=(\d{3})+(?!\d))');
 
+  /// @formatador_utils
+  ///
   /// Formata um valor monetário para o padrão brasileiro (R$ X.XXX,XX)
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// formatCurrency(1234.56)
+  /// formatCurrency(1234.56, includeSymbol: false)
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// 'R$ 1.234,56'
+  /// '1.234,56'
+  /// ```
   ///
   /// [value] - Valor numérico a ser formatado
   /// [includeSymbol] - Se deve incluir o símbolo R$ (padrão: true)
@@ -44,9 +58,25 @@ class FormatadorUtils {
     return value.toString().replaceAll(_currencyRegex, r'$1.');
   }
 
+  /// @formatador_utils
+  ///
   /// Formata CPF com máscara (XXX.XXX.XXX-XX)
   ///
-  /// [cpf] - CPF sem formatação
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// formatCpf('12345678901')
+  /// formatCpf('123.456.789-01') // aceita já formatado
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// '123.456.789-01'
+  /// '123.456.789-01'
+  /// ```
+  ///
+  /// [cpf] - CPF sem formatação ou já formatado
+  ///
+  /// Throws [ArgumentError] se o CPF não tiver 11 dígitos após limpeza
   static String formatCpf(String cpf) {
     final cleanCpf = ValidacoesUtils.cleanDocumentNumber(cpf);
 
@@ -57,9 +87,25 @@ class FormatadorUtils {
     return '${cleanCpf.substring(0, 3)}.${cleanCpf.substring(3, 6)}.${cleanCpf.substring(6, 9)}-${cleanCpf.substring(9)}';
   }
 
+  /// @formatador_utils
+  ///
   /// Formata CNPJ com máscara (XX.XXX.XXX/XXXX-XX)
   ///
-  /// [cnpj] - CNPJ sem formatação
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// formatCnpj('12345678000195')
+  /// formatCnpj('12.345.678/0001-95') // aceita já formatado
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// '12.345.678/0001-95'
+  /// '12.345.678/0001-95'
+  /// ```
+  ///
+  /// [cnpj] - CNPJ sem formatação ou já formatado
+  ///
+  /// Throws [ArgumentError] se o CNPJ não tiver 14 dígitos após limpeza
   static String formatCnpj(String cnpj) {
     final cleanCnpj = ValidacoesUtils.cleanDocumentNumber(cnpj);
 
@@ -85,9 +131,23 @@ class FormatadorUtils {
     }
   }
 
+  /// @formatador_utils
+  ///
   /// Formata data no formato AAAAMMDD para DD/MM/AAAA
   ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// formatDateFromString('20240315')
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// '15/03/2024'
+  /// ```
+  ///
   /// [dateString] - Data no formato AAAAMMDD
+  ///
+  /// Throws [ArgumentError] se não tiver 8 dígitos
   static String formatDateFromString(String dateString) {
     if (dateString.length != 8) {
       throw ArgumentError('Data deve ter 8 dígitos (AAAAMMDD). Recebido: $dateString');
@@ -135,9 +195,23 @@ class FormatadorUtils {
     return '${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)} ${time.substring(0, 2)}:${time.substring(2, 4)}:${time.substring(4, 6)}';
   }
 
+  /// @formatador_utils
+  ///
   /// Formata período no formato AAAAMM para AAAA/MM
   ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// formatPeriodFromString('202403')
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// '2024/03'
+  /// ```
+  ///
   /// [periodString] - Período no formato AAAAMM
+  ///
+  /// Throws [ArgumentError] se não tiver 6 dígitos
   static String formatPeriodFromString(String periodString) {
     if (periodString.length != 6) {
       throw ArgumentError('Período deve ter 6 dígitos (AAAAMM). Recebido: $periodString');

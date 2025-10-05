@@ -5,7 +5,32 @@ import 'package:serpro_integra_contador_api/src/services/caixa_postal/model/list
 import 'package:serpro_integra_contador_api/src/services/caixa_postal/model/detalhes_mensagem_response.dart';
 import 'package:serpro_integra_contador_api/src/services/caixa_postal/model/indicador_mensagens_response.dart';
 
-/// Serviço para operações da Caixa Postal
+/// **Serviço:** CAIXA POSTAL (Caixa Postal do Simples Nacional)
+///
+/// A Caixa Postal é um sistema de comunicação entre a Receita Federal e os contribuintes do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Listar mensagens por contribuinte (LISTAMSGPORCONTRIB271)
+/// - Obter detalhes de uma mensagem (DETALHAMSG272)
+/// - Obter indicador de mensagens não lidas (INDICMSG273)
+///
+/// **Documentação oficial:** `.cursor/rules/caixa_postal.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final caixaPostalService = CaixaPostalService(apiClient);
+///
+/// // Listar mensagens não lidas
+/// final mensagens = await caixaPostalService.obterListaMensagensPorContribuinte(
+///   '12345678000190',
+///   statusLeitura: 2, // Não lidas
+/// );
+/// print('Mensagens não lidas: ${mensagens.quantidadeMensagens}');
+///
+/// // Obter indicador de mensagens não lidas
+/// final indicador = await caixaPostalService.obterIndicadorMensagens('12345678000190');
+/// print('Total não lidas: ${indicador.quantidadeMensagensNaoLidas}');
+/// ```
 class CaixaPostalService {
   final ApiClient _apiClient;
 

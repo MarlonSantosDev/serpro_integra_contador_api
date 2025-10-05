@@ -1,14 +1,17 @@
-# SICALC - Sistema de Cálculos Tributários
+# SICALC - Sistema de Cálculo de Impostos
 
 ## Visão Geral
 
-O serviço SICALC permite gerar DARF (Documento de Arrecadação de Receitas Federais) com cálculos automáticos de multa e juros, consultar códigos de receita e gerar códigos de barras para DARFs calculados.
+O serviço SICALC permite gerar documentos de arrecadação (DARF/DAE) para diversos tipos de tributos, incluindo IRPF, IRPJ, CSLL, PIS/COFINS, entre outros.
 
 ## Funcionalidades
 
-- **Consolidar e Gerar DARF**: Cálculo automático de multa e juros com geração de DARF em PDF
-- **Consultar Código de Receita**: Consulta de informações sobre códigos de receita
-- **Gerar Código de Barras**: Geração de código de barras para DARF já calculado
+- **Gerar DARF Pessoa Física**: Geração de DARF para IRPF
+- **Gerar DARF Pessoa Jurídica**: Geração de DARF para IRPJ
+- **Consolidar e Gerar DARF**: Consolidação de tributos e geração de DARF
+- **Gerar DAE**: Geração de Documento de Arrecadação Estadual
+- **Consultar Códigos de Receita**: Consulta de códigos de receita disponíveis
+- **Validar Dados**: Validação automática de dados de entrada
 
 ## Configuração
 
@@ -25,10 +28,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 final apiClient = ApiClient();
 await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret', 
+  certPath: 'caminho/para/certificado.p12',
+  certPassword: 'senha_do_certificado',
+  ambiente: 'trial', // ou 'producao'
 );
 ```
 
@@ -40,146 +44,90 @@ await apiClient.authenticate(
 final sicalcService = SicalcService(apiClient);
 ```
 
-### 2. Consolidar e Gerar DARF
+### 2. Gerar DARF Pessoa Física
+
+```dart
+try {
+  final response = await sicalcService.gerarDarfPessoaFisica(
+    contribuinteNumero: '00000000000', // CPF
+    uf: 'SP',
+    municipio: 3550308, // São Paulo
+    codigoReceita: 190, // IRPF
+    codigoReceitaExtensao: 1,
+    dataPA: '20240101',
+    vencimento: '20240215',
+    valorImposto: 1000.00,
+    dataConsolidacao: '20240215',
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
+
+  if (response.sucesso) {
+    print('DARF gerado com sucesso!');
+    print('Número do documento: ${response.dados.numeroDocumento}');
+    print('Valor total: R\$ ${response.dados.valorTotal.toStringAsFixed(2)}');
+    print('Data de vencimento: ${response.dados.dataVencimento}');
+    
+    // Salvar PDF
+    if (response.dados.pdfBase64.isNotEmpty) {
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados.pdfBase64,
+        'darf_pf_${response.dados.numeroDocumento}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao gerar DARF PF: $e');
+}
+```
+
+### 3. Gerar DARF Pessoa Jurídica
+
+```dart
+try {
+  final response = await sicalcService.gerarDarfPessoaJuridica(
+    contribuinteNumero: '00000000000000', // CNPJ
+    uf: 'SP',
+    municipio: 3550308,
+    codigoReceita: 1001, // IRPJ
+    codigoReceitaExtensao: 1,
+    dataPA: '20240101',
+    vencimento: '20240215',
+    valorImposto: 5000.00,
+    dataConsolidacao: '20240215',
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
+
+  if (response.sucesso) {
+    print('DARF PJ gerado com sucesso!');
+    print('Número: ${response.dados.numeroDocumento}');
+    print('Valor: R\$ ${response.dados.valorTotal.toStringAsFixed(2)}');
+    
+    // Salvar PDF
+    if (response.dados.pdfBase64.isNotEmpty) {
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados.pdfBase64,
+        'darf_pj_${response.dados.numeroDocumento}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao gerar DARF PJ: $e');
+}
+```
+
+### 4. Consolidar e Gerar DARF
 
 ```dart
 try {
   final response = await sicalcService.consolidarEGerarDarf(
-    contribuinteNumero: '00000000000000',
-    uf: 'SP',
-    municipio: 3550308, // São Paulo
-    codigoReceita: 190,
-    codigoReceitaExtensao: 1,
-    dataPA: '20240101',
-    vencimento: '20240215',
-    valorImposto: 1000.0,
-    dataConsolidacao: '20240215',
-    observacao: 'DARF de teste',
-  );
-  
-  if (response.sucesso) {
-    print('DARF gerado com sucesso!');
-    print('Número do documento: ${response.dados?.numeroDocumento}');
-    print('Valor total: ${response.dados?.valorTotal}');
-    print('PDF disponível: ${response.dados?.pdfBase64 != null}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro ao gerar DARF: $e');
-}
-```
-
-### 3. Consultar Código de Receita
-
-```dart
-try {
-  final response = await sicalcService.consultarCodigoReceita(
-    contribuinteNumero: '00000000000000',
-    codigoReceita: 190,
-  );
-  
-  if (response.sucesso) {
-    print('Código de receita encontrado!');
-    print('Descrição: ${response.dados?.descricaoReceita}');
-    print('Tipo de pessoa: ${response.dados?.tipoPessoaFormatado}');
-    print('Período: ${response.dados?.tipoPeriodoFormatado}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro ao consultar receita: $e');
-}
-```
-
-### 4. Gerar Código de Barras
-
-```dart
-try {
-  final response = await sicalcService.gerarCodigoBarrasDarf(
-    contribuinteNumero: '00000000000000',
-    numeroDocumento: 123456789,
-  );
-  
-  if (response.sucesso) {
-    print('Código de barras gerado com sucesso!');
-    print('Código: ${response.dados?.codigoBarras}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro ao gerar código de barras: $e');
-}
-```
-
-## Métodos de Conveniência
-
-### Gerar DARF para Pessoa Física (IRPF)
-
-```dart
-final response = await sicalcService.gerarDarfPessoaFisica(
-  contribuinteNumero: '00000000000',
-  uf: 'SP',
-  municipio: 3550308,
-  dataPA: '20240101',
-  vencimento: '20240215',
-  valorImposto: 1000.0,
-  dataConsolidacao: '20240215',
-  observacao: 'IRPF',
-);
-```
-
-### Gerar DARF para Pessoa Jurídica (IRPJ)
-
-```dart
-final response = await sicalcService.gerarDarfPessoaJuridica(
-  contribuinteNumero: '00000000000000',
-  uf: 'SP',
-  municipio: 3550308,
-  dataPA: '20240101',
-  vencimento: '20240215',
-  valorImposto: 1000.0,
-  dataConsolidacao: '20240215',
-  observacao: 'IRPJ',
-);
-```
-
-### Gerar DARF para PIS/PASEP
-
-```dart
-final response = await sicalcService.gerarDarfPisPasep(
-  contribuinteNumero: '00000000000000',
-  uf: 'SP',
-  municipio: 3550308,
-  dataPA: '20240101',
-  vencimento: '20240215',
-  valorImposto: 1000.0,
-  dataConsolidacao: '20240215',
-  observacao: 'PIS/PASEP',
-);
-```
-
-### Gerar DARF para COFINS
-
-```dart
-final response = await sicalcService.gerarDarfCofins(
-  contribuinteNumero: '00000000000000',
-  uf: 'SP',
-  municipio: 3550308,
-  dataPA: '20240101',
-  vencimento: '20240215',
-  valorImposto: 1000.0,
-  dataConsolidacao: '20240215',
-  observacao: 'COFINS',
-);
-```
-
-## Fluxo Completo - Gerar DARF e Código de Barras
-
-```dart
-try {
-  // 1. Gerar DARF
-  final darfResponse = await sicalcService.gerarDarfECodigoBarras(
     contribuinteNumero: '00000000000000',
     uf: 'SP',
     municipio: 3550308,
@@ -187,121 +135,220 @@ try {
     codigoReceitaExtensao: 1,
     dataPA: '20240101',
     vencimento: '20240215',
-    valorImposto: 1000.0,
+    valorImposto: 1000.00,
     dataConsolidacao: '20240215',
-    observacao: 'DARF completo',
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
   );
-  
-  if (darfResponse.sucesso) {
-    print('DARF e código de barras gerados com sucesso!');
-    print('Número do documento: ${darfResponse.dados?.numeroDocumento}');
-    print('Código de barras: ${darfResponse.dados?.codigoBarras}');
+
+  if (response.sucesso) {
+    print('DARF consolidado gerado!');
+    print('Número: ${response.dados.numeroDocumento}');
+    print('Valor: R\$ ${response.dados.valorTotal.toStringAsFixed(2)}');
+    
+    // Detalhamento dos tributos
+    for (final tributo in response.dados.tributos) {
+      print('Tributo ${tributo.codigo}: R\$ ${tributo.valor.toStringAsFixed(2)}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro no fluxo completo: $e');
+  print('Erro ao consolidar DARF: $e');
 }
 ```
 
-## Validações e Utilitários
-
-### Validar Compatibilidade de Receita
+### 5. Gerar DAE (Documento de Arrecadação Estadual)
 
 ```dart
-final isCompatible = await sicalcService.validarCompatibilidadeReceita(
-  contribuinteNumero: '00000000000000',
-  codigoReceita: 190,
-);
+try {
+  final response = await sicalcService.gerarDae(
+    contribuinteNumero: '00000000000000',
+    uf: 'SP',
+    municipio: 3550308,
+    codigoReceita: 1001,
+    dataPA: '20240101',
+    vencimento: '20240215',
+    valorImposto: 1000.00,
+    dataConsolidacao: '20240215',
+  );
 
-if (isCompatible) {
-  print('Receita compatível com o contribuinte');
+  if (response.sucesso) {
+    print('DAE gerado com sucesso!');
+    print('Número: ${response.dados.numeroDocumento}');
+    print('Valor: R\$ ${response.dados.valorTotal.toStringAsFixed(2)}');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao gerar DAE: $e');
+}
+```
+
+### 6. Consultar Códigos de Receita
+
+```dart
+try {
+  final response = await sicalcService.consultarCodigosReceita(
+    uf: 'SP',
+    municipio: 3550308,
+  );
+
+  if (response.sucesso) {
+    print('Códigos de receita encontrados: ${response.dados.length}');
+    
+    for (final codigo in response.dados) {
+      print('Código: ${codigo.codigo} - ${codigo.descricao}');
+      print('Extensões: ${codigo.extensoes.map((e) => '${e.codigo}: ${e.descricao}').join(', ')}');
+      print('---');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar códigos: $e');
+}
+```
+
+## Validações Disponíveis
+
+O serviço utiliza validações centralizadas do `ValidacoesUtils`:
+
+```dart
+// Validar CPF/CNPJ antes de usar
+final errorDocumento = ValidacoesUtils.validarCpf(contribuinteNumero) ?? 
+                      ValidacoesUtils.validarCnpjContribuinte(contribuinteNumero);
+if (errorDocumento != null) {
+  print('Documento inválido: $errorDocumento');
+  return;
+}
+
+// Validar valor monetário
+final errorValor = ValidacoesUtils.validarValorMonetario(valorImposto);
+if (errorValor != null) {
+  print('Valor inválido: $errorValor');
+  return;
+}
+
+// Validar data
+final errorData = ValidacoesUtils.validarDataInt(int.tryParse(dataPA));
+if (errorData != null) {
+  print('Data inválida: $errorData');
+  return;
+}
+```
+
+## Formatação de Dados
+
+Utilize os utilitários de formatação do `FormatadorUtils`:
+
+```dart
+// Formatar CPF/CNPJ para exibição
+String documentoFormatado;
+if (contribuinteNumero.length == 11) {
+  documentoFormatado = FormatadorUtils.formatCpf(contribuinteNumero);
 } else {
-  print('Receita não compatível');
+  documentoFormatado = FormatadorUtils.formatCnpj(contribuinteNumero);
 }
-```
+print('Contribuinte: $documentoFormatado');
 
-### Obter Informações Detalhadas da Receita
+// Formatar moeda
+final valorFormatado = FormatadorUtils.formatCurrency(valorImposto);
+print('Valor do Imposto: $valorFormatado');
 
-```dart
-final info = await sicalcService.obterInfoReceita(
-  contribuinteNumero: '00000000000000',
-  codigoReceita: 190,
-);
+// Formatar data
+final dataFormatada = FormatadorUtils.formatDateFromString(dataPA);
+print('Período de Apuração: $dataFormatada');
 
-if (info != null) {
-  print('Código: ${info['codigoReceita']}');
-  print('Descrição: ${info['descricaoReceita']}');
-  print('Tipo de pessoa: ${info['tipoPessoa']}');
-  print('Período: ${info['tipoPeriodoApuracao']}');
-  print('Ativa: ${info['ativa']}');
-  print('Compatível: ${info['compativelComContribuinte']}');
-}
-```
-
-## Estrutura de Dados
-
-### ConsolidarDarfResponse
-
-```dart
-class ConsolidarDarfResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsolidarDarfDados? dados;
-}
-
-class ConsolidarDarfDados {
-  final int numeroDocumento;
-  final double valorTotal;
-  final double valorImposto;
-  final double valorMulta;
-  final double valorJuros;
-  final String? pdfBase64;
-  // ... outros campos
-}
-```
-
-### ConsultarReceitaResponse
-
-```dart
-class ConsultarReceitaResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsultarReceitaDados? dados;
-}
-
-class ConsultarReceitaDados {
-  final int codigoReceita;
-  final String descricaoReceita;
-  final String tipoPessoaFormatado;
-  final String tipoPeriodoFormatado;
-  final String? observacoes;
-  final bool ativa;
-  // ... outros campos
-}
+// Formatar período
+final periodoFormatado = FormatadorUtils.formatPeriodFromString(dataPA.substring(0, 6));
+print('Período: $periodoFormatado');
 ```
 
 ## Códigos de Receita Comuns
 
-| Código | Descrição | Tipo de Pessoa |
-|--------|-----------|----------------|
-| 190 | IRPF | Pessoa Física |
-| 220 | IRPJ | Pessoa Jurídica |
-| 1162 | PIS/PASEP | Pessoa Jurídica |
-| 1163 | COFINS | Pessoa Jurídica |
-| 1164 | CSLL | Pessoa Jurídica |
+### Tributos Federais
+- **190**: IRPF (Imposto de Renda Pessoa Física)
+- **1001**: IRPJ (Imposto de Renda Pessoa Jurídica)
+- **1002**: CSLL (Contribuição Social sobre o Lucro Líquido)
+- **1003**: PIS (Programa de Integração Social)
+- **1004**: COFINS (Contribuição para o Financiamento da Seguridade Social)
+
+### Tributos Estaduais
+- **1005**: ICMS (Imposto sobre Circulação de Mercadorias e Serviços)
+- **1006**: IPVA (Imposto sobre Propriedade de Veículos Automotores)
+
+### Tributos Municipais
+- **1007**: IPTU (Imposto sobre Propriedade Predial e Territorial Urbana)
+- **1008**: ISS (Imposto sobre Serviços)
+
+## Estrutura de Dados
+
+### GerarDarfResponse
+
+```dart
+class GerarDarfResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final GerarDarfDados? dados;
+  final List<MensagemNegocio> mensagens;
+}
+
+class GerarDarfDados {
+  final String numeroDocumento;
+  final double valorTotal;
+  final String dataVencimento;
+  final String pdfBase64;
+  final List<TributoDetalhado> tributos;
+  // ... outros campos
+}
+
+class TributoDetalhado {
+  final String codigo;
+  final String descricao;
+  final double valor;
+  final String? extensao;
+  // ... outros campos
+}
+```
+
+### ConsultarCodigosReceitaResponse
+
+```dart
+class ConsultarCodigosReceitaResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final List<CodigoReceita> dados;
+  final List<MensagemNegocio> mensagens;
+}
+
+class CodigoReceita {
+  final String codigo;
+  final String descricao;
+  final List<ExtensaoReceita> extensoes;
+  // ... outros campos
+}
+
+class ExtensaoReceita {
+  final String codigo;
+  final String descricao;
+  // ... outros campos
+}
+```
 
 ## Códigos de Erro Comuns
 
 | Código | Descrição | Solução |
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CNPJ/CPF inválido | Verificar formato do documento |
+| 002 | CPF/CNPJ inválido | Verificar formato do documento |
 | 003 | Código de receita inválido | Verificar se código existe |
-| 004 | UF inválida | Verificar código da UF |
-| 005 | Município inválido | Verificar código do município |
+| 004 | Data inválida | Verificar formato da data |
+| 005 | Valor inválido | Verificar se valor é positivo |
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Gerar DARF IRPF
+### Exemplo Completo - Fluxo Completo SICALC
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -310,59 +357,162 @@ void main() async {
   // 1. Configurar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret', 
+    certPath: 'caminho/para/certificado.p12',
+    certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
   
   // 2. Criar serviço
   final sicalcService = SicalcService(apiClient);
   
-  // 3. Consultar receita antes de gerar
   try {
-    final receitaResponse = await sicalcService.consultarCodigoReceita(
-      contribuinteNumero: '00000000000',
-      codigoReceita: 190,
+    const contribuinteNumero = '00000000000'; // CPF
+    const uf = 'SP';
+    const municipio = 3550308; // São Paulo
+    const codigoReceita = 190; // IRPF
+    const valorImposto = 1000.00;
+    
+    // Validar dados antes de usar
+    final errorCpf = ValidacoesUtils.validarCpf(contribuinteNumero);
+    if (errorCpf != null) {
+      print('CPF inválido: $errorCpf');
+      return;
+    }
+    
+    final errorValor = ValidacoesUtils.validarValorMonetario(valorImposto);
+    if (errorValor != null) {
+      print('Valor inválido: $errorValor');
+      return;
+    }
+    
+    // 3. Consultar códigos de receita disponíveis
+    print('=== Consultando Códigos de Receita ===');
+    final codigosResponse = await sicalcService.consultarCodigosReceita(
+      uf: uf,
+      municipio: municipio,
     );
     
-    if (receitaResponse.sucesso) {
-      print('Receita encontrada: ${receitaResponse.dados?.descricaoReceita}');
+    if (codigosResponse.sucesso) {
+      print('Códigos disponíveis: ${codigosResponse.dados.length}');
       
-      // 4. Gerar DARF
+      // Encontrar o código desejado
+      final codigoDesejado = codigosResponse.dados.firstWhere(
+        (c) => c.codigo == codigoReceita.toString(),
+        orElse: () => codigosResponse.dados.first,
+      );
+      
+      print('Usando código: ${codigoDesejado.codigo} - ${codigoDesejado.descricao}');
+      
+      // 4. Gerar DARF Pessoa Física
+      print('\n=== Gerando DARF Pessoa Física ===');
       final darfResponse = await sicalcService.gerarDarfPessoaFisica(
-        contribuinteNumero: '00000000000',
-        uf: 'SP',
-        municipio: 3550308,
+        contribuinteNumero: contribuinteNumero,
+        uf: uf,
+        municipio: municipio,
+        codigoReceita: int.parse(codigoDesejado.codigo),
+        codigoReceitaExtensao: codigoDesejado.extensoes.first.codigo,
         dataPA: '20240101',
         vencimento: '20240215',
-        valorImposto: 1000.0,
+        valorImposto: valorImposto,
         dataConsolidacao: '20240215',
-        observacao: 'IRPF - Janeiro 2024',
       );
       
       if (darfResponse.sucesso) {
-        print('DARF gerado com sucesso!');
-        print('Número: ${darfResponse.dados?.numeroDocumento}');
-        print('Valor total: ${darfResponse.dados?.valorTotal}');
+        print('✅ DARF gerado com sucesso!');
+        print('CPF: ${FormatadorUtils.formatCpf(contribuinteNumero)}');
+        print('Número: ${darfResponse.dados.numeroDocumento}');
+        print('Valor: ${FormatadorUtils.formatCurrency(darfResponse.dados.valorTotal)}');
+        print('Vencimento: ${FormatadorUtils.formatDateFromString(darfResponse.dados.dataVencimento)}');
         
-        // 5. Gerar código de barras
-        final codigoBarrasResponse = await sicalcService.gerarCodigoBarrasDarf(
-          contribuinteNumero: '00000000000',
-          numeroDocumento: darfResponse.dados!.numeroDocumento,
-        );
-        
-        if (codigoBarrasResponse.sucesso) {
-          print('Código de barras: ${codigoBarrasResponse.dados?.codigoBarras}');
+        // Detalhamento dos tributos
+        print('\nDetalhamento dos Tributos:');
+        for (final tributo in darfResponse.dados.tributos) {
+          print('  ${tributo.codigo}: ${FormatadorUtils.formatCurrency(tributo.valor)}');
         }
+        
+        // Salvar PDF
+        if (darfResponse.dados.pdfBase64.isNotEmpty) {
+          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+            darfResponse.dados.pdfBase64,
+            'darf_pf_${darfResponse.dados.numeroDocumento}.pdf',
+          );
+          print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+        }
+        
       } else {
-        print('Erro ao gerar DARF: ${darfResponse.mensagemErro}');
+        print('❌ Erro ao gerar DARF: ${darfResponse.mensagemErro}');
+        
+        // Analisar mensagens de erro
+        for (final mensagem in darfResponse.mensagens) {
+          if (mensagem.isErro) {
+            print('Erro: ${mensagem.codigo} - ${mensagem.texto}');
+          }
+        }
       }
+      
     } else {
-      print('Erro ao consultar receita: ${receitaResponse.mensagemErro}');
+      print('❌ Erro ao consultar códigos: ${codigosResponse.mensagemErro}');
     }
+    
   } catch (e) {
     print('Erro na operação: $e');
+  }
+}
+```
+
+### Exemplo - Validação e Formatação
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  final sicalcService = SicalcService(apiClient);
+  
+  // Validar CPF antes de usar
+  const contribuinteNumero = '12345678901';
+  final errorCpf = ValidacoesUtils.validarCpf(contribuinteNumero);
+  
+  if (errorCpf != null) {
+    print('CPF inválido: $errorCpf');
+    return;
+  }
+  
+  // Validar valor
+  const valorImposto = 1500.75;
+  final errorValor = ValidacoesUtils.validarValorMonetario(valorImposto);
+  
+  if (errorValor != null) {
+    print('Valor inválido: $errorValor');
+    return;
+  }
+  
+  // CPF e valor válidos, prosseguir
+  final response = await sicalcService.gerarDarfPessoaFisica(
+    contribuinteNumero: contribuinteNumero,
+    uf: 'SP',
+    municipio: 3550308,
+    codigoReceita: 190,
+    codigoReceitaExtensao: 1,
+    dataPA: '20240101',
+    vencimento: '20240215',
+    valorImposto: valorImposto,
+    dataConsolidacao: '20240215',
+  );
+  
+  if (response.sucesso) {
+    print('=== DARF Gerado ===');
+    print('CPF: ${FormatadorUtils.formatCpf(contribuinteNumero)}');
+    print('Número: ${response.dados.numeroDocumento}');
+    print('Valor: ${FormatadorUtils.formatCurrency(response.dados.valorTotal)}');
+    print('Vencimento: ${FormatadorUtils.formatDateFromString(response.dados.dataVencimento)}');
+    
+    // Detalhamento
+    print('\nDetalhamento:');
+    for (final tributo in response.dados.tributos) {
+      print('  ${tributo.codigo}: ${FormatadorUtils.formatCurrency(tributo.valor)}');
+    }
   }
 }
 ```
@@ -372,18 +522,15 @@ void main() async {
 Para desenvolvimento e testes, utilize os seguintes dados:
 
 ```dart
-// CNPJs/CPFs de teste (sempre usar zeros)
-const cnpjTeste = '00000000000000';
+// CPFs/CNPJs de teste (sempre usar zeros)
 const cpfTeste = '00000000000';
+const cnpjTeste = '00000000000000';
 
-// Dados de teste
-const uf = 'SP';
-const municipio = 3550308; // São Paulo
-const codigoReceita = 190; // IRPF
-const dataPA = '20240101';
-const vencimento = '20240215';
-const valorImposto = 1000.0;
-const dataConsolidacao = '20240215';
+// Dados de teste comuns
+const ufTeste = 'SP';
+const municipioTeste = 3550308; // São Paulo
+const codigoReceitaTeste = 190; // IRPF
+const valorTeste = 1000.00;
 ```
 
 ## Limitações
@@ -391,7 +538,8 @@ const dataConsolidacao = '20240215';
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Códigos de Receita**: Apenas códigos válidos são aceitos
+4. **Códigos de Receita**: Deve usar códigos válidos para a UF/município
+5. **Valores Monetários**: Devem ser valores positivos válidos
 
 ## Suporte
 

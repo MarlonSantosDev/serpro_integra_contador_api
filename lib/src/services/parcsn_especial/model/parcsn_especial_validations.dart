@@ -6,50 +6,14 @@ class ParcsnEspecialValidations {
   ///
   /// Retorna null se válido, ou uma mensagem de erro se inválido
   static String? validarNumeroParcelamento(int? numeroParcelamento) {
-    if (numeroParcelamento == null) {
-      return 'Número do parcelamento é obrigatório';
-    }
-
-    if (numeroParcelamento <= 0) {
-      return 'Número do parcelamento deve ser maior que zero';
-    }
-
-    if (numeroParcelamento > 999999) {
-      return 'Número do parcelamento deve ser menor que 999999';
-    }
-
-    return null;
+    return ValidacoesUtils.validarNumeroParcelamento(numeroParcelamento);
   }
 
   /// Valida um ano/mês de parcela no formato AAAAMM
   ///
   /// Retorna null se válido, ou uma mensagem de erro se inválido
   static String? validarAnoMesParcela(int? anoMesParcela) {
-    if (anoMesParcela == null) {
-      return 'Ano/mês da parcela é obrigatório';
-    }
-
-    final anoMesStr = anoMesParcela.toString();
-    if (anoMesStr.length != 6) {
-      return 'Ano/mês deve estar no formato AAAAMM (ex: 202301)';
-    }
-
-    final ano = int.tryParse(anoMesStr.substring(0, 4));
-    final mes = int.tryParse(anoMesStr.substring(4, 6));
-
-    if (ano == null || mes == null) {
-      return 'Ano/mês deve conter apenas números';
-    }
-
-    if (ano < 2000 || ano > 2100) {
-      return 'Ano deve estar entre 2000 e 2100';
-    }
-
-    if (mes < 1 || mes > 12) {
-      return 'Mês deve estar entre 01 e 12';
-    }
-
-    return null;
+    return ValidacoesUtils.validarAnoMes(anoMesParcela);
   }
 
   /// Valida uma parcela para emissão no formato AAAAMM

@@ -8,14 +8,34 @@ import 'package:serpro_integra_contador_api/src/services/parcmei/model/emitir_da
 import 'package:serpro_integra_contador_api/src/services/parcmei/model/parcmei_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/parcmei/model/parcmei_errors.dart';
 
-/// Serviço para integração com o sistema PARCMEI (Parcelamento do MEI)
+/// **Serviço:** PARCMEI (Parcelamento do MEI)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// O PARCMEI permite que o MEI parcele seus débitos tributários federais.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC213)
+/// - Consultar parcelamento específico (OBTERPARC214)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR212)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC215)
+/// - Emitir DAS para parcelas (GERARDAS211)
+///
+/// **Documentação oficial:** `.cursor/rules/parcmei.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final parcmeiService = ParcmeiService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await parcmeiService.consultarPedidos();
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await parcmeiService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class ParcmeiService {
   final ApiClient _apiClient;
 

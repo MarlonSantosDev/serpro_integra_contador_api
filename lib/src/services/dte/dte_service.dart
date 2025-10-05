@@ -3,7 +3,26 @@ import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/services/dte/model/dte_response.dart';
 import 'package:serpro_integra_contador_api/src/util/validacoes_utils.dart';
 
-/// Serviço para consultas do DTE - Domicílio Tributário Eletrônico
+/// **Serviço:** DTE (Domicílio Tributário Eletrônico)
+///
+/// O DTE é um canal de comunicação digital entre a Receita Federal e os contribuintes.
+///
+/// **Este serviço permite:**
+/// - Obter indicador de adesão ao DTE (INDDOMICELETTRIB201)
+///
+/// **Documentação oficial:** `.cursor/rules/dte.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final dteService = DteService(apiClient);
+///
+/// // Verificar adesão ao DTE
+/// final dte = await dteService.obterIndicadorDte('12345678000190');
+/// if (dte.isOptanteDte) {
+///   print('Contribuinte optante pelo DTE');
+///   print('Status: ${dte.statusEnquadramentoDescricao}');
+/// }
+/// ```
 class DteService {
   final ApiClient _apiClient;
 
@@ -29,13 +48,6 @@ class DteService {
   /// }
   /// ```
   Future<DteResponse> obterIndicadorDte(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    // Validações
-    /* // Para testes deve ser desabilitado
-    final validacao = _validarCnpj(cnpj);
-    if (validacao != null) {
-      throw ArgumentError(validacao);
-    }*/
-
     final request = BaseRequest(
       contribuinteNumero: cnpj,
       pedidoDados: PedidoDados(
@@ -55,17 +67,14 @@ class DteService {
       );
       final dteResponse = DteResponse.fromJson(response);
 
-      // Validação adicional da resposta
       _validarResposta(dteResponse);
 
       return dteResponse;
     } catch (e) {
-      // Tratamento de erros específicos do DTE
       if (e is ArgumentError) {
         rethrow;
       }
 
-      // Erro de conexão ou sistema
       throw Exception('Erro ao consultar indicador DTE: ${e.toString()}');
     }
   }
@@ -76,7 +85,6 @@ class DteService {
       return 'CNPJ não pode estar vazio';
     }
 
-    // Usa a validação centralizada do DocumentUtils
     if (!ValidacoesUtils.isValidCnpj(cnpj)) {
       return 'CNPJ inválido';
     }
@@ -90,7 +98,6 @@ class DteService {
       throw Exception('Erro HTTP ${response.status}: ${response.mensagemPrincipal}');
     }
 
-    // Verifica se há mensagens de erro específicas do DTE
     for (final mensagem in response.mensagens) {
       if (mensagem.isErro) {
         final erroInfo = _obterInfoErro(mensagem.codigo);

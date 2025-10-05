@@ -400,4 +400,264 @@ class ValidacoesUtils {
       throw ArgumentError('${fieldName ?? 'Data de acolhimento'} inválida: deve estar no formato AAAAMMDD');
     }
   }
+
+  // ===== VALIDAÇÕES COMUNS PARA PARCELAMENTOS =====
+
+  /// @validacoes_utils
+  ///
+  /// Valida um número de parcelamento
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// validarNumeroParcelamento(123456)
+  /// validarNumeroParcelamento(null)
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// null  // válido
+  /// 'Número do parcelamento é obrigatório'  // inválido
+  /// ```
+  ///
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarNumeroParcelamento(int? numeroParcelamento) {
+    if (numeroParcelamento == null) {
+      return 'Número do parcelamento é obrigatório';
+    }
+
+    if (numeroParcelamento <= 0) {
+      return 'Número do parcelamento deve ser maior que zero';
+    }
+
+    if (numeroParcelamento > 999999) {
+      return 'Número do parcelamento deve ser menor que 999999';
+    }
+
+    return null;
+  }
+
+  /// @validacoes_utils
+  ///
+  /// Valida um ano/mês no formato AAAAMM
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// validarAnoMes(202403)
+  /// validarAnoMes(202313)  // mês inválido
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// null  // válido
+  /// 'Mês deve estar entre 01 e 12'  // inválido
+  /// ```
+  ///
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarAnoMes(int? anoMes) {
+    if (anoMes == null) {
+      return 'Ano/mês é obrigatório';
+    }
+
+    final anoMesStr = anoMes.toString();
+    if (anoMesStr.length != 6) {
+      return 'Ano/mês deve estar no formato AAAAMM (ex: 202301)';
+    }
+
+    final ano = int.tryParse(anoMesStr.substring(0, 4));
+    final mes = int.tryParse(anoMesStr.substring(4, 6));
+
+    if (ano == null || mes == null) {
+      return 'Ano/mês deve conter apenas números';
+    }
+
+    if (ano < 2000 || ano > 2100) {
+      return 'Ano deve estar entre 2000 e 2100';
+    }
+
+    if (mes < 1 || mes > 12) {
+      return 'Mês deve estar entre 01 e 12';
+    }
+
+    return null;
+  }
+
+  /// @validacoes_utils
+  ///
+  /// Valida uma data no formato AAAAMMDD (int)
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// validarDataInt(20240315)
+  /// validarDataInt(20240229)  // 2024 é bissexto, válido
+  /// validarDataInt(20230229)  // 2023 não é bissexto, inválido
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// null  // válido
+  /// 'Data inválida'  // inválido
+  /// ```
+  ///
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarDataInt(int? data) {
+    if (data == null) {
+      return 'Data é obrigatória';
+    }
+
+    final dataStr = data.toString();
+    if (dataStr.length != 8) {
+      return 'Data deve estar no formato AAAAMMDD';
+    }
+
+    final ano = int.tryParse(dataStr.substring(0, 4));
+    final mes = int.tryParse(dataStr.substring(4, 6));
+    final dia = int.tryParse(dataStr.substring(6, 8));
+
+    if (ano == null || mes == null || dia == null) {
+      return 'Data deve conter apenas números';
+    }
+
+    if (ano < 2000 || ano > 2100) {
+      return 'Ano deve estar entre 2000 e 2100';
+    }
+
+    if (mes < 1 || mes > 12) {
+      return 'Mês deve estar entre 01 e 12';
+    }
+
+    if (dia < 1 || dia > 31) {
+      return 'Dia deve estar entre 01 e 31';
+    }
+
+    // Verifica se a data é válida
+    try {
+      DateTime(ano, mes, dia);
+    } catch (e) {
+      return 'Data inválida';
+    }
+
+    return null;
+  }
+
+  /// Valida uma data/hora no formato AAAAMMDDHHMMSS (int)
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarDataHoraInt(int? dataHora) {
+    if (dataHora == null) {
+      return 'Data/hora é obrigatória';
+    }
+
+    final dataHoraStr = dataHora.toString();
+    if (dataHoraStr.length != 14) {
+      return 'Data/hora deve ter 14 dígitos (AAAAMMDDHHMMSS)';
+    }
+
+    final ano = int.tryParse(dataHoraStr.substring(0, 4));
+    final mes = int.tryParse(dataHoraStr.substring(4, 6));
+    final dia = int.tryParse(dataHoraStr.substring(6, 8));
+    final hora = int.tryParse(dataHoraStr.substring(8, 10));
+    final minuto = int.tryParse(dataHoraStr.substring(10, 12));
+    final segundo = int.tryParse(dataHoraStr.substring(12, 14));
+
+    if (ano == null || mes == null || dia == null || hora == null || minuto == null || segundo == null) {
+      return 'Data/hora deve conter apenas números';
+    }
+
+    if (ano < 2000 || ano > 2100) {
+      return 'Ano deve estar entre 2000 e 2100';
+    }
+
+    if (mes < 1 || mes > 12) {
+      return 'Mês deve estar entre 01 e 12';
+    }
+
+    if (dia < 1 || dia > 31) {
+      return 'Dia deve estar entre 01 e 31';
+    }
+
+    if (hora < 0 || hora > 23) {
+      return 'Hora deve estar entre 00 e 23';
+    }
+
+    if (minuto < 0 || minuto > 59) {
+      return 'Minuto deve estar entre 00 e 59';
+    }
+
+    if (segundo < 0 || segundo > 59) {
+      return 'Segundo deve estar entre 00 e 59';
+    }
+
+    // Validação básica de data/hora válida
+    try {
+      DateTime(ano, mes, dia, hora, minuto, segundo);
+    } catch (e) {
+      return 'Data/hora inválida';
+    }
+
+    return null;
+  }
+
+  /// @validacoes_utils
+  ///
+  /// Valida um valor monetário
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// validarValorMonetario(1234.56)
+  /// validarValorMonetario(-10.00)  // negativo
+  /// validarValorMonetario(1000000000.00)  // muito alto
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// null  // válido
+  /// 'Valor não pode ser negativo'  // inválido
+  /// 'Valor não pode ser maior que R$ 999.999.999,99'  // inválido
+  /// ```
+  ///
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarValorMonetario(double? valor) {
+    if (valor == null) {
+      return 'Valor é obrigatório';
+    }
+
+    if (valor < 0) {
+      return 'Valor não pode ser negativo';
+    }
+
+    if (valor > 999999999.99) {
+      return 'Valor não pode ser maior que R\$ 999.999.999,99';
+    }
+
+    return null;
+  }
+
+  /// @validacoes_utils
+  ///
+  /// Valida um CNPJ retornando mensagem de erro ou null
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// validarCnpjContribuinte('12345678000195')
+  /// validarCnpjContribuinte('12.345.678/0001-95')  // aceita formatado
+  /// validarCnpjContribuinte('123456780001')  // tamanho incorreto
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// null  // válido
+  /// 'CNPJ inválido'  // inválido
+  /// ```
+  ///
+  /// Retorna null se válido, ou uma mensagem de erro se inválido
+  static String? validarCnpjContribuinte(String? cnpj) {
+    if (cnpj == null || cnpj.isEmpty) {
+      return 'CNPJ do contribuinte é obrigatório';
+    }
+
+    if (!isValidCnpj(cnpj)) {
+      return 'CNPJ inválido';
+    }
+
+    return null;
+  }
 }

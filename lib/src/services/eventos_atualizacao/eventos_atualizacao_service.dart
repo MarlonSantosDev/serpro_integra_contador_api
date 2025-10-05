@@ -10,13 +10,36 @@ import 'package:serpro_integra_contador_api/src/services/eventos_atualizacao/mod
 import 'package:serpro_integra_contador_api/src/services/eventos_atualizacao/model/obter_eventos_pj_request.dart';
 import 'package:serpro_integra_contador_api/src/services/eventos_atualizacao/model/obter_eventos_pj_response.dart';
 
-/// Serviço para consultar eventos de última atualização
+/// **Serviço:** EVENTOS DE ATUALIZAÇÃO
 ///
-/// Este serviço permite monitorar atualizações em sistemas de negócio
-/// como DCTFWeb, CaixaPostal e PagamentoWeb para contribuintes específicos.
+/// O serviço de eventos de atualização permite monitorar mudanças em sistemas de negócio
+/// como DCTFWeb, Caixa Postal e PagamentoWeb para contribuintes específicos.
 ///
-/// O processo é assíncrono: primeiro solicita os eventos, depois obtém os resultados
-/// usando o protocolo retornado.
+/// **Este serviço permite:**
+/// - Solicitar eventos para Pessoa Física (SOLICITAREVENTOS-PF291)
+/// - Obter eventos solicitados para PF (OBTEREVENTOS-PF292)
+/// - Solicitar eventos para Pessoa Jurídica (SOLICITAREVENTOS-PJ293)
+/// - Obter eventos solicitados para PJ (OBTEREVENTOS-PJ294)
+///
+/// **Documentação oficial:** `.cursor/rules/eventos_atualizacao.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final eventosService = EventosAtualizacaoService(apiClient);
+///
+/// // Solicitar eventos para PJ
+/// final solicitacao = await eventosService.solicitarEventosPJ(
+///   cnpjs: ['12345678000190'],
+///   evento: TipoEvento.dctfWeb,
+/// );
+/// print('Protocolo: ${solicitacao.protocolo}');
+///
+/// // Obter eventos após processamento (aguardar alguns segundos)
+/// final eventos = await eventosService.obterEventosPJ(
+///   protocolo: solicitacao.protocolo,
+/// );
+/// print('Eventos: ${eventos.eventos.length}');
+/// ```
 class EventosAtualizacaoService {
   final ApiClient _apiClient;
 

@@ -19,16 +19,22 @@ import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/mod
 /// implementar suporte nativo ou usar pacotes específicos como flutter_client_ssl.
 class ApiClient {
   /// URL base para ambiente de demonstração/teste
-  final String _baseUrlDemo = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  static const String _baseUrlDemo = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
 
-  /// URL base para ambiente de produção (comentada para evitar uso acidental)
-  //final String _baseUrlProd = 'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
+  /// URL base para ambiente de produção
+  static const String _baseUrlProd = 'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
+
+  /// Ambiente atual ('trial' ou 'producao')
+  String _ambiente = 'trial';
 
   /// Modelo de autenticação contendo tokens e dados do contratante/autor
   AuthenticationModel? _authModel;
 
   /// Cache do token de procurador para evitar reautenticações desnecessárias
   CacheModel? _procuradorCache;
+
+  /// Obtém a URL base de acordo com o ambiente configurado
+  String get _baseUrl => _ambiente == 'producao' ? _baseUrlProd : _baseUrlDemo;
 
   /// Autentica o cliente com a API do SERPRO usando certificados cliente (mTLS)
   ///
@@ -37,6 +43,7 @@ class ApiClient {
   /// [certPassword]: Senha do certificado cliente
   /// [contratanteNumero]: CNPJ da empresa que contratou o serviço na Loja Serpro
   /// [autorPedidoDadosNumero]: CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+  /// [ambiente]: Ambiente a ser utilizado ('trial' para teste ou 'producao' para produção, padrão: 'trial')
   ///
   /// ATENÇÃO: Esta é uma implementação simplificada para desenvolvimento.
   /// A autenticação real requer uma chamada HTTP com certificado cliente (mTLS).
@@ -49,7 +56,13 @@ class ApiClient {
     required String certPassword,
     required String contratanteNumero,
     required String autorPedidoDadosNumero,
+    String ambiente = 'trial',
   }) async {
+    // Validar ambiente
+    if (ambiente != 'trial' && ambiente != 'producao') {
+      throw ArgumentError('Ambiente deve ser "trial" ou "producao"');
+    }
+    _ambiente = ambiente;
     // Exemplo de como a requisição seria:
     /*
     final credentials = base64.encode(utf8.encode('$consumerKey:$consumerSecret'));
@@ -144,7 +157,7 @@ class ApiClient {
     headers['X-Request-Tag'] = requestTag;
 
     // Executar requisição HTTP POST para o endpoint da API
-    final response = await http.post(Uri.parse('$_baseUrlDemo$endpoint'), headers: headers, body: json.encode(requestBody));
+    final response = await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
 
     // Verificar se a requisição foi bem-sucedida (status 2xx)
     if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -203,7 +216,7 @@ class ApiClient {
 
     // Executar requisição para autenticar procurador
     final response = await http.post(
-      Uri.parse('$_baseUrlDemo/AutenticarProcurador'),
+      Uri.parse('$_baseUrl/AutenticarProcurador'),
       headers: {
         'Authorization': 'Bearer ${_authModel!.accessToken}',
         'jwt_token': _authModel!.jwtToken,

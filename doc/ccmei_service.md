@@ -6,9 +6,9 @@ O serviço CCMEI permite emitir e consultar certificados da condição de Microe
 
 ## Funcionalidades
 
-- **Emitir CCMEI**: Emissão de certificado da condição de MEI
-- **Consultar Dados CCMEI**: Consulta de dados do MEI
-- **Consultar Situação Cadastral**: Verificação da situação cadastral do MEI
+- **Emitir CCMEI**: Emissão de certificado da condição de MEI em PDF
+- **Consultar Dados CCMEI**: Consulta completa de dados do MEI
+- **Consultar Situação Cadastral**: Verificação da situação cadastral do MEI por CPF
 
 ## Configuração
 
@@ -25,10 +25,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 final apiClient = ApiClient();
 await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret', 
+  certPath: 'caminho/para/certificado.p12',
+  certPassword: 'senha_do_certificado',
+  ambiente: 'trial', // ou 'producao'
 );
 ```
 
@@ -44,12 +45,26 @@ final ccmeiService = CcmeiService(apiClient);
 
 ```dart
 try {
-  final response = await ccmeiService.emitirCcmei('00000000000000');
+  final response = await ccmeiService.emitirCcmei(
+    '00000000000000',
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
   
   if (response.sucesso) {
     print('CCMEI emitido com sucesso!');
     print('Número do certificado: ${response.dados.numeroCertificado}');
     print('Data de emissão: ${response.dados.dataEmissao}');
+    print('PDF disponível: ${response.dados.pdf.isNotEmpty}');
+    
+    // Salvar PDF
+    if (response.dados.pdf.isNotEmpty) {
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados.pdf,
+        'ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
@@ -62,13 +77,65 @@ try {
 
 ```dart
 try {
-  final response = await ccmeiService.consultarDadosCcmei('00000000000000');
+  final response = await ccmeiService.consultarDadosCcmei(
+    '00000000000000',
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
   
   if (response.sucesso) {
     print('Dados do MEI encontrados!');
-    print('Nome: ${response.dados.nome}');
+    print('Nome Empresarial: ${response.dados.nomeEmpresarial}');
     print('CNPJ: ${response.dados.cnpj}');
-    print('Situação: ${response.dados.situacao}');
+    print('Situação Cadastral: ${response.dados.situacaoCadastralVigente}');
+    print('Data Início Atividades: ${response.dados.dataInicioAtividades}');
+    print('Capital Social: R\$ ${response.dados.capitalSocial}');
+    
+    // Dados do Empresário
+    print('Empresário: ${response.dados.empresario.nomeCivil}');
+    print('CPF Empresário: ${response.dados.empresario.cpf}');
+    
+    // Endereço Comercial
+    print('Endereço: ${response.dados.enderecoComercial.logradouro}, ${response.dados.enderecoComercial.numero}');
+    print('Bairro: ${response.dados.enderecoComercial.bairro}');
+    print('Município: ${response.dados.enderecoComercial.municipio}/${response.dados.enderecoComercial.uf}');
+    print('CEP: ${response.dados.enderecoComercial.cep}');
+    
+    // Enquadramento MEI
+    print('É MEI: ${response.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
+    print('Situação Enquadramento: ${response.dados.enquadramento.situacao}');
+    
+    // Períodos MEI
+    print('Períodos MEI: ${response.dados.enquadramento.periodosMei.length}');
+    for (var periodo in response.dados.enquadramento.periodosMei) {
+      print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
+    }
+    
+    // Atividades Econômicas
+    print('Formas de Atuação: ${response.dados.atividade.formasAtuacao.join(', ')}');
+    print('Ocupação Principal: ${response.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
+    if (response.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
+      print('CNAE Principal: ${response.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${response.dados.atividade.ocupacaoPrincipal.descricaoCNAE}');
+    }
+    
+    // Ocupações Secundárias
+    print('Ocupações Secundárias: ${response.dados.atividade.ocupacoesSecundarias.length}');
+    for (var ocupacao in response.dados.atividade.ocupacoesSecundarias) {
+      print('  - ${ocupacao.descricaoOcupacao}');
+      if (ocupacao.codigoCNAE != null) {
+        print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
+      }
+    }
+    
+    // QR Code
+    if (response.dados.qrcode != null) {
+      print('QR Code disponível: Sim');
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados.qrcode!,
+        'qrcode_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('QR Code salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
@@ -81,19 +148,68 @@ try {
 
 ```dart
 try {
-  final response = await ccmeiService.consultarSituacaoCadastral('00000000000');
+  final response = await ccmeiService.consultarSituacaoCadastral(
+    '00000000000', // CPF do empresário
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
   
   if (response.sucesso) {
     print('Situação cadastral encontrada!');
-    print('CPF: ${response.dados.cpf}');
-    print('Situação: ${response.dados.situacao}');
-    print('Data de cadastro: ${response.dados.dataCadastro}');
+    print('CNPJs encontrados: ${response.dados.length}');
+    
+    for (var situacao in response.dados) {
+      print('CNPJ: ${situacao.cnpj}');
+      print('Situação: ${situacao.situacaoCadastral}');
+      print('Data de Cadastro: ${situacao.dataCadastro}');
+      print('---');
+    }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
   print('Erro ao consultar situação: $e');
 }
+```
+
+## Validações Disponíveis
+
+O serviço utiliza validações centralizadas do `ValidacoesUtils`:
+
+```dart
+// Validar CNPJ antes de usar
+final errorCnpj = ValidacoesUtils.validarCnpjContribuinte('12345678000195');
+if (errorCnpj != null) {
+  print('CNPJ inválido: $errorCnpj');
+}
+
+// Validar CPF antes de usar
+final errorCpf = ValidacoesUtils.validarCpf('12345678901');
+if (errorCpf != null) {
+  print('CPF inválido: $errorCpf');
+}
+```
+
+## Formatação de Dados
+
+Utilize os utilitários de formatação do `FormatadorUtils`:
+
+```dart
+// Formatar CNPJ para exibição
+final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
+print('CNPJ: $cnpjFormatado'); // 12.345.678/0001-95
+
+// Formatar CPF para exibição
+final cpfFormatado = FormatadorUtils.formatCpf('12345678901');
+print('CPF: $cpfFormatado'); // 123.456.789-01
+
+// Formatar moeda
+final valorFormatado = FormatadorUtils.formatCurrency(1500.00);
+print('Capital Social: $valorFormatado'); // R$ 1.500,00
+
+// Formatar data
+final dataFormatada = FormatadorUtils.formatDateFromString('20240115');
+print('Data: $dataFormatada'); // 15/01/2024
 ```
 
 ## Estrutura de Dados
@@ -105,12 +221,13 @@ class EmitirCcmeiResponse {
   final bool sucesso;
   final String? mensagemErro;
   final EmitirCcmeiDados? dados;
+  final List<MensagemNegocio> mensagens;
 }
 
 class EmitirCcmeiDados {
   final String numeroCertificado;
   final String dataEmissao;
-  final String? pdfBase64;
+  final String pdf; // Base64
   // ... outros campos
 }
 ```
@@ -122,13 +239,20 @@ class ConsultarDadosCcmeiResponse {
   final bool sucesso;
   final String? mensagemErro;
   final ConsultarDadosCcmeiDados? dados;
+  final List<MensagemNegocio> mensagens;
 }
 
 class ConsultarDadosCcmeiDados {
-  final String nome;
+  final String nomeEmpresarial;
   final String cnpj;
-  final String situacao;
-  final String? dataCadastro;
+  final String situacaoCadastralVigente;
+  final String dataInicioAtividades;
+  final double capitalSocial;
+  final EmpresarioDados empresario;
+  final EnderecoComercial enderecoComercial;
+  final EnquadramentoMei enquadramento;
+  final AtividadeEconomica atividade;
+  final String? qrcode; // Base64
   // ... outros campos
 }
 ```
@@ -139,13 +263,14 @@ class ConsultarDadosCcmeiDados {
 class ConsultarSituacaoCadastralCcmeiResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final ConsultarSituacaoCadastralCcmeiDados? dados;
+  final List<SituacaoCadastralDados> dados;
+  final List<MensagemNegocio> mensagens;
 }
 
-class ConsultarSituacaoCadastralCcmeiDados {
-  final String cpf;
-  final String situacao;
-  final String? dataCadastro;
+class SituacaoCadastralDados {
+  final String cnpj;
+  final String situacaoCadastral;
+  final String dataCadastro;
   // ... outros campos
 }
 ```
@@ -162,7 +287,7 @@ class ConsultarSituacaoCadastralCcmeiDados {
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Emitir CCMEI
+### Exemplo Completo - Fluxo Completo CCMEI
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -171,74 +296,143 @@ void main() async {
   // 1. Configurar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret', 
+    certPath: 'caminho/para/certificado.p12',
+    certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
   
   // 2. Criar serviço
   final ccmeiService = CcmeiService(apiClient);
   
-  // 3. Emitir CCMEI
   try {
-    final response = await ccmeiService.emitirCcmei('00000000000000');
+    const cnpj = '00000000000000';
     
-    if (response.sucesso) {
+    // 3. Emitir CCMEI
+    print('=== Emitindo CCMEI ===');
+    final emitirResponse = await ccmeiService.emitirCcmei(cnpj);
+    
+    if (emitirResponse.sucesso) {
       print('CCMEI emitido com sucesso!');
-      print('Número do certificado: ${response.dados?.numeroCertificado}');
-      print('Data de emissão: ${response.dados?.dataEmissao}');
+      print('Número: ${emitirResponse.dados?.numeroCertificado}');
+      print('Data: ${emitirResponse.dados?.dataEmissao}');
       
-      // 4. Consultar dados do MEI
-      final dadosResponse = await ccmeiService.consultarDadosCcmei('00000000000000');
+      // Salvar PDF
+      if (emitirResponse.dados?.pdf.isNotEmpty == true) {
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          emitirResponse.dados!.pdf,
+          'ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+      
+      // 4. Consultar dados completos
+      print('\n=== Consultando Dados Completos ===');
+      final dadosResponse = await ccmeiService.consultarDadosCcmei(cnpj);
       
       if (dadosResponse.sucesso) {
-        print('Dados do MEI:');
-        print('Nome: ${dadosResponse.dados?.nome}');
-        print('CNPJ: ${dadosResponse.dados?.cnpj}');
-        print('Situação: ${dadosResponse.dados?.situacao}');
+        print('Nome: ${dadosResponse.dados?.nomeEmpresarial}');
+        print('CNPJ: ${FormatadorUtils.formatCnpj(dadosResponse.dados?.cnpj ?? '')}');
+        print('Situação: ${dadosResponse.dados?.situacaoCadastralVigente}');
+        print('Capital Social: ${FormatadorUtils.formatCurrency(dadosResponse.dados?.capitalSocial ?? 0)}');
+        
+        // Dados do empresário
+        print('Empresário: ${dadosResponse.dados?.empresario.nomeCivil}');
+        print('CPF: ${FormatadorUtils.formatCpf(dadosResponse.dados?.empresario.cpf ?? '')}');
+        
+        // Endereço
+        final endereco = dadosResponse.dados?.enderecoComercial;
+        print('Endereço: ${endereco?.logradouro}, ${endereco?.numero}');
+        print('Bairro: ${endereco?.bairro}');
+        print('Cidade: ${endereco?.municipio}/${endereco?.uf}');
+        print('CEP: ${endereco?.cep}');
+        
+        // Atividades
+        print('Ocupação Principal: ${dadosResponse.dados?.atividade.ocupacaoPrincipal.descricaoOcupacao}');
+        print('CNAE Principal: ${dadosResponse.dados?.atividade.ocupacaoPrincipal.codigoCNAE}');
+        
+        // QR Code
+        if (dadosResponse.dados?.qrcode != null) {
+          print('QR Code disponível: Sim');
+          final sucessoQR = await ArquivoUtils.salvarArquivo(
+            dadosResponse.dados!.qrcode!,
+            'qrcode_ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+          );
+          print('QR Code salvo: ${sucessoQR ? 'Sim' : 'Não'}');
+        }
       }
+      
+      // 5. Consultar situação cadastral por CPF
+      print('\n=== Consultando Situação Cadastral ===');
+      final situacaoResponse = await ccmeiService.consultarSituacaoCadastral(
+        dadosResponse.dados?.empresario.cpf ?? '00000000000',
+      );
+      
+      if (situacaoResponse.sucesso) {
+        print('CNPJs vinculados ao CPF: ${situacaoResponse.dados.length}');
+        for (var situacao in situacaoResponse.dados) {
+          print('CNPJ: ${FormatadorUtils.formatCnpj(situacao.cnpj)}');
+          print('Situação: ${situacao.situacaoCadastral}');
+          print('Data Cadastro: ${FormatadorUtils.formatDateFromString(situacao.dataCadastro)}');
+        }
+      }
+      
     } else {
-      print('Erro: ${response.mensagemErro}');
+      print('Erro ao emitir CCMEI: ${emitirResponse.mensagemErro}');
+      
+      // Analisar mensagens de erro
+      for (final mensagem in emitirResponse.mensagens) {
+        if (mensagem.isErro) {
+          print('Erro: ${mensagem.codigo} - ${mensagem.texto}');
+        }
+      }
     }
+    
   } catch (e) {
     print('Erro na operação: $e');
   }
 }
 ```
 
-### Exemplo - Consultar Situação Cadastral
+### Exemplo - Validação e Formatação
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // 1. Configurar cliente
-  final apiClient = ApiClient();
-  await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
-  );
-  
-  // 2. Criar serviço
   final ccmeiService = CcmeiService(apiClient);
   
-  // 3. Consultar situação cadastral
-  try {
-    final response = await ccmeiService.consultarSituacaoCadastral('00000000000');
+  // Validar CNPJ antes de usar
+  const cnpj = '12345678000195';
+  final errorCnpj = ValidacoesUtils.validarCnpjContribuinte(cnpj);
+  
+  if (errorCnpj != null) {
+    print('CNPJ inválido: $errorCnpj');
+    return;
+  }
+  
+  // CNPJ válido, prosseguir
+  final response = await ccmeiService.consultarDadosCcmei(cnpj);
+  
+  if (response.sucesso) {
+    // Formatar dados para exibição
+    print('=== Dados do MEI ===');
+    print('CNPJ: ${FormatadorUtils.formatCnpj(response.dados?.cnpj ?? '')}');
+    print('Nome: ${response.dados?.nomeEmpresarial}');
+    print('Capital Social: ${FormatadorUtils.formatCurrency(response.dados?.capitalSocial ?? 0)}');
+    print('Data Início: ${FormatadorUtils.formatDateFromString(response.dados?.dataInicioAtividades ?? '')}');
     
-    if (response.sucesso) {
-      print('Situação cadastral encontrada!');
-      print('CPF: ${response.dados?.cpf}');
-      print('Situação: ${response.dados?.situacao}');
-      print('Data de cadastro: ${response.dados?.dataCadastro}');
-    } else {
-      print('Erro: ${response.mensagemErro}');
-    }
-  } catch (e) {
-    print('Erro ao consultar situação: $e');
+    // Empresário
+    print('Empresário: ${response.dados?.empresario.nomeCivil}');
+    print('CPF: ${FormatadorUtils.formatCpf(response.dados?.empresario.cpf ?? '')}');
+    
+    // Endereço formatado
+    final endereco = response.dados?.enderecoComercial;
+    print('Endereço: ${endereco?.logradouro}, ${endereco?.numero}');
+    print('Bairro: ${endereco?.bairro}');
+    print('Cidade: ${endereco?.municipio}/${endereco?.uf}');
+    print('CEP: ${FormatadorUtils.formatCep(endereco?.cep ?? '')}');
   }
 }
 ```
@@ -253,6 +447,10 @@ const cnpjTeste = '00000000000000';
 
 // CPFs de teste (sempre usar zeros)
 const cpfTeste = '00000000000';
+
+// Dados de teste comuns
+const ufTeste = 'SP';
+const municipioTeste = 3550308; // São Paulo
 ```
 
 ## Limitações
@@ -261,6 +459,7 @@ const cpfTeste = '00000000000';
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
 4. **MEI Ativo**: MEI deve estar ativo para emissão do certificado
+5. **Formato de Dados**: CNPJ deve ter 14 dígitos, CPF deve ter 11 dígitos
 
 ## Suporte
 

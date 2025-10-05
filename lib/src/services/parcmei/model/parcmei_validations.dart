@@ -3,48 +3,12 @@ import '../../../util/validacoes_utils.dart';
 class ParcmeiValidations {
   /// Valida um número de parcelamento
   static String? validarNumeroParcelamento(int? numeroParcelamento) {
-    if (numeroParcelamento == null) {
-      return 'Número do parcelamento é obrigatório';
-    }
-
-    if (numeroParcelamento <= 0) {
-      return 'Número do parcelamento deve ser maior que zero';
-    }
-
-    if (numeroParcelamento > 999999) {
-      return 'Número do parcelamento deve ser menor que 999999';
-    }
-
-    return null;
+    return ValidacoesUtils.validarNumeroParcelamento(numeroParcelamento);
   }
 
   /// Valida um ano/mês de parcela no formato AAAAMM
   static String? validarAnoMesParcela(int? anoMesParcela) {
-    if (anoMesParcela == null) {
-      return 'Ano/mês da parcela é obrigatório';
-    }
-
-    final anoMesStr = anoMesParcela.toString();
-    if (anoMesStr.length != 6) {
-      return 'Ano/mês da parcela deve ter 6 dígitos (AAAAMM)';
-    }
-
-    final ano = int.tryParse(anoMesStr.substring(0, 4));
-    final mes = int.tryParse(anoMesStr.substring(4, 6));
-
-    if (ano == null || mes == null) {
-      return 'Ano/mês da parcela deve conter apenas números';
-    }
-
-    if (ano < 2000 || ano > 2100) {
-      return 'Ano deve estar entre 2000 e 2100';
-    }
-
-    if (mes < 1 || mes > 12) {
-      return 'Mês deve estar entre 01 e 12';
-    }
-
-    return null;
+    return ValidacoesUtils.validarAnoMes(anoMesParcela);
   }
 
   /// Valida uma parcela para emissão no formato AAAAMM
@@ -85,16 +49,7 @@ class ParcmeiValidations {
 
   /// Valida o CNPJ do contribuinte
   static String? validarCnpjContribuinte(String? cnpj) {
-    if (cnpj == null || cnpj.isEmpty) {
-      return 'CNPJ do contribuinte é obrigatório';
-    }
-
-    // Usa a validação centralizada do DocumentUtils
-    if (!ValidacoesUtils.isValidCnpj(cnpj)) {
-      return 'CNPJ inválido';
-    }
-
-    return null;
+    return ValidacoesUtils.validarCnpjContribuinte(cnpj);
   }
 
   /// Valida o tipo de contribuinte
@@ -160,116 +115,17 @@ class ParcmeiValidations {
 
   /// Valida uma data no formato AAAAMMDD
   static String? validarDataFormato(int? data) {
-    if (data == null) {
-      return 'Data é obrigatória';
-    }
-
-    final dataStr = data.toString();
-    if (dataStr.length != 8) {
-      return 'Data deve ter 8 dígitos (AAAAMMDD)';
-    }
-
-    final ano = int.tryParse(dataStr.substring(0, 4));
-    final mes = int.tryParse(dataStr.substring(4, 6));
-    final dia = int.tryParse(dataStr.substring(6, 8));
-
-    if (ano == null || mes == null || dia == null) {
-      return 'Data deve conter apenas números';
-    }
-
-    if (ano < 2000 || ano > 2100) {
-      return 'Ano deve estar entre 2000 e 2100';
-    }
-
-    if (mes < 1 || mes > 12) {
-      return 'Mês deve estar entre 01 e 12';
-    }
-
-    if (dia < 1 || dia > 31) {
-      return 'Dia deve estar entre 01 e 31';
-    }
-
-    // Validação básica de data válida
-    try {
-      DateTime(ano, mes, dia);
-    } catch (e) {
-      return 'Data inválida';
-    }
-
-    return null;
+    return ValidacoesUtils.validarDataInt(data);
   }
 
   /// Valida uma data/hora no formato AAAAMMDDHHMMSS
   static String? validarDataHoraFormato(int? dataHora) {
-    if (dataHora == null) {
-      return 'Data/hora é obrigatória';
-    }
-
-    final dataHoraStr = dataHora.toString();
-    if (dataHoraStr.length != 14) {
-      return 'Data/hora deve ter 14 dígitos (AAAAMMDDHHMMSS)';
-    }
-
-    final ano = int.tryParse(dataHoraStr.substring(0, 4));
-    final mes = int.tryParse(dataHoraStr.substring(4, 6));
-    final dia = int.tryParse(dataHoraStr.substring(6, 8));
-    final hora = int.tryParse(dataHoraStr.substring(8, 10));
-    final minuto = int.tryParse(dataHoraStr.substring(10, 12));
-    final segundo = int.tryParse(dataHoraStr.substring(12, 14));
-
-    if (ano == null || mes == null || dia == null || hora == null || minuto == null || segundo == null) {
-      return 'Data/hora deve conter apenas números';
-    }
-
-    if (ano < 2000 || ano > 2100) {
-      return 'Ano deve estar entre 2000 e 2100';
-    }
-
-    if (mes < 1 || mes > 12) {
-      return 'Mês deve estar entre 01 e 12';
-    }
-
-    if (dia < 1 || dia > 31) {
-      return 'Dia deve estar entre 01 e 31';
-    }
-
-    if (hora < 0 || hora > 23) {
-      return 'Hora deve estar entre 00 e 23';
-    }
-
-    if (minuto < 0 || minuto > 59) {
-      return 'Minuto deve estar entre 00 e 59';
-    }
-
-    if (segundo < 0 || segundo > 59) {
-      return 'Segundo deve estar entre 00 e 59';
-    }
-
-    // Validação básica de data/hora válida
-    try {
-      DateTime(ano, mes, dia, hora, minuto, segundo);
-    } catch (e) {
-      return 'Data/hora inválida';
-    }
-
-    return null;
+    return ValidacoesUtils.validarDataHoraInt(dataHora);
   }
 
   /// Valida um valor monetário
   static String? validarValorMonetario(double? valor) {
-    if (valor == null) {
-      return 'Valor é obrigatório';
-    }
-
-    if (valor < 0) {
-      return 'Valor não pode ser negativo';
-    }
-
-    if (valor > 999999999.99) {
-      return 'Valor não pode ser maior que R\$ 999.999.999,99';
-    }
-
-    return null;
+    return ValidacoesUtils.validarValorMonetario(valor);
   }
 
   /// Valida um número de parcela

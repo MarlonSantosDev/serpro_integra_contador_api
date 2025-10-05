@@ -8,14 +8,34 @@ import 'package:serpro_integra_contador_api/src/services/parcsn_especial/model/e
 import 'package:serpro_integra_contador_api/src/services/parcsn_especial/model/parcsn_especial_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/parcsn_especial/model/parcsn_especial_errors.dart';
 
-/// Serviço para integração com o sistema PARCSN-ESP (Parcelamento Especial do Simples Nacional)
+/// **Serviço:** PARCSN-ESP (Parcelamento Especial do Simples Nacional)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento especial
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// O PARCSN-ESP é uma modalidade especial de parcelamento de débitos do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC91)
+/// - Consultar parcelamento específico (OBTERPARC92)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR90)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC93)
+/// - Emitir DAS para parcelas (GERARDAS89)
+///
+/// **Documentação oficial:** `.cursor/rules/parcsn_especial.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final parcsnEspecialService = ParcsnEspecialService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await parcsnEspecialService.consultarPedidos();
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await parcsnEspecialService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class ParcsnEspecialService {
   final ApiClient _apiClient;
 

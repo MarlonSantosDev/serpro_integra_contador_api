@@ -3,14 +3,36 @@ import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/services/relpmei/model/relpmei_requests.dart';
 import 'package:serpro_integra_contador_api/src/services/relpmei/model/relpmei_responses.dart';
 
-/// Serviço para integração com RELPMEI (Regime Especial de Regularização Tributária para o Microempreendedor Individual)
+/// **Serviço:** RELPMEI (Regime Especial de Regularização Tributária para o Microempreendedor Individual)
 ///
-/// Implementa todos os serviços disponíveis do Integra RELPMEI:
-/// - Consultar Pedidos de Parcelamento (PEDIDOSPARC233)
-/// - Consultar Parcelamento Específico (OBTERPARC234)
-/// - Consultar Parcelas para Impressão (PARCELASPARAGERAR232)
-/// - Consultar Detalhes de Pagamento (DETPAGTOPARC235)
-/// - Emitir DAS (GERARDAS231)
+/// O RELPMEI é um regime especial para regularização tributária de débitos do MEI.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC233)
+/// - Consultar parcelamento específico (OBTERPARC234)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR232)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC235)
+/// - Emitir DAS para parcelas (GERARDAS231)
+///
+/// **Documentação oficial:** `.cursor/rules/relpmei.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final relpmeiService = RelpmeiService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await relpmeiService.consultarPedidos(
+///   contribuinteNumero: '12345678000190',
+/// );
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await relpmeiService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class RelpmeiService {
   final ApiClient _apiClient;
 

@@ -4,40 +4,12 @@ import '../../../util/validacoes_utils.dart';
 class PertsnValidations {
   /// Valida o número do parcelamento
   static String? validarNumeroParcelamento(int? numeroParcelamento) {
-    if (numeroParcelamento == null) {
-      return 'Número do parcelamento é obrigatório';
-    }
-
-    if (numeroParcelamento <= 0) {
-      return 'Número do parcelamento deve ser maior que zero';
-    }
-
-    return null;
+    return ValidacoesUtils.validarNumeroParcelamento(numeroParcelamento);
   }
 
   /// Valida o ano/mês da parcela (formato AAAAMM)
   static String? validarAnoMesParcela(int? anoMesParcela) {
-    if (anoMesParcela == null) {
-      return 'Ano/mês da parcela é obrigatório';
-    }
-
-    final anoMesStr = anoMesParcela.toString();
-    if (anoMesStr.length != 6) {
-      return 'Ano/mês da parcela deve ter 6 dígitos (AAAAMM)';
-    }
-
-    final ano = int.parse(anoMesStr.substring(0, 4));
-    final mes = int.parse(anoMesStr.substring(4, 6));
-
-    if (ano < 2000 || ano > 2100) {
-      return 'Ano deve estar entre 2000 e 2100';
-    }
-
-    if (mes < 1 || mes > 12) {
-      return 'Mês deve estar entre 01 e 12';
-    }
-
-    return null;
+    return ValidacoesUtils.validarAnoMes(anoMesParcela);
   }
 
   /// Valida a parcela para emissão (formato AAAAMM)
@@ -76,16 +48,7 @@ class PertsnValidations {
 
   /// Valida o CNPJ do contribuinte
   static String? validarCnpjContribuinte(String? cnpj) {
-    if (cnpj == null || cnpj.isEmpty) {
-      return 'CNPJ do contribuinte é obrigatório';
-    }
-
-    // Usa a validação centralizada do DocumentUtils
-    if (!ValidacoesUtils.isValidCnpj(cnpj)) {
-      return 'CNPJ inválido';
-    }
-
-    return null;
+    return ValidacoesUtils.validarCnpjContribuinte(cnpj);
   }
 
   /// Valida se a parcela está dentro do prazo para emissão

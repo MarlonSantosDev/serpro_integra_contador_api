@@ -5,8 +5,31 @@ import 'model/termo_autorizacao_request.dart';
 import 'model/termo_autorizacao_response.dart';
 import '../../util/validacoes_utils.dart';
 
-/// Serviço para autenticação de procurador
-/// Funcionalidade principal: Envio de XML assinado com o Termo de Autorização
+/// **Serviço:** AUTENTICA PROCURADOR
+///
+/// O serviço de autenticação de procurador permite que procuradores se autentiquem
+/// através de termo de autorização assinado digitalmente.
+///
+/// **Este serviço permite:**
+/// - Autenticar procurador via termo de autorização (APOIAR)
+///
+/// **Documentação oficial:** `.cursor/rules/autenticaprocurador.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final autenticaService = AutenticaProcuradorService(apiClient);
+///
+/// // Autenticar procurador
+/// final resultado = await autenticaService.autenticarProcurador(
+///   contratanteNumero: '12345678000190',
+///   contratanteNome: 'Empresa Contábil Ltda',
+///   autorPedidoDadosNumero: '12345678901',
+///   autorPedidoDadosNome: 'João Silva',
+///   certificadoPath: '/path/to/cert.pfx',
+///   certificadoPassword: 'senha123',
+/// );
+/// print('Token: ${resultado.token}');
+/// ```
 class AutenticaProcuradorService {
   final ApiClient _apiClient;
   final String _endpoint = '/Apoiar';

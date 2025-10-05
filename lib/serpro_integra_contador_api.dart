@@ -309,13 +309,13 @@ export 'src/services/eventos_atualizacao/model/obter_eventos_pj_response.dart';
 // Regime de Apuração Models
 export 'src/services/regime_apuracao/model/regime_apuracao_enums.dart';
 export 'src/services/regime_apuracao/model/efetuar_opcao_request.dart';
-export 'src/services/regime_apuracao/model/efetuar_opcao_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/efetuar_opcao_response.dart';
 export 'src/services/regime_apuracao/model/consultar_anos_request.dart';
-export 'src/services/regime_apuracao/model/consultar_anos_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_anos_response.dart';
 export 'src/services/regime_apuracao/model/consultar_opcao_request.dart';
-export 'src/services/regime_apuracao/model/consultar_opcao_response.dart' hide RegimeApuracao, MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_opcao_response.dart' hide RegimeApuracao;
 export 'src/services/regime_apuracao/model/consultar_resolucao_request.dart';
-export 'src/services/regime_apuracao/model/consultar_resolucao_response.dart' hide MensagemNegocio;
+export 'src/services/regime_apuracao/model/consultar_resolucao_response.dart';
 
 // SICALC Models
 export 'src/services/sicalc/model/sicalc_enums.dart' hide TipoContribuinte;

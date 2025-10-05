@@ -4,14 +4,34 @@ import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pertmei/model/pertmei_response.dart';
 
-/// Serviço para integração com PERTMEI (Parcelamento Especial de Regularização Tributária para MEI)
+/// **Serviço:** PERTMEI (Parcelamento Especial de Regularização Tributária para MEI)
 ///
-/// Este serviço implementa todos os métodos disponíveis para:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos existentes
-/// - Consultar parcelas para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS (Documento de Arrecadação Simplificada)
+/// O PERTMEI é uma modalidade especial de parcelamento para regularização tributária de MEI.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC243)
+/// - Consultar parcelamento específico (OBTERPARC244)
+/// - Consultar parcelas para impressão (PARCELASPARAGERAR242)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC245)
+/// - Emitir DAS para parcelas (GERARDAS241)
+///
+/// **Documentação oficial:** `.cursor/rules/pertmei.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final pertmeiService = PertmeiService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await pertmeiService.consultarPedidos('12345678000190');
+/// print('Total de parcelamentos: ${pedidos.parcelamentos?.length}');
+///
+/// // Emitir DAS de uma parcela
+/// final das = await pertmeiService.emitirDas(
+///   numeroParcelamento: 123456,
+///   numeroParcela: 1,
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class PertmeiService {
   final ApiClient _apiClient;
 

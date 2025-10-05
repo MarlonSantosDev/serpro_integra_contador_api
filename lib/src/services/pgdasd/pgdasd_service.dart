@@ -19,18 +19,39 @@ import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_processo_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_processo_response.dart';
 
-/// Serviço para integração com PGDASD (Programa Gerador do DAS do Simples Nacional)
+/// **Serviço:** PGDASD (Programa Gerador do DAS do Simples Nacional)
 ///
-/// Implementa todos os serviços disponíveis do Integra PGDASD:
-/// - Entregar Declaração Mensal (TRANSDECLARACAO11)
+/// O PGDASD é o sistema para declaração e geração de DAS do Simples Nacional para MEI.
+///
+/// **Este serviço permite:**
+/// - Entregar declaração mensal (TRANSDECLARACAO11)
 /// - Gerar DAS (GERARDAS12)
-/// - Consultar Declarações Transmitidas (CONSDECLARACAO13)
-/// - Consultar Última Declaração/Recibo (CONSULTIMADECREC14)
-/// - Consultar Declaração/Recibo por Número (CONSDECREC15)
-/// - Consultar Extrato do DAS (CONSEXTRATO16)
-/// - Gerar DAS Cobrança (GERARDASCOBRANCA17)
-/// - Gerar DAS de Processo (GERARDASPROCESSO18)
-/// - Gerar DAS Avulso (GERARDASAVULSO19)
+/// - Consultar declarações transmitidas (CONSDECLARACAO13)
+/// - Consultar última declaração/recibo (CONSULTIMADECREC14)
+/// - Consultar declaração/recibo por número (CONSDECREC15)
+/// - Consultar extrato do DAS (CONSEXTRATO16)
+/// - Gerar DAS cobrança (GERARDASCOBRANCA17)
+/// - Gerar DAS de processo (GERARDASPROCESSO18)
+/// - Gerar DAS avulso (GERARDASAVULSO19)
+///
+/// **Documentação oficial:** `.cursor/rules/pgdasd.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final pgdasdService = PgdasdService(apiClient);
+///
+/// // Entregar declaração mensal
+/// final resultado = await pgdasdService.entregarDeclaracao(
+///   request: EntregarDeclaracaoRequest(...),
+/// );
+/// print('Número do recibo: ${resultado.numeroRecibo}');
+///
+/// // Gerar DAS
+/// final das = await pgdasdService.gerarDas(
+///   request: GerarDasRequest(periodoApuracao: '012024'),
+/// );
+/// print('DAS Base64: ${das.pdfBase64}');
+/// ```
 class PgdasdService {
   final ApiClient _apiClient;
 

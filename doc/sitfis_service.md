@@ -2,15 +2,13 @@
 
 ## Visão Geral
 
-O serviço SITFIS permite consultar informações tributárias e fiscais de contribuintes, incluindo consulta de situação fiscal, consulta de débitos, consulta de créditos e consulta de informações gerais do contribuinte.
+O serviço SITFIS permite emitir relatórios de situação fiscal de contribuintes (Pessoa Física e Jurídica) na Receita Federal e Procuradoria-Geral da Fazenda Nacional.
 
 ## Funcionalidades
 
-- **Consultar Situação Fiscal**: Consulta da situação fiscal do contribuinte
-- **Consultar Débitos**: Consulta de débitos tributários
-- **Consultar Créditos**: Consulta de créditos tributários
-- **Consultar Informações Gerais**: Consulta de informações gerais do contribuinte
-- **Validações**: Validações específicas do sistema SITFIS
+- **Solicitar Protocolo**: Solicita protocolo para geração do relatório
+- **Emitir Relatório**: Emite relatório de situação fiscal em PDF
+- **Fluxo Assíncrono**: Processo em duas etapas com tempo de espera
 
 ## Configuração
 
@@ -27,10 +25,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 final apiClient = ApiClient();
 await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret', 
+  certPath: 'caminho/para/certificado.p12',
+  certPassword: 'senha_do_certificado',
+  ambiente: 'trial', // ou 'producao'
 );
 ```
 
@@ -42,246 +41,271 @@ await apiClient.authenticate(
 final sitfisService = SitfisService(apiClient);
 ```
 
-### 2. Consultar Situação Fiscal
+### 2. Fluxo Completo - Solicitar Protocolo e Emitir Relatório
 
 ```dart
 try {
-  final response = await sitfisService.consultarSituacaoFiscal('00000000000000');
+  const contribuinteNumero = '99999999999'; // CPF ou CNPJ
   
-  if (response.sucesso) {
-    print('Situação fiscal encontrada!');
-    print('CNPJ: ${response.dadosParsed?.cnpj}');
-    print('Situação: ${response.dadosParsed?.situacao}');
-    print('Data de consulta: ${response.dadosParsed?.dataConsultaFormatada}');
-    print('Regime tributário: ${response.dadosParsed?.regimeTributario}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro ao consultar situação fiscal: $e');
-}
-```
+  // 1. Solicitar protocolo
+  print('=== Solicitando Protocolo ===');
+  final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(
+    contribuinteNumero,
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
 
-### 3. Consultar Débitos
+  print('Status: ${protocoloResponse.status}');
+  print('Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
 
-```dart
-try {
-  final response = await sitfisService.consultarDebitos('00000000000000');
-  
-  if (response.sucesso) {
-    print('Débitos encontrados: ${response.dadosParsed?.listaDebitos.length ?? 0}');
-    
-    for (final debito in response.dadosParsed?.listaDebitos ?? []) {
-      print('Débito: ${debito.numeroDocumento}');
-      print('Valor: ${debito.valorFormatado}');
-      print('Vencimento: ${debito.dataVencimentoFormatada}');
-      print('Situação: ${debito.situacao}');
+  if (protocoloResponse.isSuccess) {
+    print('✅ Sucesso ao solicitar protocolo');
+
+    if (protocoloResponse.hasProtocolo) {
+      final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
+      print('Protocolo obtido: ${protocolo.substring(0, 20)}...');
+
+      // 2. Aguardar tempo de espera se necessário
+      if (protocoloResponse.hasTempoEspera) {
+        final tempoEspera = protocoloResponse.dados!.tempoEspera!;
+        print('Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)');
+        
+        print('Aguardando ${tempoEspera}ms antes de emitir...');
+        await Future.delayed(Duration(milliseconds: tempoEspera));
+      }
+
+      // 3. Emitir relatório
+      print('\n=== Emitindo Relatório ===');
+      final emitirResponse = await sitfisService.emitirRelatorioSituacaoFiscal(
+        contribuinteNumero,
+        protocolo,
+        contratanteNumero: '00000000000000', // Opcional
+        autorPedidoDadosNumero: '00000000000000', // Opcional
+      );
+
+      print('Status: ${emitirResponse.status}');
+      print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print('Sucesso: ${emitirResponse.isSuccess}');
+      print('Em processamento: ${emitirResponse.isProcessing}');
+      print('PDF disponível: ${emitirResponse.hasPdf}');
+
+      if (emitirResponse.hasPdf) {
+        print('✅ Relatório emitido com sucesso!');
+        
+        // Salvar PDF
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          emitirResponse.dados!.pdf!,
+          'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+        print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+        
+      } else if (emitirResponse.isProcessing) {
+        print('⏳ Relatório em processamento...');
+        if (emitirResponse.hasTempoEspera) {
+          final tempoEspera = emitirResponse.dados!.tempoEspera!;
+          print('Tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)');
+        }
+      } else {
+        print('❌ Erro ao emitir relatório');
+      }
+    } else {
+      print('❌ Protocolo não disponível para emissão');
     }
-    
-    print('Valor total: ${response.valorTotalDebitosFormatado}');
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('❌ Erro ao solicitar protocolo');
   }
 } catch (e) {
-  print('Erro ao consultar débitos: $e');
+  print('Erro na operação: $e');
 }
 ```
 
-### 4. Consultar Créditos
+### 3. Método Simplificado - Fluxo Automático
 
 ```dart
 try {
-  final response = await sitfisService.consultarCreditos('00000000000000');
+  const contribuinteNumero = '99999999999';
   
+  // Método que executa o fluxo completo automaticamente
+  final response = await sitfisService.solicitarProtocoloEEmitirRelatorio(
+    contribuinteNumero,
+    contratanteNumero: '00000000000000', // Opcional
+    autorPedidoDadosNumero: '00000000000000', // Opcional
+  );
+
   if (response.sucesso) {
-    print('Créditos encontrados: ${response.dadosParsed?.listaCreditos.length ?? 0}');
+    print('✅ Relatório emitido com sucesso!');
+    print('PDF disponível: ${response.hasPdf}');
     
-    for (final credito in response.dadosParsed?.listaCreditos ?? []) {
-      print('Crédito: ${credito.numeroDocumento}');
-      print('Valor: ${credito.valorFormatado}');
-      print('Data: ${credito.dataFormatada}');
-      print('Situação: ${credito.situacao}');
+    if (response.hasPdf) {
+      // Salvar PDF
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados!.pdf!,
+        'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
     }
-    
-    print('Valor total: ${response.valorTotalCreditosFormatado}');
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('❌ Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar créditos: $e');
+  print('Erro: $e');
 }
 ```
 
-### 5. Consultar Informações Gerais
+### 4. Consultar Status de Processamento
 
 ```dart
 try {
-  final response = await sitfisService.consultarInformacoesGerais('00000000000000');
+  const contribuinteNumero = '99999999999';
+  const protocolo = 'PROTOCOLO_OBTIDO_ANTERIORMENTE';
   
-  if (response.sucesso) {
-    print('Informações gerais encontradas!');
-    print('Razão social: ${response.dadosParsed?.razaoSocial}');
-    print('Nome fantasia: ${response.dadosParsed?.nomeFantasia}');
-    print('Regime tributário: ${response.dadosParsed?.regimeTributario}');
-    print('Situação: ${response.dadosParsed?.situacao}');
-    print('Data de abertura: ${response.dadosParsed?.dataAberturaFormatada}');
-    print('Capital social: ${response.dadosParsed?.capitalSocialFormatado}');
+  // Verificar status do processamento
+  final statusResponse = await sitfisService.verificarStatusProcessamento(
+    contribuinteNumero,
+    protocolo,
+  );
+
+  if (statusResponse.isSuccess) {
+    if (statusResponse.hasPdf) {
+      print('✅ Relatório pronto!');
+      // Baixar PDF
+    } else if (statusResponse.isProcessing) {
+      print('⏳ Ainda processando...');
+      // Aguardar mais tempo
+    } else {
+      print('❌ Erro no processamento');
+    }
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('❌ Erro ao verificar status');
   }
 } catch (e) {
-  print('Erro ao consultar informações gerais: $e');
-}
-```
-
-## Estrutura de Dados
-
-### ConsultarSituacaoFiscalResponse
-
-```dart
-class ConsultarSituacaoFiscalResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsultarSituacaoFiscalDados? dadosParsed;
-}
-
-class ConsultarSituacaoFiscalDados {
-  final String cnpj;
-  final String situacao;
-  final String dataConsultaFormatada;
-  final String regimeTributario;
-  // ... outros campos
-}
-```
-
-### ConsultarDebitosResponse
-
-```dart
-class ConsultarDebitosResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsultarDebitosDados? dadosParsed;
-  final String valorTotalDebitosFormatado;
-}
-
-class ConsultarDebitosDados {
-  final List<DebitoItem> listaDebitos;
-  // ... outros campos
-}
-
-class DebitoItem {
-  final String numeroDocumento;
-  final String valorFormatado;
-  final String dataVencimentoFormatada;
-  final String situacao;
-  // ... outros campos
-}
-```
-
-### ConsultarCreditosResponse
-
-```dart
-class ConsultarCreditosResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsultarCreditosDados? dadosParsed;
-  final String valorTotalCreditosFormatado;
-}
-
-class ConsultarCreditosDados {
-  final List<CreditoItem> listaCreditos;
-  // ... outros campos
-}
-
-class CreditoItem {
-  final String numeroDocumento;
-  final String valorFormatado;
-  final String dataFormatada;
-  final String situacao;
-  // ... outros campos
-}
-```
-
-### ConsultarInformacoesGeraisResponse
-
-```dart
-class ConsultarInformacoesGeraisResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ConsultarInformacoesGeraisDados? dadosParsed;
-}
-
-class ConsultarInformacoesGeraisDados {
-  final String razaoSocial;
-  final String nomeFantasia;
-  final String regimeTributario;
-  final String situacao;
-  final String dataAberturaFormatada;
-  final String capitalSocialFormatado;
-  // ... outros campos
+  print('Erro: $e');
 }
 ```
 
 ## Validações Disponíveis
 
-O serviço SITFIS inclui várias validações para garantir a integridade dos dados:
+O serviço utiliza validações centralizadas do `ValidacoesUtils`:
 
 ```dart
-// Validar CNPJ do contribuinte
-final erro = sitfisService.validarCnpjContribuinte('00000000000000');
-if (erro != null) {
-  print('Erro: $erro');
-}
-
-// Validar CPF do contribuinte
-final erroCpf = sitfisService.validarCpfContribuinte('00000000000');
-if (erroCpf != null) {
-  print('Erro: $erroCpf');
-}
-
-// Validar período de consulta
-final erroPeriodo = sitfisService.validarPeriodoConsulta('2024-01-01', '2024-12-31');
-if (erroPeriodo != null) {
-  print('Erro: $erroPeriodo');
+// Validar CPF/CNPJ antes de usar
+final errorDocumento = ValidacoesUtils.validarCpf(contribuinteNumero) ?? 
+                      ValidacoesUtils.validarCnpjContribuinte(contribuinteNumero);
+if (errorDocumento != null) {
+  print('Documento inválido: $errorDocumento');
+  return;
 }
 ```
 
-## Análise de Erros
+## Formatação de Dados
 
-O serviço inclui análise detalhada de erros específicos do SITFIS:
+Utilize os utilitários de formatação do `FormatadorUtils`:
 
 ```dart
-// Analisar erro
-final analise = sitfisService.analyzeError('001', 'Erro de validação');
-print('Tipo: ${analise.tipo}');
-print('Descrição: ${analise.descricao}');
-print('Solução: ${analise.solucao}');
+// Formatar CPF/CNPJ para exibição
+String documentoFormatado;
+if (contribuinteNumero.length == 11) {
+  documentoFormatado = FormatadorUtils.formatCpf(contribuinteNumero);
+} else {
+  documentoFormatado = FormatadorUtils.formatCnpj(contribuinteNumero);
+}
+print('Contribuinte: $documentoFormatado');
 
-// Verificar se erro é conhecido
-if (sitfisService.isKnownError('001')) {
-  print('Erro conhecido pelo sistema');
+// Formatar tempo de espera
+final tempoFormatado = FormatadorUtils.formatDuration(Duration(milliseconds: tempoEspera));
+print('Tempo de espera: $tempoFormatado');
+```
+
+## Estrutura de Dados
+
+### SolicitarProtocoloResponse
+
+```dart
+class SolicitarProtocoloResponse {
+  final bool isSuccess;
+  final String? mensagemPrincipal;
+  final List<SitfisMensagem> mensagens;
+  final SolicitarProtocoloDados? dados;
 }
 
-// Obter informações do erro
-final info = sitfisService.getErrorInfo('001');
-if (info != null) {
-  print('Informações: ${info.descricao}');
+class SolicitarProtocoloDados {
+  final String? protocoloRelatorio;
+  final int? tempoEspera;
+  
+  // Propriedades de conveniência
+  bool get hasProtocolo => protocoloRelatorio != null && protocoloRelatorio!.isNotEmpty;
+  bool get hasTempoEspera => tempoEspera != null && tempoEspera! > 0;
+  int get tempoEsperaEmSegundos => (tempoEspera ?? 0) ~/ 1000;
 }
 ```
+
+### EmitirRelatorioResponse
+
+```dart
+class EmitirRelatorioResponse {
+  final bool isSuccess;
+  final bool isProcessing;
+  final String? mensagemPrincipal;
+  final List<SitfisMensagem> mensagens;
+  final EmitirRelatorioDados? dados;
+  
+  // Propriedades de conveniência
+  bool get hasPdf => dados?.pdf != null && dados!.pdf!.isNotEmpty;
+  bool get hasTempoEspera => dados?.tempoEspera != null && dados!.tempoEspera! > 0;
+}
+```
+
+### SitfisMensagem
+
+```dart
+class SitfisMensagem {
+  final String codigo;
+  final String texto;
+  
+  // Propriedades de conveniência
+  bool get isSuccess => codigo.contains('Sucesso-Sitfis');
+  bool get isWarning => codigo.contains('Aviso-Sitfis');
+  bool get isError => codigo.contains('Erro-Sitfis');
+  bool get isInputError => codigo.contains('EntradaIncorreta-Sitfis');
+}
+```
+
+## Códigos de Mensagem Específicos
+
+### Sucessos
+- `[Sucesso-Sitfis-SC01]`: Protocolo solicitado com sucesso
+- `[Sucesso-Sitfis-SC02]`: Relatório emitido com sucesso
+
+### Avisos
+- `[Aviso-Sitfis-AV01]`: Obtenha o relatório no serviço /emitir
+- `[Aviso-Sitfis-AV02]`: Limite de solicitações atingido
+- `[Aviso-Sitfis-AV03]`: Não foi possível concluir a ação
+
+### Erros de Entrada
+- `[EntradaIncorreta-Sitfis-EI01]`: Requisição inválida
+- `[EntradaIncorreta-Sitfis-EI02]`: Versão inexistente
+- `[EntradaIncorreta-Sitfis-EI03]`: Versão descontinuada
+
+### Erros Gerais
+- `[Erro-Sitfis-ER01]`: URL não encontrada
+- `[Erro-Sitfis-ER02]`: Erro ao solicitar protocolo
+- `[Erro-Sitfis-ER03]`: Erro ao obter relatório
+- `[Erro-Sitfis-ER04]`: Erro ao processar requisição
+- `[Erro-Sitfis-ER05]`: Erro ao processar requisição
 
 ## Códigos de Erro Comuns
 
 | Código | Descrição | Solução |
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CNPJ/CPF inválido | Verificar formato do documento |
-| 003 | Contribuinte não encontrado | Verificar se contribuinte existe |
-| 004 | Período inválido | Verificar formato do período |
-| 005 | Acesso negado | Verificar permissões de acesso |
+| 002 | CPF/CNPJ inválido | Verificar formato do documento |
+| 003 | Protocolo inválido | Verificar se protocolo é válido |
+| 004 | Contribuinte não encontrado | Verificar se contribuinte está cadastrado |
+| 005 | Sistema indisponível | Tentar novamente mais tarde |
 
 ## Exemplos Práticos
 
-### Exemplo Completo - Consulta Completa
+### Exemplo Completo - Fluxo Completo SITFIS
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -290,54 +314,143 @@ void main() async {
   // 1. Configurar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret', 
+    certPath: 'caminho/para/certificado.p12',
+    certPassword: 'senha_do_certificado',
+    ambiente: 'trial',
   );
   
   // 2. Criar serviço
   final sitfisService = SitfisService(apiClient);
   
-  // 3. Consulta completa
   try {
-    const contribuinteNumero = '00000000000000';
+    const contribuinteNumero = '99999999999';
     
-    // Consultar situação fiscal
-    print('=== Situação Fiscal ===');
-    final situacao = await sitfisService.consultarSituacaoFiscal(contribuinteNumero);
-    if (situacao.sucesso) {
-      print('Situação: ${situacao.dadosParsed?.situacao}');
-      print('Regime: ${situacao.dadosParsed?.regimeTributario}');
+    // Validar documento antes de usar
+    final errorDocumento = ValidacoesUtils.validarCpf(contribuinteNumero) ?? 
+                          ValidacoesUtils.validarCnpjContribuinte(contribuinteNumero);
+    if (errorDocumento != null) {
+      print('Documento inválido: $errorDocumento');
+      return;
     }
     
-    // Consultar débitos
-    print('\n=== Débitos ===');
-    final debitos = await sitfisService.consultarDebitos(contribuinteNumero);
-    if (debitos.sucesso) {
-      print('Total de débitos: ${debitos.dadosParsed?.listaDebitos.length ?? 0}');
-      print('Valor total: ${debitos.valorTotalDebitosFormatado}');
-    }
+    // 3. Solicitar protocolo
+    print('=== Solicitando Protocolo ===');
+    final protocoloResponse = await sitfisService.solicitarProtocoloRelatorio(contribuinteNumero);
     
-    // Consultar créditos
-    print('\n=== Créditos ===');
-    final creditos = await sitfisService.consultarCreditos(contribuinteNumero);
-    if (creditos.sucesso) {
-      print('Total de créditos: ${creditos.dadosParsed?.listaCreditos.length ?? 0}');
-      print('Valor total: ${creditos.valorTotalCreditosFormatado}');
-    }
-    
-    // Consultar informações gerais
-    print('\n=== Informações Gerais ===');
-    final info = await sitfisService.consultarInformacoesGerais(contribuinteNumero);
-    if (info.sucesso) {
-      print('Razão social: ${info.dadosParsed?.razaoSocial}');
-      print('Nome fantasia: ${info.dadosParsed?.nomeFantasia}');
-      print('Capital social: ${info.dadosParsed?.capitalSocialFormatado}');
+    if (protocoloResponse.isSuccess) {
+      print('✅ Protocolo solicitado com sucesso!');
+      
+      if (protocoloResponse.hasProtocolo) {
+        final protocolo = protocoloResponse.dados!.protocoloRelatorio!;
+        print('Protocolo: ${protocolo.substring(0, 20)}...');
+        
+        // 4. Aguardar tempo de espera
+        if (protocoloResponse.hasTempoEspera) {
+          final tempoEspera = protocoloResponse.dados!.tempoEspera!;
+          print('Tempo de espera: ${FormatadorUtils.formatDuration(Duration(milliseconds: tempoEspera))}');
+          
+          print('Aguardando processamento...');
+          await Future.delayed(Duration(milliseconds: tempoEspera));
+        }
+        
+        // 5. Emitir relatório
+        print('\n=== Emitindo Relatório ===');
+        final emitirResponse = await sitfisService.emitirRelatorioSituacaoFiscal(
+          contribuinteNumero,
+          protocolo,
+        );
+        
+        if (emitirResponse.isSuccess) {
+          if (emitirResponse.hasPdf) {
+            print('✅ Relatório emitido com sucesso!');
+            
+            // Salvar PDF
+            final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+              emitirResponse.dados!.pdf!,
+              'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
+            );
+            print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+            
+          } else if (emitirResponse.isProcessing) {
+            print('⏳ Relatório ainda em processamento...');
+            if (emitirResponse.hasTempoEspera) {
+              final tempoEspera = emitirResponse.dados!.tempoEspera!;
+              print('Tempo adicional: ${FormatadorUtils.formatDuration(Duration(milliseconds: tempoEspera))}');
+            }
+          } else {
+            print('❌ Erro ao emitir relatório');
+          }
+        } else {
+          print('❌ Erro: ${emitirResponse.mensagemPrincipal}');
+          
+          // Analisar mensagens específicas
+          for (final mensagem in emitirResponse.mensagens) {
+            if (mensagem.isError) {
+              print('Erro: ${mensagem.codigo} - ${mensagem.texto}');
+            } else if (mensagem.isWarning) {
+              print('Aviso: ${mensagem.codigo} - ${mensagem.texto}');
+            }
+          }
+        }
+      } else {
+        print('❌ Protocolo não disponível');
+      }
+    } else {
+      print('❌ Erro ao solicitar protocolo: ${protocoloResponse.mensagemPrincipal}');
+      
+      // Analisar mensagens de erro
+      for (final mensagem in protocoloResponse.mensagens) {
+        if (mensagem.isError) {
+          print('Erro: ${mensagem.codigo} - ${mensagem.texto}');
+        } else if (mensagem.isInputError) {
+          print('Entrada incorreta: ${mensagem.codigo} - ${mensagem.texto}');
+        }
+      }
     }
     
   } catch (e) {
     print('Erro na operação: $e');
+  }
+}
+```
+
+### Exemplo - Validação e Formatação
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  final sitfisService = SitfisService(apiClient);
+  
+  // Validar documento antes de usar
+  const contribuinteNumero = '12345678901';
+  final errorCpf = ValidacoesUtils.validarCpf(contribuinteNumero);
+  
+  if (errorCpf != null) {
+    print('CPF inválido: $errorCpf');
+    return;
+  }
+  
+  // CPF válido, prosseguir
+  final response = await sitfisService.solicitarProtocoloRelatorio(contribuinteNumero);
+  
+  if (response.isSuccess) {
+    print('=== Protocolo Solicitado ===');
+    print('CPF: ${FormatadorUtils.formatCpf(contribuinteNumero)}');
+    print('Status: ${response.status}');
+    print('Sucesso: ${response.isSuccess}');
+    
+    if (response.hasProtocolo) {
+      final protocolo = response.dados!.protocoloRelatorio!;
+      print('Protocolo: ${protocolo.substring(0, 20)}...');
+    }
+    
+    if (response.hasTempoEspera) {
+      final tempoEspera = response.dados!.tempoEspera!;
+      print('Tempo de espera: ${FormatadorUtils.formatDuration(Duration(milliseconds: tempoEspera))}');
+    }
   }
 }
 ```
@@ -347,13 +460,12 @@ void main() async {
 Para desenvolvimento e testes, utilize os seguintes dados:
 
 ```dart
-// CNPJs/CPFs de teste (sempre usar zeros)
+// CPFs/CNPJs de teste (sempre usar zeros)
+const cpfTeste = '99999999999';
 const cnpjTeste = '00000000000000';
-const cpfTeste = '00000000000';
 
-// Períodos de teste
-const dataInicial = '2024-01-01';
-const dataFinal = '2024-12-31';
+// Protocolos de teste
+const protocoloTeste = 'PROTOCOLO_TESTE_123';
 ```
 
 ## Limitações
@@ -361,123 +473,12 @@ const dataFinal = '2024-12-31';
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
 3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Acesso**: Algumas informações podem ter restrições de acesso
-5. **Período**: Consultas podem ter limitações de período
-
-## Casos de Uso Comuns
-
-### 1. Consulta Completa de Contribuinte
-
-```dart
-Future<void> consultarContribuinteCompleto(String contribuinteNumero) async {
-  try {
-    // Consultar situação fiscal
-    final situacao = await sitfisService.consultarSituacaoFiscal(contribuinteNumero);
-    if (!situacao.sucesso) return;
-    
-    // Consultar débitos
-    final debitos = await sitfisService.consultarDebitos(contribuinteNumero);
-    if (!debitos.sucesso) return;
-    
-    // Consultar créditos
-    final creditos = await sitfisService.consultarCreditos(contribuinteNumero);
-    if (!creditos.sucesso) return;
-    
-    // Consultar informações gerais
-    final info = await sitfisService.consultarInformacoesGerais(contribuinteNumero);
-    if (!info.sucesso) return;
-    
-    print('=== Relatório Completo ===');
-    print('Contribuinte: ${contribuinteNumero}');
-    print('Situação: ${situacao.dadosParsed?.situacao}');
-    print('Regime: ${situacao.dadosParsed?.regimeTributario}');
-    print('Débitos: ${debitos.valorTotalDebitosFormatado}');
-    print('Créditos: ${creditos.valorTotalCreditosFormatado}');
-    print('Razão social: ${info.dadosParsed?.razaoSocial}');
-  } catch (e) {
-    print('Erro: $e');
-  }
-}
-```
-
-### 2. Monitoramento de Débitos
-
-```dart
-Future<void> monitorarDebitos(String contribuinteNumero) async {
-  try {
-    // Consultar débitos
-    final debitos = await sitfisService.consultarDebitos(contribuinteNumero);
-    if (!debitos.sucesso) return;
-    
-    final listaDebitos = debitos.dadosParsed?.listaDebitos ?? [];
-    
-    for (final debito in listaDebitos) {
-      final vencimento = DateTime.tryParse(debito.dataVencimentoFormatada);
-      if (vencimento != null) {
-        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
-        
-        if (diasParaVencimento <= 5) {
-          print('⚠️ Débito ${debito.numeroDocumento} vence em $diasParaVencimento dias');
-          print('Valor: ${debito.valorFormatado}');
-        }
-      }
-    }
-  } catch (e) {
-    print('Erro no monitoramento: $e');
-  }
-}
-```
-
-### 3. Relatório de Situação Fiscal
-
-```dart
-Future<void> relatorioSituacaoFiscal(String contribuinteNumero) async {
-  try {
-    // Consultar situação fiscal
-    final situacao = await sitfisService.consultarSituacaoFiscal(contribuinteNumero);
-    if (!situacao.sucesso) return;
-    
-    // Consultar informações gerais
-    final info = await sitfisService.consultarInformacoesGerais(contribuinteNumero);
-    if (!info.sucesso) return;
-    
-    print('=== Relatório de Situação Fiscal ===');
-    print('CNPJ: ${contribuinteNumero}');
-    print('Razão social: ${info.dadosParsed?.razaoSocial}');
-    print('Nome fantasia: ${info.dadosParsed?.nomeFantasia}');
-    print('Situação: ${situacao.dadosParsed?.situacao}');
-    print('Regime tributário: ${situacao.dadosParsed?.regimeTributario}');
-    print('Data de abertura: ${info.dadosParsed?.dataAberturaFormatada}');
-    print('Capital social: ${info.dadosParsed?.capitalSocialFormatado}');
-  } catch (e) {
-    print('Erro: $e');
-  }
-}
-```
-
-## Integração com Outros Serviços
-
-O SITFIS Service pode ser usado em conjunto com:
-
-- **DCTFWeb Service**: Para consultar declarações relacionadas
-- **MIT Service**: Para consultar apurações relacionadas
-- **Eventos Atualização Service**: Para monitorar atualizações
-- **Caixa Postal Service**: Para consultar mensagens relacionadas
-
-## Monitoramento e Logs
-
-Para monitoramento eficaz:
-
-- Logar todas as consultas de informações fiscais
-- Monitorar consultas de débitos e créditos
-- Alertar sobre débitos próximos do vencimento
-- Rastrear erros de validação
-- Monitorar performance das requisições
+4. **Processamento Assíncrono**: Requer aguardar tempo de processamento
+5. **Limite de Solicitações**: Sistema pode ter limite de solicitações simultâneas
 
 ## Suporte
 
 Para dúvidas sobre o serviço SITFIS:
-
 - Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
 - Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 - Abra uma issue no repositório para questões específicas do package

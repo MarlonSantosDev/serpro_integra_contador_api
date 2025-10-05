@@ -9,13 +9,37 @@ import 'package:serpro_integra_contador_api/src/services/regime_apuracao/model/c
 import 'package:serpro_integra_contador_api/src/services/regime_apuracao/model/consultar_resolucao_response.dart';
 import 'package:serpro_integra_contador_api/src/services/regime_apuracao/model/regime_apuracao_enums.dart';
 
-/// Serviço para integração com Regime de Apuração do Simples Nacional
+/// **Serviço:** REGIME DE APURAÇÃO (Regime de Apuração do Simples Nacional)
 ///
-/// Implementa todos os serviços disponíveis do Integra REGIMEAPURACAO:
-/// - Efetuar Opção pelo Regime de Apuração (EFETUAROPCAOREGIME101)
-/// - Consultar Anos Calendários (CONSULTARANOSCALENDARIOS102)
-/// - Consultar Opção pelo Regime de Apuração (CONSULTAROPCAOREGIME103)
-/// - Consultar Resolução para o Regime de Caixa (CONSULTARRESOLUCAO104)
+/// O Regime de Apuração define como as receitas são apuradas no Simples Nacional (Competência ou Caixa).
+///
+/// **Este serviço permite:**
+/// - Efetuar opção pelo regime de apuração (EFETUAROPCAOREGIME101)
+/// - Consultar anos calendários disponíveis (CONSULTARANOSCALENDARIOS102)
+/// - Consultar opção pelo regime de apuração (CONSULTAROPCAOREGIME103)
+/// - Consultar resolução para o regime de caixa (CONSULTARRESOLUCAO104)
+///
+/// **Documentação oficial:** `.cursor/rules/regime_apuracao.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final regimeService = RegimeApuracaoService(apiClient);
+///
+/// // Efetuar opção pelo regime de caixa
+/// final resultado = await regimeService.efetuarOpcao(
+///   contribuinteNumero: '12345678000190',
+///   anoOpcao: 2024,
+///   regimeApuracao: RegimeApuracao.caixa,
+/// );
+/// print('Opção realizada: ${resultado.sucesso}');
+///
+/// // Consultar opção atual
+/// final opcao = await regimeService.consultarOpcao(
+///   contribuinteNumero: '12345678000190',
+///   anoCalendario: 2024,
+/// );
+/// print('Regime atual: ${opcao.regime}');
+/// ```
 class RegimeApuracaoService {
   final ApiClient _apiClient;
 

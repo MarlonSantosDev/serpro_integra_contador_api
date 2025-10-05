@@ -8,14 +8,35 @@ import 'package:serpro_integra_contador_api/src/services/parcsn/model/emitir_das
 import 'package:serpro_integra_contador_api/src/services/parcsn/model/parcsn_validations.dart';
 import 'package:serpro_integra_contador_api/src/services/parcsn/model/parcsn_errors.dart';
 
-/// Serviço para integração com o sistema PARCSN (Parcelamento do Simples Nacional)
+/// **Serviço:** PARCSN (Parcelamento do Simples Nacional)
 ///
-/// Este serviço permite:
-/// - Consultar pedidos de parcelamento
-/// - Consultar parcelamentos específicos
-/// - Consultar parcelas disponíveis para impressão
-/// - Consultar detalhes de pagamento
-/// - Emitir DAS para parcelas
+/// Serviço para gerenciamento de parcelamentos ordinários de débitos do Simples Nacional.
+///
+/// **Este serviço permite:**
+/// - Consultar pedidos de parcelamento (PEDIDOSPARC51)
+/// - Consultar parcelamento específico (OBTERPARC52)
+/// - Consultar parcelas disponíveis para impressão (PARCELASPARAGERAR50)
+/// - Consultar detalhes de pagamento (DETPAGTOPARC53)
+/// - Emitir DAS para parcelas (GERARDAS49)
+///
+/// **Documentação oficial:** `.cursor/rules/parcsn.mdc`
+///
+/// **Exemplo de uso:**
+/// ```dart
+/// final parcsnService = ParcsnService(apiClient);
+///
+/// // Consultar pedidos
+/// final pedidos = await parcsnService.consultarPedidosParcelamento(
+///   cnpj: '12345678000190',
+/// );
+///
+/// // Emitir DAS
+/// final das = await parcsnService.emitirDocumentoArrecadacao(
+///   cnpj: '12345678000190',
+///   numeroParcelamento: 123456,
+///   parcelaParaEmitir: 202403,
+/// );
+/// ```
 class ParcsnService {
   final ApiClient _apiClient;
 
