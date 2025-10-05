@@ -600,14 +600,13 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICE
 
 ### Comunidade
 
-- [Issues do GitHub](https://github.com/seu-usuario/serpro_integra_contador_api/issues)
-- [Discussões](https://github.com/seu-usuario/serpro_integra_contador_api/discussions)
+- [Issues do GitHub](https://github.com/MarlonSantosDev/serpro_integra_contador_api/issues)
+- [Discussões](https://github.com/MarlonSantosDev/serpro_integra_contador_api/discussions)
 
 ### Contato
 
 Para suporte técnico específico:
-- Email: suporte@exemplo.com
-- Discord: [Servidor da Comunidade](https://discord.gg/exemplo)
+- Email: marlon-20-12@hotmail.com
 
 ---
 
