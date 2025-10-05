@@ -65,5 +65,5 @@ node_modules/
 
 # Project specific
 pubspec.lock
-assistant/prompt.txt
+assistant/
 markdown/
