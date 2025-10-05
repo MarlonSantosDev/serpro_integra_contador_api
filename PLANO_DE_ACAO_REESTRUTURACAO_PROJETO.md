@@ -38,8 +38,8 @@ Elaborar um **plano de ação detalhado** para **organizar e otimizar o projeto*
   - A qual serviço pertence.
   - O que ele faz.
   - Exemplo de entrada e saída.
-- Veja as pasta .cursor/rules na qual contém a documentação de todos os serviços.
-- Veja o arquivo` @funcionalidades.txt` contém todas as funcionalidades de todos os serviços.
+- Verifique a pasta `.cursor/rules`, que contém a documentação de todos os serviços.
+- Consulte o arquivo `@funcionalidades.txt`, que contém todas as funcionalidades de todos os serviços.
 
 ---
 
@@ -56,11 +56,10 @@ Elaborar um **plano de ação detalhado** para **organizar e otimizar o projeto*
 ---
 
 ### 8. Exemplos de Entrada e Saída
-- Na pasta `exemplo`, **cada serviço deve possuir um arquivo único** contendo **todas as funções disponíveis** desse serviço.  
+- Na pasta `exemplo`, cada serviço deve possuir um **único arquivo de exemplos**, contendo todas as funções disponíveis do serviço.  
 - Caso o serviço possua **múltiplas formas de entrada** (por exemplo, 1.000 possibilidades de entrada), devem ser incluídos **exemplos completos** para **todas essas 1.000 entradas possíveis**.  
 - Da mesma forma, se o serviço possuir **1.000 campos de retorno**, o exemplo deve **listar e descrever todos esses 1.000 campos retornados**, de forma completa e organizada.  
 - O objetivo é que o arquivo de exemplo represente **integralmente o comportamento real do serviço**, tanto nas entradas quanto nas saídas.
-
 
 ---
 
@@ -71,15 +70,21 @@ Elaborar um **plano de ação detalhado** para **organizar e otimizar o projeto*
 ---
 
 ### 10. Padronização de Nomes
-- Todos os **arquivos, classes e métodos** devem seguir o padrão **pt-BR**.
-- O objetivo é tornar o projeto mais claro e consistente com o contexto brasileiro.
+- Todos os **arquivos, classes e métodos** devem seguir o padrão **pt-BR**, para tornar o projeto mais claro e consistente com o contexto brasileiro.
 
 ---
 
 ## 🧩 Antes de Executar
 1. Apresente um **resumo do que você entendeu** sobre o que deve ser feito.  
 2. Descreva **como pretende realizar cada etapa**.  
-3. Aguarde minha confirmação antes de iniciar a execução.
+3. Aguarde minha confirmação antes de iniciar a execução.  
+4. Faça no arquivo `ajustes_plano_de_acao.md` o que você entendeu e como vai realizar cada etapa.
+
+---
+
+## 🛠️ Ferramentas
+- Pode utilizar MCP para resolver problemas.
+- Refletir sobre o código para identificar melhorias e aumentar a qualidade.
 
 ---
 
