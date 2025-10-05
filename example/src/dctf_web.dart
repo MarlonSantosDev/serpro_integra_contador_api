@@ -18,7 +18,17 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       mesPA: '11',
       idsSistemaOrigem: [SistemaOrigem.esocial, SistemaOrigem.mit],
     );
-    print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
+    if (darfGeralResponse.sucesso) {
+      print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
+      print('Mensagens: ${darfGeralResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        darfGeralResponse.pdfBase64!,
+        'darf_geral_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
+    }
     await Future.delayed(Duration(seconds: 5));
 
     // DARF Pessoa Física Mensal
@@ -29,8 +39,18 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       anoPA: '2022',
       mesPA: '06',
     );
-    print('✅ DARF PF Mensal: ${darfPfResponse.sucesso}');
-    await Future.delayed(Duration(seconds: 10));
+    if (darfPfResponse.sucesso) {
+      print('✅ DARF PF Mensal: ${darfPfResponse.sucesso}');
+      print('Mensagens: ${darfPfResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        darfPfResponse.pdfBase64!,
+        'darf_pf_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ DARF PF Mensal: ${darfPfResponse.sucesso}');
+    }
+    await Future.delayed(Duration(seconds: 5));
 
     // DARF 13º Salário
     final darf13Response = await dctfWebService.gerarDarf13Salario(
@@ -40,6 +60,17 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       anoPA: '2022',
       isPessoaFisica: false,
     );
+    if (darf13Response.sucesso) {
+      print('✅ DARF 13º Salário: ${darf13Response.sucesso}');
+      print('Mensagens: ${darf13Response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        darf13Response.pdfBase64!,
+        'darf_13_salario_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ DARF 13º Salário: ${darf13Response.sucesso}');
+    }
     print('✅ DARF 13º Salário: ${darf13Response.sucesso}');
   } catch (e) {
     print('❌ Erro nos métodos de conveniência: $e');
@@ -59,6 +90,17 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       mesPA: '05',
       diaPA: '14', // Dia obrigatório para espetáculo desportivo
     );
+    if (espetaculoResponse.sucesso) {
+      print('✅ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
+      print('Mensagens: ${espetaculoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        espetaculoResponse.xmlBase64!,
+        'espetaculo_desportivo_${DateTime.now().millisecondsSinceEpoch}.xml',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
+    }
     print('✅ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
   } catch (e) {
     print('❌ Erro no exemplo espetáculo desportivo: $e');
@@ -78,7 +120,17 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       mesPA: '06',
       //cnoAfericao: 28151, // CNO obrigatório para aferição
     );
-    print('✅ XML Aferição: ${afericaoResponse.sucesso}');
+    if (afericaoResponse.sucesso) {
+      print('✅ XML Aferição: ${afericaoResponse.sucesso}');
+      print('Mensagens: ${afericaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        afericaoResponse.xmlBase64!,
+        'afericao_${DateTime.now().millisecondsSinceEpoch}.xml',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ XML Aferição: ${afericaoResponse.sucesso}');
+    }
   } catch (e) {
     print('❌ Erro no exemplo aferição: $e');
     servicoOk = false;
@@ -97,7 +149,17 @@ Future<void> DctfWeb(ApiClient apiClient) async {
       mesPA: '12',
       numProcReclamatoria: '00365354520004013400', // Processo obrigatório
     );
-    print('✅ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
+    if (reclamatoriaResponse.sucesso) {
+      print('✅ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
+      print('Mensagens: ${reclamatoriaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+        reclamatoriaResponse.pdfBase64!,
+        'recibo_reclamatoria_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    } else {
+      print('❌ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
+    }
   } catch (e) {
     print('❌ Erro no exemplo reclamatória trabalhista: $e');
     servicoOk = false;

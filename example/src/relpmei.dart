@@ -172,7 +172,10 @@ Future<void> Relpmei(ApiClient apiClient) async {
         print('     - PDF em Base64: ${das.docArrecadacaoPdfB64.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await PdfFileUtils.salvarPdf(das.docArrecadacaoPdfB64, 'das_relpmei_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
+          das.docArrecadacaoPdfB64,
+          'das_relpmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
         print('     PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
     } else {

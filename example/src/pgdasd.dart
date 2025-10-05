@@ -108,7 +108,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
       // Salvar PDF em arquivo
       if (das.pdf.isNotEmpty) {
-        final sucessoSalvamento = await PdfFileUtils.salvarPdf(das.pdf, 'das_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(das.pdf, 'das_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
@@ -228,12 +228,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
       // Salvar PDFs em arquivo
       if (declaracao.recibo.pdf.isNotEmpty) {
-        final sucessoRecibo = await PdfFileUtils.salvarPdf(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoRecibo = await PdfFileUtils.salvarArquivo(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
       }
 
       if (declaracao.declaracao.pdf.isNotEmpty) {
-        final sucessoDeclaracao = await PdfFileUtils.salvarPdf(
+        final sucessoDeclaracao = await PdfFileUtils.salvarArquivo(
           declaracao.declaracao.pdf,
           'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
@@ -247,7 +247,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
         // Salvar PDFs MAED em arquivo
         if (declaracao.maed!.pdfNotificacao.isNotEmpty) {
-          final sucessoNotificacao = await PdfFileUtils.salvarPdf(
+          final sucessoNotificacao = await PdfFileUtils.salvarArquivo(
             declaracao.maed!.pdfNotificacao,
             'notificacao_maed_${DateTime.now().millisecondsSinceEpoch}.pdf',
           );
@@ -255,7 +255,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
         }
 
         if (declaracao.maed!.pdfDarf.isNotEmpty) {
-          final sucessoDarf = await PdfFileUtils.salvarPdf(declaracao.maed!.pdfDarf, 'darf_maed_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          final sucessoDarf = await PdfFileUtils.salvarArquivo(declaracao.maed!.pdfDarf, 'darf_maed_${DateTime.now().millisecondsSinceEpoch}.pdf');
           print('  DARF MAED PDF salvo em arquivo: ${sucessoDarf ? 'Sim' : 'Não'}');
         }
       }
@@ -289,12 +289,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
       // Salvar PDFs em arquivo
       if (declaracao.recibo.pdf.isNotEmpty) {
-        final sucessoRecibo = await PdfFileUtils.salvarPdf(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoRecibo = await PdfFileUtils.salvarArquivo(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
       }
 
       if (declaracao.declaracao.pdf.isNotEmpty) {
-        final sucessoDeclaracao = await PdfFileUtils.salvarPdf(
+        final sucessoDeclaracao = await PdfFileUtils.salvarArquivo(
           declaracao.declaracao.pdf,
           'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

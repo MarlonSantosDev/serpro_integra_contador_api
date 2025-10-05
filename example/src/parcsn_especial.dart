@@ -152,7 +152,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
 
       // Salvar PDF em arquivo
       if (pdfBytes != null) {
-        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
           emitirDasResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
           'das_parcsn_especial_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

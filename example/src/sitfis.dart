@@ -79,7 +79,7 @@ Future<void> Sitfis(ApiClient apiClient) async {
 
       if (emitirResponse.hasPdf) {
         // Salvar PDF em arquivo (opcional)
-        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
           emitirResponse.dados!.pdf!,
           'relatorio_sitfis_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

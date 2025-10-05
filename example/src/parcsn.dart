@@ -158,7 +158,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
 
           // Salvar PDF em arquivo
           if (dasData.temPdf) {
-            final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+            final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
               dasData.docArrecadacaoPdfB64,
               'das_parcsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
             );

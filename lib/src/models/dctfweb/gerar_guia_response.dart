@@ -7,21 +7,13 @@ class GerarGuiaResponse {
   final String dados;
   final List<MensagemDctf> mensagens;
 
-  GerarGuiaResponse({
-    required this.status,
-    required this.dados,
-    required this.mensagens,
-  });
+  GerarGuiaResponse({required this.status, required this.dados, required this.mensagens});
 
   factory GerarGuiaResponse.fromJson(Map<String, dynamic> json) {
     return GerarGuiaResponse(
       status: json['status']?.toString() ?? '',
       dados: json['dados']?.toString() ?? '',
-      mensagens:
-          (json['mensagens'] as List<dynamic>?)
-              ?.map((m) => MensagemDctf.fromJson(m as Map<String, dynamic>))
-              .toList() ??
-          [],
+      mensagens: (json['mensagens'] as List).map((m) => MensagemDctf.fromJson(m)).toList(),
     );
   }
 
@@ -32,8 +24,9 @@ class GerarGuiaResponse {
 
       final dadosJson = Map<String, dynamic>.from(jsonDecode(dados) as Map);
 
-      return dadosJson['PDFByteArrayBase64'] as String?;
+      return dadosJson['PDFByteArrayBase64'].toString();
     } catch (e) {
+      print('Erro ao obter PDF em Base64: $e');
       return null;
     }
   }
@@ -51,10 +44,6 @@ class GerarGuiaResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'dados': dados,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-    };
+    return {'status': status, 'dados': dados, 'mensagens': mensagens.map((m) => m.toJson()).toList()};
   }
 }

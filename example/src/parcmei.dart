@@ -211,7 +211,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
 
       // Salvar PDF em arquivo
       if (pdfBytes != null) {
-        final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+        final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
           emitirResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
           'das_parcmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );

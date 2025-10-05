@@ -159,7 +159,7 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
       print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
 
       // Salvar PDF em arquivo
-      final sucessoSalvamento = await PdfFileUtils.salvarPdf(
+      final sucessoSalvamento = await PdfFileUtils.salvarArquivo(
         emitirComprovanteResponse.pdfBase64!,
         'comprovante_pagto_web_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );

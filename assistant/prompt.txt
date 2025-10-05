@@ -22,6 +22,7 @@ Faça o acesso a todo os link para pode extrair o máximo de informação possiv
 
 1) Otimizar arquivo e codigo
 2) Validar a utilização das funções e metodos criados util
+2) Funções com parametros, anotações, tipos, retornos, etc.
 2) Remover arquivos desnecessários é codigos desnecessários que não serão utilizados
 3) Remover comentarios desnecessários add comentarios importantes
 4) atualizar arquivo doc e .mdc

@@ -19,9 +19,9 @@ void main() async {
   //await AutenticaProcurador(apiClient); // Verfunção  assinatura digital com certificado
   //await CaixaPostal(apiClient);
   //await Ccmei(apiClient);
-  await DctfWeb(apiClient);
+  //await DctfWeb(apiClient);
   //await Defis(apiClient);
-  //await Dte(apiClient);
+  await Dte(apiClient);
   //await EventosAtualizacao(apiClient);
   //await Mit(apiClient);// Daqui para baixo tem exatamente o o metado de cada serviço
   //await PagtoWeb(apiClient);
