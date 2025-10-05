@@ -5,7 +5,6 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
 
   final pagtoWebService = PagtoWebService(apiClient);
   bool servicoOk = true;
-
   // 1. Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
   try {
     print('\n--- 1. Consulta Pagamento por intervaloDataArrecadacao ---');
@@ -54,6 +53,16 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
     print('✅ Status: ${consultarReceitaResponse.status}');
     print('Sucesso: ${consultarReceitaResponse.sucesso}');
     print('Quantidade de pagamentos: ${consultarReceitaResponse.dados.length}');
+    if (consultarReceitaResponse.dados.isNotEmpty) {
+      final pagamento = consultarReceitaResponse.dados.first;
+      print('Primeiro pagamento:');
+      print('  Número: ${pagamento.numeroDocumento}');
+      print('  Tipo: ${pagamento.tipo.descricao}');
+      print('  Período: ${pagamento.periodoApuracao}');
+      print('  Data Arrecadação: ${pagamento.dataArrecadacao}');
+      print('  Valor Total: R\$ ${pagamento.valorTotal}');
+      print('  Receita: ${pagamento.receitaPrincipal.descricao}');
+    }
   } catch (e) {
     print('❌ Erro ao consultar pagamentos por receita: $e');
     servicoOk = false;
@@ -76,6 +85,16 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
     print('✅ Status: ${consultarValorResponse.status}');
     print('Sucesso: ${consultarValorResponse.sucesso}');
     print('Quantidade de pagamentos: ${consultarValorResponse.dados.length}');
+    if (consultarValorResponse.dados.isNotEmpty) {
+      final pagamento = consultarValorResponse.dados.first;
+      print('Primeiro pagamento:');
+      print('  Número: ${pagamento.numeroDocumento}');
+      print('  Tipo: ${pagamento.tipo.descricao}');
+      print('  Período: ${pagamento.periodoApuracao}');
+      print('  Data Arrecadação: ${pagamento.dataArrecadacao}');
+      print('  Valor Total: R\$ ${pagamento.valorTotal}');
+      print('  Receita: ${pagamento.receitaPrincipal.descricao}');
+    }
   } catch (e) {
     print('❌ Erro ao consultar pagamentos por valor: $e');
     servicoOk = false;
@@ -146,8 +165,8 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
     print('\n--- 7. Emitir Comprovante de Pagamento ---');
     final emitirComprovanteResponse = await pagtoWebService.emitirComprovantePagamento(
       contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
+      contribuinteNumero: '99999999999',
+      autorPedidoDadosNumero: '99999999999',
       numeroDocumento: '99999999999999999',
     );
 

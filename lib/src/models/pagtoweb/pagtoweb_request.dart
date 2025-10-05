@@ -205,7 +205,7 @@ class EmitirComprovanteRequest extends PagtoWebRequest {
         contribuinteNumero: contribuinteNumero,
         pedidoDados: PedidoDados(
           idSistema: 'PAGTOWEB',
-          idServico: 'EMITECOMPROVANTEPAGAMENTO72',
+          idServico: 'COMPARRECADACAO72',
           versaoSistema: '1.0',
           dados: jsonEncode({'numeroDocumento': numeroDocumento}),
         ),

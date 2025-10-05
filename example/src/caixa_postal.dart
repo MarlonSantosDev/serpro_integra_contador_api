@@ -22,7 +22,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print('❌ Erro ao verificar mensagens novas: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 2. Obter indicador detalhado de mensagens novas
   try {
@@ -44,7 +44,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print('❌ Erro ao obter indicador de mensagens novas: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 3. Listar todas as mensagens
   try {
@@ -79,7 +79,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao listar todas as mensagens: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 4. Listar apenas mensagens não lidas
   try {
@@ -97,7 +97,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print('❌ Erro ao listar mensagens não lidas: $e');
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 5. Listar apenas mensagens lidas
   try {
@@ -115,7 +115,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao listar mensagens lidas: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 6. Listar mensagens favoritas
   try {
@@ -133,7 +133,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao listar mensagens favoritas: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 7. Obter detalhes de uma mensagem específica (usando ISN da primeira mensagem)
   try {
@@ -205,7 +205,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao obter detalhes da mensagem específica: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 8. Exemplo de paginação (se houver mais páginas)
   try {
@@ -233,7 +233,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print("❌ Erro ao listar paginação: $e");
     servicoOk = false;
   }
-  await Future.delayed(Duration(seconds: 10));
+  await Future.delayed(Duration(seconds: 5));
 
   // 9. Exemplo usando filtros específicos
   try {

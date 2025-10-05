@@ -2,7 +2,6 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 Future<void> Procuracoes(ApiClient apiClient) async {
   print('\n=== 🏢 TESTES PRINCIPAIS - SERPRO PROCURAÇÕES ELETRÔNICAS ===');
-  print('PF→PF, PJ→PJ, PF→PJ com análise detalhada');
 
   final procuracoesService = ProcuracoesService(apiClient);
   bool servicoOk = true;
@@ -72,7 +71,10 @@ Future<void> Procuracoes(ApiClient apiClient) async {
   await Future.delayed(Duration(seconds: 3));
 
   try {
+    // Não disponivel no ambiente de teste
     print('\n📋 === 2. TESTE PJ → PJ ===');
+    print('Não disponivel no ambiente de teste');
+    /*
 
     final responsePjPj = await procuracoesService.obterProcuracaoPj(
       dadosTesteSerpro['cnpjTeste'] as String,
@@ -120,6 +122,7 @@ Future<void> Procuracoes(ApiClient apiClient) async {
     } else {
       print('ℹ️ Nenhuma procuração encontrada PJ→PJ');
     }
+    */
   } catch (e) {
     print('❌ Erro no teste PJ → PJ: $e');
     servicoOk = false;
