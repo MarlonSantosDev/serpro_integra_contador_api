@@ -14,12 +14,8 @@ class SolicitarEventosPJRequest {
       throw ArgumentError('Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CNPJs por lote');
     }
 
-    // Validar formato dos CNPJs
-    for (final cnpj in cnpjs) {
-      if (!DocumentUtils.isValidCnpj(cnpj)) {
-        throw ArgumentError('CNPJ inválido: $cnpj');
-      }
-    }
+    // Validar lista de CNPJs (consistência e formato)
+    DocumentUtils.validateCNPJList(cnpjs);
   }
 
   /// Cria os dados JSON para o campo 'dados' da requisição

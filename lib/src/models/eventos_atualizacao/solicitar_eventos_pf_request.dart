@@ -14,12 +14,8 @@ class SolicitarEventosPFRequest {
       throw ArgumentError('Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CPFs por lote');
     }
 
-    // Validar formato dos CPFs
-    for (final cpf in cpfs) {
-      if (!DocumentUtils.isValidCpf(cpf)) {
-        throw ArgumentError('CPF inválido: $cpf');
-      }
-    }
+    // Validar lista de CPFs (consistência e formato)
+    DocumentUtils.validateCPFList(cpfs);
   }
 
   /// Cria os dados JSON para o campo 'dados' da requisição

@@ -32,10 +32,77 @@ class DocumentUtils {
     } else if (cleanNumber.length == tamanhoCnpj) {
       return tipoCnpj;
     } else {
+      // Caso quando for lista de cpfs ou cnpjs (EVENTOSATUALIZACAO)
+      if (cleanNumber.length % 11 == 0) return 3;
+      if (cleanNumber.length % 14 == 0) return 4;
       throw ArgumentError(
         'Número de documento inválido. Deve conter $tamanhoCpf dígitos (CPF) ou $tamanhoCnpj dígitos (CNPJ). '
         'Recebido: $cleanNumber (${cleanNumber.length} dígitos)',
       );
+    }
+  }
+
+  /// Valida uma lista de documentos para garantir que todos sejam do mesmo tipo
+  /// Retorna o tipo comum (1 para CPF, 2 para CNPJ) ou lança exceção se houver inconsistência
+  static int validateDocumentListConsistency(List<String> documentos) {
+    if (documentos.isEmpty) {
+      throw ArgumentError('Lista de documentos não pode estar vazia');
+    }
+
+    int? tipoComum;
+
+    for (int i = 0; i < documentos.length; i++) {
+      final documento = documentos[i];
+      final tipoAtual = detectDocumentType(documento);
+
+      if (tipoComum == null) {
+        tipoComum = tipoAtual;
+      } else if (tipoComum != tipoAtual) {
+        throw ArgumentError(
+          'Lista de documentos inconsistente: todos os documentos devem ser do mesmo tipo (CPF ou CNPJ). '
+          'Documento na posição $i ($documento) é diferente do tipo esperado.',
+        );
+      }
+    }
+
+    return tipoComum!; // Garantido que não será null devido à validação acima
+  }
+
+  /// Valida uma lista de CPFs
+  static void validateCPFList(List<String> cpfs) {
+    if (cpfs.isEmpty) {
+      throw ArgumentError('Lista de CPFs não pode estar vazia');
+    }
+
+    final tipoComum = validateDocumentListConsistency(cpfs);
+    if (tipoComum != tipoCpf) {
+      throw ArgumentError('Todos os documentos na lista devem ser CPFs válidos');
+    }
+
+    // Validar cada CPF individualmente
+    for (int i = 0; i < cpfs.length; i++) {
+      if (!isValidCpf(cpfs[i])) {
+        throw ArgumentError('CPF inválido na posição $i: ${cpfs[i]}');
+      }
+    }
+  }
+
+  /// Valida uma lista de CNPJs
+  static void validateCNPJList(List<String> cnpjs) {
+    if (cnpjs.isEmpty) {
+      throw ArgumentError('Lista de CNPJs não pode estar vazia');
+    }
+
+    final tipoComum = validateDocumentListConsistency(cnpjs);
+    if (tipoComum != tipoCnpj) {
+      throw ArgumentError('Todos os documentos na lista devem ser CNPJs válidos');
+    }
+
+    // Validar cada CNPJ individualmente
+    for (int i = 0; i < cnpjs.length; i++) {
+      if (!isValidCnpj(cnpjs[i])) {
+        throw ArgumentError('CNPJ inválido na posição $i: ${cnpjs[i]}');
+      }
     }
   }
 
@@ -47,7 +114,16 @@ class DocumentUtils {
 
   /// Valida se é um CPF válido (formato e dígitos verificadores)
   static bool isValidCpf(String cpf) {
-    List<String> cnpjDeTeste = ['00000000000100', '99999999999', '99999999999999', '00000000000', '11111111111', '22222222222', '33333333333'];
+    List<String> cnpjDeTeste = [
+      '00000000000100',
+      '99999999999',
+      '99999999999999',
+      '00000000000',
+      '11111111111',
+      '22222222222',
+      '33333333333',
+      '44444444444',
+    ];
     if (cnpjDeTeste.contains(cpf)) {
       return true;
     }
@@ -68,6 +144,10 @@ class DocumentUtils {
 
   /// Valida se é um CNPJ válido (formato e dígitos verificadores)
   static bool isValidCnpj(String cnpj) {
+    List<String> cnpjDeTeste = ['00000000000000', '11111111111111', '22222222222222', '33333333333333', '99999999999999'];
+    if (cnpjDeTeste.contains(cnpj)) {
+      return true;
+    }
     final cleanCnpj = cleanDocumentNumber(cnpj);
 
     // Verificar tamanho

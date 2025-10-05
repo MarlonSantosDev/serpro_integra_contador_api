@@ -37,7 +37,6 @@ class EventosAtualizacaoService {
     String? autorPedidoDadosNumero,
   }) async {
     final request = SolicitarEventosPFRequest(cpfs: cpfs, evento: evento);
-
     final baseRequest = BaseRequest(
       contribuinteNumero: request.cpfsString,
       pedidoDados: PedidoDados(
@@ -186,32 +185,6 @@ class EventosAtualizacaoService {
 
     // Obter resultados
     return obterEventosPF(
-      protocolo: solicitacao.dados.protocolo,
-      evento: evento,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Método de conveniência para solicitar e obter eventos PJ em uma única operação
-  ///
-  /// Aguarda o tempo estimado e retorna os resultados automaticamente
-  Future<ObterEventosPJResponse> solicitarEObterEventosPJ({
-    required List<String> cnpjs,
-    required TipoEvento evento,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    // Solicitar eventos
-    final solicitacao = await solicitarEventosPJ(
-      cnpjs: cnpjs,
-      evento: evento,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-
-    // Obter resultados
-    return obterEventosPJ(
       protocolo: solicitacao.dados.protocolo,
       evento: evento,
       contratanteNumero: contratanteNumero,
