@@ -12,12 +12,12 @@ import 'package:serpro_integra_contador_api/src/services/parcmei/model/parcmei_e
 ///
 /// O PARCMEI permite que o MEI parcele seus débitos tributários federais.
 ///
-/// **Este serviço permite:**
-/// - Consultar pedidos de parcelamento (PEDIDOSPARC213)
-/// - Consultar parcelamento específico (OBTERPARC214)
-/// - Consultar parcelas para impressão (PARCELASPARAGERAR212)
-/// - Consultar detalhes de pagamento (DETPAGTOPARC215)
-/// - Emitir DAS para parcelas (GERARDAS211)
+/// **Este serviço disponibiliza APENAS 5 serviços oficiais da API SERPRO:**
+/// - **PEDIDOSPARC203**: Consultar pedidos de parcelamento
+/// - **OBTERPARC204**: Consultar parcelamento específico
+/// - **PARCELASPARAGERAR202**: Consultar parcelas para impressão
+/// - **DETPAGTOPARC205**: Consultar detalhes de pagamento de parcela
+/// - **GERARDAS201**: Emitir DAS para parcelas
 ///
 /// **Documentação oficial:** `.cursor/rules/parcmei.mdc`
 ///
