@@ -9,27 +9,38 @@ import 'package:serpro_integra_contador_api/src/services/caixa_postal/model/indi
 ///
 /// A Caixa Postal é um sistema de comunicação entre a Receita Federal e os contribuintes do Simples Nacional.
 ///
-/// **Este serviço permite:**
-/// - Listar mensagens por contribuinte (LISTAMSGPORCONTRIB271)
-/// - Obter detalhes de uma mensagem (DETALHAMSG272)
-/// - Obter indicador de mensagens não lidas (INDICMSG273)
+/// **Este serviço disponibiliza APENAS os 3 serviços oficiais da API SERPRO:**
+/// - **MSGCONTRIBUINTE61**: Obter Lista de Mensagens por Contribuintes
+/// - **MSGDETALHAMENTO62**: Obter Detalhes de uma Mensagem Específica
+/// - **INNOVAMSG63**: Obter Indicador de Novas Mensagens
 ///
-/// **Documentação oficial:** `.cursor/rules/caixa_postal.mdc`
+/// **Documentação oficial:** `.cursor/rules/caixapostal.mdc`
+///
+/// **Observação sobre variáveis:**
+/// O campo `assuntoModelo` pode conter `++VARIAVEL++` que é substituído pelo valor de `valorParametroAssunto`.
+/// O campo `corpoModelo` pode conter `++1++`, `++2++`, etc. que são substituídos pelos valores do array `variaveis`.
+/// Exemplo: "[IRPF] Declaração do exercício ++VARIAVEL++ processada" com valorParametroAssunto="2023"
+/// resulta em: "[IRPF] Declaração do exercício 2023 processada"
 ///
 /// **Exemplo de uso:**
 /// ```dart
 /// final caixaPostalService = CaixaPostalService(apiClient);
 ///
-/// // Listar mensagens não lidas
+/// // 1. Obter lista de mensagens
 /// final mensagens = await caixaPostalService.obterListaMensagensPorContribuinte(
 ///   '12345678000190',
-///   statusLeitura: 2, // Não lidas
+///   statusLeitura: 2, // 0=Todas, 1=Lida, 2=Não lida
+///   indicadorFavorito: null, // 0=Não favorita, 1=Favorita, null=Sem filtro
 /// );
-/// print('Mensagens não lidas: ${mensagens.quantidadeMensagens}');
 ///
-/// // Obter indicador de mensagens não lidas
-/// final indicador = await caixaPostalService.obterIndicadorMensagens('12345678000190');
-/// print('Total não lidas: ${indicador.quantidadeMensagensNaoLidas}');
+/// // 2. Obter detalhes de uma mensagem
+/// final detalhes = await caixaPostalService.obterDetalhesMensagemEspecifica(
+///   '12345678000190',
+///   '0001626772', // ISN da mensagem
+/// );
+///
+/// // 3. Obter indicador de novas mensagens
+/// final indicador = await caixaPostalService.obterIndicadorNovasMensagens('12345678000190');
 /// ```
 class CaixaPostalService {
   final ApiClient _apiClient;
@@ -38,10 +49,13 @@ class CaixaPostalService {
 
   /// Obtém a lista de mensagens da Caixa Postal de um contribuinte
   ///
+  /// **Serviço API:** MSGCONTRIBUINTE61
+  /// **Endpoint:** /Consultar
+  ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
   /// [cnpjReferencia] - Número do CNPJ para filtro (apenas para PJ)
-  /// [statusLeitura] - Status da mensagem: 0=Não se aplica, 1=Lida, 2=Não Lida
-  /// [indicadorFavorito] - Filtro por favorita: 0=Não favorita, 1=Favorita
+  /// [statusLeitura] - Status da mensagem: 0=Todas (não se aplica), 1=Lida, 2=Não Lida
+  /// [indicadorFavorito] - Filtro por favorita: 0=Não favorita, 1=Favorita, null=Sem filtro
   /// [indicadorPagina] - Página: 0=Inicial (mais recentes), 1=Não-inicial
   /// [ponteiroPagina] - Ponteiro para página (necessário se indicadorPagina=1)
   /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
@@ -88,8 +102,11 @@ class CaixaPostalService {
 
   /// Obtém os detalhes de uma mensagem específica
   ///
+  /// **Serviço API:** MSGDETALHAMENTO62
+  /// **Endpoint:** /Consultar
+  ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
-  /// [isn] - Identificador único da mensagem
+  /// [isn] - Identificador único da mensagem (campo 'isn' retornado na lista de mensagens)
   /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(
@@ -114,14 +131,15 @@ class CaixaPostalService {
 
   /// Obtém o indicador de mensagens novas para um contribuinte
   ///
+  /// **Serviço API:** INNOVAMSG63
+  /// **Endpoint:** /Monitorar
+  ///
   /// [contribuinte] - Número do CPF/CNPJ do contribuinte
   /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   ///
-  /// Retorna:
-  /// - 0: Contribuinte não possui mensagens novas
-  /// - 1: Contribuinte possui uma mensagem nova
-  /// - 2: Contribuinte possui mensagens novas
+  /// **Retorna:**
+  /// - indicadorMensagensNovas: 0=Sem mensagens novas, 1=Uma mensagem nova, 2=Múltiplas mensagens novas
   Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(
     String contribuinte, {
     String? contratanteNumero,
@@ -138,77 +156,5 @@ class CaixaPostalService {
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
     return IndicadorMensagensResponse.fromJson(response);
-  }
-
-  // Métodos de conveniência com nomes mais simples
-
-  /// Alias para obterListaMensagensPorContribuinte - obtém todas as mensagens
-  Future<ListaMensagensResponse> listarTodasMensagens(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
-    return obterListaMensagensPorContribuinte(
-      contribuinte,
-      statusLeitura: 0,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Obtém apenas mensagens não lidas
-  Future<ListaMensagensResponse> listarMensagensNaoLidas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
-    return obterListaMensagensPorContribuinte(
-      contribuinte,
-      statusLeitura: 2,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Obtém apenas mensagens lidas
-  Future<ListaMensagensResponse> listarMensagensLidas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
-    return obterListaMensagensPorContribuinte(
-      contribuinte,
-      statusLeitura: 1,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Obtém apenas mensagens favoritas
-  Future<ListaMensagensResponse> listarMensagensFavoritas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) {
-    return obterListaMensagensPorContribuinte(
-      contribuinte,
-      indicadorFavorito: 1,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Obtém mensagens com paginação
-  Future<ListaMensagensResponse> listarMensagensComPaginacao(
-    String contribuinte, {
-    required String ponteiroPagina,
-    int statusLeitura = 0,
-    int? indicadorFavorito,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) {
-    return obterListaMensagensPorContribuinte(
-      contribuinte,
-      statusLeitura: statusLeitura,
-      indicadorFavorito: indicadorFavorito,
-      indicadorPagina: 1,
-      ponteiroPagina: ponteiroPagina,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Verifica se há mensagens novas (método de conveniência)
-  Future<bool> temMensagensNovas(String contribuinte, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final response = await obterIndicadorNovasMensagens(
-      contribuinte,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-    return response.dadosParsed?.conteudo.isNotEmpty == true && response.dadosParsed!.conteudo.first.temMensagensNovas;
   }
 }
