@@ -7,8 +7,8 @@ import 'package:serpro_integra_contador_api/src/util/validacoes_utils.dart';
 ///
 /// O DTE é um canal de comunicação digital entre a Receita Federal e os contribuintes.
 ///
-/// **Este serviço permite:**
-/// - Obter indicador de adesão ao DTE (INDDOMICELETTRIB201)
+/// **Este serviço disponibiliza APENAS 1 serviço oficial da API SERPRO:**
+/// - **CONSULTASITUACAODTE111**: Obter indicador de adesão ao DTE
 ///
 /// **Documentação oficial:** `.cursor/rules/dte.mdc`
 ///
