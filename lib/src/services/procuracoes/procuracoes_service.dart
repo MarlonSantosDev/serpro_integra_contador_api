@@ -8,8 +8,8 @@ import 'package:serpro_integra_contador_api/src/services/procuracoes/model/procu
 ///
 /// O serviço de procurações eletrônicas permite consultar procurações outorgadas e validar poderes.
 ///
-/// **Este serviço permite:**
-/// - Obter procurações eletrônicas (OBTERPROCURACAO281)
+/// **Este serviço disponibiliza APENAS 1 serviço oficial da API SERPRO:**
+/// - **OBTERPROCURACAO41**: Obter procurações eletrônicas entre outorgante e procurador
 ///
 /// **Documentação oficial:** `.cursor/rules/procuracoes.mdc`
 ///
