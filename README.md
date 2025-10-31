@@ -61,7 +61,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^1.0.0
+  serpro_integra_contador_api: ^1.0.2
 ```
 
 Execute:

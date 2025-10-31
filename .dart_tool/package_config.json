@@ -299,12 +299,12 @@
       "name": "serpro_integra_contador_api",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     }
   ],
   "generator": "pub",
   "generatorVersion": "3.9.2",
   "flutterRoot": "file:///C:/flutter",
-  "flutterVersion": "3.35.3",
+  "flutterVersion": "3.35.6",
   "pubCache": "file:///C:/Users/marlon/AppData/Local/Pub/Cache"
 }

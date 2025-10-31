@@ -65,5 +65,6 @@ node_modules/
 
 # Project specific
 pubspec.lock
-assistant/
+arquivos/
 markdown/
+.dart_tool/
