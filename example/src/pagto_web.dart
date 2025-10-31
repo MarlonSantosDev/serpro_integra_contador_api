@@ -160,35 +160,6 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   }
   await Future.delayed(Duration(seconds: 5));
 
-  // 7. Emitir Comprovante de Pagamento
-  try {
-    print('\n--- 7. Emitir Comprovante de Pagamento ---');
-    final emitirComprovanteResponse = await pagtoWebService.emitirComprovantePagamento(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999',
-      autorPedidoDadosNumero: '99999999999',
-      numeroDocumento: '99999999999999999',
-    );
-
-    print('✅ Status: ${emitirComprovanteResponse.status}');
-    print('Sucesso: ${emitirComprovanteResponse.sucesso}');
-    print('PDF disponível: ${emitirComprovanteResponse.pdfBase64 != null}');
-
-    if (emitirComprovanteResponse.pdfBase64 != null) {
-      print('Tamanho do PDF: ${emitirComprovanteResponse.pdfBase64!.length} caracteres');
-
-      // Salvar PDF em arquivo
-      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-        emitirComprovanteResponse.pdfBase64!,
-        'comprovante_pagto_web_${DateTime.now().millisecondsSinceEpoch}.pdf',
-      );
-      print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
-    }
-  } catch (e) {
-    print('❌ Erro ao emitir comprovante de pagamento: $e');
-    servicoOk = false;
-  }
-
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO PAGTOWEB ===');
   if (servicoOk) {
