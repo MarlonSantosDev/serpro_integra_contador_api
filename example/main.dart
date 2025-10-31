@@ -15,28 +15,30 @@ void main() async {
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
-  // Exemplo de uso dos serviços
-  await AutenticaProcurador(apiClient); // Verfunção  assinatura digital com certificado
   await CaixaPostal(apiClient);
-  await Ccmei(apiClient);
-  await DctfWeb(apiClient);
-  await Defis(apiClient);
-  await Dte(apiClient);
-  await EventosAtualizacao(apiClient);
-  await Mit(apiClient);
-  await PagtoWeb(apiClient);
-  await ParcmeiEspecial(apiClient);
-  await Parcmei(apiClient);
-  await ParcsnEspecial(apiClient);
-  await Parcsn(apiClient);
-  await Pertmei(apiClient);
-  await Pertsn(apiClient);
-  await Pgdasd(apiClient);
-  await Pgmei(apiClient);
-  await Procuracoes(apiClient);
-  await Regime(apiClient);
-  await Relpmei(apiClient);
-  await Relpsn(apiClient);
-  await Sicalc(apiClient);
-  await Sitfis(apiClient);
+
+  // Exemplo de uso dos serviços
+  // await AutenticaProcurador(apiClient); // Verfunção  assinatura digital com certificado
+  // await CaixaPostal(apiClient);
+  // await Ccmei(apiClient);
+  // await DctfWeb(apiClient);
+  // await Defis(apiClient);
+  // await Dte(apiClient);
+  // await EventosAtualizacao(apiClient);
+  // await Mit(apiClient);
+  // await PagtoWeb(apiClient);
+  // await ParcmeiEspecial(apiClient);
+  // await Parcmei(apiClient);
+  // await ParcsnEspecial(apiClient);
+  // await Parcsn(apiClient);
+  // await Pertmei(apiClient);
+  // await Pertsn(apiClient);
+  // await Pgdasd(apiClient);
+  // await Pgmei(apiClient);
+  // await Procuracoes(apiClient);
+  // await Regime(apiClient);
+  // await Relpmei(apiClient);
+  // await Relpsn(apiClient);
+  // await Sicalc(apiClient);
+  // await Sitfis(apiClient);
 }
