@@ -6,10 +6,14 @@ import 'package:serpro_integra_contador_api/src/services/pagtoweb/model/pagtoweb
 ///
 /// O PAGTOWEB é o sistema para consulta de pagamentos do Simples Nacional.
 ///
-/// **Este serviço permite:**
-/// - Consultar pagamentos (PAGAMENTOS71)
-/// - Emitir comprovante de pagamento (EMITECOMPROVANTEPAGAMENTO72)
-/// - Contar documentos de pagamento (CONTACONSDOCARRPG73)
+/// **Este serviço disponibiliza APENAS 3 serviços oficiais da API SERPRO:**
+/// - **PAGAMENTOS71**: Consultar pagamentos com filtros
+/// - **CONTACONSDOCARRPG73**: Contar documentos de pagamento
+/// - **EMITECOMPROVANTEPAGAMENTO72**: Emitir comprovante de pagamento em PDF
+///
+/// **Métodos de conveniência:**
+/// Este serviço também oferece métodos auxiliares que facilitam o uso dos 3 serviços principais,
+/// pré-configurando filtros específicos. Estes métodos NÃO são serviços distintos da API.
 ///
 /// **Documentação oficial:** `.cursor/rules/pagtoweb.mdc`
 ///
@@ -151,9 +155,14 @@ class PagtoWebService {
     return EmitirComprovanteResponse.fromJson(response);
   }
 
-  // ===== MÉTODOS ESPECÍFICOS PARA CADA SERVIÇO =====
+  // ========================================================================
+  // MÉTODOS DE CONVENIÊNCIA
+  // Os métodos abaixo NÃO são serviços distintos da API SERPRO.
+  // São apenas wrappers que facilitam o uso dos 3 serviços principais acima,
+  // pré-configurando filtros específicos para casos de uso comuns.
+  // ========================================================================
 
-  /// 1. Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+  /// Método de conveniência: Consultar pagamentos por intervalo de datas
   Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloDataArrecadacao({
     required String contribuinteNumero,
     required String dataInicial,
@@ -174,7 +183,7 @@ class PagtoWebService {
     );
   }
 
-  /// 2. Consulta Pagamento: quando pesquisado por codigoReceitaLista
+  /// Método de conveniência: Consultar pagamentos por código de receita
   Future<ConsultarPagamentosResponse> consultarPagamentosPorCodigoReceitaLista({
     required String contribuinteNumero,
     required List<String> codigoReceitaLista,
@@ -193,7 +202,7 @@ class PagtoWebService {
     );
   }
 
-  /// 3. Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+  /// Método de conveniência: Consultar pagamentos por intervalo de valores
   Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
@@ -214,7 +223,7 @@ class PagtoWebService {
     );
   }
 
-  /// 4. Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
+  /// Método de conveniência: Contar pagamentos por intervalo de datas
   Future<ContarPagamentosResponse> contarPagamentosPorIntervaloDataArrecadacao({
     required String contribuinteNumero,
     required String dataInicial,
@@ -231,7 +240,7 @@ class PagtoWebService {
     );
   }
 
-  /// 5. Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
+  /// Método de conveniência: Contar pagamentos por código de receita
   Future<ContarPagamentosResponse> contarPagamentosPorCodigoReceitaLista({
     required String contribuinteNumero,
     required List<String> codigoReceitaLista,
@@ -246,7 +255,7 @@ class PagtoWebService {
     );
   }
 
-  /// 6. Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
+  /// Método de conveniência: Contar pagamentos por intervalo de valores
   Future<ContarPagamentosResponse> contarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
@@ -263,18 +272,4 @@ class PagtoWebService {
     );
   }
 
-  /// 7. Emitir Comprovante de Pagamento
-  Future<EmitirComprovanteResponse> emitirComprovantePagamento({
-    required String contribuinteNumero,
-    required String numeroDocumento,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    return emitirComprovante(
-      contribuinteNumero: contribuinteNumero,
-      numeroDocumento: numeroDocumento,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
 }
