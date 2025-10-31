@@ -1,15 +1,40 @@
-# Caixa Postal - Consulta de Mensagens da RFB
+# Caixa Postal - Serviço de Mensagens da RFB
 
 ## Visão Geral
 
-O serviço Caixa Postal permite consultar mensagens da Receita Federal do Brasil (RFB) para contribuintes, incluindo lista de mensagens, detalhes de mensagens específicas e indicadores de mensagens novas.
+O serviço Caixa Postal permite consultar mensagens da Receita Federal do Brasil (RFB) para contribuintes. Este serviço disponibiliza **APENAS os 3 serviços oficiais da API SERPRO**, sem funções auxiliares ou wrappers que possam confundir o usuário.
 
-## Funcionalidades
+## Serviços Disponíveis
 
-- **Listar Mensagens**: Consulta de mensagens da caixa postal por contribuinte
-- **Detalhar Mensagem**: Consulta de detalhes de uma mensagem específica
-- **Indicador de Mensagens Novas**: Verificação de mensagens novas disponíveis
-- **Filtros Avançados**: Filtros por status de leitura, favoritas e paginação
+Este package implementa exatamente os 3 serviços da API SERPRO:
+
+1. **MSGCONTRIBUINTE61** - Obter Lista de Mensagens por Contribuintes
+2. **MSGDETALHAMENTO62** - Obter Detalhes de uma Mensagem Específica
+3. **INNOVAMSG63** - Obter Indicador de Novas Mensagens
+
+## Importante: Processamento de Variáveis
+
+A API SERPRO utiliza um sistema de variáveis nos campos de texto:
+
+### Campo assuntoModelo
+
+O campo `assuntoModelo` pode conter `++VARIAVEL++` que deve ser substituído pelo valor do campo `valorParametroAssunto`.
+
+**Exemplo:**
+- **assuntoModelo:** `"[IRPF] Declaração do exercício ++VARIAVEL++ processada"`
+- **valorParametroAssunto:** `"2023"`
+- **Resultado após processamento:** `"[IRPF] Declaração do exercício 2023 processada"`
+
+### Campo corpoModelo
+
+O campo `corpoModelo` pode conter `++1++`, `++2++`, `++3++`, etc. que devem ser substituídos pelos valores do array `variaveis`.
+
+**Exemplo:**
+- **corpoModelo:** `"Atendimento nº ++1++ do dia ++2++ foi direcionado"`
+- **variaveis:** `["12345", "01/01/2023"]`
+- **Resultado após processamento:** `"Atendimento nº 12345 do dia 01/01/2023 foi direcionado"`
+
+**Nota:** Este package já realiza esse processamento automaticamente através dos getters `assuntoProcessado` e `corpoProcessado` nas classes de modelo.
 
 ## Configuração
 
@@ -27,7 +52,7 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 final apiClient = ApiClient();
 await apiClient.authenticate(
   'seu_consumer_key',
-  'seu_consumer_secret', 
+  'seu_consumer_secret',
   'caminho/para/certificado.p12',
   'senha_do_certificado',
 );
@@ -41,147 +66,132 @@ await apiClient.authenticate(
 final caixaPostalService = CaixaPostalService(apiClient);
 ```
 
-### 2. Listar Todas as Mensagens
+### 2. Obter Lista de Mensagens por Contribuinte
+
+**Serviço API:** MSGCONTRIBUINTE61
+**Endpoint:** /Consultar
 
 ```dart
 try {
-  final response = await caixaPostalService.listarTodasMensagens('00000000000000');
-  
-  if (response.sucesso) {
-    print('Mensagens encontradas: ${response.dadosParsed?.mensagens.length ?? 0}');
-    
-    for (final mensagem in response.dadosParsed?.mensagens ?? []) {
-      print('Assunto: ${mensagem.assunto}');
-      print('Data: ${mensagem.dataEnvio}');
-      print('Status: ${mensagem.statusLeitura}');
+  final response = await caixaPostalService.obterListaMensagensPorContribuinte(
+    '12345678000190',
+    statusLeitura: 0, // 0=Todas, 1=Lida, 2=Não lida
+    indicadorFavorito: null, // 0=Não favorita, 1=Favorita, null=Sem filtro
+    indicadorPagina: 0, // 0=Página inicial, 1=Página não-inicial
+    ponteiroPagina: null, // Necessário se indicadorPagina=1
+  );
+
+  if (response.dadosParsed != null) {
+    final conteudo = response.dadosParsed!.conteudo.first;
+    print('Quantidade de mensagens: ${conteudo.quantidadeMensagensInt}');
+    print('É última página: ${conteudo.isUltimaPagina}');
+
+    for (final mensagem in conteudo.listaMensagens) {
+      print('ISN: ${mensagem.isn}');
+      print('Assunto: ${mensagem.assuntoProcessado}'); // Já com ++VARIAVEL++ substituído
+      print('Data de envio: ${mensagem.dataEnvio}');
+      print('Foi lida: ${mensagem.foiLida}');
+      print('É favorita: ${mensagem.isFavorita}');
     }
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao listar mensagens: $e');
+  print('Erro: $e');
 }
 ```
 
-### 3. Listar Apenas Mensagens Não Lidas
+#### Parâmetros
 
-```dart
-try {
-  final response = await caixaPostalService.listarMensagensNaoLidas('00000000000000');
-  
-  if (response.sucesso) {
-    print('Mensagens não lidas: ${response.dadosParsed?.mensagens.length ?? 0}');
-  }
-} catch (e) {
-  print('Erro ao listar mensagens não lidas: $e');
-}
-```
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| contribuinte | String | Sim | CPF/CNPJ do contribuinte |
+| cnpjReferencia | String? | Não | CNPJ para filtro (apenas PJ) |
+| statusLeitura | int | Não (padrão: 0) | 0=Todas, 1=Lida, 2=Não lida |
+| indicadorFavorito | int? | Não | 0=Não favorita, 1=Favorita, null=Sem filtro |
+| indicadorPagina | int | Não (padrão: 0) | 0=Página inicial, 1=Página não-inicial |
+| ponteiroPagina | String? | Não | Ponteiro para página (necessário se indicadorPagina=1) |
+| contratanteNumero | String? | Não | CNPJ do contratante |
+| autorPedidoDadosNumero | String? | Não | CPF/CNPJ do autor do pedido |
 
-### 4. Listar Apenas Mensagens Lidas
+### 3. Obter Detalhes de uma Mensagem Específica
 
-```dart
-try {
-  final response = await caixaPostalService.listarMensagensLidas('00000000000000');
-  
-  if (response.sucesso) {
-    print('Mensagens lidas: ${response.dadosParsed?.mensagens.length ?? 0}');
-  }
-} catch (e) {
-  print('Erro ao listar mensagens lidas: $e');
-}
-```
-
-### 5. Listar Mensagens Favoritas
-
-```dart
-try {
-  final response = await caixaPostalService.listarMensagensFavoritas('00000000000000');
-  
-  if (response.sucesso) {
-    print('Mensagens favoritas: ${response.dadosParsed?.mensagens.length ?? 0}');
-  }
-} catch (e) {
-  print('Erro ao listar mensagens favoritas: $e');
-}
-```
-
-### 6. Consultar Detalhes de Mensagem Específica
+**Serviço API:** MSGDETALHAMENTO62
+**Endpoint:** /Consultar
 
 ```dart
 try {
   final response = await caixaPostalService.obterDetalhesMensagemEspecifica(
-    '00000000000000',
-    '123456789', // ISN da mensagem
+    '12345678000190',
+    '0001626772', // ISN da mensagem
   );
-  
-  if (response.sucesso) {
-    print('Detalhes da mensagem encontrados!');
-    print('Assunto: ${response.dadosParsed?.assunto}');
-    print('Conteúdo: ${response.dadosParsed?.conteudo}');
-    print('Data de envio: ${response.dadosParsed?.dataEnvio}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
-  }
-} catch (e) {
-  print('Erro ao obter detalhes: $e');
-}
-```
 
-### 7. Verificar Indicador de Mensagens Novas
+  if (response.dadosParsed != null) {
+    final detalhe = response.dadosParsed!.conteudo.first;
+    print('Assunto: ${detalhe.assuntoProcessado}'); // Já com ++VARIAVEL++ substituído
+    print('Corpo: ${detalhe.corpoProcessado}'); // Já com ++1++, ++2++, etc. substituídos
+    print('Data de envio: ${detalhe.dataEnvio}');
+    print('Data de expiração: ${detalhe.dataExpiracao}');
+    print('É favorita: ${detalhe.isFavorita}');
 
-```dart
-try {
-  final response = await caixaPostalService.obterIndicadorNovasMensagens('00000000000000');
-  
-  if (response.sucesso) {
-    final indicador = response.dadosParsed?.conteudo.first.temMensagensNovas ?? false;
-    if (indicador) {
-      print('Há mensagens novas disponíveis!');
-    } else {
-      print('Não há mensagens novas');
+    // Variáveis usadas no corpo da mensagem
+    if (detalhe.variaveis.isNotEmpty) {
+      print('Variáveis:');
+      for (var i = 0; i < detalhe.variaveis.length; i++) {
+        print('  ++${i + 1}++: ${detalhe.variaveis[i]}');
+      }
     }
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao verificar indicador: $e');
+  print('Erro: $e');
 }
 ```
 
-### 8. Listar Mensagens com Paginação
+#### Parâmetros
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| contribuinte | String | Sim | CPF/CNPJ do contribuinte |
+| isn | String | Sim | ISN da mensagem (obtido na lista de mensagens) |
+| contratanteNumero | String? | Não | CNPJ do contratante |
+| autorPedidoDadosNumero | String? | Não | CPF/CNPJ do autor do pedido |
+
+### 4. Obter Indicador de Novas Mensagens
+
+**Serviço API:** INNOVAMSG63
+**Endpoint:** /Monitorar
 
 ```dart
 try {
-  final response = await caixaPostalService.listarMensagensComPaginacao(
-    '00000000000000',
-    ponteiroPagina: '20240101000000', // Ponteiro da página anterior
-    statusLeitura: 0, // Todas as mensagens
-    indicadorFavorito: null, // Sem filtro de favoritas
+  final response = await caixaPostalService.obterIndicadorNovasMensagens(
+    '12345678000190',
   );
-  
-  if (response.sucesso) {
-    print('Página de mensagens carregada: ${response.dadosParsed?.mensagens.length ?? 0}');
+
+  if (response.dadosParsed != null) {
+    final conteudo = response.dadosParsed!.conteudo.first;
+    print('Indicador: ${conteudo.indicadorMensagensNovas}');
+    print('Status: ${conteudo.statusMensagensNovas}');
+    print('Descrição: ${conteudo.descricaoStatus}');
+    print('Tem mensagens novas: ${conteudo.temMensagensNovas}');
   }
 } catch (e) {
-  print('Erro ao listar com paginação: $e');
+  print('Erro: $e');
 }
 ```
 
-### 9. Verificar se Há Mensagens Novas (Método de Conveniência)
+#### Parâmetros
 
-```dart
-try {
-  final temNovas = await caixaPostalService.temMensagensNovas('00000000000000');
-  
-  if (temNovas) {
-    print('Há mensagens novas!');
-  } else {
-    print('Não há mensagens novas');
-  }
-} catch (e) {
-  print('Erro ao verificar mensagens novas: $e');
-}
-```
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| contribuinte | String | Sim | CPF/CNPJ do contribuinte |
+| contratanteNumero | String? | Não | CNPJ do contratante |
+| autorPedidoDadosNumero | String? | Não | CPF/CNPJ do autor do pedido |
+
+#### Valores de Retorno
+
+| Indicador | Descrição |
+|-----------|-----------|
+| 0 | Contribuinte não possui mensagens novas |
+| 1 | Contribuinte possui uma mensagem nova |
+| 2 | Contribuinte possui mensagens novas (múltiplas) |
 
 ## Estrutura de Dados
 
@@ -189,24 +199,45 @@ try {
 
 ```dart
 class ListaMensagensResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final ListaMensagensDados? dadosParsed;
+  final int status;
+  final String dados; // JSON raw
+  final DadosListaMensagens? dadosParsed; // Dados parseados
 }
 
-class ListaMensagensDados {
-  final List<MensagemNegocio> mensagens;
-  final String? ponteiroProximaPagina;
-  // ... outros campos
+class DadosListaMensagens {
+  final String codigo; // Código de retorno (ex: "00")
+  final List<ConteudoListaMensagens> conteudo;
 }
 
-class MensagemNegocio {
-  final String isn;
-  final String assunto;
-  final String dataEnvio;
-  final String statusLeitura;
-  final bool favorita;
+class ConteudoListaMensagens {
+  final String quantidadeMensagens;
+  final String indicadorUltimaPagina; // "S" ou "N"
+  final String ponteiroPaginaRetornada;
+  final String ponteiroProximaPagina;
+  final String? cnpjMatriz;
+  final List<MensagemCaixaPostal> listaMensagens;
+
+  // Getters úteis
+  bool get isUltimaPagina; // true se indicadorUltimaPagina == "S"
+  int get quantidadeMensagensInt; // quantidadeMensagens como int
+}
+
+class MensagemCaixaPostal {
+  final String isn; // Identificador único
+  final String assuntoModelo; // Com ++VARIAVEL++
+  final String valorParametroAssunto; // Valor para substituir ++VARIAVEL++
+  final String dataEnvio; // Formato: AAAAMMDD
+  final String horaEnvio; // Formato: HHMMSS
+  final String indicadorLeitura; // "0" ou "1"
+  final String indicadorFavorito; // "0" ou "1"
+  final String relevancia; // "1" ou "2"
+  final String descricaoOrigem;
   // ... outros campos
+
+  // Getters úteis
+  bool get foiLida; // true se indicadorLeitura == "1"
+  bool get isFavorita; // true se indicadorFavorito == "1"
+  String get assuntoProcessado; // assuntoModelo com ++VARIAVEL++ substituído
 }
 ```
 
@@ -214,18 +245,31 @@ class MensagemNegocio {
 
 ```dart
 class DetalhesMensagemResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final DetalhesMensagemDados? dadosParsed;
+  final int status;
+  final String dados; // JSON raw
+  final DadosDetalhesMensagem? dadosParsed; // Dados parseados
 }
 
-class DetalhesMensagemDados {
+class DadosDetalhesMensagem {
+  final String codigo; // Código de retorno (ex: "00")
+  final List<DetalheMensagemCompleta> conteudo;
+}
+
+class DetalheMensagemCompleta {
   final String isn;
-  final String assunto;
-  final String conteudo;
+  final String assuntoModelo; // Com ++VARIAVEL++
+  final String valorParametroAssunto; // Valor para substituir ++VARIAVEL++
+  final String corpoModelo; // Com ++1++, ++2++, etc.
+  final List<String> variaveis; // Valores para substituir ++1++, ++2++, etc.
   final String dataEnvio;
-  final String statusLeitura;
+  final String dataExpiracao;
+  final String? indFavorito;
   // ... outros campos
+
+  // Getters úteis
+  bool get isFavorita; // true se indFavorito == "1"
+  String get assuntoProcessado; // assuntoModelo com ++VARIAVEL++ substituído
+  String get corpoProcessado; // corpoModelo com ++1++, ++2++, etc. substituídos
 }
 ```
 
@@ -233,150 +277,100 @@ class DetalhesMensagemDados {
 
 ```dart
 class IndicadorMensagensResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final IndicadorMensagensDados? dadosParsed;
+  final int status;
+  final String dados; // JSON raw
+  final DadosIndicadorMensagens? dadosParsed; // Dados parseados
 }
 
-class IndicadorMensagensDados {
-  final List<IndicadorConteudo> conteudo;
+class DadosIndicadorMensagens {
+  final String codigo; // Código de retorno (ex: "00")
+  final List<ConteudoIndicador> conteudo;
 }
 
-class IndicadorConteudo {
-  final bool temMensagensNovas;
-  // ... outros campos
+class ConteudoIndicador {
+  final String indicadorMensagensNovas; // "0", "1" ou "2"
+  final String statusMensagensNovas;
+  final String descricaoStatus;
+
+  // Getters úteis
+  bool get temMensagensNovas; // true se indicadorMensagensNovas != "0"
 }
 ```
 
-## Parâmetros de Filtro
-
-### Status de Leitura
-
-- `0`: Não se aplica (todas as mensagens)
-- `1`: Lida
-- `2`: Não lida
-
-### Indicador de Favorita
-
-- `0`: Não favorita
-- `1`: Favorita
-- `null`: Sem filtro
-
-### Indicador de Página
-
-- `0`: Página inicial (mais recentes)
-- `1`: Página não-inicial (requer ponteiro)
-
-## Códigos de Erro Comuns
-
-| Código | Descrição | Solução |
-|--------|-----------|---------|
-| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CNPJ/CPF inválido | Verificar formato do documento |
-| 003 | ISN inválido | Verificar se ISN existe |
-| 004 | Ponteiro inválido | Verificar formato do ponteiro de paginação |
-| 005 | Contribuinte não encontrado | Verificar se contribuinte está cadastrado |
-
-## Exemplos Práticos
-
-### Exemplo Completo - Consultar Mensagens
+## Exemplo Completo - Workflow de Uso
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
-  // 1. Configurar cliente
+  // 1. Autenticar
   final apiClient = ApiClient();
   await apiClient.authenticate(
     'seu_consumer_key',
-    'seu_consumer_secret', 
+    'seu_consumer_secret',
     'caminho/para/certificado.p12',
     'senha_do_certificado',
   );
-  
+
   // 2. Criar serviço
   final caixaPostalService = CaixaPostalService(apiClient);
-  
-  // 3. Verificar se há mensagens novas
+  final contribuinte = '12345678000190';
+
   try {
-    final temNovas = await caixaPostalService.temMensagensNovas('00000000000000');
-    
-    if (temNovas) {
-      print('Há mensagens novas!');
-      
-      // 4. Listar mensagens não lidas
-      final mensagensResponse = await caixaPostalService.listarMensagensNaoLidas('00000000000000');
-      
-      if (mensagensResponse.sucesso) {
-        print('Mensagens não lidas: ${mensagensResponse.dadosParsed?.mensagens.length ?? 0}');
-        
-        // 5. Obter detalhes da primeira mensagem
-        final mensagens = mensagensResponse.dadosParsed?.mensagens ?? [];
-        if (mensagens.isNotEmpty) {
-          final primeiraMensagem = mensagens.first;
-          final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
-            '00000000000000',
-            primeiraMensagem.isn,
-          );
-          
-          if (detalhesResponse.sucesso) {
-            print('Detalhes da mensagem:');
-            print('Assunto: ${detalhesResponse.dadosParsed?.assunto}');
-            print('Conteúdo: ${detalhesResponse.dadosParsed?.conteudo}');
-            print('Data: ${detalhesResponse.dadosParsed?.dataEnvio}');
+    // 3. Verificar se há mensagens novas
+    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens(contribuinte);
+
+    if (indicadorResponse.dadosParsed != null) {
+      final indicador = indicadorResponse.dadosParsed!.conteudo.first;
+
+      if (indicador.temMensagensNovas) {
+        print('Há mensagens novas!');
+
+        // 4. Listar mensagens não lidas
+        final listaMensagensResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
+          contribuinte,
+          statusLeitura: 2, // Apenas não lidas
+        );
+
+        if (listaMensagensResponse.dadosParsed != null) {
+          final conteudo = listaMensagensResponse.dadosParsed!.conteudo.first;
+          print('Mensagens não lidas: ${conteudo.quantidadeMensagensInt}');
+
+          // 5. Obter detalhes de cada mensagem
+          for (final mensagem in conteudo.listaMensagens) {
+            print('\n--- Mensagem ISN: ${mensagem.isn} ---');
+            print('Assunto: ${mensagem.assuntoProcessado}');
+
+            final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
+              contribuinte,
+              mensagem.isn,
+            );
+
+            if (detalhesResponse.dadosParsed != null) {
+              final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
+              print('Corpo: ${detalhe.corpoProcessado}');
+              print('Data de expiração: ${detalhe.dataExpiracao}');
+            }
+          }
+
+          // 6. Paginação (se necessário)
+          if (!conteudo.isUltimaPagina) {
+            print('\nCarregando próxima página...');
+            final proximaPaginaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
+              contribuinte,
+              statusLeitura: 2,
+              indicadorPagina: 1,
+              ponteiroPagina: conteudo.ponteiroProximaPagina,
+            );
+            // ... processar próxima página
           }
         }
+      } else {
+        print('Não há mensagens novas');
       }
-    } else {
-      print('Não há mensagens novas');
     }
   } catch (e) {
-    print('Erro na operação: $e');
-  }
-}
-```
-
-### Exemplo - Listar Mensagens com Filtros
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() async {
-  // 1. Configurar cliente
-  final apiClient = ApiClient();
-  await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
-  );
-  
-  // 2. Criar serviço
-  final caixaPostalService = CaixaPostalService(apiClient);
-  
-  // 3. Listar mensagens com filtros específicos
-  try {
-    final response = await caixaPostalService.obterListaMensagensPorContribuinte(
-      '00000000000000',
-      cnpjReferencia: '00000000000000', // Filtro por CNPJ
-      statusLeitura: 2, // Apenas não lidas
-      indicadorFavorito: 1, // Apenas favoritas
-      indicadorPagina: 0, // Página inicial
-    );
-    
-    if (response.sucesso) {
-      print('Mensagens filtradas: ${response.dadosParsed?.mensagens.length ?? 0}');
-      
-      for (final mensagem in response.dadosParsed?.mensagens ?? []) {
-        print('Assunto: ${mensagem.assunto}');
-        print('Data: ${mensagem.dataEnvio}');
-        print('Favorita: ${mensagem.favorita}');
-      }
-    } else {
-      print('Erro: ${response.mensagemErro}');
-    }
-  } catch (e) {
-    print('Erro ao listar mensagens: $e');
+    print('Erro: $e');
   }
 }
 ```
@@ -386,23 +380,39 @@ void main() async {
 Para desenvolvimento e testes, utilize os seguintes dados:
 
 ```dart
-// CNPJs/CPFs de teste (sempre usar zeros)
-const cnpjTeste = '00000000000000';
-const cpfTeste = '00000000000';
+// CNPJs/CPFs de teste
+const cnpjTeste = '99999999999999'; // CNPJ
+const cpfTeste = '99999999999'; // CPF
 
-// ISN de teste
-const isnTeste = '123456789';
+// ISN de teste (exemplo da documentação)
+const isnTeste = '0001626772';
 
 // Ponteiro de teste
-const ponteiroTeste = '20240101000000';
+const ponteiroTeste = '20250408092949';
 ```
 
-## Limitações
+## Códigos de Erro Comuns
 
-1. **Certificado Digital**: Requer certificado digital válido para autenticação
-2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
-3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Paginação**: Limite de mensagens por página
+| Código | Descrição | Solução |
+|--------|-----------|---------|
+| 00 | Sucesso | - |
+| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
+| 002 | CPF/CNPJ inválido | Verificar formato do documento |
+| 003 | ISN inválido | Verificar se ISN existe |
+| 004 | Ponteiro inválido | Verificar formato do ponteiro de paginação |
+| 005 | Contribuinte não encontrado | Verificar se contribuinte está cadastrado |
+
+## Observações Importantes
+
+1. **Sem Funções Auxiliares**: Este serviço implementa APENAS as 3 funções oficiais da API SERPRO. Não há wrappers como `listarMensagensNaoLidas()` ou `temMensagensNovas()` que possam confundir o usuário.
+
+2. **Processamento de Variáveis**: O processamento de `++VARIAVEL++` e `++N++` é feito automaticamente pelos getters `assuntoProcessado` e `corpoProcessado`. Você não precisa fazer esse processamento manualmente.
+
+3. **Paginação**: Para listar todas as mensagens, use `indicadorPagina=0` na primeira chamada. Se houver mais páginas (`isUltimaPagina=false`), use `indicadorPagina=1` e passe o `ponteiroProximaPagina` retornado.
+
+4. **Filtros**: Os filtros `statusLeitura` e `indicadorFavorito` são parâmetros da própria API SERPRO, não são funcionalidades adicionais do package.
+
+5. **Certificado Digital**: Sempre requer certificado digital válido para autenticação.
 
 ## Suporte
 
