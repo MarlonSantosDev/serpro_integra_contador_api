@@ -8,12 +8,7 @@ class ListaMensagensResponse {
   final String dados;
   final DadosListaMensagens? dadosParsed;
 
-  ListaMensagensResponse({
-    required this.status,
-    required this.mensagens,
-    required this.dados,
-    this.dadosParsed,
-  });
+  ListaMensagensResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
 
   factory ListaMensagensResponse.fromJson(Map<String, dynamic> json) {
     final dados = json['dados'].toString();
@@ -28,20 +23,14 @@ class ListaMensagensResponse {
 
     return ListaMensagensResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
-          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
       dados: dados,
       dadosParsed: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
   }
 }
 
@@ -55,19 +44,12 @@ class DadosListaMensagens {
   factory DadosListaMensagens.fromJson(Map<String, dynamic> json) {
     return DadosListaMensagens(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
-          .map(
-            (e) => ConteudoListaMensagens.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => ConteudoListaMensagens.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'codigo': codigo,
-      'conteudo': conteudo.map((e) => e.toJson()).toList(),
-    };
+    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -96,9 +78,7 @@ class ConteudoListaMensagens {
       ponteiroPaginaRetornada: json['ponteiroPaginaRetornada'].toString(),
       ponteiroProximaPagina: json['ponteiroProximaPagina'].toString(),
       cnpjMatriz: json['cnpjMatriz']?.toString(),
-      listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? [])
-          .map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? []).map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
