@@ -193,7 +193,7 @@ class DteService {
       'codigo_mensagem': response.codigoMensagem,
       'mensagem': response.mensagemPrincipal,
       'tem_indicador': response.temIndicadorValido,
-      'indicador': response.dadosParsed?.indicadorEnquadramento,
+      'indicador': response.dados?.indicadorEnquadramento,
       'status_enquadramento': response.statusEnquadramentoDescricao,
       'is_optante_dte': response.isOptanteDte,
       'is_optante_simples': response.isOptanteSimples,

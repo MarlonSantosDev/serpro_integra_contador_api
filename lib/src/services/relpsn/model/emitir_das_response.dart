@@ -4,37 +4,41 @@ import 'mensagem.dart';
 class EmitirDasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
+    DasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        // Se dadosJson já é um JSON válido, usa diretamente
+        if (dadosStr.startsWith('{')) {
+          final Map<String, dynamic> jsonMap = jsonDecode(dadosStr);
+          dadosParsed = DasData(docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString());
+        } else {
+          // Caso contrário, tenta parsear como string
+          dadosParsed = DasData.fromJson(dadosStr);
+        }
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return EmitirDasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  DasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      // Se dadosJson já é um JSON válido, usa diretamente
-      if (dadosJson.startsWith('{')) {
-        final Map<String, dynamic> jsonMap = json.decode(dadosJson);
-        return DasData(docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString());
-      }
-      // Caso contrário, tenta parsear como string
-      final parsed = DasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -50,12 +54,12 @@ class EmitirDasResponse {
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    return sucesso && dadosParsed?.docArrecadacaoPdfB64 != null && dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
+    return sucesso && dados?.docArrecadacaoPdfB64 != null && dados!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Retorna o tamanho do PDF em bytes
   int? get tamanhoPdfBytes {
-    final pdfBase64 = dadosParsed?.docArrecadacaoPdfB64;
+    final pdfBase64 = dados?.docArrecadacaoPdfB64;
     if (pdfBase64 == null || pdfBase64.isEmpty) return null;
 
     // Calcula o tamanho aproximado do PDF em bytes

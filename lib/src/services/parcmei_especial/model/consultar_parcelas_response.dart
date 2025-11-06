@@ -1,23 +1,34 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarParcelasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ListaParcelasData? dados;
 
   ConsultarParcelasResponse({
     required this.status,
     required this.mensagens,
-    required this.dados,
+    this.dados,
   });
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
+    ListaParcelasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ListaParcelasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List)
           .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
@@ -25,19 +36,8 @@ class ConsultarParcelasResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
     };
-  }
-
-  /// Dados parseados do JSON string
-  ListaParcelasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = ListaParcelasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -53,22 +53,19 @@ class ConsultarParcelasResponse {
 
   /// Verifica se há parcelas disponíveis
   bool get temParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.isNotEmpty ?? false;
+    return dados?.listaParcelas.isNotEmpty ?? false;
   }
 
   /// Quantidade de parcelas disponíveis
   int get quantidadeParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.length ?? 0;
+    return dados?.listaParcelas.length ?? 0;
   }
 
   /// Valor total das parcelas disponíveis
   double get valorTotalParcelas {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return 0.0;
+    if (dados == null) return 0.0;
 
-    return dadosParsed.listaParcelas.fold(
+    return dados!.listaParcelas.fold(
       0.0,
       (sum, parcela) => sum + parcela.valor,
     );

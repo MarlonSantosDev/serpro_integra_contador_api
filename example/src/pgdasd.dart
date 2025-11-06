@@ -52,8 +52,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${entregarResponse.status}');
     print('✅ Sucesso: ${entregarResponse.sucesso}');
 
-    if (entregarResponse.dadosParsed != null) {
-      final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
+    if (entregarResponse.dados != null) {
+      final declaracaoTransmitida = entregarResponse.dados!.first;
       print('🆔 ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
       print('📅 Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
       print('💰 Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido.toStringAsFixed(2)}');
@@ -96,8 +96,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${gerarDasResponse.status}');
     print('✅ Sucesso: ${gerarDasResponse.sucesso}');
 
-    if (gerarDasResponse.dadosParsed != null) {
-      final das = gerarDasResponse.dadosParsed!.first;
+    if (gerarDasResponse.dados != null) {
+      final das = gerarDasResponse.dados!.first;
       print('🏢 CNPJ: ${das.cnpjCompleto}');
       print('📅 Período: ${das.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${das.detalhamento.numeroDocumento}');
@@ -151,8 +151,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${consultarAnoResponse.status}');
     print('✅ Sucesso: ${consultarAnoResponse.sucesso}');
 
-    if (consultarAnoResponse.dadosParsed != null) {
-      final declaracoes = consultarAnoResponse.dadosParsed!;
+    if (consultarAnoResponse.dados != null) {
+      final declaracoes = consultarAnoResponse.dados!;
       print('📅 Ano Calendário: ${declaracoes.anoCalendario}');
       print('🔍 Períodos encontrados: ${declaracoes.listaPeriodos.length}');
 
@@ -195,8 +195,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${consultarPeriodoResponse.status}');
     print('✅ Sucesso: ${consultarPeriodoResponse.sucesso}');
 
-    if (consultarPeriodoResponse.dadosParsed != null) {
-      final declaracoes = consultarPeriodoResponse.dadosParsed!;
+    if (consultarPeriodoResponse.dados != null) {
+      final declaracoes = consultarPeriodoResponse.dados!;
       print('📅 Ano Calendário: ${declaracoes.anoCalendario}');
       print('🔍 Períodos encontrados: ${declaracoes.listaPeriodos.length}');
     }
@@ -220,8 +220,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${ultimaDeclaracaoResponse.status}');
     print('✅ Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
 
-    if (ultimaDeclaracaoResponse.dadosParsed != null) {
-      final declaracao = ultimaDeclaracaoResponse.dadosParsed!;
+    if (ultimaDeclaracaoResponse.dados != null) {
+      final declaracao = ultimaDeclaracaoResponse.dados!;
       print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
       print('📄 Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
       print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
@@ -280,8 +280,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${declaracaoNumeroResponse.status}');
     print('✅ Sucesso: ${declaracaoNumeroResponse.sucesso}');
 
-    if (declaracaoNumeroResponse.dadosParsed != null) {
-      final declaracao = declaracaoNumeroResponse.dadosParsed!;
+    if (declaracaoNumeroResponse.dados != null) {
+      final declaracao = declaracaoNumeroResponse.dados!;
       print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
       print('📄 Nome do arquivo: ${declaracao.declaracao.nomeArquivo}');
       print('📄 Arquivo Recibo: ${declaracao.recibo.pdf.isNotEmpty}');
@@ -403,8 +403,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${dasCobrancaResponse.status}');
     print('✅ Sucesso: ${dasCobrancaResponse.sucesso}');
 
-    if (dasCobrancaResponse.dadosParsed != null) {
-      final dasCobranca = dasCobrancaResponse.dadosParsed!;
+    if (dasCobrancaResponse.dados != null) {
+      final dasCobranca = dasCobrancaResponse.dados!;
       print('🏢 CNPJ: ${dasCobranca.cnpjCompleto}');
       print('📅 Período: ${dasCobranca.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasCobranca.detalhamento.numeroDocumento}');
@@ -442,8 +442,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${dasProcessoResponse.status}');
     print('✅ Sucesso: ${dasProcessoResponse.sucesso}');
 
-    if (dasProcessoResponse.dadosParsed != null) {
-      final dasProcesso = dasProcessoResponse.dadosParsed!;
+    if (dasProcessoResponse.dados != null) {
+      final dasProcesso = dasProcessoResponse.dados!;
       print('🏢 CNPJ: ${dasProcesso.cnpjCompleto}');
       print('📅 Período: ${dasProcesso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasProcesso.detalhamento.numeroDocumento}');
@@ -509,8 +509,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Status: ${dasAvulsoResponse.status}');
     print('✅ Sucesso: ${dasAvulsoResponse.sucesso}');
 
-    if (dasAvulsoResponse.dadosParsed != null) {
-      final dasAvulso = dasAvulsoResponse.dadosParsed!;
+    if (dasAvulsoResponse.dados != null) {
+      final dasAvulso = dasAvulsoResponse.dados!;
       print('🏢 CNPJ: ${dasAvulso.cnpjCompleto}');
       print('📅 Período: ${dasAvulso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasAvulso.detalhamento.numeroDocumento}');

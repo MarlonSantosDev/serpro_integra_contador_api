@@ -10,42 +10,48 @@ class EntregarDeclaracaoResponse {
   /// Mensagem explicativa retornada no acionamento do serviço
   final List<Mensagem> mensagens;
 
-  /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida
-  final String dados;
+  /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida parseado
+  final List<DeclaracaoTransmitida>? dados;
 
-  EntregarDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+  EntregarDeclaracaoResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
-  /// Parse dos dados JSON retornados
-  List<DeclaracaoTransmitida>? get dadosParsed {
-    try {
-      // Primeiro converte a string JSON para Map
-      final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
-
-      // Se for uma lista, retorna a lista
-      if (dadosMap.containsKey('dados') && dadosMap['dados'] is List) {
-        final lista = dadosMap['dados'] as List;
-        return lista.map((d) => DeclaracaoTransmitida.fromJson(d)).toList();
-      }
-
-      // Se for um objeto único, retorna como lista com um item
-      return [DeclaracaoTransmitida.fromJson(dadosMap)];
-    } catch (e) {
-      return null;
-    }
-  }
-
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.map((d) => d.toJson()).toList()) : '',
+    };
   }
 
   factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+    List<DeclaracaoTransmitida>? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosMap = jsonDecode(dadosStr);
+
+        // Se for uma lista, retorna a lista
+        if (dadosMap is Map && dadosMap.containsKey('dados') && dadosMap['dados'] is List) {
+          final lista = dadosMap['dados'] as List;
+          dadosParsed = lista.map((d) => DeclaracaoTransmitida.fromJson(d as Map<String, dynamic>)).toList();
+        } else if (dadosMap is List) {
+          dadosParsed = dadosMap.map((d) => DeclaracaoTransmitida.fromJson(d as Map<String, dynamic>)).toList();
+        } else if (dadosMap is Map) {
+          // Se for um objeto único, retorna como lista com um item
+          dadosParsed = [DeclaracaoTransmitida.fromJson(dadosMap as Map<String, dynamic>)];
+        }
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return EntregarDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      dados: dadosParsed,
     );
   }
 }

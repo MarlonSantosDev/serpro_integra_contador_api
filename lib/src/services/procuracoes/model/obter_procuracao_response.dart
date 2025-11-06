@@ -6,10 +6,9 @@ import 'procuracoes_enums.dart';
 class ObterProcuracaoResponse {
   final int status;
   final List<MensagemNegocio> mensagens;
-  final String dados;
-  final List<Procuracao>? dadosParsed;
+  final List<Procuracao>? dados;
 
-  ObterProcuracaoResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  ObterProcuracaoResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a requisição foi bem-sucedida
   bool get sucesso => status == 200;
@@ -36,28 +35,30 @@ class ObterProcuracaoResponse {
   bool get isErroProcuracoes => mensagens.any((m) => m.codigo.contains('[Erro-PROCURACOES]'));
 
   factory ObterProcuracaoResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'].toString();
     List<Procuracao>? dadosParsed;
-
     try {
-      if (dados.isNotEmpty) {
-        final dadosJson = jsonDecode(dados) as List<dynamic>;
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosJson = jsonDecode(dadosStr) as List<dynamic>;
         dadosParsed = dadosJson.map((e) => Procuracao.fromJson(e as Map<String, dynamic>)).toList();
       }
     } catch (e) {
-      // Se não conseguir parsear, mantém dados como string
+      // Se não conseguir parsear, mantém dados como null
     }
 
     return ObterProcuracaoResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: dados,
-      dadosParsed: dadosParsed,
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.map((e) => e.toJson()).toList()) : '',
+    };
   }
 }
 

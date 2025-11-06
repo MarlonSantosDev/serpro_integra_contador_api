@@ -16,7 +16,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
       print('Status: ${pedidosResponse.status}');
       print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
 
-      final parcelamentos = pedidosResponse.dadosParsed?.parcelamentos ?? [];
+      final parcelamentos = pedidosResponse.dados?.parcelamentos ?? [];
       print('Total de parcelamentos: ${parcelamentos.length}');
 
       for (final parcelamento in parcelamentos) {
@@ -43,7 +43,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
 
     if (parcelamentoResponse.sucesso) {
       print('✅ Parcelamento consultado com sucesso');
-      final parcelamento = parcelamentoResponse.dadosParsed;
+      final parcelamento = parcelamentoResponse.dados;
 
       if (parcelamento != null) {
         print('Número: ${parcelamento.numero}');
@@ -75,7 +75,11 @@ Future<void> Relpsn(ApiClient apiClient) async {
         print('Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
         for (final alteracao in parcelamento.alteracoesDivida) {
           print('  - Data: ${alteracao.dataAlteracaoDividaFormatada}');
-          print('    Identificador: ${alteracao.identificadorConsolidacaoDescricao}');
+          print('    Identificador: ${alteracao.identificadorConsolidacao}');
+          print('      (Valor descritivo retornado diretamente)');
+          print('      Possíveis valores:');
+          print('        - "Consolidação do restante da dívida"');
+          print('        - "Reconsolidação por alteração de débitos no sistema de cobrança"');
           print('    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}');
           print('    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}');
           print('    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}');
@@ -116,7 +120,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
 
     if (parcelasResponse.sucesso) {
       print('✅ Parcelas consultadas com sucesso');
-      final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
+      final parcelas = parcelasResponse.dados?.listaParcelas ?? [];
       print('Total de parcelas: ${parcelas.length}');
 
       print('Parcelas ordenadas:');
@@ -127,7 +131,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
       }
 
       // Próxima parcela a vencer
-      final proximaParcela = parcelasResponse.dadosParsed?.proximaParcela;
+      final proximaParcela = parcelasResponse.dados?.proximaParcela;
       if (proximaParcela != null) {
         print('Próxima parcela a vencer: ${proximaParcela.descricaoCompleta}');
       }
@@ -150,7 +154,7 @@ Future<void> Relpsn(ApiClient apiClient) async {
 
     if (detalhesResponse.sucesso) {
       print('✅ Detalhes de pagamento consultados com sucesso');
-      final detalhes = detalhesResponse.dadosParsed;
+      final detalhes = detalhesResponse.dados;
 
       if (detalhes != null) {
         print('DAS: ${detalhes.numeroDas}');
@@ -202,18 +206,18 @@ Future<void> Relpsn(ApiClient apiClient) async {
     if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
       print('✅ DAS emitido com sucesso');
       print('Tamanho do PDF: ${dasResponse.tamanhoPdfFormatado}');
-      print('PDF disponível: ${dasResponse.dadosParsed?.pdfDisponivel == true ? 'Sim' : 'Não'}');
+      print('PDF disponível: ${dasResponse.dados?.pdfDisponivel == true ? 'Sim' : 'Não'}');
 
       // Salvar PDF em arquivo
-      if (dasResponse.dadosParsed?.pdfDisponivel == true && dasResponse.dadosParsed?.docArrecadacaoPdfB64 != null) {
+      if (dasResponse.dados?.pdfDisponivel == true && dasResponse.dados?.docArrecadacaoPdfB64 != null) {
         final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-          dasResponse.dadosParsed!.docArrecadacaoPdfB64,
+          dasResponse.dados!.docArrecadacaoPdfB64,
           'das_relpsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
-      final pdfInfo = dasResponse.dadosParsed?.pdfInfo;
+      final pdfInfo = dasResponse.dados?.pdfInfo;
       if (pdfInfo != null) {
         print('Informações do PDF:');
         print('  - Disponível: ${pdfInfo['disponivel']}');

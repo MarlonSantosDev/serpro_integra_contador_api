@@ -1,17 +1,28 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarPedidosResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ParcelamentosData? dados;
 
   ConsultarPedidosResponse({
     required this.status,
     required this.mensagens,
-    required this.dados,
+    this.dados,
   });
 
   factory ConsultarPedidosResponse.fromJson(Map<String, dynamic> json) {
+    ParcelamentosData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ParcelamentosData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarPedidosResponse(
       status: json['status']?.toString() ?? '',
       mensagens:
@@ -19,7 +30,7 @@ class ConsultarPedidosResponse {
               ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
@@ -27,33 +38,47 @@ class ConsultarPedidosResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
     };
+  }
+
+  /// Verifica se a requisição foi bem-sucedida
+  bool get sucesso => status == '200';
+
+  /// Verifica se há parcelamentos disponíveis
+  bool get temParcelamentos {
+    return dados?.parcelamentos.isNotEmpty ?? false;
+  }
+
+  /// Quantidade de parcelamentos encontrados
+  int get quantidadeParcelamentos {
+    return dados?.parcelamentos.length ?? 0;
   }
 
   /// Retorna os dados parseados como lista de parcelamentos
   List<Parcelamento> get parcelamentos {
+    return dados?.parcelamentos ?? [];
+  }
+}
+
+class ParcelamentosData {
+  final List<Parcelamento> parcelamentos;
+
+  ParcelamentosData({required this.parcelamentos});
+
+  factory ParcelamentosData.fromJson(String jsonString) {
     try {
-      final dadosJson = dados.isNotEmpty ? dados : '{"parcelamentos":[]}';
-      final parsed = Map<String, dynamic>.from(
-        dadosJson.startsWith('{')
-            ? Map<String, dynamic>.from({'parcelamentos': []})
-            : Map<String, dynamic>.from({'parcelamentos': []}),
+      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+      return ParcelamentosData(
+        parcelamentos: (json['parcelamentos'] as List?)?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>)).toList() ?? [],
       );
-
-      // Se dados contém JSON válido, tentar parsear
-      if (dados.isNotEmpty && dados.contains('parcelamentos')) {
-        // Simular parsing - em implementação real seria feito com dart:convert
-        return [];
-      }
-
-      return (parsed['parcelamentos'] as List<dynamic>?)
-              ?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [];
     } catch (e) {
-      return [];
+      return ParcelamentosData(parcelamentos: []);
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'parcelamentos': parcelamentos.map((e) => e.toJson()).toList()};
   }
 }
 

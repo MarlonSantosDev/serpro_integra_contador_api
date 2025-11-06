@@ -18,7 +18,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}');
 
     if (pedidosResponse.sucesso && pedidosResponse.temParcelamentos) {
-      final parcelamentos = pedidosResponse.dadosParsed?.parcelamentos ?? [];
+      final parcelamentos = pedidosResponse.dados?.parcelamentos ?? [];
       print('Parcelamentos encontrados:');
       for (var parcelamento in parcelamentos.take(3)) {
         print('  - Número: ${parcelamento.numero}');
@@ -49,7 +49,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('Mensagem principal: ${parcelamentoResponse.mensagemPrincipal}');
 
     if (parcelamentoResponse.sucesso) {
-      final parcelamento = parcelamentoResponse.dadosParsed;
+      final parcelamento = parcelamentoResponse.dados;
       if (parcelamento != null) {
         print('Parcelamento detalhado:');
         print('  Número: ${parcelamento.numero}');
@@ -94,7 +94,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('Quantidade de parcelas: ${parcelasResponse.quantidadeParcelas}');
 
     if (parcelasResponse.sucesso && parcelasResponse.temParcelas) {
-      final parcelas = parcelasResponse.dadosParsed?.listaParcelas ?? [];
+      final parcelas = parcelasResponse.dados?.listaParcelas ?? [];
       print('Parcelas disponíveis:');
       for (var parcela in parcelas.take(5)) {
         print('  - Parcela: ${parcela.parcelaFormatada}');
@@ -134,7 +134,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('Mensagem principal: ${detalhesResponse.mensagemPrincipal}');
 
     if (detalhesResponse.sucesso) {
-      final detalhes = detalhesResponse.dadosParsed;
+      final detalhes = detalhesResponse.dados;
       if (detalhes != null) {
         print('Detalhes de pagamento:');
         print('  Número do DAS: ${detalhes.numeroDas}');
@@ -192,7 +192,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('PDF gerado com sucesso: ${emitirResponse.pdfGeradoComSucesso}');
 
     if (emitirResponse.sucesso && emitirResponse.pdfGeradoComSucesso) {
-      final dados = emitirResponse.dadosParsed;
+      final dados = emitirResponse.dados;
       if (dados != null) {
         print('Dados do DAS:');
         print('  Tem PDF: ${dados.temPdf}');
@@ -212,7 +212,7 @@ Future<void> Parcmei(ApiClient apiClient) async {
       // Salvar PDF em arquivo
       if (pdfBytes != null) {
         final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-          emitirResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
+          emitirResponse.dados?.docArrecadacaoPdfB64 ?? '',
           'das_parcmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');

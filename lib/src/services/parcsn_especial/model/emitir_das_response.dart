@@ -4,31 +4,34 @@ import 'mensagem.dart';
 class EmitirDasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
+    DasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = DasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return EmitirDasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  DasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = DasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -43,18 +46,16 @@ class EmitirDasResponse {
   }
 
   /// Verifica se há dados de DAS disponíveis
-  bool get temDadosDas => dadosParsed != null;
+  bool get temDadosDas => dados != null;
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.docArrecadacaoPdfB64.isNotEmpty ?? false;
+    return dados?.docArrecadacaoPdfB64.isNotEmpty ?? false;
   }
 
   /// Tamanho do PDF em bytes
   int get tamanhoPdf {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.docArrecadacaoPdfB64.length ?? 0;
+    return dados?.docArrecadacaoPdfB64.length ?? 0;
   }
 
   /// Tamanho do PDF formatado (KB/MB)
@@ -73,11 +74,10 @@ class EmitirDasResponse {
 
   /// Converte o PDF Base64 para bytes
   List<int>? get pdfBytes {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed?.docArrecadacaoPdfB64.isEmpty ?? true) return null;
+    if (dados?.docArrecadacaoPdfB64.isEmpty ?? true) return null;
 
     try {
-      return base64Decode(dadosParsed!.docArrecadacaoPdfB64);
+      return base64Decode(dados!.docArrecadacaoPdfB64);
     } catch (e) {
       return null;
     }

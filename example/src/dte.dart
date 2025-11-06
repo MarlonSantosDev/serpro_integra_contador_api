@@ -20,11 +20,18 @@ Future<void> Dte(ApiClient apiClient) async {
     print('Mensagem: ${response.mensagemPrincipal}');
     print('Código: ${response.codigoMensagem}');
 
-    if (response.sucesso && response.dadosParsed != null) {
-      final dados = response.dadosParsed!;
+    if (response.sucesso && response.dados != null) {
+      final dados = response.dados!;
       print('Indicador de enquadramento: ${dados.indicadorEnquadramento}');
+      print('  (Valor descritivo retornado diretamente)');
+      print('  Possíveis valores:');
+      print('    - "NI inválido"');
+      print('    - "NI Não optante"');
+      print('    - "NI Optante DTE"');
+      print('    - "NI Optante Simples"');
+      print('    - "NI Optante DTE e Simples"');
       print('Status de enquadramento: ${dados.statusEnquadramento}');
-      print('Descrição do indicador: ${dados.indicadorDescricao}');
+      print('Descrição do indicador: ${dados.indicadorDescricao} (mesmo valor)');
       print('É válido: ${dados.isIndicadorValido}');
 
       // Análise do enquadramento

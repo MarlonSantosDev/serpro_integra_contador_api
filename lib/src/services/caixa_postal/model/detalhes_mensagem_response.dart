@@ -5,32 +5,23 @@ import 'mensagem_negocio.dart';
 class DetalhesMensagemResponse {
   final int status;
   final List<MensagemNegocio> mensagens;
-  final String dados;
-  final DadosDetalhesMensagem? dadosParsed;
+  final DadosDetalhesMensagem? dados;
 
-  DetalhesMensagemResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  DetalhesMensagemResponse({required this.status, required this.mensagens, this.dados});
 
   factory DetalhesMensagemResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'].toString();
-    DadosDetalhesMensagem? dadosParsed;
-
-    try {
-      final dadosJson = jsonDecode(dados);
-      dadosParsed = DadosDetalhesMensagem.fromJson(dadosJson);
-    } catch (e) {
-      // Se não conseguir parsear, mantém dados como string
-    }
+    final dadosJson = jsonDecode(json['dados'].toString());
+    final dadosParsed = DadosDetalhesMensagem.fromJson(dadosJson);
 
     return DetalhesMensagemResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: dados,
-      dadosParsed: dadosParsed,
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 }
 
@@ -81,7 +72,7 @@ class DetalheMensagemCompleta {
   final String descricaoOrigem;
   final String corpoModelo;
   final List<String> variaveis;
-  final String? indFavorito;
+  final bool indFavorito;
 
   DetalheMensagemCompleta({
     required this.codigoSistemaRemetente,
@@ -110,17 +101,53 @@ class DetalheMensagemCompleta {
     required this.descricaoOrigem,
     required this.corpoModelo,
     required this.variaveis,
-    this.indFavorito,
+    required this.indFavorito,
   });
 
   factory DetalheMensagemCompleta.fromJson(Map<String, dynamic> json) {
+    // Processar assuntoModelo substituindo ++VARIAVEL++ por valorParametroAssunto
+    final assuntoModeloOriginal = json['assuntoModelo']?.toString() ?? '';
+    final valorParametroAssunto = json['valorParametroAssunto']?.toString() ?? '';
+    final assuntoModeloProcessado = valorParametroAssunto.isEmpty
+        ? assuntoModeloOriginal
+        : assuntoModeloOriginal.replaceAll('++VARIAVEL++', valorParametroAssunto);
+
+    // Processar corpoModelo substituindo ++1++, ++2++, etc. pelos valores de variaveis
+    final corpoModeloOriginal = json['corpoModelo']?.toString() ?? '';
+    final variaveis = (json['variaveis'] as List<dynamic>? ?? []).map((e) => e.toString()).toList();
+    String corpoModeloProcessado = corpoModeloOriginal;
+    if (variaveis.isNotEmpty) {
+      for (int i = 0; i < variaveis.length; i++) {
+        final placeholder = '++${i + 1}++';
+        corpoModeloProcessado = corpoModeloProcessado.replaceAll(placeholder, variaveis[i]);
+      }
+    }
+
+    // Converter campos numéricos para valores descritivos
+    final origemModeloStr = json['origemModelo']?.toString() ?? '';
+    final origemModelo = switch (origemModeloStr) {
+      '1' => 'Sistema Remetente',
+      '2' => 'RFB',
+      _ => origemModeloStr,
+    };
+
+    final tipoOrigemStr = json['tipoOrigem']?.toString() ?? '';
+    final tipoOrigem = switch (tipoOrigemStr) {
+      '1' => 'Receita',
+      '2' => 'Estado',
+      '3' => 'Município',
+      _ => tipoOrigemStr,
+    };
+
+    final indFavoritoStr = json['indFavorito']?.toString() ?? '0';
+
     return DetalheMensagemCompleta(
       codigoSistemaRemetente: json['codigoSistemaRemetente']?.toString() ?? '',
       codigoModelo: json['codigoModelo']?.toString() ?? '',
-      assuntoModelo: json['assuntoModelo']?.toString() ?? '',
-      origemModelo: json['origemModelo']?.toString() ?? '',
+      assuntoModelo: assuntoModeloProcessado,
+      origemModelo: origemModelo,
       dataEnvio: json['dataEnvio']?.toString() ?? '',
-      valorParametroAssunto: json['valorParametroAssunto']?.toString() ?? '',
+      valorParametroAssunto: valorParametroAssunto,
       dataLeitura: json['dataLeitura']?.toString() ?? '',
       horaLeitura: json['horaLeitura']?.toString() ?? '',
       dataExpiracao: json['dataExpiracao']?.toString() ?? '',
@@ -137,11 +164,11 @@ class DetalheMensagemCompleta {
       niUsuario: json['niUsuario']?.toString() ?? '',
       papelUsuario: json['papelUsuario']?.toString() ?? '',
       codigoAplicacao: json['codigoAplicacao']?.toString() ?? '',
-      tipoOrigem: json['tipoOrigem']?.toString() ?? '',
+      tipoOrigem: tipoOrigem,
       descricaoOrigem: json['descricaoOrigem']?.toString() ?? '',
-      corpoModelo: json['corpoModelo']?.toString() ?? '',
-      variaveis: (json['variaveis'] as List<dynamic>? ?? []).map((e) => e.toString()).toList(),
-      indFavorito: json['indFavorito']?.toString(),
+      corpoModelo: corpoModeloProcessado,
+      variaveis: variaveis,
+      indFavorito: indFavoritoStr == '1',
     );
   }
 
@@ -175,26 +202,5 @@ class DetalheMensagemCompleta {
       'variaveis': variaveis,
       'indFavorito': indFavorito,
     };
-  }
-
-  /// Verifica se a mensagem é favorita
-  bool get isFavorita => indFavorito == '1';
-
-  /// Obtém o assunto processado com as variáveis substituídas
-  String get assuntoProcessado {
-    if (valorParametroAssunto.isEmpty) return assuntoModelo;
-    return assuntoModelo.replaceAll('++VARIAVEL++', valorParametroAssunto);
-  }
-
-  /// Obtém o corpo da mensagem com as variáveis substituídas
-  String get corpoProcessado {
-    if (variaveis.isEmpty) return corpoModelo;
-
-    String corpo = corpoModelo;
-    for (int i = 0; i < variaveis.length; i++) {
-      final placeholder = '++${i + 1}++';
-      corpo = corpo.replaceAll(placeholder, variaveis[i]);
-    }
-    return corpo;
   }
 }

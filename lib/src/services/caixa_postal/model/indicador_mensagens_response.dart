@@ -5,32 +5,32 @@ import 'mensagem_negocio.dart';
 class IndicadorMensagensResponse {
   final int status;
   final List<MensagemNegocio> mensagens;
-  final String dados;
-  final DadosIndicadorMensagens? dadosParsed;
+  final DadosIndicadorMensagens? dados;
 
-  IndicadorMensagensResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  IndicadorMensagensResponse({required this.status, required this.mensagens, this.dados});
 
   factory IndicadorMensagensResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'].toString();
+    final dadosStr = json['dados']?.toString() ?? '';
     DadosIndicadorMensagens? dadosParsed;
 
     try {
-      final dadosJson = jsonDecode(dados);
-      dadosParsed = DadosIndicadorMensagens.fromJson(dadosJson);
+      if (dadosStr.isNotEmpty) {
+        final dadosJson = jsonDecode(dadosStr);
+        dadosParsed = DadosIndicadorMensagens.fromJson(dadosJson);
+      }
     } catch (e) {
-      // Se não conseguir parsear, mantém dados como string
+      // Se não conseguir parsear, mantém dados como null
     }
 
     return IndicadorMensagensResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: dados,
-      dadosParsed: dadosParsed,
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 }
 
@@ -56,44 +56,51 @@ class DadosIndicadorMensagens {
 /// Conteúdo do indicador de mensagens novas
 class ConteudoIndicadorMensagens {
   final String indicadorMensagensNovas;
+  final bool temMensagensNovas;
+  final StatusMensagensNovas statusMensagensNovas;
+  final String descricaoStatus;
 
-  ConteudoIndicadorMensagens({required this.indicadorMensagensNovas});
+  ConteudoIndicadorMensagens({
+    required this.indicadorMensagensNovas,
+    required this.temMensagensNovas,
+    required this.statusMensagensNovas,
+    required this.descricaoStatus,
+  });
 
   factory ConteudoIndicadorMensagens.fromJson(Map<String, dynamic> json) {
-    return ConteudoIndicadorMensagens(indicadorMensagensNovas: json['indicadorMensagensNovas']?.toString() ?? '0');
+    final indicador = json['indicadorMensagensNovas']?.toString() ?? '0';
+
+    // Converter valor numérico para descrição descritiva
+    final indicadorMensagensNovas = switch (indicador) {
+      '0' => 'Contribuinte não possui mensagens novas',
+      '1' => 'Contribuinte possui uma mensagem nova',
+      '2' => 'Contribuinte possui mensagens novas',
+      _ => indicador,
+    };
+
+    final status = switch (indicador) {
+      '0' => StatusMensagensNovas.semMensagensNovas,
+      '1' => StatusMensagensNovas.umaMensagemNova,
+      '2' => StatusMensagensNovas.multiplasMensagensNovas,
+      _ => StatusMensagensNovas.semMensagensNovas,
+    };
+
+    final descricao = switch (status) {
+      StatusMensagensNovas.semMensagensNovas => 'Contribuinte não possui mensagens novas',
+      StatusMensagensNovas.umaMensagemNova => 'Contribuinte possui uma mensagem nova',
+      StatusMensagensNovas.multiplasMensagensNovas => 'Contribuinte possui mensagens novas',
+    };
+
+    return ConteudoIndicadorMensagens(
+      indicadorMensagensNovas: indicadorMensagensNovas,
+      temMensagensNovas: indicador != '0',
+      statusMensagensNovas: status,
+      descricaoStatus: descricao,
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {'indicadorMensagensNovas': indicadorMensagensNovas};
-  }
-
-  /// Obtém o status das mensagens novas
-  StatusMensagensNovas get statusMensagensNovas {
-    switch (indicadorMensagensNovas) {
-      case '0':
-        return StatusMensagensNovas.semMensagensNovas;
-      case '1':
-        return StatusMensagensNovas.umaMensagemNova;
-      case '2':
-        return StatusMensagensNovas.multiplasMensagensNovas;
-      default:
-        return StatusMensagensNovas.semMensagensNovas;
-    }
-  }
-
-  /// Verifica se há mensagens novas
-  bool get temMensagensNovas => indicadorMensagensNovas != '0';
-
-  /// Obtém descrição do status
-  String get descricaoStatus {
-    switch (statusMensagensNovas) {
-      case StatusMensagensNovas.semMensagensNovas:
-        return 'Contribuinte não possui mensagens novas';
-      case StatusMensagensNovas.umaMensagemNova:
-        return 'Contribuinte possui uma mensagem nova';
-      case StatusMensagensNovas.multiplasMensagensNovas:
-        return 'Contribuinte possui mensagens novas';
-    }
   }
 }
 

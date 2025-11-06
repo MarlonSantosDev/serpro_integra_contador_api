@@ -11,10 +11,22 @@ class GerarDasResponse extends PgmeiBaseResponse {
   /// Parse dos dados como lista de DAS gerados
   List<Das>? get dasGerados {
     try {
-      if (dados.isEmpty) return [];
+      if (dados == null) return [];
 
-      final dadosList = jsonDecode(dados) as List;
-      return dadosList.map((d) => Das.fromJson(d)).toList();
+      // Se dados é uma lista, retorna diretamente
+      if (dados is List) {
+        return (dados as List).map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
+      }
+
+      // Se dados é um Map com uma chave 'das' ou similar
+      if (dados is Map) {
+        final dadosMap = dados as Map<String, dynamic>;
+        if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
+          return (dadosMap['das'] as List).map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
+        }
+      }
+
+      return [];
     } catch (e) {
       print('Erro ao parsear DAS gerados: $e');
       return null;
@@ -22,10 +34,26 @@ class GerarDasResponse extends PgmeiBaseResponse {
   }
 
   factory GerarDasResponse.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic>? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final decoded = jsonDecode(dadosStr);
+        if (decoded is List) {
+          // Se for uma lista, converte para Map com chave 'das'
+          dadosParsed = {'das': decoded};
+        } else if (decoded is Map) {
+          dadosParsed = decoded as Map<String, dynamic>;
+        }
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return GerarDasResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 }

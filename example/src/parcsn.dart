@@ -16,7 +16,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
       print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
 
       if (pedidosResponse.temParcelamentos) {
-        final parcelamentos = pedidosResponse.dadosParsed!.parcelamentos;
+        final parcelamentos = pedidosResponse.dados!.parcelamentos;
         print('Quantidade de parcelamentos: ${parcelamentos.length}');
 
         for (final parcelamento in parcelamentos) {
@@ -47,7 +47,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
       print('✅ Status: ${parcelamentoResponse.status}');
       print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
 
-      final parcelamento = parcelamentoResponse.dadosParsed;
+      final parcelamento = parcelamentoResponse.dados;
       if (parcelamento != null) {
         print('Parcelamento ${parcelamento.numero}:');
         print('  Situação: ${parcelamento.situacao}');
@@ -76,7 +76,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
       print('Mensagem: ${parcelasResponse.mensagemPrincipal}');
 
       if (parcelasResponse.temParcelas) {
-        final parcelas = parcelasResponse.dadosParsed!.listaParcelas;
+        final parcelas = parcelasResponse.dados!.listaParcelas;
         print('Quantidade de parcelas: ${parcelas.length}');
         print('Valor total: ${parcelasResponse.valorTotalParcelasFormatado}');
 
@@ -109,7 +109,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
       print('✅ Status: ${detalhesResponse.status}');
       print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
 
-      final detalhes = detalhesResponse.dadosParsed;
+      final detalhes = detalhesResponse.dados;
       if (detalhes != null) {
         print('DAS: ${detalhes.numeroDas}');
         print('Código de barras: ${detalhes.codigoBarras}');
@@ -146,7 +146,7 @@ Future<void> Parcsn(ApiClient apiClient) async {
       print('Mensagem: ${dasResponse.mensagemPrincipal}');
 
       if (dasResponse.pdfGeradoComSucesso) {
-        final dasData = dasResponse.dadosParsed;
+        final dasData = dasResponse.dados;
         if (dasData != null) {
           print('DAS emitido com sucesso!');
           print('Número do DAS: ${dasData.numeroDas}');

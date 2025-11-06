@@ -1,34 +1,38 @@
+import 'dart:convert';
 import 'mensagem.dart';
 import '../../../util/formatador_utils.dart';
 
 class ConsultarParcelamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ParcelamentoDetalhado? dados;
 
-  ConsultarParcelamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelamentoResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
+    ParcelamentoDetalhado? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ParcelamentoDetalhado.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelamentoResponse(
       status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  ParcelamentoDetalhado? get dadosParsed {
-    try {
-      if (dados.isEmpty) return null;
-      final parsed = ParcelamentoDetalhado.fromJson(dados);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -44,34 +48,29 @@ class ConsultarParcelamentoResponse {
 
   /// Valor total consolidado formatado
   String get valorTotalConsolidadoFormatado {
-    final dadosParsed = this.dadosParsed;
-    final valor = dadosParsed?.consolidacaoOriginal?.valorTotalConsolidado ?? 0.0;
+    final valor = dados?.consolidacaoOriginal?.valorTotalConsolidado ?? 0.0;
     return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
   /// Quantidade de parcelas
   int get quantidadeParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.consolidacaoOriginal?.quantidadeParcelas ?? 0;
+    return dados?.consolidacaoOriginal?.quantidadeParcelas ?? 0;
   }
 
   /// Valor da parcela básica formatado
   String get parcelaBasicaFormatada {
-    final dadosParsed = this.dadosParsed;
-    final valor = dadosParsed?.consolidacaoOriginal?.parcelaBasica ?? 0.0;
+    final valor = dados?.consolidacaoOriginal?.parcelaBasica ?? 0.0;
     return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
   /// Quantidade de pagamentos realizados
   int get quantidadePagamentos {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.demonstrativoPagamentos.length ?? 0;
+    return dados?.demonstrativoPagamentos.length ?? 0;
   }
 
   /// Valor total pago formatado
   String get valorTotalPagoFormatado {
-    final dadosParsed = this.dadosParsed;
-    final total = dadosParsed?.demonstrativoPagamentos.fold<double>(0.0, (sum, pagamento) => sum + pagamento.valorPago) ?? 0.0;
+    final total = dados?.demonstrativoPagamentos.fold<double>(0.0, (sum, pagamento) => sum + pagamento.valorPago) ?? 0.0;
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 }

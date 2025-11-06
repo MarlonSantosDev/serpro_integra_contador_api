@@ -16,7 +16,7 @@ Future<void> Pertsn(ApiClient apiClient) async {
       print('Mensagem: ${pedidosResponse.mensagemPrincipal}');
 
       if (pedidosResponse.temParcelamentos) {
-        final parcelamentos = pedidosResponse.dadosParsed!.parcelamentos;
+        final parcelamentos = pedidosResponse.dados!.parcelamentos;
         print('Quantidade de parcelamentos: ${parcelamentos.length}');
 
         for (final parcelamento in parcelamentos) {
@@ -47,7 +47,7 @@ Future<void> Pertsn(ApiClient apiClient) async {
       print('✅ Status: ${parcelamentoResponse.status}');
       print('Mensagem: ${parcelamentoResponse.mensagemPrincipal}');
 
-      final parcelamento = parcelamentoResponse.dadosParsed;
+      final parcelamento = parcelamentoResponse.dados;
       if (parcelamento != null) {
         print('Parcelamento ${parcelamento.numero}:');
         print('  Situação: ${parcelamento.situacao}');
@@ -103,7 +103,7 @@ Future<void> Pertsn(ApiClient apiClient) async {
       print('Mensagem: ${parcelasResponse.mensagemPrincipal}');
 
       if (parcelasResponse.temParcelas) {
-        final parcelas = parcelasResponse.dadosParsed!.listaParcelas;
+        final parcelas = parcelasResponse.dados!.listaParcelas;
         print('Quantidade de parcelas: ${parcelas.length}');
         print('Valor total: ${parcelasResponse.valorTotalParcelasFormatado}');
 
@@ -146,7 +146,7 @@ Future<void> Pertsn(ApiClient apiClient) async {
       print('✅ Status: ${detalhesResponse.status}');
       print('Mensagem: ${detalhesResponse.mensagemPrincipal}');
 
-      final detalhes = detalhesResponse.dadosParsed;
+      final detalhes = detalhesResponse.dados;
       if (detalhes != null) {
         print('Detalhes do pagamento:');
         print('  Número DAS: ${detalhes.numeroDas}');
@@ -210,11 +210,11 @@ Future<void> Pertsn(ApiClient apiClient) async {
           final sucessoSalvamento = await ArquivoUtils.salvarArquivo(pdfBase64, 'das_pertsn_${DateTime.now().millisecondsSinceEpoch}.pdf');
           print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
 
-          final dadosParsed = dasResponse.dadosParsed;
-          if (dadosParsed != null) {
-            print('Nome sugerido: ${dadosParsed.nomeArquivoSugerido}');
-            print('Tipo MIME: ${dadosParsed.tipoMime}');
-            print('PDF válido: ${dadosParsed.isPdfValido}');
+          final dados = dasResponse.dados;
+          if (dados != null) {
+            print('Nome sugerido: ${dados.nomeArquivoSugerido}');
+            print('Tipo MIME: ${dados.tipoMime}');
+            print('PDF válido: ${dados.isPdfValido}');
           }
         }
       } else {

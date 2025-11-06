@@ -257,17 +257,21 @@ export 'src/services/pertmei/model/pertmei_response.dart'
         Mensagem,
         ConsultarPedidosResponse,
         Parcelamento,
+        ParcelamentosData,
         ConsultarParcelamentoResponse,
         ParcelamentoDetalhado,
         ConsolidacaoOriginal,
         DetalhesConsolidacao,
         DemonstrativoPagamento,
         ConsultarParcelasResponse,
+        ListaParcelasData,
         Parcela,
         ConsultarDetalhesPagamentoResponse,
+        DetalhesPagamentoData,
         PagamentoDebito,
         DiscriminacaoDebito,
-        EmitirDasResponse;
+        EmitirDasResponse,
+        DasData;
 
 // RELPMEI Models - Padrão dos outros serviços
 export 'src/services/relpmei/model/relpmei_requests.dart';

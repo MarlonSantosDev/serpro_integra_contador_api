@@ -34,7 +34,7 @@ O campo `corpoModelo` pode conter `++1++`, `++2++`, `++3++`, etc. que devem ser 
 - **variaveis:** `["12345", "01/01/2023"]`
 - **Resultado após processamento:** `"Atendimento nº 12345 do dia 01/01/2023 foi direcionado"`
 
-**Nota:** Este package já realiza esse processamento automaticamente através dos getters `assuntoProcessado` e `corpoProcessado` nas classes de modelo.
+**Nota:** Este package já realiza esse processamento automaticamente durante a criação do modelo. Os campos `assuntoModelo` e `corpoModelo` já vêm processados, sem os placeholders.
 
 ## Configuração
 
@@ -88,10 +88,15 @@ try {
 
     for (final mensagem in conteudo.listaMensagens) {
       print('ISN: ${mensagem.isn}');
-      print('Assunto: ${mensagem.assuntoProcessado}'); // Já com ++VARIAVEL++ substituído
+      print('Assunto: ${mensagem.assuntoModelo}'); // Já com ++VARIAVEL++ substituído
       print('Data de envio: ${mensagem.dataEnvio}');
-      print('Foi lida: ${mensagem.foiLida}');
-      print('É favorita: ${mensagem.isFavorita}');
+      print('Status de leitura: ${mensagem.indicadorLeitura}'); // "Não lida", "Lida" ou "Não se aplica"
+      print('Favorito: ${mensagem.indicadorFavorito}'); // "Não lida" ou "Lida"
+      print('Origem: ${mensagem.origemModelo}'); // "Sistema Remetente" ou "RFB"
+      print('Relevância: ${mensagem.relevancia}'); // "Sem relevância" ou "Com relevância"
+      print('Tipo de origem: ${mensagem.tipoOrigem}'); // "Receita", "Estado" ou "Município"
+      print('Foi lida: ${mensagem.foiLida}'); // Boolean helper
+      print('É favorita: ${mensagem.isFavorita}'); // Boolean helper
     }
   }
 } catch (e) {
@@ -126,11 +131,13 @@ try {
 
   if (response.dadosParsed != null) {
     final detalhe = response.dadosParsed!.conteudo.first;
-    print('Assunto: ${detalhe.assuntoProcessado}'); // Já com ++VARIAVEL++ substituído
-    print('Corpo: ${detalhe.corpoProcessado}'); // Já com ++1++, ++2++, etc. substituídos
+    print('Assunto: ${detalhe.assuntoModelo}'); // Já com ++VARIAVEL++ substituído
+    print('Corpo: ${detalhe.corpoModelo}'); // Já com ++1++, ++2++, etc. substituídos
     print('Data de envio: ${detalhe.dataEnvio}');
     print('Data de expiração: ${detalhe.dataExpiracao}');
-    print('É favorita: ${detalhe.isFavorita}');
+    print('É favorita: ${detalhe.indFavorito}'); // Boolean
+    print('Origem: ${detalhe.origemModelo}'); // "Sistema Remetente" ou "RFB"
+    print('Tipo de origem: ${detalhe.tipoOrigem}'); // "Receita", "Estado" ou "Município"
 
     // Variáveis usadas no corpo da mensagem
     if (detalhe.variaveis.isNotEmpty) {
@@ -167,10 +174,10 @@ try {
 
   if (response.dadosParsed != null) {
     final conteudo = response.dadosParsed!.conteudo.first;
-    print('Indicador: ${conteudo.indicadorMensagensNovas}');
-    print('Status: ${conteudo.statusMensagensNovas}');
-    print('Descrição: ${conteudo.descricaoStatus}');
-    print('Tem mensagens novas: ${conteudo.temMensagensNovas}');
+    print('Indicador: ${conteudo.indicadorMensagensNovas}'); // Valor descritivo: "Contribuinte não possui mensagens novas", "Contribuinte possui uma mensagem nova" ou "Contribuinte possui mensagens novas"
+    print('Status: ${conteudo.statusMensagensNovas}'); // Enum para comparações
+    print('Descrição: ${conteudo.descricaoStatus}'); // Mesmo valor que indicadorMensagensNovas
+    print('Tem mensagens novas: ${conteudo.temMensagensNovas}'); // Boolean helper
   }
 } catch (e) {
   print('Erro: $e');
@@ -216,16 +223,14 @@ class ConteudoListaMensagens {
   final String ponteiroProximaPagina;
   final String? cnpjMatriz;
   final List<MensagemCaixaPostal> listaMensagens;
-
-  // Getters úteis
-  bool get isUltimaPagina; // true se indicadorUltimaPagina == "S"
-  int get quantidadeMensagensInt; // quantidadeMensagens como int
+  final bool isUltimaPagina; // Calculado automaticamente (true se indicadorUltimaPagina == "S")
+  final int quantidadeMensagensInt; // Calculado automaticamente (quantidadeMensagens como int)
 }
 
 class MensagemCaixaPostal {
   final String isn; // Identificador único
-  final String assuntoModelo; // Com ++VARIAVEL++
-  final String valorParametroAssunto; // Valor para substituir ++VARIAVEL++
+  final String assuntoModelo; // Já processado (++VARIAVEL++ substituído)
+  final String valorParametroAssunto; // Valor usado para substituir ++VARIAVEL++
   final String dataEnvio; // Formato: AAAAMMDD
   final String horaEnvio; // Formato: HHMMSS
   final String indicadorLeitura; // "0" ou "1"
@@ -233,11 +238,11 @@ class MensagemCaixaPostal {
   final String relevancia; // "1" ou "2"
   final String descricaoOrigem;
   // ... outros campos
-
-  // Getters úteis
-  bool get foiLida; // true se indicadorLeitura == "1"
-  bool get isFavorita; // true se indicadorFavorito == "1"
-  String get assuntoProcessado; // assuntoModelo com ++VARIAVEL++ substituído
+  final bool foiLida; // Calculado automaticamente (true se indicadorLeitura == "1")
+  final bool isFavorita; // Calculado automaticamente (true se indicadorFavorito == "1")
+  final bool temAltaRelevancia; // Calculado automaticamente (true se relevancia == "2")
+  
+  // Nota: assuntoModelo já vem processado (++VARIAVEL++ substituído)
 }
 ```
 
@@ -257,19 +262,16 @@ class DadosDetalhesMensagem {
 
 class DetalheMensagemCompleta {
   final String isn;
-  final String assuntoModelo; // Com ++VARIAVEL++
-  final String valorParametroAssunto; // Valor para substituir ++VARIAVEL++
-  final String corpoModelo; // Com ++1++, ++2++, etc.
-  final List<String> variaveis; // Valores para substituir ++1++, ++2++, etc.
+  final String assuntoModelo; // Já processado (++VARIAVEL++ substituído)
+  final String valorParametroAssunto; // Valor usado para substituir ++VARIAVEL++
+  final String corpoModelo; // Já processado (++1++, ++2++, etc. substituídos)
+  final List<String> variaveis; // Valores usados para substituir ++1++, ++2++, etc.
   final String dataEnvio;
   final String dataExpiracao;
-  final String? indFavorito;
+  final bool indFavorito; // Calculado automaticamente durante a criação do modelo
   // ... outros campos
-
-  // Getters úteis
-  bool get isFavorita; // true se indFavorito == "1"
-  String get assuntoProcessado; // assuntoModelo com ++VARIAVEL++ substituído
-  String get corpoProcessado; // corpoModelo com ++1++, ++2++, etc. substituídos
+  
+  // Nota: assuntoModelo e corpoModelo já vêm processados (placeholders substituídos)
 }
 ```
 
@@ -284,16 +286,14 @@ class IndicadorMensagensResponse {
 
 class DadosIndicadorMensagens {
   final String codigo; // Código de retorno (ex: "00")
-  final List<ConteudoIndicador> conteudo;
+  final List<ConteudoIndicadorMensagens> conteudo;
 }
 
-class ConteudoIndicador {
-  final String indicadorMensagensNovas; // "0", "1" ou "2"
-  final String statusMensagensNovas;
-  final String descricaoStatus;
-
-  // Getters úteis
-  bool get temMensagensNovas; // true se indicadorMensagensNovas != "0"
+class ConteudoIndicadorMensagens {
+  final String indicadorMensagensNovas; // Valor descritivo: "Contribuinte não possui mensagens novas", "Contribuinte possui uma mensagem nova" ou "Contribuinte possui mensagens novas"
+  final bool temMensagensNovas; // Calculado automaticamente (true se indicadorMensagensNovas != "Contribuinte não possui mensagens novas")
+  final StatusMensagensNovas statusMensagensNovas; // Enum calculado automaticamente
+  final String descricaoStatus; // Mesmo valor que indicadorMensagensNovas (mantido para compatibilidade)
 }
 ```
 
@@ -339,7 +339,7 @@ void main() async {
           // 5. Obter detalhes de cada mensagem
           for (final mensagem in conteudo.listaMensagens) {
             print('\n--- Mensagem ISN: ${mensagem.isn} ---');
-            print('Assunto: ${mensagem.assuntoProcessado}');
+            print('Assunto: ${mensagem.assuntoModelo}');
 
             final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
               contribuinte,
@@ -348,7 +348,7 @@ void main() async {
 
             if (detalhesResponse.dadosParsed != null) {
               final detalhe = detalhesResponse.dadosParsed!.conteudo.first;
-              print('Corpo: ${detalhe.corpoProcessado}');
+              print('Corpo: ${detalhe.corpoModelo}');
               print('Data de expiração: ${detalhe.dataExpiracao}');
             }
           }
@@ -406,13 +406,15 @@ const ponteiroTeste = '20250408092949';
 
 1. **Sem Funções Auxiliares**: Este serviço implementa APENAS as 3 funções oficiais da API SERPRO. Não há wrappers como `listarMensagensNaoLidas()` ou `temMensagensNovas()` que possam confundir o usuário.
 
-2. **Processamento de Variáveis**: O processamento de `++VARIAVEL++` e `++N++` é feito automaticamente pelos getters `assuntoProcessado` e `corpoProcessado`. Você não precisa fazer esse processamento manualmente.
+2. **Processamento de Variáveis**: O processamento de `++VARIAVEL++` e `++N++` é feito automaticamente durante a criação do modelo. Os campos `assuntoModelo` e `corpoModelo` já vêm processados, sem os placeholders. Você não precisa fazer esse processamento manualmente.
 
-3. **Paginação**: Para listar todas as mensagens, use `indicadorPagina=0` na primeira chamada. Se houver mais páginas (`isUltimaPagina=false`), use `indicadorPagina=1` e passe o `ponteiroProximaPagina` retornado.
+3. **Campos Calculados**: Todos os campos booleanos e processados (como `isUltimaPagina`, `foiLida`, `isFavorita`, `temMensagensNovas`, etc.) são calculados automaticamente durante a criação do modelo via `fromJson`. Não há necessidade de usar getters - os valores já estão disponíveis como campos diretos do objeto.
 
-4. **Filtros**: Os filtros `statusLeitura` e `indicadorFavorito` são parâmetros da própria API SERPRO, não são funcionalidades adicionais do package.
+4. **Paginação**: Para listar todas as mensagens, use `indicadorPagina=0` na primeira chamada. Se houver mais páginas (`isUltimaPagina=false`), use `indicadorPagina=1` e passe o `ponteiroProximaPagina` retornado.
 
-5. **Certificado Digital**: Sempre requer certificado digital válido para autenticação.
+5. **Filtros**: Os filtros `statusLeitura` e `indicadorFavorito` são parâmetros da própria API SERPRO, não são funcionalidades adicionais do package.
+
+6. **Certificado Digital**: Sempre requer certificado digital válido para autenticação.
 
 ## Suporte
 

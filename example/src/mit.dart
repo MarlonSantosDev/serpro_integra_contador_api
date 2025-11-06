@@ -145,7 +145,13 @@ Future<void> Mit(ApiClient apiClient) async {
       if (response.apuracao != null) {
         print('📋 Período: ${response.apuracao!.periodoApuracao}');
         print('🆔 ID: ${response.apuracao!.idApuracao}');
-        print('📊 Situação: ${response.apuracao!.situacaoEnum?.descricao}');
+        print('📊 Situação: ${response.apuracao!.situacao}');
+        print('  (Valor descritivo retornado diretamente)');
+        print('  Possíveis valores:');
+        print('    - "Em Processamento"');
+        print('    - "Processado com Sucesso"');
+        print('    - "Processado com Erro"');
+        print('📊 Situação (Enum): ${response.apuracao!.situacaoEnum?.descricao}');
         print('📅 Data Encerramento: ${response.apuracao!.dataEncerramento}');
         print('🎯 Evento Especial: ${response.apuracao!.eventoEspecial}');
         print('💰 Valor Total: R\$ ${response.apuracao!.valorTotalApurado?.toStringAsFixed(2)}');
@@ -188,7 +194,8 @@ Future<void> Mit(ApiClient apiClient) async {
         print('📊 Total de apurações encerradas: ${response.apuracoes!.length}');
 
         for (final apuracao in response.apuracoes!) {
-          print('  📋 ${apuracao.periodoApuracao} - ${apuracao.situacaoEnum?.descricao}');
+          print('  📋 ${apuracao.periodoApuracao} - ${apuracao.situacao}');
+          print('     (Valor descritivo: "${apuracao.situacao}")');
           print('     🆔 ID: ${apuracao.idApuracao}');
           print('     📅 Encerramento: ${apuracao.dataEncerramento}');
           print('     💰 Valor: R\$ ${apuracao.valorTotalApurado?.toStringAsFixed(2)}');

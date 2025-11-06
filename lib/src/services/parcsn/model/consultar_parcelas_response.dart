@@ -5,31 +5,34 @@ import '../../../util/formatador_utils.dart';
 class ConsultarParcelasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ListaParcelasData? dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelasResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
+    ListaParcelasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ListaParcelasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  ListaParcelasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = ListaParcelasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -45,33 +48,28 @@ class ConsultarParcelasResponse {
 
   /// Verifica se há parcelas disponíveis
   bool get temParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.isNotEmpty ?? false;
+    return dados?.listaParcelas.isNotEmpty ?? false;
   }
 
   /// Quantidade de parcelas disponíveis
   int get quantidadeParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.length ?? 0;
+    return dados?.listaParcelas.length ?? 0;
   }
 
   /// Lista de parcelas vencidas
   List<Parcela> get parcelasVencidas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.where((p) => p.isVencida).toList() ?? [];
+    return dados?.listaParcelas.where((p) => p.isVencida).toList() ?? [];
   }
 
   /// Lista de parcelas em dia
   List<Parcela> get parcelasEmDia {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.where((p) => !p.isVencida).toList() ?? [];
+    return dados?.listaParcelas.where((p) => !p.isVencida).toList() ?? [];
   }
 
   /// Valor total das parcelas disponíveis
   double get valorTotalParcelas {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return 0.0;
-    return dadosParsed.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
+    if (dados == null) return 0.0;
+    return dados!.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
   }
 
   /// Valor total formatado como moeda brasileira

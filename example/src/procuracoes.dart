@@ -29,9 +29,9 @@ Future<void> Procuracoes(ApiClient apiClient) async {
     print('✅ Mensagem: ${responsePfPf.mensagemPrincipal}');
     print('✅ Código Mensagem: ${responsePfPf.codigoMensagem}');
 
-    if (responsePfPf.sucesso && responsePfPf.dadosParsed != null) {
+    if (responsePfPf.sucesso && responsePfPf.dados != null) {
       print('\n📊 📋 RESULTADOS DETALHADOS PF→PF:');
-      final procuracoes = responsePfPf.dadosParsed!;
+      final procuracoes = responsePfPf.dados!;
       print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
 
       for (int i = 0; i < procuracoes.length; i++) {
@@ -88,9 +88,9 @@ Future<void> Procuracoes(ApiClient apiClient) async {
     print('✅ Mensagem: ${responsePjPj.mensagemPrincipal}');
     print('✅ Código Mensagem: ${responsePjPj.codigoMensagem}');
 
-    if (responsePjPj.sucesso && responsePjPj.dadosParsed != null) {
+    if (responsePjPj.sucesso && responsePjPj.dados != null) {
       print('\n📊 📋 RESULTADOS DETALHADOS PJ→PJ:');
-      final procuracoes = responsePjPj.dadosParsed!;
+      final procuracoes = responsePjPj.dados!;
       print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
 
       for (int i = 0; i < procuracoes.length; i++) {
@@ -147,9 +147,9 @@ Future<void> Procuracoes(ApiClient apiClient) async {
     print('✅ Mensagem: ${responseMista.mensagemPrincipal}');
     print('✅ Código Mensagem: ${responseMista.codigoMensagem}');
 
-    if (responseMista.sucesso && responseMista.dadosParsed != null) {
+    if (responseMista.sucesso && responseMista.dados != null) {
       print('\n📊 📋 RESULTADOS DETALHADOS PF→PJ:');
-      final procuracoes = responseMista.dadosParsed!;
+      final procuracoes = responseMista.dados!;
       print('🏷️  Total de procurações encontradas: ${procuracoes.length}');
 
       for (int i = 0; i < procuracoes.length; i++) {

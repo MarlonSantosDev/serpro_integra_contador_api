@@ -1,33 +1,37 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarDetalhesPagamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final DetalhesPagamentoData? dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+    DetalhesPagamentoData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = DetalhesPagamentoData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarDetalhesPagamentoResponse(
       status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  DetalhesPagamentoData? get dadosParsed {
-    try {
-      if (dados.isEmpty) return null;
-      final parsed = DetalhesPagamentoData.fromJson(dados);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -43,15 +47,13 @@ class ConsultarDetalhesPagamentoResponse {
 
   /// Valor total pago formatado
   String get valorPagoArrecadacaoFormatado {
-    final dadosParsed = this.dadosParsed;
-    final valor = dadosParsed?.valorPagoArrecadacao ?? 0.0;
+    final valor = dados?.valorPagoArrecadacao ?? 0.0;
     return 'R\$ ${valor.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
   /// Data de pagamento formatada
   String get dataPagamentoFormatada {
-    final dadosParsed = this.dadosParsed;
-    final data = dadosParsed?.dataPagamento ?? 0;
+    final data = dados?.dataPagamento ?? 0;
     final dataStr = data.toString();
     if (dataStr.length == 8) {
       return '${dataStr.substring(0, 4)}-${dataStr.substring(4, 6)}-${dataStr.substring(6, 8)}';
@@ -61,8 +63,7 @@ class ConsultarDetalhesPagamentoResponse {
 
   /// Data de vencimento formatada
   String get dataVencimentoFormatada {
-    final dadosParsed = this.dadosParsed;
-    final data = dadosParsed?.dataVencimento ?? 0;
+    final data = dados?.dataVencimento ?? 0;
     final dataStr = data.toString();
     if (dataStr.length == 8) {
       return '${dataStr.substring(0, 4)}-${dataStr.substring(4, 6)}-${dataStr.substring(6, 8)}';
@@ -72,8 +73,7 @@ class ConsultarDetalhesPagamentoResponse {
 
   /// Data limite para acolhimento formatada
   String get dataLimiteAcolhimentoFormatada {
-    final dadosParsed = this.dadosParsed;
-    final data = dadosParsed?.dataLimiteAcolhimento ?? 0;
+    final data = dados?.dataLimiteAcolhimento ?? 0;
     final dataStr = data.toString();
     if (dataStr.length == 8) {
       return '${dataStr.substring(0, 4)}-${dataStr.substring(4, 6)}-${dataStr.substring(6, 8)}';
@@ -83,8 +83,7 @@ class ConsultarDetalhesPagamentoResponse {
 
   /// Período de apuração do DAS formatado
   String get paDasGeradoFormatado {
-    final dadosParsed = this.dadosParsed;
-    final periodo = dadosParsed?.paDasGerado ?? 0;
+    final periodo = dados?.paDasGerado ?? 0;
     final periodoStr = periodo.toString();
     if (periodoStr.length == 6) {
       return '${periodoStr.substring(0, 4)}/${periodoStr.substring(4, 6)}';
@@ -94,25 +93,22 @@ class ConsultarDetalhesPagamentoResponse {
 
   /// Verifica se o pagamento foi realizado
   bool get pagamentoRealizado {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.dataPagamento != null && dadosParsed!.dataPagamento > 0;
+    return dados?.dataPagamento != null && dados!.dataPagamento > 0;
   }
 
   /// Verifica se o pagamento está em atraso
   bool get pagamentoEmAtraso {
     if (!pagamentoRealizado) return false;
 
-    final dadosParsed = this.dadosParsed;
-    final vencimento = dadosParsed?.dataVencimento ?? 0;
-    final pagamento = dadosParsed?.dataPagamento ?? 0;
+    final vencimento = dados?.dataVencimento ?? 0;
+    final pagamento = dados?.dataPagamento ?? 0;
 
     return pagamento > vencimento;
   }
 
   /// Quantidade de débitos pagos
   int get quantidadeDebitos {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.pagamentoDebitos.length ?? 0;
+    return dados?.pagamentoDebitos.length ?? 0;
   }
 }
 

@@ -5,32 +5,25 @@ import 'mensagem_negocio.dart';
 class ListaMensagensResponse {
   final int status;
   final List<MensagemNegocio> mensagens;
-  final String dados;
-  final DadosListaMensagens? dadosParsed;
+  final DadosListaMensagens? dados;
 
-  ListaMensagensResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  ListaMensagensResponse({required this.status, required this.mensagens, this.dados});
 
   factory ListaMensagensResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados'].toString();
+    final dadosStr = json['dados']?.toString() ?? '';
     DadosListaMensagens? dadosParsed;
-
-    try {
-      final dadosJson = jsonDecode(dados);
-      dadosParsed = DadosListaMensagens.fromJson(dadosJson);
-    } catch (e) {
-      // Se não conseguir parsear, mantém dados como string
-    }
+    final dadosJson = jsonDecode(dadosStr);
+    dadosParsed = DadosListaMensagens.fromJson(dadosJson);
 
     return ListaMensagensResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: dados,
-      dadosParsed: dadosParsed,
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 }
 
@@ -61,6 +54,8 @@ class ConteudoListaMensagens {
   final String ponteiroProximaPagina;
   final String? cnpjMatriz;
   final List<MensagemCaixaPostal> listaMensagens;
+  final bool isUltimaPagina;
+  final int quantidadeMensagensInt;
 
   ConteudoListaMensagens({
     required this.quantidadeMensagens,
@@ -69,16 +64,23 @@ class ConteudoListaMensagens {
     required this.ponteiroProximaPagina,
     this.cnpjMatriz,
     required this.listaMensagens,
+    required this.isUltimaPagina,
+    required this.quantidadeMensagensInt,
   });
 
   factory ConteudoListaMensagens.fromJson(Map<String, dynamic> json) {
+    final indicadorUltimaPaginaStr = json['indicadorUltimaPagina'].toString();
+    final quantidadeMensagensStr = json['quantidadeMensagens'].toString();
+
     return ConteudoListaMensagens(
-      quantidadeMensagens: json['quantidadeMensagens'].toString(),
-      indicadorUltimaPagina: json['indicadorUltimaPagina'].toString(),
+      quantidadeMensagens: quantidadeMensagensStr,
+      indicadorUltimaPagina: indicadorUltimaPaginaStr,
       ponteiroPaginaRetornada: json['ponteiroPaginaRetornada'].toString(),
       ponteiroProximaPagina: json['ponteiroProximaPagina'].toString(),
       cnpjMatriz: json['cnpjMatriz']?.toString(),
       listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? []).map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>)).toList(),
+      isUltimaPagina: indicadorUltimaPaginaStr.toUpperCase() == 'S',
+      quantidadeMensagensInt: int.tryParse(quantidadeMensagensStr) ?? 0,
     );
   }
 
@@ -92,12 +94,6 @@ class ConteudoListaMensagens {
       'listaMensagens': listaMensagens.map((e) => e.toJson()).toList(),
     };
   }
-
-  /// Verifica se é a última página
-  bool get isUltimaPagina => indicadorUltimaPagina.toUpperCase() == 'S';
-
-  /// Quantidade de mensagens como int
-  int get quantidadeMensagensInt => int.tryParse(quantidadeMensagens) ?? 0;
 }
 
 /// Mensagem individual da Caixa Postal
@@ -122,6 +118,9 @@ class MensagemCaixaPostal {
   final String tipoOrigem;
   final String descricaoOrigem;
   final String indicadorFavorito;
+  final bool foiLida;
+  final bool isFavorita;
+  final bool temAltaRelevancia;
 
   MensagemCaixaPostal({
     required this.codigoSistemaRemetente,
@@ -144,30 +143,81 @@ class MensagemCaixaPostal {
     required this.tipoOrigem,
     required this.descricaoOrigem,
     required this.indicadorFavorito,
+    required this.foiLida,
+    required this.isFavorita,
+    required this.temAltaRelevancia,
   });
 
   factory MensagemCaixaPostal.fromJson(Map<String, dynamic> json) {
+    // Processar assuntoModelo substituindo ++VARIAVEL++ por valorParametroAssunto
+    final assuntoModeloOriginal = json['assuntoModelo']?.toString() ?? '';
+    final valorParametroAssunto = json['valorParametroAssunto']?.toString() ?? '';
+    final assuntoModeloProcessado = valorParametroAssunto.isEmpty
+        ? assuntoModeloOriginal
+        : assuntoModeloOriginal.replaceAll('++VARIAVEL++', valorParametroAssunto);
+
+    // Converter campos numéricos para valores descritivos
+    final indicadorLeituraStr = json['indicadorLeitura']?.toString() ?? '';
+    final indicadorLeitura = switch (indicadorLeituraStr) {
+      '0' => 'Não lida',
+      '1' => 'Lida',
+      '2' => 'Não se aplica',
+      _ => indicadorLeituraStr,
+    };
+
+    final indicadorFavoritoStr = json['indicadorFavorito']?.toString() ?? '';
+    final indicadorFavorito = switch (indicadorFavoritoStr) {
+      '0' => 'Não lida',
+      '1' => 'Lida',
+      _ => indicadorFavoritoStr,
+    };
+
+    final origemModeloStr = json['origemModelo']?.toString() ?? '';
+    final origemModelo = switch (origemModeloStr) {
+      '1' => 'Sistema Remetente',
+      '2' => 'RFB',
+      _ => origemModeloStr,
+    };
+
+    final relevanciaStr = json['relevancia']?.toString() ?? '';
+    final relevancia = switch (relevanciaStr) {
+      '1' => 'Sem relevância',
+      '2' => 'Com relevância',
+      _ => relevanciaStr,
+    };
+
+    final tipoOrigemStr = json['tipoOrigem']?.toString() ?? '';
+    final tipoOrigem = switch (tipoOrigemStr) {
+      '1' => 'Receita',
+      '2' => 'Estado',
+      '3' => 'Município',
+      _ => tipoOrigemStr,
+    };
+
     return MensagemCaixaPostal(
       codigoSistemaRemetente: json['codigoSistemaRemetente']?.toString() ?? '',
       codigoModelo: json['codigoModelo']?.toString() ?? '',
       dataEnvio: json['dataEnvio']?.toString() ?? '',
       horaEnvio: json['horaEnvio']?.toString() ?? '',
       numeroControle: json['numeroControle']?.toString() ?? '',
-      indicadorLeitura: json['indicadorLeitura']?.toString() ?? '',
+      indicadorLeitura: indicadorLeitura,
       dataLeitura: json['dataLeitura']?.toString() ?? '',
       horaLeitura: json['horaLeitura']?.toString() ?? '',
       dataExclusao: json['dataExclusao']?.toString() ?? '',
       horaExclusao: json['horaExclusao']?.toString() ?? '',
       dataCiencia: json['dataCiencia']?.toString() ?? '',
-      assuntoModelo: json['assuntoModelo']?.toString() ?? '',
+      assuntoModelo: assuntoModeloProcessado,
       dataValidade: json['dataValidade']?.toString() ?? '',
-      origemModelo: json['origemModelo']?.toString() ?? '',
-      valorParametroAssunto: json['valorParametroAssunto']?.toString() ?? '',
-      relevancia: json['relevancia']?.toString() ?? '',
+      origemModelo: origemModelo,
+      valorParametroAssunto: valorParametroAssunto,
+      relevancia: relevancia,
       isn: json['isn']?.toString() ?? '',
-      tipoOrigem: json['tipoOrigem']?.toString() ?? '',
+      tipoOrigem: tipoOrigem,
       descricaoOrigem: json['descricaoOrigem']?.toString() ?? '',
-      indicadorFavorito: json['indicadorFavorito']?.toString() ?? '',
+      indicadorFavorito: indicadorFavorito,
+      foiLida: indicadorLeituraStr == '1',
+      isFavorita: indicadorFavoritoStr == '1',
+      temAltaRelevancia: relevanciaStr == '2',
     );
   }
 
@@ -194,20 +244,5 @@ class MensagemCaixaPostal {
       'descricaoOrigem': descricaoOrigem,
       'indicadorFavorito': indicadorFavorito,
     };
-  }
-
-  /// Verifica se a mensagem foi lida
-  bool get foiLida => indicadorLeitura == '1';
-
-  /// Verifica se a mensagem é favorita
-  bool get isFavorita => indicadorFavorito == '1';
-
-  /// Verifica se a mensagem tem alta relevância
-  bool get temAltaRelevancia => relevancia == '2';
-
-  /// Obtém o assunto processado com as variáveis substituídas
-  String get assuntoProcessado {
-    if (valorParametroAssunto.isEmpty) return assuntoModelo;
-    return assuntoModelo.replaceAll('++VARIAVEL++', valorParametroAssunto);
   }
 }

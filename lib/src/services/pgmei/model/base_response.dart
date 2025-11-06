@@ -11,34 +11,37 @@ class PgmeiBaseResponse {
   /// É um array composto de Código e texto da mensagem
   final List<Mensagem> mensagens;
 
-  /// Estrutura de dados de retorno (string JSON escapada)
-  final String dados;
+  /// Estrutura de dados de retorno (Map parseado)
+  final Map<String, dynamic>? dados;
 
-  PgmeiBaseResponse({required this.status, required this.mensagens, required this.dados});
+  PgmeiBaseResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
-  /// Parse dos dados JSON retornados
-  Map<String, dynamic>? get dadosParsed {
-    try {
-      if (dados.isEmpty) return null;
-      return jsonDecode(dados) as Map<String, dynamic>;
-    } catch (e) {
-      print('Erro ao parsear dados PGMEI: $e');
-      return null;
-    }
-  }
-
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!) : '',
+    };
   }
 
   factory PgmeiBaseResponse.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic>? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = jsonDecode(dadosStr) as Map<String, dynamic>;
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return PgmeiBaseResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      dados: dadosParsed,
     );
   }
 

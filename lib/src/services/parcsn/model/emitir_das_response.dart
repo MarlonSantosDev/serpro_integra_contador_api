@@ -5,31 +5,34 @@ import '../../../util/formatador_utils.dart';
 class EmitirDasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, required this.dados});
+  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
+    DasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = DasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return EmitirDasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  DasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = DasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -44,19 +47,17 @@ class EmitirDasResponse {
   }
 
   /// Verifica se há dados de DAS disponíveis
-  bool get temDadosDas => dadosParsed != null;
+  bool get temDadosDas => dados != null;
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.docArrecadacaoPdfB64 != null && dadosParsed!.docArrecadacaoPdfB64.isNotEmpty;
+    return dados?.docArrecadacaoPdfB64 != null && dados!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Tamanho do PDF em bytes
   int get tamanhoPdf {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed?.docArrecadacaoPdfB64 != null) {
-      return dadosParsed!.docArrecadacaoPdfB64.length;
+    if (dados?.docArrecadacaoPdfB64 != null) {
+      return dados!.docArrecadacaoPdfB64.length;
     }
     return 0;
   }
@@ -77,20 +78,17 @@ class EmitirDasResponse {
 
   /// Número do DAS gerado
   String? get numeroDas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.numeroDas;
+    return dados?.numeroDas;
   }
 
   /// Código de barras do DAS
   String? get codigoBarras {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.codigoBarras;
+    return dados?.codigoBarras;
   }
 
   /// Valor do DAS
   double? get valorDas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.valor;
+    return dados?.valor;
   }
 
   /// Valor do DAS formatado como moeda brasileira
@@ -102,8 +100,7 @@ class EmitirDasResponse {
 
   /// Data de vencimento do DAS
   String? get dataVencimento {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.dataVencimento;
+    return dados?.dataVencimento;
   }
 
   /// Data de vencimento formatada (DD/MM/AAAA)

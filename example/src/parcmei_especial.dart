@@ -17,7 +17,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('Tem parcelamentos: ${responsePedidos.temParcelamentos}');
       print('Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}');
 
-      final parcelamentos = responsePedidos.dadosParsed?.parcelamentos ?? [];
+      final parcelamentos = responsePedidos.dados?.parcelamentos ?? [];
       for (final parcelamento in parcelamentos) {
         print('  Parcelamento ${parcelamento.numero}:');
         print('    Situação: ${parcelamento.situacao}');
@@ -43,7 +43,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('✅ Status: ${responseParcelamento.status}');
       print('Mensagem: ${responseParcelamento.mensagemPrincipal}');
 
-      final parcelamento = responseParcelamento.dadosParsed;
+      final parcelamento = responseParcelamento.dados;
       if (parcelamento != null) {
         print('Parcelamento ${parcelamento.numero}:');
         print('  Situação: ${parcelamento.situacao}');
@@ -103,7 +103,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('Quantidade de parcelas: ${responseParcelas.quantidadeParcelas}');
       print('Valor total: ${responseParcelas.valorTotalParcelasFormatado}');
 
-      final parcelas = responseParcelas.dadosParsed?.listaParcelas ?? [];
+      final parcelas = responseParcelas.dados?.listaParcelas ?? [];
       for (final parcela in parcelas.take(5)) {
         print('  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
         print('    Descrição: ${parcela.descricao}');
@@ -131,7 +131,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('✅ Status: ${responseDetalhes.status}');
       print('Mensagem: ${responseDetalhes.mensagemPrincipal}');
 
-      final detalhes = responseDetalhes.dadosParsed;
+      final detalhes = responseDetalhes.dados;
       if (detalhes != null) {
         print('Detalhes do pagamento:');
         print('  DAS: ${detalhes.numeroDas}');
@@ -190,7 +190,7 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('PDF válido: ${responseDas.pdfValido}');
       print('Tamanho do PDF: ${responseDas.tamanhoPdfFormatado}');
 
-      final dadosDas = responseDas.dadosParsed;
+      final dadosDas = responseDas.dados;
       if (dadosDas != null) {
         print('Dados do DAS:');
         print('  Tem PDF: ${dadosDas.temPdf}');

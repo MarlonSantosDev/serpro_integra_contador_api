@@ -5,18 +5,17 @@ import '../../../base/mensagem_negocio.dart';
 class DteResponse {
   final int status;
   final List<MensagemNegocio> mensagens;
-  final String dados;
-  final DteDados? dadosParsed;
+  final DteDados? dados;
 
-  DteResponse({required this.status, required this.mensagens, required this.dados, this.dadosParsed});
+  DteResponse({required this.status, required this.mensagens, this.dados});
 
   factory DteResponse.fromJson(Map<String, dynamic> json) {
-    final dados = json['dados']?.toString() ?? '';
+    final dadosStr = json['dados']?.toString() ?? '';
     DteDados? dadosParsed;
 
     try {
-      if (dados.isNotEmpty) {
-        final dadosJson = jsonDecode(dados) as Map<String, dynamic>;
+      if (dadosStr.isNotEmpty) {
+        final dadosJson = jsonDecode(dadosStr) as Map<String, dynamic>;
         dadosParsed = DteDados.fromJson(dadosJson);
       }
     } catch (e) {
@@ -26,13 +25,12 @@ class DteResponse {
     return DteResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: dados,
-      dadosParsed: dadosParsed,
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   /// Indica se a requisição foi bem-sucedida
@@ -54,63 +52,62 @@ class DteResponse {
   }
 
   /// Indica se há indicador de enquadramento válido
-  bool get temIndicadorValido => dadosParsed?.indicadorEnquadramento != null;
+  bool get temIndicadorValido => dados?.indicadorEnquadramento != null;
 
   /// Retorna a descrição do status de enquadramento
-  String get statusEnquadramentoDescricao => dadosParsed?.statusEnquadramento ?? 'Não disponível';
+  String get statusEnquadramentoDescricao => dados?.statusEnquadramento ?? 'Não disponível';
 
   /// Indica se o contribuinte é optante DTE
-  bool get isOptanteDte => dadosParsed?.indicadorEnquadramento == 0;
+  bool get isOptanteDte => dados?.indicadorEnquadramento == 'NI Optante DTE';
 
   /// Indica se o contribuinte é optante Simples Nacional
-  bool get isOptanteSimples => dadosParsed?.indicadorEnquadramento == 1;
+  bool get isOptanteSimples => dados?.indicadorEnquadramento == 'NI Optante Simples';
 
   /// Indica se o contribuinte é optante DTE e Simples Nacional
-  bool get isOptanteDteESimples => dadosParsed?.indicadorEnquadramento == 2;
+  bool get isOptanteDteESimples => dados?.indicadorEnquadramento == 'NI Optante DTE e Simples';
 
   /// Indica se o contribuinte não é optante
-  bool get isNaoOptante => dadosParsed?.indicadorEnquadramento == -1;
+  bool get isNaoOptante => dados?.indicadorEnquadramento == 'NI Não optante';
 
   /// Indica se o NI (Número de Identificação) é inválido
-  bool get isNiInvalido => dadosParsed?.indicadorEnquadramento == -2;
+  bool get isNiInvalido => dados?.indicadorEnquadramento == 'NI inválido';
 }
 
 /// Dados específicos do DTE
 class DteDados {
-  final int indicadorEnquadramento;
+  final String indicadorEnquadramento;
   final String statusEnquadramento;
 
   DteDados({required this.indicadorEnquadramento, required this.statusEnquadramento});
 
   factory DteDados.fromJson(Map<String, dynamic> json) {
-    return DteDados(
-      indicadorEnquadramento: int.parse(json['indicadorEnquadramento'].toString()),
-      statusEnquadramento: json['statusEnquadramento'].toString(),
-    );
+    // Converter indicadorEnquadramento numérico para valor descritivo
+    final indicadorStr = json['indicadorEnquadramento']?.toString() ?? '';
+    final indicadorEnquadramento = switch (indicadorStr) {
+      '-2' => 'NI inválido',
+      '-1' => 'NI Não optante',
+      '0' => 'NI Optante DTE',
+      '1' => 'NI Optante Simples',
+      '2' => 'NI Optante DTE e Simples',
+      _ => 'Indicador desconhecido ($indicadorStr)',
+    };
+
+    return DteDados(indicadorEnquadramento: indicadorEnquadramento, statusEnquadramento: json['statusEnquadramento'].toString());
   }
 
   Map<String, dynamic> toJson() {
     return {'indicadorEnquadramento': indicadorEnquadramento, 'statusEnquadramento': statusEnquadramento};
   }
 
-  /// Retorna a descrição do indicador de enquadramento
-  String get indicadorDescricao {
-    switch (indicadorEnquadramento) {
-      case -2:
-        return 'NI inválido';
-      case -1:
-        return 'NI Não optante';
-      case 0:
-        return 'NI Optante DTE';
-      case 1:
-        return 'NI Optante Simples';
-      case 2:
-        return 'NI Optante DTE e Simples';
-      default:
-        return 'Indicador desconhecido ($indicadorEnquadramento)';
-    }
-  }
+  /// Retorna a descrição do indicador de enquadramento (mantido para compatibilidade)
+  String get indicadorDescricao => indicadorEnquadramento;
 
   /// Indica se o indicador é válido
-  bool get isIndicadorValido => indicadorEnquadramento >= -2 && indicadorEnquadramento <= 2;
+  bool get isIndicadorValido {
+    return indicadorEnquadramento == 'NI inválido' ||
+        indicadorEnquadramento == 'NI Não optante' ||
+        indicadorEnquadramento == 'NI Optante DTE' ||
+        indicadorEnquadramento == 'NI Optante Simples' ||
+        indicadorEnquadramento == 'NI Optante DTE e Simples';
+  }
 }

@@ -16,7 +16,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}');
 
     if (consultarPedidosResponse.temParcelamentos) {
-      final parcelamentos = consultarPedidosResponse.dadosParsed?.parcelamentos ?? [];
+      final parcelamentos = consultarPedidosResponse.dados?.parcelamentos ?? [];
       for (var parcelamento in parcelamentos) {
         print('  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
         print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
@@ -39,7 +39,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('Sucesso: ${consultarParcelamentoResponse.sucesso}');
 
     if (consultarParcelamentoResponse.temDadosParcelamento) {
-      final parcelamento = consultarParcelamentoResponse.dadosParsed;
+      final parcelamento = consultarParcelamentoResponse.dados;
       print('Número: ${parcelamento?.numero}');
       print('Situação: ${parcelamento?.situacao}');
       print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
@@ -74,7 +74,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('Sucesso: ${consultarDetalhesResponse.sucesso}');
 
     if (consultarDetalhesResponse.temDadosPagamento) {
-      final detalhes = consultarDetalhesResponse.dadosParsed;
+      final detalhes = consultarDetalhesResponse.dados;
       print('Número do DAS: ${detalhes?.numeroDas}');
       print('Data de vencimento: ${detalhes?.dataVencimentoFormatada}');
       print('Período de apuração: ${detalhes?.paDasGeradoFormatado}');
@@ -120,7 +120,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}');
 
     if (consultarParcelasResponse.temParcelas) {
-      final parcelas = consultarParcelasResponse.dadosParsed?.listaParcelas ?? [];
+      final parcelas = consultarParcelasResponse.dados?.listaParcelas ?? [];
       for (var parcela in parcelas) {
         print('  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
         print('    Ano: ${parcela.ano}, Mês: ${parcela.mes}');
@@ -153,7 +153,7 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
       // Salvar PDF em arquivo
       if (pdfBytes != null) {
         final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-          emitirDasResponse.dadosParsed?.docArrecadacaoPdfB64 ?? '',
+          emitirDasResponse.dados?.docArrecadacaoPdfB64 ?? '',
           'das_parcsn_especial_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');

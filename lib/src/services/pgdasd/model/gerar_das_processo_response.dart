@@ -10,35 +10,38 @@ class GerarDasProcessoResponse {
   /// Mensagem explicativa retornada no acionamento do serviço
   final List<Mensagem> mensagens;
 
-  /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Das
-  final String dados;
+  /// Estrutura de dados de retorno, contendo o objeto DasProcesso parseado
+  final DasProcesso? dados;
 
-  GerarDasProcessoResponse({required this.status, required this.mensagens, required this.dados});
+  GerarDasProcessoResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
-  /// Parse dos dados JSON retornados
-  DasProcesso? get dadosParsed {
-    try {
-      // Primeiro converte a string JSON para List
-      final dadosList = jsonDecode(dados);
-      return DasProcesso.fromJson(dadosList);
-    } catch (e) {
-      print("Erro ao fazer parse dos dados GERARDASPROCESSO18: $e");
-      return null;
-    }
-  }
-
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   factory GerarDasProcessoResponse.fromJson(Map<String, dynamic> json) {
+    DasProcesso? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosList = jsonDecode(dadosStr);
+        dadosParsed = DasProcesso.fromJson(dadosList as Map<String, dynamic>);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return GerarDasProcessoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      dados: dadosParsed,
     );
   }
 }

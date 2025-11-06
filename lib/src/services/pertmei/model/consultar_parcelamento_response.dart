@@ -1,17 +1,29 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarParcelamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ParcelamentoDetalhado? dados;
 
   ConsultarParcelamentoResponse({
     required this.status,
     required this.mensagens,
-    required this.dados,
+    this.dados,
   });
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
+    ParcelamentoDetalhado? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosJson = jsonDecode(dadosStr) as Map<String, dynamic>;
+        dadosParsed = ParcelamentoDetalhado.fromJson(dadosJson);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelamentoResponse(
       status: json['status']?.toString() ?? '',
       mensagens:
@@ -19,7 +31,7 @@ class ConsultarParcelamentoResponse {
               ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
@@ -27,21 +39,16 @@ class ConsultarParcelamentoResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
     };
   }
 
+  /// Verifica se a requisição foi bem-sucedida
+  bool get sucesso => status == '200';
+
   /// Retorna os dados parseados como objeto parcelamento detalhado
   ParcelamentoDetalhado? get parcelamentoDetalhado {
-    try {
-      if (dados.isEmpty) return null;
-
-      // Em implementação real, seria feito parsing do JSON string
-      // Por enquanto retornamos null - seria implementado com dart:convert
-      return null;
-    } catch (e) {
-      return null;
-    }
+    return dados;
   }
 }
 

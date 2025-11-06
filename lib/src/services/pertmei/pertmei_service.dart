@@ -49,7 +49,7 @@ class PertmeiService {
         return ConsultarPedidosResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -64,7 +64,7 @@ class PertmeiService {
       return ConsultarPedidosResponse(
         status: '500',
         mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
-        dados: '',
+        dados: null,
       );
     }
   }
@@ -82,7 +82,7 @@ class PertmeiService {
         return ConsultarParcelamentoResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -90,7 +90,7 @@ class PertmeiService {
         return ConsultarParcelamentoResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Número do parcelamento deve ser maior que zero')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -110,7 +110,7 @@ class PertmeiService {
       return ConsultarParcelamentoResponse(
         status: '500',
         mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
-        dados: '',
+        dados: null,
       );
     }
   }
@@ -127,7 +127,7 @@ class PertmeiService {
         return ConsultarParcelasResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -142,7 +142,7 @@ class PertmeiService {
       return ConsultarParcelasResponse(
         status: '500',
         mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
-        dados: '',
+        dados: null,
       );
     }
   }
@@ -161,7 +161,7 @@ class PertmeiService {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -169,7 +169,7 @@ class PertmeiService {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Número do parcelamento deve ser maior que zero')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -177,7 +177,7 @@ class PertmeiService {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Ano/mês da parcela deve estar no formato AAAAMM (ex: 202306)')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -197,7 +197,7 @@ class PertmeiService {
       return ConsultarDetalhesPagamentoResponse(
         status: '500',
         mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
-        dados: '',
+        dados: null,
       );
     }
   }
@@ -215,7 +215,7 @@ class PertmeiService {
         return EmitirDasResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -223,7 +223,7 @@ class PertmeiService {
         return EmitirDasResponse(
           status: '400',
           mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Parcela para emitir deve estar no formato AAAAMM (ex: 202306)')],
-          dados: '',
+          dados: null,
         );
       }
 
@@ -243,7 +243,7 @@ class PertmeiService {
       return EmitirDasResponse(
         status: '500',
         mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
-        dados: '',
+        dados: null,
       );
     }
   }

@@ -1,19 +1,31 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarDetalhesPagamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final DetalhesPagamentoData? dados;
 
   ConsultarDetalhesPagamentoResponse({
     required this.status,
     required this.mensagens,
-    required this.dados,
+    this.dados,
   });
 
   factory ConsultarDetalhesPagamentoResponse.fromJson(
     Map<String, dynamic> json,
   ) {
+    DetalhesPagamentoData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosJson = jsonDecode(dadosStr) as Map<String, dynamic>;
+        dadosParsed = DetalhesPagamentoData.fromJson(dadosJson);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarDetalhesPagamentoResponse(
       status: json['status']?.toString() ?? '',
       mensagens:
@@ -21,7 +33,7 @@ class ConsultarDetalhesPagamentoResponse {
               ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
@@ -29,21 +41,32 @@ class ConsultarDetalhesPagamentoResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados,
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
     };
   }
 
+  /// Verifica se a requisição foi bem-sucedida
+  bool get sucesso => status == '200';
+
   /// Retorna os dados parseados como objeto detalhes de pagamento
   DetalhesPagamento? get detalhesPagamento {
-    try {
-      if (dados.isEmpty) return null;
+    return dados?.detalhesPagamento;
+  }
+}
 
-      // Em implementação real, seria feito parsing do JSON string
-      // Por enquanto retornamos null - seria implementado com dart:convert
-      return null;
-    } catch (e) {
-      return null;
-    }
+class DetalhesPagamentoData {
+  final DetalhesPagamento detalhesPagamento;
+
+  DetalhesPagamentoData({required this.detalhesPagamento});
+
+  factory DetalhesPagamentoData.fromJson(Map<String, dynamic> json) {
+    return DetalhesPagamentoData(
+      detalhesPagamento: DetalhesPagamento.fromJson(json),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return detalhesPagamento.toJson();
   }
 }
 

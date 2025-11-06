@@ -5,31 +5,34 @@ import '../../../util/formatador_utils.dart';
 class ConsultarParcelamentoResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ParcelamentoDetalhado? dados;
 
-  ConsultarParcelamentoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelamentoResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
+    ParcelamentoDetalhado? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ParcelamentoDetalhado.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelamentoResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  ParcelamentoDetalhado? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = ParcelamentoDetalhado.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -44,7 +47,7 @@ class ConsultarParcelamentoResponse {
   }
 
   /// Verifica se há dados de parcelamento disponíveis
-  bool get temDadosParcelamento => dadosParsed != null;
+  bool get temDadosParcelamento => dados != null;
 
   @override
   String toString() {

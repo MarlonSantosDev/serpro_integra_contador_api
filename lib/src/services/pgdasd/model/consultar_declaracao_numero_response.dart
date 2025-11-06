@@ -10,34 +10,38 @@ class ConsultarDeclaracaoNumeroResponse {
   /// Mensagem explicativa retornada no acionamento do serviço
   final List<Mensagem> mensagens;
 
-  /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto Declaracao
-  final String dados;
+  /// Estrutura de dados de retorno, contendo o objeto DeclaracaoCompleta parseado
+  final DeclaracaoCompleta? dados;
 
-  ConsultarDeclaracaoNumeroResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarDeclaracaoNumeroResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
-  /// Parse dos dados JSON retornados
-  DeclaracaoCompleta? get dadosParsed {
-    try {
-      // Primeiro converte a string JSON para Map
-      final dadosMap = jsonDecode(dados) as Map<String, dynamic>;
-      return DeclaracaoCompleta.fromJson(dadosMap);
-    } catch (e) {
-      return null;
-    }
-  }
-
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   factory ConsultarDeclaracaoNumeroResponse.fromJson(Map<String, dynamic> json) {
+    DeclaracaoCompleta? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosMap = jsonDecode(dadosStr) as Map<String, dynamic>;
+        dadosParsed = DeclaracaoCompleta.fromJson(dadosMap);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarDeclaracaoNumeroResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      dados: dadosParsed,
     );
   }
 }

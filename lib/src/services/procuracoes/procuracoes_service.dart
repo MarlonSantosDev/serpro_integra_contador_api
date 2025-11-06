@@ -132,11 +132,11 @@ class ProcuracoesService {
 
   /// Analisa todas as procurações retornadas e gera estatísticas
   Map<String, dynamic> analisarProcuracoes(ObterProcuracaoResponse response) {
-    if (!response.sucesso || response.dadosParsed == null) {
+    if (!response.sucesso || response.dados == null) {
       return {'total': 0, 'ativas': 0, 'expiramEmBreve': 0, 'expiradas': 0, 'sistemasUnicos': <String>[], 'analiseStatus': 'sem_dados'};
     }
 
-    final procuracoes = response.dadosParsed!;
+    final procuracoes = response.dados!;
     final sistemasUnicos = <String>{};
 
     int ativas = 0;
@@ -195,11 +195,11 @@ class ProcuracoesService {
     buffer.writeln('   • Sistemas únicos: ${analise['totalSistemasUnicos']}');
     buffer.writeln('');
 
-    if (response.dadosParsed != null && response.dadosParsed!.isNotEmpty) {
+    if (response.dados != null && response.dados!.isNotEmpty) {
       buffer.writeln('📝 Detalhes por Procuração:');
 
-      for (int i = 0; i < response.dadosParsed!.length; i++) {
-        final proc = response.dadosParsed![i];
+      for (int i = 0; i < response.dados!.length; i++) {
+        final proc = response.dados![i];
         final emoji = proc.status == StatusProcuracao.ativa
             ? '✅'
             : proc.status == StatusProcuracao.expiraEmBreve

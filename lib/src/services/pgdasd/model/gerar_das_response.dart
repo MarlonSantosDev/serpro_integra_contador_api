@@ -11,34 +11,37 @@ class GerarDasResponse {
   final List<Mensagem> mensagens;
 
   /// Estrutura de dados de retorno, contendo uma lista com o objeto Das
-  final String dados;
+  final List<Das>? dados;
 
-  GerarDasResponse({required this.status, required this.mensagens, required this.dados});
+  GerarDasResponse({required this.status, required this.mensagens, this.dados});
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
-  /// Parse dos dados JSON retornados
-  List<Das>? get dadosParsed {
-    try {
-      // Primeiro converte a string JSON para List
-      final dadosList = jsonDecode(dados) as List;
-      return dadosList.map((d) => Das.fromJson(d)).toList();
-    } catch (e) {
-      print('Erro ao fazer parse dos dados GERARDAS12: $e');
-      return null;
-    }
-  }
-
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.map((d) => d.toJson()).toList()) : '',
+    };
   }
 
   factory GerarDasResponse.fromJson(Map<String, dynamic> json) {
+    List<Das>? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        final dadosList = jsonDecode(dadosStr) as List;
+        dadosParsed = dadosList.map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return GerarDasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
-      dados: json['dados'].toString(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      dados: dadosParsed,
     );
   }
 }

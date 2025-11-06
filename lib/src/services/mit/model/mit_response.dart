@@ -298,7 +298,7 @@ class Pendencia {
 class ApuracaoResumo {
   final String? periodoApuracao;
   final int? idApuracao;
-  final int? situacao;
+  final String? situacao;
   final String? dataEncerramento;
   final bool? eventoEspecial;
   final double? valorTotalApurado;
@@ -306,17 +306,36 @@ class ApuracaoResumo {
   ApuracaoResumo({this.periodoApuracao, this.idApuracao, this.situacao, this.dataEncerramento, this.eventoEspecial, this.valorTotalApurado});
 
   factory ApuracaoResumo.fromJson(Map<String, dynamic> json) {
+    // Converter situacao numérica para valor descritivo
+    final situacaoInt = json['situacao'] as int?;
+    final situacao = situacaoInt != null
+        ? switch (situacaoInt) {
+            1 => 'Em Processamento',
+            2 => 'Processado com Sucesso',
+            3 => 'Processado com Erro',
+            _ => situacaoInt.toString(),
+          }
+        : null;
+
     return ApuracaoResumo(
       periodoApuracao: json['periodoApuracao']?.toString(),
       idApuracao: json['idApuracao'] as int?,
-      situacao: json['situacao'] as int?,
+      situacao: situacao,
       dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
       valorTotalApurado: json['valorTotalApurado'] != null ? (json['valorTotalApurado'] as num).toDouble() : null,
     );
   }
 
-  SituacaoApuracao? get situacaoEnum => situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
+  SituacaoEncerramento? get situacaoEnum {
+    if (situacao == null) return null;
+    return switch (situacao) {
+      'Em Processamento' => SituacaoEncerramento.emProcessamento,
+      'Processado com Sucesso' => SituacaoEncerramento.processadoComSucesso,
+      'Processado com Erro' => SituacaoEncerramento.processadoComErro,
+      _ => null,
+    };
+  }
 }
 
 /// Enum para situação de encerramento

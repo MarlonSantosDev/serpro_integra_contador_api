@@ -1,33 +1,37 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarParcelasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ListaParcelasData? dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelasResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
+    ListaParcelasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ListaParcelasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelasResponse(
       status: json['status'].toString(),
       mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
-      dados: json['dados'].toString(),
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  ListaParcelasData? get dadosParsed {
-    try {
-      final dadosJson = dados;
-      final parsed = ListaParcelasData.fromJson(dadosJson);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -43,22 +47,19 @@ class ConsultarParcelasResponse {
 
   /// Verifica se há parcelas disponíveis
   bool get temParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.isNotEmpty ?? false;
+    return dados?.listaParcelas.isNotEmpty ?? false;
   }
 
   /// Quantidade de parcelas encontradas
   int get quantidadeParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.length ?? 0;
+    return dados?.listaParcelas.length ?? 0;
   }
 
   /// Valor total das parcelas
   double get valorTotalParcelas {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return 0.0;
+    if (dados == null) return 0.0;
 
-    return dadosParsed.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
+    return dados!.listaParcelas.fold(0.0, (sum, parcela) => sum + parcela.valor);
   }
 
   /// Formata o valor total das parcelas
@@ -68,12 +69,11 @@ class ConsultarParcelasResponse {
 
   /// Obtém parcelas por ano
   Map<int, List<Parcela>> get parcelasPorAno {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return {};
+    if (dados == null) return {};
 
     final Map<int, List<Parcela>> parcelasPorAno = {};
 
-    for (final parcela in dadosParsed.listaParcelas) {
+    for (final parcela in dados!.listaParcelas) {
       final ano = parcela.ano;
       if (!parcelasPorAno.containsKey(ano)) {
         parcelasPorAno[ano] = [];
@@ -92,35 +92,32 @@ class ConsultarParcelasResponse {
 
   /// Obtém parcelas pendentes (futuras)
   List<Parcela> get parcelasPendentes {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return [];
+    if (dados == null) return [];
 
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela > anoMesAtual).toList();
+    return dados!.listaParcelas.where((parcela) => parcela.parcela > anoMesAtual).toList();
   }
 
   /// Obtém parcelas vencidas
   List<Parcela> get parcelasVencidas {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return [];
+    if (dados == null) return [];
 
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela < anoMesAtual).toList();
+    return dados!.listaParcelas.where((parcela) => parcela.parcela < anoMesAtual).toList();
   }
 
   /// Obtém parcelas do mês atual
   List<Parcela> get parcelasMesAtual {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed == null) return [];
+    if (dados == null) return [];
 
     final hoje = DateTime.now();
     final anoMesAtual = hoje.year * 100 + hoje.month;
 
-    return dadosParsed.listaParcelas.where((parcela) => parcela.parcela == anoMesAtual).toList();
+    return dados!.listaParcelas.where((parcela) => parcela.parcela == anoMesAtual).toList();
   }
 }
 

@@ -1,33 +1,37 @@
+import 'dart:convert';
 import 'mensagem.dart';
 
 class ConsultarParcelasResponse {
   final String status;
   final List<Mensagem> mensagens;
-  final String dados;
+  final ListaParcelasData? dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarParcelasResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
+    ListaParcelasData? dadosParsed;
+    try {
+      final dadosStr = json['dados']?.toString() ?? '';
+      if (dadosStr.isNotEmpty) {
+        dadosParsed = ListaParcelasData.fromJson(dadosStr);
+      }
+    } catch (e) {
+      // Se não conseguir fazer parse, mantém dados como null
+    }
+
     return ConsultarParcelasResponse(
       status: json['status']?.toString() ?? '',
       mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      dados: json['dados']?.toString() ?? '',
+      dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados};
-  }
-
-  /// Dados parseados do JSON string
-  ListaParcelasData? get dadosParsed {
-    try {
-      if (dados.isEmpty) return null;
-      final parsed = ListaParcelasData.fromJson(dados);
-      return parsed;
-    } catch (e) {
-      return null;
-    }
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -43,51 +47,44 @@ class ConsultarParcelasResponse {
 
   /// Verifica se há parcelas disponíveis
   bool get temParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.isNotEmpty ?? false;
+    return dados?.listaParcelas.isNotEmpty ?? false;
   }
 
   /// Quantidade de parcelas disponíveis
   int get quantidadeParcelas {
-    final dadosParsed = this.dadosParsed;
-    return dadosParsed?.listaParcelas.length ?? 0;
+    return dados?.listaParcelas.length ?? 0;
   }
 
   /// Valor total das parcelas disponíveis formatado
   String get valorTotalParcelasFormatado {
-    final dadosParsed = this.dadosParsed;
-    final total = dadosParsed?.listaParcelas.fold<double>(0.0, (sum, parcela) => sum + parcela.valor) ?? 0.0;
+    final total = dados?.listaParcelas.fold<double>(0.0, (sum, parcela) => sum + parcela.valor) ?? 0.0;
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
   /// Lista de parcelas ordenadas por período
   List<Parcela> get parcelasOrdenadas {
-    final dadosParsed = this.dadosParsed;
-    final parcelas = dadosParsed?.listaParcelas ?? [];
+    final parcelas = dados?.listaParcelas ?? [];
     parcelas.sort((a, b) => a.parcela.compareTo(b.parcela));
     return parcelas;
   }
 
   /// Parcela com menor valor
   Parcela? get parcelaMenorValor {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed?.listaParcelas.isEmpty ?? true) return null;
+    if (dados?.listaParcelas.isEmpty ?? true) return null;
 
-    return dadosParsed!.listaParcelas.reduce((a, b) => a.valor < b.valor ? a : b);
+    return dados!.listaParcelas.reduce((a, b) => a.valor < b.valor ? a : b);
   }
 
   /// Parcela com maior valor
   Parcela? get parcelaMaiorValor {
-    final dadosParsed = this.dadosParsed;
-    if (dadosParsed?.listaParcelas.isEmpty ?? true) return null;
+    if (dados?.listaParcelas.isEmpty ?? true) return null;
 
-    return dadosParsed!.listaParcelas.reduce((a, b) => a.valor > b.valor ? a : b);
+    return dados!.listaParcelas.reduce((a, b) => a.valor > b.valor ? a : b);
   }
 
   /// Verifica se todas as parcelas têm o mesmo valor
   bool get todasParcelasMesmoValor {
-    final dadosParsed = this.dadosParsed;
-    final parcelas = dadosParsed?.listaParcelas ?? [];
+    final parcelas = dados?.listaParcelas ?? [];
     if (parcelas.length <= 1) return true;
 
     final primeiroValor = parcelas.first.valor;
@@ -102,7 +99,7 @@ class ListaParcelasData {
 
   factory ListaParcelasData.fromJson(String jsonString) {
     try {
-      final Map<String, dynamic> json = jsonString as Map<String, dynamic>;
+      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
 
       return ListaParcelasData(
         listaParcelas: (json['listaParcelas'] as List?)?.map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList() ?? [],
