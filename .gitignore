@@ -1,17 +1,8 @@
 # Dart/Flutter
-.dart_tool/
 .flutter-plugins-dependencies
 .flutter-plugins
-.packages
 .pub-cache/
 .pub/
-build/
-ios/
-android/
-web/
-linux/
-macos/
-windows/
 
 # IDEs
 .vscode/
@@ -64,6 +55,5 @@ node_modules/
 .env.production.local
 
 # Project specific
-pubspec.lock
 arquivos/
 markdown/
