@@ -6,3 +6,6 @@
 
 [1.0.2] - 2025-10-31
 - Ajustes no README.md.
+
+[1.0.3] - 2025-11-06
+- Ajustes no modelo de resposta da API Caixa Postal.
