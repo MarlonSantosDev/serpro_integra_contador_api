@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'pgdasd_dominios.dart';
 
 /// Modelo de resposta para entrega de declaração PGDASD
 ///
@@ -148,7 +149,7 @@ class DeclaracaoTransmitida {
 /// Valor devido
 class ValorDevido {
   /// Código do tributo
-  final int codigoTributo;
+  final String codigoTributo;
 
   /// Valor devido do tributo
   final double valor;
@@ -160,7 +161,9 @@ class ValorDevido {
   }
 
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
-    return ValorDevido(codigoTributo: int.parse(json['codigoTributo'].toString()), valor: (num.parse(json['valor'].toString())).toDouble());
+    final codigo = json['codigoTributo']?.toString();
+    final descricao = PgdasdDominios.descricaoCodigoTributo(codigo);
+    return ValorDevido(codigoTributo: descricao, valor: (num.parse(json['valor'].toString())).toDouble());
   }
 }
 

@@ -9,3 +9,6 @@
 
 [1.0.3] - 2025-11-06
 - Ajustes no modelo de resposta da API Caixa Postal.
+
+[1.0.4] - 2025-11-10
+- Ajustes no modelo de resposta da API PGDASD.
