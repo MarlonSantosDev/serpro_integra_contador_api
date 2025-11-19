@@ -81,7 +81,7 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.5.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.6.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -303,8 +303,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.10.0",
   "flutterRoot": "file:///C:/flutter",
-  "flutterVersion": "3.35.6",
+  "flutterVersion": "3.38.1",
   "pubCache": "file:///C:/Users/marlon/AppData/Local/Pub/Cache"
 }
