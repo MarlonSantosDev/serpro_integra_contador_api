@@ -15,7 +15,7 @@ void main() async {
     autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
-  //await CaixaPostal(apiClient);
+  await CaixaPostal(apiClient);
   await Pgdasd(apiClient);
 
   // Exemplo de uso dos serviços
