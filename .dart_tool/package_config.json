@@ -3,15 +3,15 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-85.0.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-92.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.9"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-7.7.1",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-9.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.9"
     },
     {
       "name": "args",
@@ -102,12 +102,6 @@
       "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/io-1.0.5",
       "packageUri": "lib/",
       "languageVersion": "3.4"
-    },
-    {
-      "name": "js",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.7.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.7"
     },
     {
       "name": "logging",
@@ -231,21 +225,21 @@
     },
     {
       "name": "test",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.26.2",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.28.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.7"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.6",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.8",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.7"
     },
     {
       "name": "test_core",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.11",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.14",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.7"
     },
     {
       "name": "typed_data",
@@ -303,8 +297,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.10.0",
+  "generatorVersion": "3.10.1",
   "flutterRoot": "file:///C:/flutter",
-  "flutterVersion": "3.38.1",
+  "flutterVersion": "3.38.3",
   "pubCache": "file:///C:/Users/marlon/AppData/Local/Pub/Cache"
 }

@@ -52,8 +52,6 @@ class ApiClient {
   Future<void> authenticate({
     required String consumerKey,
     required String consumerSecret,
-    required String certPath,
-    required String certPassword,
     required String contratanteNumero,
     required String autorPedidoDadosNumero,
     String ambiente = 'trial',

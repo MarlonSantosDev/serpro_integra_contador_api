@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "serpro_integra_contador_api",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "dependencies": [
         "http"
       ],
@@ -15,7 +15,7 @@
     },
     {
       "name": "test",
-      "version": "1.26.2",
+      "version": "1.28.0",
       "dependencies": [
         "analyzer",
         "async",
@@ -24,7 +24,6 @@
         "coverage",
         "http_multi_server",
         "io",
-        "js",
         "matcher",
         "node_preamble",
         "package_config",
@@ -91,7 +90,7 @@
     },
     {
       "name": "test_core",
-      "version": "0.6.11",
+      "version": "0.6.14",
       "dependencies": [
         "analyzer",
         "args",
@@ -118,7 +117,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.6",
+      "version": "0.7.8",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -232,11 +231,6 @@
       ]
     },
     {
-      "name": "js",
-      "version": "0.7.2",
-      "dependencies": []
-    },
-    {
       "name": "io",
       "version": "1.0.5",
       "dependencies": [
@@ -292,7 +286,7 @@
     },
     {
       "name": "analyzer",
-      "version": "7.7.1",
+      "version": "9.0.0",
       "dependencies": [
         "_fe_analyzer_shared",
         "collection",
@@ -441,7 +435,7 @@
     },
     {
       "name": "_fe_analyzer_shared",
-      "version": "85.0.0",
+      "version": "92.0.0",
       "dependencies": [
         "meta"
       ]
