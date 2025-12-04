@@ -1,5 +1,3 @@
-/// Classes comuns utilizadas em todos os módulos da API SERPRO Integra Contador
-///
 /// Este diretório contém classes base que foram consolidadas para resolver
 /// conflitos de nomes entre diferentes módulos, mantendo compatibilidade
 /// através de extensões específicas para cada módulo.

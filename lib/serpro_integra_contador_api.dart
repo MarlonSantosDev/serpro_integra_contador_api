@@ -67,6 +67,7 @@ library serpro_integra_contador_api;
 // Core
 export 'src/core/api_client.dart';
 export 'src/core/auth/authentication_model.dart';
+export 'src/core/auth/auth_exceptions.dart';
 
 // Common Models (Classes base consolidadas)
 export 'src/base/mensagem_negocio.dart';

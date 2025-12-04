@@ -57,3 +57,13 @@ node_modules/
 # Project specific
 arquivos/
 markdown/
+
+# Certificados e dados sensíveis (NUNCA commitar!)
+*.pfx
+*.p12
+*.cer
+*.crt
+*.key
+*.pem
+**/certificado/
+**/certificados/
