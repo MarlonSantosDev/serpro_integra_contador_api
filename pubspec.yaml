@@ -8,6 +8,10 @@ environment:
 
 dependencies:
   http: ^1.6.0
+  pointycastle: ^3.9.1  # Assinatura RSA-SHA256
+  asn1lib: ^1.6.5       # Análise PKCS12
+  xml: ^6.5.0           # Manipulação XML
+  crypto: ^3.0.7        # Hash SHA-256
 
 dev_dependencies:
   test: ^1.28.0

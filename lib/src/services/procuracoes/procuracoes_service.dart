@@ -17,13 +17,14 @@ import 'package:serpro_integra_contador_api/src/services/procuracoes/model/procu
 /// ```dart
 /// final procuracoesService = ProcuracoesService(apiClient);
 ///
-/// // Obter procurações
-/// final procuracao = await procuracoesService.obterProcuracao(
+/// // Obter procurações (detecta automaticamente CPF/CNPJ)
+/// final procuracao = await procuracoesService.consultarProcuracao(
 ///   outorgante: '12345678000190',
-///   outorgado: '12345678901',
+///   // outorgado é opcional se o usuário já estiver autenticado
 /// );
+///
 /// if (procuracao.sucesso) {
-///   print('Procuração encontrada: ${procuracao.numeroProcuracao}');
+///   print('Procuração encontrada com sucesso!');
 /// }
 /// ```
 class ProcuracoesService {
@@ -31,12 +32,62 @@ class ProcuracoesService {
 
   ProcuracoesService(this._apiClient);
 
-  /// Obtém procurações com dados específicos de tipos de documento
+  /// Consulta procurações eletrônicas entre um outorgante e um procurador.
   ///
-  /// [outorgante] - CPF/CNPJ do outorgante
-  /// [tipoOutorgante] - Tipo do outorgante (1=CPF, 2=CNPJ)
-  /// [outorgado] - CPF/CNPJ do procurador
-  /// [tipoOutorgado] - Tipo do procurador (1=CPF, 2=CNPJ)
+  /// Este método detecta automaticamente se os documentos informados são CPF ou CNPJ.
+  ///
+  /// [outorgante] - CPF ou CNPJ do outorgante (quem passou a procuração)
+  /// [outorgado] - (Opcional) CPF ou CNPJ do procurador. Se não informado, utiliza o documento do usuário autenticado.
+  /// [contratanteNumero] - (Opcional) CNPJ do contratante. Se não informado, usa o da autenticação.
+  /// [autorPedidoDadosNumero] - (Opcional) CPF/CNPJ do autor. Se não informado, usa o da autenticação.
+  Future<ObterProcuracaoResponse> consultarProcuracao({
+    required String outorgante,
+    String? outorgado,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    // Tenta obter o outorgado do parâmetro ou da autenticação
+    final outorgadoFinal = outorgado ?? _apiClient.autorPedidoDadosNumero;
+
+    if (outorgadoFinal == null || outorgadoFinal.isEmpty) {
+      throw ArgumentError(
+        'CPF/CNPJ do outorgado (procurador) não informado e não foi possível obter da autenticação. '
+        'Certifique-se de que o cliente esteja autenticado ou informe o parâmetro "outorgado".',
+      );
+    }
+
+    // Cria o request que já detecta automaticamente os tipos de documento
+    final requestData = ObterProcuracaoRequest.fromDocuments(outorgante: outorgante, outorgado: outorgadoFinal);
+
+    // Valida dados antes de enviar
+    final erros = requestData.validate();
+    if (erros.isNotEmpty) {
+      // Em produção, você pode querer lançar uma exceção ou retornar erro
+      // throw ArgumentError('Dados inválidos: ${erros.join(', ')}');
+    }
+
+    final request = BaseRequest(
+      contribuinteNumero: requestData.outorgante, // O contribuinte é o outorgante
+      pedidoDados: PedidoDados(
+        idSistema: ProcuracoesConstants.idSistema,
+        idServico: ProcuracoesConstants.idServico,
+        versaoSistema: ProcuracoesConstants.versaoSistema,
+        dados: requestData.toJsonString(),
+      ),
+    );
+
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    return ObterProcuracaoResponse.fromJson(response);
+  }
+
+  /// Método legado para compatibilidade interna.
+  /// Recomendado usar [consultarProcuracao] que é mais simples.
   Future<ObterProcuracaoResponse> obterProcuracaoComTipos(
     String outorgante,
     String tipoOutorgante,
@@ -51,12 +102,6 @@ class ProcuracoesService {
       outorgado: outorgado,
       tipoOutorgado: tipoOutorgado,
     );
-
-    // Validar dados antes de enviar (comentado para testes)
-    final erros = requestData.validate();
-    if (erros.isNotEmpty) {
-      //throw ArgumentError('Dados inválidos: ${erros.join(', ')}');
-    }
 
     final request = BaseRequest(
       contribuinteNumero: outorgante,
@@ -75,59 +120,6 @@ class ProcuracoesService {
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
     return ObterProcuracaoResponse.fromJson(response);
-  }
-
-  /// Método de conveniência para obter procurações de pessoa física
-  Future<ObterProcuracaoResponse> obterProcuracaoPf(
-    String cpfOutorgante,
-    String cpfProcurador, {
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    return obterProcuracaoComTipos(
-      cpfOutorgante,
-      '1', // CPF
-      cpfProcurador,
-      '1', // CPF
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Método de conveniência para obter procurações de pessoa jurídica
-  Future<ObterProcuracaoResponse> obterProcuracaoPj(
-    String cnpjOutorgante,
-    String cnpjProcurador, {
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    return obterProcuracaoComTipos(
-      cnpjOutorgante,
-      '2', // CNPJ
-      cnpjProcurador,
-      '2', // CNPJ
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Método de conveniência para obter procurações mistas (PF para PJ ou vice-versa)
-  Future<ObterProcuracaoResponse> obterProcuracaoMista(
-    String documentoOutorgante,
-    String documentoProcurador,
-    bool outorganteIsPj,
-    bool procuradorIsPj, {
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    return obterProcuracaoComTipos(
-      documentoOutorgante,
-      outorganteIsPj ? '2' : '1',
-      documentoProcurador,
-      procuradorIsPj ? '2' : '1',
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
   }
 
   /// Analisa todas as procurações retornadas e gera estatísticas

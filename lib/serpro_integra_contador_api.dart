@@ -136,8 +136,11 @@ export 'src/services/procuracoes/model/procuracoes_enums.dart';
 // Autenticação de Procurador Models
 export 'src/services/autenticaprocurador/model/termo_autorizacao_request.dart';
 export 'src/services/autenticaprocurador/model/termo_autorizacao_response.dart';
-export 'src/services/autenticaprocurador/model/assinatura_digital_model.dart';
+export 'src/services/autenticaprocurador/model/assinatura_digital_model.dart' hide TipoCertificado, FormatoCertificado;
 export 'src/services/autenticaprocurador/model/cache_model.dart';
+export 'src/services/autenticaprocurador/model/certificate_info.dart';
+export 'src/services/autenticaprocurador/xml_signer.dart';
+export 'src/services/autenticaprocurador/exceptions/autenticaprocurador_exceptions.dart';
 
 // Caixa Postal Models
 export 'src/services/caixa_postal/model/mensagem_negocio.dart';

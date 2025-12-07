@@ -1,0 +1,10 @@
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\bin\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.deps.json
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\bin\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.dll
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\bin\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.pdb
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.csproj.AssemblyReference.cache
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.GeneratedMSBuildEditorConfig.editorconfig
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.AssemblyInfoInputs.cache
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.AssemblyInfo.cs
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.csproj.CoreCompileInputs.cache
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.dll
+D:\Doug\Zero\Work\Serpro\Repos\Codigo\ic-dctfweb-todososprojetos\Serpro.Componentes.AssinaturaDigital\obj\Debug\netstandard2.1\Serpro.Componentes.AssinaturaDigital.pdb

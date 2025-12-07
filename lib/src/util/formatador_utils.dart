@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'validacoes_utils.dart';
 
 /// Utilitários centralizados para formatação de dados
@@ -334,6 +335,41 @@ class FormatadorUtils {
 
     try {
       return DateTime(ano, mes, dia);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// @formatador_utils
+  ///
+  /// Converte um header HTTP 'expires' para formato ISO 8601 (AAAA-MM-DDTHH:MM:SS)
+  ///
+  /// **Exemplo de entrada:**
+  /// ```dart
+  /// converterHttpExpiresParaISO('Sat, 15 Oct 2022 00:00:01 GMT')
+  /// ```
+  ///
+  /// **Exemplo de saída:**
+  /// ```dart
+  /// '2022-10-15T00:00:01'
+  /// ```
+  ///
+  /// [httpExpires] - String no formato HTTP date header (ex: 'Sat, 15 Oct 2022 00:00:01 GMT')
+  ///
+  /// Retorna null se a string não puder ser parseada
+  static String? converterHttpExpiresParaISO(String? httpExpires) {
+    if (httpExpires == null || httpExpires.isEmpty) {
+      return null;
+    }
+
+    try {
+      final dateTime = HttpDate.parse(httpExpires);
+      return '${dateTime.year.toString().padLeft(4, '0')}-'
+          '${dateTime.month.toString().padLeft(2, '0')}-'
+          '${dateTime.day.toString().padLeft(2, '0')}T'
+          '${dateTime.hour.toString().padLeft(2, '0')}:'
+          '${dateTime.minute.toString().padLeft(2, '0')}:'
+          '${dateTime.second.toString().padLeft(2, '0')}';
     } catch (e) {
       return null;
     }

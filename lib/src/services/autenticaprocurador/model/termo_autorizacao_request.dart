@@ -23,28 +23,18 @@ class TermoAutorizacaoRequest {
     this.certificadoPassword,
   });
 
-  /// Cria o XML do termo de autorização conforme especificação
+  /// Cria o XML do termo de autorização conforme especificação SERPRO
+  ///
+  /// O XML é criado SEM a tag Signature.
+  /// A assinatura digital será adicionada posteriormente pelo assinador.
+  /// Isso segue o padrão do PHP de referência do SERPRO.
   String criarXmlTermo() {
     final contratanteTipo = ValidacoesUtils.detectDocumentType(contratanteNumero);
     final autorTipo = ValidacoesUtils.detectDocumentType(autorPedidoDadosNumero);
 
+    // XML sem Signature - será adicionada pelo assinador (conforme padrão SERPRO PHP)
     final xml =
-        '''<?xml version="1.0" encoding="UTF-8"?>
-<termoDeAutorizacao>
-    <dados>
-        <sistema id="API Integra Contador" />
-        <termo texto="Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS." />
-        <avisoLegal texto="O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD)." />
-        <finalidade texto="A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR DO PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE)." />
-        <dataAssinatura data="$dataAssinatura" />
-        <vigencia data="$dataVigencia" />
-        <destinatario numero="${ValidacoesUtils.cleanDocumentNumber(contratanteNumero)}" nome="$contratanteNome" tipo="${contratanteTipo == 1 ? 'PF' : 'PJ'}" papel="contratante" />
-        <assinadoPor numero="${ValidacoesUtils.cleanDocumentNumber(autorPedidoDadosNumero)}" nome="$autorPedidoDadosNome" tipo="${autorTipo == 1 ? 'PF' : 'PJ'}" papel="autor pedido de dados"/>
-    </dados>
-    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <!-- Assinatura digital será inserida aqui -->
-    </Signature>
-</termoDeAutorizacao>''';
+        '''<?xml version="1.0" encoding="UTF-8"?><termoDeAutorizacao><dados><sistema id="API Integra Contador"/><termo texto="Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS."/><avisoLegal texto="O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD)."/><finalidade texto="A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE)."/><dataAssinatura data="$dataAssinatura"/><vigencia data="$dataVigencia"/><destinatario numero="${ValidacoesUtils.cleanDocumentNumber(contratanteNumero)}" nome="$contratanteNome" tipo="${contratanteTipo == 1 ? 'PF' : 'PJ'}" papel="contratante"/><assinadoPor numero="${ValidacoesUtils.cleanDocumentNumber(autorPedidoDadosNumero)}" nome="$autorPedidoDadosNome" tipo="${autorTipo == 1 ? 'PF' : 'PJ'}" papel="autor pedido de dados"/></dados></termoDeAutorizacao>''';
 
     return xml;
   }

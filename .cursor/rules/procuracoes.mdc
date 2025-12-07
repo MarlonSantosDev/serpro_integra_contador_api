@@ -7,12 +7,6 @@ alwaysApply: true
 
 # Cenários Procurações
 
-**IMPORTANTE**
-
-A chamada da API Trial é apenas para demonstração. As APIs disponíveis e suas respectivas URLs (endpoints) para consumo são disponibilizadas (através da documentação dos seus respectivos swaggers) na seção [Referência da API]().
-
-Na chamada da API Trial o parâmetro do tipo header jwt\_token não é obrigatório, apenas no contexto real de produção esse parâmetro é obrigatório. Saiba mais sobre o jwt\_token na seção [Como Autenticar na API]().
-
 ## Obter Procurações
 
 Esta simulação retorna as procurações eletrônicas entre um outorgante titular e seu respectivo procurador. Para cada procuração eletrônica encontrada, as seguintes informações são retornadas: quantidade de sistemas na procuração, nome do sistema e a data de expiração.

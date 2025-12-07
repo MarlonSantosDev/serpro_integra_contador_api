@@ -3,6 +3,7 @@
     "allow": [
       "Bash(dart analyze:*)",
       "Bash(dart run:*)",
+      "Bash(dart:*)",
       "Bash(dart compile exe example/main.dart -o example/main.exe)",
       "Bash(./main.exe:*)",
       "Bash(dart test:*)",
@@ -16,7 +17,20 @@
       "Bash(\"C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe\" version)",
       "Bash(\"C:\\Strawberry\\c\\bin\\openssl.exe\" version)",
       "Bash(dart pub deps:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(sed:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(xargs:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(head:*)",
+      "Bash(cat:*)",
+      "Bash(tail:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

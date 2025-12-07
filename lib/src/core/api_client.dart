@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.dart';
 import 'package:serpro_integra_contador_api/src/util/validacoes_utils.dart';
+import 'package:serpro_integra_contador_api/src/util/formatador_utils.dart';
 import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart';
 import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/model/cache_model.dart';
 import 'auth/auth_service.dart';
@@ -79,6 +79,25 @@ class ApiClient {
 
   /// Construtor padrão
   ApiClient();
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GETTERS PARA DADOS DE AUTENTICAÇÃO (usados pelos serviços)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Número do contratante (CNPJ) configurado na autenticação
+  String? get contratanteNumero => _authModel?.contratanteNumero;
+
+  /// Número do autor do pedido (CPF/CNPJ) configurado na autenticação
+  String? get autorPedidoDadosNumero => _authModel?.autorPedidoDadosNumero;
+
+  /// Caminho do certificado digital (se configurado)
+  String? get certificadoPath => _storedCredentials?.certPath;
+
+  /// Senha do certificado digital (se configurado)
+  String? get certificadoSenha => _storedCredentials?.certPassword;
+
+  /// Verifica se está autenticado
+  bool get isAutenticado => _authModel != null;
 
   /// Construtor com autenticação automática
   ///
@@ -263,26 +282,22 @@ class ApiClient {
           );
         }
 
-        if (senhaCertificado == null || senhaCertificado.trim().isEmpty) {
+        if (senhaCertificado == null) {
           throw _buildErrorResponse(
             mensagem: 'Senha do certificado não informada',
             status: 400,
-            resposta: 'Para ambiente de produção é necessário informar a senha do certificado digital.',
+            resposta:
+                'Para ambiente de produção é necessário informar a senha do certificado digital (use string vazia "" para certificados sem senha).',
           );
         }
       }
 
-      // 4. Se tiver certificado em Base64, converter para arquivo temporário ANTES de criar credenciais
-      String? certPathToUse = certificadoDigitalPath;
-      if (certificadoDigitalBase64 != null && certificadoDigitalBase64.trim().isNotEmpty) {
-        certPathToUse = await _saveCertificateFromBase64(certificadoDigitalBase64);
-      }
-
-      // 5. Criar credenciais (agora com o caminho do arquivo já definido)
+      // 4. Criar credenciais
       final credentials = AuthCredentials(
         consumerKey: consumerKey.trim(),
         consumerSecret: consumerSecret.trim(),
-        certPath: certPathToUse?.trim(),
+        certPath: certificadoDigitalPath?.trim(),
+        certBase64: certificadoDigitalBase64?.trim(),
         certPassword: senhaCertificado?.trim(),
         contratanteNumero: contratanteNumero.trim(),
         autorPedidoDadosNumero: autorPedidoDadosNumero.trim(),
@@ -292,12 +307,17 @@ class ApiClient {
       credentials.validate();
       _storedCredentials = credentials;
 
-      // 6. Inicializar HTTP adapter com mTLS
+      // 5. Inicializar HTTP adapter com mTLS (aceita Base64 diretamente - sem arquivo temporário)
       _httpAdapter = HttpClientAdapter();
 
-      await _httpAdapter!.configureMtls(certPathToUse, senhaCertificado, ambiente == 'producao');
+      await _httpAdapter!.configureMtlsUnified(
+        certBase64: certificadoDigitalBase64,
+        certPath: certificadoDigitalPath,
+        certPassword: senhaCertificado,
+        isProduction: ambiente == 'producao',
+      );
 
-      // 7. Inicializar serviço de autenticação
+      // 6. Inicializar serviço de autenticação
       _authService = AuthService(_httpAdapter!, ambiente);
 
       // 7. Executar autenticação
@@ -316,23 +336,6 @@ class ApiClient {
       throw _buildErrorResponse(mensagem: 'Erro de rede durante autenticação', status: 0, resposta: e.message);
     } catch (e) {
       throw _buildErrorResponse(mensagem: 'Erro inesperado durante autenticação', status: 500, resposta: e.toString());
-    }
-  }
-
-  /// Salva certificado em Base64 em arquivo temporário
-  Future<String> _saveCertificateFromBase64(String base64String) async {
-    try {
-      final bytes = base64.decode(base64String);
-      final tempDir = Directory.systemTemp;
-      final tempFile = File('${tempDir.path}/serpro_cert_${DateTime.now().millisecondsSinceEpoch}.p12');
-      await tempFile.writeAsBytes(bytes);
-      return tempFile.path;
-    } catch (e) {
-      throw _buildErrorResponse(
-        mensagem: 'Erro ao processar certificado Base64',
-        status: 400,
-        resposta: 'Não foi possível decodificar o certificado Base64. Verifique se o formato está correto.',
-      );
     }
   }
 
@@ -412,6 +415,7 @@ class ApiClient {
     final headers = <String, String>{
       'Authorization': 'Bearer ${_authModel!.accessToken}',
       'jwt_token': _authModel!.jwtToken,
+      'autenticar_procurador_token': '8cefba82-70f9-c449-5f45-3a261bbc9579',
       'Content-Type': 'application/json',
     };
 
@@ -430,7 +434,12 @@ class ApiClient {
 
     // Executar requisição HTTP POST
     final response = await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
-
+    //print("================================================");
+    //print("Endpoint: $_baseUrl$endpoint");
+    //print("headers: ${headers}");
+    //print("requestBody: ${json.encode(requestBody)}");
+    //print("responseBody: ${response.body}");
+    //print("================================================");
     // Verificar se a requisição foi bem-sucedida
     if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
@@ -459,6 +468,12 @@ class ApiClient {
         "mensagens": "Credenciais inválidas. Certifique-se de ter fornecido as credenciais de segurança corretas",
         "body": "Credenciais inválidas",
       });
+    } else if (response.statusCode == 304) {
+      final autenticar_procurador_token = response.headers['etag'].toString().replaceAll(':', '":"');
+      final expiresISO = FormatadorUtils.converterHttpExpiresParaISO(response.headers['expires']) ?? '';
+      final StringBody = "{$autenticar_procurador_token, \"data_hora_expiracao\":\"$expiresISO\"}";
+      final body = jsonDecode(StringBody);
+      return {"status": response.statusCode, "mensagens": "Resposta em cache (304 Not Modified)", "dados": body};
     } else {
       throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
     }

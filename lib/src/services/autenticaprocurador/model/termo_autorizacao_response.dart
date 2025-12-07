@@ -60,12 +60,41 @@ class TermoAutorizacaoResponse {
       }
     }
 
+    // Tratar resposta de cache (quando não há 'dados')
+    if (json['cacheado'] == true || json['dados'] == null || json['dados'].toString().isEmpty) {
+      // Resposta de cache (status 304) sem dados
+      return TermoAutorizacaoResponse(
+        status: int.tryParse(json['status']?.toString() ?? '304') ?? 304,
+        mensagens: mensagens.isNotEmpty
+            ? mensagens
+            : [MensagemNegocio(codigo: 'CACHE', texto: json['mensagem']?.toString() ?? 'Token em cache válido')],
+        dados: json['dados']?.toString(),
+        autenticarProcuradorToken: json['autenticar_procurador_token']?.toString(),
+        dataExpiracao: DateTime.tryParse(json['data_hora_expiracao']?.toString() ?? ''),
+        isCacheValido: true,
+      );
+    }
+
+    // Resposta normal com dados
+    String? token;
+    DateTime? dataExpiracao;
+
+    try {
+      final dadosObj = json['dados'] is String ? jsonDecode(json['dados']) : json['dados'];
+      token = dadosObj['autenticar_procurador_token']?.toString();
+      if (dadosObj['data_hora_expiracao'] != null) {
+        dataExpiracao = DateTime.tryParse(dadosObj['data_hora_expiracao'].toString());
+      }
+    } catch (e) {
+      // Se falhar ao parsear dados, apenas continuar sem eles
+    }
     return TermoAutorizacaoResponse(
-      status: int.parse(json['status'].toString()),
+      status: int.tryParse(json['status']?.toString() ?? '200') ?? 200,
       mensagens: mensagens,
       dados: json['dados']?.toString(),
-      autenticarProcuradorToken: jsonDecode(json['dados'])['autenticar_procurador_token']?.toString(),
-      dataExpiracao: DateTime.parse(jsonDecode(json['dados'])['data_hora_expiracao'].toString()),
+      autenticarProcuradorToken: token,
+      dataExpiracao: dataExpiracao,
+      isCacheValido: (json['status']) == 304 ? true : false,
     );
   }
 
@@ -112,7 +141,7 @@ class TermoAutorizacaoResponse {
       'dados': dados,
       'autenticar_procurador_token': autenticarProcuradorToken,
       'data_expiracao': dataExpiracao?.toIso8601String(),
-      'is_cache_valido': isCacheValido,
+      'is_cache_valido': status == 304 ? true : false,
     };
   }
 

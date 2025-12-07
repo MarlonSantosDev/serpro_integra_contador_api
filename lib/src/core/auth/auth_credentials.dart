@@ -2,6 +2,10 @@ import '../../util/validacoes_utils.dart';
 import 'auth_exceptions.dart';
 
 /// Encapsula e valida as credenciais de autenticação da API SERPRO
+///
+/// Suporta certificados via:
+/// - **certBase64**: Certificado em Base64 (recomendado - mais portátil)
+/// - **certPath**: Caminho do arquivo P12/PFX (alternativa)
 class AuthCredentials {
   /// Consumer Key OAuth2 fornecido pelo SERPRO
   final String consumerKey;
@@ -10,8 +14,13 @@ class AuthCredentials {
   final String consumerSecret;
 
   /// Caminho para o arquivo de certificado digital (P12/PFX)
-  /// Obrigatório em ambiente de produção
+  /// Obrigatório em ambiente de produção se certBase64 não for fornecido
   final String? certPath;
+
+  /// Certificado digital em Base64 (P12/PFX)
+  /// Obrigatório em ambiente de produção se certPath não for fornecido
+  /// Recomendado por ser mais portátil e não depender do sistema de arquivos
+  final String? certBase64;
 
   /// Senha do certificado digital
   /// Obrigatória em ambiente de produção
@@ -30,6 +39,7 @@ class AuthCredentials {
     required this.consumerKey,
     required this.consumerSecret,
     this.certPath,
+    this.certBase64,
     this.certPassword,
     required this.contratanteNumero,
     required this.autorPedidoDadosNumero,
@@ -65,17 +75,33 @@ class AuthCredentials {
       throw ArgumentError('Ambiente deve ser "trial" ou "producao"');
     }
 
-    // Produção requer certificados
-    if (isProduction && !requiresMtls) {
+    // Produção requer certificados (via Base64 ou arquivo)
+    if (isProduction && !hasCertificate) {
       throw CertificateException(
-        'Certificado e senha são obrigatórios em ambiente de produção',
+        'Certificado é obrigatório em ambiente de produção. '
+        'Forneça certBase64 (recomendado) ou certPath.',
         reason: CertificateErrorReason.requiredForProduction,
+      );
+    }
+
+    // Se tem certificado, senha é obrigatória
+    if (isProduction && hasCertificate && (certPassword == null || certPassword!.isEmpty)) {
+      throw CertificateException(
+        'Senha do certificado é obrigatória em ambiente de produção',
+        reason: CertificateErrorReason.invalidPassword,
       );
     }
   }
 
+  /// Verifica se tem certificado disponível (Base64 ou arquivo)
+  bool get hasCertificate {
+    final hasBase64 = certBase64 != null && certBase64!.trim().isNotEmpty;
+    final hasPath = certPath != null && certPath!.trim().isNotEmpty;
+    return hasBase64 || hasPath;
+  }
+
   /// Verifica se mTLS está configurado (certificado e senha fornecidos)
-  bool get requiresMtls => certPath != null && certPassword != null;
+  bool get requiresMtls => hasCertificate && certPassword != null;
 
   /// Verifica se está em ambiente de produção
   bool get isProduction => ambiente == 'producao';
@@ -89,7 +115,8 @@ class AuthCredentials {
         'ambiente: $ambiente, '
         'contratante: $contratanteNumero, '
         'autor: $autorPedidoDadosNumero, '
-        'hasCertificate: $requiresMtls'
+        'hasCertificate: $hasCertificate, '
+        'certSource: ${certBase64 != null ? "base64" : certPath != null ? "file" : "none"}'
         ')';
   }
 }
