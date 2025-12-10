@@ -67,3 +67,5 @@ markdown/
 *.pem
 **/certificado/
 **/certificados/
+/example/teste.dart
+/example/teste2.dart

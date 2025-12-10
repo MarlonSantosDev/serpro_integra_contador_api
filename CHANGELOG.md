@@ -52,3 +52,7 @@
 [1.1.2] - 2025-12-09
 - Ajustes e correções no código.
 - Adicionado autenticação com procurador.
+[1.1.3] - 2025-12-10
+- Ajustes e correções no código.
+- Removido cache de tokens do procurador.
+- Adicionado método para limpar cache de tokens do procurador.

@@ -8,7 +8,6 @@ import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart'
 import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/autenticaprocurador_service.dart';
 import 'auth/auth_service.dart';
 import 'auth/auth_credentials.dart';
-import 'auth/auth_token_cache.dart';
 import 'auth/http_client_adapter.dart';
 import 'auth/auth_exceptions.dart';
 
@@ -70,7 +69,6 @@ class ApiClient {
 
   /// Serviços de autenticação
   AuthService? _authService;
-  AuthTokenCache? _tokenCache;
   HttpClientAdapter? _httpAdapter;
   AuthCredentials? _storedCredentials;
 
@@ -221,6 +219,16 @@ class ApiClient {
     String ambiente = 'trial',
   }) async {
     try {
+      // 0. Verificar se é uma nova autenticação com dados diferentes
+      final novoContratante = contratanteNumero.trim();
+      final novoAutor = autorPedidoDadosNumero.trim();
+
+      if (_storedCredentials != null &&
+          (_storedCredentials!.contratanteNumero != novoContratante || _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
+        // Limpar dados da autenticação anterior para evitar conflitos
+        clearAuthentication();
+      }
+
       // 1. Validar ambiente
       if (ambiente != 'trial' && ambiente != 'producao') {
         throw _buildErrorResponse(
@@ -320,9 +328,7 @@ class ApiClient {
       // 7. Executar autenticação
       _authModel = await _authService!.authenticate(credentials);
 
-      // 8. Inicializar cache de tokens
-      _tokenCache = AuthTokenCache();
-      _tokenCache!.saveToken(_authModel!);
+      // Token já está armazenado em _authModel
     } on InvalidCredentialsException catch (e) {
       throw _buildErrorResponse(mensagem: e.message, status: 400, resposta: 'Credenciais inválidas');
     } on CertificateException catch (e) {
@@ -377,6 +383,9 @@ class ApiClient {
     String? certificadoProcuradorBase64,
     String? certificadoProcuradorPassword,
   }) async {
+    // Limpar dados da autenticação anterior para evitar conflitos
+    clearAuthentication();
+
     // Validações dos parâmetros do procurador (se fornecidos)
     if (contratanteNome != null || autorNome != null) {
       // Se forneceu um parâmetro do procurador, todos os obrigatórios devem estar presentes
@@ -477,11 +486,9 @@ class ApiClient {
         try {
           // Re-autenticar automaticamente
           _authModel = await _authService!.authenticate(_storedCredentials!);
-          _tokenCache?.saveToken(_authModel!);
         } catch (e) {
           // Se falhar a re-autenticação, limpar tudo
           _authModel = null;
-          _tokenCache?.invalidate();
           throw Exception(
             'Token expirado e não foi possível renovar automaticamente. '
             'Erro: $e. Por favor, chame authenticate() novamente.',
@@ -490,7 +497,6 @@ class ApiClient {
       } else {
         // Não temos credenciais para re-autenticar
         _authModel = null;
-        _tokenCache?.invalidate();
         throw Exception('Token expirado. Por favor, chame authenticate() novamente.');
       }
     }
@@ -727,10 +733,8 @@ class ApiClient {
 
     try {
       _authModel = await _authService!.authenticate(_storedCredentials!);
-      _tokenCache?.saveToken(_authModel!);
     } catch (e) {
       _authModel = null;
-      _tokenCache?.invalidate();
       rethrow;
     }
   }
@@ -748,10 +752,12 @@ class ApiClient {
   /// ```
   void clearAuthentication() {
     _authModel = null;
-    _tokenCache?.invalidate();
     _httpAdapter?.dispose();
     _httpAdapter = null;
     _authService = null;
     _storedCredentials = null;
+
+    // Limpar cache estático do serviço de procurador
+    AutenticaProcuradorService.limparCache();
   }
 }
