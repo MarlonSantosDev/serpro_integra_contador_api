@@ -45,13 +45,11 @@ class DefisService {
   /// [declaracaoData] Dados da declaração incluindo ano, empresa, situação especial, etc.
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
-  /// [procuradorToken] Token de procurador (opcional)
   Future<TransmitirDeclaracaoResponse> transmitirDeclaracao({
     required String contribuinteNumero,
     required TransmitirDeclaracaoRequest declaracaoData,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
-    String? procuradorToken,
   }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
@@ -63,7 +61,6 @@ class DefisService {
       request,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
-      procuradorToken: procuradorToken,
     );
     return TransmitirDeclaracaoResponse.fromJson(response);
   }
@@ -73,12 +70,10 @@ class DefisService {
   /// [contribuinteNumero] CNPJ do contribuinte
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
-  /// [procuradorToken] Token de procurador (opcional)
   Future<ConsultarDeclaracoesResponse> consultarDeclaracoesTransmitidas({
     required String contribuinteNumero,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
-    String? procuradorToken,
   }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
@@ -95,7 +90,6 @@ class DefisService {
       request,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
-      procuradorToken: procuradorToken,
     );
     return ConsultarDeclaracoesResponse.fromJson(response);
   }
@@ -106,13 +100,11 @@ class DefisService {
   /// [ano] Ano calendário que se deseja consultar a última declaração transmitida
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
-  /// [procuradorToken] Token de procurador (opcional)
   Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracao({
     required String contribuinteNumero,
     required int ano,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
-    String? procuradorToken,
   }) async {
     final consultaRequest = ConsultarUltimaDeclaracaoRequest(ano: ano);
 
@@ -131,7 +123,6 @@ class DefisService {
       request,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
-      procuradorToken: procuradorToken,
     );
     return ConsultarUltimaDeclaracaoResponse.fromJson(response);
   }
@@ -142,13 +133,12 @@ class DefisService {
   /// [idDefis] ID DEFIS da declaração específica
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
-  /// [procuradorToken] Token de procurador (opcional)
+
   Future<ConsultarDeclaracaoEspecificaResponse> consultarDeclaracaoEspecifica({
     required String contribuinteNumero,
     required String idDefis,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
-    String? procuradorToken,
   }) async {
     final consultaRequest = ConsultarDeclaracaoEspecificaRequest(idDefis: idDefis);
 
@@ -162,7 +152,6 @@ class DefisService {
       request,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
-      procuradorToken: procuradorToken,
     );
     return ConsultarDeclaracaoEspecificaResponse.fromJson(response);
   }

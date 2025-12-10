@@ -49,3 +49,6 @@
   - Assinatura XML simulada para desenvolvimento sem certificado
   - Funciona apenas com ambiente Trial do SERPRO
   - Facilita testes de integração
+[1.1.2] - 2025-12-09
+- Ajustes e correções no código.
+- Adicionado autenticação com procurador.

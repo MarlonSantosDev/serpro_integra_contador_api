@@ -5,7 +5,7 @@ import 'package:serpro_integra_contador_api/src/core/auth/authentication_model.d
 import 'package:serpro_integra_contador_api/src/util/validacoes_utils.dart';
 import 'package:serpro_integra_contador_api/src/util/formatador_utils.dart';
 import 'package:serpro_integra_contador_api/src/util/request_tag_generator.dart';
-import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/model/cache_model.dart';
+import 'package:serpro_integra_contador_api/src/services/autenticaprocurador/autenticaprocurador_service.dart';
 import 'auth/auth_service.dart';
 import 'auth/auth_credentials.dart';
 import 'auth/auth_token_cache.dart';
@@ -67,9 +67,6 @@ class ApiClient {
 
   /// Modelo de autenticação contendo tokens e dados do contratante/autor
   AuthenticationModel? _authModel;
-
-  /// Cache do token de procurador para evitar reautenticações desnecessárias
-  CacheModel? _procuradorCache;
 
   /// Serviços de autenticação
   AuthService? _authService;
@@ -339,6 +336,105 @@ class ApiClient {
     }
   }
 
+  /// **Autenticação Unificada**: OAuth2 + Procurador em um único passo
+  ///
+  /// Este método combina a autenticação OAuth2 básica com a autenticação do procurador
+  /// em uma única chamada, facilitando o uso quando ambas são necessárias.
+  ///
+  /// [consumerKey]: Chave do consumidor fornecida pelo SERPRO
+  /// [consumerSecret]: Segredo do consumidor forneida pelo SERPRO
+  /// [contratanteNumero]: CNPJ da empresa contratante
+  /// [autorPedidoDadosNumero]: CPF/CNPJ do autor do pedido
+  /// [certificadoDigitalBase64]: Certificado digital em Base64 (opcional)
+  /// [certificadoDigitalPath]: Caminho para o arquivo do certificado digital (opcional)
+  /// [senhaCertificado]: Senha do certificado digital (opcional)
+  /// [ambiente]: Ambiente de execução ('trial' ou 'producao')
+  ///
+  /// Parâmetros do Procurador (se fornecidos, faz autenticação completa):
+  /// [contratanteNome]: Nome da empresa contratante
+  /// [autorNome]: Nome do autor da procuração
+  /// [contribuinteNumero]: CNPJ do contribuinte (se diferente do contratante)
+  /// [autorNumero]: CPF/CNPJ do autor (se diferente do autorPedidoDadosNumero)
+  /// [certificadoProcuradorPath]: Caminho do certificado do procurador
+  /// [certificadoProcuradorBase64]: Certificado do procurador em Base64
+  /// [certificadoProcuradorPassword]: Senha do certificado do procurador
+  Future<void> authenticateWithProcurador({
+    required String consumerKey,
+    required String consumerSecret,
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+    String? certificadoDigitalBase64,
+    String? certificadoDigitalPath,
+    String? senhaCertificado,
+    String ambiente = 'trial',
+
+    // Parâmetros do Procurador (se fornecidos, faz autenticação completa)
+    String? contratanteNome,
+    String? autorNome,
+    String? contribuinteNumero,
+    String? autorNumero,
+    String? certificadoProcuradorPath,
+    String? certificadoProcuradorBase64,
+    String? certificadoProcuradorPassword,
+  }) async {
+    // Validações dos parâmetros do procurador (se fornecidos)
+    if (contratanteNome != null || autorNome != null) {
+      // Se forneceu um parâmetro do procurador, todos os obrigatórios devem estar presentes
+      if (contratanteNome == null || contratanteNome.trim().isEmpty) {
+        throw Exception('Parâmetro obrigatório ausente: contratanteNome');
+      }
+      if (autorNome == null || autorNome.trim().isEmpty) {
+        throw Exception('Parâmetro obrigatório ausente: autorNome');
+      }
+
+      // Validar se há pelo menos um certificado disponível
+      final hasCertificadoDigital = certificadoDigitalPath != null || certificadoDigitalBase64 != null;
+      final hasCertificadoProcurador = certificadoProcuradorPath != null || certificadoProcuradorBase64 != null;
+
+      if (!hasCertificadoDigital && !hasCertificadoProcurador) {
+        throw Exception('Certificado digital necessário. Forneça certificadoDigitalPath/Base64 ou certificadoProcuradorPath/Base64');
+      }
+    }
+
+    // 1. Fazer autenticação OAuth2 normal
+    await authenticate(
+      consumerKey: consumerKey,
+      consumerSecret: consumerSecret,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+      certificadoDigitalBase64: certificadoDigitalBase64,
+      certificadoDigitalPath: certificadoDigitalPath,
+      senhaCertificado: senhaCertificado,
+      ambiente: ambiente,
+    );
+
+    // 2. Se parâmetros do procurador foram fornecidos, fazer autenticação do procurador
+    if (contratanteNome != null && autorNome != null) {
+      // Validar se a autenticação OAuth2 foi bem-sucedida
+      if (_authModel == null) {
+        throw Exception('Falha na autenticação OAuth2. Não é possível prosseguir com a autenticação do procurador.');
+      }
+      final service = AutenticaProcuradorService(this);
+      final response = await service.autenticarProcurador(
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorNome: autorNome,
+        contribuinteNumero: contribuinteNumero ?? contratanteNumero,
+        autorNumero: autorNumero ?? autorPedidoDadosNumero,
+        certificadoPath: certificadoProcuradorPath ?? certificadoDigitalPath,
+        certificadoBase64: certificadoProcuradorBase64,
+        certificadoPassword: certificadoProcuradorPassword ?? senhaCertificado,
+      );
+
+      if (!response.sucesso) {
+        throw Exception('Falha na autenticação do procurador.: ${response.mensagemPrincipal}');
+      }
+
+      // Atualizar o _authModel com o token do procurador
+      _updateProcuradorToken(response.autenticarProcuradorToken ?? '');
+    }
+  }
+
   /// Constrói resposta de erro padronizada em formato JSON
   Exception _buildErrorResponse({required String mensagem, required int status, required String resposta}) {
     final errorJson = {'mensagem': mensagem, 'status': status, 'resposta': resposta};
@@ -401,7 +497,10 @@ class ApiClient {
 
     // Usar dados customizados se fornecidos, senão usar os dados padrão
     final finalContratanteNumero = contratanteNumero ?? _authModel!.contratanteNumero;
-    final finalAutorPedidoDadosNumero = autorPedidoDadosNumero ?? _authModel!.autorPedidoDadosNumero;
+
+    // Quando há token de procurador, o autorPedidoDadosNumero deve ser o contribuinteNumero
+    final finalAutorPedidoDadosNumero =
+        autorPedidoDadosNumero ?? (hasProcuradorToken ? request.contribuinteNumero : _authModel!.autorPedidoDadosNumero);
 
     // Criar o JSON completo usando os dados de autenticação
     final requestBody = request.toJsonWithAuth(
@@ -415,13 +514,12 @@ class ApiClient {
     final headers = <String, String>{
       'Authorization': 'Bearer ${_authModel!.accessToken}',
       'jwt_token': _authModel!.jwtToken,
-      'autenticar_procurador_token': '8cefba82-70f9-c449-5f45-3a261bbc9579',
       'Content-Type': 'application/json',
     };
 
-    // Adicionar token de procurador se fornecido
-    if (procuradorToken != null && procuradorToken.isNotEmpty) {
-      headers['autenticar_procurador_token'] = procuradorToken;
+    // Adicionar token de procurador (sempre do authModel, parâmetro ignorado)
+    if (_authModel != null && _authModel!.procuradorToken.isNotEmpty) {
+      headers['autenticar_procurador_token'] = _authModel!.procuradorToken;
     }
 
     // Gerar e adicionar identificador de requisição
@@ -519,14 +617,10 @@ class ApiClient {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
-      // Salvar token de procurador em cache
+      // Salvar token de procurador no authModel
       if (responseBody['autenticar_procurador_token'] != null) {
-        _procuradorCache = CacheModel.fromResponse(
-          token: responseBody['autenticar_procurador_token'],
-          headers: response.headers,
-          contratanteNumero: contratanteNumero,
-          autorPedidoDadosNumero: autorPedidoDadosNumero,
-        );
+        // Atualizar o _authModel com o token do procurador
+        _updateProcuradorToken(responseBody['autenticar_procurador_token']);
       }
 
       return responseBody;
@@ -535,40 +629,33 @@ class ApiClient {
     }
   }
 
-  /// Verifica se existe token de procurador válido em cache
-  bool get hasProcuradorToken => _procuradorCache?.isTokenValido ?? false;
+  /// Verifica se existe token de procurador válido no authModel
+  bool get hasProcuradorToken => _authModel?.procuradorToken.isNotEmpty ?? false;
 
-  /// Obtém token de procurador do cache
-  String? get procuradorToken => _procuradorCache?.token;
+  /// Obtém token de procurador do authModel
+  String? get procuradorToken => _authModel?.procuradorToken;
 
-  /// Define token de procurador manualmente
-  void setProcuradorToken(String token, {required String contratanteNumero, required String autorPedidoDadosNumero}) {
-    _procuradorCache = CacheModel(
-      token: token,
-      dataCriacao: DateTime.now(),
-      dataExpiracao: DateTime.now().add(const Duration(hours: 24)),
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+  /// Atualiza o token de procurador no authModel (usado internamente e pelos services)
+  void updateProcuradorToken(String procuradorToken) {
+    _updateProcuradorToken(procuradorToken);
   }
 
-  /// Limpa cache de procurador
-  void clearProcuradorCache() {
-    _procuradorCache = null;
-  }
-
-  /// Obtém informações do cache de procurador
-  Map<String, dynamic>? get procuradorCacheInfo {
-    if (_procuradorCache == null) return null;
-
-    return {
-      'token': _procuradorCache!.token.substring(0, 8) + '...',
-      'is_valido': _procuradorCache!.isTokenValido,
-      'expira_em_breve': _procuradorCache!.expiraEmBreve,
-      'tempo_restante_horas': _procuradorCache!.tempoRestante.inHours,
-      'contratante_numero': _procuradorCache!.contratanteNumero,
-      'autor_pedido_dados_numero': _procuradorCache!.autorPedidoDadosNumero,
-    };
+  /// Atualiza o token de procurador no authModel (usado internamente)
+  void _updateProcuradorToken(String procuradorToken) {
+    if (_authModel != null) {
+      _authModel = AuthenticationModel(
+        accessToken: _authModel!.accessToken,
+        jwtToken: _authModel!.jwtToken,
+        expiresIn: _authModel!.expiresIn,
+        contratanteNumero: _authModel!.contratanteNumero,
+        autorPedidoDadosNumero: _authModel!.autorPedidoDadosNumero,
+        tokenCreatedAt: _authModel!.tokenCreatedAt,
+        tokenType: _authModel!.tokenType,
+        scope: _authModel!.scope,
+        fromCache: _authModel!.fromCache,
+        procuradorToken: procuradorToken,
+      );
+    }
   }
 
   /// Verifica se o cliente está autenticado
@@ -666,6 +753,5 @@ class ApiClient {
     _httpAdapter = null;
     _authService = null;
     _storedCredentials = null;
-    clearProcuradorCache();
   }
 }

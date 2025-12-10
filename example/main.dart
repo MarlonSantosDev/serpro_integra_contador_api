@@ -11,8 +11,8 @@ void main() async {
     consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e', // Substitua pelo seu Consumer Secret
     certificadoDigitalPath: 'certificado.pfx', // Caminho para seu certificado
     senhaCertificado: '', // Senha do certificado
-    contratanteNumero: '00000000000100', // CNPJ da empresa que contratou o serviço na Loja Serpro
-    autorPedidoDadosNumero: '00000000000100', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
+    contratanteNumero: '99999999999999', // CNPJ da empresa que contratou o serviço na Loja Serpro
+    autorPedidoDadosNumero: '99999999999999', // CPF/CNPJ do autor da requisição (pode ser procurador/contador)
   );
 
   // await AutenticaProcurador(apiClient);

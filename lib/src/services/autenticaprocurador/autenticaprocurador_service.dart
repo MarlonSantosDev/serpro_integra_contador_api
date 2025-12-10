@@ -288,10 +288,11 @@ class AutenticaProcuradorService {
         );
       }
 
-      // Se recebeu token novo, salvar em cache
+      // Se recebeu token novo, salvar em cache e no authModel
       if (resultado.sucesso && resultado.autenticarProcuradorToken != null) {
         _ultimoTokenCache = resultado;
-        print('💾 Token salvo em cache local');
+        _apiClient.updateProcuradorToken(resultado.autenticarProcuradorToken!);
+        print('💾 Token salvo em cache local e authModel');
       }
 
       // Verificar erros específicos da API

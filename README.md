@@ -7,8 +7,10 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 
 ## 🚀 Características Principais
 
-- **Autenticação automática** com certificados cliente (mTLS)
-- **Cache inteligente** de tokens de procurador
+- **Autenticação automática** com certificados cliente (mTLS nativo)
+- **Assinatura XML digital** completa com RSA-SHA256 para autenticação de procurador
+- **Cache inteligente** de tokens de procurador com suporte HTTP 304
+- **Suporte multiplataforma** completo: Android, iOS, Web, Desktop, Windows
 - **Validação automática** de documentos (CPF/CNPJ) com utilitários centralizados
 - **Tratamento de erros** padronizado e robusto
 - **Suporte completo** a procurações eletrônicas
@@ -16,8 +18,9 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 - **Flexibilidade de contratante e autor do pedido**: Todos os serviços suportam parâmetros opcionais `contratanteNumero` e `autorPedidoDadosNumero`
 - **Documentação completa** com exemplos práticos e anotações `@formatador_utils` e `@validacoes_utils`
 - **Suporte a múltiplos ambientes** (trial e produção)
-- **Utilitários centralizados** para validações e formatação
+- **Utilitários centralizados** para validações, formatação e manipulação de arquivos
 - **Exemplos completos** para todos os serviços com entrada e saída detalhadas
+- **Catálogo de serviços** integrado para mapeamento de códigos funcionais
 
 ## 📋 Serviços Disponíveis
 
@@ -54,6 +57,7 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 ### 🏠 Serviços Especiais
 - **DTE**: Domicílio Tributário Eletrônico
 - **PagtoWeb**: Consulta de pagamentos e emissão de comprovantes
+- **Regime Apuração**: Gestão do regime de apuração (Competência/Caixa) do Simples Nacional
 
 ## 🔧 Instalação
 
@@ -61,7 +65,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^1.0.2
+  serpro_integra_contador_api: ^1.1.2
 ```
 
 Execute:
@@ -211,6 +215,33 @@ final periodoFormatado = FormatadorUtils.formatPeriodFromString('202401');
 // Resultado: Janeiro/2024
 ```
 
+### Utilitários de Arquivo
+
+```dart
+// Salvar PDF em base64 no sistema de arquivos
+final sucesso = await ArquivoUtils.salvarArquivo(
+  pdfBase64,
+  'ccmei_certificado.pdf'
+);
+// Resultado: true (arquivo salvo em arquivos/pdf/ccmei_certificado.pdf)
+```
+
+### Catálogo de Serviços
+
+```dart
+// Obter código funcional de um serviço
+final codigoFuncional = CatalogoServicosUtils.getFunctionCode('TRANSDECLARACAO11');
+// Resultado: '01'
+
+// Verificar se serviço existe no catálogo
+final existe = CatalogoServicosUtils.isServiceInCatalog('TRANSDECLARACAO11');
+// Resultado: true
+
+// Obter todos os serviços disponíveis
+final servicos = CatalogoServicosUtils.getAllServices();
+// Resultado: ['TRANSDECLARACAO11', 'GERARDAS12', ...]
+```
+
 ## 📚 Documentação Completa
 
 ### Documentação dos Serviços
@@ -233,6 +264,7 @@ final periodoFormatado = FormatadorUtils.formatPeriodFromString('202401');
 - [PGDASD Service](doc/pgdasd_service.md) - Pagamento de DAS por Débito Direto Autorizado
 - [PGMEI Service](doc/pgmei_service.md) - Pagamento de DAS do MEI
 - [Procurações Service](doc/procuracoes_service.md) - Gestão de procurações eletrônicas
+- [Regime Apuração Service](doc/regime_apuracao_service.md) - Gestão do regime de apuração do Simples Nacional
 - [RELPMEI Service](doc/relpmei_service.md) - Relatório de Pagamentos do MEI
 - [RELPSN Service](doc/relpsn_service.md) - Relatório de Pagamentos do Simples Nacional
 - [SICALC Service](doc/sicalc_service.md) - Sistema de Cálculo de Impostos
@@ -389,11 +421,31 @@ final apiClient = ApiClient(
 
 ## 🔒 Segurança
 
+### Autenticação mTLS Nativa
+
+A partir da versão 1.1.0, o package utiliza autenticação mTLS nativa do Dart através da classe `SecurityContext`, garantindo:
+
+- **Compatibilidade multiplataforma**: Android, iOS, Web, Desktop e Windows
+- **Suporte a algoritmos legados**: RC2-40-CBC, 3DES, etc. (comuns em certificados antigos)
+- **Processamento nativo**: Sem dependências externas para criptografia
+- **Validação automática**: Certificados Base64 são processados corretamente
+
+### Assinatura XML Digital
+
+Implementação completa de XMLDSig (W3C) para autenticação de procurador:
+
+- **RSA-SHA256**: Algoritmo de assinatura digital padrão
+- **Certificados ICP-Brasil**: Suporte completo a e-CPF e e-CNPJ
+- **Validação automática**: Verificação de validade e cadeia de certificação
+- **Modo Trial**: Assinatura simulada para desenvolvimento sem certificado
+
 ### Certificados Digitais
 
 O package suporta certificados ICP-Brasil nos formatos:
 - **A1**: Arquivo .p12/.pfx
-- **A3**: Token/cartão inteligente
+- **A3**: Token/cartão inteligente (através do sistema operacional)
+- **PEM**: Certificados em formato texto (PKCS#1 e PKCS#8)
+- **Base64**: Certificados codificados para aplicações Web/Mobile
 
 ### Validação de Documentos
 
@@ -568,11 +620,6 @@ final apiClient = ApiClient(
 
 ### Próximas Funcionalidades
 
-- [ ] Suporte a certificados A3 nativos
-- [ ] Cache persistente de tokens
-- [ ] Retry automático em falhas temporárias
-- [ ] Métricas de performance
-- [ ] Suporte a webhooks
 - [ ] Interface gráfica para testes
 
 

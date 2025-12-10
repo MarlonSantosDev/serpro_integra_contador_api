@@ -32,6 +32,8 @@ class AuthenticationModel {
   /// Indica se a autenticação foi recuperada do cache
   final bool fromCache;
 
+  final String procuradorToken;
+
   AuthenticationModel({
     required this.accessToken,
     required this.jwtToken,
@@ -42,6 +44,7 @@ class AuthenticationModel {
     this.tokenType = 'Bearer',
     this.scope = '',
     this.fromCache = false,
+    this.procuradorToken = '',
   }) : tokenCreatedAt = tokenCreatedAt ?? DateTime.now(),
        contratanteTipo = ValidacoesUtils.detectDocumentType(contratanteNumero),
        autorPedidoDadosTipo = ValidacoesUtils.detectDocumentType(autorPedidoDadosNumero);
@@ -82,6 +85,7 @@ class AuthenticationModel {
       contratanteNumero: json['contratante_numero'] as String,
       autorPedidoDadosNumero: json['autor_pedido_dados_numero'] as String,
       tokenCreatedAt: json['token_created_at'] != null ? DateTime.parse(json['token_created_at'] as String) : DateTime.now(),
+      procuradorToken: json['procurador_token'] as String? ?? '',
       fromCache: json['from_cache'] as bool? ?? true, // Se veio do JSON, provavelmente é do cache
     );
   }
@@ -99,6 +103,7 @@ class AuthenticationModel {
       'contratante_tipo': contratanteTipo,
       'autor_pedido_dados_numero': autorPedidoDadosNumero,
       'autor_pedido_dados_tipo': autorPedidoDadosTipo,
+      'procurador_token': procuradorToken,
       'from_cache': fromCache,
     };
   }
@@ -127,6 +132,7 @@ class AuthenticationModel {
       'origem': fromCache ? 'cache' : 'nova autenticação',
       'contratante': {'numero': contratanteNumero, 'tipo': contratanteTipo == 1 ? 'CPF' : 'CNPJ'},
       'autorPedidoDados': {'numero': autorPedidoDadosNumero, 'tipo': autorPedidoDadosTipo == 1 ? 'CPF' : 'CNPJ'},
+      'procurador_token': procuradorToken,
     });
   }
 
