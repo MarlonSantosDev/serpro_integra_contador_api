@@ -16,8 +16,8 @@ void main() async {
   );
 
   // await AutenticaProcurador(apiClient);
-  await CaixaPostal(apiClient);
-  //await Pgdasd(apiClient);
+  //await CaixaPostal(apiClient);
+  await Pgdasd(apiClient);
 
   // Exemplo de uso dos serviços
   // await AutenticaProcurador(apiClient);
