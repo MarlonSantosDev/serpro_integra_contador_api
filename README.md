@@ -8,8 +8,8 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 ## 🚀 Características Principais
 
 - **Autenticação automática** com certificados cliente (mTLS nativo)
+- **Autenticação unificada** (OAuth2 + Procurador) via `authenticateWithProcurador`
 - **Assinatura XML digital** completa com RSA-SHA256 para autenticação de procurador
-- **Cache inteligente** de tokens de procurador com suporte HTTP 304
 - **Suporte multiplataforma** completo: Android, iOS, Web, Desktop, Windows
 - **Validação automática** de documentos (CPF/CNPJ) com utilitários centralizados
 - **Tratamento de erros** padronizado e robusto
@@ -21,6 +21,12 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 - **Utilitários centralizados** para validações, formatação e manipulação de arquivos
 - **Exemplos completos** para todos os serviços com entrada e saída detalhadas
 - **Catálogo de serviços** integrado para mapeamento de códigos funcionais
+
+## 🆕 O que mudou na 1.1.3
+
+- Método `ApiClient.authenticateWithProcurador` combina OAuth2 e token de procurador em uma única chamada.
+- `AutenticaProcuradorService.limparCache()` permite limpar o cache em memória do token ao trocar de credenciais.
+- Ajustes gerais e correções de fluxo de autenticação.
 
 ## 📋 Serviços Disponíveis
 
@@ -65,7 +71,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^1.1.2
+  serpro_integra_contador_api: ^1.1.3
 ```
 
 Execute:
@@ -76,7 +82,7 @@ flutter pub get
 
 ## 💡 Uso Básico
 
-### Autenticação
+### Autenticação OAuth2
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -89,12 +95,44 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     contratanteNumero: '12345678000100',
     autorPedidoDadosNumero: '12345678000100',
     ambiente: 'trial', // ou 'producao'
   );
+}
+```
+
+### Autenticação unificada (OAuth2 + Procurador)
+
+Use um único passo para obter o token OAuth2 e o token de procurador. Se não precisar de procuração, basta omitir os parâmetros do procurador e o método executa apenas a autenticação básica.
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  final apiClient = ApiClient();
+
+  await apiClient.authenticateWithProcurador(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    contratanteNumero: '12345678000100',
+    autorPedidoDadosNumero: '12345678000100',
+    certificadoDigitalPath: 'contratante.pfx',
+    senhaCertificado: 'senha_contratante',
+    ambiente: 'producao', // ou 'trial'
+    // Dados do procurador (opcionais, obrigatórios para gerar token de procurador)
+    contratanteNome: 'Minha Empresa de Contabilidade',
+    autorNome: 'Nome do Procurador',
+    contribuinteNumero: '12345678000100',
+    autorNumero: '12345678901',
+    certificadoProcuradorPath: 'procurador.pfx',
+    certificadoProcuradorPassword: 'senha_procurador',
+  );
+
+  // Token do procurador fica disponível automaticamente no ApiClient
+  print('Token procurador ativo: ${apiClient.hasProcuradorToken}');
 }
 ```
 
@@ -283,8 +321,8 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     ambiente: 'trial',
   );
 
@@ -321,8 +359,8 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     ambiente: 'trial',
   );
 
@@ -357,8 +395,8 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     ambiente: 'trial',
   );
 
@@ -387,8 +425,8 @@ final apiClient = ApiClient();
 await apiClient.authenticate(
   consumerKey: 'seu_consumer_key',
   consumerSecret: 'seu_consumer_secret',
-  certPath: 'caminho/para/certificado.p12',
-  certPassword: 'senha_do_certificado',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
   ambiente: 'trial', // Usa URL de trial
 );
 
@@ -396,8 +434,8 @@ await apiClient.authenticate(
 await apiClient.authenticate(
   consumerKey: 'seu_consumer_key',
   consumerSecret: 'seu_consumer_secret',
-  certPath: 'caminho/para/certificado.p12',
-  certPassword: 'senha_do_certificado',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
   ambiente: 'producao', // Usa URL de produção
 );
 ```
@@ -550,22 +588,14 @@ void main() {
 
 ## 🚀 Performance e Otimização
 
-### Cache de Tokens
-
-O package implementa cache automático de tokens de procurador:
+### Gerenciamento de tokens
 
 ```dart
-// Verificar cache antes de autenticar
-final cache = await autenticaProcuradorService.verificarCacheToken(
-  contratanteNumero: '12345678000195',
-  autorPedidoDadosNumero: '98765432000100',
-);
+// Status do token OAuth2 (expiração, ambiente, mTLS)
+print(apiClient.authTokenInfo);
 
-if (cache != null && cache.isTokenValido) {
-  print('Token válido encontrado no cache');
-} else {
-  print('Necessário obter novo token');
-}
+// Limpar cache em memória do token de procurador ao trocar de usuário
+AutenticaProcuradorService.limparCache();
 ```
 
 ### Requisições em Lote

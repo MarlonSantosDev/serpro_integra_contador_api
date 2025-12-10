@@ -1,207 +1,254 @@
-# Guia de Implementação e Uso - SERPRO Integra Contador API
+# Guia de implementação – authenticateWithProcurador, PGDAS e PGMEI
 
-Este documento serve como guia para entender a estrutura do pacote `serpro_integra_contador_api` e como implementar ou utilizar seus serviços. Ele foi desenhado para ser consumido por IAs ou desenvolvedores que desejam estender ou utilizar a biblioteca.
+Documento único para implementar a autenticação unificada (OAuth2 + procurador) e consumir os serviços PGDAS/PGMEI usando o pacote `serpro_integra_contador_api`.
 
-## 1. Visão Geral
+## Pré-requisitos
+- Dart/Flutter configurado.
+- Certificados digitais (`.pfx`) válidos do contratante e do procurador.
+- Credenciais SERPRO (`consumerKey`, `consumerSecret`) e números CNPJ/CPF corretos.
+- Ambiente: `producao` ou `trial` (quando disponível).
 
-O pacote fornece uma interface em Dart para acessar a API do SERPRO Integra Contador. Ele encapsula a complexidade de autenticação (OAuth2 com mTLS e assinatura de termos) e fornece métodos tipados para os diversos endpoints fiscais (Simples Nacional, MEI, DCTFWeb, etc.).
-
-### Principais Componentes
-
-*   **`ApiClient`**: Classe central responsável por gerenciar a conexão HTTP, autenticação OAuth2, armazenamento de tokens e configuração de certificados digitais.
-*   **Serviços (`*Service`)**: Classes que encapsulam a lógica de negócio de cada módulo do SERPRO (ex: `CaixaPostalService`, `PgdasdService`).
-*   **Modelos**: Classes que representam as requisições e respostas da API, garantindo tipagem segura.
-
-## 2. Estrutura do Projeto
-
-A estrutura de pastas segue o padrão:
-
+## Fluxo padrão (qualquer serviço)
+1) Instale o pacote:
+```yaml
+dependencies:
+  serpro_integra_contador_api: ^<versao>
 ```
-lib/
-├── serpro_integra_contador_api.dart  # Exporta os principais membros
-├── src/
-│   ├── core/                         # Núcleo da API
-│   │   ├── api_client.dart           # Cliente HTTP e Auth
-│   │   └── auth/                     # Lógica de autenticação
-│   ├── services/                     # Implementação dos serviços
-│   │   ├── [nome_servico]/           # Pasta de cada serviço
-│   │   │   ├── [nome]_service.dart   # Lógica do serviço
-│   │   │   └── model/                # DTOs (Request/Response)
-│   └── util/                         # Utilitários (Validadores, Formatadores)
-```
+2) Importe: `import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';`
+3) Crie um `ApiClient` e autentique com `authenticateWithProcurador`.
+4) Instancie o serviço (`PgdasdService`, `PgmeiService`, etc.) passando o `apiClient`.
+5) Monte o request (model ou `BaseRequest`) e chame o método do serviço.
+6) Verifique `response.sucesso`, leia `response.dados`/modelos e trate exceções.
 
-## 3. Autenticação
+### Metadados rápidos
+| Serviço | idSistema | idServico | Endpoint (padrão) |
+| --- | --- | --- | --- |
+| authenticateWithProcurador | OAuth2 | AUTENTICARPROCURADOR | `/AutenticarProcurador` (interno) |
+| PGDASD – entregar declaração | PGDASD | TRANSDECLARACAO11 | `/Declarar` |
+| PGDASD – gerar DAS | PGDASD | GERARDAS12 | `/Emitir` |
+| PGDASD – consultar declarações | PGDASD | CONSDECLARACAO13 | `/Consultar` |
+| PGDASD – última declaração | PGDASD | CONSULTIMADECREC14 | `/Consultar` |
+| PGDASD – declaração por número | PGDASD | CONSDECREC15 | `/Consultar` |
+| PGDASD – extrato do DAS | PGDASD | CONSEXTRATO16 | `/Consultar` |
+| PGDASD – DAS cobrança | PGDASD | GERARDASCOBRANCA17 | `/Emitir` |
+| PGDASD – DAS processo | PGDASD | GERARDASPROCESSO18 | `/Emitir` |
+| PGDASD – DAS avulso | PGDASD | GERARDASAVULSO19 | `/Emitir` |
+| PGMEI – DAS PDF | PGMEI | GERARDASPDF21 | `/Emitir` |
+| PGMEI – DAS código barras | PGMEI | GERARDASCODBARRA22 | `/Emitir` |
+| PGMEI – atualizar benefício | PGMEI | ATUBENEFICIO23 | `/Emitir` |
+| PGMEI – dívida ativa | PGMEI | DIVIDAATIVA24 | `/Consultar` |
 
-A autenticação é o passo mais crítico. Existem dois níveis:
+---
 
-1.  **OAuth2 (Acesso à API)**: Feito via `ApiClient.authenticate()`. Requer `Consumer Key`, `Consumer Secret` e certificado digital (pfx) do contratante (quem paga a API).
-2.  **Autentica Procurador (Assinatura de Termo)**: Necessário para agir em nome de terceiros (procuração). Requer o serviço `AutenticaProcuradorService` e o certificado digital do procurador/contador.
+## Autenticação – `authenticateWithProcurador`
+Autentica via OAuth2 e obtém o token do procurador numa única chamada.
 
-### Configuração do `ApiClient`
+**Parâmetros OAuth2**
+- `consumerKey`, `consumerSecret`: credenciais SERPRO.
+- `contratanteNumero`: CNPJ do contratante.
+- `autorPedidoDadosNumero`: CNPJ/CPF que solicita os dados.
+- Certificado do contratante: `certificadoDigitalPath` **ou** `certificadoDigitalBase64` + `senhaCertificado`.
+- `ambiente`: `producao` ou `trial`.
 
+**Parâmetros do Procurador (obr. para token de procuração)**
+- `contratanteNome`, `autorNome`
+- `contribuinteNumero`: CNPJ consultado (default: contratanteNumero)
+- `autorNumero`: CPF/CNPJ do procurador (default: autorPedidoDadosNumero)
+- Certificado do procurador: `certificadoProcuradorPath` ou `certificadoProcuradorBase64` + `certificadoProcuradorPassword`
+
+**Exemplo**
 ```dart
 final apiClient = ApiClient();
 
-await apiClient.authenticate(
-  consumerKey: 'SEU_CONSUMER_KEY',
-  consumerSecret: 'SEU_CONSUMER_SECRET',
-  contratanteNumero: 'CNPJ_CONTRATANTE', // Quem contratou a API
-  autorPedidoDadosNumero: 'CPF_CNPJ_AUTOR', // Quem está fazendo a requisição
-  certificadoDigitalPath: 'caminho/para/certificado_contratante.pfx',
-  senhaCertificado: 'SENHA_CERTIFICADO',
-  ambiente: 'producao', // ou 'trial'
+await apiClient.authenticateWithProcurador(
+  consumerKey: '<consumerKey>',
+  consumerSecret: '<consumerSecret>',
+  contratanteNumero: '<CNPJ_CONTRATANTE>',
+  autorPedidoDadosNumero: '<CNPJ_SOLICITANTE>',
+  certificadoDigitalPath: 'contratante.pfx',
+  senhaCertificado: '<senha_certificado_contratante>',
+  ambiente: 'producao',
+  contratanteNome: 'NOME EMPRESA CONTRATANTE',
+  autorNome: 'Nome do procurador',
+  autorNumero: '<CPF_CNPJ_PROCURADOR>',
+  contribuinteNumero: '<CNPJ_CONSULTADO>',
+  certificadoProcuradorPath: 'procurador.pfx',
+  certificadoProcuradorPassword: '<senha_certificado_procurador>',
 );
+
+print('Token procurador: ${apiClient.procuradorToken}');
 ```
 
-### Melhorias na Versão 1.1.x
-
-A versão 1.1.x trouxe melhorias significativas em segurança e compatibilidade:
-
-#### Autenticação mTLS Nativa
-
-- **SecurityContext nativo**: Utiliza APIs nativas do Dart para mTLS, garantindo compatibilidade multiplataforma
-- **Suporte a algoritmos legados**: Compatível com certificados antigos (RC2-40-CBC, 3DES)
-- **Sem dependências externas**: Removidas dependências de criptografia externa
-- **Processamento Base64**: Certificados em Base64 são processados automaticamente
-
-#### Assinatura XML Digital
-
-- **XMLDSig completo**: Implementação W3C de assinatura digital XML
-- **RSA-SHA256**: Algoritmo padrão para assinaturas digitais
-- **Certificados ICP-Brasil**: Suporte total a e-CPF e e-CNPJ
-- **Modo Trial**: Assinatura simulada para desenvolvimento
-- **Cache inteligente**: Suporte a HTTP 304 para otimização de tokens
-
-### Autenticação do Procurador (Se necessário)
-
-```dart
-final autenticaService = AutenticaProcuradorService(apiClient);
-
-await autenticaService.autenticarProcurador(
-  contratanteNome: 'NOME CONTRATANTE',
-  contratanteNumero: 'CNPJ_CONTRATANTE',
-  autorNome: 'NOME PROCURADOR',
-  autorNumero: 'CPF_CNPJ_PROCURADOR',
-  contribuinteNumero: 'CNPJ_CLIENTE', // Cliente do contador
-  certificadoPath: 'caminho/para/certificado_procurador.pfx',
-  certificadoPassword: 'SENHA',
-);
+**Saída esperada (simplificada)**
+```
+✅ Autenticação unificada (OAuth2 + Procurador) realizada com sucesso!
+Token: eyJhbGciOi...
 ```
 
-## 4. Lista de Serviços Disponíveis
+---
 
-Abaixo a lista de serviços já implementados em `lib/src/services/`. Para implementar um novo, siga o padrão destes.
+## PGDAS – `PgdasdService`
+Serviços completos com ID de sistema/serviço embutidos nas chamadas.
 
-*   **`AutenticaProcuradorService`**: Assinatura digital de termos de procuração.
-*   **`CaixaPostalService`**: Acesso a mensagens da caixa postal fiscal.
-*   **`CcmeiService`**: Consulta e emissão de CCMEI.
-*   **`DctfWebService`**: Declaração de Débitos e Créditos Tributários Federais.
-*   **`DefisService`**: Declaração de Informações Socioeconômicas e Fiscais (Simples Nacional).
-*   **`DteService`**: Domicílio Tributário Eletrônico.
-*   **`EventosAtualizacaoService`**: Consulta eventos de atualização cadastral.
-*   **`MitService`**: Microempreendedor Individual - Tributos.
-*   **`PagtoWebService`**: Pagamentos Web.
-*   **`ParcmeiService` / `ParcmeiEspecialService`**: Parcelamento MEI.
-*   **`ParcsnService` / `ParcsnEspecialService`**: Parcelamento Simples Nacional.
-*   **`PertmeiService` / `PertsnService`**: Programa Especial de Regularização Tributária.
-*   **`PgdasdService`**: Programa Gerador do Documento de Arrecadação do Simples Nacional.
-*   **`PgmeiService`**: Programa Gerador de DAS do Microempreendedor Individual.
-*   **`ProcuracoesService`**: Gestão e consulta de procurações eletrônicas.
-*   **`RegimeApuracaoService`**: Gestão completa do regime de apuração do Simples Nacional (Competência/Caixa) - efetuar opção, consultar anos calendários, consultar opções e resoluções.
-*   **`RelpmeiService` / `RelpsnService`**: Programa de Reescalonamento (RELP).
-*   **`SicalcService`**: Cálculo e emissão de DARF.
-*   **`SitfisService`**: Situação Fiscal.
-
-## 5. Como Implementar um Novo Serviço
-
-Para adicionar um novo serviço ao pacote, siga este roteiro:
-
-1.  **Crie a pasta**: `lib/src/services/NOVO_SERVICO/`.
-2.  **Crie os Modelos**: Em `lib/src/services/NOVO_SERVICO/model/`, crie classes para o Request e Response do endpoint.
-    *   Use `jsonEncode`/`jsonDecode` para serialização.
-    *   Estenda de classes base se houver padrão comum.
-3.  **Crie a Classe de Serviço**: Em `lib/src/services/NOVO_SERVICO/NOVO_SERVICO_service.dart`.
-    *   A classe deve receber o `ApiClient` no construtor.
-    *   Implemente métodos que chamam `apiClient.post`, `apiClient.get`, etc.
-    *   Trate as rotas da API (endpoints).
-
-**Exemplo de Template de Serviço:**
-
+### Consulta rápida (CONSDECLARACAO13)
 ```dart
-import '../../core/api_client.dart';
-import 'model/meu_servico_response.dart';
+final pgdasd = PgdasdService(apiClient);
+final resp = await pgdasd.consultarDeclaracoesPorPeriodo(
+  cnpj: '<CNPJ_CONSULTADO>',
+  periodoApuracao: '202509',
+);
+if (resp.sucesso) {
+  print(resp.dados?.anoCalendario);
+  print(resp.dados?.listaPeriodos.length);
+}
+```
 
-class MeuServicoService {
-  final ApiClient _apiClient;
+Saída típica:
+```
+✅ Status: 200
+✅ Sucesso: true
+📅 Ano Calendário: 2025
+🔍 Períodos encontrados: 1
+```
 
-  MeuServicoService(this._apiClient);
+### Mapeamento de operações PGDASD
+- **TRANSDECLARACAO11** (`/Declarar`) – transmitir declaração mensal.
+  - Dados: declaração completa (`EntregarDeclaracaoRequest`).
+- **GERARDAS12** (`/Emitir`) – gerar DAS de declaração transmitida.
+  - Dados: `periodoApuracao` e opcional `dataConsolidacao`.
+- **CONSDECLARACAO13** (`/Consultar`) – listar declarações por ano ou período.
+  - Dados: ano (AAAA) ou período (AAAAMM).
+- **CONSULTIMADECREC14** (`/Consultar`) – última declaração/recibo por período.
+- **CONSDECREC15** (`/Consultar`) – declaração/recibo por número (17 dígitos).
+- **CONSEXTRATO16** (`/Consultar`) – extrato do DAS por número.
+- **GERARDASCOBRANCA17** (`/Emitir`) – DAS com débitos em cobrança.
+  - Dados mínimos: `periodoApuracao`.
+- **GERARDASPROCESSO18** (`/Emitir`) – DAS de processo.
+  - Dados mínimos: `numeroProcesso`.
+- **GERARDASAVULSO19** (`/Emitir`) – DAS avulso com lista de tributos.
+  - Dados mínimos: `periodoApuracao`, `listaTributos`.
 
-  Future<MeuServicoResponse> consultarAlgo(String parametro) async {
-    final response = await _apiClient.get(
-      '/meu-endpoint/v1/$parametro',
-    );
+### Exemplo: gerar DAS (GERARDAS12)
+```dart
+final resp = await pgdasd.gerarDasSimples(
+  cnpj: '<CNPJ>',
+  periodoApuracao: '202403',
+  dataConsolidacao: '20240430', // opcional
+);
+if (resp.sucesso) {
+  final das = resp.dados?.first;
+  print('PDF base64: ${das?.pdf.length} chars');
+  print('Valor total: ${das?.detalhamento.valores.total}');
+}
+```
 
-    // O ApiClient já trata erros HTTP comuns e retorna o body parseado ou throw Exception
-    // Aqui você converte o Map/String para seu Modelo
-    return MeuServicoResponse.fromJson(response);
+### Exemplo: declarar (TRANSDECLARACAO11)
+```dart
+final resp = await pgdasd.entregarDeclaracaoSimples(
+  cnpj: '<CNPJ>',
+  periodoApuracao: 202501,
+  declaracao: /* Declaracao model */,
+  transmitir: true,
+);
+print('Status: ${resp.status}');
+print('Número recibo: ${resp.numeroRecibo}');
+```
+
+### Exemplo: extrato do DAS (CONSEXTRATO16)
+```dart
+final extrato = await pgdasd.consultarExtratoDasSimples(
+  cnpj: '<CNPJ>',
+  numeroDas: '<NUMERO_DAS>',
+);
+print('Sucesso: ${extrato.sucesso}');
+print('Mensagens: ${extrato.mensagens.map((m) => m.texto).join(', ')}');
+```
+
+---
+
+## PGMEI – `PgmeiService`
+Operações suportadas:
+- **GERARDASPDF21** (`/Emitir`) – gerar DAS com PDF.
+- **GERARDASCODBARRA22** (`/Emitir`) – gerar DAS com código de barras.
+- **ATUBENEFICIO23** (`/Emitir`) – atualizar benefício.
+- **DIVIDAATIVA24** (`/Consultar`) – consultar dívida ativa.
+
+### Gerar DAS (PDF) – GERARDASPDF21
+```dart
+final pgmei = PgmeiService(apiClient);
+final r = await pgmei.gerarDas(
+  cnpj: '00000000000100',
+  periodoApuracao: '201901',
+);
+if (r.sucesso) {
+  final das = r.dasGerados?.first;
+  final det = das?.primeiroDetalhamento;
+  print('PDF base64: ${das?.pdf.length} chars');
+  print('Valor total: R\$ ${det?.valores.total.toStringAsFixed(2)}');
+  print('Vencimento: ${det?.dataVencimento}');
+}
+```
+
+Saída esperada:
+```
+✅ Successo: DAS gerado
+📄 PDF gerado: 12345 caracteres
+💰 Valor total: R$ 120.00
+📅 Vencimento: 20190220
+```
+
+### Gerar DAS código de barras – GERARDASCODBARRA22
+```dart
+final r = await pgmei.gerarDasCodigoBarras(
+  cnpj: '00000000000100',
+  periodoApuracao: '201901',
+);
+if (r.sucesso) {
+  final det = r.dasGerados?.first.primeiroDetalhamento;
+  print('Código de barras: ${det?.codigoDeBarras.join(' ')}');
+}
+```
+
+### Atualizar benefício – ATUBENEFICIO23
+```dart
+final r = await pgmei.atualizarBeneficio(
+  cnpj: '00000000000100',
+  anoCalendario: 2021,
+  beneficios: [
+    InfoBeneficio(periodoApuracao: '202101', indicadorBeneficio: true),
+    InfoBeneficio(periodoApuracao: '202102', indicadorBeneficio: true),
+  ],
+);
+print('Sucesso: ${r.sucesso}');
+print('Benefícios atualizados: ${r.beneficiosAtualizados?.length}');
+```
+
+### Consultar dívida ativa – DIVIDAATIVA24
+```dart
+final r = await pgmei.consultarDividaAtiva(
+  cnpj: '00000000000101',
+  anoCalendario: '2020',
+);
+if (r.sucesso && r.temDebitosDividaAtiva) {
+  print('Valor total: ${r.valorTotalDividaAtiva}');
+  for (final d in r.debitosDividaAtiva!) {
+    print('${d.periodoApuracao} - ${d.tributo}: ${d.valor}');
   }
 }
 ```
 
-## 5. Novos Utilitários (v1.1.x)
-
-### ArquivoUtils
-
-Utilitário para manipulação de arquivos, especialmente PDFs em base64:
-
-```dart
-// Salvar PDF da CCMEI
-final pdfBase64 = response.dados?.pdf;
-final sucesso = await ArquivoUtils.salvarArquivo(pdfBase64, 'ccmei.pdf');
-// Arquivo salvo em: arquivos/pdf/ccmei.pdf
+Saída típica:
+```
+🚨 Situação: CONTRIBUINTE EM DÍVIDA ATIVA
+💰 Valor total em dívida: R$ 999.99
+Período: 202001 - DAS: R$ 999.99
 ```
 
-### CatalogoServicosUtils
+---
 
-Mapeamento de códigos de serviço para códigos funcionais conforme catálogo SERPRO:
-
-```dart
-// Obter código funcional
-final codigo = CatalogoServicosUtils.getFunctionCode('TRANSDECLARACAO11');
-// Resultado: '01'
-
-// Verificar se serviço existe
-final existe = CatalogoServicosUtils.isServiceInCatalog('GERARDAS12');
-// Resultado: true
-```
-
-## 6. Exemplo Completo de Uso
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() async {
-  final apiClient = ApiClient();
-
-  // 1. Autenticação Base
-  await apiClient.authenticate(
-    consumerKey: 'KEY',
-    consumerSecret: 'SECRET',
-    contratanteNumero: '00000000000000',
-    autorPedidoDadosNumero: '00000000000000',
-    certificadoDigitalPath: 'cert.pfx',
-    senhaCertificado: '1234',
-  );
-
-  // 2. Usando um serviço (ex: Caixa Postal)
-  final caixaPostal = CaixaPostalService(apiClient);
-  
-  try {
-    final indicador = await caixaPostal.obterIndicadorNovasMensagens('CNPJ_DO_CLIENTE');
-    print('Tem mensagens? ${indicador.dados?.conteudo.first.temMensagensNovas}');
-  } catch (e) {
-    print('Erro: $e');
-  }
-}
-```
-
+## Padronização/boas práticas
+1) Sempre autentique com `authenticateWithProcurador` antes de serviços que exigem procuração.
+2) Passe `contratanteNumero`/`autorPedidoDadosNumero` explícitos se diferente do autenticado.
+3) Use os métodos `*Simples` (PGDASD) quando quiser menos campos; os modelos completos existem para cenários avançados.
+4) Trate erros com `try/catch` e logue `response.mensagens`.
+5) Tokens são renovados automaticamente pelo `ApiClient`, mas é possível limpar cache de procurador via `AutenticaProcuradorService.limparCache()`.
