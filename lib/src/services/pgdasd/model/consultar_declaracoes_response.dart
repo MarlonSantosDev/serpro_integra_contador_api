@@ -19,11 +19,7 @@ class ConsultarDeclaracoesResponse {
   bool get sucesso => status == 200;
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
-    };
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   factory ConsultarDeclaracoesResponse.fromJson(Map<String, dynamic> json) {
@@ -31,11 +27,11 @@ class ConsultarDeclaracoesResponse {
     try {
       final dadosStr = json['dados']?.toString() ?? '';
       if (dadosStr.isNotEmpty) {
-        final dadosMap = jsonDecode(dadosStr) as Map<String, dynamic>;
+        final dadosMap = jsonDecode(dadosStr);
         dadosParsed = DeclaracoesEntregues.fromJson(dadosMap);
       }
     } catch (e) {
-      // Se não conseguir fazer parse, mantém dados como null
+      print('❌ Erro ao fazer parse dos dados: $e');
     }
 
     return ConsultarDeclaracoesResponse(
@@ -96,8 +92,10 @@ class DeclaracoesEntregues {
   }
 
   factory DeclaracoesEntregues.fromJson(Map<String, dynamic> json) {
+    final ano = json['anocalendario'] ?? json['anoCalendario'];
+
     return DeclaracoesEntregues(
-      anoCalendario: int.parse(json['anocalendario'].toString()),
+      anoCalendario: int.parse(ano.toString()),
       periodos: json['periodos'] != null ? (json['periodos'] as List).map((p) => Periodo.fromJson(p)).toList() : null,
       periodo: json['periodo'] != null ? Periodo.fromJson(json['periodo']) : null,
     );
