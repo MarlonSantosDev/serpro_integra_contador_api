@@ -277,7 +277,7 @@ class AutenticaProcuradorService {
 
       // Se recebeu resposta de cache (304) e temos cache local, usar cache
       if (resultado.isCacheValido && _ultimoTokenCache != null) {
-        print('📦 Usando token do cache local (API retornou 304)');
+        //print('📦 Usando token do cache local (API retornou 304)');
         return TermoAutorizacaoResponse(
           status: 304,
           mensagens: resultado.mensagens,
@@ -292,7 +292,7 @@ class AutenticaProcuradorService {
       if (resultado.sucesso && resultado.autenticarProcuradorToken != null) {
         _ultimoTokenCache = resultado;
         _apiClient.updateProcuradorToken(resultado.autenticarProcuradorToken!);
-        print('💾 Token salvo em cache local e authModel');
+        //print('💾 Token salvo em cache local e authModel');
       }
 
       // Verificar erros específicos da API
