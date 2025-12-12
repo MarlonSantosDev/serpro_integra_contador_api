@@ -525,7 +525,7 @@ class ApiClient {
 
     // Adicionar token de procurador (sempre do authModel, parâmetro ignorado)
     if (_authModel != null && _authModel!.procuradorToken.isNotEmpty) {
-      headers['autenticarProcuradorToken'] = _authModel!.procuradorToken;
+      headers['autenticar_procurador_token'] = _authModel!.procuradorToken;
     }
 
     // Gerar e adicionar identificador de requisição
