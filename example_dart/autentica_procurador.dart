@@ -121,10 +121,10 @@ Future<void> testeProducaoComCertificado() async {
 
     // Detectar diretório
     final currentDir = Directory.current.path;
-    final isInExample = currentDir.endsWith('example');
+    final isInExample = currentDir.endsWith('example_dart');
 
     // Certificado do CONTRATANTE (para mTLS OAuth2)
-    final certContratantePath = isInExample ? 'logica.pfx' : 'example/logica.pfx';
+    final certContratantePath = isInExample ? 'logica.pfx' : 'example_dart/logica.pfx';
     const certContratanteSenha = '';
 
     // ═══════════════════════════════════════════════════════════════

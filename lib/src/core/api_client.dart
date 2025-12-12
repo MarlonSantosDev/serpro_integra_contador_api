@@ -575,8 +575,8 @@ class ApiClient {
     } else if (response.statusCode == 304) {
       final autenticarProcuradorToken = response.headers['etag'].toString().replaceAll(':', '":"');
       final expiresISO = FormatadorUtils.converterHttpExpiresParaISO(response.headers['expires']) ?? '';
-      final StringBody = "{$autenticarProcuradorToken, \"data_hora_expiracao\":\"$expiresISO\"}";
-      final body = jsonDecode(StringBody);
+      final stringBody = "{$autenticarProcuradorToken, \"data_hora_expiracao\":\"$expiresISO\"}";
+      final body = jsonDecode(stringBody);
       return {"status": response.statusCode, "mensagens": "Resposta em cache (304 Not Modified)", "dados": body};
     } else {
       throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');

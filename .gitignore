@@ -67,7 +67,7 @@ markdown/
 *.pem
 **/certificado/
 **/certificados/
-/example/teste.dart
-/example/teste2.dart
-/example/pgdas.dart
-/example/pgdas2.dart
+/example_dart/teste.dart
+/example_dart/teste2.dart
+/example_dart/pgdas.dart
+/example_dart/pgdas2.dart

@@ -35,7 +35,7 @@ class AuthService {
   Future<AuthenticationModel> authenticate(AuthCredentials credentials) async {
     try {
       // Trial (sem certificado)
-      if (credentials.ambiente == 'trial')
+      if (credentials.ambiente == 'trial') {
         return AuthenticationModel(
           expiresIn: 2008,
           scope: "default",
@@ -46,6 +46,7 @@ class AuthService {
           autorPedidoDadosNumero: credentials.autorPedidoDadosNumero,
           tokenCreatedAt: DateTime.now(),
         );
+      }
       // Construir Basic Auth header
       final basicAuth = base64.encode(utf8.encode('${credentials.consumerKey}:${credentials.consumerSecret}'));
 

@@ -43,7 +43,7 @@
   - `xml: ^6.5.0` - Manipulação de XML
   - `crypto: ^3.0.3` - Hash SHA-256
 - **Exemplos e Documentação**:
-  - Suite completa de testes em `example/main.dart`
+  - Suite completa de testes em `example_dart/main.dart`
   - 4 testes: Trial Mode, Validação de Certificado, Produção (Path), Produção (Base64)
 - **Modo Trial**:
   - Assinatura XML simulada para desenvolvimento sem certificado
