@@ -27,14 +27,14 @@ function montarTermoAutorizacao()
 	<?xml version='1.0' encoding='UTF-8'?><termoDeAutorizacao></termoDeAutorizacao>
 	XML;
 
-	$xmlNaoAssinado = new SimpleXMLElement($stringRoot );
+	$xmlNaoAssinado = new SimpleXMLElement($stringRoot);
 
 	$dados = $xmlNaoAssinado->addChild('dados');
 
 	$sistema = $dados->addChild('sistema');
 	$sistema->addAttribute('id', 'API Integra Contador');
 
-	$termo =  $dados->addChild('termo');
+	$termo = $dados->addChild('termo');
 	$termo->addAttribute('texto', 'Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS.');
 
 	$avisoLegal = $dados->addChild('avisoLegal');
@@ -47,7 +47,7 @@ function montarTermoAutorizacao()
 	$dataAssinatura->addAttribute('data', $GLOBALS['data_assinatura']);
 
 	$vigencia = $dados->addChild('vigencia');
-	$vigencia->addAttribute('data', date('Ymd', $GLOBALS['data_vigencia_termo'],strtotime(date('Ymd')))));
+	$vigencia->addAttribute('data', date('Ymd', strtotime($GLOBALS['data_vigencia_termo'])));
 
 	$destinatario = $dados->addChild('destinatario');
 	$destinatario->addAttribute('numero', $GLOBALS['destinatario_numero']);
@@ -60,10 +60,10 @@ function montarTermoAutorizacao()
 	$assinadoPor->addAttribute('nome', $GLOBALS['assinante_nome']);
 	$assinadoPor->addAttribute('tipo', $GLOBALS['assinante_tipo']);
 	$assinadoPor->addAttribute('papel', $GLOBALS['assinante_papel']);
-	
+
 	return $xmlNaoAssinado;
- }
- 
+}
+
 function carregarCertificados()
 {
 	$arquivo = $GLOBALS['arquivoCertificado'];
@@ -172,18 +172,18 @@ function assinar($xmlNaoAssinado, $certificados)
 	$X509Data->appendChild($X509Certificate);
 
 	$c14nSignedInfo = $signedInfoElement->C14N(true, false);
-	
+
 	$status = openssl_sign($c14nSignedInfo, $signatureValue, obterPrivateKey($certificados), OPENSSL_ALGO_SHA256);
 
 	if (!$status) {
-		throw new XmlSignerException('Falha no cálculo da assinatura.');
+		throw new Exception('Falha no cálculo da assinatura.');
 	}
 
 	$xpath = new DOMXpath($xml);
 	$signatureValueElement = $xpath->query('//SignatureValue', $signatureElement)->item(0);
 	$signatureValueElement->nodeValue = base64_encode($signatureValue);
-	
-	return $xml->saveXML(); 
+
+	return $xml->saveXML();
 }
 
 $certificados = array();
@@ -194,8 +194,8 @@ $certificados = carregarCertificados();
 
 $resultado = assinar($xmlNaoAssinado, $certificados);
 
-echo '<textarea>'.$resultado.'</textarea>';
-echo '<textarea>'.base64_encode($resultado).'</textarea>';
+echo '<textarea>' . $resultado . '</textarea>';
+echo '<textarea>' . base64_encode($resultado) . '</textarea>';
 
 /* Output:
 
@@ -206,4 +206,4 @@ Textarea1 xml assinado:
 Textarea2 xml assinado em base64: 
 PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHRlcm1vRdd...
 
-*/ 
+*/

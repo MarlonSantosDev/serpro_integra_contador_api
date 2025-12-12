@@ -208,6 +208,13 @@ class ApiClient {
   ///   "resposta": "Campo 'consumerSecret' é obrigatório"
   /// }
   /// ```
+  /// URL da Cloud Function para uso na Web
+  /// Quando fornecido, usa proxy via Firebase Cloud Functions
+  String? _cloudFunctionUrl;
+
+  /// Getter para URL da Cloud Function
+  String? get cloudFunctionUrl => _cloudFunctionUrl;
+
   Future<void> authenticate({
     required String consumerKey,
     required String consumerSecret,
@@ -217,8 +224,33 @@ class ApiClient {
     String? certificadoDigitalPath,
     String? senhaCertificado,
     String ambiente = 'trial',
+    /// URL da Cloud Function (para uso na Web)
+    /// Exemplo: 'https://us-central1-projeto.cloudfunctions.net'
+    String? cloudFunctionUrl,
+    /// Nome do segredo do certificado no Secret Manager (para Cloud Function)
+    String? certSecretName,
+    /// Nome do segredo da senha no Secret Manager (para Cloud Function)
+    String? certPasswordSecretName,
   }) async {
     try {
+      // Salvar URL da Cloud Function para uso posterior
+      _cloudFunctionUrl = cloudFunctionUrl;
+
+      // Se cloudFunctionUrl fornecida, usar Cloud Function (para Web)
+      if (cloudFunctionUrl != null && cloudFunctionUrl.isNotEmpty) {
+        await _authenticateViaCloudFunction(
+          cloudFunctionUrl: cloudFunctionUrl,
+          consumerKey: consumerKey,
+          consumerSecret: consumerSecret,
+          contratanteNumero: contratanteNumero,
+          autorPedidoDadosNumero: autorPedidoDadosNumero,
+          ambiente: ambiente,
+          certSecretName: certSecretName,
+          certPasswordSecretName: certPasswordSecretName,
+        );
+        return;
+      }
+
       // 0. Verificar se é uma nova autenticação com dados diferentes
       final novoContratante = contratanteNumero.trim();
       final novoAutor = autorPedidoDadosNumero.trim();
@@ -382,7 +414,38 @@ class ApiClient {
     String? certificadoProcuradorPath,
     String? certificadoProcuradorBase64,
     String? certificadoProcuradorPassword,
+    
+    /// URL da Cloud Function (para uso na Web)
+    String? cloudFunctionUrl,
+    /// Nome do segredo do certificado no Secret Manager
+    String? certSecretName,
+    /// Nome do segredo da senha no Secret Manager
+    String? certPasswordSecretName,
+    /// Token Firebase para autenticação
+    String? firebaseToken,
   }) async {
+    // Salvar URL da Cloud Function
+    _cloudFunctionUrl = cloudFunctionUrl;
+    
+    // Se cloudFunctionUrl fornecida, usar Cloud Function (para Web)
+    if (cloudFunctionUrl != null && cloudFunctionUrl.isNotEmpty && contratanteNome != null && autorNome != null) {
+      await _authenticateWithProcuradorViaCloudFunction(
+        cloudFunctionUrl: cloudFunctionUrl,
+        consumerKey: consumerKey,
+        consumerSecret: consumerSecret,
+        contratanteNumero: contratanteNumero,
+        contratanteNome: contratanteNome,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        autorNome: autorNome,
+        ambiente: ambiente,
+        contribuinteNumero: contribuinteNumero,
+        certSecretName: certSecretName,
+        certPasswordSecretName: certPasswordSecretName,
+        firebaseToken: firebaseToken,
+      );
+      return;
+    }
+    
     // Limpar dados da autenticação anterior para evitar conflitos
     clearAuthentication();
 
@@ -448,6 +511,106 @@ class ApiClient {
   Exception _buildErrorResponse({required String mensagem, required int status, required String resposta}) {
     final errorJson = {'mensagem': mensagem, 'status': status, 'resposta': resposta};
     return Exception(json.encode(errorJson));
+  }
+
+  /// Autentica via Firebase Cloud Function (para uso na Web)
+  Future<void> _authenticateViaCloudFunction({
+    required String cloudFunctionUrl,
+    required String consumerKey,
+    required String consumerSecret,
+    required String contratanteNumero,
+    required String autorPedidoDadosNumero,
+    required String ambiente,
+    String? certSecretName,
+    String? certPasswordSecretName,
+    String? firebaseToken,
+  }) async {
+    final url = Uri.parse('$cloudFunctionUrl/autenticar_serpro');
+    final body = <String, String>{
+      'consumer_key': consumerKey,
+      'consumer_secret': consumerSecret,
+      'contratante_numero': contratanteNumero,
+      'autor_pedido_dados_numero': autorPedidoDadosNumero,
+      'ambiente': ambiente,
+    };
+    if (certSecretName != null) body['cert_secret_name'] = certSecretName;
+    if (certPasswordSecretName != null) body['cert_password_secret_name'] = certPasswordSecretName;
+    
+    final headers = <String, String>{'Content-Type': 'application/json'};
+    if (firebaseToken != null) headers['Authorization'] = 'Bearer $firebaseToken';
+    
+    final response = await http.post(url, headers: headers, body: json.encode(body));
+    
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      _authModel = AuthenticationModel(
+        expiresIn: responseBody['expires_in'] ?? 2008,
+        scope: responseBody['scope'] ?? 'default',
+        tokenType: responseBody['token_type'] ?? 'Bearer',
+        accessToken: responseBody['access_token'],
+        jwtToken: responseBody['jwt_token'],
+        contratanteNumero: responseBody['contratante_numero'] ?? contratanteNumero,
+        autorPedidoDadosNumero: responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
+        tokenCreatedAt: DateTime.now(),
+      );
+      _ambiente = ambiente;
+    } else {
+      throw _buildErrorResponse(mensagem: 'Falha via Cloud Function', status: response.statusCode, resposta: response.body);
+    }
+  }
+
+  /// Autentica Procurador via Firebase Cloud Function (para uso na Web)
+  Future<void> _authenticateWithProcuradorViaCloudFunction({
+    required String cloudFunctionUrl,
+    required String consumerKey,
+    required String consumerSecret,
+    required String contratanteNumero,
+    required String contratanteNome,
+    required String autorPedidoDadosNumero,
+    required String autorNome,
+    required String ambiente,
+    String? contribuinteNumero,
+    String? certSecretName,
+    String? certPasswordSecretName,
+    String? firebaseToken,
+  }) async {
+    final url = Uri.parse('$cloudFunctionUrl/autenticar_procurador');
+    final body = <String, String>{
+      'consumer_key': consumerKey,
+      'consumer_secret': consumerSecret,
+      'contratante_numero': contratanteNumero,
+      'contratante_nome': contratanteNome,
+      'autor_pedido_dados_numero': autorPedidoDadosNumero,
+      'autor_nome': autorNome,
+      'ambiente': ambiente,
+    };
+    if (contribuinteNumero != null) body['contribuinte_numero'] = contribuinteNumero;
+    if (certSecretName != null) body['cert_secret_name'] = certSecretName;
+    if (certPasswordSecretName != null) body['cert_password_secret_name'] = certPasswordSecretName;
+    
+    final headers = <String, String>{'Content-Type': 'application/json'};
+    if (firebaseToken != null) headers['Authorization'] = 'Bearer $firebaseToken';
+    
+    final response = await http.post(url, headers: headers, body: json.encode(body));
+    
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      _authModel = AuthenticationModel(
+        expiresIn: responseBody['expires_in'] ?? 2008,
+        scope: responseBody['scope'] ?? 'default',
+        tokenType: responseBody['token_type'] ?? 'Bearer',
+        accessToken: responseBody['access_token'],
+        jwtToken: responseBody['jwt_token'],
+        contratanteNumero: responseBody['contratante_numero'] ?? contratanteNumero,
+        autorPedidoDadosNumero: responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
+        tokenCreatedAt: DateTime.now(),
+        procuradorToken: responseBody['procurador_token'] ?? '',
+      );
+      _ambiente = ambiente;
+      _cloudFunctionUrl = cloudFunctionUrl;
+    } else {
+      throw _buildErrorResponse(mensagem: 'Falha procurador via Cloud Function', status: response.statusCode, resposta: response.body);
+    }
   }
 
   /// Executa uma requisição POST para a API do SERPRO
