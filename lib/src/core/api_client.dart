@@ -525,7 +525,7 @@ class ApiClient {
 
     // Adicionar token de procurador (sempre do authModel, parâmetro ignorado)
     if (_authModel != null && _authModel!.procuradorToken.isNotEmpty) {
-      headers['autenticar_procurador_token'] = _authModel!.procuradorToken;
+      headers['autenticarProcuradorToken'] = _authModel!.procuradorToken;
     }
 
     // Gerar e adicionar identificador de requisição
@@ -573,9 +573,9 @@ class ApiClient {
         "body": "Credenciais inválidas",
       });
     } else if (response.statusCode == 304) {
-      final autenticar_procurador_token = response.headers['etag'].toString().replaceAll(':', '":"');
+      final autenticarProcuradorToken = response.headers['etag'].toString().replaceAll(':', '":"');
       final expiresISO = FormatadorUtils.converterHttpExpiresParaISO(response.headers['expires']) ?? '';
-      final StringBody = "{$autenticar_procurador_token, \"data_hora_expiracao\":\"$expiresISO\"}";
+      final StringBody = "{$autenticarProcuradorToken, \"data_hora_expiracao\":\"$expiresISO\"}";
       final body = jsonDecode(StringBody);
       return {"status": response.statusCode, "mensagens": "Resposta em cache (304 Not Modified)", "dados": body};
     } else {
@@ -624,9 +624,9 @@ class ApiClient {
       Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
       // Salvar token de procurador no authModel
-      if (responseBody['autenticar_procurador_token'] != null) {
+      if (responseBody['autenticarProcuradorToken'] != null) {
         // Atualizar o _authModel com o token do procurador
-        _updateProcuradorToken(responseBody['autenticar_procurador_token']);
+        _updateProcuradorToken(responseBody['autenticarProcuradorToken']);
       }
 
       return responseBody;

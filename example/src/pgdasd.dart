@@ -47,35 +47,31 @@ Future<void> Pgdasd(ApiClient apiClient) async {
         pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
         pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
       ],
+      autorPedidoDadosNumero: '00000000000100',
+      contratanteNumero: '00000000000100',
     );
-
-    print('✅ Status: ${entregarResponse.status}');
     print('✅ Sucesso: ${entregarResponse.sucesso}');
 
     if (entregarResponse.dados != null) {
-      final declaracaoTransmitida = entregarResponse.dados!.first;
-      print('🆔 ID Declaração: ${declaracaoTransmitida.idDeclaracao}');
-      print('📅 Data Transmissão: ${declaracaoTransmitida.dataHoraTransmissao}');
-      print('💰 Valor Total Devido: R\$ ${declaracaoTransmitida.valorTotalDevido.toStringAsFixed(2)}');
-      print('📋 Tem MAED: ${declaracaoTransmitida.temMaed}');
-
-      // Detalhamento dos valores devidos
-      print('\n📊 Valores Devidos por Tributo:');
-      for (final valor in declaracaoTransmitida.valoresDevidos) {
-        print('  • Tributo ${valor.codigoTributo}: R\$ ${valor.valor.toStringAsFixed(2)}');
-      }
-
-      // Detalhamento MAED se houver
-      if (declaracaoTransmitida.temMaed && declaracaoTransmitida.detalhamentoDarfMaed != null) {
-        final maed = declaracaoTransmitida.detalhamentoDarfMaed!;
-        print('\n📋 Detalhamento MAED:');
-        print('  📄 Número Documento: ${maed.numeroDocumento}');
-        print('  📅 Data Vencimento: ${maed.dataVencimento}');
-        print('  💰 Principal: R\$ ${maed.valores.principal.toStringAsFixed(2)}');
-        print('  💰 Multa: R\$ ${maed.valores.multa.toStringAsFixed(2)}');
-        print('  💰 Juros: R\$ ${maed.valores.juros.toStringAsFixed(2)}');
-        print('  💰 Total MAED: R\$ ${maed.valores.total.toStringAsFixed(2)}');
-      }
+      print("Mensagens: ${entregarResponse.mensagens.map((m) => m.toJson()).toList()}");
+      print("idDeclaracao: ${entregarResponse.dados!.idDeclaracao}.");
+      print("dataHoraTransmissao: ${entregarResponse.dados!.dataHoraTransmissao}");
+      print("valoresDevidos: ${entregarResponse.dados!.valoresDevidos.map((v) => v.toJson()).toList()}");
+      print("total valoresDevidos: ${entregarResponse.dados!.valorTotalDevido}");
+      print("declaracao: ${entregarResponse.dados!.declaracao.isEmpty}");
+      print("recibo: ${entregarResponse.dados!.recibo.isEmpty}");
+      print("notificacaoMaed: ${entregarResponse.dados!.notificacaoMaed!.isEmpty}");
+      print("darf: ${entregarResponse.dados!.darf!.isEmpty}");
+      print("detalhamentoDarfMaed: ${entregarResponse.dados!.detalhamentoDarfMaed != null}");
+      print("detalhamentoDarfMaed.periodoApuracao: ${entregarResponse.dados!.detalhamentoDarfMaed!.periodoApuracao}");
+      print("detalhamentoDarfMaed.numeroDocumento: ${entregarResponse.dados!.detalhamentoDarfMaed?.numeroDocumento}");
+      print("detalhamentoDarfMaed.dataVencimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataVencimento}");
+      print("detalhamentoDarfMaed.dataLimiteAcolhimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataLimiteAcolhimento}");
+      print("detalhamentoDarfMaed.valores: ${entregarResponse.dados!.detalhamentoDarfMaed?.valores.toJson()}");
+      print("detalhamentoDarfMaed.observacao1: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao1}");
+      print("detalhamentoDarfMaed.observacao2: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao2}");
+      print("detalhamentoDarfMaed.observacao3: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao3}");
+      print("detalhamentoDarfMaed.composicao: ${entregarResponse.dados!.detalhamentoDarfMaed?.composicao}\n\n");
     }
   } catch (e) {
     print('❌ Erro ao entregar declaração mensal: $e');

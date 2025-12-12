@@ -19,7 +19,7 @@ class ConsultarExtratoDasRequest {
   bool get isValid => isNumeroValido;
 
   Map<String, dynamic> toJson() {
-    return {'numeroDas': numeroDas};
+    return {"\"numeroDas\"": "\"$numeroDas\""};
   }
 
   factory ConsultarExtratoDasRequest.fromJson(Map<String, dynamic> json) {

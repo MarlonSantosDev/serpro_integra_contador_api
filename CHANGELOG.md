@@ -56,3 +56,5 @@
 - Ajustes e correções no código.
 - Removido cache de tokens do procurador.
 - Adicionado método para limpar cache de tokens do procurador.
+[1.1.4] - 2025-12-11
+- Ajustes e correções no código.

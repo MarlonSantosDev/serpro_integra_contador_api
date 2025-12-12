@@ -12,7 +12,7 @@ class EntregarDeclaracaoResponse {
   final List<Mensagem> mensagens;
 
   /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida parseado
-  final List<DeclaracaoTransmitida>? dados;
+  final DeclaracaoTransmitida? dados;
 
   EntregarDeclaracaoResponse({required this.status, required this.mensagens, this.dados});
 
@@ -20,15 +20,11 @@ class EntregarDeclaracaoResponse {
   bool get sucesso => status == 200;
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.map((d) => d.toJson()).toList()) : '',
-    };
+    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
-    List<DeclaracaoTransmitida>? dadosParsed;
+    DeclaracaoTransmitida? dadosParsed;
     try {
       final dadosStr = json['dados']?.toString() ?? '';
       if (dadosStr.isNotEmpty) {
@@ -36,13 +32,11 @@ class EntregarDeclaracaoResponse {
 
         // Se for uma lista, retorna a lista
         if (dadosMap is Map && dadosMap.containsKey('dados') && dadosMap['dados'] is List) {
-          final lista = dadosMap['dados'] as List;
-          dadosParsed = lista.map((d) => DeclaracaoTransmitida.fromJson(d as Map<String, dynamic>)).toList();
-        } else if (dadosMap is List) {
-          dadosParsed = dadosMap.map((d) => DeclaracaoTransmitida.fromJson(d as Map<String, dynamic>)).toList();
+          final lista = dadosMap['dados'];
+          dadosParsed = DeclaracaoTransmitida.fromJson(lista as Map<String, dynamic>);
         } else if (dadosMap is Map) {
           // Se for um objeto único, retorna como lista com um item
-          dadosParsed = [DeclaracaoTransmitida.fromJson(dadosMap as Map<String, dynamic>)];
+          dadosParsed = DeclaracaoTransmitida.fromJson(dadosMap as Map<String, dynamic>);
         }
       }
     } catch (e) {
