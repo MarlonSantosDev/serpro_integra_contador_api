@@ -243,6 +243,35 @@ class MtlsClient:
                 )
             finally:
                 self.cleanup()
-        
-        response.raise_for_status()
-        return response.json()
+
+        # Verificar status code antes de processar
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 304:
+            # Cache hit - extrair dados dos headers (como no Dart)
+            etag = response.headers.get('etag', '')
+            expires = response.headers.get('expires', '')
+
+            # Processar ETag para extrair token (formato similar ao Dart)
+            token_data = {}
+            if etag:
+                # ETag pode conter o token
+                token_data['autenticarProcuradorToken'] = etag.replace('"', '')
+
+            if expires:
+                token_data['data_hora_expiracao'] = expires
+
+            return {
+                'status': 304,
+                'mensagens': 'Resposta em cache (304 Not Modified)',
+                'dados': token_data
+            }
+        else:
+            # Outros erros
+            error_detail = f"{response.status_code} {response.reason}"
+            try:
+                error_body = response.json()
+                error_detail += f" - {error_body}"
+            except:
+                error_detail += f" - {response.text}"
+            raise Exception(error_detail)

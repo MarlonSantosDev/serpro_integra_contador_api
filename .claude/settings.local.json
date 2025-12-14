@@ -36,7 +36,8 @@
       "Bash(C:\\Users\\marlon\\Data\\dev\\my_flutter\\**)",
       "Bash(test:*)",
       "Bash(mkdir:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(python -c:*)"
     ],
     "deny": [],
     "ask": []

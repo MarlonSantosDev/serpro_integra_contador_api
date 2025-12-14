@@ -166,18 +166,23 @@ def process_autenticar_procurador(data: Dict[str, Any], get_secret_fn=None) -> D
     # 4. Enviar para API
     xml_base64 = base64.b64encode(xml_assinado.encode()).decode()
 
+    # Limpar números para detectar tipo corretamente
+    contratante_limpo = data["contratante_numero"].replace(".", "").replace("-", "").replace("/", "")
+    autor_limpo = data["autor_pedido_dados_numero"].replace(".", "").replace("-", "").replace("/", "")
+    contribuinte_limpo = contribuinte.replace(".", "").replace("-", "").replace("/", "")
+
     request_body = {
         "contratante": {
-            "numero": data["contratante_numero"],
-            "tipo": 2 if len(data["contratante_numero"]) == 14 else 1
+            "numero": contratante_limpo,
+            "tipo": 2 if len(contratante_limpo) == 14 else 1
         },
         "autorPedidoDados": {
-            "numero": data["autor_pedido_dados_numero"],
-            "tipo": 2 if len(data["autor_pedido_dados_numero"]) == 14 else 1
+            "numero": autor_limpo,
+            "tipo": 2 if len(autor_limpo) == 14 else 1
         },
         "contribuinte": {
-            "numero": contribuinte,
-            "tipo": 2 if len(contribuinte) == 14 else 1
+            "numero": contribuinte_limpo,
+            "tipo": 2 if len(contribuinte_limpo) == 14 else 1
         },
         "pedidoDados": {
             "idSistema": "AUTENTICAPROCURADOR",
@@ -186,6 +191,10 @@ def process_autenticar_procurador(data: Dict[str, Any], get_secret_fn=None) -> D
             "dados": json.dumps({"xml": xml_base64})
         }
     }
+
+    # Debug log (remover em produção se necessário)
+    import logging
+    logging.info(f"[autenticar_procurador] Request body - Contratante: {contratante_limpo} (tipo: {request_body['contratante']['tipo']}), Autor: {autor_limpo} (tipo: {request_body['autorPedidoDados']['tipo']})")
 
     response = client.post(
         endpoint="/Apoiar",

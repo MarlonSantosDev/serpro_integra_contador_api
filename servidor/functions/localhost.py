@@ -100,7 +100,7 @@ async def autenticar_serpro(request: AutenticarSerproRequest):
         logger.info(f"[autenticar_serpro] Ambiente: {request.ambiente}")
 
         # Chamar lógica centralizada (sem Secret Manager)
-        result = process_autenticar_serpro(request.dict(), get_secret_fn=None)
+        result = process_autenticar_serpro(request.model_dump(), get_secret_fn=None)
 
         logger.info(f"[autenticar_serpro] OK para {request.contratante_numero}")
         return result
@@ -119,7 +119,7 @@ async def autenticar_procurador(request: AutenticarProcuradorRequest):
         logger.info(f"[autenticar_procurador] Ambiente: {request.ambiente}")
 
         # Chamar lógica centralizada (sem Secret Manager)
-        result = process_autenticar_procurador(request.dict(), get_secret_fn=None)
+        result = process_autenticar_procurador(request.model_dump(), get_secret_fn=None)
 
         logger.info(f"[autenticar_procurador] OK para {request.autor_pedido_dados_numero}")
         return result
@@ -138,7 +138,7 @@ async def proxy_serpro(request: ProxySerproRequest):
         logger.info(f"[proxy_serpro] Endpoint: {request.endpoint}")
 
         # Chamar lógica centralizada (sem Secret Manager)
-        result = process_proxy_serpro(request.dict(), get_secret_fn=None)
+        result = process_proxy_serpro(request.model_dump(), get_secret_fn=None)
 
         logger.info(f"[proxy_serpro] OK para {request.endpoint}")
         return result

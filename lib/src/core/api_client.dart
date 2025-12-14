@@ -224,11 +224,14 @@ class ApiClient {
     String? certificadoDigitalPath,
     String? senhaCertificado,
     String ambiente = 'trial',
+
     /// URL da Cloud Function (para uso na Web)
     /// Exemplo: 'https://us-central1-projeto.cloudfunctions.net'
     String? urlServidor,
+
     /// Nome do segredo do certificado no Secret Manager (para Cloud Function)
     String? certSecretName,
+
     /// Nome do segredo da senha no Secret Manager (para Cloud Function)
     String? certPasswordSecretName,
   }) async {
@@ -414,19 +417,22 @@ class ApiClient {
     String? certificadoProcuradorPath,
     String? certificadoProcuradorBase64,
     String? certificadoProcuradorPassword,
-    
+
     /// URL da Cloud Function (para uso na Web)
     String? urlServidor,
+
     /// Nome do segredo do certificado no Secret Manager
     String? certSecretName,
+
     /// Nome do segredo da senha no Secret Manager
     String? certPasswordSecretName,
+
     /// Token Firebase para autenticação
     String? firebaseToken,
   }) async {
     // Salvar URL da Cloud Function
     _urlServidor = urlServidor;
-    
+
     // Se urlServidor fornecida, usar Cloud Function (para Web)
     if (urlServidor != null && urlServidor.isNotEmpty && contratanteNome != null && autorNome != null) {
       await _authenticateWithProcuradorViaCloudFunction(
@@ -442,10 +448,14 @@ class ApiClient {
         certSecretName: certSecretName,
         certPasswordSecretName: certPasswordSecretName,
         firebaseToken: firebaseToken,
+        certificadoDigitalBase64: certificadoDigitalBase64,
+        senhaCertificado: senhaCertificado,
+        certificadoProcuradorBase64: certificadoProcuradorBase64,
+        certificadoProcuradorPassword: certificadoProcuradorPassword,
       );
       return;
     }
-    
+
     // Limpar dados da autenticação anterior para evitar conflitos
     clearAuthentication();
 
@@ -535,12 +545,12 @@ class ApiClient {
     };
     if (certSecretName != null) body['cert_secret_name'] = certSecretName;
     if (certPasswordSecretName != null) body['cert_password_secret_name'] = certPasswordSecretName;
-    
+
     final headers = <String, String>{'Content-Type': 'application/json'};
     if (firebaseToken != null) headers['Authorization'] = 'Bearer $firebaseToken';
-    
+
     final response = await http.post(url, headers: headers, body: json.encode(body));
-    
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       _authModel = AuthenticationModel(
@@ -555,7 +565,7 @@ class ApiClient {
       );
       _ambiente = ambiente;
     } else {
-      throw _buildErrorResponse(mensagem: 'Falha via Cloud Function', status: response.statusCode, resposta: response.body);
+      throw _buildErrorResponse(mensagem: 'Falha servidor', status: response.statusCode, resposta: response.body);
     }
   }
 
@@ -573,6 +583,10 @@ class ApiClient {
     String? certSecretName,
     String? certPasswordSecretName,
     String? firebaseToken,
+    String? certificadoDigitalBase64,
+    String? senhaCertificado,
+    String? certificadoProcuradorBase64,
+    String? certificadoProcuradorPassword,
   }) async {
     final url = Uri.parse('$urlServidor/autenticar_procurador');
     final body = <String, String>{
@@ -587,12 +601,16 @@ class ApiClient {
     if (contribuinteNumero != null) body['contribuinte_numero'] = contribuinteNumero;
     if (certSecretName != null) body['cert_secret_name'] = certSecretName;
     if (certPasswordSecretName != null) body['cert_password_secret_name'] = certPasswordSecretName;
-    
+    if (certificadoDigitalBase64 != null) body['certificado_base64'] = certificadoDigitalBase64;
+    if (senhaCertificado != null) body['certificado_senha'] = senhaCertificado;
+    if (certificadoProcuradorBase64 != null) body['certificado_procurador_base64'] = certificadoProcuradorBase64;
+    if (certificadoProcuradorPassword != null) body['certificado_procurador_senha'] = certificadoProcuradorPassword;
+
     final headers = <String, String>{'Content-Type': 'application/json'};
     if (firebaseToken != null) headers['Authorization'] = 'Bearer $firebaseToken';
-    
+
     final response = await http.post(url, headers: headers, body: json.encode(body));
-    
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       _authModel = AuthenticationModel(

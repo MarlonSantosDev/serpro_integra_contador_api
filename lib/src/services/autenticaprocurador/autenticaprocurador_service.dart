@@ -252,6 +252,7 @@ class AutenticaProcuradorService {
     String contribuinteNumero,
   ) async {
     try {
+      //print('xmlAssinado: $xmlAssinado');
       // Converter XML para Base64
       final xmlBase64 = base64.encode(utf8.encode(xmlAssinado));
 
