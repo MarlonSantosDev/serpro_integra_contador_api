@@ -253,10 +253,19 @@ class MtlsClient:
             expires = response.headers.get('expires', '')
 
             # Processar ETag para extrair token (formato similar ao Dart)
+            # O ETag vem no formato: "autenticar_procurador_token:UUID" ou apenas "UUID"
+            # A API espera apenas o UUID de 36 caracteres
             token_data = {}
             if etag:
-                # ETag pode conter o token
-                token_data['autenticarProcuradorToken'] = etag.replace('"', '')
+                # Remover aspas
+                clean_etag = etag.replace('"', '')
+                # Se contiver o prefixo, extrair apenas o UUID
+                if ':' in clean_etag:
+                    # Formato: "autenticar_procurador_token:UUID"
+                    token_data['autenticarProcuradorToken'] = clean_etag.split(':')[-1]
+                else:
+                    # Formato: apenas UUID
+                    token_data['autenticarProcuradorToken'] = clean_etag
 
             if expires:
                 token_data['data_hora_expiracao'] = expires
