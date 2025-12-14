@@ -45,6 +45,9 @@ enum CertificateErrorReason {
 
   /// Certificado obrigatório em produção mas não fornecido
   requiredForProduction,
+
+  /// Plataforma não suporta mTLS nativamente (ex: Web)
+  platformNotSupported,
 }
 
 /// Lançada quando há problemas com o certificado digital

@@ -1,28 +1,79 @@
-[1.0.0] - 2025-10-05
-- Primeira versão do pacote.
+## [2.0.0] - 2024-12-14
 
-[1.0.1] - 2025-10-05
-- Ajustes no README.md.
+### Breaking Changes
+- Refatorado `HttpClientAdapter` para suportar múltiplas plataformas via conditional exports
+- Renomeado arquivo interno `lib/src/core/auth/http_client_adapter.dart` → `http_client_adapter_io.dart`
+- Adicionado suporte completo para Flutter Web via proxy mTLS (Cloud Functions ou servidor próprio)
 
-[1.0.2] - 2025-10-31
-- Ajustes no README.md.
+### Added
+- ✨ **Suporte Flutter Web** via servidor próprio ou localhost
+- Implementação `http_client_adapter_web.dart` para plataforma Web
+- Implementação `http_client_adapter_io.dart` para Desktop/Mobile (código anterior sem alterações)
+- Implementação `http_client_adapter_stub.dart` para conditional exports
+- Parâmetros `urlServidor`, `certSecretName`, `certPasswordSecretName`, `firebaseToken`
+- Detecção automática de plataforma e roteamento inteligente
+- Enum `CertificateErrorReason.platformNotSupported`
 
-[1.0.3] - 2025-11-06
-- Ajustes no modelo de resposta da API Caixa Postal.
+### Changed
+- mTLS agora é platform-aware (detecta automaticamente Web vs Desktop/Mobile)
+- Desktop/Mobile continuam usando `dart:io` SecurityContext sem mudanças
+- Web usa `package:http` sem mTLS nativo, requer Cloud Function para OAuth2
+- Assinatura digital XML continua funcionando em Web (pure Dart)
 
-[1.0.4] - 2025-11-10
-- Ajustes no modelo de resposta da API PGDASD.
+### Migration Guide
 
- [1.1.0] - 2025-12-04
-  - Implementação de autenticação mTLS usando API nativa do Dart (SecurityContext)
-  - Suporte completo multiplataforma: Android, iOS, Web, Desktop, Windows
-  - Suporte a certificados PKCS12/PFX com algoritmos legados (RC2-40-CBC, 3DES, etc.)
-  - Removidas dependências externas (pointycastle, asn1lib) - solução 100% Dart nativo
-  - Código simplificado e mais confiável usando SecurityContext nativo
-  - Correção: certificados Base64 agora são processados corretamente antes da validação
-  - Adicionado getter `info` em AuthenticationModel para visualização formatada de todos os dados
-  - Adicionado campo `origem` no info mostrando se autenticação é nova ou recuperada do cache
-  - Exemplos simplificados: agora basta usar `print(apiClient.authModel!.info)`
+**Desktop/Mobile (sem alterações):**
+```dart
+await apiClient.authenticate(
+  consumerKey: 'key',
+  certificadoDigitalBase64: certBase64,
+  senhaCertificado: 'senha',
+  ambiente: 'producao',
+);
+```
+
+**Web (nova sintaxe):**
+```dart
+await apiClient.authenticate(
+  consumerKey: 'key',
+  ambiente: 'producao',
+  urlServidor: 'https://us-central1-projeto.cloudfunctions.net',
+  certificadoDigitalBase64: certBase64,
+  senhaCertificado: senha,
+  firebaseToken: await FirebaseAuth.instance.currentUser?.getIdToken(),
+);
+```
+
+---
+
+## [1.1.6] - 2025-12-12
+- Implementação urlServidor.
+
+## [1.1.5] - 2025-12-12
+- Correções no nome do token do procurador.
+
+## [1.1.4] - 2025-12-11
+- Ajustes e correções no código.
+
+## [1.1.3] - 2025-12-10
+- Ajustes e correções no código.
+- Removido cache de tokens do procurador.
+- Adicionado método para limpar cache de tokens do procurador.
+
+## [1.1.2] - 2025-12-09
+- Ajustes e correções no código.
+- Adicionado autenticação com procurador.
+
+## [1.1.0] - 2025-12-04
+- Implementação de autenticação mTLS usando API nativa do Dart (SecurityContext)
+- Suporte completo multiplataforma: Android, iOS, Web, Desktop, Windows
+- Suporte a certificados PKCS12/PFX com algoritmos legados (RC2-40-CBC, 3DES, etc.)
+- Removidas dependências externas (pointycastle, asn1lib) - solução 100% Dart nativo
+- Código simplificado e mais confiável usando SecurityContext nativo
+- Correção: certificados Base64 agora são processados corretamente antes da validação
+- Adicionado getter `info` em AuthenticationModel para visualização formatada de todos os dados
+- Adicionado campo `origem` no info mostrando se autenticação é nova ou recuperada do cache
+- Exemplos simplificados: agora basta usar `print(apiClient.authModel!.info)`
 - **NOVA FUNCIONALIDADE**: Assinatura XML Digital para Autentica Procurador
   - Implementação completa de XMLDSig (W3C) com RSA-SHA256
   - Suporte a certificados ICP-Brasil (e-CPF e e-CNPJ)
@@ -49,16 +100,18 @@
   - Assinatura XML simulada para desenvolvimento sem certificado
   - Funciona apenas com ambiente Trial do SERPRO
   - Facilita testes de integração
-[1.1.2] - 2025-12-09
-- Ajustes e correções no código.
-- Adicionado autenticação com procurador.
-[1.1.3] - 2025-12-10
-- Ajustes e correções no código.
-- Removido cache de tokens do procurador.
-- Adicionado método para limpar cache de tokens do procurador.
-[1.1.4] - 2025-12-11
-- Ajustes e correções no código.
-[1.1.5] - 2025-12-12
-- Correções no nome do token do procurador.
-[1.1.6] - 2025-12-12
-- Implementação cloudFunctionUrl.
+
+## [1.0.4] - 2025-11-10
+- Ajustes no modelo de resposta da API PGDASD.
+
+## [1.0.3] - 2025-11-06
+- Ajustes no modelo de resposta da API Caixa Postal.
+
+## [1.0.2] - 2025-10-31
+- Ajustes no README.md.
+
+## [1.0.1] - 2025-10-05
+- Ajustes no README.md.
+
+## [1.0.0] - 2025-10-05
+- Primeira versão do pacote.

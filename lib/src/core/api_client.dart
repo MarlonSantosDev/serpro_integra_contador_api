@@ -210,10 +210,10 @@ class ApiClient {
   /// ```
   /// URL da Cloud Function para uso na Web
   /// Quando fornecido, usa proxy via Firebase Cloud Functions
-  String? _cloudFunctionUrl;
+  String? _urlServidor;
 
   /// Getter para URL da Cloud Function
-  String? get cloudFunctionUrl => _cloudFunctionUrl;
+  String? get urlServidor => _urlServidor;
 
   Future<void> authenticate({
     required String consumerKey,
@@ -226,7 +226,7 @@ class ApiClient {
     String ambiente = 'trial',
     /// URL da Cloud Function (para uso na Web)
     /// Exemplo: 'https://us-central1-projeto.cloudfunctions.net'
-    String? cloudFunctionUrl,
+    String? urlServidor,
     /// Nome do segredo do certificado no Secret Manager (para Cloud Function)
     String? certSecretName,
     /// Nome do segredo da senha no Secret Manager (para Cloud Function)
@@ -234,12 +234,12 @@ class ApiClient {
   }) async {
     try {
       // Salvar URL da Cloud Function para uso posterior
-      _cloudFunctionUrl = cloudFunctionUrl;
+      _urlServidor = urlServidor;
 
-      // Se cloudFunctionUrl fornecida, usar Cloud Function (para Web)
-      if (cloudFunctionUrl != null && cloudFunctionUrl.isNotEmpty) {
+      // Se urlServidor fornecida, usar Cloud Function (para Web)
+      if (urlServidor != null && urlServidor.isNotEmpty) {
         await _authenticateViaCloudFunction(
-          cloudFunctionUrl: cloudFunctionUrl,
+          urlServidor: urlServidor,
           consumerKey: consumerKey,
           consumerSecret: consumerSecret,
           contratanteNumero: contratanteNumero,
@@ -416,7 +416,7 @@ class ApiClient {
     String? certificadoProcuradorPassword,
     
     /// URL da Cloud Function (para uso na Web)
-    String? cloudFunctionUrl,
+    String? urlServidor,
     /// Nome do segredo do certificado no Secret Manager
     String? certSecretName,
     /// Nome do segredo da senha no Secret Manager
@@ -425,12 +425,12 @@ class ApiClient {
     String? firebaseToken,
   }) async {
     // Salvar URL da Cloud Function
-    _cloudFunctionUrl = cloudFunctionUrl;
+    _urlServidor = urlServidor;
     
-    // Se cloudFunctionUrl fornecida, usar Cloud Function (para Web)
-    if (cloudFunctionUrl != null && cloudFunctionUrl.isNotEmpty && contratanteNome != null && autorNome != null) {
+    // Se urlServidor fornecida, usar Cloud Function (para Web)
+    if (urlServidor != null && urlServidor.isNotEmpty && contratanteNome != null && autorNome != null) {
       await _authenticateWithProcuradorViaCloudFunction(
-        cloudFunctionUrl: cloudFunctionUrl,
+        urlServidor: urlServidor,
         consumerKey: consumerKey,
         consumerSecret: consumerSecret,
         contratanteNumero: contratanteNumero,
@@ -515,7 +515,7 @@ class ApiClient {
 
   /// Autentica via Firebase Cloud Function (para uso na Web)
   Future<void> _authenticateViaCloudFunction({
-    required String cloudFunctionUrl,
+    required String urlServidor,
     required String consumerKey,
     required String consumerSecret,
     required String contratanteNumero,
@@ -525,7 +525,7 @@ class ApiClient {
     String? certPasswordSecretName,
     String? firebaseToken,
   }) async {
-    final url = Uri.parse('$cloudFunctionUrl/autenticar_serpro');
+    final url = Uri.parse('$urlServidor/autenticar_serpro');
     final body = <String, String>{
       'consumer_key': consumerKey,
       'consumer_secret': consumerSecret,
@@ -561,7 +561,7 @@ class ApiClient {
 
   /// Autentica Procurador via Firebase Cloud Function (para uso na Web)
   Future<void> _authenticateWithProcuradorViaCloudFunction({
-    required String cloudFunctionUrl,
+    required String urlServidor,
     required String consumerKey,
     required String consumerSecret,
     required String contratanteNumero,
@@ -574,7 +574,7 @@ class ApiClient {
     String? certPasswordSecretName,
     String? firebaseToken,
   }) async {
-    final url = Uri.parse('$cloudFunctionUrl/autenticar_procurador');
+    final url = Uri.parse('$urlServidor/autenticar_procurador');
     final body = <String, String>{
       'consumer_key': consumerKey,
       'consumer_secret': consumerSecret,
@@ -607,7 +607,7 @@ class ApiClient {
         procuradorToken: responseBody['procurador_token'] ?? '',
       );
       _ambiente = ambiente;
-      _cloudFunctionUrl = cloudFunctionUrl;
+      _urlServidor = urlServidor;
     } else {
       throw _buildErrorResponse(mensagem: 'Falha procurador via Cloud Function', status: response.statusCode, resposta: response.body);
     }

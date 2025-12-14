@@ -1,0 +1,16 @@
+# Dependências para Firebase Functions
+firebase_functions>=0.1.0
+firebase_admin>=6.0.0
+google-cloud-secret-manager>=2.16.0
+
+# Dependências para FastAPI (localhost)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# Dependências comuns
+requests>=2.31.0
+cryptography>=41.0.0
+pyOpenSSL>=23.0.0
+lxml>=4.9.0
+signxml>=3.2.0

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
@@ -119,12 +118,8 @@ Future<void> testeProducaoComCertificado() async {
     const contratanteCNPJ = '';
     const contratanteNome = '';
 
-    // Detectar diretório
-    final currentDir = Directory.current.path;
-    final isInExample = currentDir.endsWith('example_dart');
-
     // Certificado do CONTRATANTE (para mTLS OAuth2)
-    final certContratantePath = isInExample ? 'logica.pfx' : 'example_dart/logica.pfx';
+    final certContratantePath = 'certificado.pfx';
     const certContratanteSenha = '';
 
     // ═══════════════════════════════════════════════════════════════

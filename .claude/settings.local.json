@@ -32,7 +32,11 @@
       "Bash(curl:*)",
       "Bash(flutter:*)",
       "Bash(done:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(C:\\Users\\marlon\\Data\\dev\\my_flutter\\**)",
+      "Bash(test:*)",
+      "Bash(mkdir:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
