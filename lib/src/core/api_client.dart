@@ -433,6 +433,9 @@ class ApiClient {
     // Salvar URL da Cloud Function
     _urlServidor = urlServidor;
 
+    // Limpar dados da autenticação anterior para evitar conflitos
+    clearAuthentication();
+
     // Se urlServidor fornecida, usar Cloud Function (para Web)
     if (urlServidor != null && urlServidor.isNotEmpty && contratanteNome != null && autorNome != null) {
       await _authenticateWithProcuradorViaCloudFunction(
@@ -455,9 +458,6 @@ class ApiClient {
       );
       return;
     }
-
-    // Limpar dados da autenticação anterior para evitar conflitos
-    clearAuthentication();
 
     // Validações dos parâmetros do procurador (se fornecidos)
     if (contratanteNome != null || autorNome != null) {
@@ -627,7 +627,7 @@ class ApiClient {
       _ambiente = ambiente;
       _urlServidor = urlServidor;
     } else {
-      throw _buildErrorResponse(mensagem: 'Falha procurador via Cloud Function', status: response.statusCode, resposta: response.body);
+      throw _buildErrorResponse(mensagem: 'Falha procurador via Servidor', status: response.statusCode, resposta: response.body);
     }
   }
 
