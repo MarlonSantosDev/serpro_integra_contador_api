@@ -606,19 +606,6 @@ class ApiClient {
     if (certificadoProcuradorBase64 != null) body['certificado_procurador_base64'] = certificadoProcuradorBase64;
     if (certificadoProcuradorPassword != null) body['certificado_procurador_senha'] = certificadoProcuradorPassword;
 
-    // Debug temporário
-    print('[DEBUG DART] Todas as chaves no body: ${body.keys.toList()}');
-    print('[DEBUG DART] autor_pedido_dados_numero: ${body['autor_pedido_dados_numero']}');
-    print('[DEBUG DART] certificado_base64 presente: ${certificadoDigitalBase64 != null} (tamanho: ${certificadoDigitalBase64?.length ?? 0})');
-    print(
-      '[DEBUG DART] certificado_procurador_base64 presente: ${certificadoProcuradorBase64 != null} (tamanho: ${certificadoProcuradorBase64?.length ?? 0})',
-    );
-    print('[DEBUG DART] body[certificado_procurador_base64] no Map: ${body.containsKey('certificado_procurador_base64')}');
-    if (body.containsKey('certificado_procurador_base64')) {
-      print('[DEBUG DART] Tamanho real no Map: ${body['certificado_procurador_base64']?.length}');
-    }
-    print('[DEBUG DART] Enviando para: $url');
-
     final headers = <String, String>{'Content-Type': 'application/json'};
     if (firebaseToken != null) headers['Authorization'] = 'Bearer $firebaseToken';
 
