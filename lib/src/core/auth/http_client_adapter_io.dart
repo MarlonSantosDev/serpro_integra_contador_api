@@ -46,16 +46,10 @@ class HttpClientAdapter {
       // Aceitar todos os certificados do servidor (focando apenas em client auth)
       _httpClient!.badCertificateCallback = (cert, host, port) => true;
     } on TlsException catch (e) {
-      throw CertificateException(
-        'Erro SSL/TLS ao carregar certificado: ${e.message}',
-        reason: CertificateErrorReason.invalidFormat,
-      );
+      throw CertificateException('Erro SSL/TLS ao carregar certificado: ${e.message}', reason: CertificateErrorReason.invalidFormat);
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException(
-        'Erro ao configurar mTLS com bytes: $e',
-        reason: CertificateErrorReason.invalidFormat,
-      );
+      throw CertificateException('Erro ao configurar mTLS com bytes: $e', reason: CertificateErrorReason.invalidFormat);
     }
   }
 
@@ -100,12 +94,7 @@ class HttpClientAdapter {
   /// [certPath] Caminho para o arquivo de certificado P12/PFX
   /// [certPassword] Senha do certificado
   /// [isProduction] Se está em ambiente de produção
-  Future<void> configureMtlsUnified({
-    String? certBase64,
-    String? certPath,
-    String? certPassword,
-    required bool isProduction,
-  }) async {
+  Future<void> configureMtlsUnified({String? certBase64, String? certPath, String? certPassword, required bool isProduction}) async {
     try {
       if (!isProduction) {
         // Modo trial - sem certificado necessário
@@ -118,10 +107,7 @@ class HttpClientAdapter {
 
       // Em produção, precisa de certificado
       if (certPassword == null) {
-        throw CertificateException(
-          'Senha do certificado é obrigatória em produção',
-          reason: CertificateErrorReason.invalidPassword,
-        );
+        throw CertificateException('Senha do certificado é obrigatória em produção', reason: CertificateErrorReason.invalidPassword);
       }
 
       // Priorizar Base64 se fornecido
@@ -146,10 +132,7 @@ class HttpClientAdapter {
       );
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException(
-        'Erro ao configurar mTLS: $e',
-        reason: CertificateErrorReason.invalidFormat,
-      );
+      throw CertificateException('Erro ao configurar mTLS: $e', reason: CertificateErrorReason.invalidFormat);
     }
   }
 
