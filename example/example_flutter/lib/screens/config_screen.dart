@@ -31,7 +31,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
     _consumerSecretController.text = '06aef429-a981-3ec5-a1f8-71d38d86481e';
     _contratanteController.text = '00000000000191';
     _autorPedidoController.text = '00000000191';
-    _urlServidorController.text = 'http://localhost:8080';
+    _urlServidorController.text = 'http://localhost:8000';
   }
 
   @override

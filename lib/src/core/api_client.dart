@@ -718,13 +718,39 @@ class ApiClient {
     headers['X-Request-Tag'] = requestTag;
 
     // Executar requisição HTTP POST
-    final response = await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
-    //print("================================================");
-    //print("Endpoint: $_baseUrl$endpoint");
-    //print("headers: ${headers}");
-    //print("requestBody: ${json.encode(requestBody)}");
-    //print("responseBody: ${response.body}");
-    //print("================================================");
+    final response = await (() async {
+      // Se urlServidor estiver configurado (Web), usar proxy
+      if (_urlServidor != null && _urlServidor!.isNotEmpty) {
+        final proxyUrl = Uri.parse('$_urlServidor/proxy_serpro');
+        final proxyHeaders = <String, String>{'Content-Type': 'application/json'};
+        final proxyBody = {
+          'endpoint': endpoint,
+          'body': requestBody,
+          'access_token': _authModel!.accessToken,
+          'jwt_token': _authModel!.jwtToken,
+          'procurador_token': _authModel!.procuradorToken.isNotEmpty ? _authModel!.procuradorToken : null,
+          'ambiente': _ambiente,
+          'certificado_base64': _storedCredentials?.certBase64,
+          'certificado_senha': _storedCredentials?.certPassword,
+        };
+
+        //print("================================================");
+        //print("Usando proxy: $proxyUrl");
+        //print("Proxy body: ${json.encode(proxyBody)}");
+        //print("================================================");
+
+        return await http.post(proxyUrl, headers: proxyHeaders, body: json.encode(proxyBody));
+      } else {
+        // Requisição direta (Desktop/Mobile ou quando urlServidor não está configurado)
+        //print("================================================");
+        //print("Endpoint direto: $_baseUrl$endpoint");
+        //print("headers: ${headers}");
+        //print("requestBody: ${json.encode(requestBody)}");
+        //print("================================================");
+
+        return await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
+      }
+    })();
     // Verificar se a requisição foi bem-sucedida
     if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
