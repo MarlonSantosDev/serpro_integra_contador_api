@@ -62,6 +62,8 @@ class AutenticarProcuradorRequest(BaseModel):
     ambiente: str = "trial"
     certificado_base64: Optional[str] = None
     certificado_senha: Optional[str] = None
+    certificado_procurador_base64: Optional[str] = None
+    certificado_procurador_senha: Optional[str] = None
 
 
 class ProxySerproRequest(BaseModel):

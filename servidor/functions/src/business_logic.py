@@ -118,9 +118,35 @@ def process_autenticar_procurador(data: Dict[str, Any], get_secret_fn=None) -> D
 
     ambiente = data.get("ambiente", "trial")
 
-    # Obter certificado
+    # Obter certificado do CONTRATANTE (para mTLS OAuth2)
     cert_base64 = data.get("certificado_base64")
     cert_password = data.get("certificado_senha")
+
+    # Obter certificado do PROCURADOR (para assinar XML)
+    procurador_cert_base64 = data.get("certificado_procurador_base64")
+    procurador_cert_password = data.get("certificado_procurador_senha")
+
+    # Debug temporário
+    import logging
+    logging.info(f"[DEBUG] Todas as chaves recebidas no data: {list(data.keys())}")
+    logging.info(f"[DEBUG] autor_pedido_dados_numero: {data.get('autor_pedido_dados_numero')}")
+    logging.info(f"[DEBUG] cert_base64 presente: {bool(cert_base64)} (tamanho: {len(cert_base64) if cert_base64 else 0})")
+    logging.info(f"[DEBUG] procurador_cert_base64 presente: {bool(procurador_cert_base64)} (tamanho: {len(procurador_cert_base64) if procurador_cert_base64 else 0})")
+
+    # Verificar se existe com outro nome
+    for key in data.keys():
+        if 'procurador' in key.lower() or 'certificado' in key.lower():
+            value = data[key]
+            if isinstance(value, str):
+                logging.info(f"[DEBUG] Chave relacionada encontrada: {key} (tamanho: {len(value)})")
+
+    # Se não forneceu certificado procurador separado, usa o mesmo (fallback)
+    if not procurador_cert_base64:
+        logging.info("[DEBUG] FALLBACK: usando certificado contratante para assinar")
+        procurador_cert_base64 = cert_base64
+        procurador_cert_password = cert_password
+    else:
+        logging.info("[DEBUG] Usando certificado procurador separado para assinar")
 
     if get_secret_fn and ambiente == "producao" and not cert_base64:
         cert_secret = data.get("cert_secret_name")
@@ -159,9 +185,9 @@ def process_autenticar_procurador(data: Dict[str, Any], get_secret_fn=None) -> D
         autor_nome=data["autor_nome"]
     )
 
-    # 3. Assinar XML
-    cert_bytes = base64.b64decode(cert_base64)
-    xml_assinado = assinar_xml(xml_termo, cert_bytes, cert_password)
+    # 3. Assinar XML - USAR CERTIFICADO DO PROCURADOR
+    procurador_cert_bytes = base64.b64decode(procurador_cert_base64)
+    xml_assinado = assinar_xml(xml_termo, procurador_cert_bytes, procurador_cert_password)
 
     # 4. Enviar para API
     xml_base64 = base64.b64encode(xml_assinado.encode()).decode()
