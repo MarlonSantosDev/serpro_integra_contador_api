@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SERPRO Integra Contador - Testes',
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), useMaterial3: true),
+      debugShowCheckedModeBanner: false,
       home: const HomeScreen(),
     );
   }

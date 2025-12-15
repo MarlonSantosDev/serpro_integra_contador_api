@@ -31,6 +31,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
     _consumerSecretController.text = '06aef429-a981-3ec5-a1f8-71d38d86481e';
     _contratanteController.text = '00000000000191';
     _autorPedidoController.text = '00000000191';
+    _urlServidorController.text = 'http://localhost:8080';
   }
 
   @override
@@ -98,6 +99,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
           children: [
             // Ambiente
             Card(
+              color: Colors.redAccent.withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -259,7 +261,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
               decoration: const InputDecoration(
                 labelText: 'URL Servidor (Opcional)',
                 border: OutlineInputBorder(),
-                helperText: 'URL da Cloud Function para uso na Web',
+                helperText: 'URL do servidor externo para uso na Web',
               ),
             ),
             const SizedBox(height: 24),
