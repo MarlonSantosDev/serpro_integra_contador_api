@@ -41,7 +41,7 @@ def criar_termo_xml(
     autor_tipo = "PJ" if len(autor_limpo) == 14 else "PF"
 
     # Datas (formato AAAAMMDD)
-    agora = datetime.now(timezone.utc)
+    agora = datetime.now()
     data_assinatura = agora.strftime("%Y%m%d")
     # Vigência de 1 ano
     vigencia = agora.replace(year=agora.year + 1)
