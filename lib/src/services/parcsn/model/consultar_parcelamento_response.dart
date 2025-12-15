@@ -192,6 +192,9 @@ class DetalhesConsolidacao {
   }
 }
 
+/// Representa uma alteração de dívida no parcelamento PARCSN.
+/// 
+/// Contém informações sobre o número, tipo e detalhes da alteração.
 class AlteracaoDivida {
   final int numero;
   final String tipo;
@@ -199,6 +202,7 @@ class AlteracaoDivida {
 
   AlteracaoDivida({required this.numero, required this.tipo, required this.detalhes});
 
+  /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
       numero: int.parse(json['numero'].toString()),

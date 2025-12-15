@@ -208,6 +208,10 @@ class DetalhesConsolidacao {
   }
 }
 
+/// Representa uma alteração de dívida no parcelamento RELPSN.
+///
+/// Contém informações sobre consolidação de débitos, valores remanescentes
+/// e parcelas relacionadas à alteração.
 class AlteracaoDivida {
   final int dataAlteracaoDivida;
   final String identificadorConsolidacao;
@@ -229,6 +233,10 @@ class AlteracaoDivida {
     required this.parcelasAlteracao,
   });
 
+  /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
+  ///
+  /// Converte automaticamente o identificador de consolidação numérico
+  /// para sua descrição textual correspondente.
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     // Converter identificadorConsolidacao numérico para valor descritivo
     final identificadorStr = json['identificadorConsolidacao']?.toString() ?? '';

@@ -262,6 +262,10 @@ class DetalhesConsolidacao {
   }
 }
 
+/// Representa uma alteração de dívida no parcelamento PARCMEI.
+/// 
+/// Contém informações sobre valores consolidados, parcelas remanescentes
+/// e detalhes da alteração da dívida.
 class AlteracaoDivida {
   final double valorTotalConsolidado;
   final int parcelasRemanescentes;
@@ -277,6 +281,7 @@ class AlteracaoDivida {
     required this.detalhesAlteracaoDivida,
   });
 
+  /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
       valorTotalConsolidado: double.tryParse(json['valorTotalConsolidado']?.toString() ?? '0') ?? 0.0,

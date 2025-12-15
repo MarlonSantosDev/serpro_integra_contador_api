@@ -28,11 +28,7 @@ class ConsultarParcelamentoResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -266,6 +262,10 @@ class DetalhesConsolidacao {
   }
 }
 
+/// Representa uma alteração de dívida no parcelamento PARCSN Especial.
+///
+/// Contém informações sobre valores consolidados, parcelas remanescentes
+/// e detalhes da consolidação.
 class AlteracaoDivida {
   final double valorTotalConsolidado;
   final int parcelasRemanescentes;
@@ -281,6 +281,7 @@ class AlteracaoDivida {
     required this.detalhesConsolidacao,
   });
 
+  /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
       valorTotalConsolidado: (num.parse(json['valorTotalConsolidado'].toString())).toDouble(),

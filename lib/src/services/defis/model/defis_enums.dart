@@ -14,9 +14,7 @@ enum TipoEventoSituacaoEspecial {
 
   static TipoEventoSituacaoEspecial? fromCodigo(int codigo) {
     try {
-      return TipoEventoSituacaoEspecial.values.firstWhere(
-        (e) => e.codigo == codigo,
-      );
+      return TipoEventoSituacaoEspecial.values.firstWhere((e) => e.codigo == codigo);
     } catch (e) {
       return null;
     }
@@ -25,18 +23,9 @@ enum TipoEventoSituacaoEspecial {
 
 /// Regra para inatividade
 enum RegraInatividade {
-  atividadesZeroNao(
-    0,
-    'As atividades do PGDASD totalizam zero. Responde NÃO à pergunta sobre inatividade',
-  ),
-  atividadesZeroSim(
-    1,
-    'As atividades do PGDASD totalizam zero. Responde SIM à pergunta sobre inatividade',
-  ),
-  atividadesMaiorZero(
-    2,
-    'O total das atividades do PGDASD (incluindo valor fixo) é maior que zero',
-  );
+  atividadesZeroNao(0, 'As atividades do PGDASD totalizam zero. Responde NÃO à pergunta sobre inatividade'),
+  atividadesZeroSim(1, 'As atividades do PGDASD totalizam zero. Responde SIM à pergunta sobre inatividade'),
+  atividadesMaiorZero(2, 'O total das atividades do PGDASD (incluindo valor fixo) é maior que zero');
 
   const RegraInatividade(this.codigo, this.descricao);
   final int codigo;
@@ -63,9 +52,7 @@ enum TipoBeneficiarioDoacao {
 
   static TipoBeneficiarioDoacao? fromCodigo(int codigo) {
     try {
-      return TipoBeneficiarioDoacao.values.firstWhere(
-        (e) => e.codigo == codigo,
-      );
+      return TipoBeneficiarioDoacao.values.firstWhere((e) => e.codigo == codigo);
     } catch (e) {
       return null;
     }
@@ -121,14 +108,19 @@ enum AdministracaoTributaria {
   municipal(4, 'Municipal');
 
   const AdministracaoTributaria(this.codigo, this.descricao);
+
+  /// Código numérico da administração tributária
   final int codigo;
+
+  /// Descrição textual da administração tributária
   final String descricao;
 
+  /// Retorna a instância de [AdministracaoTributaria] correspondente ao código fornecido.
+  ///
+  /// Retorna `null` se nenhum valor corresponder ao código.
   static AdministracaoTributaria? fromCodigo(int codigo) {
     try {
-      return AdministracaoTributaria.values.firstWhere(
-        (e) => e.codigo == codigo,
-      );
+      return AdministracaoTributaria.values.firstWhere((e) => e.codigo == codigo);
     } catch (e) {
       return null;
     }
