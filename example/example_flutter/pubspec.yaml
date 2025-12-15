@@ -1,0 +1,25 @@
+name: example_flutter
+description: "Aplicação de exemplo para o pacote serpro_integra_contador_api"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  serpro_integra_contador_api:
+    path: ../../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
