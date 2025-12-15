@@ -27,50 +27,57 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   }
 
   void _initializeControllers() {
-    // Controllers comuns para todos os serviços
-    _controllers['contribuinteNumero'] = TextEditingController();
-    _controllers['contratanteNumero'] = TextEditingController();
-    _controllers['autorPedidoDadosNumero'] = TextEditingController();
+    // Controllers comuns para todos os serviços com valores de exemplo
+    _controllers['contribuinteNumero'] = TextEditingController(text: '00000000000000');
+    _controllers['contratanteNumero'] = TextEditingController(text: '00000000000000');
+    _controllers['autorPedidoDadosNumero'] = TextEditingController(text: '00000000000000');
 
-    // Controllers específicos por serviço
+    // Controllers específicos por serviço com valores de exemplo dos arquivos Dart
     switch (widget.service.id) {
       case 'ccmei':
         // CCMEI não precisa de campos adicionais
         break;
       case 'pgmei':
-        _controllers['competencia'] = TextEditingController();
+        _controllers['competencia'] = TextEditingController(text: '201901');
         break;
       case 'pgdasd':
-        _controllers['periodoApuracao'] = TextEditingController();
+        _controllers['periodoApuracao'] = TextEditingController(text: '202101');
         break;
       case 'caixa_postal':
-        _controllers['cpfCnpj'] = TextEditingController();
+        _controllers['cpfCnpj'] = TextEditingController(text: '99999999999');
+        _controllers['contribuinteNumero'] = TextEditingController(text: '99999999999');
+        _controllers['contratanteNumero'] = TextEditingController(text: '00000000000000');
+        _controllers['autorPedidoDadosNumero'] = TextEditingController(text: '00000000000000');
         break;
       case 'dctfweb':
-        _controllers['anoPA'] = TextEditingController();
-        _controllers['mesPA'] = TextEditingController();
+        _controllers['anoPA'] = TextEditingController(text: '2027');
+        _controllers['mesPA'] = TextEditingController(text: '11');
         break;
       case 'sicalc':
-        _controllers['codigoReceita'] = TextEditingController();
+        _controllers['codigoReceita'] = TextEditingController(text: '6106');
         break;
       case 'pagtoweb':
-        _controllers['dataInicial'] = TextEditingController();
-        _controllers['dataFinal'] = TextEditingController();
+        _controllers['dataInicial'] = TextEditingController(text: '2024-01-01');
+        _controllers['dataFinal'] = TextEditingController(text: '2024-12-31');
         break;
       case 'eventos_atualizacao':
         // Pode receber múltiplos CNPJs separados por vírgula
+        _controllers['contribuinteNumero'] = TextEditingController(text: '00000000000000');
         break;
       case 'procuracoes':
         _controllers['outorgado'] = TextEditingController();
         break;
       case 'autenticaprocurador':
-        _controllers['contratanteNome'] = TextEditingController();
-        _controllers['autorNome'] = TextEditingController();
+        _controllers['contratanteNome'] = TextEditingController(text: 'Empresa Contratante');
+        _controllers['autorNome'] = TextEditingController(text: 'Procurador');
         _controllers['certificadoBase64'] = TextEditingController();
         _controllers['senhaCertificado'] = TextEditingController();
         break;
       case 'regime_apuracao':
-        _controllers['anoCalendario'] = TextEditingController();
+        _controllers['anoCalendario'] = TextEditingController(text: '2024');
+        break;
+      case 'mit':
+        _controllers['anoApuracao'] = TextEditingController(text: '2024');
         break;
     }
   }
@@ -217,11 +224,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = CcmeiService(apiClient);
     final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
 
-    // Emitir CCMEI
+    // Emitir CCMEI (exemplo de ccmei.dart)
     final response = await service.emitirCcmei(
       cnpj,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -233,10 +240,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   Future<dynamic> _executePgmei(ApiClient apiClient) async {
     final service = PgmeiService(apiClient);
-    final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
-    final competencia = _getValueOr('competencia', '202401');
+    final cnpj = _getValueOr('contribuinteNumero', '00000000000100');
+    final competencia = _getValueOr('competencia', '201901');
 
-    // Gerar DAS com PDF
+    // Gerar DAS com PDF (exemplo de pgmei.dart)
     final response = await service.gerarDas(
       cnpj: cnpj,
       periodoApuracao: competencia,
@@ -269,14 +276,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Future<dynamic> _executePgdasd(ApiClient apiClient) async {
     final service = PgdasdService(apiClient);
     final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
-    final periodoApuracao = _getValue('periodoApuracao') ?? '012024';
+    final periodoApuracao = _getValue('periodoApuracao') ?? '201801';
 
-    // Consultar última declaração
-    final response = await service.consultarUltimaDeclaracao(
-      contribuinteNumero: cnpj,
-      request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao),
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+    // Consultar última declaração (exemplo de pgdasd.dart)
+    final response = await service.consultarUltimaDeclaracaoPorPeriodo(
+      cnpj: cnpj,
+      periodoApuracao: periodoApuracao,
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -290,11 +297,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = CaixaPostalService(apiClient);
     final cpfCnpj = _getValueOr('cpfCnpj', '99999999999');
 
-    // Obter indicador de novas mensagens
+    // Obter indicador de novas mensagens (exemplo de caixa_postal.dart)
     final response = await service.obterIndicadorNovasMensagens(
       cpfCnpj,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -307,17 +314,16 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Future<dynamic> _executeDctfweb(ApiClient apiClient) async {
     final service = DctfWebService(apiClient);
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
-    final anoPA = _getValue('anoPA') ?? '2024';
-    final mesPA = _getValue('mesPA') ?? '01';
+    final anoPA = _getValue('anoPA') ?? '2027';
+    final mesPA = _getValue('mesPA') ?? '11';
 
-    // Gerar documento de arrecadação
-    final response = await service.gerarDocumentoArrecadacao(
+    // Gerar documento de arrecadação (exemplo de dctf_web.dart)
+    final response = await service.gerarDarfGeralMensal(
       contribuinteNumero: contribuinte,
-      categoria: CategoriaDctf.geralMensal,
       anoPA: anoPA,
       mesPA: mesPA,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -331,11 +337,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = DefisService(apiClient);
     final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
 
-    // Consultar declarações transmitidas
+    // Consultar declarações transmitidas (exemplo de defis.dart)
     final response = await service.consultarDeclaracoesTransmitidas(
       contribuinteNumero: cnpj,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -349,11 +355,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = SitfisService(apiClient);
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
 
-    // Solicitar protocolo
+    // Solicitar protocolo (exemplo padrão)
     final protocoloResponse = await service.solicitarProtocoloRelatorio(
       contribuinte,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -370,14 +376,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   Future<dynamic> _executeSicalc(ApiClient apiClient) async {
     final service = SicalcService(apiClient);
-    final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
-    final codigoReceita = _getValue('codigoReceita') ?? '1850';
+    final contribuinte = _getValueOr('contribuinteNumero', '00000000000');
+    final codigoReceita = _getValue('codigoReceita') ?? '6106';
 
-    // Consultar receitas
+    // Consultar receitas (exemplo de sicalc.dart)
+    final request = SicalcService.criarConsultaReceitas(contribuinteNumero: contribuinte, codigoReceita: codigoReceita);
     final response = await service.consultarReceitas(
-      ConsultarReceitasRequest(contribuinteNumero: contribuinte, codigoReceita: codigoReceita),
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      request,
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -427,11 +434,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = RelpmeiService(apiClient);
     final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
 
-    // Consultar pedidos de parcelamento
+    // Consultar pedidos de parcelamento (exemplo padrão)
     final response = await service.consultarPedidos(
       contribuinteNumero: cnpj,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -484,11 +491,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = DteService(apiClient);
     final cnpj = _getValueOr('contribuinteNumero', '00000000000000');
 
-    // Obter indicador DTE
+    // Obter indicador DTE (exemplo padrão)
     final response = await service.obterIndicadorDte(
       cnpj,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -509,13 +516,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final dataInicial = _getValue('dataInicial');
     final dataFinal = _getValue('dataFinal');
 
-    // Consultar pagamentos
+    // Consultar pagamentos (exemplo padrão)
     final response = await service.consultarPagamentos(
       contribuinteNumero: contribuinte,
       dataInicial: dataInicial,
       dataFinal: dataFinal,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
@@ -526,12 +533,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
     final anoApuracao = int.tryParse(_getValue('anoApuracao') ?? '2024') ?? 2024;
 
-    // Listar apurações
+    // Listar apurações (exemplo padrão)
     final response = await service.listarApuracaoes(
       contribuinteNumero: contribuinte,
       anoApuracao: anoApuracao,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -548,12 +555,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final service = EventosAtualizacaoService(apiClient);
     final cnpjs = _getValue('contribuinteNumero')?.split(',').where((e) => e.trim().isNotEmpty).toList() ?? ['00000000000000'];
 
-    // Solicitar eventos para PJ
+    // Solicitar eventos para PJ (exemplo padrão)
     final response = await service.solicitarEventosPJ(
       cnpjs: cnpjs,
       evento: TipoEvento.dctfWeb,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
@@ -564,12 +571,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final outorgante = _getValueOr('contribuinteNumero', '00000000000000');
     final outorgado = _getValue('outorgado');
 
-    // Consultar procurações
+    // Consultar procurações (exemplo padrão)
     final response = await service.consultarProcuracao(
       outorgante: outorgante,
       outorgado: outorgado,
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -629,12 +636,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
     final anoCalendario = int.tryParse(_getValue('anoCalendario') ?? '2024') ?? 2024;
 
-    // Consultar opção de regime
+    // Consultar opção de regime (exemplo padrão)
     final response = await service.consultarOpcaoRegime(
       contribuinteNumero: contribuinte,
       request: ConsultarOpcaoRegimeRequest(anoCalendario: anoCalendario),
-      contratanteNumero: _getValue('contratanteNumero'),
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero'),
+      contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
+      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
@@ -691,7 +698,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['competencia'],
-            decoration: const InputDecoration(labelText: 'Competência (AAAAMM)', border: OutlineInputBorder(), helperText: 'Exemplo: 202401'),
+            decoration: const InputDecoration(labelText: 'Competência (AAAAMM)', border: OutlineInputBorder(), helperText: 'Exemplo: 201901'),
             keyboardType: TextInputType.number,
           ),
         );
@@ -704,7 +711,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             decoration: const InputDecoration(
               labelText: 'CPF/CNPJ',
               border: OutlineInputBorder(),
-              helperText: 'CPF ou CNPJ para consultar mensagens',
+              helperText: 'Exemplo: 99999999999 (CPF) ou 99999999999999 (CNPJ)',
             ),
             keyboardType: TextInputType.number,
           ),
@@ -715,7 +722,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['periodoApuracao'],
-            decoration: const InputDecoration(labelText: 'Período de Apuração (MMAAAA)', border: OutlineInputBorder(), helperText: 'Exemplo: 012024'),
+            decoration: const InputDecoration(labelText: 'Período de Apuração (AAAAMM)', border: OutlineInputBorder(), helperText: 'Exemplo: 202101'),
             keyboardType: TextInputType.number,
           ),
         );
@@ -725,7 +732,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['anoPA'],
-            decoration: const InputDecoration(labelText: 'Ano PA (AAAA)', border: OutlineInputBorder(), helperText: 'Exemplo: 2024'),
+            decoration: const InputDecoration(labelText: 'Ano PA (AAAA)', border: OutlineInputBorder(), helperText: 'Exemplo: 2027'),
             keyboardType: TextInputType.number,
           ),
         );
@@ -733,7 +740,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['mesPA'],
-            decoration: const InputDecoration(labelText: 'Mês PA (MM)', border: OutlineInputBorder(), helperText: 'Exemplo: 01'),
+            decoration: const InputDecoration(labelText: 'Mês PA (MM)', border: OutlineInputBorder(), helperText: 'Exemplo: 11'),
             keyboardType: TextInputType.number,
           ),
         );
@@ -743,7 +750,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['codigoReceita'],
-            decoration: const InputDecoration(labelText: 'Código da Receita', border: OutlineInputBorder(), helperText: 'Exemplo: 1850'),
+            decoration: const InputDecoration(labelText: 'Código da Receita', border: OutlineInputBorder(), helperText: 'Exemplo: 6106'),
             keyboardType: TextInputType.number,
           ),
         );
