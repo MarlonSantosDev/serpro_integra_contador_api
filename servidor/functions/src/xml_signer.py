@@ -7,11 +7,40 @@ Usado para assinar o Termo de Autorização do Procurador.
 import base64
 from datetime import datetime, timezone
 from typing import Optional
+
+# Import para fuso horário de Brasília
+try:
+    # Python 3.9+
+    from zoneinfo import ZoneInfo
+except ImportError:
+    # Fallback para versões anteriores
+    import pytz
+
 from lxml import etree
 from signxml import XMLSigner, methods
 from cryptography.hazmat.primitives.serialization import pkcs12
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
+
+
+def get_brasilia_datetime() -> datetime:
+    """
+    Retorna a data e hora atual no fuso horário de Brasília (America/Sao_Paulo).
+
+    Sempre retorna data/hora no horário de Brasília, independentemente
+    do ambiente ou configuração da máquina.
+
+    Returns:
+        datetime: Data/hora atual em Brasília
+    """
+    try:
+        # Python 3.9+
+        brasilia_tz = ZoneInfo("America/Sao_Paulo")
+        return datetime.now(brasilia_tz)
+    except NameError:
+        # Fallback para pytz
+        brasilia_tz = pytz.timezone("America/Sao_Paulo")
+        return datetime.now(brasilia_tz)
 
 
 def criar_termo_xml(
@@ -40,8 +69,8 @@ def criar_termo_xml(
     contratante_tipo = "PJ" if len(contratante_limpo) == 14 else "PF"
     autor_tipo = "PJ" if len(autor_limpo) == 14 else "PF"
 
-    # Datas (formato AAAAMMDD)
-    agora = datetime.now()
+    # Datas (formato AAAAMMDD) - sempre no fuso horário de Brasília
+    agora = get_brasilia_datetime()
     data_assinatura = agora.strftime("%Y%m%d")
     # Vigência de 1 ano
     vigencia = agora.replace(year=agora.year + 1)

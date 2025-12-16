@@ -14,3 +14,4 @@ cryptography>=41.0.0
 pyOpenSSL>=23.0.0
 lxml>=4.9.0
 signxml>=3.2.0
+pytz>=2023.0.0
