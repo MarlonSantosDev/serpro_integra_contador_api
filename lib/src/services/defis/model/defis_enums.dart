@@ -1,4 +1,5 @@
 /// Enums para os dados de domínio do DEFIS conforme documentação oficial
+library;
 
 /// Tipos de evento para situação especial
 enum TipoEventoSituacaoEspecial {

@@ -9,11 +9,14 @@
       "dependencies": [
         "asn1lib",
         "crypto",
+        "cupertino_icons",
+        "flutter",
         "http",
         "pointycastle",
         "xml"
       ],
       "devDependencies": [
+        "flutter_lints",
         "test"
       ]
     },
@@ -46,6 +49,13 @@
         "web_socket_channel",
         "webkit_inspection_protocol",
         "yaml"
+      ]
+    },
+    {
+      "name": "flutter_lints",
+      "version": "6.0.0",
+      "dependencies": [
+        "lints"
       ]
     },
     {
@@ -85,6 +95,23 @@
         "http_parser",
         "meta",
         "web"
+      ]
+    },
+    {
+      "name": "cupertino_icons",
+      "version": "1.0.8",
+      "dependencies": []
+    },
+    {
+      "name": "flutter",
+      "version": "0.0.0",
+      "dependencies": [
+        "characters",
+        "collection",
+        "material_color_utilities",
+        "meta",
+        "sky_engine",
+        "vector_math"
       ]
     },
     {
@@ -336,6 +363,11 @@
       ]
     },
     {
+      "name": "lints",
+      "version": "6.0.0",
+      "dependencies": []
+    },
+    {
       "name": "petitparser",
       "version": "7.0.1",
       "dependencies": [
@@ -345,7 +377,7 @@
     },
     {
       "name": "meta",
-      "version": "1.16.0",
+      "version": "1.17.0",
       "dependencies": []
     },
     {
@@ -369,6 +401,28 @@
         "string_scanner",
         "typed_data"
       ]
+    },
+    {
+      "name": "sky_engine",
+      "version": "0.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "vector_math",
+      "version": "2.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "material_color_utilities",
+      "version": "0.11.1",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
+      "name": "characters",
+      "version": "1.4.0",
+      "dependencies": []
     },
     {
       "name": "string_scanner",

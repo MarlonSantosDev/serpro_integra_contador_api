@@ -4,10 +4,14 @@ version: 2.0.2
 homepage: https://github.com/MarlonSantosDev/serpro_integra_contador_api
 
 environment:
-  sdk: ^3.10.3
+  sdk: ^3.10.4
   flutter: ">=1.17.0"
 
 dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
   http: ^1.6.0
   pointycastle: ^4.0.0  # Assinatura RSA-SHA256
   asn1lib: ^1.6.5       # Análise PKCS12
@@ -15,5 +19,8 @@ dependencies:
   crypto: ^3.0.7        # Hash SHA-256
 
 dev_dependencies:
-  test: ^1.28.0
+  #flutter_test:
+  #  sdk: flutter
 
+  flutter_lints: ^6.0.0
+  test: ^1.28.0
