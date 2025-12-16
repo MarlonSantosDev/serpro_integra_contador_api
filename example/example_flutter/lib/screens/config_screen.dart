@@ -16,7 +16,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
   final _autorPedidoController = TextEditingController();
   final _senhaCertificadoController = TextEditingController();
   final _certificadoBase64Controller = TextEditingController();
-  final _urlServidorController = TextEditingController();
+  final _urlAutenticacaoController = TextEditingController();
+  final _urlAutenticacaoProcuradoController = TextEditingController();
+  final _urlProxyController = TextEditingController();
 
   String _ambiente = 'trial';
   bool _isLoading = false;
@@ -31,7 +33,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
     _consumerSecretController.text = '06aef429-a981-3ec5-a1f8-71d38d86481e';
     _contratanteController.text = '00000000000191';
     _autorPedidoController.text = '00000000191';
-    _urlServidorController.text = 'http://localhost:8000';
+    _urlAutenticacaoController.text = 'http://localhost:8000';
+    _urlAutenticacaoProcuradoController.text = 'http://localhost:8000';
+    _urlProxyController.text = 'http://localhost:8000';
   }
 
   @override
@@ -42,7 +46,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
     _autorPedidoController.dispose();
     _senhaCertificadoController.dispose();
     _certificadoBase64Controller.dispose();
-    _urlServidorController.dispose();
+    _urlAutenticacaoController.dispose();
+    _urlAutenticacaoProcuradoController.dispose();
+    _urlProxyController.dispose();
     super.dispose();
   }
 
@@ -56,6 +62,16 @@ class _ConfigScreenState extends State<ConfigScreen> {
     });
 
     try {
+      // Configurar servidores se URLs fornecidas
+      AuthService.setServidores(
+        urlAutenticacao: _urlAutenticacaoController.text.trim().isNotEmpty
+            ? _urlAutenticacaoController.text.trim() : null,
+        urlAutenticacaoProcurado: _urlAutenticacaoProcuradoController.text.trim().isNotEmpty
+            ? _urlAutenticacaoProcuradoController.text.trim() : null,
+        urlProxy: _urlProxyController.text.trim().isNotEmpty
+            ? _urlProxyController.text.trim() : null,
+      );
+
       await AuthService.authenticate(
         consumerKey: _consumerKeyController.text.trim(),
         consumerSecret: _consumerSecretController.text.trim(),
@@ -64,7 +80,6 @@ class _ConfigScreenState extends State<ConfigScreen> {
         certificadoDigitalBase64: _certificadoBase64Controller.text.trim().isNotEmpty ? _certificadoBase64Controller.text.trim() : null,
         senhaCertificado: _senhaCertificadoController.text.trim().isNotEmpty ? _senhaCertificadoController.text.trim() : null,
         ambiente: _ambiente,
-        urlServidor: _urlServidorController.text.trim().isNotEmpty ? _urlServidorController.text.trim() : null,
       );
 
       if (mounted) {
@@ -255,13 +270,35 @@ class _ConfigScreenState extends State<ConfigScreen> {
               const SizedBox(height: 16),
             ],
 
-            // URL Servidor (opcional para Web)
+            // URL Autenticação (opcional para Web)
             TextFormField(
-              controller: _urlServidorController,
+              controller: _urlAutenticacaoController,
               decoration: const InputDecoration(
-                labelText: 'URL Servidor (Opcional)',
+                labelText: 'URL Autenticação (Opcional - Web)',
                 border: OutlineInputBorder(),
-                helperText: 'URL do servidor externo para uso na Web',
+                helperText: 'URL do servidor para autenticação OAuth2',
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // URL Autenticação Procurador (opcional para Web)
+            TextFormField(
+              controller: _urlAutenticacaoProcuradoController,
+              decoration: const InputDecoration(
+                labelText: 'URL Autenticação Procurador (Opcional - Web)',
+                border: OutlineInputBorder(),
+                helperText: 'URL do servidor para autenticação de procurador',
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // URL Proxy (opcional para Web)
+            TextFormField(
+              controller: _urlProxyController,
+              decoration: const InputDecoration(
+                labelText: 'URL Proxy (Opcional - Web)',
+                border: OutlineInputBorder(),
+                helperText: 'URL do servidor proxy para requisições POST',
               ),
             ),
             const SizedBox(height: 24),

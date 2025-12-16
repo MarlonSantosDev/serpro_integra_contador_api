@@ -8,6 +8,20 @@ class AuthService {
   static ApiClient? get apiClient => _apiClient;
   static bool get isAuthenticated => _isAuthenticated;
 
+  /// Configura os servidores para web
+  static void setServidores({
+    String? urlAutenticacao,
+    String? urlAutenticacaoProcurado,
+    String? urlProxy,
+  }) {
+    _apiClient ??= ApiClient();
+    _apiClient!.setServidores(
+      urlAutenticacao: urlAutenticacao,
+      urlAutenticacaoProcurado: urlAutenticacaoProcurado,
+      urlProxy: urlProxy,
+    );
+  }
+
   /// Autentica o cliente da API
   static Future<void> authenticate({
     required String consumerKey,
@@ -18,10 +32,9 @@ class AuthService {
     String? certificadoDigitalPath,
     String? senhaCertificado,
     String ambiente = 'trial',
-    String? urlServidor,
   }) async {
-    _apiClient = ApiClient();
-    
+    _apiClient ??= ApiClient();
+
     await _apiClient!.authenticate(
       consumerKey: consumerKey,
       consumerSecret: consumerSecret,
@@ -31,9 +44,8 @@ class AuthService {
       certificadoDigitalPath: certificadoDigitalPath,
       senhaCertificado: senhaCertificado,
       ambiente: ambiente,
-      urlServidor: urlServidor,
     );
-    
+
     _isAuthenticated = true;
   }
 

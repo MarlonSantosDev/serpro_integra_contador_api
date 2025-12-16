@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('SERPRO Integra Contador - Testes'),
-            Text('Versão: 2.0.0', style: TextStyle(fontSize: 11)),
+            Text('Versão: 2.0.1', style: TextStyle(fontSize: 11)),
           ],
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

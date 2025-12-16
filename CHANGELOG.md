@@ -1,3 +1,8 @@
+## [2.0.1] - 2024-12-15
+- Implementação de autenticação
+- Exemplo de uso em example_flutter e example_dart
+- Ajustes e correções no código.
+
 ## [2.0.0] - 2024-12-14
 
 ### Breaking Changes

@@ -94,6 +94,27 @@ class ApiClient {
   /// Verifica se está autenticado
   bool get isAutenticado => _authModel != null;
 
+  /// Configura URLs dos servidores Firebase Cloud Functions
+  ///
+  /// [urlAutenticacao]: URL base para autenticação OAuth2 normal
+  /// [urlAutenticacaoProcurado]: URL base para autenticação de procurador
+  /// [urlProxy]: URL base para proxy das requisições POST (evita CORS na web)
+  ///
+  /// ## Exemplo
+  /// ```dart
+  /// final apiClient = ApiClient();
+  /// apiClient.setServidores(
+  ///   urlAutenticacaoProcurado: 'https://servidor.com.app',
+  ///   urlAutenticacao: 'https://servidor.com.app',
+  ///   urlProxy: 'https://servidor.com.app',
+  /// );
+  /// ```
+  void setServidores({String? urlAutenticacao, String? urlAutenticacaoProcurado, String? urlProxy}) {
+    if (urlAutenticacao != null) _urlAutenticacao = urlAutenticacao;
+    if (urlAutenticacaoProcurado != null) _urlAutenticacaoProcurado = urlAutenticacaoProcurado;
+    if (urlProxy != null) _urlProxy = urlProxy;
+  }
+
   /// Construtor com autenticação automática
   ///
   /// Cria uma instância e já autentica automaticamente.
@@ -208,12 +229,18 @@ class ApiClient {
   ///   "resposta": "Campo 'consumerSecret' é obrigatório"
   /// }
   /// ```
-  /// URL da Cloud Function para uso na Web
-  /// Quando fornecido, usa proxy via Firebase Cloud Functions
-  String? _urlServidor;
+  /// URL para autenticação OAuth2 normal (Firebase Cloud Functions)
+  String? _urlAutenticacao;
 
-  /// Getter para URL da Cloud Function
-  String? get urlServidor => _urlServidor;
+  /// URL para autenticação de procurador (Firebase Cloud Functions)
+  String? _urlAutenticacaoProcurado;
+
+  /// URL para proxy das requisições POST (Firebase Cloud Functions)
+  String? _urlProxy;
+
+  /// Certificado usado na autenticação via Cloud Function (para uso no proxy)
+  String? _cloudFunctionCertBase64;
+  String? _cloudFunctionCertPassword;
 
   Future<void> authenticate({
     required String consumerKey,
@@ -224,32 +251,20 @@ class ApiClient {
     String? certificadoDigitalPath,
     String? senhaCertificado,
     String ambiente = 'trial',
-
-    /// URL da Cloud Function (para uso na Web)
-    /// Exemplo: 'https://us-central1-projeto.cloudfunctions.net'
-    String? urlServidor,
-
-    /// Nome do segredo do certificado no Secret Manager (para Cloud Function)
-    String? certSecretName,
-
-    /// Nome do segredo da senha no Secret Manager (para Cloud Function)
-    String? certPasswordSecretName,
   }) async {
     try {
-      // Salvar URL da Cloud Function para uso posterior
-      _urlServidor = urlServidor;
+      // Usar autenticação via Cloud Function se URL estiver configurada
+      if (_urlAutenticacao != null && _urlAutenticacao!.isNotEmpty) {
+        // Armazenar certificado para uso no proxy
+        _cloudFunctionCertBase64 = certificadoDigitalBase64;
+        _cloudFunctionCertPassword = senhaCertificado;
 
-      // Se urlServidor fornecida, usar Cloud Function (para Web)
-      if (urlServidor != null && urlServidor.isNotEmpty) {
         await _authenticateViaCloudFunction(
-          urlServidor: urlServidor,
           consumerKey: consumerKey,
           consumerSecret: consumerSecret,
           contratanteNumero: contratanteNumero,
           autorPedidoDadosNumero: autorPedidoDadosNumero,
           ambiente: ambiente,
-          certSecretName: certSecretName,
-          certPasswordSecretName: certPasswordSecretName,
         );
         return;
       }
@@ -417,40 +432,25 @@ class ApiClient {
     String? certificadoProcuradorPath,
     String? certificadoProcuradorBase64,
     String? certificadoProcuradorPassword,
-
-    /// URL da Cloud Function (para uso na Web)
-    String? urlServidor,
-
-    /// Nome do segredo do certificado no Secret Manager
-    String? certSecretName,
-
-    /// Nome do segredo da senha no Secret Manager
-    String? certPasswordSecretName,
-
-    /// Token Firebase para autenticação
-    String? firebaseToken,
   }) async {
-    // Salvar URL da Cloud Function
-    _urlServidor = urlServidor;
-
     // Limpar dados da autenticação anterior para evitar conflitos
     clearAuthentication();
 
-    // Se urlServidor fornecida, usar Cloud Function (para Web)
-    if (urlServidor != null && urlServidor.isNotEmpty && contratanteNome != null && autorNome != null) {
+    // Usar autenticação procurador via Cloud Function se URL estiver configurada
+    if (_urlAutenticacaoProcurado != null && _urlAutenticacaoProcurado!.isNotEmpty && contratanteNome != null && autorNome != null) {
+      // Armazenar certificado para uso no proxy
+      _cloudFunctionCertBase64 = certificadoProcuradorBase64 ?? certificadoDigitalBase64;
+      _cloudFunctionCertPassword = certificadoProcuradorPassword ?? senhaCertificado;
+
       await _authenticateWithProcuradorViaCloudFunction(
-        urlServidor: urlServidor,
         consumerKey: consumerKey,
         consumerSecret: consumerSecret,
         contratanteNumero: contratanteNumero,
         contratanteNome: contratanteNome,
-        autorPedidoDadosNumero: autorNumero ?? autorPedidoDadosNumero, // CORREÇÃO: usar autorNumero se fornecido
+        autorPedidoDadosNumero: autorNumero ?? autorPedidoDadosNumero,
         autorNome: autorNome,
         ambiente: ambiente,
         contribuinteNumero: contribuinteNumero ?? contratanteNumero,
-        certSecretName: certSecretName,
-        certPasswordSecretName: certPasswordSecretName,
-        firebaseToken: firebaseToken,
         certificadoDigitalBase64: certificadoDigitalBase64,
         senhaCertificado: senhaCertificado,
         certificadoProcuradorBase64: certificadoProcuradorBase64,
@@ -525,7 +525,6 @@ class ApiClient {
 
   /// Autentica via Firebase Cloud Function (para uso na Web)
   Future<void> _authenticateViaCloudFunction({
-    required String urlServidor,
     required String consumerKey,
     required String consumerSecret,
     required String contratanteNumero,
@@ -535,7 +534,10 @@ class ApiClient {
     String? certPasswordSecretName,
     String? firebaseToken,
   }) async {
-    final url = Uri.parse('$urlServidor/autenticar_serpro');
+    if (_urlAutenticacao == null) {
+      throw Exception('urlAutenticacao não configurado. Chame setServidores() primeiro.');
+    }
+    final url = Uri.parse('$_urlAutenticacao/autenticar_serpro');
     final body = <String, String>{
       'consumer_key': consumerKey,
       'consumer_secret': consumerSecret,
@@ -571,7 +573,6 @@ class ApiClient {
 
   /// Autentica Procurador via Firebase Cloud Function (para uso na Web)
   Future<void> _authenticateWithProcuradorViaCloudFunction({
-    required String urlServidor,
     required String consumerKey,
     required String consumerSecret,
     required String contratanteNumero,
@@ -588,7 +589,10 @@ class ApiClient {
     String? certificadoProcuradorBase64,
     String? certificadoProcuradorPassword,
   }) async {
-    final url = Uri.parse('$urlServidor/autenticar_procurador');
+    if (_urlAutenticacaoProcurado == null) {
+      throw Exception('urlAutenticacaoProcurado não configurado. Chame setServidores() primeiro.');
+    }
+    final url = Uri.parse('$_urlAutenticacaoProcurado/autenticar_procurador');
     final body = <String, String>{
       'consumer_key': consumerKey,
       'consumer_secret': consumerSecret,
@@ -625,7 +629,6 @@ class ApiClient {
         procuradorToken: responseBody['procurador_token'] ?? '',
       );
       _ambiente = ambiente;
-      _urlServidor = urlServidor;
     } else {
       throw _buildErrorResponse(mensagem: 'Falha procurador via Servidor', status: response.statusCode, resposta: response.body);
     }
@@ -719,9 +722,9 @@ class ApiClient {
 
     // Executar requisição HTTP POST
     final response = await (() async {
-      // Se urlServidor estiver configurado (Web), usar proxy
-      if (_urlServidor != null && _urlServidor!.isNotEmpty) {
-        final proxyUrl = Uri.parse('$_urlServidor/proxy_serpro');
+      // Se urlProxy estiver configurado (Web), usar proxy
+      if (_urlProxy != null && _urlProxy!.isNotEmpty) {
+        final proxyUrl = Uri.parse('$_urlProxy/proxy_serpro');
         final proxyHeaders = <String, String>{'Content-Type': 'application/json'};
         final proxyBody = {
           'endpoint': endpoint,
@@ -730,8 +733,8 @@ class ApiClient {
           'jwt_token': _authModel!.jwtToken,
           'procurador_token': _authModel!.procuradorToken.isNotEmpty ? _authModel!.procuradorToken : null,
           'ambiente': _ambiente,
-          'certificado_base64': _storedCredentials?.certBase64,
-          'certificado_senha': _storedCredentials?.certPassword,
+          'certificado_base64': _cloudFunctionCertBase64 ?? _storedCredentials?.certBase64,
+          'certificado_senha': _cloudFunctionCertPassword ?? _storedCredentials?.certPassword,
         };
 
         //print("================================================");
@@ -741,7 +744,7 @@ class ApiClient {
 
         return await http.post(proxyUrl, headers: proxyHeaders, body: json.encode(proxyBody));
       } else {
-        // Requisição direta (Desktop/Mobile ou quando urlServidor não está configurado)
+        // Requisição direta (Desktop/Mobile ou quando urlProxy não está configurado)
         //print("================================================");
         //print("Endpoint direto: $_baseUrl$endpoint");
         //print("headers: ${headers}");
@@ -963,6 +966,8 @@ class ApiClient {
     _httpAdapter = null;
     _authService = null;
     _storedCredentials = null;
+    _cloudFunctionCertBase64 = null;
+    _cloudFunctionCertPassword = null;
 
     // Limpar cache estático do serviço de procurador
     AutenticaProcuradorService.limparCache();
