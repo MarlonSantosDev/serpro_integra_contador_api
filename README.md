@@ -22,11 +22,6 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 - **Exemplos completos** para todos os serviços com entrada e saída detalhadas
 - **Catálogo de serviços** integrado para mapeamento de códigos funcionais
 
-## 🆕 O que mudou na 1.1.3
-
-- Método `ApiClient.authenticateWithProcurador` combina OAuth2 e token de procurador em uma única chamada.
-- `AutenticaProcuradorService.limparCache()` permite limpar o cache em memória do token ao trocar de credenciais.
-- Ajustes gerais e correções de fluxo de autenticação.
 
 ## 📋 Serviços Disponíveis
 
@@ -71,7 +66,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^1.1.3
+  serpro_integra_contador_api: ^2.0.2
 ```
 
 Execute:
@@ -418,6 +413,8 @@ void main() async {
 
 ### Configuração de Ambiente
 
+#### Desktop/Mobile (Android, iOS, Windows, Linux, macOS)
+
 ```dart
 // Ambiente Trial (desenvolvimento)
 final apiClient = ApiClient();
@@ -440,33 +437,50 @@ await apiClient.authenticate(
 );
 ```
 
-### Configuração de Timeout
+#### Flutter Web
+
+Para Flutter Web, é necessário usar um servidor proxy (Cloud Functions ou servidor próprio) para autenticação OAuth2, pois o navegador não suporta mTLS nativo.
 
 ```dart
-final apiClient = ApiClient(
-  timeout: Duration(seconds: 30),
+// Configurar servidores para Web
+final apiClient = ApiClient();
+apiClient.setServidores(
+  urlAutenticacao: 'https://servidor.com.br',
+  urlAutenticacaoProcurado: 'https://servidor.com.br',
+  urlProxy: 'https://servidor.com.br',
+);
+
+// Autenticação na Web
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  contratanteNumero: '12345678000100',
+  autorPedidoDadosNumero: '12345678000100',
+  certificadoDigitalBase64: certBase64, // Certificado em Base64
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'producao',
+  // Opcional: usar secrets do Firebase
+  certSecretName: 'certificado_serpro',
+  certPasswordSecretName: 'senha_certificado',
+  firebaseToken: await FirebaseAuth.instance.currentUser?.getIdToken(),
 );
 ```
 
-### Configuração de Logs
+**Nota**: A assinatura XML digital funciona nativamente na Web (pure Dart), apenas a autenticação OAuth2 requer o servidor proxy.
 
-```dart
-final apiClient = ApiClient(
-  enableLogs: true,
-  logLevel: LogLevel.debug,
-);
-```
 
 ## 🔒 Segurança
 
 ### Autenticação mTLS Nativa
 
-A partir da versão 1.1.0, o package utiliza autenticação mTLS nativa do Dart através da classe `SecurityContext`, garantindo:
+O package utiliza autenticação mTLS nativa do Dart através da classe `SecurityContext`, garantindo:
 
-- **Compatibilidade multiplataforma**: Android, iOS, Web, Desktop e Windows
+- **Compatibilidade multiplataforma**: Android, iOS, Desktop e Windows
+- **Flutter Web**: Requer servidor proxy (Cloud Functions ou servidor próprio) para OAuth2
 - **Suporte a algoritmos legados**: RC2-40-CBC, 3DES, etc. (comuns em certificados antigos)
-- **Processamento nativo**: Sem dependências externas para criptografia
+- **Processamento nativo**: Sem dependências externas para criptografia (Desktop/Mobile)
 - **Validação automática**: Certificados Base64 são processados corretamente
+- **Detecção automática de plataforma**: O package detecta automaticamente se está rodando em Web ou Desktop/Mobile
 
 ### Assinatura XML Digital
 
@@ -635,23 +649,7 @@ Erro: Consumer Key/Secret inválidos
 Erro: Timeout na requisição
 ```
 
-**Solução**: Aumentar o timeout ou verificar a conexão de rede.
-
-### Logs de Debug
-
-```dart
-final apiClient = ApiClient(
-  enableLogs: true,
-  logLevel: LogLevel.debug,
-);
-```
-
-## 📈 Roadmap
-
-### Próximas Funcionalidades
-
-- [ ] Interface gráfica para testes
-
+**Solução**: Verificar a conexão de rede.
 
 ## 🤝 Contribuição
 

@@ -58,7 +58,6 @@ node_modules/
 
 # Project specific
 arquivos/
-markdown/
 
 # Certificados e dados sensíveis (NUNCA commitar!)
 *.pfx
@@ -69,12 +68,12 @@ markdown/
 *.pem
 **/certificado/
 **/certificados/
-example/example_dart/teste.dart
-example/example_dart/teste2.dart
-example/example_dart/pgdas.dart
-example/example_dart/pgdas2.dart
-saida.txt
-#/firebase
 
+
+# Meus arquivos de teste
+example/dart/my_test
+
+
+# Arquivos do Python
 **/__pycache__/**
 **/venv/**

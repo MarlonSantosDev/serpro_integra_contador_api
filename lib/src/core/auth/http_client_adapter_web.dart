@@ -80,7 +80,7 @@ class HttpClientAdapter {
       '  consumerKey: "key",\n'
       '  consumerSecret: "secret",\n'
       '  ambiente: "producao",\n'
-      '  urlServidor: "https://us-central1-projeto.cloudfunctions.net",\n'
+      '  urlServidor: "https://servidor.com.br",\n'
       '  certificadoDigitalBase64: certBase64,\n'
       '  senhaCertificado: senha,\n'
       ');\n\n'

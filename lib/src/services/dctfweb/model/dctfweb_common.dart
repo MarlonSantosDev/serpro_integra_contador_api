@@ -1,5 +1,6 @@
-/// Classes comuns para respostas DCTFWeb
 library;
+
+/// Classes comuns para respostas DCTFWeb
 
 /// Mensagem específica do DCTFWeb
 class MensagemDctf {

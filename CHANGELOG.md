@@ -1,3 +1,8 @@
+## [2.0.2] - 2024-12-18
+- Ajustes e correções no código.
+- Atualização de documentação.
+- Limpeza de código desnecessário.
+
 ## [2.0.1] - 2024-12-15
 - Implementação de autenticação
 - Exemplo de uso em example_flutter e example_dart
@@ -42,7 +47,7 @@ await apiClient.authenticate(
 await apiClient.authenticate(
   consumerKey: 'key',
   ambiente: 'producao',
-  urlServidor: 'https://us-central1-projeto.cloudfunctions.net',
+  urlServidor: 'https://servidor.com.br',
   certificadoDigitalBase64: certBase64,
   senhaCertificado: senha,
   firebaseToken: await FirebaseAuth.instance.currentUser?.getIdToken(),
