@@ -1,3 +1,6 @@
+## [2.0.4] - 2024-12-19
+- Atualização de documentação.
+
 ## [2.0.3] - 2024-12-18
 - Ajustes e correções no código.
 - Atualização de documentação.

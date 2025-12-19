@@ -214,10 +214,10 @@ class ListarApuracaoesResponse extends MitResponse {
   }
 
   /// Obtém apurações encerradas
-  List<ApuracaoResumo> get apuracoesEncerradas => apuracoes?.where((a) => a.situacaoEnum == SituacaoApuracao.encerrada).toList() ?? [];
+  List<ApuracaoResumo> get apuracoesEncerradas => apuracoes?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.encerrada).toList() ?? [];
 
   /// Obtém apurações em edição
-  List<ApuracaoResumo> get apuracoesEmEdicao => apuracoes?.where((a) => a.situacaoEnum == SituacaoApuracao.emEdicao).toList() ?? [];
+  List<ApuracaoResumo> get apuracoesEmEdicao => apuracoes?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.emEdicao).toList() ?? [];
 }
 
 /// Mensagem MIT
@@ -299,11 +299,20 @@ class ApuracaoResumo {
   final String? periodoApuracao;
   final int? idApuracao;
   final String? situacao;
+  final int? situacaoInt;
   final String? dataEncerramento;
   final bool? eventoEspecial;
   final double? valorTotalApurado;
 
-  ApuracaoResumo({this.periodoApuracao, this.idApuracao, this.situacao, this.dataEncerramento, this.eventoEspecial, this.valorTotalApurado});
+  ApuracaoResumo({
+    this.periodoApuracao,
+    this.idApuracao,
+    this.situacao,
+    this.situacaoInt,
+    this.dataEncerramento,
+    this.eventoEspecial,
+    this.valorTotalApurado,
+  });
 
   factory ApuracaoResumo.fromJson(Map<String, dynamic> json) {
     // Converter situacao numérica para valor descritivo
@@ -321,6 +330,7 @@ class ApuracaoResumo {
       periodoApuracao: json['periodoApuracao']?.toString(),
       idApuracao: json['idApuracao'] as int?,
       situacao: situacao,
+      situacaoInt: situacaoInt,
       dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
       valorTotalApurado: json['valorTotalApurado'] != null ? (json['valorTotalApurado'] as num).toDouble() : null,
@@ -336,6 +346,9 @@ class ApuracaoResumo {
       _ => null,
     };
   }
+
+  /// Obtém a situação da apuração como enum SituacaoApuracao
+  SituacaoApuracao? get situacaoApuracaoEnum => situacaoInt != null ? SituacaoApuracao.fromCodigo(situacaoInt!) : null;
 }
 
 /// Enum para situação de encerramento
