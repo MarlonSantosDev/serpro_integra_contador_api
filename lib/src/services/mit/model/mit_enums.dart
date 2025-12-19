@@ -1,3 +1,5 @@
+library;
+
 /// Re-export do enum TipoDocumento específico para MIT
 export '../../../base/tipo_documento.dart' show MitTipoDocumento;
 

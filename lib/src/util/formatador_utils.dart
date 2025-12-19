@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'validacoes_utils.dart';
+import 'formatador_http_date.dart';
 
 /// Utilitários centralizados para formatação de dados
 ///
@@ -363,7 +363,9 @@ class FormatadorUtils {
     }
 
     try {
-      final dateTime = HttpDate.parse(httpExpires);
+      final dateTime = HttpDateUtils.parse(httpExpires);
+      if (dateTime == null) return null;
+
       return '${dateTime.year.toString().padLeft(4, '0')}-'
           '${dateTime.month.toString().padLeft(2, '0')}-'
           '${dateTime.day.toString().padLeft(2, '0')}T'

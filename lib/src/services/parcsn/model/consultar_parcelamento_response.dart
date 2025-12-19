@@ -28,11 +28,7 @@ class ConsultarParcelamentoResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -193,13 +189,21 @@ class DetalhesConsolidacao {
 }
 
 /// Representa uma alteração de dívida no parcelamento PARCSN.
-/// 
+///
 /// Contém informações sobre o número, tipo e detalhes da alteração.
 class AlteracaoDivida {
+  /// Número identificador da alteração de dívida.
   final int numero;
+
+  /// Tipo da alteração de dívida.
   final String tipo;
+
+  /// Lista de detalhes da alteração de dívida.
   final List<DetalhesAlteracaoDivida> detalhes;
 
+  /// Cria uma nova instância de [AlteracaoDivida].
+  ///
+  /// Os parâmetros [numero], [tipo] e [detalhes] são obrigatórios.
   AlteracaoDivida({required this.numero, required this.tipo, required this.detalhes});
 
   /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
@@ -211,6 +215,10 @@ class AlteracaoDivida {
     );
   }
 
+  /// Converte a instância de [AlteracaoDivida] para um mapa JSON.
+  ///
+  /// Retorna um [Map] contendo os dados da alteração de dívida
+  /// no formato JSON.
   Map<String, dynamic> toJson() {
     return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
   }

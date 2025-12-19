@@ -1,3 +1,5 @@
+library;
+
 /// Classes compartilhadas para responses do DEFIS
 
 /// Mensagem padrão do DEFIS
