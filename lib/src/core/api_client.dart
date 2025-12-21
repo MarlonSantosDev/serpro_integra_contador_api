@@ -170,6 +170,19 @@ class ApiClient {
   /// Obtém a URL base de acordo com o ambiente configurado
   String get _baseUrl => _ambiente == 'producao' ? _baseUrlProd : _baseUrlDemo;
 
+  /// URL para autenticação OAuth2 normal (Firebase Cloud Functions)
+  String? _urlAutenticacao;
+
+  /// URL para autenticação de procurador (Firebase Cloud Functions)
+  String? _urlAutenticacaoProcurado;
+
+  /// URL para proxy das requisições POST (Firebase Cloud Functions)
+  String? _urlProxy;
+
+  /// Certificado usado na autenticação via Cloud Function (para uso no proxy)
+  String? _cloudFunctionCertBase64;
+  String? _cloudFunctionCertPassword;
+
   /// Autentica o cliente com a API do SERPRO usando OAuth2 e mTLS
   ///
   /// ## Parâmetros
@@ -229,19 +242,6 @@ class ApiClient {
   ///   "resposta": "Campo 'consumerSecret' é obrigatório"
   /// }
   /// ```
-  /// URL para autenticação OAuth2 normal (Firebase Cloud Functions)
-  String? _urlAutenticacao;
-
-  /// URL para autenticação de procurador (Firebase Cloud Functions)
-  String? _urlAutenticacaoProcurado;
-
-  /// URL para proxy das requisições POST (Firebase Cloud Functions)
-  String? _urlProxy;
-
-  /// Certificado usado na autenticação via Cloud Function (para uso no proxy)
-  String? _cloudFunctionCertBase64;
-  String? _cloudFunctionCertPassword;
-
   Future<void> authenticate({
     required String consumerKey,
     required String consumerSecret,

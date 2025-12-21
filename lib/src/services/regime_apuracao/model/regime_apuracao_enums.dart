@@ -1,7 +1,7 @@
 /// Enums para o serviço de Regime de Apuração
 ///
-/// Contém as constantes e tipos utilizados nos serviços de regime de apuração
-/// do Simples Nacional
+/// Contém as constantes e tipos utilizados nos serviços de regime de apuração do Simples Nacional
+library;
 
 /// Tipos de regime de apuração disponíveis
 enum TipoRegime {

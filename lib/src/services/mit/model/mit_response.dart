@@ -262,8 +262,20 @@ class ApuracaoDetalhada {
   final bool? eventoEspecial;
   final double? valorTotalApurado;
 
+  /// Construtor para criar uma instância de ApuracaoDetalhada
+  ///
+  /// [periodoApuracao] Período de apuração
+  /// [idApuracao] Identificador da apuração
+  /// [situacao] Situação da apuração
+  /// [dataEncerramento] Data de encerramento
+  /// [eventoEspecial] Indica se há evento especial
+  /// [valorTotalApurado] Valor total apurado
   ApuracaoDetalhada({this.periodoApuracao, this.idApuracao, this.situacao, this.dataEncerramento, this.eventoEspecial, this.valorTotalApurado});
 
+  /// Cria uma instância de ApuracaoDetalhada a partir de um mapa JSON
+  ///
+  /// [json] Mapa contendo os dados da apuração detalhada
+  /// Retorna uma nova instância de [ApuracaoDetalhada]
   factory ApuracaoDetalhada.fromJson(Map<String, dynamic> json) {
     return ApuracaoDetalhada(
       periodoApuracao: json['periodoApuracao']?.toString(),

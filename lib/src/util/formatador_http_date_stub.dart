@@ -2,6 +2,7 @@
 ///
 /// Esta implementação é usada em Web onde HttpDate não está disponível.
 /// Faz parse manual do formato HTTP date (RFC 7231): "Day, DD Mon YYYY HH:MM:SS GMT"
+library;
 
 class HttpDateUtils {
   /// Parse manual de string de data HTTP para DateTime

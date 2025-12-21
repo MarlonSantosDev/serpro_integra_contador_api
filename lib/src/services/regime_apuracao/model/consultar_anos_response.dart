@@ -56,6 +56,10 @@ class AnoCalendarioRegime {
   /// Texto com o regime efetivado: "COMPETENCIA" ou "CAIXA"
   final String regimeApurado;
 
+  /// Construtor para criar uma instância de AnoCalendarioRegime
+  ///
+  /// [anoCalendario] O ano calendário
+  /// [regimeApurado] O regime apurado ("COMPETENCIA" ou "CAIXA")
   AnoCalendarioRegime({required this.anoCalendario, required this.regimeApurado});
 
   /// Converte o regime apurado para enum
@@ -67,10 +71,17 @@ class AnoCalendarioRegime {
   /// Indica se o regime é de caixa
   bool get isCaixa => regimeApurado.toUpperCase() == 'CAIXA';
 
+  /// Converte a instância para um mapa JSON
+  ///
+  /// Retorna um [Map] com as chaves 'anoCalendario' e 'regimeApurado'
   Map<String, dynamic> toJson() {
     return {'anoCalendario': anoCalendario, 'regimeApurado': regimeApurado};
   }
 
+  /// Cria uma instância de AnoCalendarioRegime a partir de um mapa JSON
+  ///
+  /// [json] Mapa contendo os dados do ano calendário e regime apurado
+  /// Retorna uma nova instância de [AnoCalendarioRegime]
   factory AnoCalendarioRegime.fromJson(Map<String, dynamic> json) {
     return AnoCalendarioRegime(anoCalendario: int.parse(json['anoCalendario'].toString()), regimeApurado: json['regimeApurado'].toString());
   }
