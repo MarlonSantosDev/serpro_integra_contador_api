@@ -127,11 +127,12 @@ class DetalheMensagemCompleta {
     corpoModeloProcessado = corpoModeloProcessado
         .replaceAll(RegExp(r'<[^>]*>'), '')
         .replaceAll('&nbsp;', ' ')
+        .replaceAll('&#160;', ' ')
         .replaceAll('&lt;', '<')
         .replaceAll('&gt;', '>')
-        .replaceAll('&amp;', '&')
         .replaceAll('&quot;', '"')
         .replaceAll('&#39;', "'")
+        .replaceAll('&apos;', "'")
         .replaceAll('&aacute;', 'á')
         .replaceAll('&eacute;', 'é')
         .replaceAll('&iacute;', 'í')
@@ -140,6 +141,10 @@ class DetalheMensagemCompleta {
         .replaceAll('&atilde;', 'ã')
         .replaceAll('&otilde;', 'õ')
         .replaceAll('&ccedil;', 'ç')
+        .replaceAll('&agrave;', 'à')
+        .replaceAll('&acirc;', 'â')
+        .replaceAll('&ecirc;', 'ê')
+        .replaceAll('&ocirc;', 'ô')
         .replaceAll('&Aacute;', 'Á')
         .replaceAll('&Eacute;', 'É')
         .replaceAll('&Iacute;', 'Í')
@@ -148,7 +153,13 @@ class DetalheMensagemCompleta {
         .replaceAll('&Atilde;', 'Ã')
         .replaceAll('&Otilde;', 'Õ')
         .replaceAll('&Ccedil;', 'Ç')
+        .replaceAll('&Agrave;', 'À')
+        .replaceAll('&Acirc;', 'Â')
+        .replaceAll('&Ecirc;', 'Ê')
+        .replaceAll('&Ocirc;', 'Ô')
         .replaceAll('&ordm;', 'º')
+        .replaceAll('&ordf;', 'ª')
+        .replaceAll('&amp;', '&') // Deve ser o último para não interferir nas outras entidades
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
 
