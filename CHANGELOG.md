@@ -1,3 +1,8 @@
+## [2.0.5] - 2025-12-21
+- Ajustes e correções no código.
+- Atualização de documentação.
+- Correção de erro na resposta do serviço MSGDETALHAMENTO62.
+
 ## [2.0.4] - 2024-12-19
 - Atualização de documentação.
 

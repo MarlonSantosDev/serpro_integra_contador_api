@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import '../io/file_io.dart';
 
 /// Modelo para gerenciamento de assinatura digital
 class AssinaturaDigitalModel {
@@ -40,8 +40,7 @@ class AssinaturaDigitalModel {
     try {
       // Verificar se o certificado existe (se for arquivo)
       if (certificadoPath != null) {
-        final file = File(certificadoPath!);
-        if (!await file.exists()) {
+        if (!await FileIO.fileExists(certificadoPath!)) {
           return false;
         }
       }

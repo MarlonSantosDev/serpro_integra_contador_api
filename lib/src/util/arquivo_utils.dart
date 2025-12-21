@@ -1,39 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
+/// Abstração multiplataforma para operações de arquivo
+///
+/// Esta classe permite que o código funcione tanto em Web quanto em Desktop/Mobile,
+/// usando imports condicionais para selecionar a implementação correta.
+///
+/// - Web: Usa implementação stub (não suporta operações de arquivo)
+/// - Desktop/Mobile: Usa dart:io para salvar arquivos no sistema de arquivos
+library;
 
-class ArquivoUtils {
-  /// Salva um arquivo em base64 em um arquivo local
-  static Future<bool> salvarArquivo(String pdfBase64, String nomeDoArquivo) async {
-    try {
-      if (pdfBase64.isEmpty) {
-        throw Exception('PDF base64 vazio');
-      }
-      if (nomeDoArquivo.isEmpty) {
-        throw Exception('Nome do arquivo vazio');
-      }
-      if (pdfBase64.length < 100) {
-        throw Exception('string base64 muito pequeno');
-      }
-      if (!nomeDoArquivo.contains('.')) {
-        throw Exception('Nome do arquivo não contém extensão');
-      }
-      final extensao = nomeDoArquivo.split('.').last;
-      if (extensao.isEmpty) {
-        throw Exception('Extensão vazia');
-      }
-      final bytes = base64Decode(pdfBase64);
-      if (!Directory("arquivos").existsSync()) {
-        Directory("arquivos").createSync();
-      }
-      if (!Directory("arquivos/$extensao").existsSync()) {
-        Directory("arquivos/$extensao").createSync();
-      }
-      final arquivo = File('arquivos/$extensao/$nomeDoArquivo');
-      await arquivo.writeAsBytes(bytes);
-      return true;
-    } catch (e) {
-      print('Erro ao salvar arquivo: $e');
-      return false;
-    }
-  }
-}
+export 'arquivo_utils_stub.dart' if (dart.library.io) 'arquivo_utils_native.dart';

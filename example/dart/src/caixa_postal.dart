@@ -333,7 +333,7 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         }
 
         // Mostrar corpo processado (primeiros 200 caracteres)
-        final corpoLimpo = _limparHtml(detalhe.corpoModelo);
+        final corpoLimpo = detalhe.corpoModelo;
         print('   ║ 📄 Corpo Processado (primeiros 200 caracteres):         ║');
         final corpoLinhas = _quebrarEmLinhas(corpoLimpo, 51, 200);
         for (final linha in corpoLinhas) {
@@ -404,37 +404,6 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
 String _truncate(String text, int maxLength) {
   if (text.length <= maxLength) return text;
   return '${text.substring(0, maxLength - 3)}...';
-}
-
-/// Limpa HTML de uma string
-String _limparHtml(String html) {
-  return html
-      .replaceAll(RegExp(r'<[^>]*>'), '')
-      .replaceAll('&nbsp;', ' ')
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&#39;', "'")
-      .replaceAll('&aacute;', 'á')
-      .replaceAll('&eacute;', 'é')
-      .replaceAll('&iacute;', 'í')
-      .replaceAll('&oacute;', 'ó')
-      .replaceAll('&uacute;', 'ú')
-      .replaceAll('&atilde;', 'ã')
-      .replaceAll('&otilde;', 'õ')
-      .replaceAll('&ccedil;', 'ç')
-      .replaceAll('&Aacute;', 'Á')
-      .replaceAll('&Eacute;', 'É')
-      .replaceAll('&Iacute;', 'Í')
-      .replaceAll('&Oacute;', 'Ó')
-      .replaceAll('&Uacute;', 'Ú')
-      .replaceAll('&Atilde;', 'Ã')
-      .replaceAll('&Otilde;', 'Õ')
-      .replaceAll('&Ccedil;', 'Ç')
-      .replaceAll('&ordm;', 'º')
-      .replaceAll(RegExp(r'\s+'), ' ')
-      .trim();
 }
 
 /// Quebra texto em linhas respeitando o limite de caracteres

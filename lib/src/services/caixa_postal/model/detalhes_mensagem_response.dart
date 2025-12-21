@@ -123,6 +123,35 @@ class DetalheMensagemCompleta {
       }
     }
 
+    /// Limpa HTML de uma string
+    corpoModeloProcessado = corpoModeloProcessado
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#39;', "'")
+        .replaceAll('&aacute;', 'á')
+        .replaceAll('&eacute;', 'é')
+        .replaceAll('&iacute;', 'í')
+        .replaceAll('&oacute;', 'ó')
+        .replaceAll('&uacute;', 'ú')
+        .replaceAll('&atilde;', 'ã')
+        .replaceAll('&otilde;', 'õ')
+        .replaceAll('&ccedil;', 'ç')
+        .replaceAll('&Aacute;', 'Á')
+        .replaceAll('&Eacute;', 'É')
+        .replaceAll('&Iacute;', 'Í')
+        .replaceAll('&Oacute;', 'Ó')
+        .replaceAll('&Uacute;', 'Ú')
+        .replaceAll('&Atilde;', 'Ã')
+        .replaceAll('&Otilde;', 'Õ')
+        .replaceAll('&Ccedil;', 'Ç')
+        .replaceAll('&ordm;', 'º')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+
     // Converter campos numéricos para valores descritivos
     final origemModeloStr = json['origemModelo']?.toString() ?? '';
     final origemModelo = switch (origemModeloStr) {
