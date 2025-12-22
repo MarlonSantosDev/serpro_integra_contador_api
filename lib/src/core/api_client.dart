@@ -116,10 +116,15 @@ class ApiClient {
     String? urlAutenticacaoProcurado,
     String? urlProxy,
   }) {
-    if (urlAutenticacao != null) _urlAutenticacao = urlAutenticacao;
-    if (urlAutenticacaoProcurado != null)
+    if (urlAutenticacao != null) {
+      _urlAutenticacao = urlAutenticacao;
+    }
+    if (urlAutenticacaoProcurado != null) {
       _urlAutenticacaoProcurado = urlAutenticacaoProcurado;
-    if (urlProxy != null) _urlProxy = urlProxy;
+    }
+    if (urlProxy != null) {
+      _urlProxy = urlProxy;
+    }
   }
 
   /// Construtor com autenticação automática
@@ -604,8 +609,9 @@ class ApiClient {
       'ambiente': ambiente,
     };
     if (certSecretName != null) body['cert_secret_name'] = certSecretName;
-    if (certPasswordSecretName != null)
+    if (certPasswordSecretName != null) {
       body['cert_password_secret_name'] = certPasswordSecretName;
+    }
 
     final headers = <String, String>{'Content-Type': 'application/json'};
     if (firebaseToken != null)
@@ -675,22 +681,32 @@ class ApiClient {
       'autor_nome': autorNome,
       'ambiente': ambiente,
     };
-    if (contribuinteNumero != null)
+    if (contribuinteNumero != null) {
       body['contribuinte_numero'] = contribuinteNumero;
-    if (certSecretName != null) body['cert_secret_name'] = certSecretName;
-    if (certPasswordSecretName != null)
+    }
+    if (certSecretName != null) {
+      body['cert_secret_name'] = certSecretName;
+    }
+    if (certPasswordSecretName != null) {
       body['cert_password_secret_name'] = certPasswordSecretName;
-    if (certificadoDigitalBase64 != null)
+    }
+    if (certificadoDigitalBase64 != null) {
       body['certificado_base64'] = certificadoDigitalBase64;
-    if (senhaCertificado != null) body['certificado_senha'] = senhaCertificado;
-    if (certificadoProcuradorBase64 != null)
+    }
+    if (senhaCertificado != null) {
+      body['certificado_senha'] = senhaCertificado;
+    }
+    if (certificadoProcuradorBase64 != null) {
       body['certificado_procurador_base64'] = certificadoProcuradorBase64;
-    if (certificadoProcuradorPassword != null)
+    }
+    if (certificadoProcuradorPassword != null) {
       body['certificado_procurador_senha'] = certificadoProcuradorPassword;
+    }
 
     final headers = <String, String>{'Content-Type': 'application/json'};
-    if (firebaseToken != null)
+    if (firebaseToken != null) {
       headers['Authorization'] = 'Bearer $firebaseToken';
+    }
 
     final response = await http.post(
       url,
