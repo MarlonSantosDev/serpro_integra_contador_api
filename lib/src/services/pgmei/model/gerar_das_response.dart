@@ -6,7 +6,11 @@ import 'base_response.dart';
 /// Representa a resposta do serviço GERARDASPDF21 que gera DAS
 /// para MEI com PDF completo
 class GerarDasResponse extends PgmeiBaseResponse {
-  GerarDasResponse({required super.status, required super.mensagens, required super.dados});
+  GerarDasResponse({
+    required super.status,
+    required super.mensagens,
+    required super.dados,
+  });
 
   /// Parse dos dados como lista de DAS gerados
   List<Das>? get dasGerados {
@@ -15,14 +19,18 @@ class GerarDasResponse extends PgmeiBaseResponse {
 
       // Se dados é uma lista, retorna diretamente
       if (dados is List) {
-        return (dados as List).map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
+        return (dados as List)
+            .map((d) => Das.fromJson(d as Map<String, dynamic>))
+            .toList();
       }
 
       // Se dados é um Map com uma chave 'das' ou similar
       if (dados is Map) {
         final dadosMap = dados as Map<String, dynamic>;
         if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
-          return (dadosMap['das'] as List).map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
+          return (dadosMap['das'] as List)
+              .map((d) => Das.fromJson(d as Map<String, dynamic>))
+              .toList();
         }
       }
 
@@ -52,7 +60,9 @@ class GerarDasResponse extends PgmeiBaseResponse {
 
     return GerarDasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -72,10 +82,16 @@ class Das {
   /// Detalhamento do DAS (lista de detalhamentos)
   final List<DetalhamentoDas> detalhamento;
 
-  Das({required this.pdf, required this.cnpjCompleto, this.razaoSocial, required this.detalhamento});
+  Das({
+    required this.pdf,
+    required this.cnpjCompleto,
+    this.razaoSocial,
+    required this.detalhamento,
+  });
 
   /// Retorna o primeiro detalhamente (mais comum em DAS únicos)
-  DetalhamentoDas? get primeiroDetalhamento => detalhamento.isNotEmpty ? detalhamento.first : null;
+  DetalhamentoDas? get primeiroDetalhamento =>
+      detalhamento.isNotEmpty ? detalhamento.first : null;
 
   Map<String, dynamic> toJson() {
     return {
@@ -91,7 +107,9 @@ class Das {
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
       razaoSocial: json['razaoSocial']?.toString(),
-      detalhamento: (json['detalhamento'] as List).map((d) => DetalhamentoDas.fromJson(d)).toList(),
+      detalhamento: (json['detalhamento'] as List)
+          .map((d) => DetalhamentoDas.fromJson(d))
+          .toList(),
     );
   }
 }
@@ -152,7 +170,8 @@ class DetalhamentoDas {
       if (observacao1 != null) 'observacao1': observacao1,
       if (observacao2 != null) 'observacao2': observacao2,
       if (observacao3 != null) 'observacao3': observacao3,
-      if (composicao != null) 'composicao': composicao!.map((c) => c.toJson()).toList(),
+      if (composicao != null)
+        'composicao': composicao!.map((c) => c.toJson()).toList(),
     };
   }
 
@@ -163,11 +182,17 @@ class DetalhamentoDas {
       dataVencimento: json['dataVencimento'].toString(),
       dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
       valores: ValoresDas.fromJson(json['valores']),
-      codigoDeBarras: json['codigoDeBarras'] != null ? (json['codigoDeBarras'] as List).map((e) => e.toString()).toList() : null,
+      codigoDeBarras: json['codigoDeBarras'] != null
+          ? (json['codigoDeBarras'] as List).map((e) => e.toString()).toList()
+          : null,
       observacao1: json['observacao1']?.toString(),
       observacao2: json['observacao2']?.toString(),
       observacao3: json['observacao3']?.toString(),
-      composicao: json['composicao'] != null ? (json['composicao'] as List).map((c) => ComposicaoDas.fromJson(c)).toList() : null,
+      composicao: json['composicao'] != null
+          ? (json['composicao'] as List)
+                .map((c) => ComposicaoDas.fromJson(c))
+                .toList()
+          : null,
     );
   }
 }
@@ -186,10 +211,20 @@ class ValoresDas {
   /// Valor total
   final double total;
 
-  ValoresDas({required this.principal, required this.multa, required this.juros, required this.total});
+  ValoresDas({
+    required this.principal,
+    required this.multa,
+    required this.juros,
+    required this.total,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
+    return {
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+    };
   }
 
   factory ValoresDas.fromJson(Map<String, dynamic> json) {
@@ -216,10 +251,20 @@ class ComposicaoDas {
   /// Valores discriminados do tributo
   final ValoresDas valores;
 
-  ComposicaoDas({required this.periodoApuracao, required this.codigo, required this.denominacao, required this.valores});
+  ComposicaoDas({
+    required this.periodoApuracao,
+    required this.codigo,
+    required this.denominacao,
+    required this.valores,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'codigo': codigo, 'denominacao': denominacao, 'valores': valores.toJson()};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'codigo': codigo,
+      'denominacao': denominacao,
+      'valores': valores.toJson(),
+    };
   }
 
   factory ComposicaoDas.fromJson(Map<String, dynamic> json) {

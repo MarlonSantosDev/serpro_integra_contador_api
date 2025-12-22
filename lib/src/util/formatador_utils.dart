@@ -31,7 +31,10 @@ class FormatadorUtils {
   /// [value] - Valor numérico a ser formatado
   /// [includeSymbol] - Se deve incluir o símbolo R$ (padrão: true)
   static String formatCurrency(double value, {bool includeSymbol = true}) {
-    final formatted = value.toStringAsFixed(2).replaceAll('.', ',').replaceAll(_currencyRegex, r'$1.');
+    final formatted = value
+        .toStringAsFixed(2)
+        .replaceAll('.', ',')
+        .replaceAll(_currencyRegex, r'$1.');
     return includeSymbol ? 'R\$ $formatted' : formatted;
   }
 
@@ -39,7 +42,10 @@ class FormatadorUtils {
   ///
   /// [value] - String contendo o valor numérico
   /// [includeSymbol] - Se deve incluir o símbolo R$ (padrão: true)
-  static String formatCurrencyString(String value, {bool includeSymbol = true}) {
+  static String formatCurrencyString(
+    String value, {
+    bool includeSymbol = true,
+  }) {
     final doubleValue = double.tryParse(value) ?? 0.0;
     return formatCurrency(doubleValue, includeSymbol: includeSymbol);
   }
@@ -82,7 +88,9 @@ class FormatadorUtils {
     final cleanCpf = ValidacoesUtils.cleanDocumentNumber(cpf);
 
     if (cleanCpf.length != ValidacoesUtils.tamanhoCpf) {
-      throw ArgumentError('CPF deve ter ${ValidacoesUtils.tamanhoCpf} dígitos. Recebido: $cleanCpf');
+      throw ArgumentError(
+        'CPF deve ter ${ValidacoesUtils.tamanhoCpf} dígitos. Recebido: $cleanCpf',
+      );
     }
 
     return '${cleanCpf.substring(0, 3)}.${cleanCpf.substring(3, 6)}.${cleanCpf.substring(6, 9)}-${cleanCpf.substring(9)}';
@@ -111,7 +119,9 @@ class FormatadorUtils {
     final cleanCnpj = ValidacoesUtils.cleanDocumentNumber(cnpj);
 
     if (cleanCnpj.length != ValidacoesUtils.tamanhoCnpj) {
-      throw ArgumentError('CNPJ deve ter ${ValidacoesUtils.tamanhoCnpj} dígitos. Recebido: $cleanCnpj');
+      throw ArgumentError(
+        'CNPJ deve ter ${ValidacoesUtils.tamanhoCnpj} dígitos. Recebido: $cleanCnpj',
+      );
     }
 
     return '${cleanCnpj.substring(0, 2)}.${cleanCnpj.substring(2, 5)}.${cleanCnpj.substring(5, 8)}/${cleanCnpj.substring(8, 12)}-${cleanCnpj.substring(12)}';
@@ -151,7 +161,9 @@ class FormatadorUtils {
   /// Throws [ArgumentError] se não tiver 8 dígitos
   static String formatDateFromString(String dateString) {
     if (dateString.length != 8) {
-      throw ArgumentError('Data deve ter 8 dígitos (AAAAMMDD). Recebido: $dateString');
+      throw ArgumentError(
+        'Data deve ter 8 dígitos (AAAAMMDD). Recebido: $dateString',
+      );
     }
 
     return '${dateString.substring(6, 8)}/${dateString.substring(4, 6)}/${dateString.substring(0, 4)}';
@@ -162,7 +174,9 @@ class FormatadorUtils {
   /// [dateString] - Data no formato AAAAMMDD
   static String formatDateFromStringISO(String dateString) {
     if (dateString.length != 8) {
-      throw ArgumentError('Data deve ter 8 dígitos (AAAAMMDD). Recebido: $dateString');
+      throw ArgumentError(
+        'Data deve ter 8 dígitos (AAAAMMDD). Recebido: $dateString',
+      );
     }
 
     return '${dateString.substring(0, 4)}-${dateString.substring(4, 6)}-${dateString.substring(6, 8)}';
@@ -173,7 +187,9 @@ class FormatadorUtils {
   /// [dateTimeString] - Data e hora no formato AAAAMMDDHHMMSS
   static String formatDateTimeFromString(String dateTimeString) {
     if (dateTimeString.length != 14) {
-      throw ArgumentError('Data e hora deve ter 14 dígitos (AAAAMMDDHHMMSS). Recebido: $dateTimeString');
+      throw ArgumentError(
+        'Data e hora deve ter 14 dígitos (AAAAMMDDHHMMSS). Recebido: $dateTimeString',
+      );
     }
 
     final date = dateTimeString.substring(0, 8);
@@ -187,7 +203,9 @@ class FormatadorUtils {
   /// [dateTimeString] - Data e hora no formato AAAAMMDDHHMMSS
   static String formatDateTimeFromStringISO(String dateTimeString) {
     if (dateTimeString.length != 14) {
-      throw ArgumentError('Data e hora deve ter 14 dígitos (AAAAMMDDHHMMSS). Recebido: $dateTimeString');
+      throw ArgumentError(
+        'Data e hora deve ter 14 dígitos (AAAAMMDDHHMMSS). Recebido: $dateTimeString',
+      );
     }
 
     final date = dateTimeString.substring(0, 8);
@@ -215,7 +233,9 @@ class FormatadorUtils {
   /// Throws [ArgumentError] se não tiver 6 dígitos
   static String formatPeriodFromString(String periodString) {
     if (periodString.length != 6) {
-      throw ArgumentError('Período deve ter 6 dígitos (AAAAMM). Recebido: $periodString');
+      throw ArgumentError(
+        'Período deve ter 6 dígitos (AAAAMM). Recebido: $periodString',
+      );
     }
 
     return '${periodString.substring(0, 4)}/${periodString.substring(4, 6)}';
@@ -226,7 +246,9 @@ class FormatadorUtils {
   /// [periodString] - Período no formato AAAAMM
   static String formatPeriodFromStringReverse(String periodString) {
     if (periodString.length != 6) {
-      throw ArgumentError('Período deve ter 6 dígitos (AAAAMM). Recebido: $periodString');
+      throw ArgumentError(
+        'Período deve ter 6 dígitos (AAAAMM). Recebido: $periodString',
+      );
     }
 
     return '${periodString.substring(4, 6)}/${periodString.substring(0, 4)}';
@@ -237,7 +259,9 @@ class FormatadorUtils {
   /// [dateTimeString] - Data e hora no formato AAAAMMDDHHMM
   static String formatDateTimeShortFromString(String dateTimeString) {
     if (dateTimeString.length != 12) {
-      throw ArgumentError('Data e hora deve ter 12 dígitos (AAAAMMDDHHMM). Recebido: $dateTimeString');
+      throw ArgumentError(
+        'Data e hora deve ter 12 dígitos (AAAAMMDDHHMM). Recebido: $dateTimeString',
+      );
     }
 
     final date = dateTimeString.substring(0, 8);

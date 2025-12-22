@@ -81,7 +81,12 @@ class MitService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'ENCAPURACAO314', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'ENCAPURACAO314',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -109,11 +114,18 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = ConsultarSituacaoEncerramentoRequest(protocoloEncerramento: protocoloEncerramento);
+    final request = ConsultarSituacaoEncerramentoRequest(
+      protocoloEncerramento: protocoloEncerramento,
+    );
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'SITUACAOENC315', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'SITUACAOENC315',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -145,7 +157,12 @@ class MitService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'CONSAPURACAO316', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'CONSAPURACAO316',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -177,11 +194,20 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = ListarApuracaoesRequest(anoApuracao: anoApuracao, mesApuracao: mesApuracao, situacaoApuracao: situacaoApuracao);
+    final request = ListarApuracaoesRequest(
+      anoApuracao: anoApuracao,
+      mesApuracao: mesApuracao,
+      situacaoApuracao: situacaoApuracao,
+    );
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'MIT', idServico: 'LISTAAPURACOES317', versaoSistema: '1.0', dados: request.toDadosJson()),
+      pedidoDados: PedidoDados(
+        idSistema: 'MIT',
+        idServico: 'LISTAAPURACOES317',
+        versaoSistema: '1.0',
+        dados: request.toDadosJson(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -216,11 +242,21 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final periodoApuracao = PeriodoApuracao(mesApuracao: mesApuracao, anoApuracao: anoApuracao);
+    final periodoApuracao = PeriodoApuracao(
+      mesApuracao: mesApuracao,
+      anoApuracao: anoApuracao,
+    );
 
-    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: cpfResponsavel, emailResponsavel: emailResponsavel);
+    final responsavelApuracao = ResponsavelApuracao(
+      cpfResponsavel: cpfResponsavel,
+      emailResponsavel: emailResponsavel,
+    );
 
-    final dadosIniciais = DadosIniciais(semMovimento: true, qualificacaoPj: qualificacaoPj, responsavelApuracao: responsavelApuracao);
+    final dadosIniciais = DadosIniciais(
+      semMovimento: true,
+      qualificacaoPj: qualificacaoPj,
+      responsavelApuracao: responsavelApuracao,
+    );
 
     return await encerrarApuracao(
       contribuinteNumero: contribuinteNumero,
@@ -260,9 +296,15 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final periodoApuracao = PeriodoApuracao(mesApuracao: mesApuracao, anoApuracao: anoApuracao);
+    final periodoApuracao = PeriodoApuracao(
+      mesApuracao: mesApuracao,
+      anoApuracao: anoApuracao,
+    );
 
-    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: cpfResponsavel, emailResponsavel: emailResponsavel);
+    final responsavelApuracao = ResponsavelApuracao(
+      cpfResponsavel: cpfResponsavel,
+      emailResponsavel: emailResponsavel,
+    );
 
     final dadosIniciais = DadosIniciais(
       semMovimento: false,
@@ -386,7 +428,10 @@ class MitService {
   ///
   /// [tributo] Grupo do tributo
   /// [qualificacao] Qualificação da PJ
-  bool validarTributoParaQualificacao(GrupoTributo tributo, QualificacaoPj qualificacao) {
+  bool validarTributoParaQualificacao(
+    GrupoTributo tributo,
+    QualificacaoPj qualificacao,
+  ) {
     return ValidacoesMit.validarTributoParaQualificacao(tributo, qualificacao);
   }
 
@@ -394,7 +439,10 @@ class MitService {
   ///
   /// [tributo] Grupo do tributo
   /// [tributacao] Tributação do lucro
-  bool validarTributoParaTributacao(GrupoTributo tributo, TributacaoLucro tributacao) {
+  bool validarTributoParaTributacao(
+    GrupoTributo tributo,
+    TributacaoLucro tributacao,
+  ) {
     return ValidacoesMit.validarTributoParaTributacao(tributo, tributacao);
   }
 

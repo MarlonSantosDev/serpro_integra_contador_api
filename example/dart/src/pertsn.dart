@@ -30,7 +30,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
         print('Nenhum parcelamento encontrado');
       }
     } else {
-      print('❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
@@ -41,7 +43,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
   // 2. Consultar parcelamento específico (usando exemplo da documentação)
   try {
     print('\n2. Consultando parcelamento específico...');
-    final parcelamentoResponse = await pertsnService.consultarParcelamento(9102);
+    final parcelamentoResponse = await pertsnService.consultarParcelamento(
+      9102,
+    );
 
     if (parcelamentoResponse.sucesso) {
       print('✅ Status: ${parcelamentoResponse.status}');
@@ -52,40 +56,70 @@ Future<void> Pertsn(ApiClient apiClient) async {
         print('Parcelamento ${parcelamento.numero}:');
         print('  Situação: ${parcelamento.situacao}');
         print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
-        print('  Valor total consolidado: R\$ ${parcelamento.valorTotalConsolidado.toStringAsFixed(2)}');
-        print('  Valor total entrada: R\$ ${parcelamento.valorTotalEntrada.toStringAsFixed(2)}');
-        print('  Quantidade parcelas entrada: ${parcelamento.quantidadeParcelasEntrada}');
-        print('  Valor parcela entrada: R\$ ${parcelamento.valorParcelaEntrada.toStringAsFixed(2)}');
+        print(
+          '  Valor total consolidado: R\$ ${parcelamento.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
+        print(
+          '  Valor total entrada: R\$ ${parcelamento.valorTotalEntrada.toStringAsFixed(2)}',
+        );
+        print(
+          '  Quantidade parcelas entrada: ${parcelamento.quantidadeParcelasEntrada}',
+        );
+        print(
+          '  Valor parcela entrada: R\$ ${parcelamento.valorParcelaEntrada.toStringAsFixed(2)}',
+        );
 
         if (parcelamento.consolidacaoOriginal != null) {
           print('  Consolidação original:');
-          print('    Data: ${parcelamento.consolidacaoOriginal!.dataConsolidacaoFormatada}');
-          print('    Valor consolidado: R\$ ${parcelamento.consolidacaoOriginal!.valorConsolidadoDaDivida.toStringAsFixed(2)}');
-          print('    Detalhes: ${parcelamento.consolidacaoOriginal!.detalhesConsolidacao.length} itens');
+          print(
+            '    Data: ${parcelamento.consolidacaoOriginal!.dataConsolidacaoFormatada}',
+          );
+          print(
+            '    Valor consolidado: R\$ ${parcelamento.consolidacaoOriginal!.valorConsolidadoDaDivida.toStringAsFixed(2)}',
+          );
+          print(
+            '    Detalhes: ${parcelamento.consolidacaoOriginal!.detalhesConsolidacao.length} itens',
+          );
         }
 
         if (parcelamento.alteracoesDivida.isNotEmpty) {
-          print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+          print(
+            '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
+          );
           for (final alteracao in parcelamento.alteracoesDivida) {
-            print('    Total consolidado: R\$ ${alteracao.totalConsolidado.toStringAsFixed(2)}');
-            print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
-            print('    Parcela básica: R\$ ${alteracao.parcelaBasica.toStringAsFixed(2)}');
-            print('    Data alteração: ${alteracao.dataAlteracaoDividaFormatada}');
+            print(
+              '    Total consolidado: R\$ ${alteracao.totalConsolidado.toStringAsFixed(2)}',
+            );
+            print(
+              '    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}',
+            );
+            print(
+              '    Parcela básica: R\$ ${alteracao.parcelaBasica.toStringAsFixed(2)}',
+            );
+            print(
+              '    Data alteração: ${alteracao.dataAlteracaoDividaFormatada}',
+            );
           }
         }
 
         if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
-          print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+          print(
+            '  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
+          );
           for (final pagamento in parcelamento.demonstrativoPagamentos) {
             print('    Mês: ${pagamento.mesDaParcelaFormatado}');
             print('    Vencimento: ${pagamento.vencimentoDoDasFormatado}');
-            print('    Data arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
+            print(
+              '    Data arrecadação: ${pagamento.dataDeArrecadacaoFormatada}',
+            );
             print('    Valor pago: ${pagamento.valorPagoFormatado}');
           }
         }
       }
     } else {
-      print('❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelamento: $e');
@@ -115,9 +149,13 @@ Future<void> Pertsn(ApiClient apiClient) async {
         }
 
         // Mostrar estatísticas
-        print('Parcelas pendentes: ${parcelasResponse.parcelasPendentes.length}');
+        print(
+          'Parcelas pendentes: ${parcelasResponse.parcelasPendentes.length}',
+        );
         print('Parcelas vencidas: ${parcelasResponse.parcelasVencidas.length}');
-        print('Parcelas do mês atual: ${parcelasResponse.parcelasMesAtual.length}');
+        print(
+          'Parcelas do mês atual: ${parcelasResponse.parcelasMesAtual.length}',
+        );
 
         // Mostrar parcelas por ano
         final parcelasPorAno = parcelasResponse.parcelasPorAno;
@@ -129,7 +167,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
         print('Nenhuma parcela encontrada');
       }
     } else {
-      print('❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelas: $e');
@@ -140,7 +180,10 @@ Future<void> Pertsn(ApiClient apiClient) async {
   // 4. Consultar detalhes de pagamento
   try {
     print('\n4. Consultando detalhes de pagamento...');
-    final detalhesResponse = await pertsnService.consultarDetalhesPagamento(9102, 201806);
+    final detalhesResponse = await pertsnService.consultarDetalhesPagamento(
+      9102,
+      201806,
+    );
 
     if (detalhesResponse.sucesso) {
       print('✅ Status: ${detalhesResponse.status}');
@@ -157,7 +200,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
 
         if (detalhes.temPagamentosDebitos) {
           print('  Débitos pagos: ${detalhes.quantidadeDebitosPagos}');
-          print('  Valor total débitos: ${detalhes.valorTotalDebitosPagosFormatado}');
+          print(
+            '  Valor total débitos: ${detalhes.valorTotalDebitosPagosFormatado}',
+          );
 
           for (final debito in detalhes.pagamentosDebitos) {
             print('    Período: ${debito.periodoApuracaoFormatado}');
@@ -170,17 +215,27 @@ Future<void> Pertsn(ApiClient apiClient) async {
               print('      Discriminações: ${debito.quantidadeDiscriminacoes}');
               for (final discriminacao in debito.discriminacaoDebitos) {
                 print('        ${discriminacao.descricaoResumida}');
-                print('        Valor principal: ${discriminacao.valorPrincipalFormatado}');
-                print('        Valor multa: ${discriminacao.valorMultaFormatado}');
-                print('        Valor juros: ${discriminacao.valorJurosFormatado}');
-                print('        Valor total: ${discriminacao.valorTotalFormatado}');
+                print(
+                  '        Valor principal: ${discriminacao.valorPrincipalFormatado}',
+                );
+                print(
+                  '        Valor multa: ${discriminacao.valorMultaFormatado}',
+                );
+                print(
+                  '        Valor juros: ${discriminacao.valorJurosFormatado}',
+                );
+                print(
+                  '        Valor total: ${discriminacao.valorTotalFormatado}',
+                );
               }
             }
           }
         }
       }
     } else {
-      print('❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar detalhes: $e');
@@ -207,7 +262,10 @@ Future<void> Pertsn(ApiClient apiClient) async {
           print('PDF Base64 disponível: ${pdfBase64.length} caracteres');
 
           // Salvar PDF em arquivo
-          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(pdfBase64, 'das_pertsn_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+            pdfBase64,
+            'das_pertsn_${DateTime.now().millisecondsSinceEpoch}.pdf',
+          );
           print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
 
           final dados = dasResponse.dados;
@@ -239,7 +297,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
     }
 
     // Validar ano/mês da parcela
-    final validacaoAnoMes = pertsnService.validarAnoMesParcela(202513); // Mês inválido
+    final validacaoAnoMes = pertsnService.validarAnoMesParcela(
+      202513,
+    ); // Mês inválido
     if (validacaoAnoMes != null) {
       print('✅ Validação ano/mês inválido: $validacaoAnoMes');
     }
@@ -257,7 +317,9 @@ Future<void> Pertsn(ApiClient apiClient) async {
     }
 
     // Validar tipo de contribuinte
-    final validacaoTipo = pertsnService.validarTipoContribuinte(1); // Tipo inválido para PERTSN
+    final validacaoTipo = pertsnService.validarTipoContribuinte(
+      1,
+    ); // Tipo inválido para PERTSN
     if (validacaoTipo != null) {
       print('✅ Validação tipo contribuinte: $validacaoTipo');
     }
@@ -285,7 +347,10 @@ Future<void> Pertsn(ApiClient apiClient) async {
     }
 
     // Analisar erro
-    final analysis = pertsnService.analyzeError('[Aviso-PERTSN-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
+    final analysis = pertsnService.analyzeError(
+      '[Aviso-PERTSN-ER_E001]',
+      'Não há parcelamento ativo para o contribuinte.',
+    );
     print('Análise do erro:');
     print('  Resumo: ${analysis.resumo}');
     print('  Ação recomendada: ${analysis.recommendedAction}');

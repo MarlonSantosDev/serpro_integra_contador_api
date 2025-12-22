@@ -58,8 +58,14 @@ class ParcsnService {
   /// ```
   Future<ConsultarPedidosResponse> consultarPedidos() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCSN', idServico: 'PEDIDOSPARC163', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCSN',
+        idServico: 'PEDIDOSPARC163',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -84,15 +90,20 @@ class ParcsnService {
   ///   print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
   /// }
   /// ```
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    int numeroParcelamento,
+  ) async {
     // Validação do parâmetro
-    final validacao = PertsnValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacao = PertsnValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacao != null) {
       throw ArgumentError(validacao);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN',
         idServico: 'OBTERPARC164',
@@ -124,25 +135,34 @@ class ParcsnService {
   ///   print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
   /// }
   /// ```
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     // Validação dos parâmetros
-    final validacaoParcelamento = PertsnValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacaoParcelamento = PertsnValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacaoParcelamento != null) {
       throw ArgumentError(validacaoParcelamento);
     }
 
-    final validacaoAnoMes = PertsnValidations.validarAnoMesParcela(anoMesParcela);
+    final validacaoAnoMes = PertsnValidations.validarAnoMesParcela(
+      anoMesParcela,
+    );
     if (validacaoAnoMes != null) {
       throw ArgumentError(validacaoAnoMes);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN',
         idServico: 'DETPAGTOPARC165',
         versaoSistema: '1.0',
-        dados: '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
+        dados:
+            '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
       ),
     );
 
@@ -166,8 +186,14 @@ class ParcsnService {
   /// ```
   Future<ConsultarParcelasResponse> consultarParcelas() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCSN', idServico: 'PARCELASPARAGERAR162', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCSN',
+        idServico: 'PARCELASPARAGERAR162',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -191,19 +217,24 @@ class ParcsnService {
   /// ```
   Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir) async {
     // Validação dos parâmetros
-    final validacaoParcela = PertsnValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    final validacaoParcela = PertsnValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
     if (validacaoParcela != null) {
       throw ArgumentError(validacaoParcela);
     }
 
     // Validação adicional: prazo para emissão
-    final validacaoPrazo = PertsnValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    final validacaoPrazo = PertsnValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
     if (validacaoPrazo != null) {
       throw ArgumentError(validacaoPrazo);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCSN',
         idServico: 'GERARDAS161',

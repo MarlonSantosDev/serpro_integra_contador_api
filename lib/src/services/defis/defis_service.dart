@@ -53,7 +53,12 @@ class DefisService {
   }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DEFIS', idServico: 'TRANSDECLARACAO141', versaoSistema: '1.0', dados: jsonEncode(declaracaoData.toJson())),
+      pedidoDados: PedidoDados(
+        idSistema: 'DEFIS',
+        idServico: 'TRANSDECLARACAO141',
+        versaoSistema: '1.0',
+        dados: jsonEncode(declaracaoData.toJson()),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -140,11 +145,18 @@ class DefisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final consultaRequest = ConsultarDeclaracaoEspecificaRequest(idDefis: idDefis);
+    final consultaRequest = ConsultarDeclaracaoEspecificaRequest(
+      idDefis: idDefis,
+    );
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'DEFIS', idServico: 'CONSDECREC144', versaoSistema: '1.0', dados: jsonEncode(consultaRequest.toJson())),
+      pedidoDados: PedidoDados(
+        idSistema: 'DEFIS',
+        idServico: 'CONSDECREC144',
+        versaoSistema: '1.0',
+        dados: jsonEncode(consultaRequest.toJson()),
+      ),
     );
 
     final response = await _apiClient.post(

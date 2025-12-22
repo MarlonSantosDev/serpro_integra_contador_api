@@ -7,4 +7,5 @@
 /// - Desktop/Mobile: Usa dart:io para salvar arquivos no sistema de arquivos
 library;
 
-export 'arquivo_utils_stub.dart' if (dart.library.io) 'arquivo_utils_native.dart';
+export 'arquivo_utils_stub.dart'
+    if (dart.library.io) 'arquivo_utils_native.dart';

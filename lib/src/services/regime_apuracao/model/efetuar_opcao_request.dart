@@ -18,19 +18,30 @@ class EfetuarOpcaoRegimeRequest {
   /// Este campo deve ser enviado como true para ser efetivada a opção
   final bool deAcordoResolucao;
 
-  EfetuarOpcaoRegimeRequest({required this.anoOpcao, required this.tipoRegime, required this.descritivoRegime, required this.deAcordoResolucao});
+  EfetuarOpcaoRegimeRequest({
+    required this.anoOpcao,
+    required this.tipoRegime,
+    required this.descritivoRegime,
+    required this.deAcordoResolucao,
+  });
 
   /// Valida se o ano da opção está dentro dos limites permitidos
   bool get isAnoOpcaoValido => RegimeApuracaoValidations.isAnoValido(anoOpcao);
 
   /// Valida se o tipo de regime é válido
-  bool get isTipoRegimeValido => RegimeApuracaoValidations.isTipoRegimeValido(tipoRegime);
+  bool get isTipoRegimeValido =>
+      RegimeApuracaoValidations.isTipoRegimeValido(tipoRegime);
 
   /// Valida se o descritivo do regime é válido
-  bool get isDescritivoRegimeValido => RegimeApuracaoValidations.isDescritivoRegimeValido(descritivoRegime);
+  bool get isDescritivoRegimeValido =>
+      RegimeApuracaoValidations.isDescritivoRegimeValido(descritivoRegime);
 
   /// Valida se o descritivo está coerente com o tipo de regime
-  bool get isDescritivoCoerenteComTipo => RegimeApuracaoValidations.isDescritivoCoerenteComTipo(tipoRegime, descritivoRegime);
+  bool get isDescritivoCoerenteComTipo =>
+      RegimeApuracaoValidations.isDescritivoCoerenteComTipo(
+        tipoRegime,
+        descritivoRegime,
+      );
 
   /// Valida se todos os campos obrigatórios estão preenchidos e válidos
   bool get isValid {
@@ -43,7 +54,12 @@ class EfetuarOpcaoRegimeRequest {
   }
 
   Map<String, dynamic> toJson() {
-    return {'anoOpcao': anoOpcao, 'tipoRegime': tipoRegime, 'descritivoRegime': descritivoRegime, 'deAcordoResolucao': deAcordoResolucao};
+    return {
+      'anoOpcao': anoOpcao,
+      'tipoRegime': tipoRegime,
+      'descritivoRegime': descritivoRegime,
+      'deAcordoResolucao': deAcordoResolucao,
+    };
   }
 
   factory EfetuarOpcaoRegimeRequest.fromJson(Map<String, dynamic> json) {
@@ -56,7 +72,10 @@ class EfetuarOpcaoRegimeRequest {
   }
 
   /// Cria uma instância para regime de competência
-  factory EfetuarOpcaoRegimeRequest.competencia({required int anoOpcao, bool deAcordoResolucao = true}) {
+  factory EfetuarOpcaoRegimeRequest.competencia({
+    required int anoOpcao,
+    bool deAcordoResolucao = true,
+  }) {
     return EfetuarOpcaoRegimeRequest(
       anoOpcao: anoOpcao,
       tipoRegime: TipoRegime.competencia.codigo,
@@ -66,7 +85,10 @@ class EfetuarOpcaoRegimeRequest {
   }
 
   /// Cria uma instância para regime de caixa
-  factory EfetuarOpcaoRegimeRequest.caixa({required int anoOpcao, bool deAcordoResolucao = true}) {
+  factory EfetuarOpcaoRegimeRequest.caixa({
+    required int anoOpcao,
+    bool deAcordoResolucao = true,
+  }) {
     return EfetuarOpcaoRegimeRequest(
       anoOpcao: anoOpcao,
       tipoRegime: TipoRegime.caixa.codigo,

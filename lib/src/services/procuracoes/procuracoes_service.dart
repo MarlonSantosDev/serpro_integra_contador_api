@@ -57,7 +57,10 @@ class ProcuracoesService {
     }
 
     // Cria o request que já detecta automaticamente os tipos de documento
-    final requestData = ObterProcuracaoRequest.fromDocuments(outorgante: outorgante, outorgado: outorgadoFinal);
+    final requestData = ObterProcuracaoRequest.fromDocuments(
+      outorgante: outorgante,
+      outorgado: outorgadoFinal,
+    );
 
     // Valida dados antes de enviar
     final erros = requestData.validate();
@@ -67,7 +70,8 @@ class ProcuracoesService {
     }
 
     final request = BaseRequest(
-      contribuinteNumero: requestData.outorgante, // O contribuinte é o outorgante
+      contribuinteNumero:
+          requestData.outorgante, // O contribuinte é o outorgante
       pedidoDados: PedidoDados(
         idSistema: ProcuracoesConstants.idSistema,
         idServico: ProcuracoesConstants.idServico,
@@ -125,7 +129,14 @@ class ProcuracoesService {
   /// Analisa todas as procurações retornadas e gera estatísticas
   Map<String, dynamic> analisarProcuracoes(ObterProcuracaoResponse response) {
     if (!response.sucesso || response.dados == null) {
-      return {'total': 0, 'ativas': 0, 'expiramEmBreve': 0, 'expiradas': 0, 'sistemasUnicos': <String>[], 'analiseStatus': 'sem_dados'};
+      return {
+        'total': 0,
+        'ativas': 0,
+        'expiramEmBreve': 0,
+        'expiradas': 0,
+        'sistemasUnicos': <String>[],
+        'analiseStatus': 'sem_dados',
+      };
     }
 
     final procuracoes = response.dados!;
@@ -160,7 +171,9 @@ class ProcuracoesService {
       'expiradas': expiradas,
       'sistemasUnicos': sistemasUnicos.toList(),
       'totalSistemasUnicos': sistemasUnicos.length,
-      'analiseStatus': procuracoes.isEmpty ? 'nenhuma_procuracao' : 'com_procuracoes',
+      'analiseStatus': procuracoes.isEmpty
+          ? 'nenhuma_procuracao'
+          : 'com_procuracoes',
     };
   }
 

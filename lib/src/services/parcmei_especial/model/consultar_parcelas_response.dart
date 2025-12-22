@@ -199,4 +199,3 @@ class Parcela {
     return parcelaFormatada;
   }
 }
-

@@ -137,9 +137,12 @@ class AutenticaProcuradorService {
       }
 
       // Obter dados do ApiClient (se não fornecidos)
-      final finalContratanteNumero = contratanteNumero ?? _apiClient.contratanteNumero!;
-      final finalAutorNumero = autorNumero ?? _apiClient.autorPedidoDadosNumero!;
-      final finalContribuinteNumero = contribuinteNumero ?? finalContratanteNumero;
+      final finalContratanteNumero =
+          contratanteNumero ?? _apiClient.contratanteNumero!;
+      final finalAutorNumero =
+          autorNumero ?? _apiClient.autorPedidoDadosNumero!;
+      final finalContribuinteNumero =
+          contribuinteNumero ?? finalContratanteNumero;
 
       // Certificado de assinatura: pode ser diferente do OAuth2
       // Prioridade: certificadoBase64 > certificadoPath > certificado do authenticate
@@ -166,8 +169,11 @@ class AutenticaProcuradorService {
         );
       }
 
-      if (finalCertificadoPassword == null || finalCertificadoPassword.isEmpty) {
-        throw ExcecaoAssinaturaCertificado('Senha do certificado não fornecida.');
+      if (finalCertificadoPassword == null ||
+          finalCertificadoPassword.isEmpty) {
+        throw ExcecaoAssinaturaCertificado(
+          'Senha do certificado não fornecida.',
+        );
       }
 
       // 1. Criar termo de autorização
@@ -202,11 +208,20 @@ class AutenticaProcuradorService {
       );
 
       // 5. Enviar para API e obter token
-      return await _enviarParaAPI(xmlAssinado, finalContratanteNumero, finalAutorNumero, finalContribuinteNumero);
+      return await _enviarParaAPI(
+        xmlAssinado,
+        finalContratanteNumero,
+        finalAutorNumero,
+        finalContribuinteNumero,
+      );
     } on ExcecaoAutenticaProcurador {
       rethrow;
     } catch (e) {
-      throw ExcecaoAutenticaProcurador('Erro na autenticação de procurador: $e', codigo: 'ERRO_INESPERADO', statusHttp: 500);
+      throw ExcecaoAutenticaProcurador(
+        'Erro na autenticação de procurador: $e',
+        codigo: 'ERRO_INESPERADO',
+        statusHttp: 500,
+      );
     }
   }
 
@@ -214,7 +229,12 @@ class AutenticaProcuradorService {
   ///
   /// Usa assinatura criptográfica real com certificado PFX ou PEM.
   /// Funciona em todas as plataformas (Windows, Android, iOS, Web).
-  Future<String> _assinarXmlReal(String xml, {String? certificadoPath, String? certificadoBase64, required String certificadoPassword}) async {
+  Future<String> _assinarXmlReal(
+    String xml, {
+    String? certificadoPath,
+    String? certificadoBase64,
+    required String certificadoPassword,
+  }) async {
     try {
       final assinador = AssinadorDigitalXml(
         caminhoCertificado: certificadoPath,
@@ -262,7 +282,12 @@ class AutenticaProcuradorService {
       // Criar BaseRequest com estrutura correta
       final request = BaseRequest(
         contribuinteNumero: contribuinteNumero,
-        pedidoDados: PedidoDados(idSistema: 'AUTENTICAPROCURADOR', idServico: 'ENVIOXMLASSINADO81', versaoSistema: '1.0', dados: dadosPedido),
+        pedidoDados: PedidoDados(
+          idSistema: 'AUTENTICAPROCURADOR',
+          idServico: 'ENVIOXMLASSINADO81',
+          versaoSistema: '1.0',
+          dados: dadosPedido,
+        ),
       );
 
       // Fazer requisição HTTP
@@ -283,7 +308,8 @@ class AutenticaProcuradorService {
           status: 304,
           mensagens: resultado.mensagens,
           dados: _ultimoTokenCache!.dados,
-          autenticarProcuradorToken: _ultimoTokenCache!.autenticarProcuradorToken,
+          autenticarProcuradorToken:
+              _ultimoTokenCache!.autenticarProcuradorToken,
           dataExpiracao: _ultimoTokenCache!.dataExpiracao,
           isCacheValido: true,
         );
@@ -299,7 +325,9 @@ class AutenticaProcuradorService {
       // Verificar erros específicos da API
       if (!resultado.sucesso) {
         final codigo = resultado.codigoMensagem;
-        if (codigo.startsWith('AcessoNegado-') || codigo.startsWith('EntradaIncorreta-') || codigo.startsWith('Erro-')) {
+        if (codigo.startsWith('AcessoNegado-') ||
+            codigo.startsWith('EntradaIncorreta-') ||
+            codigo.startsWith('Erro-')) {
           throw ExcecaoErroSerpro.doCodigo(codigo);
         }
       }
@@ -310,15 +338,23 @@ class AutenticaProcuradorService {
     } catch (e) {
       // Tentar parsear erro da API
       final errorStr = e.toString();
-      if (errorStr.contains('AcessoNegado-') || errorStr.contains('EntradaIncorreta-') || errorStr.contains('Erro-')) {
+      if (errorStr.contains('AcessoNegado-') ||
+          errorStr.contains('EntradaIncorreta-') ||
+          errorStr.contains('Erro-')) {
         // Extrair código de erro
-        final match = RegExp(r'(AcessoNegado|EntradaIncorreta|Erro)-AUTENTICAPROCURADOR-\d+').firstMatch(errorStr);
+        final match = RegExp(
+          r'(AcessoNegado|EntradaIncorreta|Erro)-AUTENTICAPROCURADOR-\d+',
+        ).firstMatch(errorStr);
         if (match != null) {
           throw ExcecaoErroSerpro.doCodigo(match.group(0)!);
         }
       }
 
-      throw ExcecaoAutenticaProcurador('Erro ao enviar para API: $e', codigo: 'ERRO_API', statusHttp: 500);
+      throw ExcecaoAutenticaProcurador(
+        'Erro ao enviar para API: $e',
+        codigo: 'ERRO_API',
+        statusHttp: 500,
+      );
     }
   }
 }

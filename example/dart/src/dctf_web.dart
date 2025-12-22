@@ -20,7 +20,9 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     );
     if (darfGeralResponse.sucesso) {
       print('✅ DARF Geral Mensal: ${darfGeralResponse.sucesso}');
-      print('Mensagens: ${darfGeralResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${darfGeralResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darfGeralResponse.pdfBase64!,
         'darf_geral_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
@@ -41,7 +43,9 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     );
     if (darfPfResponse.sucesso) {
       print('✅ DARF PF Mensal: ${darfPfResponse.sucesso}');
-      print('Mensagens: ${darfPfResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${darfPfResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darfPfResponse.pdfBase64!,
         'darf_pf_mensal_${DateTime.now().millisecondsSinceEpoch}.pdf',
@@ -62,7 +66,9 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     );
     if (darf13Response.sucesso) {
       print('✅ DARF 13º Salário: ${darf13Response.sucesso}');
-      print('Mensagens: ${darf13Response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${darf13Response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         darf13Response.pdfBase64!,
         'darf_13_salario_${DateTime.now().millisecondsSinceEpoch}.pdf',
@@ -92,7 +98,9 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     );
     if (espetaculoResponse.sucesso) {
       print('✅ XML Espetáculo Desportivo: ${espetaculoResponse.sucesso}');
-      print('Mensagens: ${espetaculoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${espetaculoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         espetaculoResponse.xmlBase64!,
         'espetaculo_desportivo_${DateTime.now().millisecondsSinceEpoch}.xml',
@@ -122,7 +130,9 @@ Future<void> DctfWeb(ApiClient apiClient) async {
     );
     if (afericaoResponse.sucesso) {
       print('✅ XML Aferição: ${afericaoResponse.sucesso}');
-      print('Mensagens: ${afericaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${afericaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         afericaoResponse.xmlBase64!,
         'afericao_${DateTime.now().millisecondsSinceEpoch}.xml',
@@ -140,18 +150,21 @@ Future<void> DctfWeb(ApiClient apiClient) async {
   // 4. Exemplo com categoria Reclamatória Trabalhista
   try {
     print('\n--- 4. Exemplo Reclamatória Trabalhista ---');
-    final reclamatoriaResponse = await dctfWebService.consultarReciboTransmissao(
-      contribuinteNumero: '00000000000000',
-      contratanteNumero: '00000000000000',
-      autorPedidoDadosNumero: '00000000000000',
-      categoria: CategoriaDctf.reclamatoriaTrabalhista,
-      anoPA: '2022',
-      mesPA: '12',
-      numProcReclamatoria: '00365354520004013400', // Processo obrigatório
-    );
+    final reclamatoriaResponse = await dctfWebService
+        .consultarReciboTransmissao(
+          contribuinteNumero: '00000000000000',
+          contratanteNumero: '00000000000000',
+          autorPedidoDadosNumero: '00000000000000',
+          categoria: CategoriaDctf.reclamatoriaTrabalhista,
+          anoPA: '2022',
+          mesPA: '12',
+          numProcReclamatoria: '00365354520004013400', // Processo obrigatório
+        );
     if (reclamatoriaResponse.sucesso) {
       print('✅ Recibo Reclamatória: ${reclamatoriaResponse.sucesso}');
-      print('Mensagens: ${reclamatoriaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${reclamatoriaResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         reclamatoriaResponse.pdfBase64!,
         'recibo_reclamatoria_${DateTime.now().millisecondsSinceEpoch}.pdf',
@@ -170,12 +183,15 @@ Future<void> DctfWeb(ApiClient apiClient) async {
   try {
     print('\n--- 5. Exemplo de fluxo completo (simulado) ---');
     print('⚠️ ATENÇÃO: Este exemplo simula a assinatura digital.');
-    print('⚠️ Em produção, você deve implementar a assinatura real com certificado digital.');
+    print(
+      '⚠️ Em produção, você deve implementar a assinatura real com certificado digital.',
+    );
 
     final transmissaoResponse = await dctfWebService.consultarXmlETransmitir(
       contribuinteNumero: '00000000000',
       contratanteNumero: '00000000000', // CPF/CNPJ do contratante do serviço
-      autorPedidoDadosNumero: '00000000000', // CPF/CNPJ do autor do pedido de dados
+      autorPedidoDadosNumero:
+          '00000000000', // CPF/CNPJ do autor do pedido de dados
       categoria: CategoriaDctf.pfMensal,
       anoPA: '2022',
       mesPA: '06',

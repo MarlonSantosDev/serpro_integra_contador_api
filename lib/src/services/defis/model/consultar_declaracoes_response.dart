@@ -7,18 +7,30 @@ class ConsultarDeclaracoesResponse {
   final List<MensagemDefis> mensagens;
   final List<Declaracao> dados;
 
-  ConsultarDeclaracoesResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarDeclaracoesResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   factory ConsultarDeclaracoesResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarDeclaracoesResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((e) => MensagemDefis.fromJson(e)).toList(),
-      dados: (jsonDecode(json['dados']) as List).map((e) => Declaracao.fromJson(e)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => MensagemDefis.fromJson(e))
+          .toList(),
+      dados: (jsonDecode(json['dados']) as List)
+          .map((e) => Declaracao.fromJson(e))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.map((e) => e.toJson()).toList()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -29,7 +41,12 @@ class Declaracao {
   final String tipo;
   final int dataHora;
 
-  Declaracao({required this.anoCalendario, required this.idDefis, required this.tipo, required this.dataHora});
+  Declaracao({
+    required this.anoCalendario,
+    required this.idDefis,
+    required this.tipo,
+    required this.dataHora,
+  });
 
   factory Declaracao.fromJson(Map<String, dynamic> json) {
     return Declaracao(
@@ -41,6 +58,11 @@ class Declaracao {
   }
 
   Map<String, dynamic> toJson() {
-    return {'anoCalendario': anoCalendario, 'idDefis': idDefis, 'tipo': tipo, 'dataHora': dataHora};
+    return {
+      'anoCalendario': anoCalendario,
+      'idDefis': idDefis,
+      'tipo': tipo,
+      'dataHora': dataHora,
+    };
   }
 }

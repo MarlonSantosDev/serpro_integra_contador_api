@@ -22,7 +22,8 @@ class GerarDasProcessoRequest {
   }
 
   factory GerarDasProcessoRequest.fromJson(Map<String, dynamic> json) {
-    return GerarDasProcessoRequest(numeroProcesso: json['numeroProcesso'].toString());
+    return GerarDasProcessoRequest(
+      numeroProcesso: json['numeroProcesso'].toString(),
+    );
   }
 }
-

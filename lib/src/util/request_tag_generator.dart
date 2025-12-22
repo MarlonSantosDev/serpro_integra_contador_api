@@ -21,24 +21,37 @@ class RequestTagGenerator {
   /// [idServico] - Código do serviço (ex: 'TRANSDECLARACAO11')
   ///
   /// Retorna o identificador no formato: TAAAAAAAAAAAAAATCCCCCCCCCCCCCCFF
-  static String generateRequestTag({required String autorPedidoDadosNumero, required String contribuinteNumero, required String idServico}) {
+  static String generateRequestTag({
+    required String autorPedidoDadosNumero,
+    required String contribuinteNumero,
+    required String idServico,
+  }) {
     // Limpar e padronizar os números de documento
-    final autorLimpo = ValidacoesUtils.cleanDocumentNumber(autorPedidoDadosNumero);
-    final contribuinteLimpo = ValidacoesUtils.cleanDocumentNumber(contribuinteNumero);
+    final autorLimpo = ValidacoesUtils.cleanDocumentNumber(
+      autorPedidoDadosNumero,
+    );
+    final contribuinteLimpo = ValidacoesUtils.cleanDocumentNumber(
+      contribuinteNumero,
+    );
 
     // Detectar tipos de documento
     final autorTipo = ValidacoesUtils.detectDocumentType(autorLimpo);
-    final contribuinteTipo = ValidacoesUtils.detectDocumentType(contribuinteLimpo);
+    final contribuinteTipo = ValidacoesUtils.detectDocumentType(
+      contribuinteLimpo,
+    );
 
     // Obter código da funcionalidade
-    final codigoFuncionalidade = CatalogoServicosUtils.getFunctionCode(idServico);
+    final codigoFuncionalidade = CatalogoServicosUtils.getFunctionCode(
+      idServico,
+    );
 
     // Padronizar documentos para 14 posições (completar com zeros à esquerda)
     final autorPadronizado = autorLimpo.padLeft(14, '0');
     final contribuintePadronizado = contribuinteLimpo.padLeft(14, '0');
 
     // Montar o identificador
-    final requestTag = '$autorTipo$autorPadronizado$contribuinteTipo$contribuintePadronizado$codigoFuncionalidade';
+    final requestTag =
+        '$autorTipo$autorPadronizado$contribuinteTipo$contribuintePadronizado$codigoFuncionalidade';
 
     return requestTag;
   }

@@ -22,7 +22,10 @@ class GerarDasRequest {
   }
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, if (dataConsolidacao != null) 'dataConsolidacao': dataConsolidacao};
+    return {
+      'periodoApuracao': periodoApuracao,
+      if (dataConsolidacao != null) 'dataConsolidacao': dataConsolidacao,
+    };
   }
 }
 
@@ -34,15 +37,24 @@ class AtualizarBeneficioRequest {
   /// Informação sobre os benefícios por período
   final List<InfoBeneficio> infoBeneficio;
 
-  AtualizarBeneficioRequest({required this.anoCalendario, required this.infoBeneficio});
+  AtualizarBeneficioRequest({
+    required this.anoCalendario,
+    required this.infoBeneficio,
+  });
 
   /// Converte para JSON string para uso nos dados do pedido
   String toJsonString() {
-    return jsonEncode({'anoCalendario': anoCalendario, 'infoBeneficio': infoBeneficio.map((b) => b.toJson()).toList()});
+    return jsonEncode({
+      'anoCalendario': anoCalendario,
+      'infoBeneficio': infoBeneficio.map((b) => b.toJson()).toList(),
+    });
   }
 
   Map<String, dynamic> toJson() {
-    return {'anoCalendario': anoCalendario, 'infoBeneficio': infoBeneficio.map((b) => b.toJson()).toList()};
+    return {
+      'anoCalendario': anoCalendario,
+      'infoBeneficio': infoBeneficio.map((b) => b.toJson()).toList(),
+    };
   }
 }
 
@@ -54,10 +66,16 @@ class InfoBeneficio {
   /// Indica se houve benefício
   final bool indicadorBeneficio;
 
-  InfoBeneficio({required this.periodoApuracao, required this.indicadorBeneficio});
+  InfoBeneficio({
+    required this.periodoApuracao,
+    required this.indicadorBeneficio,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'indicadorBeneficio': indicadorBeneficio};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'indicadorBeneficio': indicadorBeneficio,
+    };
   }
 }
 

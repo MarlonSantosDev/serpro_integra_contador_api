@@ -38,8 +38,10 @@ Future<void> AutenticaProcurador(
   final autenticaProcuradorService = AutenticaProcuradorService(apiClient);
 
   // Usar dados do ApiClient se não fornecidos
-  final finalContratanteNumero = contratanteNumero ?? apiClient.contratanteNumero!;
-  final finalProcuradorNumero = procuradorNumero ?? apiClient.autorPedidoDadosNumero!;
+  final finalContratanteNumero =
+      contratanteNumero ?? apiClient.contratanteNumero!;
+  final finalProcuradorNumero =
+      procuradorNumero ?? apiClient.autorPedidoDadosNumero!;
 
   print('┌─────────────────────────────────────────────────────────────┐');
   print('│ CONFIGURAÇÃO                                                │');
@@ -79,37 +81,55 @@ Future<void> AutenticaProcurador(
     print('   Sucesso: ${response.sucesso}');
 
     if (response.sucesso) {
-      print('\n┌─────────────────────────────────────────────────────────────┐');
+      print(
+        '\n┌─────────────────────────────────────────────────────────────┐',
+      );
       print('│ ✅ AUTENTICAÇÃO REALIZADA COM SUCESSO                        │');
       print('├─────────────────────────────────────────────────────────────┤');
 
       if (response.isCacheValido) {
-        print('│ 📦 Status: Token já existe no servidor (Cache)              │');
+        print(
+          '│ 📦 Status: Token já existe no servidor (Cache)              │',
+        );
         if (response.autenticarProcuradorToken != null) {
-          print('│ Token: ${_truncate(response.autenticarProcuradorToken!, 45)}');
+          print(
+            '│ Token: ${_truncate(response.autenticarProcuradorToken!, 45)}',
+          );
         }
       } else {
-        print('│ 🆕 Status: Novo token gerado                                │');
-        print('│ Token: ${_truncate(response.autenticarProcuradorToken ?? 'N/A', 45)}');
+        print(
+          '│ 🆕 Status: Novo token gerado                                │',
+        );
+        print(
+          '│ Token: ${_truncate(response.autenticarProcuradorToken ?? 'N/A', 45)}',
+        );
       }
 
       if (response.dataExpiracao != null) {
         print('│ Expira: ${response.dataExpiracao}');
       }
       print('│ Em Cache: ${response.isCacheValido}');
-      print('└─────────────────────────────────────────────────────────────┘\n');
+      print(
+        '└─────────────────────────────────────────────────────────────┘\n',
+      );
 
       // Salvar token para uso posterior
       if (response.autenticarProcuradorToken != null) {
-        print('💡 Use este token nas requisições para o contribuinte $contribuinteNumero');
+        print(
+          '💡 Use este token nas requisições para o contribuinte $contribuinteNumero',
+        );
       }
     } else {
-      print('\n┌─────────────────────────────────────────────────────────────┐');
+      print(
+        '\n┌─────────────────────────────────────────────────────────────┐',
+      );
       print('│ ❌ ERRO NA AUTENTICAÇÃO                                      │');
       print('├─────────────────────────────────────────────────────────────┤');
       print('│ Código: ${response.codigoMensagem}');
       print('│ Mensagem: ${response.mensagemPrincipal}');
-      print('└─────────────────────────────────────────────────────────────┘\n');
+      print(
+        '└─────────────────────────────────────────────────────────────┘\n',
+      );
     }
 
     return;

@@ -78,7 +78,10 @@ void main() async {
   // Example: Use PGMEI service
   final pgmeiService = PgmeiService(apiClient);
   try {
-    await pgmeiService.gerarDas(cnpj: '12345678000100', periodoApuracao: '202401');
+    await pgmeiService.gerarDas(
+      cnpj: '12345678000100',
+      periodoApuracao: '202401',
+    );
     print('DAS generated successfully');
   } catch (e) {
     print('Error: $e');

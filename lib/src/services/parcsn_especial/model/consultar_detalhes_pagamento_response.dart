@@ -7,9 +7,15 @@ class ConsultarDetalhesPagamentoResponse {
   final List<Mensagem> mensagens;
   final DetalhesPagamentoData? dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarDetalhesPagamentoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     DetalhesPagamentoData? dadosParsed;
     try {
       final dadosStr = json['dados']?.toString() ?? '';
@@ -22,7 +28,9 @@ class ConsultarDetalhesPagamentoResponse {
 
     return ConsultarDetalhesPagamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -83,7 +91,8 @@ class DetalhesPagamentoData {
   });
 
   factory DetalhesPagamentoData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
     return DetalhesPagamentoData(
       numeroDas: json['numeroDas'].toString(),
       dataVencimento: int.parse(json['dataVencimento'].toString()),
@@ -91,11 +100,17 @@ class DetalhesPagamentoData {
       geradoEm: json['geradoEm'].toString(),
       numeroParcelamento: json['numeroParcelamento'].toString(),
       numeroParcela: json['numeroParcela'].toString(),
-      dataLimiteAcolhimento: int.parse(json['dataLimiteAcolhimento'].toString()),
-      pagamentoDebitos: (json['pagamentoDebitos'] as List).map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList(),
+      dataLimiteAcolhimento: int.parse(
+        json['dataLimiteAcolhimento'].toString(),
+      ),
+      pagamentoDebitos: (json['pagamentoDebitos'] as List)
+          .map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dataPagamento: int.parse(json['dataPagamento'].toString()),
       bancoAgencia: json['bancoAgencia'].toString(),
-      valorPagoArrecadacao: (num.parse(json['valorPagoArrecadacao'].toString())).toDouble(),
+      valorPagoArrecadacao: (num.parse(
+        json['valorPagoArrecadacao'].toString(),
+      )).toDouble(),
     );
   }
 
@@ -170,18 +185,30 @@ class PagamentoDebito {
   final String processo;
   final List<DiscriminacaoDebito> discriminacoesDebito;
 
-  PagamentoDebito({required this.paDebito, required this.processo, required this.discriminacoesDebito});
+  PagamentoDebito({
+    required this.paDebito,
+    required this.processo,
+    required this.discriminacoesDebito,
+  });
 
   factory PagamentoDebito.fromJson(Map<String, dynamic> json) {
     return PagamentoDebito(
       paDebito: int.parse(json['paDebito'].toString()),
       processo: json['processo'].toString(),
-      discriminacoesDebito: (json['discriminacoesDebito'] as List).map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList(),
+      discriminacoesDebito: (json['discriminacoesDebito'] as List)
+          .map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'paDebito': paDebito, 'processo': processo, 'discriminacoesDebito': discriminacoesDebito.map((e) => e.toJson()).toList()};
+    return {
+      'paDebito': paDebito,
+      'processo': processo,
+      'discriminacoesDebito': discriminacoesDebito
+          .map((e) => e.toJson())
+          .toList(),
+    };
   }
 
   /// Período de apuração do débito formatado (MM/AAAA)
@@ -238,7 +265,14 @@ class DiscriminacaoDebito {
   }
 
   Map<String, dynamic> toJson() {
-    return {'tributo': tributo, 'principal': principal, 'multa': multa, 'juros': juros, 'total': total, 'enteFederadoDestino': enteFederadoDestino};
+    return {
+      'tributo': tributo,
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+      'enteFederadoDestino': enteFederadoDestino,
+    };
   }
 
   /// Valor principal formatado como moeda brasileira

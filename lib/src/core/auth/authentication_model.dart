@@ -47,7 +47,9 @@ class AuthenticationModel {
     this.procuradorToken = '',
   }) : tokenCreatedAt = tokenCreatedAt ?? DateTime.now(),
        contratanteTipo = ValidacoesUtils.detectDocumentType(contratanteNumero),
-       autorPedidoDadosTipo = ValidacoesUtils.detectDocumentType(autorPedidoDadosNumero);
+       autorPedidoDadosTipo = ValidacoesUtils.detectDocumentType(
+         autorPedidoDadosNumero,
+       );
 
   /// Verifica se o token está expirado
   bool get isExpired {
@@ -84,9 +86,13 @@ class AuthenticationModel {
       scope: json['scope'] as String? ?? '',
       contratanteNumero: json['contratante_numero'] as String,
       autorPedidoDadosNumero: json['autor_pedido_dados_numero'] as String,
-      tokenCreatedAt: json['token_created_at'] != null ? DateTime.parse(json['token_created_at'] as String) : DateTime.now(),
+      tokenCreatedAt: json['token_created_at'] != null
+          ? DateTime.parse(json['token_created_at'] as String)
+          : DateTime.now(),
       procuradorToken: json['procurador_token'] as String? ?? '',
-      fromCache: json['from_cache'] as bool? ?? true, // Se veio do JSON, provavelmente é do cache
+      fromCache:
+          json['from_cache'] as bool? ??
+          true, // Se veio do JSON, provavelmente é do cache
     );
   }
 
@@ -118,8 +124,12 @@ class AuthenticationModel {
   /// ```
   String get info {
     return JsonEncoder.withIndent('  ').convert({
-      'access_token': accessToken.length > 50 ? '${accessToken.substring(0, 50)}...' : accessToken,
-      'jwt_token': jwtToken.length > 50 ? '${jwtToken.substring(0, 50)}...' : jwtToken,
+      'access_token': accessToken.length > 50
+          ? '${accessToken.substring(0, 50)}...'
+          : accessToken,
+      'jwt_token': jwtToken.length > 50
+          ? '${jwtToken.substring(0, 50)}...'
+          : jwtToken,
       'token_type': tokenType,
       'scope': scope,
       'expira_em': expiresIn,
@@ -130,8 +140,14 @@ class AuthenticationModel {
       'está_expirado': isExpired,
       'deveria_atualizar': shouldRefresh,
       'origem': fromCache ? 'cache' : 'nova autenticação',
-      'contratante': {'numero': contratanteNumero, 'tipo': contratanteTipo == 1 ? 'CPF' : 'CNPJ'},
-      'autorPedidoDados': {'numero': autorPedidoDadosNumero, 'tipo': autorPedidoDadosTipo == 1 ? 'CPF' : 'CNPJ'},
+      'contratante': {
+        'numero': contratanteNumero,
+        'tipo': contratanteTipo == 1 ? 'CPF' : 'CNPJ',
+      },
+      'autorPedidoDados': {
+        'numero': autorPedidoDadosNumero,
+        'tipo': autorPedidoDadosTipo == 1 ? 'CPF' : 'CNPJ',
+      },
       'procurador_token': procuradorToken,
     });
   }

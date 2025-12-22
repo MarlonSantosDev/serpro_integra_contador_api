@@ -41,7 +41,8 @@ void main() async {
     final apiClient = ApiClient();
 
     // Certificado em Base64 (exemplo)
-    const certificadoBase64 = 'MIIJqQIBAzCCCW8GCSqGSIb3...'; // Seu certificado aqui
+    const certificadoBase64 =
+        'MIIJqQIBAzCCCW8GCSqGSIb3...'; // Seu certificado aqui
 
     await apiClient.authenticate(
       consumerKey: 'sua_consumer_key',

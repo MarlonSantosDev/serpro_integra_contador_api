@@ -54,11 +54,17 @@ class AuthCredentials {
   void validate() {
     // Validar consumer credentials
     if (consumerKey.isEmpty) {
-      throw InvalidCredentialsException('Consumer Key não pode ser vazio', field: 'consumerKey');
+      throw InvalidCredentialsException(
+        'Consumer Key não pode ser vazio',
+        field: 'consumerKey',
+      );
     }
 
     if (consumerSecret.isEmpty) {
-      throw InvalidCredentialsException('Consumer Secret não pode ser vazio', field: 'consumerSecret');
+      throw InvalidCredentialsException(
+        'Consumer Secret não pode ser vazio',
+        field: 'consumerSecret',
+      );
     }
 
     // Validar números de documentos
@@ -67,7 +73,9 @@ class AuthCredentials {
     }
 
     if (!ValidacoesUtils.isValidDocument(autorPedidoDadosNumero)) {
-      throw ArgumentError('Número do autor do pedido inválido: $autorPedidoDadosNumero');
+      throw ArgumentError(
+        'Número do autor do pedido inválido: $autorPedidoDadosNumero',
+      );
     }
 
     // Validar ambiente
@@ -85,7 +93,9 @@ class AuthCredentials {
     }
 
     // Se tem certificado, senha é obrigatória
-    if (isProduction && hasCertificate && (certPassword == null || certPassword!.isEmpty)) {
+    if (isProduction &&
+        hasCertificate &&
+        (certPassword == null || certPassword!.isEmpty)) {
       throw CertificateException(
         'Senha do certificado é obrigatória em ambiente de produção',
         reason: CertificateErrorReason.invalidPassword,
@@ -116,7 +126,11 @@ class AuthCredentials {
         'contratante: $contratanteNumero, '
         'autor: $autorPedidoDadosNumero, '
         'hasCertificate: $hasCertificate, '
-        'certSource: ${certBase64 != null ? "base64" : certPath != null ? "file" : "none"}'
+        'certSource: ${certBase64 != null
+            ? "base64"
+            : certPath != null
+            ? "file"
+            : "none"}'
         ')';
   }
 }

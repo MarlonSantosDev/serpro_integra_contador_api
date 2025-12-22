@@ -51,7 +51,11 @@ class HttpDateUtils {
       final second = int.tryParse(timeParts[2]);
 
       // Validar valores numéricos básicos
-      if (day == null || year == null || hour == null || minute == null || second == null) {
+      if (day == null ||
+          year == null ||
+          hour == null ||
+          minute == null ||
+          second == null) {
         return null;
       }
 
@@ -99,7 +103,20 @@ class HttpDateUtils {
   /// [monthName] - Nome do mês em inglês (3 letras)
   /// Retorna número do mês ou null se inválido
   static int? _monthNameToNumber(String monthName) {
-    const months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
+    const months = {
+      'Jan': 1,
+      'Feb': 2,
+      'Mar': 3,
+      'Apr': 4,
+      'May': 5,
+      'Jun': 6,
+      'Jul': 7,
+      'Aug': 8,
+      'Sep': 9,
+      'Oct': 10,
+      'Nov': 11,
+      'Dec': 12,
+    };
     return months[monthName];
   }
 
@@ -115,7 +132,8 @@ class HttpDateUtils {
 
     // Verificar fevereiro em ano bissexto
     if (month == 2) {
-      final isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+      final isLeapYear =
+          (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
       return day <= (isLeapYear ? 29 : 28);
     }
 

@@ -6,7 +6,11 @@ import 'base_response.dart';
 /// Representa a resposta do serviço ATUBENEFICIO23 que permite
 /// registrar benefício para determinada apuração do PGMEI
 class AtualizarBeneficioResponse extends PgmeiBaseResponse {
-  AtualizarBeneficioResponse({required super.status, required super.mensagens, required super.dados});
+  AtualizarBeneficioResponse({
+    required super.status,
+    required super.mensagens,
+    required super.dados,
+  });
 
   /// Parse dos dados como lista de benefícios atualizados
   List<AtualizarBeneficioIntegraMei>? get beneficiosAtualizados {
@@ -15,14 +19,27 @@ class AtualizarBeneficioResponse extends PgmeiBaseResponse {
 
       // Se dados é uma lista, retorna diretamente
       if (dados is List) {
-        return (dados as List).map((d) => AtualizarBeneficioIntegraMei.fromJson(d as Map<String, dynamic>)).toList();
+        return (dados as List)
+            .map(
+              (d) => AtualizarBeneficioIntegraMei.fromJson(
+                d as Map<String, dynamic>,
+              ),
+            )
+            .toList();
       }
 
       // Se dados é um Map com uma chave 'beneficios' ou similar
       if (dados is Map) {
         final dadosMap = dados as Map<String, dynamic>;
-        if (dadosMap.containsKey('beneficios') && dadosMap['beneficios'] is List) {
-          return (dadosMap['beneficios'] as List).map((d) => AtualizarBeneficioIntegraMei.fromJson(d as Map<String, dynamic>)).toList();
+        if (dadosMap.containsKey('beneficios') &&
+            dadosMap['beneficios'] is List) {
+          return (dadosMap['beneficios'] as List)
+              .map(
+                (d) => AtualizarBeneficioIntegraMei.fromJson(
+                  d as Map<String, dynamic>,
+                ),
+              )
+              .toList();
         }
       }
 
@@ -52,7 +69,9 @@ class AtualizarBeneficioResponse extends PgmeiBaseResponse {
 
     return AtualizarBeneficioResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -69,10 +88,18 @@ class AtualizarBeneficioIntegraMei {
   /// PA que possui os períodos agrupados para emissão de DAS no formato AAAAMM
   final String paAgrupado;
 
-  AtualizarBeneficioIntegraMei({required this.paOriginal, required this.indicadorBeneficio, required this.paAgrupado});
+  AtualizarBeneficioIntegraMei({
+    required this.paOriginal,
+    required this.indicadorBeneficio,
+    required this.paAgrupado,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'paOriginal': paOriginal, 'indicadorBeneficio': indicadorBeneficio, 'paAgrupado': paAgrupado};
+    return {
+      'paOriginal': paOriginal,
+      'indicadorBeneficio': indicadorBeneficio,
+      'paAgrupado': paAgrupado,
+    };
   }
 
   factory AtualizarBeneficioIntegraMei.fromJson(Map<String, dynamic> json) {

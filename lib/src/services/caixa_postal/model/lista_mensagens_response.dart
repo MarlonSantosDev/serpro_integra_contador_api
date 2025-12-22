@@ -7,7 +7,11 @@ class ListaMensagensResponse {
   final List<MensagemNegocio> mensagens;
   final DadosListaMensagens? dados;
 
-  ListaMensagensResponse({required this.status, required this.mensagens, this.dados});
+  ListaMensagensResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ListaMensagensResponse.fromJson(Map<String, dynamic> json) {
     final dadosStr = json['dados']?.toString() ?? '';
@@ -17,13 +21,19 @@ class ListaMensagensResponse {
 
     return ListaMensagensResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
+          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 }
 
@@ -37,12 +47,19 @@ class DadosListaMensagens {
   factory DadosListaMensagens.fromJson(Map<String, dynamic> json) {
     return DadosListaMensagens(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => ConteudoListaMensagens.fromJson(e as Map<String, dynamic>)).toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
+          .map(
+            (e) => ConteudoListaMensagens.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
+    return {
+      'codigo': codigo,
+      'conteudo': conteudo.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -78,7 +95,9 @@ class ConteudoListaMensagens {
       ponteiroPaginaRetornada: json['ponteiroPaginaRetornada'].toString(),
       ponteiroProximaPagina: json['ponteiroProximaPagina'].toString(),
       cnpjMatriz: json['cnpjMatriz']?.toString(),
-      listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? []).map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>)).toList(),
+      listaMensagens: (json['listaMensagens'] as List<dynamic>? ?? [])
+          .map((e) => MensagemCaixaPostal.fromJson(e as Map<String, dynamic>))
+          .toList(),
       isUltimaPagina: indicadorUltimaPaginaStr.toUpperCase() == 'S',
       quantidadeMensagensInt: int.tryParse(quantidadeMensagensStr) ?? 0,
     );
@@ -151,10 +170,14 @@ class MensagemCaixaPostal {
   factory MensagemCaixaPostal.fromJson(Map<String, dynamic> json) {
     // Processar assuntoModelo substituindo ++VARIAVEL++ por valorParametroAssunto
     final assuntoModeloOriginal = json['assuntoModelo']?.toString() ?? '';
-    final valorParametroAssunto = json['valorParametroAssunto']?.toString() ?? '';
+    final valorParametroAssunto =
+        json['valorParametroAssunto']?.toString() ?? '';
     final assuntoModeloProcessado = valorParametroAssunto.isEmpty
         ? assuntoModeloOriginal
-        : assuntoModeloOriginal.replaceAll('++VARIAVEL++', valorParametroAssunto);
+        : assuntoModeloOriginal.replaceAll(
+            '++VARIAVEL++',
+            valorParametroAssunto,
+          );
 
     // Converter campos numéricos para valores descritivos
     final indicadorLeituraStr = json['indicadorLeitura']?.toString() ?? '';

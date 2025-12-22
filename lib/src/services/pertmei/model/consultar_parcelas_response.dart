@@ -68,9 +68,14 @@ class ListaParcelasData {
 
   factory ListaParcelasData.fromJson(String jsonString) {
     try {
-      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+      final Map<String, dynamic> json =
+          jsonDecode(jsonString) as Map<String, dynamic>;
       return ListaParcelasData(
-        listaParcelas: (json['listaParcelas'] as List?)?.map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+        listaParcelas:
+            (json['listaParcelas'] as List?)
+                ?.map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
       );
     } catch (e) {
       return ListaParcelasData(listaParcelas: []);

@@ -6,7 +6,11 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     DasData? dadosParsed;
@@ -16,7 +20,9 @@ class EmitirDasResponse {
         // Se dadosJson já é um JSON válido, usa diretamente
         if (dadosStr.startsWith('{')) {
           final Map<String, dynamic> jsonMap = jsonDecode(dadosStr);
-          dadosParsed = DasData(docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString());
+          dadosParsed = DasData(
+            docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString(),
+          );
         } else {
           // Caso contrário, tenta parsear como string
           dadosParsed = DasData.fromJson(dadosStr);
@@ -28,7 +34,9 @@ class EmitirDasResponse {
 
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -54,7 +62,9 @@ class EmitirDasResponse {
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    return sucesso && dados?.docArrecadacaoPdfB64 != null && dados!.docArrecadacaoPdfB64.isNotEmpty;
+    return sucesso &&
+        dados?.docArrecadacaoPdfB64 != null &&
+        dados!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Retorna o tamanho do PDF em bytes
@@ -89,7 +99,9 @@ class DasData {
 
   factory DasData.fromJson(String jsonString) {
     final Map<String, dynamic> json = {"docArrecadacaoPdfB64": jsonString};
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

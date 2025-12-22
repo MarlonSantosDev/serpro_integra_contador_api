@@ -6,7 +6,11 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final ListaParcelasData? dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarParcelasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     ListaParcelasData? dadosParsed;
@@ -21,7 +25,11 @@ class ConsultarParcelasResponse {
 
     return ConsultarParcelasResponse(
       status: json['status']?.toString() ?? '',
-      mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List?)
+              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       dados: dadosParsed,
     );
   }
@@ -57,7 +65,12 @@ class ConsultarParcelasResponse {
 
   /// Valor total das parcelas disponíveis formatado
   String get valorTotalParcelasFormatado {
-    final total = dados?.listaParcelas.fold<double>(0.0, (sum, parcela) => sum + parcela.valor) ?? 0.0;
+    final total =
+        dados?.listaParcelas.fold<double>(
+          0.0,
+          (sum, parcela) => sum + parcela.valor,
+        ) ??
+        0.0;
     return 'R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
@@ -99,10 +112,15 @@ class ListaParcelasData {
 
   factory ListaParcelasData.fromJson(String jsonString) {
     try {
-      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+      final Map<String, dynamic> json =
+          jsonDecode(jsonString) as Map<String, dynamic>;
 
       return ListaParcelasData(
-        listaParcelas: (json['listaParcelas'] as List?)?.map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+        listaParcelas:
+            (json['listaParcelas'] as List?)
+                ?.map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
       );
     } catch (e) {
       return ListaParcelasData(listaParcelas: []);
@@ -121,7 +139,10 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(parcela: int.tryParse(json['parcela']?.toString() ?? '0') ?? 0, valor: double.tryParse(json['valor']?.toString() ?? '0') ?? 0.0);
+    return Parcela(
+      parcela: int.tryParse(json['parcela']?.toString() ?? '0') ?? 0,
+      valor: double.tryParse(json['valor']?.toString() ?? '0') ?? 0.0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -162,7 +183,21 @@ class Parcela {
 
   /// Nome do mês da parcela
   String get nomeMes {
-    const meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const meses = [
+      '',
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ];
     return mes > 0 && mes <= 12 ? meses[mes] : '';
   }
 
@@ -194,4 +229,3 @@ class Parcela {
     return 'Parcela $parcelaFormatada: $valorFormatado';
   }
 }
-

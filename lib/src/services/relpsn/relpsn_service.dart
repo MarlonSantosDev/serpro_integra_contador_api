@@ -57,8 +57,13 @@ class RelpsnService {
   /// ```
   Future<ConsultarPedidosResponse> consultarPedidos() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'RELPSN', idServico: 'PEDIDOSPARC193', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPSN',
+        idServico: 'PEDIDOSPARC193',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -83,16 +88,25 @@ class RelpsnService {
   ///   print('Data do pedido: ${parcelamento?.dataDoPedidoFormatada}');
   /// }
   /// ```
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    int numeroParcelamento,
+  ) async {
     // Validação do parâmetro
-    final validacao = RelpsnValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacao = RelpsnValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacao != null) {
       throw ArgumentError(validacao);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'RELPSN', idServico: 'OBTERPARC174', dados: numeroParcelamento.toString()),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPSN',
+        idServico: 'OBTERPARC174',
+        dados: numeroParcelamento.toString(),
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -117,8 +131,13 @@ class RelpsnService {
   /// ```
   Future<ConsultarParcelasResponse> consultarParcelasParaImpressao() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'RELPSN', idServico: 'PARCELASPARAGERAR192', dados: ""),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPSN',
+        idServico: 'PARCELASPARAGERAR192',
+        dados: "",
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -144,21 +163,33 @@ class RelpsnService {
   ///   print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
   /// }
   /// ```
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     // Validação dos parâmetros
-    final validacaoParcelamento = RelpsnValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacaoParcelamento = RelpsnValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacaoParcelamento != null) {
       throw ArgumentError(validacaoParcelamento);
     }
 
-    final validacaoAnoMes = RelpsnValidations.validarAnoMesParcela(anoMesParcela);
+    final validacaoAnoMes = RelpsnValidations.validarAnoMesParcela(
+      anoMesParcela,
+    );
     if (validacaoAnoMes != null) {
       throw ArgumentError(validacaoAnoMes);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'RELPSN', idServico: 'DETPAGTOPARC195', dados: '$numeroParcelamento|$anoMesParcela'),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPSN',
+        idServico: 'DETPAGTOPARC195',
+        dados: '$numeroParcelamento|$anoMesParcela',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -182,20 +213,29 @@ class RelpsnService {
   /// }
   /// ```
   Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir) async {
-    final validacaoParcela = RelpsnValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    final validacaoParcela = RelpsnValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
     if (validacaoParcela != null) {
       throw ArgumentError(validacaoParcela);
     }
 
     // Validação adicional: prazo para emissão
-    final validacaoPrazo = RelpsnValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    final validacaoPrazo = RelpsnValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
     if (validacaoPrazo != null) {
       throw ArgumentError(validacaoPrazo);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'RELPSN', idServico: 'GERARDAS191', dados: '{"parcelaParaEmitir": $parcelaParaEmitir}'),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPSN',
+        idServico: 'GERARDAS191',
+        dados: '{"parcelaParaEmitir": $parcelaParaEmitir}',
+      ),
     );
 
     final response = await _apiClient.post('/Emitir', request);

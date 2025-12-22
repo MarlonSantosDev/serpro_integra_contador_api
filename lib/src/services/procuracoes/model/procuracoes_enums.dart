@@ -13,19 +13,28 @@ class ProcuracoesConstants {
   static const String codigoSucesso = '[Sucesso-PROCURACOES]';
   static const String codigoAviso20001 = '[Aviso-PROCURACOES-20001]';
   static const String codigoAviso40400 = '[Aviso-PROCURACOES-40400]';
-  static const String codigoAcessoNegado40300 = '[AcessoNegado-PROCURACOES-40300]';
-  static const String codigoAcessoNegado40301 = '[AcessoNegado-PROCURACOES-40301]';
-  static const String codigoEntrataIncorreta40002 = '[EntrataIncorreta-PROCURACOES-40002]';
-  static const String codigoEntrataIncorreta40003 = '[EntrataIncorreta-PROCURACOES-40003]';
-  static const String codigoEntrataIncorreta40004 = '[EntrataIncorreta-PROCURACOES-40004]';
-  static const String codigoEntrataIncorreta40005 = '[EntrataIncorreta-PROCURACOES-40005]';
-  static const String codigoEntrataIncorreta40006 = '[EntrataIncorreta-PROCURACOES-40006]';
-  static const String codigoEntrataIncorreta40007 = '[EntrataIncorreta-PROCURACOES-40007]';
+  static const String codigoAcessoNegado40300 =
+      '[AcessoNegado-PROCURACOES-40300]';
+  static const String codigoAcessoNegado40301 =
+      '[AcessoNegado-PROCURACOES-40301]';
+  static const String codigoEntrataIncorreta40002 =
+      '[EntrataIncorreta-PROCURACOES-40002]';
+  static const String codigoEntrataIncorreta40003 =
+      '[EntrataIncorreta-PROCURACOES-40003]';
+  static const String codigoEntrataIncorreta40004 =
+      '[EntrataIncorreta-PROCURACOES-40004]';
+  static const String codigoEntrataIncorreta40005 =
+      '[EntrataIncorreta-PROCURACOES-40005]';
+  static const String codigoEntrataIncorreta40006 =
+      '[EntrataIncorreta-PROCURACOES-40006]';
+  static const String codigoEntrataIncorreta40007 =
+      '[EntrataIncorreta-PROCURACOES-40007]';
   static const String codigoErro500XX = '[Erro-PROCURACOES-500XX]';
 
   // Mensagens de texto conforme documentação
   static const String mensagemSucesso = 'Requisição efetuada com sucesso.';
-  static const String mensagemAviso20001 = 'Uma ou mais procurações foram retornadas com sucesso.';
+  static const String mensagemAviso20001 =
+      'Uma ou mais procurações foram retornadas com sucesso.';
   static const String mensagemAviso40400 = 'Não possui procuração ativa.';
 
   // Domínio de tipos aceitos

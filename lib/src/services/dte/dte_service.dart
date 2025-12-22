@@ -47,7 +47,11 @@ class DteService {
   ///   print('É optante DTE: ${response.isOptanteDte}');
   /// }
   /// ```
-  Future<DteResponse> obterIndicadorDte(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<DteResponse> obterIndicadorDte(
+    String cnpj, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     final request = BaseRequest(
       contribuinteNumero: cnpj,
       pedidoDados: PedidoDados(
@@ -95,7 +99,9 @@ class DteService {
   /// Valida a resposta recebida do serviço
   void _validarResposta(DteResponse response) {
     if (response.status != 200) {
-      throw Exception('Erro HTTP ${response.status}: ${response.mensagemPrincipal}');
+      throw Exception(
+        'Erro HTTP ${response.status}: ${response.mensagemPrincipal}',
+      );
     }
 
     for (final mensagem in response.mensagens) {
@@ -110,31 +116,68 @@ class DteService {
   Map<String, String> _obterInfoErro(String codigo) {
     switch (codigo) {
       case 'Erro-DTE-04':
-        return {'tipo': 'Validação', 'descricao': 'CPF inválido (9 dígitos)', 'acao': 'Verifique se o CPF tem exatamente 9 dígitos e é válido'};
+        return {
+          'tipo': 'Validação',
+          'descricao': 'CPF inválido (9 dígitos)',
+          'acao': 'Verifique se o CPF tem exatamente 9 dígitos e é válido',
+        };
       case 'Erro-DTE-05':
-        return {'tipo': 'Validação', 'descricao': 'CNPJ inválido (8 dígitos)', 'acao': 'Verifique se o CNPJ tem exatamente 8 dígitos e é válido'};
+        return {
+          'tipo': 'Validação',
+          'descricao': 'CNPJ inválido (8 dígitos)',
+          'acao': 'Verifique se o CNPJ tem exatamente 8 dígitos e é válido',
+        };
       case 'Erro-DTE-991':
         return {
           'tipo': 'Sistema',
           'descricao': 'Serviço não disponibilizado pelo sistema',
-          'acao': 'Verifique se o serviço CONSULTASITUACAODTE111 está disponível',
+          'acao':
+              'Verifique se o serviço CONSULTASITUACAODTE111 está disponível',
         };
       case 'Erro-DTE-992':
-        return {'tipo': 'Sistema', 'descricao': 'Serviço inválido', 'acao': 'Verifique se o idServico está correto'};
+        return {
+          'tipo': 'Sistema',
+          'descricao': 'Serviço inválido',
+          'acao': 'Verifique se o idServico está correto',
+        };
       case 'Erro-DTE-993':
-        return {'tipo': 'Sistema', 'descricao': 'Erro na conversão do retorno do serviço DTE', 'acao': 'Tente novamente em alguns minutos'};
+        return {
+          'tipo': 'Sistema',
+          'descricao': 'Erro na conversão do retorno do serviço DTE',
+          'acao': 'Tente novamente em alguns minutos',
+        };
       case 'Erro-DTE-994':
-        return {'tipo': 'Validação', 'descricao': 'Campo informado inválido', 'acao': 'Verifique os dados enviados na requisição'};
+        return {
+          'tipo': 'Validação',
+          'descricao': 'Campo informado inválido',
+          'acao': 'Verifique os dados enviados na requisição',
+        };
       case 'Erro-DTE-995':
-        return {'tipo': 'Conexão', 'descricao': 'Erro ao conectar com o serviço DTE', 'acao': 'Verifique sua conexão e tente novamente'};
+        return {
+          'tipo': 'Conexão',
+          'descricao': 'Erro ao conectar com o serviço DTE',
+          'acao': 'Verifique sua conexão e tente novamente',
+        };
       default:
-        return {'tipo': 'Desconhecido', 'descricao': 'Erro não mapeado', 'acao': 'Entre em contato com o suporte'};
+        return {
+          'tipo': 'Desconhecido',
+          'descricao': 'Erro não mapeado',
+          'acao': 'Entre em contato com o suporte',
+        };
     }
   }
 
   /// Verifica se um código de erro é conhecido
   bool isErroConhecido(String codigo) {
-    return ['Erro-DTE-04', 'Erro-DTE-05', 'Erro-DTE-991', 'Erro-DTE-992', 'Erro-DTE-993', 'Erro-DTE-994', 'Erro-DTE-995'].contains(codigo);
+    return [
+      'Erro-DTE-04',
+      'Erro-DTE-05',
+      'Erro-DTE-991',
+      'Erro-DTE-992',
+      'Erro-DTE-993',
+      'Erro-DTE-994',
+      'Erro-DTE-995',
+    ].contains(codigo);
   }
 
   /// Obtém informações sobre um erro específico

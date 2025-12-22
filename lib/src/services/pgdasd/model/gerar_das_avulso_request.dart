@@ -14,7 +14,12 @@ class GerarDasAvulsoRequest {
   /// Indicador de Prorrogação Especial. Somente utilizar para os períodos prorrogados entre 03/2020 e 05/2020 ou 03/2021 e 05/2021
   final int? prorrogacaoEspecial;
 
-  GerarDasAvulsoRequest({required this.periodoApuracao, required this.listaTributos, this.dataConsolidacao, this.prorrogacaoEspecial});
+  GerarDasAvulsoRequest({
+    required this.periodoApuracao,
+    required this.listaTributos,
+    this.dataConsolidacao,
+    this.prorrogacaoEspecial,
+  });
 
   /// Valida se o período de apuração está no formato correto (AAAAMM)
   bool get isPeriodoValido {
@@ -37,7 +42,12 @@ class GerarDasAvulsoRequest {
     final mes = int.parse(dataConsolidacao!.substring(4, 6));
     final dia = int.parse(dataConsolidacao!.substring(6, 8));
 
-    return ano >= 2018 && ano <= 9999 && mes >= 1 && mes <= 12 && dia >= 1 && dia <= 31;
+    return ano >= 2018 &&
+        ano <= 9999 &&
+        mes >= 1 &&
+        mes <= 12 &&
+        dia >= 1 &&
+        dia <= 31;
   }
 
   /// Valida se a data de consolidação é futura
@@ -80,16 +90,21 @@ class GerarDasAvulsoRequest {
       'periodoApuracao': periodoApuracao,
       'listaTributos': listaTributos.map((t) => t.toJson()).toList(),
       if (dataConsolidacao != null) 'dataConsolidacao': dataConsolidacao,
-      if (prorrogacaoEspecial != null) 'prorrogacaoEspecial': prorrogacaoEspecial,
+      if (prorrogacaoEspecial != null)
+        'prorrogacaoEspecial': prorrogacaoEspecial,
     };
   }
 
   factory GerarDasAvulsoRequest.fromJson(Map<String, dynamic> json) {
     return GerarDasAvulsoRequest(
       periodoApuracao: json['periodoApuracao'].toString(),
-      listaTributos: (json['listaTributos'] as List).map((t) => TributoAvulso.fromJson(t)).toList(),
+      listaTributos: (json['listaTributos'] as List)
+          .map((t) => TributoAvulso.fromJson(t))
+          .toList(),
       dataConsolidacao: json['dataConsolidacao']?.toString(),
-      prorrogacaoEspecial: json['prorrogacaoEspecial'] != null ? int.parse(json['prorrogacaoEspecial'].toString()) : null,
+      prorrogacaoEspecial: json['prorrogacaoEspecial'] != null
+          ? int.parse(json['prorrogacaoEspecial'].toString())
+          : null,
     );
   }
 }
@@ -108,7 +123,12 @@ class TributoAvulso {
   /// Destino da UF. Obrigatório para ICMS
   final String? uf;
 
-  TributoAvulso({required this.codigo, required this.valor, this.codMunicipio, this.uf});
+  TributoAvulso({
+    required this.codigo,
+    required this.valor,
+    this.codMunicipio,
+    this.uf,
+  });
 
   /// Valida se o valor é positivo
   bool get isValorValido => valor > 0;
@@ -132,14 +152,21 @@ class TributoAvulso {
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'valor': valor, if (codMunicipio != null) 'codMunicipio': codMunicipio, if (uf != null) 'uf': uf};
+    return {
+      'codigo': codigo,
+      'valor': valor,
+      if (codMunicipio != null) 'codMunicipio': codMunicipio,
+      if (uf != null) 'uf': uf,
+    };
   }
 
   factory TributoAvulso.fromJson(Map<String, dynamic> json) {
     return TributoAvulso(
       codigo: int.parse(json['codigo'].toString()),
       valor: (num.parse(json['valor'].toString())).toDouble(),
-      codMunicipio: json['codMunicipio'] != null ? int.parse(json['codMunicipio'].toString()) : null,
+      codMunicipio: json['codMunicipio'] != null
+          ? int.parse(json['codMunicipio'].toString())
+          : null,
       uf: json['uf']?.toString(),
     );
   }

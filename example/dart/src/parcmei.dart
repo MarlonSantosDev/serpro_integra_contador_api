@@ -11,11 +11,15 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('\n--- 1. Consultar Pedidos de Parcelamento ---');
     final pedidosResponse = await parcmeiService.consultarPedidos();
     print('✅ Status: ${pedidosResponse.status}');
-    print('Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${pedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${pedidosResponse.sucesso}');
     print('Mensagem principal: ${pedidosResponse.mensagemPrincipal}');
     print('Tem parcelamentos: ${pedidosResponse.temParcelamentos}');
-    print('Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}');
+    print(
+      'Quantidade de parcelamentos: ${pedidosResponse.quantidadeParcelamentos}',
+    );
 
     if (pedidosResponse.sucesso && pedidosResponse.temParcelamentos) {
       final parcelamentos = pedidosResponse.dados?.parcelamentos ?? [];
@@ -30,8 +34,12 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('');
       }
 
-      print('Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}');
-      print('Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}');
+      print(
+        'Parcelamentos ativos: ${pedidosResponse.parcelamentosAtivos.length}',
+      );
+      print(
+        'Parcelamentos encerrados: ${pedidosResponse.parcelamentosEncerrados.length}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
@@ -44,7 +52,9 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('\n--- 2. Consultar Parcelamento Específico ---');
     final parcelamentoResponse = await parcmeiService.consultarParcelamento(1);
     print('✅ Status: ${parcelamentoResponse.status}');
-    print('Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${parcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${parcelamentoResponse.sucesso}');
     print('Mensagem principal: ${parcelamentoResponse.mensagemPrincipal}');
 
@@ -57,23 +67,43 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
         print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
         print('  Ativo: ${parcelamento.isAtivo}');
-        print('  Tem alterações de dívida: ${parcelamento.temAlteracoesDivida}');
+        print(
+          '  Tem alterações de dívida: ${parcelamento.temAlteracoesDivida}',
+        );
         print('  Tem pagamentos: ${parcelamento.temPagamentos}');
 
         if (parcelamento.consolidacaoOriginal != null) {
           final consolidacao = parcelamento.consolidacaoOriginal!;
           print('  Consolidação original:');
-          print('    Valor total: ${parcelamentoResponse.valorTotalConsolidadoFormatado}');
-          print('    Quantidade de parcelas: ${parcelamentoResponse.quantidadeParcelas}');
-          print('    Parcela básica: ${parcelamentoResponse.parcelaBasicaFormatada}');
-          print('    Data de consolidação: ${consolidacao.dataConsolidacaoFormatada}');
-          print('    Detalhes de consolidação: ${consolidacao.detalhesConsolidacao.length}');
+          print(
+            '    Valor total: ${parcelamentoResponse.valorTotalConsolidadoFormatado}',
+          );
+          print(
+            '    Quantidade de parcelas: ${parcelamentoResponse.quantidadeParcelas}',
+          );
+          print(
+            '    Parcela básica: ${parcelamentoResponse.parcelaBasicaFormatada}',
+          );
+          print(
+            '    Data de consolidação: ${consolidacao.dataConsolidacaoFormatada}',
+          );
+          print(
+            '    Detalhes de consolidação: ${consolidacao.detalhesConsolidacao.length}',
+          );
         }
 
-        print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
-        print('  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
-        print('  Quantidade de pagamentos: ${parcelamentoResponse.quantidadePagamentos}');
-        print('  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}');
+        print(
+          '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
+        );
+        print(
+          '  Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
+        );
+        print(
+          '  Quantidade de pagamentos: ${parcelamentoResponse.quantidadePagamentos}',
+        );
+        print(
+          '  Valor total pago: ${parcelamentoResponse.valorTotalPagoFormatado}',
+        );
       }
     }
   } catch (e) {
@@ -87,7 +117,9 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
     final parcelasResponse = await parcmeiService.consultarParcelas();
     print('✅ Status: ${parcelasResponse.status}');
-    print('Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${parcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${parcelasResponse.sucesso}');
     print('Mensagem principal: ${parcelasResponse.mensagemPrincipal}');
     print('Tem parcelas: ${parcelasResponse.temParcelas}');
@@ -106,16 +138,24 @@ Future<void> Parcmei(ApiClient apiClient) async {
         print('');
       }
 
-      print('Valor total das parcelas: ${parcelasResponse.valorTotalParcelasFormatado}');
-      print('Todas parcelas mesmo valor: ${parcelasResponse.todasParcelasMesmoValor}');
+      print(
+        'Valor total das parcelas: ${parcelasResponse.valorTotalParcelasFormatado}',
+      );
+      print(
+        'Todas parcelas mesmo valor: ${parcelasResponse.todasParcelasMesmoValor}',
+      );
 
       final menorValor = parcelasResponse.parcelaMenorValor;
       final maiorValor = parcelasResponse.parcelaMaiorValor;
       if (menorValor != null) {
-        print('Menor valor: ${menorValor.valorFormatado} (${menorValor.parcelaFormatada})');
+        print(
+          'Menor valor: ${menorValor.valorFormatado} (${menorValor.parcelaFormatada})',
+        );
       }
       if (maiorValor != null) {
-        print('Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})');
+        print(
+          'Maior valor: ${maiorValor.valorFormatado} (${maiorValor.parcelaFormatada})',
+        );
       }
     }
   } catch (e) {
@@ -127,9 +167,14 @@ Future<void> Parcmei(ApiClient apiClient) async {
   // 4. Consultar Detalhes de Pagamento
   try {
     print('\n--- 4. Consultar Detalhes de Pagamento ---');
-    final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(1, 202107);
+    final detalhesResponse = await parcmeiService.consultarDetalhesPagamento(
+      1,
+      202107,
+    );
     print('✅ Status: ${detalhesResponse.status}');
-    print('Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${detalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${detalhesResponse.sucesso}');
     print('Mensagem principal: ${detalhesResponse.mensagemPrincipal}');
 
@@ -138,15 +183,23 @@ Future<void> Parcmei(ApiClient apiClient) async {
       if (detalhes != null) {
         print('Detalhes de pagamento:');
         print('  Número do DAS: ${detalhes.numeroDas}');
-        print('  Data de vencimento: ${detalhesResponse.dataVencimentoFormatada}');
+        print(
+          '  Data de vencimento: ${detalhesResponse.dataVencimentoFormatada}',
+        );
         print('  Período DAS gerado: ${detalhesResponse.paDasGeradoFormatado}');
         print('  Gerado em: ${detalhes.geradoEmFormatado}');
         print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
         print('  Número da parcela: ${detalhes.numeroParcela}');
-        print('  Data limite acolhimento: ${detalhesResponse.dataLimiteAcolhimentoFormatada}');
-        print('  Data de pagamento: ${detalhesResponse.dataPagamentoFormatada}');
+        print(
+          '  Data limite acolhimento: ${detalhesResponse.dataLimiteAcolhimentoFormatada}',
+        );
+        print(
+          '  Data de pagamento: ${detalhesResponse.dataPagamentoFormatada}',
+        );
         print('  Banco/Agência: ${detalhes.bancoAgencia}');
-        print('  Valor pago: ${detalhesResponse.valorPagoArrecadacaoFormatado}');
+        print(
+          '  Valor pago: ${detalhesResponse.valorPagoArrecadacaoFormatado}',
+        );
         print('  Pagamento realizado: ${detalhesResponse.pagamentoRealizado}');
         print('  Pagamento em atraso: ${detalhesResponse.pagamentoEmAtraso}');
         print('  Quantidade de débitos: ${detalhesResponse.quantidadeDebitos}');
@@ -166,13 +219,19 @@ Future<void> Parcmei(ApiClient apiClient) async {
             print('        Ente federado: ${disc.enteFederadoDestino}');
             print('        Tem multa: ${disc.temMulta}');
             print('        Tem juros: ${disc.temJuros}');
-            print('        % Multa: ${disc.percentualMulta.toStringAsFixed(2)}%');
-            print('        % Juros: ${disc.percentualJuros.toStringAsFixed(2)}%');
+            print(
+              '        % Multa: ${disc.percentualMulta.toStringAsFixed(2)}%',
+            );
+            print(
+              '        % Juros: ${disc.percentualJuros.toStringAsFixed(2)}%',
+            );
           }
           print('');
         }
 
-        print('Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}');
+        print(
+          'Valor total dos débitos: ${detalhes.valorTotalDebitosFormatado}',
+        );
       }
     }
   } catch (e) {
@@ -186,7 +245,9 @@ Future<void> Parcmei(ApiClient apiClient) async {
     print('\n--- 5. Emitir DAS ---');
     final emitirResponse = await parcmeiService.emitirDas(202107);
     print('✅ Status: ${emitirResponse.status}');
-    print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${emitirResponse.sucesso}');
     print('Mensagem principal: ${emitirResponse.mensagemPrincipal}');
     print('PDF gerado com sucesso: ${emitirResponse.pdfGeradoComSucesso}');
@@ -234,22 +295,54 @@ Future<void> Parcmei(ApiClient apiClient) async {
   // 6. Validações
   try {
     print('\n--- 6. Validações ---');
-    print('✅ Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}');
-    print('✅ Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}');
-    print('✅ Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}');
-    print('✅ Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}');
-    print('✅ Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}');
-    print('✅ Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}');
-    print('✅ Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}');
-    print('✅ Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}');
-    print('✅ Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}');
-    print('✅ Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}');
-    print('✅ Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}');
-    print('✅ Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}');
-    print('✅ Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}');
-    print('✅ Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}');
-    print('✅ Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}');
-    print('✅ Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}');
+    print(
+      '✅ Validação número parcelamento (1): ${parcmeiService.validarNumeroParcelamento(1)}',
+    );
+    print(
+      '✅ Validação número parcelamento (null): ${parcmeiService.validarNumeroParcelamento(null)}',
+    );
+    print(
+      '✅ Validação ano/mês parcela (202306): ${parcmeiService.validarAnoMesParcela(202306)}',
+    );
+    print(
+      '✅ Validação ano/mês parcela (202313): ${parcmeiService.validarAnoMesParcela(202313)}',
+    );
+    print(
+      '✅ Validação parcela para emitir (202306): ${parcmeiService.validarParcelaParaEmitir(202306)}',
+    );
+    print(
+      '✅ Validação prazo emissão (202306): ${parcmeiService.validarPrazoEmissaoParcela(202306)}',
+    );
+    print(
+      '✅ Validação CNPJ (00000000000000): ${parcmeiService.validarCnpjContribuinte('00000000000000')}',
+    );
+    print(
+      '✅ Validação tipo contribuinte (2): ${parcmeiService.validarTipoContribuinte(2)}',
+    );
+    print(
+      '✅ Validação tipo contribuinte (1): ${parcmeiService.validarTipoContribuinte(1)}',
+    );
+    print(
+      '✅ Validação parcela disponível (202306): ${parcmeiService.validarParcelaDisponivelParaEmissao(202306)}',
+    );
+    print(
+      '✅ Validação período apuração (202306): ${parcmeiService.validarPeriodoApuracao(202306)}',
+    );
+    print(
+      '✅ Validação data formato (20230615): ${parcmeiService.validarDataFormato(20230615)}',
+    );
+    print(
+      '✅ Validação valor monetário (100.50): ${parcmeiService.validarValorMonetario(100.50)}',
+    );
+    print(
+      '✅ Validação sistema (PARCMEI): ${parcmeiService.validarSistema('PARCMEI')}',
+    );
+    print(
+      '✅ Validação serviço (PEDIDOSPARC203): ${parcmeiService.validarServico('PEDIDOSPARC203')}',
+    );
+    print(
+      '✅ Validação versão sistema (1.0): ${parcmeiService.validarVersaoSistema('1.0')}',
+    );
   } catch (e) {
     print('❌ Erro nas validações: $e');
     servicoOk = false;
@@ -283,7 +376,10 @@ Future<void> Parcmei(ApiClient apiClient) async {
     }
 
     // Exemplo de análise de erro
-    final analiseErro = parcmeiService.analyzeError('[Sucesso-PARCMEI]', 'Requisição efetuada com sucesso.');
+    final analiseErro = parcmeiService.analyzeError(
+      '[Sucesso-PARCMEI]',
+      'Requisição efetuada com sucesso.',
+    );
     print('✅ Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Mensagem: ${analiseErro.mensagem}');

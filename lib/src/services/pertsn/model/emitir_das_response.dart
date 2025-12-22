@@ -6,7 +6,11 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     DasData? dadosParsed;
@@ -21,7 +25,9 @@ class EmitirDasResponse {
 
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -104,7 +110,9 @@ class DasData {
 
   factory DasData.fromJson(String jsonString) {
     final json = jsonString as Map<String, dynamic>;
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -154,7 +162,10 @@ class DasData {
 
     try {
       // Decodifica o Base64 e verifica se começa com o header PDF
-      final uri = Uri.dataFromString(docArrecadacaoPdfB64, mimeType: 'application/pdf');
+      final uri = Uri.dataFromString(
+        docArrecadacaoPdfB64,
+        mimeType: 'application/pdf',
+      );
       final bytes = uri.data?.contentAsBytes();
       if (bytes == null) return false;
 

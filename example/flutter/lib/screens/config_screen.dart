@@ -65,11 +65,15 @@ class _ConfigScreenState extends State<ConfigScreen> {
       // Configurar servidores se URLs fornecidas
       AuthService.setServidores(
         urlAutenticacao: _urlAutenticacaoController.text.trim().isNotEmpty
-            ? _urlAutenticacaoController.text.trim() : null,
-        urlAutenticacaoProcurado: _urlAutenticacaoProcuradoController.text.trim().isNotEmpty
-            ? _urlAutenticacaoProcuradoController.text.trim() : null,
+            ? _urlAutenticacaoController.text.trim()
+            : null,
+        urlAutenticacaoProcurado:
+            _urlAutenticacaoProcuradoController.text.trim().isNotEmpty
+            ? _urlAutenticacaoProcuradoController.text.trim()
+            : null,
         urlProxy: _urlProxyController.text.trim().isNotEmpty
-            ? _urlProxyController.text.trim() : null,
+            ? _urlProxyController.text.trim()
+            : null,
       );
 
       await AuthService.authenticate(
@@ -77,22 +81,34 @@ class _ConfigScreenState extends State<ConfigScreen> {
         consumerSecret: _consumerSecretController.text.trim(),
         contratanteNumero: _contratanteController.text.trim(),
         autorPedidoDadosNumero: _autorPedidoController.text.trim(),
-        certificadoDigitalBase64: _certificadoBase64Controller.text.trim().isNotEmpty ? _certificadoBase64Controller.text.trim() : null,
-        senhaCertificado: _senhaCertificadoController.text.trim().isNotEmpty ? _senhaCertificadoController.text.trim() : null,
+        certificadoDigitalBase64:
+            _certificadoBase64Controller.text.trim().isNotEmpty
+            ? _certificadoBase64Controller.text.trim()
+            : null,
+        senhaCertificado: _senhaCertificadoController.text.trim().isNotEmpty
+            ? _senhaCertificadoController.text.trim()
+            : null,
         ambiente: _ambiente,
       );
 
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Autenticação realizada com sucesso!'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Autenticação realizada com sucesso!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro na autenticação: $e'), backgroundColor: Colors.red, duration: const Duration(seconds: 5)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro na autenticação: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -120,12 +136,26 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Ambiente', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Ambiente',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     SegmentedButton<String>(
                       segments: const [
-                        ButtonSegment(value: 'trial', label: Text('Trial'), icon: Icon(Icons.developer_mode)),
-                        ButtonSegment(value: 'producao', label: Text('Produção'), icon: Icon(Icons.business)),
+                        ButtonSegment(
+                          value: 'trial',
+                          label: Text('Trial'),
+                          icon: Icon(Icons.developer_mode),
+                        ),
+                        ButtonSegment(
+                          value: 'producao',
+                          label: Text('Produção'),
+                          icon: Icon(Icons.business),
+                        ),
                       ],
                       selected: {_ambiente},
                       onSelectionChanged: (Set<String> newSelection) {
@@ -165,7 +195,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 border: const OutlineInputBorder(),
                 helperText: 'Segredo de acesso fornecida pelo SERPRO',
                 suffixIcon: IconButton(
-                  icon: Icon(_obscureSecret ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                    _obscureSecret ? Icons.visibility : Icons.visibility_off,
+                  ),
                   onPressed: () {
                     setState(() {
                       _obscureSecret = !_obscureSecret;
@@ -228,7 +260,13 @@ class _ConfigScreenState extends State<ConfigScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Certificado Digital (Produção)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Certificado Digital (Produção)',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _certificadoBase64Controller,
@@ -239,7 +277,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
                         ),
                         maxLines: 5,
                         validator: (value) {
-                          if (_ambiente == 'producao' && (value == null || value.trim().isEmpty)) {
+                          if (_ambiente == 'producao' &&
+                              (value == null || value.trim().isEmpty)) {
                             return 'Certificado é obrigatório em produção';
                           }
                           return null;
@@ -251,9 +290,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
                         decoration: InputDecoration(
                           labelText: 'Senha do Certificado',
                           border: const OutlineInputBorder(),
-                          helperText: 'Senha do certificado (deixe vazio se não tiver)',
+                          helperText:
+                              'Senha do certificado (deixe vazio se não tiver)',
                           suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
                             onPressed: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
@@ -309,8 +353,13 @@ class _ConfigScreenState extends State<ConfigScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _authenticate,
-                style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.white),
-                child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Autenticar', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Autenticar', style: TextStyle(fontSize: 16)),
               ),
             ),
             const SizedBox(height: 16),
@@ -324,7 +373,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
                   onPressed: () {
                     AuthService.clear();
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Autenticação limpa')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Autenticação limpa')),
+                      );
                       Navigator.pop(context);
                     }
                   },

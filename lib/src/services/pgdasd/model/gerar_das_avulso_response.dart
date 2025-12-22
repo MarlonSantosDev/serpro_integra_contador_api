@@ -13,7 +13,11 @@ class GerarDasAvulsoResponse {
   /// Estrutura de dados de retorno, contendo o objeto DasAvulso parseado
   final DasAvulso? dados;
 
-  GerarDasAvulsoResponse({required this.status, required this.mensagens, this.dados});
+  GerarDasAvulsoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -40,7 +44,9 @@ class GerarDasAvulsoResponse {
 
     return GerarDasAvulsoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -61,7 +67,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 }
 
@@ -76,10 +85,18 @@ class DasAvulso {
   /// Detalhamento do DAS
   final DetalhamentoDasAvulso detalhamento;
 
-  DasAvulso({required this.pdf, required this.cnpjCompleto, required this.detalhamento});
+  DasAvulso({
+    required this.pdf,
+    required this.cnpjCompleto,
+    required this.detalhamento,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'pdf': pdf, 'cnpjCompleto': cnpjCompleto, 'detalhamento': detalhamento.toJson()};
+    return {
+      'pdf': pdf,
+      'cnpjCompleto': cnpjCompleto,
+      'detalhamento': detalhamento.toJson(),
+    };
   }
 
   factory DasAvulso.fromJson(Map<String, dynamic> json) {
@@ -142,7 +159,8 @@ class DetalhamentoDasAvulso {
       if (observacao1 != null) 'observacao1': observacao1,
       if (observacao2 != null) 'observacao2': observacao2,
       if (observacao3 != null) 'observacao3': observacao3,
-      if (composicao != null) 'composicao': composicao!.map((c) => c.toJson()).toList(),
+      if (composicao != null)
+        'composicao': composicao!.map((c) => c.toJson()).toList(),
     };
   }
 
@@ -156,7 +174,11 @@ class DetalhamentoDasAvulso {
       observacao1: json['observacao1']?.toString(),
       observacao2: json['observacao2']?.toString(),
       observacao3: json['observacao3']?.toString(),
-      composicao: json['composicao'] != null ? (json['composicao'] as List).map((c) => ComposicaoDasAvulso.fromJson(c)).toList() : null,
+      composicao: json['composicao'] != null
+          ? (json['composicao'] as List)
+                .map((c) => ComposicaoDasAvulso.fromJson(c))
+                .toList()
+          : null,
     );
   }
 }
@@ -175,10 +197,20 @@ class ValoresDasAvulso {
   /// Valor total
   final double total;
 
-  ValoresDasAvulso({required this.principal, required this.multa, required this.juros, required this.total});
+  ValoresDasAvulso({
+    required this.principal,
+    required this.multa,
+    required this.juros,
+    required this.total,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
+    return {
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+    };
   }
 
   factory ValoresDasAvulso.fromJson(Map<String, dynamic> json) {
@@ -205,10 +237,20 @@ class ComposicaoDasAvulso {
   /// Discriminação dos valores do tributo
   final ValoresDasAvulso valores;
 
-  ComposicaoDasAvulso({required this.periodoApuracao, required this.codigo, required this.denominacao, required this.valores});
+  ComposicaoDasAvulso({
+    required this.periodoApuracao,
+    required this.codigo,
+    required this.denominacao,
+    required this.valores,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'codigo': codigo, 'denominacao': denominacao, 'valores': valores.toJson()};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'codigo': codigo,
+      'denominacao': denominacao,
+      'valores': valores.toJson(),
+    };
   }
 
   factory ComposicaoDasAvulso.fromJson(Map<String, dynamic> json) {

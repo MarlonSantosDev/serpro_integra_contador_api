@@ -26,7 +26,9 @@ Future<void> Relpsn(ApiClient apiClient) async {
         print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
       }
     } else {
-      print('❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar pedidos: $e');
@@ -39,7 +41,9 @@ Future<void> Relpsn(ApiClient apiClient) async {
     print('\n--- 2. Consultar Parcelamento Específico ---');
     const numeroParcelamento = 9131; // Número de exemplo
 
-    final parcelamentoResponse = await relpsnService.consultarParcelamento(numeroParcelamento);
+    final parcelamentoResponse = await relpsnService.consultarParcelamento(
+      numeroParcelamento,
+    );
 
     if (parcelamentoResponse.sucesso) {
       print('✅ Parcelamento consultado com sucesso');
@@ -55,19 +59,31 @@ Future<void> Relpsn(ApiClient apiClient) async {
         final consolidacao = parcelamento.consolidacaoOriginal;
         if (consolidacao != null) {
           print('Consolidação original:');
-          print('  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDeEntrada.toStringAsFixed(2)}');
+          print(
+            '  Valor total: R\$ ${consolidacao.valorTotalConsolidadoDeEntrada.toStringAsFixed(2)}',
+          );
           print('  Data: ${consolidacao.dataConsolidacaoFormatada}');
-          print('  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}');
-          print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}');
-          print('  Valor consolidado da dívida: R\$ ${consolidacao.valorConsolidadoDivida.toStringAsFixed(2)}');
+          print(
+            '  Parcela de entrada: R\$ ${consolidacao.parcelaDeEntrada.toStringAsFixed(2)}',
+          );
+          print(
+            '  Quantidade de parcelas: ${consolidacao.quantidadeParcelasDeEntrada}',
+          );
+          print(
+            '  Valor consolidado da dívida: R\$ ${consolidacao.valorConsolidadoDivida.toStringAsFixed(2)}',
+          );
 
           print('  Detalhes da consolidação:');
           for (final detalhe in consolidacao.detalhesConsolidacao) {
             print('    - Período: ${detalhe.periodoApuracaoFormatado}');
             print('      Vencimento: ${detalhe.vencimentoFormatado}');
             print('      Processo: ${detalhe.numeroProcesso}');
-            print('      Saldo original: R\$ ${detalhe.saldoDevedorOriginal.toStringAsFixed(2)}');
-            print('      Valor atualizado: R\$ ${detalhe.valorAtualizado.toStringAsFixed(2)}');
+            print(
+              '      Saldo original: R\$ ${detalhe.saldoDevedorOriginal.toStringAsFixed(2)}',
+            );
+            print(
+              '      Valor atualizado: R\$ ${detalhe.valorAtualizado.toStringAsFixed(2)}',
+            );
           }
         }
 
@@ -79,32 +95,56 @@ Future<void> Relpsn(ApiClient apiClient) async {
           print('      (Valor descritivo retornado diretamente)');
           print('      Possíveis valores:');
           print('        - "Consolidação do restante da dívida"');
-          print('        - "Reconsolidação por alteração de débitos no sistema de cobrança"');
-          print('    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}');
-          print('    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}');
-          print('    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}');
-          print('    Demais débitos: R\$ ${alteracao.demaisDebitos.toStringAsFixed(2)}');
+          print(
+            '        - "Reconsolidação por alteração de débitos no sistema de cobrança"',
+          );
+          print(
+            '    Saldo sem reduções: R\$ ${alteracao.saldoDevedorOriginalSemReducoes.toStringAsFixed(2)}',
+          );
+          print(
+            '    Valor com reduções: R\$ ${alteracao.valorRemanescenteComReducoes.toStringAsFixed(2)}',
+          );
+          print(
+            '    Parte previdenciária: R\$ ${alteracao.partePrevidenciaria.toStringAsFixed(2)}',
+          );
+          print(
+            '    Demais débitos: R\$ ${alteracao.demaisDebitos.toStringAsFixed(2)}',
+          );
 
           print('    Parcelas da alteração:');
           for (final parcela in alteracao.parcelasAlteracao) {
             print('      - Faixa: ${parcela.faixaParcelas}');
-            print('        Parcela inicial: ${parcela.parcelaInicialFormatada}');
-            print('        Vencimento inicial: ${parcela.vencimentoInicialFormatado}');
-            print('        Parcela básica: R\$ ${parcela.parcelaBasica.toStringAsFixed(2)}');
+            print(
+              '        Parcela inicial: ${parcela.parcelaInicialFormatada}',
+            );
+            print(
+              '        Vencimento inicial: ${parcela.vencimentoInicialFormatado}',
+            );
+            print(
+              '        Parcela básica: R\$ ${parcela.parcelaBasica.toStringAsFixed(2)}',
+            );
           }
         }
 
         // Demonstrativo de pagamentos
-        print('Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}');
+        print(
+          'Demonstrativo de pagamentos: ${parcelamento.demonstrativoPagamentos.length}',
+        );
         for (final pagamento in parcelamento.demonstrativoPagamentos) {
           print('  - Mês: ${pagamento.mesDaParcelaFormatado}');
           print('    Vencimento DAS: ${pagamento.vencimentoDoDasFormatado}');
-          print('    Data de arrecadação: ${pagamento.dataDeArrecadacaoFormatada}');
-          print('    Valor pago: R\$ ${pagamento.valorPago.toStringAsFixed(2)}');
+          print(
+            '    Data de arrecadação: ${pagamento.dataDeArrecadacaoFormatada}',
+          );
+          print(
+            '    Valor pago: R\$ ${pagamento.valorPago.toStringAsFixed(2)}',
+          );
         }
       }
     } else {
-      print('❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelamento: $e');
@@ -116,7 +156,8 @@ Future<void> Relpsn(ApiClient apiClient) async {
   try {
     print('\n--- 3. Consultar Parcelas Disponíveis ---');
 
-    final parcelasResponse = await relpsnService.consultarParcelasParaImpressao();
+    final parcelasResponse = await relpsnService
+        .consultarParcelasParaImpressao();
 
     if (parcelasResponse.sucesso) {
       print('✅ Parcelas consultadas com sucesso');
@@ -136,7 +177,9 @@ Future<void> Relpsn(ApiClient apiClient) async {
         print('Próxima parcela a vencer: ${proximaParcela.descricaoCompleta}');
       }
     } else {
-      print('❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelas: $e');
@@ -150,7 +193,10 @@ Future<void> Relpsn(ApiClient apiClient) async {
     const numeroParcelamento = 9131; // Número de exemplo
     const anoMesParcela = 201806; // Janeiro de 2024
 
-    final detalhesResponse = await relpsnService.consultarDetalhesPagamento(numeroParcelamento, anoMesParcela);
+    final detalhesResponse = await relpsnService.consultarDetalhesPagamento(
+      numeroParcelamento,
+      anoMesParcela,
+    );
 
     if (detalhesResponse.sucesso) {
       print('✅ Detalhes de pagamento consultados com sucesso');
@@ -163,33 +209,53 @@ Future<void> Relpsn(ApiClient apiClient) async {
         print('Gerado em: ${detalhes.geradoEmFormatado}');
         print('Número do parcelamento: ${detalhes.numeroParcelamento}');
         print('Número da parcela: ${detalhes.numeroParcela}');
-        print('Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
+        print(
+          'Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}',
+        );
         print('Data do pagamento: ${detalhes.dataPagamentoFormatada}');
         print('Banco/Agência: ${detalhes.bancoAgencia}');
         print('Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
 
-        print('Total de débitos pagos: R\$ ${detalhes.totalDebitosPagos.toStringAsFixed(2)}');
-        print('Total de tributos pagos: R\$ ${detalhes.totalTributosPagos.toStringAsFixed(2)}');
+        print(
+          'Total de débitos pagos: R\$ ${detalhes.totalDebitosPagos.toStringAsFixed(2)}',
+        );
+        print(
+          'Total de tributos pagos: R\$ ${detalhes.totalTributosPagos.toStringAsFixed(2)}',
+        );
 
         print('Pagamentos de débitos:');
         for (final pagamento in detalhes.pagamentoDebitos) {
           print('  - PA Débito: ${pagamento.paDebitoFormatado}');
           print('    Processo: ${pagamento.processo}');
-          print('    Total de débitos: R\$ ${pagamento.totalDebitos.toStringAsFixed(2)}');
-          print('    Total principal: R\$ ${pagamento.totalPrincipal.toStringAsFixed(2)}');
-          print('    Total multa: R\$ ${pagamento.totalMulta.toStringAsFixed(2)}');
-          print('    Total juros: R\$ ${pagamento.totalJuros.toStringAsFixed(2)}');
+          print(
+            '    Total de débitos: R\$ ${pagamento.totalDebitos.toStringAsFixed(2)}',
+          );
+          print(
+            '    Total principal: R\$ ${pagamento.totalPrincipal.toStringAsFixed(2)}',
+          );
+          print(
+            '    Total multa: R\$ ${pagamento.totalMulta.toStringAsFixed(2)}',
+          );
+          print(
+            '    Total juros: R\$ ${pagamento.totalJuros.toStringAsFixed(2)}',
+          );
 
           print('    Discriminações:');
           for (final discriminacao in pagamento.discriminacoesDebito) {
             print('      - ${discriminacao.descricaoCompleta}');
-            print('        Percentual multa: ${discriminacao.percentualMulta.toStringAsFixed(2)}%');
-            print('        Percentual juros: ${discriminacao.percentualJuros.toStringAsFixed(2)}%');
+            print(
+              '        Percentual multa: ${discriminacao.percentualMulta.toStringAsFixed(2)}%',
+            );
+            print(
+              '        Percentual juros: ${discriminacao.percentualJuros.toStringAsFixed(2)}%',
+            );
           }
         }
       }
     } else {
-      print('❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar detalhes: $e');
@@ -206,10 +272,13 @@ Future<void> Relpsn(ApiClient apiClient) async {
     if (dasResponse.sucesso && dasResponse.pdfGeradoComSucesso) {
       print('✅ DAS emitido com sucesso');
       print('Tamanho do PDF: ${dasResponse.tamanhoPdfFormatado}');
-      print('PDF disponível: ${dasResponse.dados?.pdfDisponivel == true ? 'Sim' : 'Não'}');
+      print(
+        'PDF disponível: ${dasResponse.dados?.pdfDisponivel == true ? 'Sim' : 'Não'}',
+      );
 
       // Salvar PDF em arquivo
-      if (dasResponse.dados?.pdfDisponivel == true && dasResponse.dados?.docArrecadacaoPdfB64 != null) {
+      if (dasResponse.dados?.pdfDisponivel == true &&
+          dasResponse.dados?.docArrecadacaoPdfB64 != null) {
         final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
           dasResponse.dados!.docArrecadacaoPdfB64,
           'das_relpsn_${DateTime.now().millisecondsSinceEpoch}.pdf',

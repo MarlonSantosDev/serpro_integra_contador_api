@@ -20,7 +20,10 @@ class EmitirDasResponse {
         // Se dadosJson já é um JSON válido, usa diretamente
         if (dadosStr.startsWith('{')) {
           final Map<String, dynamic> jsonMap = jsonDecode(dadosStr);
-          dadosParsed = DasData(docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64']?.toString() ?? '');
+          dadosParsed = DasData(
+            docArrecadacaoPdfB64:
+                jsonMap['docArrecadacaoPdfB64']?.toString() ?? '',
+          );
         } else {
           // Caso contrário, tenta parsear como string
           final dadosJson = jsonDecode(dadosStr) as Map<String, dynamic>;
@@ -74,4 +77,3 @@ class DasData {
     return {'docArrecadacaoPdfB64': docArrecadacaoPdfB64};
   }
 }
-

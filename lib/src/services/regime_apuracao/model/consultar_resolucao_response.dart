@@ -14,7 +14,11 @@ class ConsultarResolucaoResponse {
   /// Dados de retorno contendo o texto da resolução
   final ResolucaoRegimeCaixa? dados;
 
-  ConsultarResolucaoResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarResolucaoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get isSuccess => status == 200;
@@ -29,14 +33,22 @@ class ConsultarResolucaoResponse {
   bool get hasData => dados != null;
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), if (dados != null) 'dados': dados!.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      if (dados != null) 'dados': dados!.toJson(),
+    };
   }
 
   factory ConsultarResolucaoResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarResolucaoResponse(
       status: json['status'] as int,
-      mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? ResolucaoRegimeCaixa.fromJson(jsonDecode(json['dados'])) : null,
+      mensagens: (json['mensagens'] as List)
+          .map((m) => MensagemNegocio.fromJson(m))
+          .toList(),
+      dados: json['dados'] != null
+          ? ResolucaoRegimeCaixa.fromJson(jsonDecode(json['dados']))
+          : null,
     );
   }
 }
@@ -58,6 +70,8 @@ class ResolucaoRegimeCaixa {
   }
 
   factory ResolucaoRegimeCaixa.fromJson(Map<String, dynamic> json) {
-    return ResolucaoRegimeCaixa(textoResolucao: json['textoResolucao'].toString());
+    return ResolucaoRegimeCaixa(
+      textoResolucao: json['textoResolucao'].toString(),
+    );
   }
 }

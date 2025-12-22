@@ -148,9 +148,17 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = EmitirComprovanteRequest(contribuinteNumero: contribuinteNumero, numeroDocumento: numeroDocumento);
+    final request = EmitirComprovanteRequest(
+      contribuinteNumero: contribuinteNumero,
+      numeroDocumento: numeroDocumento,
+    );
 
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     return EmitirComprovanteResponse.fromJson(response);
   }
@@ -163,7 +171,8 @@ class PagtoWebService {
   // ========================================================================
 
   /// Método de conveniência: Consultar pagamentos por intervalo de datas
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloDataArrecadacao({
+  Future<ConsultarPagamentosResponse>
+  consultarPagamentosPorIntervaloDataArrecadacao({
     required String contribuinteNumero,
     required String dataInicial,
     required String dataFinal,
@@ -203,7 +212,8 @@ class PagtoWebService {
   }
 
   /// Método de conveniência: Consultar pagamentos por intervalo de valores
-  Future<ConsultarPagamentosResponse> consultarPagamentosPorIntervaloValorTotalDocumento({
+  Future<ConsultarPagamentosResponse>
+  consultarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
@@ -256,7 +266,8 @@ class PagtoWebService {
   }
 
   /// Método de conveniência: Contar pagamentos por intervalo de valores
-  Future<ContarPagamentosResponse> contarPagamentosPorIntervaloValorTotalDocumento({
+  Future<ContarPagamentosResponse>
+  contarPagamentosPorIntervaloValorTotalDocumento({
     required String contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
@@ -271,5 +282,4 @@ class PagtoWebService {
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
-
 }

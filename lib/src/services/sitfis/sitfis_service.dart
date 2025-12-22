@@ -55,9 +55,16 @@ class SitfisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = SolicitarProtocoloRequest(contribuinteNumero: contribuinteNumero);
+    final request = SolicitarProtocoloRequest(
+      contribuinteNumero: contribuinteNumero,
+    );
 
-    final response = await _apiClient.post('/Apoiar', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Apoiar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return SolicitarProtocoloResponse.fromJson(response);
   }
 
@@ -78,9 +85,17 @@ class SitfisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = EmitirRelatorioRequest(contribuinteNumero: contribuinteNumero, protocoloRelatorio: protocoloRelatorio);
+    final request = EmitirRelatorioRequest(
+      contribuinteNumero: contribuinteNumero,
+      protocoloRelatorio: protocoloRelatorio,
+    );
 
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return EmitirRelatorioResponse.fromJson(response);
   }
 }

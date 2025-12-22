@@ -78,7 +78,12 @@ class ConsolidarEmitirDarfRequest extends BaseRequest {
     this.cno,
     this.cnpjPrestador,
   }) : super(
-         pedidoDados: PedidoDados(idSistema: 'SICALC', idServico: ServicoSicalc.consolidarEmitirDarf.idServico, versaoSistema: '2.9', dados: '{}'),
+         pedidoDados: PedidoDados(
+           idSistema: 'SICALC',
+           idServico: ServicoSicalc.consolidarEmitirDarf.idServico,
+           versaoSistema: '2.9',
+           dados: '{}',
+         ),
        );
 
   /// Valida os dados da requisição
@@ -139,15 +144,17 @@ class ConsultarReceitasRequest extends BaseRequest {
   /// Código da Receita
   final String codigoReceita;
 
-  ConsultarReceitasRequest({required super.contribuinteNumero, required this.codigoReceita})
-    : super(
-        pedidoDados: PedidoDados(
-          idSistema: 'SICALC',
-          idServico: ServicoSicalc.consultarReceitas.idServico,
-          versaoSistema: '2.9',
-          dados: {'codigoReceita': codigoReceita}.toString(),
-        ),
-      );
+  ConsultarReceitasRequest({
+    required super.contribuinteNumero,
+    required this.codigoReceita,
+  }) : super(
+         pedidoDados: PedidoDados(
+           idSistema: 'SICALC',
+           idServico: ServicoSicalc.consultarReceitas.idServico,
+           versaoSistema: '2.9',
+           dados: {'codigoReceita': codigoReceita}.toString(),
+         ),
+       );
 
   /// Valida os dados da requisição
   List<String> validarDados() {
@@ -238,7 +245,12 @@ class GerarCodigoBarrasRequest extends BaseRequest {
     this.cno,
     this.cnpjPrestador,
   }) : super(
-         pedidoDados: PedidoDados(idSistema: 'SICALC', idServico: ServicoSicalc.gerarCodigoBarras.idServico, versaoSistema: '2.9', dados: '{}'),
+         pedidoDados: PedidoDados(
+           idSistema: 'SICALC',
+           idServico: ServicoSicalc.gerarCodigoBarras.idServico,
+           versaoSistema: '2.9',
+           dados: '{}',
+         ),
        );
 
   /// Valida os dados da requisição

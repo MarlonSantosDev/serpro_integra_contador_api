@@ -68,9 +68,14 @@ class ParcelamentosData {
 
   factory ParcelamentosData.fromJson(String jsonString) {
     try {
-      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+      final Map<String, dynamic> json =
+          jsonDecode(jsonString) as Map<String, dynamic>;
       return ParcelamentosData(
-        parcelamentos: (json['parcelamentos'] as List?)?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+        parcelamentos:
+            (json['parcelamentos'] as List?)
+                ?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
       );
     } catch (e) {
       return ParcelamentosData(parcelamentos: []);

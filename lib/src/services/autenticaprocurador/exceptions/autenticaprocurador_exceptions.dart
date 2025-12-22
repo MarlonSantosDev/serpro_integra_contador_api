@@ -7,31 +7,32 @@ class ExcecaoAutenticaProcurador implements Exception {
   ExcecaoAutenticaProcurador(this.mensagem, {this.codigo, this.statusHttp});
 
   @override
-  String toString() => 'ExcecaoAutenticaProcurador: $mensagem${codigo != null ? " (código: $codigo)" : ""}';
+  String toString() =>
+      'ExcecaoAutenticaProcurador: $mensagem${codigo != null ? " (código: $codigo)" : ""}';
 }
 
 /// Exceções relacionadas ao certificado digital
 class ExcecaoAssinaturaCertificado extends ExcecaoAutenticaProcurador {
   ExcecaoAssinaturaCertificado(String mensagem, {String? codigo})
-      : super(mensagem, codigo: codigo ?? 'ERRO_CERTIFICADO', statusHttp: 400);
+    : super(mensagem, codigo: codigo ?? 'ERRO_CERTIFICADO', statusHttp: 400);
 }
 
 /// Exceções relacionadas à assinatura XML
 class ExcecaoAssinaturaXml extends ExcecaoAutenticaProcurador {
   ExcecaoAssinaturaXml(String mensagem, {String? codigo})
-      : super(mensagem, codigo: codigo ?? 'ERRO_ASSINATURA_XML', statusHttp: 400);
+    : super(mensagem, codigo: codigo ?? 'ERRO_ASSINATURA_XML', statusHttp: 400);
 }
 
 /// Exceções relacionadas à validação ICP-Brasil
 class ExcecaoValidacaoICPBrasil extends ExcecaoAutenticaProcurador {
   ExcecaoValidacaoICPBrasil(String mensagem, {String? codigo})
-      : super(mensagem, codigo: codigo ?? 'ERRO_VALIDACAO_ICP', statusHttp: 403);
+    : super(mensagem, codigo: codigo ?? 'ERRO_VALIDACAO_ICP', statusHttp: 403);
 }
 
 /// Mapeia erros específicos da API SERPRO
 class ExcecaoErroSerpro extends ExcecaoAutenticaProcurador {
   ExcecaoErroSerpro(String mensagem, {required String codigo, int? statusHttp})
-      : super(mensagem, codigo: codigo, statusHttp: statusHttp);
+    : super(mensagem, codigo: codigo, statusHttp: statusHttp);
 
   /// Cria exceção a partir do código de erro SERPRO
   factory ExcecaoErroSerpro.doCodigo(String codigo) {

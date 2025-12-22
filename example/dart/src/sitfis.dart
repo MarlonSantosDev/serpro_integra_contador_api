@@ -17,7 +17,9 @@ Future<void> Sitfis(ApiClient apiClient) async {
     );
 
     print('Status: ${protocoloResponse.status}');
-    print('Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${protocoloResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
 
     if (protocoloResponse.isSuccess) {
       print('✅ Sucesso ao solicitar protocolo');
@@ -29,7 +31,9 @@ Future<void> Sitfis(ApiClient apiClient) async {
 
       if (protocoloResponse.hasTempoEspera) {
         final tempoEspera = protocoloResponse.dados!.tempoEspera!;
-        print('Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)');
+        print(
+          'Tempo de espera: ${tempoEspera}ms (${protocoloResponse.dados!.tempoEsperaEmSegundos}s)',
+        );
       }
     } else {
       print('❌ Erro ao solicitar protocolo');
@@ -72,7 +76,9 @@ Future<void> Sitfis(ApiClient apiClient) async {
       );
 
       print('Status: ${emitirResponse.status}');
-      print('Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+      print(
+        'Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+      );
       print('Sucesso: ${emitirResponse.isSuccess}');
       print('Em processamento: ${emitirResponse.isProcessing}');
       print('PDF disponível: ${emitirResponse.hasPdf}');
@@ -88,7 +94,9 @@ Future<void> Sitfis(ApiClient apiClient) async {
         print('⏳ Relatório em processamento...');
         if (emitirResponse.hasTempoEspera) {
           final tempoEspera = emitirResponse.dados!.tempoEspera!;
-          print('Tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)');
+          print(
+            'Tempo de espera: ${tempoEspera}ms (${emitirResponse.dados!.tempoEsperaEmSegundos}s)',
+          );
         }
       }
     } else {

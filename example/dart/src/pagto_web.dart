@@ -8,15 +8,16 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   // 1. Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
   try {
     print('\n--- 1. Consulta Pagamento por intervaloDataArrecadacao ---');
-    final consultarDataResponse = await pagtoWebService.consultarPagamentosPorIntervaloDataArrecadacao(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      dataInicial: '2019-09-01',
-      dataFinal: '2019-11-30',
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 100,
-    );
+    final consultarDataResponse = await pagtoWebService
+        .consultarPagamentosPorIntervaloDataArrecadacao(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          dataInicial: '2019-09-01',
+          dataFinal: '2019-11-30',
+          primeiroDaPagina: 0,
+          tamanhoDaPagina: 100,
+        );
 
     print('✅ Status: ${consultarDataResponse.status}');
     print('Sucesso: ${consultarDataResponse.sucesso}');
@@ -41,14 +42,15 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   // 2. Consulta Pagamento: quando pesquisado por codigoReceitaLista
   try {
     print('\n--- 2. Consulta Pagamento por codigoReceitaLista ---');
-    final consultarReceitaResponse = await pagtoWebService.consultarPagamentosPorCodigoReceitaLista(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      codigoReceitaLista: ['9999', '9999'],
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 100,
-    );
+    final consultarReceitaResponse = await pagtoWebService
+        .consultarPagamentosPorCodigoReceitaLista(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          codigoReceitaLista: ['9999', '9999'],
+          primeiroDaPagina: 0,
+          tamanhoDaPagina: 100,
+        );
 
     print('✅ Status: ${consultarReceitaResponse.status}');
     print('Sucesso: ${consultarReceitaResponse.sucesso}');
@@ -72,15 +74,16 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   // 3. Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
   try {
     print('\n--- 3. Consulta Pagamento por intervaloValorTotalDocumento ---');
-    final consultarValorResponse = await pagtoWebService.consultarPagamentosPorIntervaloValorTotalDocumento(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      valorInicial: 6000.0,
-      valorFinal: 13000.0,
-      primeiroDaPagina: 0,
-      tamanhoDaPagina: 100,
-    );
+    final consultarValorResponse = await pagtoWebService
+        .consultarPagamentosPorIntervaloValorTotalDocumento(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          valorInicial: 6000.0,
+          valorFinal: 13000.0,
+          primeiroDaPagina: 0,
+          tamanhoDaPagina: 100,
+        );
 
     print('✅ Status: ${consultarValorResponse.status}');
     print('Sucesso: ${consultarValorResponse.sucesso}');
@@ -104,13 +107,14 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   // 4. Conta Consulta Pagamento: quando pesquisado por intervaloDataArrecadacao
   try {
     print('\n--- 4. Conta Consulta Pagamento por intervaloDataArrecadacao ---');
-    final contarDataResponse = await pagtoWebService.contarPagamentosPorIntervaloDataArrecadacao(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      dataInicial: '2019-09-01',
-      dataFinal: '2019-11-30',
-    );
+    final contarDataResponse = await pagtoWebService
+        .contarPagamentosPorIntervaloDataArrecadacao(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          dataInicial: '2019-09-01',
+          dataFinal: '2019-11-30',
+        );
 
     print('✅ Status: ${contarDataResponse.status}');
     print('Sucesso: ${contarDataResponse.sucesso}');
@@ -124,12 +128,13 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
   // 5. Conta Consulta Pagamento: quando pesquisado por codigoReceitaLista
   try {
     print('\n--- 5. Conta Consulta Pagamento por codigoReceitaLista ---');
-    final contarReceitaResponse = await pagtoWebService.contarPagamentosPorCodigoReceitaLista(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      codigoReceitaLista: ['9999', '9999'],
-    );
+    final contarReceitaResponse = await pagtoWebService
+        .contarPagamentosPorCodigoReceitaLista(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          codigoReceitaLista: ['9999', '9999'],
+        );
 
     print('✅ Status: ${contarReceitaResponse.status}');
     print('Sucesso: ${contarReceitaResponse.sucesso}');
@@ -142,14 +147,17 @@ Future<void> PagtoWeb(ApiClient apiClient) async {
 
   // 6. Conta Consulta Pagamento: quando pesquisado por intervaloValorTotalDocumento
   try {
-    print('\n--- 6. Conta Consulta Pagamento por intervaloValorTotalDocumento ---');
-    final contarValorResponse = await pagtoWebService.contarPagamentosPorIntervaloValorTotalDocumento(
-      contratanteNumero: '99999999999999',
-      contribuinteNumero: '99999999999999',
-      autorPedidoDadosNumero: '99999999999999',
-      valorInicial: 6000.0,
-      valorFinal: 13000.0,
+    print(
+      '\n--- 6. Conta Consulta Pagamento por intervaloValorTotalDocumento ---',
     );
+    final contarValorResponse = await pagtoWebService
+        .contarPagamentosPorIntervaloValorTotalDocumento(
+          contratanteNumero: '99999999999999',
+          contribuinteNumero: '99999999999999',
+          autorPedidoDadosNumero: '99999999999999',
+          valorInicial: 6000.0,
+          valorFinal: 13000.0,
+        );
 
     print('✅ Status: ${contarValorResponse.status}');
     print('Sucesso: ${contarValorResponse.sucesso}');

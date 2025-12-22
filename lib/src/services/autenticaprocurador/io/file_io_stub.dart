@@ -31,7 +31,10 @@ class FileIO {
   }
 
   /// Executa processo OpenSSL - não suportado em Web
-  static Future<String?> runOpenSSLConversion(String pfxPath, String password) async {
+  static Future<String?> runOpenSSLConversion(
+    String pfxPath,
+    String password,
+  ) async {
     return null;
   }
 
@@ -45,4 +48,3 @@ class FileIO {
     // No-op em Web
   }
 }
-

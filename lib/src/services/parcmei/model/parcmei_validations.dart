@@ -264,7 +264,13 @@ class ParcmeiValidations {
       return 'Serviço é obrigatório';
     }
 
-    final servicosValidos = ['PEDIDOSPARC203', 'OBTERPARC204', 'PARCELASPARAGERAR202', 'DETPAGTOPARC205', 'GERARDAS201'];
+    final servicosValidos = [
+      'PEDIDOSPARC203',
+      'OBTERPARC204',
+      'PARCELASPARAGERAR202',
+      'DETPAGTOPARC205',
+      'GERARDAS201',
+    ];
 
     if (!servicosValidos.contains(servico)) {
       return 'Serviço inválido para PARCMEI';

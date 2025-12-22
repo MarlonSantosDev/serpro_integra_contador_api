@@ -58,7 +58,11 @@ class CcmeiService {
   /// ```
   ///
   /// Throws [ArgumentError] se o CNPJ for inválido
-  Future<EmitirCcmeiResponse> emitirCcmei(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<EmitirCcmeiResponse> emitirCcmei(
+    String cnpj, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     // Validar formato do CNPJ antes de fazer a requisição
     ValidacoesUtils.validateCNPJ(cnpj);
 
@@ -74,7 +78,12 @@ class CcmeiService {
     );
 
     // Executar requisição para o endpoint de emissão
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
     return EmitirCcmeiResponse.fromJson(response);
   }
 
@@ -91,7 +100,11 @@ class CcmeiService {
   /// - Atividades econômicas (CNAE principal e secundárias)
   /// - Períodos de enquadramento como MEI
   /// Lança exceção se o CNPJ for inválido ou houver erro na API
-  Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(String cnpj, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(
+    String cnpj, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     // Validar formato do CNPJ antes de fazer a requisição
     ValidacoesUtils.validateCNPJ(cnpj);
 
@@ -137,7 +150,8 @@ class CcmeiService {
       contribuinteNumero: cpf,
       pedidoDados: PedidoDados(
         idSistema: 'CCMEI',
-        idServico: 'CCMEISITCADASTRAL123', // ID específico para consulta de situação
+        idServico:
+            'CCMEISITCADASTRAL123', // ID específico para consulta de situação
         versaoSistema: '1.0',
         dados: '',
       ),

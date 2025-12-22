@@ -19,7 +19,10 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('   CNPJ: $cnpjContribuinte1');
     print('   Período: 201901');
 
-    final response = await pgmeiService.gerarDas(cnpj: cnpjContribuinte1, periodoApuracao: '201901');
+    final response = await pgmeiService.gerarDas(
+      cnpj: cnpjContribuinte1,
+      periodoApuracao: '201901',
+    );
 
     if (response.sucesso) {
       print('   ✅ Successo: ${response.mensagens.first.texto}');
@@ -31,18 +34,27 @@ Future<void> Pgmei(ApiClient apiClient) async {
 
         if (detalhe != null) {
           print('   📄 PDF gerado: ${das.pdf.length} caracteres');
-          print('   💰 Valor total: R\$ ${detalhe.valores.total.toStringAsFixed(2)}');
+          print(
+            '   💰 Valor total: R\$ ${detalhe.valores.total.toStringAsFixed(2)}',
+          );
           print('   📅 Vencimento: ${formatarData(detalhe.dataVencimento)}');
 
           // Salvar PDF em arquivo
-          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(das.pdf, 'das_pgmei_${DateTime.now().millisecondsSinceEpoch}.pdf');
-          print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+            das.pdf,
+            'das_pgmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+          );
+          print(
+            '   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}',
+          );
 
           if (detalhe.composicao != null) {
             print('   📊 Tributos:');
             for (final comp in detalhe.composicao!) {
               print('      ${comp.codigo}: ${comp.denominacao}');
-              print('        Valor: R\$ ${comp.valores.total.toStringAsFixed(2)}');
+              print(
+                '        Valor: R\$ ${comp.valores.total.toStringAsFixed(2)}',
+              );
             }
           }
         }
@@ -67,7 +79,10 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('   CNPJ: $cnpjContribuinte1');
     print('   Período: 201901');
 
-    final response = await pgmeiService.gerarDasCodigoBarras(cnpj: cnpjContribuinte1, periodoApuracao: '201901');
+    final response = await pgmeiService.gerarDasCodigoBarras(
+      cnpj: cnpjContribuinte1,
+      periodoApuracao: '201901',
+    );
 
     if (response.sucesso) {
       print('   ✅ Successo: ${response.mensagens.first.texto}');
@@ -78,12 +93,18 @@ Future<void> Pgmei(ApiClient apiClient) async {
         final detalhe = das.primeiroDetalhamento;
 
         if (detalhe != null) {
-          print('   🔲 Códigos de barras: ${detalhe.codigoDeBarras.length} segmentos');
-          print('   💰 Valor total: R\$ ${detalhe.valores.total.toStringAsFixed(2)}');
+          print(
+            '   🔲 Códigos de barras: ${detalhe.codigoDeBarras.length} segmentos',
+          );
+          print(
+            '   💰 Valor total: R\$ ${detalhe.valores.total.toStringAsFixed(2)}',
+          );
           print('   📅 Vencimento: ${formatarData(detalhe.dataVencimento)}');
 
           if (detalhe.codigoDeBarras.isNotEmpty) {
-            print('   📊 Código de barras: ${detalhe.codigoDeBarras.join(' ')}');
+            print(
+              '   📊 Código de barras: ${detalhe.codigoDeBarras.join(' ')}',
+            );
           }
         }
       }
@@ -113,7 +134,11 @@ Future<void> Pgmei(ApiClient apiClient) async {
       InfoBeneficio(periodoApuracao: '202102', indicadorBeneficio: true),
     ];
 
-    final response = await pgmeiService.atualizarBeneficio(cnpj: cnpjContribuinte1, anoCalendario: 2021, beneficios: beneficios);
+    final response = await pgmeiService.atualizarBeneficio(
+      cnpj: cnpjContribuinte1,
+      anoCalendario: 2021,
+      beneficios: beneficios,
+    );
 
     if (response.sucesso) {
       print('   ✅ Successo: ${response.mensagens.first.texto}');
@@ -123,7 +148,9 @@ Future<void> Pgmei(ApiClient apiClient) async {
         print('   📋 Benefícios atualizados:');
         for (final beneficio in beneficiosAtualizados) {
           print('      PA Original: ${beneficio.paOriginal}');
-          print('      Indicador: ${beneficio.indicadorBeneficio ? 'Sim' : 'Não'}');
+          print(
+            '      Indicador: ${beneficio.indicadorBeneficio ? 'Sim' : 'Não'}',
+          );
           print('      PA Agrupado: ${beneficio.paAgrupado}');
           print('      ---');
         }
@@ -148,7 +175,10 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('   CNPJ: $cnpjContribuinte2');
     print('   Ano: 2020');
 
-    final response = await pgmeiService.consultarDividaAtiva(cnpj: cnpjContribuinte1, anoCalendario: '2020');
+    final response = await pgmeiService.consultarDividaAtiva(
+      cnpj: cnpjContribuinte1,
+      anoCalendario: '2020',
+    );
 
     if (response.sucesso) {
       print('   ✅ Successo: ${response.mensagens.first.texto}');
@@ -156,7 +186,9 @@ Future<void> Pgmei(ApiClient apiClient) async {
       final debitosDividaAtiva = response.debitosDividaAtiva;
       if (response.temDebitosDividaAtiva) {
         print('   🚨 Situação: CONTRIBUINTE EM DÍVIDA ATIVA');
-        print('   💰 Valor total em dívida: R\$ ${response.valorTotalDividaAtiva.toStringAsFixed(2)}');
+        print(
+          '   💰 Valor total em dívida: R\$ ${response.valorTotalDividaAtiva.toStringAsFixed(2)}',
+        );
         print('   📋 Débitos encontrados:');
 
         for (final debito in debitosDividaAtiva!) {
@@ -194,13 +226,20 @@ Future<void> Pgmei(ApiClient apiClient) async {
     print('   CNPJ: $cnpjContribuinte1');
     print('   Período: 202310');
 
-    final response = await pgmeiService.gerarDasCodigoBarras(cnpj: cnpjContribuinte1, periodoApuracao: '202310');
+    final response = await pgmeiService.gerarDasCodigoBarras(
+      cnpj: cnpjContribuinte1,
+      periodoApuracao: '202310',
+    );
 
     if (response.sucesso) {
-      print('   ✅ Interface moderna funcionando: ${response.mensagens.first.texto}');
+      print(
+        '   ✅ Interface moderna funcionando: ${response.mensagens.first.texto}',
+      );
       sucessos++;
     } else {
-      print('   ❌ Interface moderna falhou: ${response.mensagens.map((m) => m.texto).join(', ')}');
+      print(
+        '   ❌ Interface moderna falhou: ${response.mensagens.map((m) => m.texto).join(', ')}',
+      );
       erros++;
     }
   } catch (e) {
@@ -224,10 +263,14 @@ Future<void> Pgmei(ApiClient apiClient) async {
     );
 
     if (response.sucesso) {
-      print('   ✅ Benefício único atualizado: ${response.mensagens.first.texto}');
+      print(
+        '   ✅ Benefício único atualizado: ${response.mensagens.first.texto}',
+      );
       sucessos++;
     } else {
-      print('   ❌ Benefício único falhou: ${response.mensagens.map((m) => m.texto).join(', ')}');
+      print(
+        '   ❌ Benefício único falhou: ${response.mensagens.map((m) => m.texto).join(', ')}',
+      );
       erros++;
     }
   } catch (e) {
@@ -244,7 +287,9 @@ Future<void> Pgmei(ApiClient apiClient) async {
   print('=' * 50);
   print('✅ Sucessos: $sucessos');
   print('❌ Erros: $erros');
-  print('📈 Taxa de sucesso: ${((sucessos / (sucessos + erros)) * 100).toStringAsFixed(1)}%');
+  print(
+    '📈 Taxa de sucesso: ${((sucessos / (sucessos + erros)) * 100).toStringAsFixed(1)}%',
+  );
 
   if (erros == 0) {
     print('🎉 TODOS OS SERVIÇOS PGMEI FUNCIONANDO PERFEITAMENTE!');

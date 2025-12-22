@@ -31,7 +31,12 @@ class GerarDasRequest {
     final mes = int.parse(dataConsolidacao!.substring(4, 6));
     final dia = int.parse(dataConsolidacao!.substring(6, 8));
 
-    return ano >= 2018 && ano <= 9999 && mes >= 1 && mes <= 12 && dia >= 1 && dia <= 31;
+    return ano >= 2018 &&
+        ano <= 9999 &&
+        mes >= 1 &&
+        mes <= 12 &&
+        dia >= 1 &&
+        dia <= 31;
   }
 
   /// Valida se a data de consolidação é futura
@@ -57,10 +62,16 @@ class GerarDasRequest {
   }
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, if (dataConsolidacao != null) 'dataConsolidacao': dataConsolidacao};
+    return {
+      'periodoApuracao': periodoApuracao,
+      if (dataConsolidacao != null) 'dataConsolidacao': dataConsolidacao,
+    };
   }
 
   factory GerarDasRequest.fromJson(Map<String, dynamic> json) {
-    return GerarDasRequest(periodoApuracao: json['periodoApuracao'].toString(), dataConsolidacao: json['dataConsolidacao']?.toString());
+    return GerarDasRequest(
+      periodoApuracao: json['periodoApuracao'].toString(),
+      dataConsolidacao: json['dataConsolidacao']?.toString(),
+    );
   }
 }

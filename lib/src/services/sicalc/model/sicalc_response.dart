@@ -18,7 +18,13 @@ class ConsolidarEmitirDarfResponse {
   /// Número do documento
   final String? numeroDocumento;
 
-  ConsolidarEmitirDarfResponse({required this.status, this.mensagens, this.consolidado, this.darf, this.numeroDocumento});
+  ConsolidarEmitirDarfResponse({
+    required this.status,
+    this.mensagens,
+    this.consolidado,
+    this.darf,
+    this.numeroDocumento,
+  });
 
   factory ConsolidarEmitirDarfResponse.fromJson(Map<String, dynamic> json) {
     ConsolidadoDarf? consolidado;
@@ -45,7 +51,11 @@ class ConsolidarEmitirDarfResponse {
 
     return ConsolidarEmitirDarfResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
+      mensagens: json['mensagens'] != null
+          ? (json['mensagens'] as List)
+                .map((m) => MensagemNegocio.fromJson(m))
+                .toList()
+          : null,
       consolidado: consolidado,
       darf: darf,
       numeroDocumento: numeroDocumento,
@@ -96,14 +106,19 @@ class ConsolidadoDarf {
 
   factory ConsolidadoDarf.fromJson(Map<String, dynamic> json) {
     return ConsolidadoDarf(
-      valorPrincipalMoedaCorrente: double.parse(json['valorPrincipalMoedaCorrente'].toString()),
-      valorTotalConsolidado: double.parse(json['valorTotalConsolidado'].toString()),
+      valorPrincipalMoedaCorrente: double.parse(
+        json['valorPrincipalMoedaCorrente'].toString(),
+      ),
+      valorTotalConsolidado: double.parse(
+        json['valorTotalConsolidado'].toString(),
+      ),
       valorMultaMora: double.parse(json['valorMultaMora'].toString()),
       percentualMultaMora: double.parse(json['percentualMultaMora'].toString()),
       valorJuros: double.parse(json['valorJuros'].toString()),
       percentualJuros: double.parse(json['percentualJuros'].toString()),
       termoInicialJuros: json['termoInicialJuros'].toString(),
-      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao'].toString(),
+      dataArrecadacaoConsolidacao: json['dataArrecadacaoConsolidacao']
+          .toString(),
       dataValidadeCalculo: json['dataValidadeCalculo'].toString(),
     );
   }
@@ -120,7 +135,11 @@ class ConsultarReceitasResponse {
   /// Dados da receita consultada
   final ReceitaInfo? receita;
 
-  ConsultarReceitasResponse({required this.status, this.mensagens, this.receita});
+  ConsultarReceitasResponse({
+    required this.status,
+    this.mensagens,
+    this.receita,
+  });
 
   factory ConsultarReceitasResponse.fromJson(Map<String, dynamic> json) {
     ReceitaInfo? receita;
@@ -141,7 +160,11 @@ class ConsultarReceitasResponse {
 
     return ConsultarReceitasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
+      mensagens: json['mensagens'] != null
+          ? (json['mensagens'] as List)
+                .map((m) => MensagemNegocio.fromJson(m))
+                .toList()
+          : null,
       receita: receita,
     );
   }
@@ -158,13 +181,19 @@ class ReceitaInfo {
   /// Extensões da receita
   final List<ExtensaoReceita> extensoes;
 
-  ReceitaInfo({required this.codigoReceita, required this.descricaoReceita, required this.extensoes});
+  ReceitaInfo({
+    required this.codigoReceita,
+    required this.descricaoReceita,
+    required this.extensoes,
+  });
 
   factory ReceitaInfo.fromJson(Map<String, dynamic> json) {
     return ReceitaInfo(
       codigoReceita: int.parse(json['codigoReceita'].toString()),
       descricaoReceita: json['descricaoReceita'].toString(),
-      extensoes: (json['extensoes'] as List).map((e) => ExtensaoReceita.fromJson(e)).toList(),
+      extensoes: (json['extensoes'] as List)
+          .map((e) => ExtensaoReceita.fromJson(e))
+          .toList(),
     );
   }
 }
@@ -180,7 +209,11 @@ class ExtensaoReceita {
   /// Informações adicionais
   final InformacoesAdicionais informacoes;
 
-  ExtensaoReceita({required this.obrigatorios, required this.opcionais, required this.informacoes});
+  ExtensaoReceita({
+    required this.obrigatorios,
+    required this.opcionais,
+    required this.informacoes,
+  });
 
   factory ExtensaoReceita.fromJson(Map<String, dynamic> json) {
     return ExtensaoReceita(
@@ -308,7 +341,9 @@ class InformacoesAdicionais {
     return InformacoesAdicionais(
       calculado: json['calculado'] as bool,
       codigoBarras: json['codigoBarras'] as bool,
-      codigoReceitaExtensao: int.parse(json['codigoReceitaExtensao'].toString()),
+      codigoReceitaExtensao: int.parse(
+        json['codigoReceitaExtensao'].toString(),
+      ),
       criacao: json['criacao'].toString(),
       descricaoReceitaExtensao: json['descricaoReceitaExtensao'].toString(),
       descricaoReferencia: json['descricaoReferencia'].toString(),
@@ -340,7 +375,13 @@ class GerarCodigoBarrasResponse {
   /// Número do documento
   final String? numeroDocumento;
 
-  GerarCodigoBarrasResponse({required this.status, this.mensagens, this.consolidado, this.codigoDeBarras, this.numeroDocumento});
+  GerarCodigoBarrasResponse({
+    required this.status,
+    this.mensagens,
+    this.consolidado,
+    this.codigoDeBarras,
+    this.numeroDocumento,
+  });
 
   factory GerarCodigoBarrasResponse.fromJson(Map<String, dynamic> json) {
     ConsolidadoDarf? consolidado;
@@ -369,7 +410,11 @@ class GerarCodigoBarrasResponse {
 
     return GerarCodigoBarrasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: json['mensagens'] != null ? (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList() : null,
+      mensagens: json['mensagens'] != null
+          ? (json['mensagens'] as List)
+                .map((m) => MensagemNegocio.fromJson(m))
+                .toList()
+          : null,
       consolidado: consolidado,
       codigoDeBarras: codigoDeBarras,
       numeroDocumento: numeroDocumento,
@@ -394,7 +439,13 @@ class CodigoBarras {
   /// Código de barras com 44 caracteres sem os dígitos verificadores
   final String codigo44;
 
-  CodigoBarras({required this.campo1ComDV, required this.campo2ComDV, required this.campo3ComDV, required this.campo4ComDV, required this.codigo44});
+  CodigoBarras({
+    required this.campo1ComDV,
+    required this.campo2ComDV,
+    required this.campo3ComDV,
+    required this.campo4ComDV,
+    required this.codigo44,
+  });
 
   factory CodigoBarras.fromJson(Map<String, dynamic> json) {
     return CodigoBarras(

@@ -11,7 +11,10 @@ class MensagemNegocio {
 
   /// Factory constructor para criar a partir de JSON
   factory MensagemNegocio.fromJson(Map<String, dynamic> json) {
-    return MensagemNegocio(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return MensagemNegocio(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   /// Converte para JSON
@@ -44,7 +47,9 @@ class MensagemNegocio {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is MensagemNegocio && other.codigo == codigo && other.texto == texto;
+    return other is MensagemNegocio &&
+        other.codigo == codigo &&
+        other.texto == texto;
   }
 
   @override
@@ -60,8 +65,10 @@ class MensagemNegocio {
 extension MensagemNegocioProcuracoes on MensagemNegocio {
   bool get isSucessoProcuracoes => codigo.contains('[Sucesso-PROCURACOES]');
   bool get isAvisoProcuracoes => codigo.contains('[Aviso-PROCURACOES]');
-  bool get isAcessoNegadoProcuracoes => codigo.contains('[AcessoNegado-PROCURACOES]');
-  bool get isEntradaIncorretaProcuracoes => codigo.contains('[EntrataIncorreta-PROCURACOES]');
+  bool get isAcessoNegadoProcuracoes =>
+      codigo.contains('[AcessoNegado-PROCURACOES]');
+  bool get isEntradaIncorretaProcuracoes =>
+      codigo.contains('[EntrataIncorreta-PROCURACOES]');
   bool get isErroProcuracoes => codigo.contains('[Erro-PROCURACOES]');
 
   String get tipoProcuracoes {

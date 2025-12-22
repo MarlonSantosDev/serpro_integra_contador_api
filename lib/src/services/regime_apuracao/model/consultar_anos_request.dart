@@ -22,5 +22,6 @@ class ConsultarAnosCalendariosRequest {
   }
 
   /// Instância singleton para reutilização
-  static const ConsultarAnosCalendariosRequest instance = ConsultarAnosCalendariosRequest();
+  static const ConsultarAnosCalendariosRequest instance =
+      ConsultarAnosCalendariosRequest();
 }

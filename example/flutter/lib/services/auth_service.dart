@@ -55,4 +55,3 @@ class AuthService {
     _isAuthenticated = false;
   }
 }
-

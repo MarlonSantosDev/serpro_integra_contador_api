@@ -45,15 +45,27 @@ class AssinadorDigitalXml {
   String? _certificadoX509Base64;
   InformacoesCertificado? _infoCertificado;
 
-  AssinadorDigitalXml({this.caminhoCertificado, this.certificadoBase64, required this.senhaCertificado}) {
+  AssinadorDigitalXml({
+    this.caminhoCertificado,
+    this.certificadoBase64,
+    required this.senhaCertificado,
+  }) {
     // Validar que pelo menos um dos dois foi fornecido
-    if ((caminhoCertificado == null || caminhoCertificado!.isEmpty) && (certificadoBase64 == null || certificadoBase64!.isEmpty)) {
-      throw ExcecaoAssinaturaCertificado('É necessário fornecer caminhoCertificado ou certificadoBase64');
+    if ((caminhoCertificado == null || caminhoCertificado!.isEmpty) &&
+        (certificadoBase64 == null || certificadoBase64!.isEmpty)) {
+      throw ExcecaoAssinaturaCertificado(
+        'É necessário fornecer caminhoCertificado ou certificadoBase64',
+      );
     }
 
     // Validar que não foram fornecidos ambos
-    if (caminhoCertificado != null && caminhoCertificado!.isNotEmpty && certificadoBase64 != null && certificadoBase64!.isNotEmpty) {
-      throw ExcecaoAssinaturaCertificado('Forneça apenas caminhoCertificado OU certificadoBase64, não ambos');
+    if (caminhoCertificado != null &&
+        caminhoCertificado!.isNotEmpty &&
+        certificadoBase64 != null &&
+        certificadoBase64!.isNotEmpty) {
+      throw ExcecaoAssinaturaCertificado(
+        'Forneça apenas caminhoCertificado OU certificadoBase64, não ambos',
+      );
     }
   }
 
@@ -90,12 +102,22 @@ class AssinadorDigitalXml {
       final signatureXml = _construirSignatureXmlString(valorDigest);
 
       // 6. Adicionar Signature ao documento para poder canonizar o SignedInfo
-      final docComSignature = XmlDocument.parse(conteudoXml.replaceAll('</termoDeAutorizacao>', '$signatureXml</termoDeAutorizacao>'));
+      final docComSignature = XmlDocument.parse(
+        conteudoXml.replaceAll(
+          '</termoDeAutorizacao>',
+          '$signatureXml</termoDeAutorizacao>',
+        ),
+      );
 
       // 7. Extrair e canonizar APENAS o SignedInfo
       // PHP: $c14nSignedInfo = $signedInfoElement->C14N(true, false);
-      final signedInfoElement = docComSignature.findAllElements('SignedInfo').first;
-      final signedInfoCanonico = _canonizarElemento(signedInfoElement, namespacePai: 'http://www.w3.org/2000/09/xmldsig#');
+      final signedInfoElement = docComSignature
+          .findAllElements('SignedInfo')
+          .first;
+      final signedInfoCanonico = _canonizarElemento(
+        signedInfoElement,
+        namespacePai: 'http://www.w3.org/2000/09/xmldsig#',
+      );
 
       // 8. Assinar o SignedInfo canonizado com RSA-SHA256
       // PHP: openssl_sign($c14nSignedInfo, $signatureValue, $privateKey, OPENSSL_ALGO_SHA256);
@@ -104,7 +126,10 @@ class AssinadorDigitalXml {
       // 9. Substituir o SignatureValue vazio pelo valor da assinatura
       final xmlFinal = docComSignature
           .toXmlString(pretty: false, indent: '')
-          .replaceFirst('<SignatureValue></SignatureValue>', '<SignatureValue>$valorAssinatura</SignatureValue>');
+          .replaceFirst(
+            '<SignatureValue></SignatureValue>',
+            '<SignatureValue>$valorAssinatura</SignatureValue>',
+          );
 
       return xmlFinal;
     } catch (e) {
@@ -196,7 +221,9 @@ class AssinadorDigitalXml {
     // Processar filhos
     for (final child in element.children) {
       if (child is XmlElement) {
-        buffer.write(_c14nElement(child, namespacePai: namespaceAtual ?? namespacePai));
+        buffer.write(
+          _c14nElement(child, namespacePai: namespaceAtual ?? namespacePai),
+        );
       } else if (child is XmlText) {
         buffer.write(_escapeText(child.value));
       }
@@ -221,7 +248,11 @@ class AssinadorDigitalXml {
 
   /// Escapa caracteres especiais em texto (C14N)
   String _escapeText(String value) {
-    return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\r', '&#xD;');
+    return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('\r', '&#xD;');
   }
 
   /// Carrega e analisa o certificado digital
@@ -251,16 +282,25 @@ class AssinadorDigitalXml {
         }
 
         if (!await FileIO.fileExists(caminhoCertificado!)) {
-          throw ExcecaoAssinaturaCertificado('Certificado não encontrado: $caminhoCertificado');
+          throw ExcecaoAssinaturaCertificado(
+            'Certificado não encontrado: $caminhoCertificado',
+          );
         }
         certificadoBytes = await FileIO.readFileAsBytes(caminhoCertificado!);
       } else {
-        throw ExcecaoAssinaturaCertificado('Nenhum certificado fornecido. Use certificadoBase64 ou caminhoCertificado.');
+        throw ExcecaoAssinaturaCertificado(
+          'Nenhum certificado fornecido. Use certificadoBase64 ou caminhoCertificado.',
+        );
       }
 
       // Detectar formato: PEM (texto) ou PKCS#12 (binário)
-      final certificadoTexto = utf8.decode(certificadoBytes, allowMalformed: true);
-      final isPem = certificadoTexto.contains('-----BEGIN') && certificadoTexto.contains('-----END');
+      final certificadoTexto = utf8.decode(
+        certificadoBytes,
+        allowMalformed: true,
+      );
+      final isPem =
+          certificadoTexto.contains('-----BEGIN') &&
+          certificadoTexto.contains('-----END');
 
       _DadosPkcs12 dadosCertificado;
 
@@ -273,7 +313,10 @@ class AssinadorDigitalXml {
 
         // Tentar conversão via OpenSSL em Desktop (melhor compatibilidade)
         if (FileIO.isDesktop && caminhoCertificado != null) {
-          final pemConvertido = await FileIO.runOpenSSLConversion(caminhoCertificado!, senhaCertificado);
+          final pemConvertido = await FileIO.runOpenSSLConversion(
+            caminhoCertificado!,
+            senhaCertificado,
+          );
 
           if (pemConvertido != null) {
             //print('✅ Convertido para PEM usando OpenSSL');
@@ -281,11 +324,17 @@ class AssinadorDigitalXml {
           } else {
             // Fallback para parse Pure Dart
             //print('⚠️  OpenSSL não disponível, usando parser Pure Dart');
-            dadosCertificado = _extrairPkcs12PureDart(certificadoBytes, senhaCertificado);
+            dadosCertificado = _extrairPkcs12PureDart(
+              certificadoBytes,
+              senhaCertificado,
+            );
           }
         } else {
           // Web/Mobile: usar parser Pure Dart diretamente
-          dadosCertificado = _extrairPkcs12PureDart(certificadoBytes, senhaCertificado);
+          dadosCertificado = _extrairPkcs12PureDart(
+            certificadoBytes,
+            senhaCertificado,
+          );
         }
       }
 
@@ -328,13 +377,18 @@ class AssinadorDigitalXml {
     try {
       // Criar assinador RSA-SHA256
       final assinador = pc.Signer('SHA-256/RSA');
-      assinador.init(true, pc.PrivateKeyParameter<pc.RSAPrivateKey>(_chavePrivada!));
+      assinador.init(
+        true,
+        pc.PrivateKeyParameter<pc.RSAPrivateKey>(_chavePrivada!),
+      );
 
       // Converter dados para bytes
       final dadosBytes = utf8.encode(dados);
 
       // Gerar assinatura
-      final assinatura = assinador.generateSignature(Uint8List.fromList(dadosBytes)) as pc.RSASignature;
+      final assinatura =
+          assinador.generateSignature(Uint8List.fromList(dadosBytes))
+              as pc.RSASignature;
 
       // Retornar em base64
       return base64.encode(assinatura.bytes);
@@ -357,13 +411,18 @@ class AssinadorDigitalXml {
 
       final privateKeyMatch = privateKeyRegex.firstMatch(pemText);
       if (privateKeyMatch != null) {
-        final privateKeyB64 = privateKeyMatch.group(1)!.replaceAll(RegExp(r'\s'), '');
+        final privateKeyB64 = privateKeyMatch
+            .group(1)!
+            .replaceAll(RegExp(r'\s'), '');
         final privateKeyBytes = base64.decode(privateKeyB64);
         chavePrivada = _parsePrivateKeyFromDer(privateKeyBytes);
       }
 
       // Procurar pelo certificado
-      final certRegex = RegExp(r'-----BEGIN CERTIFICATE-----\s*([A-Za-z0-9+/=\s]+)\s*-----END CERTIFICATE-----', multiLine: true);
+      final certRegex = RegExp(
+        r'-----BEGIN CERTIFICATE-----\s*([A-Za-z0-9+/=\s]+)\s*-----END CERTIFICATE-----',
+        multiLine: true,
+      );
 
       final certMatch = certRegex.firstMatch(pemText);
       if (certMatch != null) {
@@ -371,7 +430,9 @@ class AssinadorDigitalXml {
       }
 
       if (chavePrivada == null) {
-        throw ExcecaoAssinaturaCertificado('Chave privada não encontrada no PEM');
+        throw ExcecaoAssinaturaCertificado(
+          'Chave privada não encontrada no PEM',
+        );
       }
 
       if (certificadoBase64 == null) {
@@ -379,9 +440,15 @@ class AssinadorDigitalXml {
       }
 
       // Extrair informações do certificado
-      final infoCert = _extrairInformacoesCertificadoDeBytes(base64.decode(certificadoBase64));
+      final infoCert = _extrairInformacoesCertificadoDeBytes(
+        base64.decode(certificadoBase64),
+      );
 
-      return _DadosPkcs12(chavePrivada: chavePrivada, certificado: certificadoBase64, info: infoCert);
+      return _DadosPkcs12(
+        chavePrivada: chavePrivada,
+        certificado: certificadoBase64,
+        info: infoCert,
+      );
     } catch (e) {
       if (e is ExcecaoAutenticaProcurador) rethrow;
       throw ExcecaoAssinaturaCertificado('Erro ao processar PEM: $e');
@@ -396,7 +463,8 @@ class AssinadorDigitalXml {
 
       // Verificar se é PKCS#8 (tem version + algorithm + privateKey)
       // ou PKCS#1 (tem version + modulus + exponents diretamente)
-      if (sequence.elements.length >= 3 && sequence.elements[1] is asn1.ASN1Sequence) {
+      if (sequence.elements.length >= 3 &&
+          sequence.elements[1] is asn1.ASN1Sequence) {
         // PKCS#8 format
         final privateKeyOctet = sequence.elements[2] as asn1.ASN1OctetString;
         final privateKeyBytes = privateKeyOctet.valueBytes();
@@ -414,8 +482,10 @@ class AssinadorDigitalXml {
 
   /// Parse RSAPrivateKey ASN.1 sequence
   pc.RSAPrivateKey _parseRsaPrivateKey(asn1.ASN1Sequence rsaSequence) {
-    final modulus = (rsaSequence.elements[1] as asn1.ASN1Integer).valueAsBigInteger;
-    final privateExponent = (rsaSequence.elements[3] as asn1.ASN1Integer).valueAsBigInteger;
+    final modulus =
+        (rsaSequence.elements[1] as asn1.ASN1Integer).valueAsBigInteger;
+    final privateExponent =
+        (rsaSequence.elements[3] as asn1.ASN1Integer).valueAsBigInteger;
     final p = (rsaSequence.elements[4] as asn1.ASN1Integer).valueAsBigInteger;
     final q = (rsaSequence.elements[5] as asn1.ASN1Integer).valueAsBigInteger;
 
@@ -439,12 +509,16 @@ class AssinadorDigitalXml {
           final lengthOfLength = appBytes[1] & 0x7F;
           offset = 1 + 1 + lengthOfLength;
         }
-        final innerParser = asn1.ASN1Parser(Uint8List.sublistView(appBytes, offset));
+        final innerParser = asn1.ASN1Parser(
+          Uint8List.sublistView(appBytes, offset),
+        );
         pfxObject = innerParser.nextObject();
       }
 
       if (pfxObject is! asn1.ASN1Sequence) {
-        throw ExcecaoAssinaturaCertificado('PKCS#12 inválido: objeto raiz não é Sequence');
+        throw ExcecaoAssinaturaCertificado(
+          'PKCS#12 inválido: objeto raiz não é Sequence',
+        );
       }
 
       final pfxSequence = pfxObject;
@@ -456,24 +530,34 @@ class AssinadorDigitalXml {
 
       final version = (pfxSequence.elements[0] as asn1.ASN1Integer).intValue;
       if (version != 3) {
-        throw ExcecaoAssinaturaCertificado('Versão PKCS#12 não suportada: $version');
+        throw ExcecaoAssinaturaCertificado(
+          'Versão PKCS#12 não suportada: $version',
+        );
       }
 
       // AuthSafe ContentInfo
       if (pfxSequence.elements[1] is! asn1.ASN1Sequence) {
-        throw ExcecaoAssinaturaCertificado('AuthSafe ContentInfo não é Sequence');
+        throw ExcecaoAssinaturaCertificado(
+          'AuthSafe ContentInfo não é Sequence',
+        );
       }
 
       final authSafeContentInfo = pfxSequence.elements[1] as asn1.ASN1Sequence;
 
       if (authSafeContentInfo.elements[0] is! asn1.ASN1ObjectIdentifier) {
-        throw ExcecaoAssinaturaCertificado('AuthSafe OID não é ObjectIdentifier');
+        throw ExcecaoAssinaturaCertificado(
+          'AuthSafe OID não é ObjectIdentifier',
+        );
       }
 
-      final authSafeOid = (authSafeContentInfo.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
+      final authSafeOid =
+          (authSafeContentInfo.elements[0] as asn1.ASN1ObjectIdentifier)
+              .identifier;
 
       if (authSafeOid != '1.2.840.113549.1.7.1') {
-        throw ExcecaoAssinaturaCertificado('PKCS#12 authSafe OID não suportado: $authSafeOid');
+        throw ExcecaoAssinaturaCertificado(
+          'PKCS#12 authSafe OID não suportado: $authSafeOid',
+        );
       }
 
       // Extrair conteúdo do AuthSafe
@@ -489,7 +573,9 @@ class AssinadorDigitalXml {
           final lengthOfLength = authSafeBytes[1] & 0x7F;
           offset = 1 + 1 + lengthOfLength;
         }
-        final innerParser = asn1.ASN1Parser(Uint8List.sublistView(authSafeBytes, offset));
+        final innerParser = asn1.ASN1Parser(
+          Uint8List.sublistView(authSafeBytes, offset),
+        );
         final authSafeOctet = innerParser.nextObject() as asn1.ASN1OctetString;
         authSafeOctetBytes = authSafeOctet.valueBytes();
       }
@@ -513,7 +599,8 @@ class AssinadorDigitalXml {
         if (contentInfo.elements.isEmpty) continue;
         if (contentInfo.elements[0] is! asn1.ASN1ObjectIdentifier) continue;
 
-        final contentType = (contentInfo.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
+        final contentType =
+            (contentInfo.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
 
         if (contentType == '1.2.840.113549.1.7.1') {
           // Data - contém bags não encriptados
@@ -536,12 +623,20 @@ class AssinadorDigitalXml {
       }
 
       if (certificadoBase64 == null) {
-        throw ExcecaoAssinaturaCertificado('Certificado não encontrado no PKCS#12');
+        throw ExcecaoAssinaturaCertificado(
+          'Certificado não encontrado no PKCS#12',
+        );
       }
 
-      final infoCert = _extrairInformacoesCertificadoDeBytes(base64.decode(certificadoBase64));
+      final infoCert = _extrairInformacoesCertificadoDeBytes(
+        base64.decode(certificadoBase64),
+      );
 
-      return _DadosPkcs12(chavePrivada: chavePrivada, certificado: certificadoBase64, info: infoCert);
+      return _DadosPkcs12(
+        chavePrivada: chavePrivada,
+        certificado: certificadoBase64,
+        info: infoCert,
+      );
     } catch (e) {
       if (e is ExcecaoAutenticaProcurador) rethrow;
       throw ExcecaoAssinaturaCertificado(
@@ -552,7 +647,10 @@ class AssinadorDigitalXml {
   }
 
   /// Processa conteúdo Data (não encriptado) do PKCS#12
-  _DadosParciais _processarDataContent(asn1.ASN1Sequence contentInfo, String senha) {
+  _DadosParciais _processarDataContent(
+    asn1.ASN1Sequence contentInfo,
+    String senha,
+  ) {
     pc.RSAPrivateKey? chavePrivada;
     String? certificadoBase64;
 
@@ -572,7 +670,9 @@ class AssinadorDigitalXml {
         final lengthOfLength = contentBytes[1] & 0x7F;
         offset = 1 + 1 + lengthOfLength;
       }
-      final innerParser = asn1.ASN1Parser(Uint8List.sublistView(contentBytes, offset));
+      final innerParser = asn1.ASN1Parser(
+        Uint8List.sublistView(contentBytes, offset),
+      );
       final contentOctet = innerParser.nextObject() as asn1.ASN1OctetString;
       bagsBytes = contentOctet.valueBytes();
     }
@@ -587,7 +687,8 @@ class AssinadorDigitalXml {
       if (safeBag.elements.isEmpty) continue;
       if (safeBag.elements[0] is! asn1.ASN1ObjectIdentifier) continue;
 
-      final bagId = (safeBag.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
+      final bagId =
+          (safeBag.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
 
       if (bagId == '1.2.840.113549.1.12.10.1.1') {
         // KeyBag - chave privada NÃO encriptada
@@ -601,11 +702,17 @@ class AssinadorDigitalXml {
       }
     }
 
-    return _DadosParciais(chavePrivada: chavePrivada, certificado: certificadoBase64);
+    return _DadosParciais(
+      chavePrivada: chavePrivada,
+      certificado: certificadoBase64,
+    );
   }
 
   /// Processa conteúdo EncryptedData do PKCS#12
-  _DadosParciais _processarEncryptedData(asn1.ASN1Sequence contentInfo, String senha) {
+  _DadosParciais _processarEncryptedData(
+    asn1.ASN1Sequence contentInfo,
+    String senha,
+  ) {
     pc.RSAPrivateKey? chavePrivada;
     String? certificadoBase64;
 
@@ -615,21 +722,35 @@ class AssinadorDigitalXml {
       }
 
       final encryptedDataContext = contentInfo.elements[1];
-      final encryptedDataBytes = _extrairBytesDeContextSpecific(encryptedDataContext);
+      final encryptedDataBytes = _extrairBytesDeContextSpecific(
+        encryptedDataContext,
+      );
 
       final encryptedDataParser = asn1.ASN1Parser(encryptedDataBytes);
-      final encryptedData = encryptedDataParser.nextObject() as asn1.ASN1Sequence;
+      final encryptedData =
+          encryptedDataParser.nextObject() as asn1.ASN1Sequence;
 
-      final encryptedContentInfo = encryptedData.elements[1] as asn1.ASN1Sequence;
-      final algorithmSeq = encryptedContentInfo.elements[1] as asn1.ASN1Sequence;
+      final encryptedContentInfo =
+          encryptedData.elements[1] as asn1.ASN1Sequence;
+      final algorithmSeq =
+          encryptedContentInfo.elements[1] as asn1.ASN1Sequence;
       final encryptedContentContext = encryptedContentInfo.elements[2];
 
-      final algorithmOid = (algorithmSeq.elements[0] as asn1.ASN1ObjectIdentifier).identifier!;
+      final algorithmOid =
+          (algorithmSeq.elements[0] as asn1.ASN1ObjectIdentifier).identifier!;
       final algorithmParams = algorithmSeq.elements[1] as asn1.ASN1Sequence;
 
-      final encryptedContentBytes = _extrairBytesDeContextSpecific(encryptedContentContext, isOctetString: true);
+      final encryptedContentBytes = _extrairBytesDeContextSpecific(
+        encryptedContentContext,
+        isOctetString: true,
+      );
 
-      final decryptedBytes = _pbeDecrypt(algorithmOid, algorithmParams, encryptedContentBytes, senha);
+      final decryptedBytes = _pbeDecrypt(
+        algorithmOid,
+        algorithmParams,
+        encryptedContentBytes,
+        senha,
+      );
 
       final bagsParser = asn1.ASN1Parser(decryptedBytes);
       final bagsSequence = bagsParser.nextObject() as asn1.ASN1Sequence;
@@ -641,7 +762,8 @@ class AssinadorDigitalXml {
         if (safeBag.elements.isEmpty) continue;
         if (safeBag.elements[0] is! asn1.ASN1ObjectIdentifier) continue;
 
-        final bagId = (safeBag.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
+        final bagId =
+            (safeBag.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
 
         if (bagId == '1.2.840.113549.1.12.10.1.1') {
           chavePrivada = _extrairChavePrivadaDeBag(safeBag);
@@ -655,49 +777,74 @@ class AssinadorDigitalXml {
       // Ignorar erros e continuar
     }
 
-    return _DadosParciais(chavePrivada: chavePrivada, certificado: certificadoBase64);
+    return _DadosParciais(
+      chavePrivada: chavePrivada,
+      certificado: certificadoBase64,
+    );
   }
 
   /// Descriptografa chave privada de PKCS8ShroudedKeyBag
-  pc.RSAPrivateKey _descriptografarChavePrivada(asn1.ASN1Sequence safeBag, String senha) {
+  pc.RSAPrivateKey _descriptografarChavePrivada(
+    asn1.ASN1Sequence safeBag,
+    String senha,
+  ) {
     try {
       if (safeBag.elements.length < 2) {
         throw ExcecaoAssinaturaCertificado('SafeBag incompleto');
       }
 
       final encryptedKeyContext = safeBag.elements[1];
-      final encryptedKeyBytes = _extrairBytesDeContextSpecific(encryptedKeyContext);
+      final encryptedKeyBytes = _extrairBytesDeContextSpecific(
+        encryptedKeyContext,
+      );
 
       final encryptedKeyParser = asn1.ASN1Parser(encryptedKeyBytes);
-      final encryptedPrivateKeyInfo = encryptedKeyParser.nextObject() as asn1.ASN1Sequence;
+      final encryptedPrivateKeyInfo =
+          encryptedKeyParser.nextObject() as asn1.ASN1Sequence;
 
       if (encryptedPrivateKeyInfo.elements.length < 2) {
-        throw ExcecaoAssinaturaCertificado('EncryptedPrivateKeyInfo incompleto');
+        throw ExcecaoAssinaturaCertificado(
+          'EncryptedPrivateKeyInfo incompleto',
+        );
       }
 
-      final algorithmSeq = encryptedPrivateKeyInfo.elements[0] as asn1.ASN1Sequence;
-      final encryptedDataOctet = encryptedPrivateKeyInfo.elements[1] as asn1.ASN1OctetString;
+      final algorithmSeq =
+          encryptedPrivateKeyInfo.elements[0] as asn1.ASN1Sequence;
+      final encryptedDataOctet =
+          encryptedPrivateKeyInfo.elements[1] as asn1.ASN1OctetString;
 
-      final algorithmOid = (algorithmSeq.elements[0] as asn1.ASN1ObjectIdentifier).identifier!;
+      final algorithmOid =
+          (algorithmSeq.elements[0] as asn1.ASN1ObjectIdentifier).identifier!;
       final algorithmParams = algorithmSeq.elements[1] as asn1.ASN1Sequence;
 
-      final decryptedBytes = _pbeDecrypt(algorithmOid, algorithmParams, encryptedDataOctet.valueBytes(), senha);
+      final decryptedBytes = _pbeDecrypt(
+        algorithmOid,
+        algorithmParams,
+        encryptedDataOctet.valueBytes(),
+        senha,
+      );
 
       final keyParser = asn1.ASN1Parser(decryptedBytes);
       final privateKeyInfo = keyParser.nextObject() as asn1.ASN1Sequence;
 
-      final privateKeyOctet = privateKeyInfo.elements[2] as asn1.ASN1OctetString;
+      final privateKeyOctet =
+          privateKeyInfo.elements[2] as asn1.ASN1OctetString;
       final rsaParser = asn1.ASN1Parser(privateKeyOctet.valueBytes());
       final rsaSequence = rsaParser.nextObject() as asn1.ASN1Sequence;
 
       return _parseRsaPrivateKey(rsaSequence);
     } catch (e) {
-      throw ExcecaoAssinaturaCertificado('Erro ao descriptografar chave privada: $e');
+      throw ExcecaoAssinaturaCertificado(
+        'Erro ao descriptografar chave privada: $e',
+      );
     }
   }
 
   /// Extrai bytes de CONTEXT_SPECIFIC tag
-  Uint8List _extrairBytesDeContextSpecific(asn1.ASN1Object context, {bool isOctetString = false}) {
+  Uint8List _extrairBytesDeContextSpecific(
+    asn1.ASN1Object context, {
+    bool isOctetString = false,
+  }) {
     final bytes = context.encodedBytes;
     int offset = 2;
     if ((bytes[1] & 0x80) != 0) {
@@ -713,7 +860,12 @@ class AssinadorDigitalXml {
   }
 
   /// Descriptografia PBE (Password Based Encryption)
-  Uint8List _pbeDecrypt(String algorithmOid, asn1.ASN1Sequence params, Uint8List encryptedData, String senha) {
+  Uint8List _pbeDecrypt(
+    String algorithmOid,
+    asn1.ASN1Sequence params,
+    Uint8List encryptedData,
+    String senha,
+  ) {
     if (params.elements.isEmpty) {
       throw ExcecaoAssinaturaCertificado('Parâmetros PBE vazios');
     }
@@ -729,21 +881,38 @@ class AssinadorDigitalXml {
 
     switch (algorithmOid) {
       case '1.2.840.113549.1.12.1.3': // pbeWithSHAAnd3-KeyTripleDES-CBC
-        return _pbeWithSHAAnd3KeyTripleDESCBC(senhaBytes, salt, iterations, encryptedData);
+        return _pbeWithSHAAnd3KeyTripleDESCBC(
+          senhaBytes,
+          salt,
+          iterations,
+          encryptedData,
+        );
 
       case '1.2.840.113549.1.12.1.6': // pbeWithSHAAnd40BitRC2-CBC
-        return _pbeWithSHAAnd40BitRC2CBC(senhaBytes, salt, iterations, encryptedData);
+        return _pbeWithSHAAnd40BitRC2CBC(
+          senhaBytes,
+          salt,
+          iterations,
+          encryptedData,
+        );
 
       case '1.2.840.113549.1.5.13': // PBES2
         return _pbes2Decrypt(params, encryptedData, senhaBytes);
 
       default:
-        throw ExcecaoAssinaturaCertificado('Algoritmo PBE não suportado: $algorithmOid');
+        throw ExcecaoAssinaturaCertificado(
+          'Algoritmo PBE não suportado: $algorithmOid',
+        );
     }
   }
 
   /// PBE com SHA1 e 3-Key Triple DES CBC
-  Uint8List _pbeWithSHAAnd3KeyTripleDESCBC(Uint8List senha, Uint8List salt, int iterations, Uint8List data) {
+  Uint8List _pbeWithSHAAnd3KeyTripleDESCBC(
+    Uint8List senha,
+    Uint8List salt,
+    int iterations,
+    Uint8List data,
+  ) {
     final keyAndIv = _pkcs12Kdf(senha, salt, iterations, 1, 24);
     final iv = _pkcs12Kdf(senha, salt, iterations, 2, 8);
 
@@ -761,7 +930,12 @@ class AssinadorDigitalXml {
   }
 
   /// PBE com SHA1 e 40-bit RC2 CBC
-  Uint8List _pbeWithSHAAnd40BitRC2CBC(Uint8List senha, Uint8List salt, int iterations, Uint8List data) {
+  Uint8List _pbeWithSHAAnd40BitRC2CBC(
+    Uint8List senha,
+    Uint8List salt,
+    int iterations,
+    Uint8List data,
+  ) {
     final key = _pkcs12Kdf(senha, salt, iterations, 1, 5);
     final iv = _pkcs12Kdf(senha, salt, iterations, 2, 8);
 
@@ -779,7 +953,11 @@ class AssinadorDigitalXml {
   }
 
   /// PBES2 (mais moderno)
-  Uint8List _pbes2Decrypt(asn1.ASN1Sequence params, Uint8List data, Uint8List senha) {
+  Uint8List _pbes2Decrypt(
+    asn1.ASN1Sequence params,
+    Uint8List data,
+    Uint8List senha,
+  ) {
     final kdfSeq = params.elements[0] as asn1.ASN1Sequence;
     final encSchemeSeq = params.elements[1] as asn1.ASN1Sequence;
 
@@ -788,7 +966,8 @@ class AssinadorDigitalXml {
     final iterations = (kdfParams.elements[1] as asn1.ASN1Integer).intValue;
 
     int keyLength = 32;
-    if (kdfParams.elements.length > 2 && kdfParams.elements[2] is asn1.ASN1Integer) {
+    if (kdfParams.elements.length > 2 &&
+        kdfParams.elements[2] is asn1.ASN1Integer) {
       keyLength = (kdfParams.elements[2] as asn1.ASN1Integer).intValue;
     }
 
@@ -812,7 +991,13 @@ class AssinadorDigitalXml {
   }
 
   /// PKCS#12 Key Derivation Function
-  Uint8List _pkcs12Kdf(Uint8List senha, Uint8List salt, int iterations, int id, int keyLength) {
+  Uint8List _pkcs12Kdf(
+    Uint8List senha,
+    Uint8List salt,
+    int iterations,
+    int id,
+    int keyLength,
+  ) {
     // Converter senha para formato PKCS#12 (UTF-16BE com null terminator)
     final senhaUtf16 = Uint8List(senha.length * 2 + 2);
     for (var i = 0; i < senha.length; i++) {
@@ -833,7 +1018,9 @@ class AssinadorDigitalXml {
 
     // Construct I = S || P
     final sLen = salt.isEmpty ? 0 : v * ((salt.length + v - 1) ~/ v);
-    final pLen = senhaUtf16.isEmpty ? 0 : v * ((senhaUtf16.length + v - 1) ~/ v);
+    final pLen = senhaUtf16.isEmpty
+        ? 0
+        : v * ((senhaUtf16.length + v - 1) ~/ v);
     final iArray = Uint8List(sLen + pLen);
 
     for (var j = 0; j < sLen; j++) {
@@ -853,7 +1040,9 @@ class AssinadorDigitalXml {
         a = digest.process(a);
       }
 
-      final copyLen = (keyLength - resultOffset) < u ? (keyLength - resultOffset) : u;
+      final copyLen = (keyLength - resultOffset) < u
+          ? (keyLength - resultOffset)
+          : u;
       for (var j = 0; j < copyLen; j++) {
         result[resultOffset + j] = a[j];
       }
@@ -906,10 +1095,13 @@ class AssinadorDigitalXml {
         offset = 1 + 1 + lengthOfLength;
       }
 
-      final keyParser = asn1.ASN1Parser(Uint8List.sublistView(keyBagBytes, offset));
+      final keyParser = asn1.ASN1Parser(
+        Uint8List.sublistView(keyBagBytes, offset),
+      );
       final privateKeyInfo = keyParser.nextObject() as asn1.ASN1Sequence;
 
-      final privateKeyOctet = privateKeyInfo.elements[2] as asn1.ASN1OctetString;
+      final privateKeyOctet =
+          privateKeyInfo.elements[2] as asn1.ASN1OctetString;
       final privateKeyBytes = privateKeyOctet.valueBytes();
 
       final rsaParser = asn1.ASN1Parser(privateKeyBytes);
@@ -933,12 +1125,17 @@ class AssinadorDigitalXml {
         offset = 1 + 1 + lengthOfLength;
       }
 
-      final certBagParser = asn1.ASN1Parser(Uint8List.sublistView(certBagBytes, offset));
+      final certBagParser = asn1.ASN1Parser(
+        Uint8List.sublistView(certBagBytes, offset),
+      );
       final certBagSequence = certBagParser.nextObject() as asn1.ASN1Sequence;
-      final certType = (certBagSequence.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
+      final certType =
+          (certBagSequence.elements[0] as asn1.ASN1ObjectIdentifier).identifier;
 
       if (certType != '1.2.840.113549.1.9.22.1') {
-        throw ExcecaoAssinaturaCertificado('Tipo de certificado não suportado: $certType');
+        throw ExcecaoAssinaturaCertificado(
+          'Tipo de certificado não suportado: $certType',
+        );
       }
 
       final certContext = certBagSequence.elements[1];
@@ -950,7 +1147,9 @@ class AssinadorDigitalXml {
         certOffset = 1 + 1 + lengthOfLength;
       }
 
-      final certParser = asn1.ASN1Parser(Uint8List.sublistView(certContextBytes, certOffset));
+      final certParser = asn1.ASN1Parser(
+        Uint8List.sublistView(certContextBytes, certOffset),
+      );
       final certOctet = certParser.nextObject() as asn1.ASN1OctetString;
       final certBytes = certOctet.valueBytes();
 
@@ -961,13 +1160,17 @@ class AssinadorDigitalXml {
   }
 
   /// Extrai informações do certificado X.509 dos bytes
-  InformacoesCertificado _extrairInformacoesCertificadoDeBytes(Uint8List certBytes) {
+  InformacoesCertificado _extrairInformacoesCertificadoDeBytes(
+    Uint8List certBytes,
+  ) {
     try {
       final parser = asn1.ASN1Parser(certBytes);
       final certSequence = parser.nextObject() as asn1.ASN1Sequence;
       final tbsCertificate = certSequence.elements[0] as asn1.ASN1Sequence;
 
-      final serialNumber = (tbsCertificate.elements[1] as asn1.ASN1Integer).valueAsBigInteger.toString();
+      final serialNumber = (tbsCertificate.elements[1] as asn1.ASN1Integer)
+          .valueAsBigInteger
+          .toString();
 
       final validity = tbsCertificate.elements[4] as asn1.ASN1Sequence;
       final validoDe = _parseAsn1Time(validity.elements[0]);
@@ -993,7 +1196,9 @@ class AssinadorDigitalXml {
         validoDe: validoDe,
         validoAte: validoAte,
         isICPBrasil: true,
-        tipo: cpfCnpj != null && cpfCnpj.length == 11 ? TipoCertificado.eCPF : TipoCertificado.eCNPJ,
+        tipo: cpfCnpj != null && cpfCnpj.length == 11
+            ? TipoCertificado.eCPF
+            : TipoCertificado.eCNPJ,
         cpfCnpj: cpfCnpj ?? '',
       );
     } catch (e) {
@@ -1090,7 +1295,11 @@ class _DadosPkcs12 {
   final String certificado;
   final InformacoesCertificado info;
 
-  _DadosPkcs12({required this.chavePrivada, required this.certificado, required this.info});
+  _DadosPkcs12({
+    required this.chavePrivada,
+    required this.certificado,
+    required this.info,
+  });
 }
 
 /// Dados parciais extraídos durante o processamento

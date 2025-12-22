@@ -56,21 +56,34 @@ class TermoAutorizacaoResponse {
         }
       } else if (json['mensagens'] is String) {
         // Caso especial quando mensagens vem como string
-        mensagens.add(MensagemNegocio(codigo: 'INFO', texto: json['mensagens'].toString()));
+        mensagens.add(
+          MensagemNegocio(codigo: 'INFO', texto: json['mensagens'].toString()),
+        );
       }
     }
 
     // Tratar resposta de cache (quando não há 'dados')
-    if (json['cacheado'] == true || json['dados'] == null || json['dados'].toString().isEmpty) {
+    if (json['cacheado'] == true ||
+        json['dados'] == null ||
+        json['dados'].toString().isEmpty) {
       // Resposta de cache (status 304) sem dados
       return TermoAutorizacaoResponse(
         status: int.tryParse(json['status']?.toString() ?? '304') ?? 304,
         mensagens: mensagens.isNotEmpty
             ? mensagens
-            : [MensagemNegocio(codigo: 'CACHE', texto: json['mensagem']?.toString() ?? 'Token em cache válido')],
+            : [
+                MensagemNegocio(
+                  codigo: 'CACHE',
+                  texto:
+                      json['mensagem']?.toString() ?? 'Token em cache válido',
+                ),
+              ],
         dados: json['dados']?.toString(),
-        autenticarProcuradorToken: json['autenticar_procurador_token']?.toString(),
-        dataExpiracao: DateTime.tryParse(json['data_hora_expiracao']?.toString() ?? ''),
+        autenticarProcuradorToken: json['autenticar_procurador_token']
+            ?.toString(),
+        dataExpiracao: DateTime.tryParse(
+          json['data_hora_expiracao']?.toString() ?? '',
+        ),
         isCacheValido: true,
       );
     }
@@ -80,10 +93,14 @@ class TermoAutorizacaoResponse {
     DateTime? dataExpiracao;
 
     try {
-      final dadosObj = json['dados'] is String ? jsonDecode(json['dados']) : json['dados'];
+      final dadosObj = json['dados'] is String
+          ? jsonDecode(json['dados'])
+          : json['dados'];
       token = dadosObj['autenticar_procurador_token']?.toString();
       if (dadosObj['data_hora_expiracao'] != null) {
-        dataExpiracao = DateTime.tryParse(dadosObj['data_hora_expiracao'].toString());
+        dataExpiracao = DateTime.tryParse(
+          dadosObj['data_hora_expiracao'].toString(),
+        );
       }
     } catch (e) {
       // Se falhar ao parsear dados, apenas continuar sem eles
@@ -127,7 +144,9 @@ class TermoAutorizacaoResponse {
 
     return TermoAutorizacaoResponse(
       status: status,
-      mensagens: [MensagemNegocio(codigo: 'CACHE', texto: 'Token em cache válido')],
+      mensagens: [
+        MensagemNegocio(codigo: 'CACHE', texto: 'Token em cache válido'),
+      ],
       autenticarProcuradorToken: token,
       dataExpiracao: dataExpiracao,
       isCacheValido: true,
@@ -159,7 +178,11 @@ class CacheToken {
   final DateTime dataExpiracao;
   final DateTime dataCriacao;
 
-  CacheToken({required this.token, required this.dataExpiracao, required this.dataCriacao});
+  CacheToken({
+    required this.token,
+    required this.dataExpiracao,
+    required this.dataCriacao,
+  });
 
   /// Verifica se o token ainda é válido
   bool get isValido => DateTime.now().isBefore(dataExpiracao);
@@ -179,7 +202,11 @@ class CacheToken {
   }
 
   Map<String, dynamic> toJson() {
-    return {'token': token, 'data_expiracao': dataExpiracao.toIso8601String(), 'data_criacao': dataCriacao.toIso8601String()};
+    return {
+      'token': token,
+      'data_expiracao': dataExpiracao.toIso8601String(),
+      'data_criacao': dataCriacao.toIso8601String(),
+    };
   }
 
   @override

@@ -28,7 +28,8 @@ Future<void> Regime(ApiClient apiClient) async {
         print("Demonstrativo PDF: ${dados.demonstrativoPdf?.isEmpty}");
 
         // Salvar PDF em arquivo se disponível
-        if (dados.demonstrativoPdf != null && dados.demonstrativoPdf!.isNotEmpty) {
+        if (dados.demonstrativoPdf != null &&
+            dados.demonstrativoPdf!.isNotEmpty) {
           final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
             dados.demonstrativoPdf!,
             'demonstrativo_regime_${DateTime.now().millisecondsSinceEpoch}.pdf',
@@ -47,7 +48,9 @@ Future<void> Regime(ApiClient apiClient) async {
   // 2. Consultar anos calendários com opções efetivadas
   try {
     print('\n2. Consultando anos calendários com opções efetivadas...');
-    final anosResponse = await regimeService.consultarAnosCalendarios(contribuinteNumero: '00000000000000');
+    final anosResponse = await regimeService.consultarAnosCalendarios(
+      contribuinteNumero: '00000000000000',
+    );
 
     if (anosResponse.isSuccess) {
       print('✅ Consulta de anos realizada com sucesso!');
@@ -75,7 +78,10 @@ Future<void> Regime(ApiClient apiClient) async {
   try {
     print('\n3. Consultando opção específica para o ano 2023...');
     final requestOpcao = ConsultarOpcaoRegimeRequest(anoCalendario: 2023);
-    final opcaoResponse = await regimeService.consultarOpcaoRegime(contribuinteNumero: '00000000000000', request: requestOpcao);
+    final opcaoResponse = await regimeService.consultarOpcaoRegime(
+      contribuinteNumero: '00000000000000',
+      request: requestOpcao,
+    );
 
     if (opcaoResponse.isSuccess) {
       print('✅ Consulta de opção realizada com sucesso!');
@@ -106,7 +112,10 @@ Future<void> Regime(ApiClient apiClient) async {
   try {
     print('\n4. Consultando resolução para regime de caixa (ano 2021)...');
     final requestResolucao = ConsultarResolucaoRequest(anoCalendario: 2021);
-    final resolucaoResponse = await regimeService.consultarResolucao(contribuinteNumero: '00000000000000', request: requestResolucao);
+    final resolucaoResponse = await regimeService.consultarResolucao(
+      contribuinteNumero: '00000000000000',
+      request: requestResolucao,
+    );
 
     if (resolucaoResponse.isSuccess) {
       print('✅ Consulta de resolução realizada com sucesso!');
@@ -115,7 +124,9 @@ Future<void> Regime(ApiClient apiClient) async {
         print('Resolução disponível: ${dados.hasTextoResolucao}');
         if (dados.hasTextoResolucao) {
           print('Texto da resolução (primeiros 100 caracteres):');
-          print('  ${dados.textoResolucao.substring(0, dados.textoResolucao.length > 100 ? 100 : dados.textoResolucao.length)}...');
+          print(
+            '  ${dados.textoResolucao.substring(0, dados.textoResolucao.length > 100 ? 100 : dados.textoResolucao.length)}...',
+          );
         }
       } else {
         print('Nenhuma resolução encontrada para o ano 2021.');

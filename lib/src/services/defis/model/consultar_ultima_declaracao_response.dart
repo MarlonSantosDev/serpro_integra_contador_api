@@ -7,18 +7,30 @@ class ConsultarUltimaDeclaracaoResponse {
   final List<MensagemDefis> mensagens;
   final UltimaDeclaracao dados;
 
-  ConsultarUltimaDeclaracaoResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarUltimaDeclaracaoResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
-  factory ConsultarUltimaDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarUltimaDeclaracaoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ConsultarUltimaDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>)
+          .map((e) => MensagemDefis.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: UltimaDeclaracao.fromJson(jsonDecode(json['dados'])),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados.toJson(),
+    };
   }
 }
 
@@ -28,13 +40,25 @@ class UltimaDeclaracao {
   final String declaracaoPdf;
   final String reciboPdf;
 
-  UltimaDeclaracao({required this.idDefis, required this.declaracaoPdf, required this.reciboPdf});
+  UltimaDeclaracao({
+    required this.idDefis,
+    required this.declaracaoPdf,
+    required this.reciboPdf,
+  });
 
   factory UltimaDeclaracao.fromJson(Map<String, dynamic> json) {
-    return UltimaDeclaracao(idDefis: json['idDefis'].toString(), declaracaoPdf: json['declaracao'].toString(), reciboPdf: json['recibo'].toString());
+    return UltimaDeclaracao(
+      idDefis: json['idDefis'].toString(),
+      declaracaoPdf: json['declaracao'].toString(),
+      reciboPdf: json['recibo'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'idDefis': idDefis, 'declaracao': declaracaoPdf, 'recibo': reciboPdf};
+    return {
+      'idDefis': idDefis,
+      'declaracao': declaracaoPdf,
+      'recibo': reciboPdf,
+    };
   }
 }

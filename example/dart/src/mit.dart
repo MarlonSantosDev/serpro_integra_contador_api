@@ -14,7 +14,9 @@ Future<void> Mit(ApiClient apiClient) async {
     final periodoApuracao = PeriodoApuracao(mesApuracao: 1, anoApuracao: 2025);
 
     // Criar responsável pela apuração
-    final responsavelApuracao = ResponsavelApuracao(cpfResponsavel: '00000000000');
+    final responsavelApuracao = ResponsavelApuracao(
+      cpfResponsavel: '00000000000',
+    );
 
     // Criar dados iniciais (baseado no JSON fornecido)
     final dadosIniciais = DadosIniciais(
@@ -29,16 +31,44 @@ Future<void> Mit(ApiClient apiClient) async {
     // Criar débitos (baseado no JSON fornecido)
     final debitos = Debitos(
       irpj: ListaDebitosIrpj(
-        listaDebitos: [Debito(idDebito: 1, codigoDebito: '236208', cnpjScp: '88888888888888', valorDebito: 100.00)],
+        listaDebitos: [
+          Debito(
+            idDebito: 1,
+            codigoDebito: '236208',
+            cnpjScp: '88888888888888',
+            valorDebito: 100.00,
+          ),
+        ],
       ),
       csll: ListaDebitosCsll(
-        listaDebitos: [Debito(idDebito: 2, codigoDebito: '248408', cnpjScp: '88888888888888', valorDebito: 220.00)],
+        listaDebitos: [
+          Debito(
+            idDebito: 2,
+            codigoDebito: '248408',
+            cnpjScp: '88888888888888',
+            valorDebito: 220.00,
+          ),
+        ],
       ),
       pisPasep: ListaDebitosPisPasep(
-        listaDebitos: [Debito(idDebito: 3, codigoDebito: '067904', cnpjScp: '88888888888888', valorDebito: 300.00)],
+        listaDebitos: [
+          Debito(
+            idDebito: 3,
+            codigoDebito: '067904',
+            cnpjScp: '88888888888888',
+            valorDebito: 300.00,
+          ),
+        ],
       ),
       cofins: ListaDebitosCofins(
-        listaDebitos: [Debito(idDebito: 4, codigoDebito: '092902', cnpjScp: '88888888888888', valorDebito: 444.00)],
+        listaDebitos: [
+          Debito(
+            idDebito: 4,
+            codigoDebito: '092902',
+            cnpjScp: '88888888888888',
+            valorDebito: 444.00,
+          ),
+        ],
       ),
     );
 
@@ -53,7 +83,9 @@ Future<void> Mit(ApiClient apiClient) async {
     );
 
     print('✅ Status: ${response.status}');
-    print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     if (response.sucesso) {
       print('✅ Apuração encerrada com sucesso!');
       print('📋 Protocolo: ${response.protocoloEncerramento}');
@@ -78,7 +110,9 @@ Future<void> Mit(ApiClient apiClient) async {
     );
 
     print('✅ Status: ${response.status}');
-    print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     if (response.sucesso) {
       print('✅ Situação consultada com sucesso!');
       print('📊 Situação: ${response.situacaoEnum?.descricao}');
@@ -104,7 +138,9 @@ Future<void> Mit(ApiClient apiClient) async {
     );
 
     print('✅ Status: ${response.status}');
-    print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     if (response.sucesso) {
       print('✅ Situação consultada com sucesso!');
       print('📊 Situação: ${response.situacaoEnum?.descricao}');
@@ -138,7 +174,9 @@ Future<void> Mit(ApiClient apiClient) async {
     );
 
     print('✅ Status: ${response.status}');
-    print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     if (response.sucesso) {
       print('✅ Apuração consultada com sucesso!');
 
@@ -151,10 +189,14 @@ Future<void> Mit(ApiClient apiClient) async {
         print('    - "Em Processamento"');
         print('    - "Processado com Sucesso"');
         print('    - "Processado com Erro"');
-        print('📊 Situação (Enum): ${response.apuracao!.situacaoEnum?.descricao}');
+        print(
+          '📊 Situação (Enum): ${response.apuracao!.situacaoEnum?.descricao}',
+        );
         print('📅 Data Encerramento: ${response.apuracao!.dataEncerramento}');
         print('🎯 Evento Especial: ${response.apuracao!.eventoEspecial}');
-        print('💰 Valor Total: R\$ ${response.apuracao!.valorTotalApurado?.toStringAsFixed(2)}');
+        print(
+          '💰 Valor Total: R\$ ${response.apuracao!.valorTotalApurado?.toStringAsFixed(2)}',
+        );
       }
 
       if (response.temPendencias) {
@@ -186,19 +228,25 @@ Future<void> Mit(ApiClient apiClient) async {
     );
 
     print('✅ Status: ${response.status}');
-    print('📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${response.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     if (response.sucesso) {
       print('✅ Apurações encerradas listadas com sucesso!');
 
       if (response.apuracoes != null && response.apuracoes!.isNotEmpty) {
-        print('📊 Total de apurações encerradas: ${response.apuracoes!.length}');
+        print(
+          '📊 Total de apurações encerradas: ${response.apuracoes!.length}',
+        );
 
         for (final apuracao in response.apuracoes!) {
           print('  📋 ${apuracao.periodoApuracao} - ${apuracao.situacao}');
           print('     (Valor descritivo: "${apuracao.situacao}")');
           print('     🆔 ID: ${apuracao.idApuracao}');
           print('     📅 Encerramento: ${apuracao.dataEncerramento}');
-          print('     💰 Valor: R\$ ${apuracao.valorTotalApurado?.toStringAsFixed(2)}');
+          print(
+            '     💰 Valor: R\$ ${apuracao.valorTotalApurado?.toStringAsFixed(2)}',
+          );
           print('');
         }
       } else {

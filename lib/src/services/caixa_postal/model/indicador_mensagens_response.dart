@@ -7,7 +7,11 @@ class IndicadorMensagensResponse {
   final List<MensagemNegocio> mensagens;
   final DadosIndicadorMensagens? dados;
 
-  IndicadorMensagensResponse({required this.status, required this.mensagens, this.dados});
+  IndicadorMensagensResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory IndicadorMensagensResponse.fromJson(Map<String, dynamic> json) {
     final dadosStr = json['dados']?.toString() ?? '';
@@ -24,13 +28,19 @@ class IndicadorMensagensResponse {
 
     return IndicadorMensagensResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
+          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 }
 
@@ -44,12 +54,20 @@ class DadosIndicadorMensagens {
   factory DadosIndicadorMensagens.fromJson(Map<String, dynamic> json) {
     return DadosIndicadorMensagens(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => ConteudoIndicadorMensagens.fromJson(e as Map<String, dynamic>)).toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
+          .map(
+            (e) =>
+                ConteudoIndicadorMensagens.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
+    return {
+      'codigo': codigo,
+      'conteudo': conteudo.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -86,9 +104,12 @@ class ConteudoIndicadorMensagens {
     };
 
     final descricao = switch (status) {
-      StatusMensagensNovas.semMensagensNovas => 'Contribuinte não possui mensagens novas',
-      StatusMensagensNovas.umaMensagemNova => 'Contribuinte possui uma mensagem nova',
-      StatusMensagensNovas.multiplasMensagensNovas => 'Contribuinte possui mensagens novas',
+      StatusMensagensNovas.semMensagensNovas =>
+        'Contribuinte não possui mensagens novas',
+      StatusMensagensNovas.umaMensagemNova =>
+        'Contribuinte possui uma mensagem nova',
+      StatusMensagensNovas.multiplasMensagensNovas =>
+        'Contribuinte possui mensagens novas',
     };
 
     return ConteudoIndicadorMensagens(

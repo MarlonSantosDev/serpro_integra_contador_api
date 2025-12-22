@@ -13,15 +13,18 @@ class AuthService {
   final String _environment;
 
   /// URL de autenticação para ambiente Trial
-  static const String _authUrlTrial = 'https://autenticacao.sapi.serpro.gov.br/authenticate';
+  static const String _authUrlTrial =
+      'https://autenticacao.sapi.serpro.gov.br/authenticate';
 
   /// URL de autenticação para ambiente de Produção
-  static const String _authUrlProd = 'https://autenticacao.sapi.serpro.gov.br/authenticate';
+  static const String _authUrlProd =
+      'https://autenticacao.sapi.serpro.gov.br/authenticate';
 
   AuthService(this._httpAdapter, this._environment);
 
   /// Retorna a URL de autenticação apropriada para o ambiente
-  String get _authUrl => _environment == 'producao' ? _authUrlProd : _authUrlTrial;
+  String get _authUrl =>
+      _environment == 'producao' ? _authUrlProd : _authUrlTrial;
 
   /// Autentica usando OAuth2 client credentials flow
   ///
@@ -48,13 +51,23 @@ class AuthService {
         );
       }
       // Construir Basic Auth header
-      final basicAuth = base64.encode(utf8.encode('${credentials.consumerKey}:${credentials.consumerSecret}'));
+      final basicAuth = base64.encode(
+        utf8.encode('${credentials.consumerKey}:${credentials.consumerSecret}'),
+      );
 
       // Preparar headers conforme documentação SERPRO
-      final headers = {'Authorization': 'Basic $basicAuth', 'role-type': 'TERCEIROS', 'content-type': 'application/x-www-form-urlencoded'};
+      final headers = {
+        'Authorization': 'Basic $basicAuth',
+        'role-type': 'TERCEIROS',
+        'content-type': 'application/x-www-form-urlencoded',
+      };
 
       // Fazer requisição de autenticação
-      final response = await _httpAdapter.post(Uri.parse(_authUrl), headers, 'grant_type=client_credentials');
+      final response = await _httpAdapter.post(
+        Uri.parse(_authUrl),
+        headers,
+        'grant_type=client_credentials',
+      );
 
       // Criar modelo de autenticação
       return AuthenticationModel(
@@ -68,9 +81,17 @@ class AuthService {
         tokenCreatedAt: DateTime.now(),
       );
     } on AuthenticationFailedException catch (e) {
-      throw AuthenticationFailedException(e.toString(), statusCode: e.statusCode, responseBody: e.responseBody);
+      throw AuthenticationFailedException(
+        e.toString(),
+        statusCode: e.statusCode,
+        responseBody: e.responseBody,
+      );
     } catch (e) {
-      throw AuthenticationFailedException(e.toString(), statusCode: 0, responseBody: e.toString());
+      throw AuthenticationFailedException(
+        e.toString(),
+        statusCode: 0,
+        responseBody: e.toString(),
+      );
     }
   }
 
@@ -88,7 +109,9 @@ class AuthService {
   /// É necessário re-autenticar completamente usando [authenticate].
   ///
   /// Este método sempre lança [TokenRefreshException].
-  Future<AuthenticationModel> refreshToken(AuthenticationModel currentAuth) async {
+  Future<AuthenticationModel> refreshToken(
+    AuthenticationModel currentAuth,
+  ) async {
     throw TokenRefreshException(
       'SERPRO não suporta refresh de token. '
       'Re-autentique usando o método authenticate().',

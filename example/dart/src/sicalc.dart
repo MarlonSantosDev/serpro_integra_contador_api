@@ -10,7 +10,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física
   // ========================================
   try {
-    print('📋 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física');
+    print(
+      '📋 1. DARF PESSOA FÍSICA - Consolidar e emitir DARF de pessoa física',
+    );
 
     final request = SicalcService.criarDarfPessoaFisica(
       contribuinteNumero: '99999999999',
@@ -25,7 +27,11 @@ Future<void> Sicalc(ApiClient apiClient) async {
       dataConsolidacao: '2022-08-08T00:00:00',
       observacao: 'DARF calculado - Pessoa Física',
     );
-    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999');
+    final response = await sicalcService.consolidarEmitirDarf(
+      request,
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: DARF consolidado e emitido');
@@ -39,22 +45,43 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.consolidado != null) {
         print('   💰 Dados consolidados:');
-        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
-        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
-        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
-        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
-        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
-        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
-        print('      Termo inicial juros: ${response.consolidado!.termoInicialJuros}');
-        print('      Data arrecadação: ${response.consolidado!.dataArrecadacaoConsolidacao}');
-        print('      Data validade: ${response.consolidado!.dataValidadeCalculo}');
+        print(
+          '      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%',
+        );
+        print(
+          '      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%',
+        );
+        print(
+          '      Termo inicial juros: ${response.consolidado!.termoInicialJuros}',
+        );
+        print(
+          '      Data arrecadação: ${response.consolidado!.dataArrecadacaoConsolidacao}',
+        );
+        print(
+          '      Data validade: ${response.consolidado!.dataValidadeCalculo}',
+        );
       }
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(response.darf!, 'darf_pessoa_fisica_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          response.darf!,
+          'darf_pessoa_fisica_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
         print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
@@ -81,7 +108,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas
   // ========================================
   try {
-    print('\n📋 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas');
+    print(
+      '\n📋 2. DARF PESSOA JURÍDICA COM COTAS - Consolidar e emitir DARF de pessoa jurídica com cotas',
+    );
 
     final request = SicalcService.criarDarfPessoaJuridica(
       contribuinteNumero: '99999999999999',
@@ -98,7 +127,11 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF calculado - Pessoa Jurídica com cota',
     );
 
-    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '00000000000000', autorPedidoDadosNumero: '99999999999999');
+    final response = await sicalcService.consolidarEmitirDarf(
+      request,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '99999999999999',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: DARF consolidado e emitido');
@@ -112,19 +145,34 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.consolidado != null) {
         print('   💰 Dados consolidados:');
-        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
-        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
-        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
-        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
-        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
-        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
+        print(
+          '      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%',
+        );
+        print(
+          '      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%',
+        );
       }
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(response.darf!, 'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          response.darf!,
+          'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
         print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
@@ -151,7 +199,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE
   // ========================================
   try {
-    print('\n📋 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE');
+    print(
+      '\n📋 3. DARF PJ COM CÓDIGO BARRAS E QRCODE - DARF de Pessoa Jurídica com código de barras e QRCODE',
+    );
 
     final request = SicalcService.criarCodigoBarras(
       contribuinteNumero: '99999999999999',
@@ -167,7 +217,11 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF com código de barras e QRCODE - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.gerarCodigoBarras(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
+    final response = await sicalcService.gerarCodigoBarras(
+      request,
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999999',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: DARF com código de barras e QRCODE gerado');
@@ -181,8 +235,12 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.consolidado != null) {
         print('   💰 Dados consolidados:');
-        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
-        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+        print(
+          '      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
       }
 
       if (response.codigoDeBarras != null) {
@@ -218,8 +276,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
   try {
     print('\n📋 4. CONSULTAR RECEITAS - Consultar receitas do SICALC');
 
-    final request = SicalcService.criarConsultaReceitas(contribuinteNumero: '00000000000', codigoReceita: '6106');
-    final response = await sicalcService.consultarReceitas(request, contratanteNumero: '00000000000000', autorPedidoDadosNumero: '00000000000000');
+    final request = SicalcService.criarConsultaReceitas(
+      contribuinteNumero: '00000000000',
+      codigoReceita: '6106',
+    );
+    final response = await sicalcService.consultarReceitas(
+      request,
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: Consulta realizada com sucesso');
@@ -240,9 +305,15 @@ Future<void> Sicalc(ApiClient apiClient) async {
         for (int i = 0; i < response.receita!.extensoes.length; i++) {
           final extensao = response.receita!.extensoes[i];
           print('      Extensão ${i + 1}:');
-          print('        Código: ${extensao.informacoes.codigoReceitaExtensao}');
-          print('        Descrição: ${extensao.informacoes.descricaoReceitaExtensao}');
-          print('        Permite código de barras: ${extensao.informacoes.codigoBarras}');
+          print(
+            '        Código: ${extensao.informacoes.codigoReceitaExtensao}',
+          );
+          print(
+            '        Descrição: ${extensao.informacoes.descricaoReceitaExtensao}',
+          );
+          print(
+            '        Permite código de barras: ${extensao.informacoes.codigoBarras}',
+          );
           print('        Calculado: ${extensao.informacoes.calculado}');
           print('        Manual: ${extensao.informacoes.manual}');
           print('        PF: ${extensao.informacoes.pf}');
@@ -269,7 +340,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras
   // ========================================
   try {
-    print('\n📋 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras');
+    print(
+      '\n📋 5. DARF PJ COM CÓDIGO BARRAS - DARF de Pessoa Jurídica com código de barras',
+    );
 
     final request = SicalcService.criarCodigoBarras(
       contribuinteNumero: '99999999999999',
@@ -285,7 +358,11 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF com código de barras - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.gerarCodigoBarras(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
+    final response = await sicalcService.gerarCodigoBarras(
+      request,
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999999',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: DARF com código de barras gerado');
@@ -299,8 +376,12 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.consolidado != null) {
         print('   💰 Dados consolidados:');
-        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
-        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
+        print(
+          '      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
       }
 
       if (response.codigoDeBarras != null) {
@@ -335,7 +416,9 @@ Future<void> Sicalc(ApiClient apiClient) async {
   // 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras
   // ========================================
   try {
-    print('\n📋 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras');
+    print(
+      '\n📋 6. DARF PJ MANUAL COM CÓDIGO BARRAS - DARF de Pessoa Jurídica manual com código de barras',
+    );
 
     final request = SicalcService.criarDarfPessoaJuridica(
       contribuinteNumero: '99999999999999',
@@ -351,7 +434,11 @@ Future<void> Sicalc(ApiClient apiClient) async {
       observacao: 'DARF manual com código de barras - Pessoa Jurídica',
     );
 
-    final response = await sicalcService.consolidarEmitirDarf(request, contratanteNumero: '99999999999999', autorPedidoDadosNumero: '99999999999999');
+    final response = await sicalcService.consolidarEmitirDarf(
+      request,
+      contratanteNumero: '99999999999999',
+      autorPedidoDadosNumero: '99999999999999',
+    );
 
     if (response.status == 200) {
       print('   ✅ Sucesso: DARF manual consolidado e emitido');
@@ -365,19 +452,34 @@ Future<void> Sicalc(ApiClient apiClient) async {
 
       if (response.consolidado != null) {
         print('   💰 Dados consolidados:');
-        print('      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}');
-        print('      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}');
-        print('      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}');
-        print('      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%');
-        print('      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}');
-        print('      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%');
+        print(
+          '      Valor principal: R\$ ${response.consolidado!.valorPrincipalMoedaCorrente.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor total consolidado: R\$ ${response.consolidado!.valorTotalConsolidado.toStringAsFixed(2)}',
+        );
+        print(
+          '      Valor multa: R\$ ${response.consolidado!.valorMultaMora.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual multa: ${response.consolidado!.percentualMultaMora.toStringAsFixed(2)}%',
+        );
+        print(
+          '      Valor juros: R\$ ${response.consolidado!.valorJuros.toStringAsFixed(2)}',
+        );
+        print(
+          '      Percentual juros: ${response.consolidado!.percentualJuros.toStringAsFixed(2)}%',
+        );
       }
 
       if (response.darf != null) {
         print('   📄 PDF do DARF gerado: ${response.darf!.length} caracteres');
 
         // Salvar PDF em arquivo
-        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(response.darf!, 'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          response.darf!,
+          'darf_sicalc_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
         print('   PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 

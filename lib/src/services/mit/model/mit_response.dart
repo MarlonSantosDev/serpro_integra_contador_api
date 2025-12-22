@@ -8,7 +8,12 @@ class MitResponse {
   final String? responseDateTime;
   final List<MensagemMit> mensagens;
 
-  MitResponse({required this.status, this.responseId, this.responseDateTime, required this.mensagens});
+  MitResponse({
+    required this.status,
+    this.responseId,
+    this.responseDateTime,
+    required this.mensagens,
+  });
 
   factory MitResponse.fromJson(Map<String, dynamic> json) {
     final mensagens = <MensagemMit>[];
@@ -26,19 +31,28 @@ class MitResponse {
     );
   }
 
-  MitResponse._internal({required this.status, this.responseId, this.responseDateTime, required this.mensagens});
+  MitResponse._internal({
+    required this.status,
+    this.responseId,
+    this.responseDateTime,
+    required this.mensagens,
+  });
 
   bool get sucesso => status == '200';
-  String? get mensagemErro => mensagens.isNotEmpty ? mensagens.first.texto : null;
+  String? get mensagemErro =>
+      mensagens.isNotEmpty ? mensagens.first.texto : null;
 
   /// Obtém todas as mensagens de sucesso
-  List<MensagemMit> get mensagensSucesso => mensagens.where((m) => m.isSucesso).toList();
+  List<MensagemMit> get mensagensSucesso =>
+      mensagens.where((m) => m.isSucesso).toList();
 
   /// Obtém todas as mensagens de erro
-  List<MensagemMit> get mensagensErro => mensagens.where((m) => m.isErro).toList();
+  List<MensagemMit> get mensagensErro =>
+      mensagens.where((m) => m.isErro).toList();
 
   /// Obtém todas as mensagens de aviso
-  List<MensagemMit> get mensagensAviso => mensagens.where((m) => m.isAviso).toList();
+  List<MensagemMit> get mensagensAviso =>
+      mensagens.where((m) => m.isAviso).toList();
 }
 
 /// Response para encerrar apuração MIT
@@ -95,7 +109,9 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
     this.situacaoEncerramento,
   });
 
-  factory ConsultarSituacaoEncerramentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarSituacaoEncerramentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     final baseResponse = MitResponse.fromJson(json);
 
     int? situacaoEncerramento;
@@ -120,7 +136,9 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
   }
 
   /// Obtém a situação do encerramento como enum
-  SituacaoEncerramento? get situacaoEnum => situacaoEncerramento != null ? SituacaoEncerramento.fromCodigo(situacaoEncerramento!) : null;
+  SituacaoEncerramento? get situacaoEnum => situacaoEncerramento != null
+      ? SituacaoEncerramento.fromCodigo(situacaoEncerramento!)
+      : null;
 
   /// Verifica se o encerramento foi concluído
   bool get encerramentoConcluido => situacaoEncerramento == 3;
@@ -159,7 +177,9 @@ class ConsultarApuracaoResponse extends MitResponse {
         }
 
         if (dados['pendencias'] != null) {
-          pendencias = (dados['pendencias'] as List).map((item) => Pendencia.fromJson(item)).toList();
+          pendencias = (dados['pendencias'] as List)
+              .map((item) => Pendencia.fromJson(item))
+              .toList();
         }
       } catch (e) {
         // Se não conseguir decodificar, mantém null
@@ -184,7 +204,13 @@ class ConsultarApuracaoResponse extends MitResponse {
 class ListarApuracaoesResponse extends MitResponse {
   final List<ApuracaoResumo>? apuracoes;
 
-  ListarApuracaoesResponse({required super.status, super.responseId, super.responseDateTime, required super.mensagens, this.apuracoes});
+  ListarApuracaoesResponse({
+    required super.status,
+    super.responseId,
+    super.responseDateTime,
+    required super.mensagens,
+    this.apuracoes,
+  });
 
   factory ListarApuracaoesResponse.fromJson(Map<String, dynamic> json) {
     final baseResponse = MitResponse.fromJson(json);
@@ -197,7 +223,9 @@ class ListarApuracaoesResponse extends MitResponse {
         final dados = jsonDecode(dadosStr) as Map<String, dynamic>;
 
         if (dados['Apuracoes'] != null) {
-          apuracoes = (dados['Apuracoes'] as List).map((item) => ApuracaoResumo.fromJson(item)).toList();
+          apuracoes = (dados['Apuracoes'] as List)
+              .map((item) => ApuracaoResumo.fromJson(item))
+              .toList();
         }
       } catch (e) {
         // Se não conseguir decodificar, mantém null
@@ -214,10 +242,18 @@ class ListarApuracaoesResponse extends MitResponse {
   }
 
   /// Obtém apurações encerradas
-  List<ApuracaoResumo> get apuracoesEncerradas => apuracoes?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.encerrada).toList() ?? [];
+  List<ApuracaoResumo> get apuracoesEncerradas =>
+      apuracoes
+          ?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.encerrada)
+          .toList() ??
+      [];
 
   /// Obtém apurações em edição
-  List<ApuracaoResumo> get apuracoesEmEdicao => apuracoes?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.emEdicao).toList() ?? [];
+  List<ApuracaoResumo> get apuracoesEmEdicao =>
+      apuracoes
+          ?.where((a) => a.situacaoApuracaoEnum == SituacaoApuracao.emEdicao)
+          .toList() ??
+      [];
 }
 
 /// Mensagem MIT
@@ -228,7 +264,10 @@ class MensagemMit {
   MensagemMit({required this.codigo, required this.texto});
 
   factory MensagemMit.fromJson(Map<String, dynamic> json) {
-    return MensagemMit(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return MensagemMit(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -236,10 +275,13 @@ class MensagemMit {
   }
 
   /// Verifica se é uma mensagem de sucesso
-  bool get isSucesso => codigo.contains('[Sucesso-MIT]') || codigo.contains('Sucesso');
+  bool get isSucesso =>
+      codigo.contains('[Sucesso-MIT]') || codigo.contains('Sucesso');
 
   /// Verifica se é uma mensagem de erro
-  bool get isErro => codigo.contains('[Erro-MIT]') || codigo.contains('[EntradaIncorreta-MIT]');
+  bool get isErro =>
+      codigo.contains('[Erro-MIT]') ||
+      codigo.contains('[EntradaIncorreta-MIT]');
 
   /// Verifica se é uma mensagem de aviso
   bool get isAviso => codigo.contains('[Aviso-MIT]');
@@ -270,7 +312,14 @@ class ApuracaoDetalhada {
   /// [dataEncerramento] Data de encerramento
   /// [eventoEspecial] Indica se há evento especial
   /// [valorTotalApurado] Valor total apurado
-  ApuracaoDetalhada({this.periodoApuracao, this.idApuracao, this.situacao, this.dataEncerramento, this.eventoEspecial, this.valorTotalApurado});
+  ApuracaoDetalhada({
+    this.periodoApuracao,
+    this.idApuracao,
+    this.situacao,
+    this.dataEncerramento,
+    this.eventoEspecial,
+    this.valorTotalApurado,
+  });
 
   /// Cria uma instância de ApuracaoDetalhada a partir de um mapa JSON
   ///
@@ -283,11 +332,14 @@ class ApuracaoDetalhada {
       situacao: json['situacao'] as int?,
       dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
-      valorTotalApurado: json['valorTotalApurado'] != null ? (json['valorTotalApurado'] as num).toDouble() : null,
+      valorTotalApurado: json['valorTotalApurado'] != null
+          ? (json['valorTotalApurado'] as num).toDouble()
+          : null,
     );
   }
 
-  SituacaoApuracao? get situacaoEnum => situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
+  SituacaoApuracao? get situacaoEnum =>
+      situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
 }
 
 /// Pendência da apuração
@@ -298,7 +350,10 @@ class Pendencia {
   Pendencia({this.codigo, this.texto});
 
   factory Pendencia.fromJson(Map<String, dynamic> json) {
-    return Pendencia(codigo: json['codigo']?.toString(), texto: json['texto']?.toString());
+    return Pendencia(
+      codigo: json['codigo']?.toString(),
+      texto: json['texto']?.toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -345,7 +400,9 @@ class ApuracaoResumo {
       situacaoInt: situacaoInt,
       dataEncerramento: json['dataEncerramento']?.toString(),
       eventoEspecial: json['eventoEspecial'] as bool?,
-      valorTotalApurado: json['valorTotalApurado'] != null ? (json['valorTotalApurado'] as num).toDouble() : null,
+      valorTotalApurado: json['valorTotalApurado'] != null
+          ? (json['valorTotalApurado'] as num).toDouble()
+          : null,
     );
   }
 
@@ -360,7 +417,8 @@ class ApuracaoResumo {
   }
 
   /// Obtém a situação da apuração como enum SituacaoApuracao
-  SituacaoApuracao? get situacaoApuracaoEnum => situacaoInt != null ? SituacaoApuracao.fromCodigo(situacaoInt!) : null;
+  SituacaoApuracao? get situacaoApuracaoEnum =>
+      situacaoInt != null ? SituacaoApuracao.fromCodigo(situacaoInt!) : null;
 }
 
 /// Enum para situação de encerramento

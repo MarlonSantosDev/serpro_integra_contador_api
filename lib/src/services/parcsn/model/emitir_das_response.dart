@@ -7,7 +7,11 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     DasData? dadosParsed;
@@ -22,7 +26,9 @@ class EmitirDasResponse {
 
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -51,7 +57,8 @@ class EmitirDasResponse {
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    return dados?.docArrecadacaoPdfB64 != null && dados!.docArrecadacaoPdfB64.isNotEmpty;
+    return dados?.docArrecadacaoPdfB64 != null &&
+        dados!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Tamanho do PDF em bytes
@@ -136,7 +143,8 @@ class DasData {
   });
 
   factory DasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
     return DasData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),

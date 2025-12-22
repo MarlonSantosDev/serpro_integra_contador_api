@@ -32,7 +32,10 @@ class HttpClientAdapter {
   /// final certBytes = base64.decode(certificadoBase64);
   /// await adapter.configureMtlsFromBytes(certBytes, 'senha123');
   /// ```
-  Future<void> configureMtlsFromBytes(Uint8List certBytes, String certPassword) async {
+  Future<void> configureMtlsFromBytes(
+    Uint8List certBytes,
+    String certPassword,
+  ) async {
     try {
       _securityContext = SecurityContext()
         ..useCertificateChainBytes(certBytes, password: certPassword)
@@ -46,10 +49,16 @@ class HttpClientAdapter {
       // Aceitar todos os certificados do servidor (focando apenas em client auth)
       _httpClient!.badCertificateCallback = (cert, host, port) => true;
     } on TlsException catch (e) {
-      throw CertificateException('Erro SSL/TLS ao carregar certificado: ${e.message}', reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro SSL/TLS ao carregar certificado: ${e.message}',
+        reason: CertificateErrorReason.invalidFormat,
+      );
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException('Erro ao configurar mTLS com bytes: $e', reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro ao configurar mTLS com bytes: $e',
+        reason: CertificateErrorReason.invalidFormat,
+      );
     }
   }
 
@@ -61,7 +70,11 @@ class HttpClientAdapter {
   ///
   /// Em produção com certificado: Carrega certificado no SecurityContext
   /// Em trial: Não usa certificado, aceita certificados auto-assinados
-  Future<void> configureMtls(String? certPath, String? certPassword, bool isProduction) async {
+  Future<void> configureMtls(
+    String? certPath,
+    String? certPassword,
+    bool isProduction,
+  ) async {
     try {
       // Para produção com certificado
       if (isProduction && certPath != null && certPassword != null) {
@@ -81,7 +94,11 @@ class HttpClientAdapter {
       _httpClient!.badCertificateCallback = (cert, host, port) => true;
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException('Erro ao configurar mTLS: $e', certificatePath: certPath, reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro ao configurar mTLS: $e',
+        certificatePath: certPath,
+        reason: CertificateErrorReason.invalidFormat,
+      );
     }
   }
 
@@ -94,7 +111,12 @@ class HttpClientAdapter {
   /// [certPath] Caminho para o arquivo de certificado P12/PFX
   /// [certPassword] Senha do certificado
   /// [isProduction] Se está em ambiente de produção
-  Future<void> configureMtlsUnified({String? certBase64, String? certPath, String? certPassword, required bool isProduction}) async {
+  Future<void> configureMtlsUnified({
+    String? certBase64,
+    String? certPath,
+    String? certPassword,
+    required bool isProduction,
+  }) async {
     try {
       if (!isProduction) {
         // Modo trial - sem certificado necessário
@@ -107,13 +129,19 @@ class HttpClientAdapter {
 
       // Em produção, precisa de certificado
       if (certPassword == null) {
-        throw CertificateException('Senha do certificado é obrigatória em produção', reason: CertificateErrorReason.invalidPassword);
+        throw CertificateException(
+          'Senha do certificado é obrigatória em produção',
+          reason: CertificateErrorReason.invalidPassword,
+        );
       }
 
       // Priorizar Base64 se fornecido
       if (certBase64 != null && certBase64.trim().isNotEmpty) {
         final certBytes = base64.decode(certBase64);
-        await configureMtlsFromBytes(Uint8List.fromList(certBytes), certPassword);
+        await configureMtlsFromBytes(
+          Uint8List.fromList(certBytes),
+          certPassword,
+        );
         return;
       }
 
@@ -132,7 +160,10 @@ class HttpClientAdapter {
       );
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException('Erro ao configurar mTLS: $e', reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro ao configurar mTLS: $e',
+        reason: CertificateErrorReason.invalidFormat,
+      );
     }
   }
 
@@ -140,11 +171,16 @@ class HttpClientAdapter {
   ///
   /// Esta implementação usa a API nativa do Dart (SecurityContext) que suporta
   /// PKCS12/PFX nativamente em todas as plataformas (Android, iOS, Desktop, Windows).
-  Future<void> _loadCertificateFromFile(String certPath, String certPassword) async {
+  Future<void> _loadCertificateFromFile(
+    String certPath,
+    String certPassword,
+  ) async {
     try {
       // Resolver caminho absoluto se necessário
       final certFile = File(certPath);
-      final absolutePath = certFile.isAbsolute ? certPath : certFile.absolute.path;
+      final absolutePath = certFile.isAbsolute
+          ? certPath
+          : certFile.absolute.path;
       final resolvedFile = File(absolutePath);
 
       // Verificar se arquivo existe
@@ -166,12 +202,24 @@ class HttpClientAdapter {
         ..useCertificateChainBytes(pkcs12Bytes, password: certPassword)
         ..usePrivateKeyBytes(pkcs12Bytes, password: certPassword);
     } on FileSystemException catch (e) {
-      throw CertificateException('Erro ao ler certificado: ${e.message}', certificatePath: certPath, reason: CertificateErrorReason.notFound);
+      throw CertificateException(
+        'Erro ao ler certificado: ${e.message}',
+        certificatePath: certPath,
+        reason: CertificateErrorReason.notFound,
+      );
     } on TlsException catch (e) {
-      throw CertificateException('Erro SSL/TLS: ${e.message}', certificatePath: certPath, reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro SSL/TLS: ${e.message}',
+        certificatePath: certPath,
+        reason: CertificateErrorReason.invalidFormat,
+      );
     } catch (e) {
       if (e is CertificateException) rethrow;
-      throw CertificateException('Erro ao carregar certificado: $e', certificatePath: certPath, reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro ao carregar certificado: $e',
+        certificatePath: certPath,
+        reason: CertificateErrorReason.invalidFormat,
+      );
     }
   }
 
@@ -183,9 +231,15 @@ class HttpClientAdapter {
   ///
   /// Retorna o corpo da resposta parseado como JSON
   /// Lança exceções específicas em caso de erro
-  Future<Map<String, dynamic>> post(Uri uri, Map<String, String> headers, String body) async {
+  Future<Map<String, dynamic>> post(
+    Uri uri,
+    Map<String, String> headers,
+    String body,
+  ) async {
     if (_httpClient == null) {
-      throw StateError('HttpClient não configurado. Chame configureMtls ou configureMtlsFromBytes primeiro.');
+      throw StateError(
+        'HttpClient não configurado. Chame configureMtls ou configureMtlsFromBytes primeiro.',
+      );
     }
 
     HttpClientRequest? request;
@@ -210,24 +264,41 @@ class HttpClientAdapter {
       // Verificar status code
       if (response.statusCode < 200 || response.statusCode >= 300) {
         final res = jsonDecode(responseBody);
-        throw AuthenticationFailedException('Requisição falhou..', statusCode: res['status'], responseBody: res['message']);
+        throw AuthenticationFailedException(
+          'Requisição falhou..',
+          statusCode: res['status'],
+          responseBody: res['message'],
+        );
       }
 
       // Parsear JSON
       try {
         return jsonDecode(responseBody) as Map<String, dynamic>;
       } catch (e) {
-        throw AuthenticationFailedException('Resposta não é um JSON válido: $e', statusCode: response.statusCode, responseBody: responseBody);
+        throw AuthenticationFailedException(
+          'Resposta não é um JSON válido: $e',
+          statusCode: response.statusCode,
+          responseBody: responseBody,
+        );
       }
     } on SocketException catch (e) {
-      throw NetworkAuthException('Erro de rede ao autenticar: ${e.message}', originalError: e);
+      throw NetworkAuthException(
+        'Erro de rede ao autenticar: ${e.message}',
+        originalError: e,
+      );
     } on TlsException catch (e) {
-      throw CertificateException('Erro SSL/TLS durante autenticação: ${e.message}', reason: CertificateErrorReason.invalidFormat);
+      throw CertificateException(
+        'Erro SSL/TLS durante autenticação: ${e.message}',
+        reason: CertificateErrorReason.invalidFormat,
+      );
     } on HttpException catch (e) {
       throw NetworkAuthException('Erro HTTP: ${e.message}', originalError: e);
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw NetworkAuthException('Erro ao fazer requisição: $e', originalError: e);
+      throw NetworkAuthException(
+        'Erro ao fazer requisição: $e',
+        originalError: e,
+      );
     }
   }
 

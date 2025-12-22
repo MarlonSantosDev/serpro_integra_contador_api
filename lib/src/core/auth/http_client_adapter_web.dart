@@ -26,7 +26,10 @@ class HttpClientAdapter {
   ///
   /// [certBytes] Bytes do certificado P12/PFX (não usado em Web)
   /// [certPassword] Senha do certificado (não usada em Web)
-  Future<void> configureMtlsFromBytes(Uint8List certBytes, String certPassword) async {
+  Future<void> configureMtlsFromBytes(
+    Uint8List certBytes,
+    String certPassword,
+  ) async {
     _isConfigured = true;
   }
 
@@ -39,7 +42,11 @@ class HttpClientAdapter {
   /// [certPath] Caminho para o arquivo de certificado (não usado em Web)
   /// [certPassword] Senha do certificado (não usada em Web)
   /// [isProduction] Se está em ambiente de produção
-  Future<void> configureMtls(String? certPath, String? certPassword, bool isProduction) async {
+  Future<void> configureMtls(
+    String? certPath,
+    String? certPassword,
+    bool isProduction,
+  ) async {
     if (!isProduction) {
       // Trial mode - sem certificado necessário
       _isConfigured = true;
@@ -65,7 +72,12 @@ class HttpClientAdapter {
   /// [certPath] Caminho para o arquivo de certificado (não usado em Web)
   /// [certPassword] Senha do certificado (não usada em Web)
   /// [isProduction] Se está em ambiente de produção
-  Future<void> configureMtlsUnified({String? certBase64, String? certPath, String? certPassword, required bool isProduction}) async {
+  Future<void> configureMtlsUnified({
+    String? certBase64,
+    String? certPath,
+    String? certPassword,
+    required bool isProduction,
+  }) async {
     if (!isProduction) {
       // Trial mode - sem certificado necessário
       _isConfigured = true;
@@ -99,9 +111,15 @@ class HttpClientAdapter {
   ///
   /// Retorna o corpo da resposta parseado como JSON
   /// Lança exceções específicas em caso de erro
-  Future<Map<String, dynamic>> post(Uri uri, Map<String, String> headers, String body) async {
+  Future<Map<String, dynamic>> post(
+    Uri uri,
+    Map<String, String> headers,
+    String body,
+  ) async {
     if (!_isConfigured) {
-      throw StateError('HttpClient não configurado. Chame configureMtls, configureMtlsFromBytes ou configureMtlsUnified primeiro.');
+      throw StateError(
+        'HttpClient não configurado. Chame configureMtls, configureMtlsFromBytes ou configureMtlsUnified primeiro.',
+      );
     }
 
     try {
@@ -129,7 +147,8 @@ class HttpClientAdapter {
 
       // Parsear JSON
       try {
-        return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        return jsonDecode(utf8.decode(response.bodyBytes))
+            as Map<String, dynamic>;
       } catch (e) {
         throw AuthenticationFailedException(
           'Resposta não é um JSON válido: $e',
@@ -139,7 +158,10 @@ class HttpClientAdapter {
       }
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw NetworkAuthException('Erro ao fazer requisição: $e', originalError: e);
+      throw NetworkAuthException(
+        'Erro ao fazer requisição: $e',
+        originalError: e,
+      );
     }
   }
 

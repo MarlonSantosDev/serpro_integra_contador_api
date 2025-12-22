@@ -6,9 +6,15 @@ class ConsultarDetalhesPagamentoResponse {
   final List<Mensagem> mensagens;
   final DetalhesPagamentoData? dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarDetalhesPagamentoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     DetalhesPagamentoData? dadosParsed;
     try {
       final dadosStr = json['dados']?.toString() ?? '';
@@ -21,7 +27,9 @@ class ConsultarDetalhesPagamentoResponse {
 
     return ConsultarDetalhesPagamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -68,10 +76,14 @@ class DetalhesPagamentoData {
     return DetalhesPagamentoData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),
-      valorPagoArrecadacao: double.parse(json['valorPagoArrecadacao'].toString()),
+      valorPagoArrecadacao: double.parse(
+        json['valorPagoArrecadacao'].toString(),
+      ),
       dataArrecadacao: int.parse(json['dataArrecadacao'].toString()),
       bancoAgencia: json['bancoAgencia'].toString(),
-      pagamentosDebitos: (json['pagamentosDebitos'] as List? ?? []).map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList(),
+      pagamentosDebitos: (json['pagamentosDebitos'] as List? ?? [])
+          .map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -162,7 +174,9 @@ class PagamentoDebito {
       'tributo': tributo,
       'enteFederado': enteFederado,
       'valorPago': valorPago,
-      'discriminacaoDebitos': discriminacaoDebitos.map((e) => e.toJson()).toList(),
+      'discriminacaoDebitos': discriminacaoDebitos
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 
@@ -274,4 +288,3 @@ class DiscriminacaoDebito {
     return '$codigoReceita - $descricaoReceita';
   }
 }
-

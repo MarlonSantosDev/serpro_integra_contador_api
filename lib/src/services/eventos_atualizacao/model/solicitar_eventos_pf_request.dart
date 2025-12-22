@@ -11,7 +11,9 @@ class SolicitarEventosPFRequest {
       throw ArgumentError('Lista de CPFs não pode estar vazia');
     }
     if (cpfs.length > EventosAtualizacaoCommon.maxContribuintesPorLote) {
-      throw ArgumentError('Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CPFs por lote');
+      throw ArgumentError(
+        'Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CPFs por lote',
+      );
     }
 
     // Validar lista de CPFs (consistência e formato)

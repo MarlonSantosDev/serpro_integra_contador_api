@@ -44,14 +44,22 @@ class RegimeApuracaoMensagens {
 
   // Mensagens de erro
   static const String erroIntegraContador = 'Erro-REGIME-MSG_ISN_001';
-  static const String entradaIncorretaDescritivo = 'EntradaIncorreta-REGIME-MSG_ISN_049';
-  static const String entradaIncorretaAnoAnterior = 'EntradaIncorreta-REGIME-MSG_ISN_050';
-  static const String entradaIncorretaAcordoResolucao = 'EntradaIncorreta-REGIME-MSG_ISN_051';
-  static const String entradaIncorretaCoerencia = 'EntradaIncorreta-REGIME-MSG_ISN_053';
-  static const String entradaIncorretaAnoLimites = 'EntradaIncorreta-REGIME-MSG_ISN_056';
-  static const String entradaIncorretaParametroAusente = 'EntradaIncorreta-REGIME-MSG_ISN_058';
-  static const String entradaIncorretaAnoFormato = 'EntradaIncorreta-REGIME-MSG_ISN_059';
-  static const String entradaIncorretaTipoRegime = 'EntradaIncorreta-REGIME-MSG_ISN_060';
+  static const String entradaIncorretaDescritivo =
+      'EntradaIncorreta-REGIME-MSG_ISN_049';
+  static const String entradaIncorretaAnoAnterior =
+      'EntradaIncorreta-REGIME-MSG_ISN_050';
+  static const String entradaIncorretaAcordoResolucao =
+      'EntradaIncorreta-REGIME-MSG_ISN_051';
+  static const String entradaIncorretaCoerencia =
+      'EntradaIncorreta-REGIME-MSG_ISN_053';
+  static const String entradaIncorretaAnoLimites =
+      'EntradaIncorreta-REGIME-MSG_ISN_056';
+  static const String entradaIncorretaParametroAusente =
+      'EntradaIncorreta-REGIME-MSG_ISN_058';
+  static const String entradaIncorretaAnoFormato =
+      'EntradaIncorreta-REGIME-MSG_ISN_059';
+  static const String entradaIncorretaTipoRegime =
+      'EntradaIncorreta-REGIME-MSG_ISN_060';
 
   // Mensagens de aviso
   static const String avisoOpcaoJaRealizada = 'Aviso-REGIME-MSG_ISN_052';
@@ -79,7 +87,8 @@ class RegimeApuracaoValidations {
 
   /// Valida se o descritivo do regime é válido
   static bool isDescritivoRegimeValido(String descritivo) {
-    return descritivo.toUpperCase() == 'COMPETENCIA' || descritivo.toUpperCase() == 'CAIXA';
+    return descritivo.toUpperCase() == 'COMPETENCIA' ||
+        descritivo.toUpperCase() == 'CAIXA';
   }
 
   /// Valida se o descritivo está coerente com o tipo de regime

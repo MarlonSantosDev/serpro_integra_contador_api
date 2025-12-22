@@ -70,7 +70,10 @@ class CaixaPostalService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final dadosMap = <String, dynamic>{'statusLeitura': statusLeitura.toString(), 'indicadorPagina': indicadorPagina.toString()};
+    final dadosMap = <String, dynamic>{
+      'statusLeitura': statusLeitura.toString(),
+      'indicadorPagina': indicadorPagina.toString(),
+    };
 
     if (cnpjReferencia != null && cnpjReferencia.isNotEmpty) {
       dadosMap['cnpjReferencia'] = cnpjReferencia;
@@ -88,7 +91,12 @@ class CaixaPostalService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGCONTRIBUINTE61', versaoSistema: '1.0', dados: jsonEncode(dadosMap)),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'MSGCONTRIBUINTE61',
+        versaoSistema: '1.0',
+        dados: jsonEncode(dadosMap),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -117,7 +125,12 @@ class CaixaPostalService {
   }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'MSGDETALHAMENTO62', versaoSistema: '1.0', dados: jsonEncode({'isn': isn})),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'MSGDETALHAMENTO62',
+        versaoSistema: '1.0',
+        dados: jsonEncode({'isn': isn}),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -147,7 +160,12 @@ class CaixaPostalService {
   }) async {
     final request = BaseRequest(
       contribuinteNumero: contribuinte,
-      pedidoDados: PedidoDados(idSistema: 'CAIXAPOSTAL', idServico: 'INNOVAMSG63', versaoSistema: '1.0', dados: ''),
+      pedidoDados: PedidoDados(
+        idSistema: 'CAIXAPOSTAL',
+        idServico: 'INNOVAMSG63',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
     final response = await _apiClient.post(
       '/Monitorar',

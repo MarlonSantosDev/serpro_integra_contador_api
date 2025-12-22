@@ -1,7 +1,10 @@
 /// Tratamento de erros específicos para os serviços PARCMEI-ESP
 class ParcmeiEspecialErrors {
   /// Analisa um erro específico do PARCMEI-ESP e retorna informações detalhadas
-  static ParcmeiEspecialErrorAnalysis analyzeError(String codigo, String mensagem) {
+  static ParcmeiEspecialErrorAnalysis analyzeError(
+    String codigo,
+    String mensagem,
+  ) {
     final errorInfo = getErrorInfo(codigo);
 
     return ParcmeiEspecialErrorAnalysis(
@@ -26,22 +29,32 @@ class ParcmeiEspecialErrors {
 
   /// Obtém todos os erros de aviso do PARCMEI-ESP
   static List<ParcmeiEspecialErrorInfo> getAvisos() {
-    return _errorCodes.values.where((error) => error.tipo == ParcmeiEspecialErrorType.aviso).toList();
+    return _errorCodes.values
+        .where((error) => error.tipo == ParcmeiEspecialErrorType.aviso)
+        .toList();
   }
 
   /// Obtém todos os erros de entrada incorreta do PARCMEI-ESP
   static List<ParcmeiEspecialErrorInfo> getEntradasIncorretas() {
-    return _errorCodes.values.where((error) => error.tipo == ParcmeiEspecialErrorType.entradaIncorreta).toList();
+    return _errorCodes.values
+        .where(
+          (error) => error.tipo == ParcmeiEspecialErrorType.entradaIncorreta,
+        )
+        .toList();
   }
 
   /// Obtém todos os erros gerais do PARCMEI-ESP
   static List<ParcmeiEspecialErrorInfo> getErros() {
-    return _errorCodes.values.where((error) => error.tipo == ParcmeiEspecialErrorType.erro).toList();
+    return _errorCodes.values
+        .where((error) => error.tipo == ParcmeiEspecialErrorType.erro)
+        .toList();
   }
 
   /// Obtém todos os sucessos do PARCMEI-ESP
   static List<ParcmeiEspecialErrorInfo> getSucessos() {
-    return _errorCodes.values.where((error) => error.tipo == ParcmeiEspecialErrorType.sucesso).toList();
+    return _errorCodes.values
+        .where((error) => error.tipo == ParcmeiEspecialErrorType.sucesso)
+        .toList();
   }
 
   /// Mapa de códigos de erro conhecidos do PARCMEI-ESP
@@ -110,7 +123,8 @@ class ParcmeiEspecialErrors {
       tipo: ParcmeiEspecialErrorType.entradaIncorreta,
       categoria: ParcmeiEspecialErrorCategory.contribuinte,
       detalhes: 'Tipo de contribuinte inválido.',
-      solucao: 'PARCMEI-ESP aceita apenas contribuintes do tipo 2 (Pessoa Jurídica).',
+      solucao:
+          'PARCMEI-ESP aceita apenas contribuintes do tipo 2 (Pessoa Jurídica).',
     ),
 
     '[Erro-PARCMEI-ESP-005]': ParcmeiEspecialErrorInfo(
@@ -127,7 +141,8 @@ class ParcmeiEspecialErrors {
       tipo: ParcmeiEspecialErrorType.erro,
       categoria: ParcmeiEspecialErrorCategory.sistema,
       detalhes: 'Erro interno do sistema PARCMEI-ESP.',
-      solucao: 'Tente novamente em alguns minutos. Se o problema persistir, entre em contato com o suporte.',
+      solucao:
+          'Tente novamente em alguns minutos. Se o problema persistir, entre em contato com o suporte.',
     ),
 
     '[Erro-PARCMEI-ESP-101]': ParcmeiEspecialErrorInfo(
@@ -143,7 +158,8 @@ class ParcmeiEspecialErrors {
       tipo: ParcmeiEspecialErrorType.erro,
       categoria: ParcmeiEspecialErrorCategory.timeout,
       detalhes: 'Timeout na comunicação com o sistema PARCMEI-ESP.',
-      solucao: 'Tente novamente. Se o problema persistir, entre em contato com o suporte.',
+      solucao:
+          'Tente novamente. Se o problema persistir, entre em contato com o suporte.',
     ),
 
     '[Erro-PARCMEI-ESP-103]': ParcmeiEspecialErrorInfo(
@@ -183,7 +199,8 @@ class ParcmeiEspecialErrors {
       tipo: ParcmeiEspecialErrorType.erro,
       categoria: ParcmeiEspecialErrorCategory.emissao,
       detalhes: 'Erro na emissão do DAS.',
-      solucao: 'Tente novamente. Se o problema persistir, entre em contato com o suporte.',
+      solucao:
+          'Tente novamente. Se o problema persistir, entre em contato com o suporte.',
     ),
 
     '[Erro-PARCMEI-ESP-108]': ParcmeiEspecialErrorInfo(
@@ -213,7 +230,13 @@ class ParcmeiEspecialErrors {
 }
 
 /// Tipos de erro do PARCMEI-ESP
-enum ParcmeiEspecialErrorType { sucesso, aviso, entradaIncorreta, erro, desconhecido }
+enum ParcmeiEspecialErrorType {
+  sucesso,
+  aviso,
+  entradaIncorreta,
+  erro,
+  desconhecido,
+}
 
 /// Categorias de erro do PARCMEI-ESP
 enum ParcmeiEspecialErrorCategory {
@@ -243,7 +266,13 @@ class ParcmeiEspecialErrorInfo {
   final String detalhes;
   final String solucao;
 
-  ParcmeiEspecialErrorInfo({required this.codigo, required this.tipo, required this.categoria, required this.detalhes, required this.solucao});
+  ParcmeiEspecialErrorInfo({
+    required this.codigo,
+    required this.tipo,
+    required this.categoria,
+    required this.detalhes,
+    required this.solucao,
+  });
 
   /// Verifica se é um erro crítico
   bool get isCritico => tipo == ParcmeiEspecialErrorType.erro;
@@ -258,7 +287,8 @@ class ParcmeiEspecialErrorInfo {
   bool get isSucesso => tipo == ParcmeiEspecialErrorType.sucesso;
 
   /// Verifica se requer ação do usuário
-  bool get requerAcaoUsuario => tipo == ParcmeiEspecialErrorType.entradaIncorreta;
+  bool get requerAcaoUsuario =>
+      tipo == ParcmeiEspecialErrorType.entradaIncorreta;
 
   /// Verifica se é temporário
   bool get isTemporario =>
@@ -299,7 +329,8 @@ class ParcmeiEspecialErrorAnalysis {
   bool get isSucesso => tipo == ParcmeiEspecialErrorType.sucesso;
 
   /// Verifica se requer ação do usuário
-  bool get requerAcaoUsuario => tipo == ParcmeiEspecialErrorType.entradaIncorreta;
+  bool get requerAcaoUsuario =>
+      tipo == ParcmeiEspecialErrorType.entradaIncorreta;
 
   /// Verifica se é temporário
   bool get isTemporario =>
@@ -312,7 +343,9 @@ class ParcmeiEspecialErrorAnalysis {
   bool get podeSerIgnorado => tipo == ParcmeiEspecialErrorType.aviso;
 
   /// Verifica se deve ser reportado
-  bool get deveSerReportado => tipo == ParcmeiEspecialErrorType.erro && categoria != ParcmeiEspecialErrorCategory.validacao;
+  bool get deveSerReportado =>
+      tipo == ParcmeiEspecialErrorType.erro &&
+      categoria != ParcmeiEspecialErrorCategory.validacao;
 
   /// Obtém a prioridade do erro
   int get prioridade {

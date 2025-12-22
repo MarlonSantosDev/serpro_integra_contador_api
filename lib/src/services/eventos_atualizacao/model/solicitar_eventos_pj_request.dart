@@ -11,7 +11,9 @@ class SolicitarEventosPJRequest {
       throw ArgumentError('Lista de CNPJs não pode estar vazia');
     }
     if (cnpjs.length > EventosAtualizacaoCommon.maxContribuintesPorLote) {
-      throw ArgumentError('Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CNPJs por lote');
+      throw ArgumentError(
+        'Máximo de ${EventosAtualizacaoCommon.maxContribuintesPorLote} CNPJs por lote',
+      );
     }
 
     // Validar lista de CNPJs (consistência e formato)

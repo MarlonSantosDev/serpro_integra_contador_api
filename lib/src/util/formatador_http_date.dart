@@ -7,4 +7,5 @@
 /// - Desktop/Mobile: Usa dart:io HttpDate
 library;
 
-export 'formatador_http_date_stub.dart' if (dart.library.io) 'formatador_http_date_native.dart';
+export 'formatador_http_date_stub.dart'
+    if (dart.library.io) 'formatador_http_date_native.dart';

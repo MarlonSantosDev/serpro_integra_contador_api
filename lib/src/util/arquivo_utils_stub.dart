@@ -7,7 +7,10 @@ class ArquivoUtils {
   ///
   /// Em Web, este método sempre retorna false pois não é possível
   /// salvar arquivos diretamente no sistema de arquivos.
-  static Future<bool> salvarArquivo(String pdfBase64, String nomeDoArquivo) async {
+  static Future<bool> salvarArquivo(
+    String pdfBase64,
+    String nomeDoArquivo,
+  ) async {
     // Em Web, não é possível salvar arquivos no sistema de arquivos
     // O usuário deve usar APIs do navegador (como download) ou
     // implementações específicas da plataforma

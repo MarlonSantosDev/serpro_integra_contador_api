@@ -7,9 +7,15 @@ class ConsultarDetalhesPagamentoResponse {
   final List<Mensagem> mensagens;
   final DetalhesPagamentoData? dados;
 
-  ConsultarDetalhesPagamentoResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarDetalhesPagamentoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
-  factory ConsultarDetalhesPagamentoResponse.fromJson(Map<String, dynamic> json) {
+  factory ConsultarDetalhesPagamentoResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
     DetalhesPagamentoData? dadosParsed;
     try {
       final dadosStr = json['dados']?.toString() ?? '';
@@ -22,7 +28,9 @@ class ConsultarDetalhesPagamentoResponse {
 
     return ConsultarDetalhesPagamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -71,13 +79,20 @@ class DetalhesPagamentoData {
   });
 
   factory DetalhesPagamentoData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
     return DetalhesPagamentoData(
       numeroDas: json['numeroDas'].toString(),
       codigoBarras: json['codigoBarras'].toString(),
-      valorPagoArrecadacao: (num.parse(json['valorPagoArrecadacao'].toString())).toDouble(),
+      valorPagoArrecadacao: (num.parse(
+        json['valorPagoArrecadacao'].toString(),
+      )).toDouble(),
       dataPagamento: json['dataPagamento'].toString(),
-      pagamentosDebitos: (json['pagamentosDebitos'] as List?)?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      pagamentosDebitos:
+          (json['pagamentosDebitos'] as List?)
+              ?.map((e) => PagamentoDebito.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -143,7 +158,13 @@ class PagamentoDebito {
       valorMulta: (num.parse(json['valorMulta'].toString())).toDouble(),
       valorJuros: (num.parse(json['valorJuros'].toString())).toDouble(),
       valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
-      discriminacoes: (json['discriminacoes'] as List?)?.map((e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      discriminacoes:
+          (json['discriminacoes'] as List?)
+              ?.map(
+                (e) => DiscriminacaoDebito.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -193,7 +214,11 @@ class DiscriminacaoDebito {
   final String descricao;
   final double valor;
 
-  DiscriminacaoDebito({required this.codigo, required this.descricao, required this.valor});
+  DiscriminacaoDebito({
+    required this.codigo,
+    required this.descricao,
+    required this.valor,
+  });
 
   factory DiscriminacaoDebito.fromJson(Map<String, dynamic> json) {
     return DiscriminacaoDebito(

@@ -13,7 +13,10 @@ abstract class PagtoWebResponse {
   // Use concrete subclasses instead
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((msg) => msg.toJson()).toList()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((msg) => msg.toJson()).toList(),
+    };
   }
 
   /// Verifica se a resposta foi bem-sucedida
@@ -24,8 +27,11 @@ abstract class PagtoWebResponse {
 class ConsultarPagamentosResponse extends PagtoWebResponse {
   final List<DocumentoArrecadacao> dados;
 
-  ConsultarPagamentosResponse({required int status, required List<MensagemNegocio> mensagens, required this.dados})
-    : super(status: status, mensagens: mensagens);
+  ConsultarPagamentosResponse({
+    required int status,
+    required List<MensagemNegocio> mensagens,
+    required this.dados,
+  }) : super(status: status, mensagens: mensagens);
 
   factory ConsultarPagamentosResponse.fromJson(Map<String, dynamic> json) {
     final dados = <DocumentoArrecadacao>[];
@@ -35,7 +41,12 @@ class ConsultarPagamentosResponse extends PagtoWebResponse {
       if (dadosString.isNotEmpty) {
         try {
           final dadosList = jsonDecode(dadosString) as List<dynamic>;
-          dados.addAll(dadosList.map((item) => DocumentoArrecadacao.fromJson(item as Map<String, dynamic>)));
+          dados.addAll(
+            dadosList.map(
+              (item) =>
+                  DocumentoArrecadacao.fromJson(item as Map<String, dynamic>),
+            ),
+          );
         } catch (e) {
           // Se não conseguir fazer parse, deixa a lista vazia
         }
@@ -44,14 +55,19 @@ class ConsultarPagamentosResponse extends PagtoWebResponse {
 
     return ConsultarPagamentosResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((msg) => MensagemNegocio.fromJson(msg as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>)
+          .map((msg) => MensagemNegocio.fromJson(msg as Map<String, dynamic>))
+          .toList(),
       dados: dados,
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {...super.toJson(), 'dados': dados.map((doc) => doc.toJson()).toList()};
+    return {
+      ...super.toJson(),
+      'dados': dados.map((doc) => doc.toJson()).toList(),
+    };
   }
 }
 
@@ -59,8 +75,11 @@ class ConsultarPagamentosResponse extends PagtoWebResponse {
 class ContarPagamentosResponse extends PagtoWebResponse {
   final int quantidade;
 
-  ContarPagamentosResponse({required int status, required List<MensagemNegocio> mensagens, required this.quantidade})
-    : super(status: status, mensagens: mensagens);
+  ContarPagamentosResponse({
+    required int status,
+    required List<MensagemNegocio> mensagens,
+    required this.quantidade,
+  }) : super(status: status, mensagens: mensagens);
 
   factory ContarPagamentosResponse.fromJson(Map<String, dynamic> json) {
     int quantidade = 0;
@@ -78,7 +97,9 @@ class ContarPagamentosResponse extends PagtoWebResponse {
 
     return ContarPagamentosResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((msg) => MensagemNegocio.fromJson(msg)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((msg) => MensagemNegocio.fromJson(msg))
+          .toList(),
       quantidade: quantidade,
     );
   }
@@ -93,8 +114,11 @@ class ContarPagamentosResponse extends PagtoWebResponse {
 class EmitirComprovanteResponse extends PagtoWebResponse {
   final String? pdfBase64;
 
-  EmitirComprovanteResponse({required int status, required List<MensagemNegocio> mensagens, this.pdfBase64})
-    : super(status: status, mensagens: mensagens);
+  EmitirComprovanteResponse({
+    required int status,
+    required List<MensagemNegocio> mensagens,
+    this.pdfBase64,
+  }) : super(status: status, mensagens: mensagens);
 
   factory EmitirComprovanteResponse.fromJson(Map<String, dynamic> json) {
     String? pdfBase64;
@@ -113,14 +137,19 @@ class EmitirComprovanteResponse extends PagtoWebResponse {
 
     return EmitirComprovanteResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>).map((msg) => MensagemNegocio.fromJson(msg as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>)
+          .map((msg) => MensagemNegocio.fromJson(msg as Map<String, dynamic>))
+          .toList(),
       pdfBase64: pdfBase64,
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {...super.toJson(), 'dados': pdfBase64 != null ? '{"pdf":"$pdfBase64"}' : '{}'};
+    return {
+      ...super.toJson(),
+      'dados': pdfBase64 != null ? '{"pdf":"$pdfBase64"}' : '{}',
+    };
   }
 }
 
@@ -165,21 +194,39 @@ class DocumentoArrecadacao {
   factory DocumentoArrecadacao.fromJson(Map<String, dynamic> json) {
     return DocumentoArrecadacao(
       numeroDocumento: json['numeroDocumento'].toString(),
-      tipo: PagtoWebTipoDocumento.fromJson(json['tipo'] as Map<String, dynamic>),
+      tipo: PagtoWebTipoDocumento.fromJson(
+        json['tipo'] as Map<String, dynamic>,
+      ),
       periodoApuracao: json['periodoApuracao'].toString(),
       dataArrecadacao: json['dataArrecadacao'].toString(),
       dataVencimento: json['dataVencimento'].toString(),
-      receitaPrincipal: ReceitaPrincipal.fromJson(json['receitaPrincipal'] as Map<String, dynamic>),
+      receitaPrincipal: ReceitaPrincipal.fromJson(
+        json['receitaPrincipal'] as Map<String, dynamic>,
+      ),
       referencia: json['referencia']?.toString(),
       valorTotal: (num.parse(json['valorTotal'].toString())).toDouble(),
       valorPrincipal: (num.parse(json['valorPrincipal'].toString())).toDouble(),
-      valorMulta: json['valorMulta'] != null ? (num.parse(json['valorMulta'].toString())).toDouble() : null,
-      valorJuros: json['valorJuros'] != null ? (num.parse(json['valorJuros'].toString())).toDouble() : null,
-      valorSaldoTotal: json['valorSaldoTotal'] != null ? (num.parse(json['valorSaldoTotal'].toString())).toDouble() : null,
-      valorSaldoPrincipal: json['valorSaldoPrincipal'] != null ? (num.parse(json['valorSaldoPrincipal'].toString())).toDouble() : null,
-      valorSaldoMulta: json['valorSaldoMulta'] != null ? (num.parse(json['valorSaldoMulta'].toString())).toDouble() : null,
-      valorSaldoJuros: json['valorSaldoJuros'] != null ? (num.parse(json['valorSaldoJuros'].toString())).toDouble() : null,
-      desmembramentos: (json['desmembramentos'] as List<dynamic>).map((item) => Desmembramento.fromJson(item as Map<String, dynamic>)).toList(),
+      valorMulta: json['valorMulta'] != null
+          ? (num.parse(json['valorMulta'].toString())).toDouble()
+          : null,
+      valorJuros: json['valorJuros'] != null
+          ? (num.parse(json['valorJuros'].toString())).toDouble()
+          : null,
+      valorSaldoTotal: json['valorSaldoTotal'] != null
+          ? (num.parse(json['valorSaldoTotal'].toString())).toDouble()
+          : null,
+      valorSaldoPrincipal: json['valorSaldoPrincipal'] != null
+          ? (num.parse(json['valorSaldoPrincipal'].toString())).toDouble()
+          : null,
+      valorSaldoMulta: json['valorSaldoMulta'] != null
+          ? (num.parse(json['valorSaldoMulta'].toString())).toDouble()
+          : null,
+      valorSaldoJuros: json['valorSaldoJuros'] != null
+          ? (num.parse(json['valorSaldoJuros'].toString())).toDouble()
+          : null,
+      desmembramentos: (json['desmembramentos'] as List<dynamic>)
+          .map((item) => Desmembramento.fromJson(item as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -211,7 +258,11 @@ class ReceitaPrincipal {
   final String descricao;
   final String? extensaoReceita;
 
-  ReceitaPrincipal({required this.codigo, required this.descricao, this.extensaoReceita});
+  ReceitaPrincipal({
+    required this.codigo,
+    required this.descricao,
+    this.extensaoReceita,
+  });
 
   factory ReceitaPrincipal.fromJson(Map<String, dynamic> json) {
     return ReceitaPrincipal(
@@ -222,7 +273,11 @@ class ReceitaPrincipal {
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'descricao': descricao, 'extensaoReceita': extensaoReceita};
+    return {
+      'codigo': codigo,
+      'descricao': descricao,
+      'extensaoReceita': extensaoReceita,
+    };
   }
 }
 
@@ -259,17 +314,35 @@ class Desmembramento {
   factory Desmembramento.fromJson(Map<String, dynamic> json) {
     return Desmembramento(
       sequencial: json['sequencial'].toString(),
-      receitaPrincipal: ReceitaPrincipal.fromJson(json['receitaPrincipal'] as Map<String, dynamic>),
+      receitaPrincipal: ReceitaPrincipal.fromJson(
+        json['receitaPrincipal'] as Map<String, dynamic>,
+      ),
       periodoApuracao: json['periodoApuracao'].toString(),
       dataVencimento: json['dataVencimento'].toString(),
-      valorTotal: json['valorTotal'] != null ? (num.parse(json['valorTotal'].toString())).toDouble() : null,
-      valorPrincipal: json['valorPrincipal'] != null ? (num.parse(json['valorPrincipal'].toString())).toDouble() : null,
-      valorMulta: json['valorMulta'] != null ? (num.parse(json['valorMulta'].toString())).toDouble() : null,
-      valorJuros: json['valorJuros'] != null ? (num.parse(json['valorJuros'].toString())).toDouble() : null,
-      valorSaldoTotal: json['valorSaldoTotal'] != null ? (num.parse(json['valorSaldoTotal'].toString())).toDouble() : null,
-      valorSaldoPrincipal: json['valorSaldoPrincipal'] != null ? (num.parse(json['valorSaldoPrincipal'].toString())).toDouble() : null,
-      valorSaldoMulta: json['valorSaldoMulta'] != null ? (num.parse(json['valorSaldoMulta'].toString())).toDouble() : null,
-      valorSaldoJuros: json['valorSaldoJuros'] != null ? (num.parse(json['valorSaldoJuros'].toString())).toDouble() : null,
+      valorTotal: json['valorTotal'] != null
+          ? (num.parse(json['valorTotal'].toString())).toDouble()
+          : null,
+      valorPrincipal: json['valorPrincipal'] != null
+          ? (num.parse(json['valorPrincipal'].toString())).toDouble()
+          : null,
+      valorMulta: json['valorMulta'] != null
+          ? (num.parse(json['valorMulta'].toString())).toDouble()
+          : null,
+      valorJuros: json['valorJuros'] != null
+          ? (num.parse(json['valorJuros'].toString())).toDouble()
+          : null,
+      valorSaldoTotal: json['valorSaldoTotal'] != null
+          ? (num.parse(json['valorSaldoTotal'].toString())).toDouble()
+          : null,
+      valorSaldoPrincipal: json['valorSaldoPrincipal'] != null
+          ? (num.parse(json['valorSaldoPrincipal'].toString())).toDouble()
+          : null,
+      valorSaldoMulta: json['valorSaldoMulta'] != null
+          ? (num.parse(json['valorSaldoMulta'].toString())).toDouble()
+          : null,
+      valorSaldoJuros: json['valorSaldoJuros'] != null
+          ? (num.parse(json['valorSaldoJuros'].toString())).toDouble()
+          : null,
     );
   }
 

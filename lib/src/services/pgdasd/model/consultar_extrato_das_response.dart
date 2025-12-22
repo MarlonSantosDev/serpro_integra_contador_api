@@ -13,19 +13,29 @@ class ConsultarExtratoDasResponse {
   /// Estrutura de dados de retorno, contendo uma lista em SCAPED Texto JSON com o objeto ExtratoDas
   final ExtratoDas dados;
 
-  ConsultarExtratoDasResponse({required this.status, required this.mensagens, required this.dados});
+  ConsultarExtratoDasResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados,
+    };
   }
 
   factory ConsultarExtratoDasResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarExtratoDasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: ExtratoDas.fromJson(jsonDecode(json['dados'])),
     );
   }
@@ -46,7 +56,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 }
 
@@ -65,7 +78,10 @@ class ExtratoDas {
   }
 
   factory ExtratoDas.fromJson(Map<String, dynamic> json) {
-    return ExtratoDas(numeroDas: json['numeroDas'].toString(), extrato: Extrato.fromJson(json['extrato']));
+    return ExtratoDas(
+      numeroDas: json['numeroDas'].toString(),
+      extrato: Extrato.fromJson(json['extrato']),
+    );
   }
 }
 
@@ -78,6 +94,9 @@ class Extrato {
   }
 
   factory Extrato.fromJson(Map<String, dynamic> json) {
-    return Extrato(nomeArquivo: json['nomeArquivo'].toString(), pdf: json['pdf'].toString());
+    return Extrato(
+      nomeArquivo: json['nomeArquivo'].toString(),
+      pdf: json['pdf'].toString(),
+    );
   }
 }

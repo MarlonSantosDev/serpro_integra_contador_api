@@ -8,7 +8,12 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
   // Exemplo 1: Solicitar eventos de Pessoa Física (DCTFWeb)
   try {
     print('\n--- Exemplo 1: Solicitar Eventos PF (DCTFWeb) ---');
-    final cpfsExemplo = ['00000000000', '11111111111', '22222222222', '33333333333'];
+    final cpfsExemplo = [
+      '00000000000',
+      '11111111111',
+      '22222222222',
+      '33333333333',
+    ];
 
     final solicitacaoPF = await eventosService.solicitarEventosPF(
       contratanteNumero: '99999999999999',
@@ -35,14 +40,19 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
   try {
     print('\n--- Exemplo 2: Obter Eventos PF ---');
 
-    final eventosPF = await eventosService.obterEventosPF(protocolo: 'a65f3455-fa91-419b-b0ad-c4ac50695abf', evento: TipoEvento.dctfWeb);
+    final eventosPF = await eventosService.obterEventosPF(
+      protocolo: 'a65f3455-fa91-419b-b0ad-c4ac50695abf',
+      evento: TipoEvento.dctfWeb,
+    );
 
     print('✅ Status: ${eventosPF.status}');
     print('Total de eventos: ${eventosPF.dados.length}');
 
     for (final evento in eventosPF.dados) {
       if (evento.temAtualizacao) {
-        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+        print(
+          'CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}',
+        );
       } else if (evento.semAtualizacao) {
         print('CPF ${evento.cpf}: Sem atualizações');
       } else {
@@ -58,9 +68,17 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
   // Exemplo 3: Solicitar eventos de Pessoa Jurídica (CaixaPostal)
   try {
     print('\n--- Exemplo 3: Solicitar Eventos PJ (CaixaPostal) ---');
-    final cnpjsExemplo = ['00000000000000', '11111111111111', '22222222222222', '33333333333333'];
+    final cnpjsExemplo = [
+      '00000000000000',
+      '11111111111111',
+      '22222222222222',
+      '33333333333333',
+    ];
 
-    final solicitacaoPJ = await eventosService.solicitarEventosPJ(cnpjs: cnpjsExemplo, evento: TipoEvento.caixaPostal);
+    final solicitacaoPJ = await eventosService.solicitarEventosPJ(
+      cnpjs: cnpjsExemplo,
+      evento: TipoEvento.caixaPostal,
+    );
 
     print('✅ Status: ${solicitacaoPJ.status}');
     print('Protocolo: ${solicitacaoPJ.dados.protocolo}');
@@ -85,7 +103,9 @@ Future<void> EventosAtualizacao(ApiClient apiClient) async {
 
     for (final evento in eventosPFConveniencia.dados) {
       if (evento.temAtualizacao) {
-        print('CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}');
+        print(
+          'CPF ${evento.cpf}: Última atualização em ${evento.dataFormatada}',
+        );
       } else if (evento.semAtualizacao) {
         print('CPF ${evento.cpf}: Sem atualizações');
       } else {

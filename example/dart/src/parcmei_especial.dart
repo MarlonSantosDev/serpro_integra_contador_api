@@ -15,7 +15,9 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
       print('✅ Status: ${responsePedidos.status}');
       print('Mensagem: ${responsePedidos.mensagemPrincipal}');
       print('Tem parcelamentos: ${responsePedidos.temParcelamentos}');
-      print('Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}');
+      print(
+        'Quantidade de parcelamentos: ${responsePedidos.quantidadeParcelamentos}',
+      );
 
       final parcelamentos = responsePedidos.dados?.parcelamentos ?? [];
       for (final parcelamento in parcelamentos) {
@@ -37,7 +39,8 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
   // 2. Consultar parcelamento específico
   try {
     print('\n2. Consultando parcelamento específico...');
-    final responseParcelamento = await parcmeiEspecialService.consultarParcelamento(9001);
+    final responseParcelamento = await parcmeiEspecialService
+        .consultarParcelamento(9001);
 
     if (responseParcelamento.sucesso) {
       print('✅ Status: ${responseParcelamento.status}');
@@ -48,7 +51,9 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
         print('Parcelamento ${parcelamento.numero}:');
         print('  Situação: ${parcelamento.situacao}');
         print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
-        print('  Valor total consolidado: ${parcelamento.valorTotalConsolidadoFormatado}');
+        print(
+          '  Valor total consolidado: ${parcelamento.valorTotalConsolidadoFormatado}',
+        );
         print('  Quantidade de parcelas: ${parcelamento.quantidadeParcelas}');
         print('  Parcela básica: ${parcelamento.parcelaBasicaFormatada}');
 
@@ -57,28 +62,44 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
           final consolidacao = parcelamento.consolidacaoOriginal!;
           print('  Consolidação original:');
           print('    Data: ${consolidacao.dataConsolidacaoFormatada}');
-          print('    Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
-          print('    Detalhes: ${consolidacao.detalhesConsolidacao.length} itens');
+          print(
+            '    Primeira parcela: ${consolidacao.primeiraParcelaFormatada}',
+          );
+          print(
+            '    Detalhes: ${consolidacao.detalhesConsolidacao.length} itens',
+          );
         }
 
         // Alterações de dívida
         if (parcelamento.alteracoesDivida.isNotEmpty) {
-          print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
+          print(
+            '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
+          );
           for (final alteracao in parcelamento.alteracoesDivida) {
             print('    Data: ${alteracao.dataAlteracaoDividaFormatada}');
-            print('    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}');
+            print(
+              '    Parcelas remanescentes: ${alteracao.parcelasRemanescentes}',
+            );
             print('    Valor: ${alteracao.valorTotalConsolidadoFormatado}');
           }
         }
 
         // Demonstrativo de pagamentos
         if (parcelamento.demonstrativoPagamentos.isNotEmpty) {
-          print('  Pagamentos realizados: ${parcelamento.demonstrativoPagamentos.length}');
-          for (final pagamento in parcelamento.demonstrativoPagamentos.take(3)) {
-            print('    ${pagamento.mesDaParcelaFormatado}: ${pagamento.valorPagoFormatado}');
+          print(
+            '  Pagamentos realizados: ${parcelamento.demonstrativoPagamentos.length}',
+          );
+          for (final pagamento in parcelamento.demonstrativoPagamentos.take(
+            3,
+          )) {
+            print(
+              '    ${pagamento.mesDaParcelaFormatado}: ${pagamento.valorPagoFormatado}',
+            );
           }
           if (parcelamento.demonstrativoPagamentos.length > 3) {
-            print('    ... e mais ${parcelamento.demonstrativoPagamentos.length - 3} pagamentos');
+            print(
+              '    ... e mais ${parcelamento.demonstrativoPagamentos.length - 3} pagamentos',
+            );
           }
         }
       }
@@ -105,7 +126,9 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
 
       final parcelas = responseParcelas.dados?.listaParcelas ?? [];
       for (final parcela in parcelas.take(5)) {
-        print('  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+        print(
+          '  Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}',
+        );
         print('    Descrição: ${parcela.descricao}');
         print('    Mês atual: ${parcela.isMesAtual}');
         print('    Mês futuro: ${parcela.isMesFuturo}');
@@ -125,7 +148,8 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
   // 4. Consultar detalhes de pagamento
   try {
     print('\n4. Consultando detalhes de pagamento...');
-    final responseDetalhes = await parcmeiEspecialService.consultarDetalhesPagamento(9001, 202111);
+    final responseDetalhes = await parcmeiEspecialService
+        .consultarDetalhesPagamento(9001, 202111);
 
     if (responseDetalhes.sucesso) {
       print('✅ Status: ${responseDetalhes.status}');
@@ -140,7 +164,9 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
         print('  Gerado em: ${detalhes.geradoEm}');
         print('  Número do parcelamento: ${detalhes.numeroParcelamento}');
         print('  Número da parcela: ${detalhes.numeroParcela}');
-        print('  Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}');
+        print(
+          '  Data limite para acolhimento: ${detalhes.dataLimiteAcolhimentoFormatada}',
+        );
         print('  Data de pagamento: ${detalhes.dataPagamentoFormatada}');
         print('  Banco/Agência: ${detalhes.bancoAgencia}');
         print('  Valor pago: ${detalhes.valorPagoArrecadacaoFormatado}');
@@ -161,7 +187,9 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
               print('        Multa: ${discriminacao.multaFormatada}');
               print('        Juros: ${discriminacao.jurosFormatado}');
               print('        Total: ${discriminacao.totalFormatado}');
-              print('        Ente federado: ${discriminacao.enteFederadoDestino}');
+              print(
+                '        Ente federado: ${discriminacao.enteFederadoDestino}',
+              );
               print('        Tem multa: ${discriminacao.temMulta}');
               print('        Tem juros: ${discriminacao.temJuros}');
             }
@@ -206,7 +234,10 @@ Future<void> ParcmeiEspecial(ApiClient apiClient) async {
           print('  PDF convertido para bytes: ${pdfBytes.length} bytes');
 
           // Salvar PDF em arquivo
-          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(dadosDas.docArrecadacaoPdfB64, dadosDas.nomeArquivoSugerido);
+          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+            dadosDas.docArrecadacaoPdfB64,
+            dadosDas.nomeArquivoSugerido,
+          );
           print('  PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
         }
       }

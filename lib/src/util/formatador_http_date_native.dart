@@ -34,7 +34,10 @@ class HttpDateUtils {
       if (parts.length != 2) return false;
 
       final dateTimePart = parts[1].trim();
-      final elements = dateTimePart.split(' ').where((e) => e.isNotEmpty).toList();
+      final elements = dateTimePart
+          .split(' ')
+          .where((e) => e.isNotEmpty)
+          .toList();
       if (elements.length < 5) return false;
 
       final day = int.tryParse(elements[0]);
@@ -75,7 +78,20 @@ class HttpDateUtils {
 
   /// Converte nome do mês para número (1-12)
   static int? _monthNameToNumber(String monthName) {
-    const months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
+    const months = {
+      'Jan': 1,
+      'Feb': 2,
+      'Mar': 3,
+      'Apr': 4,
+      'May': 5,
+      'Jun': 6,
+      'Jul': 7,
+      'Aug': 8,
+      'Sep': 9,
+      'Oct': 10,
+      'Nov': 11,
+      'Dec': 12,
+    };
     return months[monthName];
   }
 
@@ -84,7 +100,8 @@ class HttpDateUtils {
     const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     if (month == 2) {
-      final isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+      final isLeapYear =
+          (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
       return day <= (isLeapYear ? 29 : 28);
     }
 

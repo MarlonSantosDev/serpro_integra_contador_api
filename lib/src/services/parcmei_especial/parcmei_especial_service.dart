@@ -57,8 +57,14 @@ class ParcmeiEspecialService {
   /// ```
   Future<ConsultarPedidosResponse> consultarPedidos() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCMEI-ESP', idServico: 'PEDIDOSPARC213', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCMEI-ESP',
+        idServico: 'PEDIDOSPARC213',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -84,15 +90,20 @@ class ParcmeiEspecialService {
   ///   print('Valor total: ${parcelamento?.valorTotalConsolidadoFormatado}');
   /// }
   /// ```
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    int numeroParcelamento,
+  ) async {
     // Validação do parâmetro
-    final validacao = ParcmeiEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacao = ParcmeiEspecialValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
     if (validacao != null) {
       throw ArgumentError(validacao);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI-ESP',
         idServico: 'OBTERPARC214',
@@ -122,8 +133,14 @@ class ParcmeiEspecialService {
   /// ```
   Future<ConsultarParcelasResponse> consultarParcelas() async {
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
-      pedidoDados: PedidoDados(idSistema: 'PARCMEI-ESP', idServico: 'PARCELASPARAGERAR212', versaoSistema: '1.0', dados: ''),
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      pedidoDados: PedidoDados(
+        idSistema: 'PARCMEI-ESP',
+        idServico: 'PARCELASPARAGERAR212',
+        versaoSistema: '1.0',
+        dados: '',
+      ),
     );
 
     final response = await _apiClient.post('/Consultar', request);
@@ -150,25 +167,35 @@ class ParcmeiEspecialService {
   ///   print('Data de pagamento: ${detalhes?.dataPagamentoFormatada}');
   /// }
   /// ```
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     // Validação dos parâmetros
-    final validacaoParcelamento = ParcmeiEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    final validacaoParcelamento =
+        ParcmeiEspecialValidations.validarNumeroParcelamento(
+          numeroParcelamento,
+        );
     if (validacaoParcelamento != null) {
       throw ArgumentError(validacaoParcelamento);
     }
 
-    final validacaoAnoMes = ParcmeiEspecialValidations.validarAnoMesParcela(anoMesParcela);
+    final validacaoAnoMes = ParcmeiEspecialValidations.validarAnoMesParcela(
+      anoMesParcela,
+    );
     if (validacaoAnoMes != null) {
       throw ArgumentError(validacaoAnoMes);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI-ESP',
         idServico: 'DETPAGTOPARC215',
         versaoSistema: '1.0',
-        dados: '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
+        dados:
+            '{"numeroParcelamento": $numeroParcelamento, "anoMesParcela": $anoMesParcela}',
       ),
     );
 
@@ -194,19 +221,24 @@ class ParcmeiEspecialService {
   /// ```
   Future<EmitirDasResponse> emitirDas(int parcelaParaEmitir) async {
     // Validação dos parâmetros
-    final validacaoParcela = ParcmeiEspecialValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    final validacaoParcela =
+        ParcmeiEspecialValidations.validarParcelaParaEmitir(parcelaParaEmitir);
     if (validacaoParcela != null) {
       throw ArgumentError(validacaoParcela);
     }
 
     // Validação adicional: prazo para emissão
-    final validacaoPrazo = ParcmeiEspecialValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    final validacaoPrazo =
+        ParcmeiEspecialValidations.validarPrazoEmissaoParcela(
+          parcelaParaEmitir,
+        );
     if (validacaoPrazo != null) {
       throw ArgumentError(validacaoPrazo);
     }
 
     final request = BaseRequest(
-      contribuinteNumero: '00000000000000', // Será substituído pelo CNPJ do contribuinte
+      contribuinteNumero:
+          '00000000000000', // Será substituído pelo CNPJ do contribuinte
       pedidoDados: PedidoDados(
         idSistema: 'PARCMEI-ESP',
         idServico: 'GERARDAS211',
@@ -256,7 +288,9 @@ class ParcmeiEspecialService {
 
   /// Valida um número de parcelamento
   String? validarNumeroParcelamento(int? numeroParcelamento) {
-    return ParcmeiEspecialValidations.validarNumeroParcelamento(numeroParcelamento);
+    return ParcmeiEspecialValidations.validarNumeroParcelamento(
+      numeroParcelamento,
+    );
   }
 
   /// Valida um ano/mês de parcela
@@ -266,12 +300,16 @@ class ParcmeiEspecialService {
 
   /// Valida uma parcela para emissão
   String? validarParcelaParaEmitir(int? parcelaParaEmitir) {
-    return ParcmeiEspecialValidations.validarParcelaParaEmitir(parcelaParaEmitir);
+    return ParcmeiEspecialValidations.validarParcelaParaEmitir(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida o prazo para emissão de uma parcela
   String? validarPrazoEmissaoParcela(int parcelaParaEmitir) {
-    return ParcmeiEspecialValidations.validarPrazoEmissaoParcela(parcelaParaEmitir);
+    return ParcmeiEspecialValidations.validarPrazoEmissaoParcela(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida o CNPJ do contribuinte
@@ -286,7 +324,9 @@ class ParcmeiEspecialService {
 
   /// Valida se a parcela está disponível para emissão
   String? validarParcelaDisponivelParaEmissao(int parcelaParaEmitir) {
-    return ParcmeiEspecialValidations.validarParcelaDisponivelParaEmissao(parcelaParaEmitir);
+    return ParcmeiEspecialValidations.validarParcelaDisponivelParaEmissao(
+      parcelaParaEmitir,
+    );
   }
 
   /// Valida um período de apuração
@@ -366,11 +406,15 @@ class ParcmeiEspecialService {
 
   /// Valida um número de parcelamento no formato específico do PARCMEI-ESP
   String? validarNumeroParcelamentoFormato(int? numeroParcelamento) {
-    return ParcmeiEspecialValidations.validarNumeroParcelamentoFormato(numeroParcelamento);
+    return ParcmeiEspecialValidations.validarNumeroParcelamentoFormato(
+      numeroParcelamento,
+    );
   }
 
   /// Valida um período de apuração dentro de um range válido
   String? validarPeriodoApuracaoRange(int? periodoApuracao) {
-    return ParcmeiEspecialValidations.validarPeriodoApuracaoRange(periodoApuracao);
+    return ParcmeiEspecialValidations.validarPeriodoApuracaoRange(
+      periodoApuracao,
+    );
   }
 }

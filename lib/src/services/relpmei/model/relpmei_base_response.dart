@@ -9,7 +9,11 @@ abstract class RelpmeiBaseResponse {
   /// Dados retornados como string JSON
   final String dados;
 
-  RelpmeiBaseResponse({required this.status, required this.mensagens, required this.dados});
+  RelpmeiBaseResponse({
+    required this.status,
+    required this.mensagens,
+    required this.dados,
+  });
 
   /// Converte status contêm sucesso
   bool get sucesso => status == 200 && dados.isNotEmpty;
@@ -20,7 +24,9 @@ abstract class RelpmeiBaseResponse {
   factory RelpmeiBaseResponse.fromJson(Map<String, dynamic> json) {
     return GenericRelpmeiResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => MensagemRelpmei.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => MensagemRelpmei.fromJson(m))
+          .toList(),
       dados: json['dados'].toString(),
     );
   }
@@ -28,7 +34,11 @@ abstract class RelpmeiBaseResponse {
 
 /// Implementação genérica para respostas RELPMEI
 class GenericRelpmeiResponse extends RelpmeiBaseResponse {
-  GenericRelpmeiResponse({required super.status, required super.mensagens, required super.dados});
+  GenericRelpmeiResponse({
+    required super.status,
+    required super.mensagens,
+    required super.dados,
+  });
 }
 
 /// Mensagem de resposta RELPMEI
@@ -42,7 +52,10 @@ class MensagemRelpmei {
   MensagemRelpmei({required this.codigo, required this.texto});
 
   factory MensagemRelpmei.fromJson(Map<String, dynamic> json) {
-    return MensagemRelpmei(codigo: json['codigo']?.toString() ?? '', texto: json['texto']?.toString() ?? '');
+    return MensagemRelpmei(
+      codigo: json['codigo']?.toString() ?? '',
+      texto: json['texto']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() => {'codigo': codigo, 'texto': texto};

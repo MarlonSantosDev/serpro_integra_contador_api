@@ -27,7 +27,8 @@ class InformacoesCertificado {
   }
 
   /// Retorna o nome de exibição do certificado
-  String get nomeExibicao => tipo == TipoCertificado.eCPF ? 'e-CPF $cpfCnpj' : 'e-CNPJ $cpfCnpj';
+  String get nomeExibicao =>
+      tipo == TipoCertificado.eCPF ? 'e-CPF $cpfCnpj' : 'e-CNPJ $cpfCnpj';
 
   /// Dias restantes até expiração
   int get diasRestantes {
@@ -37,17 +38,17 @@ class InformacoesCertificado {
 
   /// Converte para JSON
   Map<String, dynamic> toJson() => {
-        'numero_serie': numeroSerie,
-        'assunto': assunto,
-        'emissor': emissor,
-        'valido_de': validoDe.toIso8601String(),
-        'valido_ate': validoAte.toIso8601String(),
-        'is_icp_brasil': isICPBrasil,
-        'tipo': tipo.toString(),
-        'cpf_cnpj': cpfCnpj,
-        'is_valido': isValido,
-        'dias_restantes': diasRestantes,
-      };
+    'numero_serie': numeroSerie,
+    'assunto': assunto,
+    'emissor': emissor,
+    'valido_de': validoDe.toIso8601String(),
+    'valido_ate': validoAte.toIso8601String(),
+    'is_icp_brasil': isICPBrasil,
+    'tipo': tipo.toString(),
+    'cpf_cnpj': cpfCnpj,
+    'is_valido': isValido,
+    'dias_restantes': diasRestantes,
+  };
 
   @override
   String toString() {
@@ -57,8 +58,4 @@ class InformacoesCertificado {
 }
 
 /// Tipos de certificado ICP-Brasil
-enum TipoCertificado {
-  eCPF,
-  eCNPJ,
-  desconhecido,
-}
+enum TipoCertificado { eCPF, eCNPJ, desconhecido }

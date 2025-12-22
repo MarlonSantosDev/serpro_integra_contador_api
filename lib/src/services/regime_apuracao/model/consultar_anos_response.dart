@@ -15,7 +15,11 @@ class ConsultarAnosCalendariosResponse {
   /// Lista de anos calendários com opções efetivadas
   final List<AnoCalendarioRegime>? dados;
 
-  ConsultarAnosCalendariosResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarAnosCalendariosResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get isSuccess => status == 200;
@@ -40,8 +44,14 @@ class ConsultarAnosCalendariosResponse {
   factory ConsultarAnosCalendariosResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarAnosCalendariosResponse(
       status: json['status'] as int,
-      mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? (jsonDecode(json['dados']) as List).map((d) => AnoCalendarioRegime.fromJson(d)).toList() : null,
+      mensagens: (json['mensagens'] as List)
+          .map((m) => MensagemNegocio.fromJson(m))
+          .toList(),
+      dados: json['dados'] != null
+          ? (jsonDecode(json['dados']) as List)
+                .map((d) => AnoCalendarioRegime.fromJson(d))
+                .toList()
+          : null,
     );
   }
 }
@@ -60,7 +70,10 @@ class AnoCalendarioRegime {
   ///
   /// [anoCalendario] O ano calendário
   /// [regimeApurado] O regime apurado ("COMPETENCIA" ou "CAIXA")
-  AnoCalendarioRegime({required this.anoCalendario, required this.regimeApurado});
+  AnoCalendarioRegime({
+    required this.anoCalendario,
+    required this.regimeApurado,
+  });
 
   /// Converte o regime apurado para enum
   TipoRegime? get tipoRegime => TipoRegime.fromDescricao(regimeApurado);
@@ -83,6 +96,9 @@ class AnoCalendarioRegime {
   /// [json] Mapa contendo os dados do ano calendário e regime apurado
   /// Retorna uma nova instância de [AnoCalendarioRegime]
   factory AnoCalendarioRegime.fromJson(Map<String, dynamic> json) {
-    return AnoCalendarioRegime(anoCalendario: int.parse(json['anoCalendario'].toString()), regimeApurado: json['regimeApurado'].toString());
+    return AnoCalendarioRegime(
+      anoCalendario: int.parse(json['anoCalendario'].toString()),
+      regimeApurado: json['regimeApurado'].toString(),
+    );
   }
 }

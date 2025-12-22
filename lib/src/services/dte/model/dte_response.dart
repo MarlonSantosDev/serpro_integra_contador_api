@@ -24,23 +24,35 @@ class DteResponse {
 
     return DteResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>?)?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      mensagens:
+          (json['mensagens'] as List<dynamic>?)
+              ?.map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Indica se a requisição foi bem-sucedida
-  bool get sucesso => status == 200 && mensagens.any((m) => m.codigo.startsWith('Sucesso-DTE'));
+  bool get sucesso =>
+      status == 200 && mensagens.any((m) => m.codigo.startsWith('Sucesso-DTE'));
 
   /// Retorna a mensagem principal (primeira mensagem de sucesso ou erro)
   String get mensagemPrincipal {
     if (mensagens.isEmpty) return 'Sem mensagens';
 
-    final sucessoMsg = mensagens.firstWhere((m) => m.codigo.startsWith('Sucesso-DTE'), orElse: () => mensagens.first);
+    final sucessoMsg = mensagens.firstWhere(
+      (m) => m.codigo.startsWith('Sucesso-DTE'),
+      orElse: () => mensagens.first,
+    );
 
     return sucessoMsg.texto;
   }
@@ -55,16 +67,19 @@ class DteResponse {
   bool get temIndicadorValido => dados?.indicadorEnquadramento != null;
 
   /// Retorna a descrição do status de enquadramento
-  String get statusEnquadramentoDescricao => dados?.statusEnquadramento ?? 'Não disponível';
+  String get statusEnquadramentoDescricao =>
+      dados?.statusEnquadramento ?? 'Não disponível';
 
   /// Indica se o contribuinte é optante DTE
   bool get isOptanteDte => dados?.indicadorEnquadramento == 'NI Optante DTE';
 
   /// Indica se o contribuinte é optante Simples Nacional
-  bool get isOptanteSimples => dados?.indicadorEnquadramento == 'NI Optante Simples';
+  bool get isOptanteSimples =>
+      dados?.indicadorEnquadramento == 'NI Optante Simples';
 
   /// Indica se o contribuinte é optante DTE e Simples Nacional
-  bool get isOptanteDteESimples => dados?.indicadorEnquadramento == 'NI Optante DTE e Simples';
+  bool get isOptanteDteESimples =>
+      dados?.indicadorEnquadramento == 'NI Optante DTE e Simples';
 
   /// Indica se o contribuinte não é optante
   bool get isNaoOptante => dados?.indicadorEnquadramento == 'NI Não optante';
@@ -78,7 +93,10 @@ class DteDados {
   final String indicadorEnquadramento;
   final String statusEnquadramento;
 
-  DteDados({required this.indicadorEnquadramento, required this.statusEnquadramento});
+  DteDados({
+    required this.indicadorEnquadramento,
+    required this.statusEnquadramento,
+  });
 
   factory DteDados.fromJson(Map<String, dynamic> json) {
     // Converter indicadorEnquadramento numérico para valor descritivo
@@ -92,11 +110,17 @@ class DteDados {
       _ => 'Indicador desconhecido ($indicadorStr)',
     };
 
-    return DteDados(indicadorEnquadramento: indicadorEnquadramento, statusEnquadramento: json['statusEnquadramento'].toString());
+    return DteDados(
+      indicadorEnquadramento: indicadorEnquadramento,
+      statusEnquadramento: json['statusEnquadramento'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'indicadorEnquadramento': indicadorEnquadramento, 'statusEnquadramento': statusEnquadramento};
+    return {
+      'indicadorEnquadramento': indicadorEnquadramento,
+      'statusEnquadramento': statusEnquadramento,
+    };
   }
 
   /// Retorna a descrição do indicador de enquadramento (mantido para compatibilidade)

@@ -42,20 +42,32 @@ class PertmeiService {
   /// [contribuinteNumero] - CNPJ do contribuinte (obrigatório)
   ///
   /// Retorna lista de parcelamentos encontrados ou erro detalhado
-  Future<ConsultarPedidosResponse> consultarPedidos(String contribuinteNumero) async {
+  Future<ConsultarPedidosResponse> consultarPedidos(
+    String contribuinteNumero,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (contribuinteNumero.isEmpty) {
         return ConsultarPedidosResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'CNPJ do contribuinte é obrigatório',
+            ),
+          ],
           dados: null,
         );
       }
 
       final request = BaseRequest(
         contribuinteNumero: contribuinteNumero,
-        pedidoDados: PedidoDados(idSistema: 'PERTMEI', idServico: 'PEDIDOSPARC223', versaoSistema: '1.0', dados: ''),
+        pedidoDados: PedidoDados(
+          idSistema: 'PERTMEI',
+          idServico: 'PEDIDOSPARC223',
+          versaoSistema: '1.0',
+          dados: '',
+        ),
       );
 
       final response = await _apiClient.post('/Consultar', request);
@@ -63,7 +75,12 @@ class PertmeiService {
     } catch (e) {
       return ConsultarPedidosResponse(
         status: '500',
-        mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
+        mensagens: [
+          Mensagem(
+            codigo: '[Erro-PERTMEI-INTERNAL]',
+            texto: 'Erro interno: $e',
+          ),
+        ],
         dados: null,
       );
     }
@@ -75,13 +92,21 @@ class PertmeiService {
   /// [numeroParcelamento] - Número do parcelamento que se deseja consultar (obrigatório)
   ///
   /// Retorna informações detalhadas do parcelamento ou erro detalhado
-  Future<ConsultarParcelamentoResponse> consultarParcelamento(String contribuinteNumero, int numeroParcelamento) async {
+  Future<ConsultarParcelamentoResponse> consultarParcelamento(
+    String contribuinteNumero,
+    int numeroParcelamento,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (contribuinteNumero.isEmpty) {
         return ConsultarParcelamentoResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'CNPJ do contribuinte é obrigatório',
+            ),
+          ],
           dados: null,
         );
       }
@@ -89,7 +114,12 @@ class PertmeiService {
       if (numeroParcelamento <= 0) {
         return ConsultarParcelamentoResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Número do parcelamento deve ser maior que zero')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'Número do parcelamento deve ser maior que zero',
+            ),
+          ],
           dados: null,
         );
       }
@@ -109,7 +139,12 @@ class PertmeiService {
     } catch (e) {
       return ConsultarParcelamentoResponse(
         status: '500',
-        mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
+        mensagens: [
+          Mensagem(
+            codigo: '[Erro-PERTMEI-INTERNAL]',
+            texto: 'Erro interno: $e',
+          ),
+        ],
         dados: null,
       );
     }
@@ -120,20 +155,32 @@ class PertmeiService {
   /// [contribuinteNumero] - CNPJ do contribuinte (obrigatório)
   ///
   /// Retorna lista de parcelas disponíveis para geração do DAS ou erro detalhado
-  Future<ConsultarParcelasResponse> consultarParcelasParaImpressao(String contribuinteNumero) async {
+  Future<ConsultarParcelasResponse> consultarParcelasParaImpressao(
+    String contribuinteNumero,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (contribuinteNumero.isEmpty) {
         return ConsultarParcelasResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'CNPJ do contribuinte é obrigatório',
+            ),
+          ],
           dados: null,
         );
       }
 
       final request = BaseRequest(
         contribuinteNumero: contribuinteNumero,
-        pedidoDados: PedidoDados(idSistema: 'PERTMEI', idServico: 'PARCELASPARAGERAR222', versaoSistema: '1.0', dados: ''),
+        pedidoDados: PedidoDados(
+          idSistema: 'PERTMEI',
+          idServico: 'PARCELASPARAGERAR222',
+          versaoSistema: '1.0',
+          dados: '',
+        ),
       );
 
       final response = await _apiClient.post('/Consultar', request);
@@ -141,7 +188,12 @@ class PertmeiService {
     } catch (e) {
       return ConsultarParcelasResponse(
         status: '500',
-        mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
+        mensagens: [
+          Mensagem(
+            codigo: '[Erro-PERTMEI-INTERNAL]',
+            texto: 'Erro interno: $e',
+          ),
+        ],
         dados: null,
       );
     }
@@ -154,13 +206,22 @@ class PertmeiService {
   /// [anoMesParcela] - Mês da parcela paga no formato AAAAMM (obrigatório)
   ///
   /// Retorna informações detalhadas de pagamento de uma parcela ou erro detalhado
-  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(String contribuinteNumero, int numeroParcelamento, int anoMesParcela) async {
+  Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
+    String contribuinteNumero,
+    int numeroParcelamento,
+    int anoMesParcela,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (contribuinteNumero.isEmpty) {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'CNPJ do contribuinte é obrigatório',
+            ),
+          ],
           dados: null,
         );
       }
@@ -168,7 +229,12 @@ class PertmeiService {
       if (numeroParcelamento <= 0) {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Número do parcelamento deve ser maior que zero')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'Número do parcelamento deve ser maior que zero',
+            ),
+          ],
           dados: null,
         );
       }
@@ -176,7 +242,13 @@ class PertmeiService {
       if (anoMesParcela < 202001 || anoMesParcela > 209912) {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Ano/mês da parcela deve estar no formato AAAAMM (ex: 202306)')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto:
+                  'Ano/mês da parcela deve estar no formato AAAAMM (ex: 202306)',
+            ),
+          ],
           dados: null,
         );
       }
@@ -187,7 +259,10 @@ class PertmeiService {
           idSistema: 'PERTMEI',
           idServico: 'DETPAGTOPARC225',
           versaoSistema: '1.0',
-          dados: jsonEncode({'numeroParcelamento': numeroParcelamento, 'anoMesParcela': anoMesParcela}),
+          dados: jsonEncode({
+            'numeroParcelamento': numeroParcelamento,
+            'anoMesParcela': anoMesParcela,
+          }),
         ),
       );
 
@@ -196,7 +271,12 @@ class PertmeiService {
     } catch (e) {
       return ConsultarDetalhesPagamentoResponse(
         status: '500',
-        mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
+        mensagens: [
+          Mensagem(
+            codigo: '[Erro-PERTMEI-INTERNAL]',
+            texto: 'Erro interno: $e',
+          ),
+        ],
         dados: null,
       );
     }
@@ -208,13 +288,21 @@ class PertmeiService {
   /// [parcelaParaEmitir] - Ano e mês da parcela para emitir o DAS no formato AAAAMM (obrigatório)
   ///
   /// Retorna PDF do DAS em formato base64 ou erro detalhado
-  Future<EmitirDasResponse> emitirDas(String contribuinteNumero, int parcelaParaEmitir) async {
+  Future<EmitirDasResponse> emitirDas(
+    String contribuinteNumero,
+    int parcelaParaEmitir,
+  ) async {
     try {
       // Validação dos dados obrigatórios
       if (contribuinteNumero.isEmpty) {
         return EmitirDasResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'CNPJ do contribuinte é obrigatório')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto: 'CNPJ do contribuinte é obrigatório',
+            ),
+          ],
           dados: null,
         );
       }
@@ -222,7 +310,13 @@ class PertmeiService {
       if (parcelaParaEmitir < 202001 || parcelaParaEmitir > 209912) {
         return EmitirDasResponse(
           status: '400',
-          mensagens: [Mensagem(codigo: '[Erro-PERTMEI-VALIDATION]', texto: 'Parcela para emitir deve estar no formato AAAAMM (ex: 202306)')],
+          mensagens: [
+            Mensagem(
+              codigo: '[Erro-PERTMEI-VALIDATION]',
+              texto:
+                  'Parcela para emitir deve estar no formato AAAAMM (ex: 202306)',
+            ),
+          ],
           dados: null,
         );
       }
@@ -242,7 +336,12 @@ class PertmeiService {
     } catch (e) {
       return EmitirDasResponse(
         status: '500',
-        mensagens: [Mensagem(codigo: '[Erro-PERTMEI-INTERNAL]', texto: 'Erro interno: $e')],
+        mensagens: [
+          Mensagem(
+            codigo: '[Erro-PERTMEI-INTERNAL]',
+            texto: 'Erro interno: $e',
+          ),
+        ],
         dados: null,
       );
     }

@@ -253,11 +253,18 @@ class SicalcService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) {
-    return ConsultarReceitasRequest(contribuinteNumero: contribuinteNumero, codigoReceita: codigoReceita);
+    return ConsultarReceitasRequest(
+      contribuinteNumero: contribuinteNumero,
+      codigoReceita: codigoReceita,
+    );
   }
 
   /// Valida se uma receita permite código de barras
-  Future<bool> receitaPermiteCodigoBarras(String codigoReceita, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<bool> receitaPermiteCodigoBarras(
+    String codigoReceita, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     try {
       final request = criarConsultaReceitas(
         contribuinteNumero: '00000000000', // CPF genérico para consulta
@@ -266,10 +273,16 @@ class SicalcService {
         autorPedidoDadosNumero: autorPedidoDadosNumero,
       );
 
-      final response = await consultarReceitas(request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+      final response = await consultarReceitas(
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       if (response.receita?.extensoes.isNotEmpty == true) {
-        return response.receita!.extensoes.any((extensao) => extensao.informacoes.codigoBarras);
+        return response.receita!.extensoes.any(
+          (extensao) => extensao.informacoes.codigoBarras,
+        );
       }
 
       return false;
@@ -279,7 +292,11 @@ class SicalcService {
   }
 
   /// Obtém informações sobre campos obrigatórios de uma receita
-  Future<Map<String, dynamic>?> obterInfoReceita(String codigoReceita, {String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<Map<String, dynamic>?> obterInfoReceita(
+    String codigoReceita, {
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
     try {
       final request = criarConsultaReceitas(
         contribuinteNumero: '00000000000', // CPF genérico para consulta
@@ -288,7 +305,11 @@ class SicalcService {
         autorPedidoDadosNumero: autorPedidoDadosNumero,
       );
 
-      final response = await consultarReceitas(request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+      final response = await consultarReceitas(
+        request,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
 
       if (response.receita != null) {
         return {
@@ -299,7 +320,8 @@ class SicalcService {
                 (e) => {
                   'obrigatorios': {
                     'codigoReceita': e.obrigatorios.codigoReceita,
-                    'codigoReceitaExtensao': e.obrigatorios.codigoReceitaExtensao,
+                    'codigoReceitaExtensao':
+                        e.obrigatorios.codigoReceitaExtensao,
                     'cota': e.obrigatorios.cota,
                     'dataConsolidacao': e.obrigatorios.dataConsolidacao,
                     'dataPA': e.obrigatorios.dataPA,
@@ -321,9 +343,11 @@ class SicalcService {
                   'informacoes': {
                     'calculado': e.informacoes.calculado,
                     'codigoBarras': e.informacoes.codigoBarras,
-                    'codigoReceitaExtensao': e.informacoes.codigoReceitaExtensao,
+                    'codigoReceitaExtensao':
+                        e.informacoes.codigoReceitaExtensao,
                     'criacao': e.informacoes.criacao,
-                    'descricaoReceitaExtensao': e.informacoes.descricaoReceitaExtensao,
+                    'descricaoReceitaExtensao':
+                        e.informacoes.descricaoReceitaExtensao,
                     'descricaoReferencia': e.informacoes.descricaoReferencia,
                     'exigeMatriz': e.informacoes.exigeMatriz,
                     'extincao': e.informacoes.extincao,

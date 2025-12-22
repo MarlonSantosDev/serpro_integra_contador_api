@@ -7,7 +7,11 @@ class DetalhesMensagemResponse {
   final List<MensagemNegocio> mensagens;
   final DadosDetalhesMensagem? dados;
 
-  DetalhesMensagemResponse({required this.status, required this.mensagens, this.dados});
+  DetalhesMensagemResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory DetalhesMensagemResponse.fromJson(Map<String, dynamic> json) {
     final dadosJson = jsonDecode(json['dados'].toString());
@@ -15,13 +19,19 @@ class DetalhesMensagemResponse {
 
     return DetalhesMensagemResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
+          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 }
 
@@ -35,12 +45,19 @@ class DadosDetalhesMensagem {
   factory DadosDetalhesMensagem.fromJson(Map<String, dynamic> json) {
     return DadosDetalhesMensagem(
       codigo: json['codigo'].toString(),
-      conteudo: (json['conteudo'] as List<dynamic>? ?? []).map((e) => DetalheMensagemCompleta.fromJson(e as Map<String, dynamic>)).toList(),
+      conteudo: (json['conteudo'] as List<dynamic>? ?? [])
+          .map(
+            (e) => DetalheMensagemCompleta.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'conteudo': conteudo.map((e) => e.toJson()).toList()};
+    return {
+      'codigo': codigo,
+      'conteudo': conteudo.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -107,19 +124,28 @@ class DetalheMensagemCompleta {
   factory DetalheMensagemCompleta.fromJson(Map<String, dynamic> json) {
     // Processar assuntoModelo substituindo ++VARIAVEL++ por valorParametroAssunto
     final assuntoModeloOriginal = json['assuntoModelo']?.toString() ?? '';
-    final valorParametroAssunto = json['valorParametroAssunto']?.toString() ?? '';
+    final valorParametroAssunto =
+        json['valorParametroAssunto']?.toString() ?? '';
     final assuntoModeloProcessado = valorParametroAssunto.isEmpty
         ? assuntoModeloOriginal
-        : assuntoModeloOriginal.replaceAll('++VARIAVEL++', valorParametroAssunto);
+        : assuntoModeloOriginal.replaceAll(
+            '++VARIAVEL++',
+            valorParametroAssunto,
+          );
 
     // Processar corpoModelo substituindo ++1++, ++2++, etc. pelos valores de variaveis
     final corpoModeloOriginal = json['corpoModelo']?.toString() ?? '';
-    final variaveis = (json['variaveis'] as List<dynamic>? ?? []).map((e) => e.toString()).toList();
+    final variaveis = (json['variaveis'] as List<dynamic>? ?? [])
+        .map((e) => e.toString())
+        .toList();
     String corpoModeloProcessado = corpoModeloOriginal;
     if (variaveis.isNotEmpty) {
       for (int i = 0; i < variaveis.length; i++) {
         final placeholder = '++${i + 1}++';
-        corpoModeloProcessado = corpoModeloProcessado.replaceAll(placeholder, variaveis[i]);
+        corpoModeloProcessado = corpoModeloProcessado.replaceAll(
+          placeholder,
+          variaveis[i],
+        );
       }
     }
 
@@ -159,7 +185,10 @@ class DetalheMensagemCompleta {
         .replaceAll('&Ocirc;', 'Ô')
         .replaceAll('&ordm;', 'º')
         .replaceAll('&ordf;', 'ª')
-        .replaceAll('&amp;', '&') // Deve ser o último para não interferir nas outras entidades
+        .replaceAll(
+          '&amp;',
+          '&',
+        ) // Deve ser o último para não interferir nas outras entidades
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
 
@@ -196,10 +225,13 @@ class DetalheMensagemCompleta {
       enquadramento: json['enquadramento']?.toString() ?? '',
       dataAcessoExterno: json['dataAcessoExterno']?.toString() ?? '',
       horaAcessoExterno: json['horaAcessoExterno']?.toString() ?? '',
-      tipoAutenticacaoUsuario: json['tipoAutenticacaoUsuario']?.toString() ?? '',
+      tipoAutenticacaoUsuario:
+          json['tipoAutenticacaoUsuario']?.toString() ?? '',
       codigoAcesso: json['codigoAcesso']?.toString() ?? '',
-      numeroSerieCertificadoDigital: json['numeroSerieCertificadoDigital']?.toString() ?? '',
-      emissorCertificadoDigital: json['emissorCertificadoDigital']?.toString() ?? '',
+      numeroSerieCertificadoDigital:
+          json['numeroSerieCertificadoDigital']?.toString() ?? '',
+      emissorCertificadoDigital:
+          json['emissorCertificadoDigital']?.toString() ?? '',
       tipoUsuario: json['tipoUsuario']?.toString() ?? '',
       niUsuario: json['niUsuario']?.toString() ?? '',
       papelUsuario: json['papelUsuario']?.toString() ?? '',

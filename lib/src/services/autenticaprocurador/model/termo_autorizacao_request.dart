@@ -29,8 +29,12 @@ class TermoAutorizacaoRequest {
   /// A assinatura digital será adicionada posteriormente pelo assinador.
   /// Isso segue o padrão do PHP de referência do SERPRO.
   String criarXmlTermo() {
-    final contratanteTipo = ValidacoesUtils.detectDocumentType(contratanteNumero);
-    final autorTipo = ValidacoesUtils.detectDocumentType(autorPedidoDadosNumero);
+    final contratanteTipo = ValidacoesUtils.detectDocumentType(
+      contratanteNumero,
+    );
+    final autorTipo = ValidacoesUtils.detectDocumentType(
+      autorPedidoDadosNumero,
+    );
 
     // XML sem Signature - será adicionada pelo assinador (conforme padrão SERPRO PHP)
     final xml =
@@ -44,13 +48,17 @@ class TermoAutorizacaoRequest {
     final erros = <String>[];
 
     // Validar CNPJ/CPF do contratante
-    if (!ValidacoesUtils.isValidCnpj(contratanteNumero) && !ValidacoesUtils.isValidCpf(contratanteNumero)) {
+    if (!ValidacoesUtils.isValidCnpj(contratanteNumero) &&
+        !ValidacoesUtils.isValidCpf(contratanteNumero)) {
       erros.add('CNPJ/CPF do contratante inválido: $contratanteNumero');
     }
 
     // Validar CNPJ/CPF do autor do pedido
-    if (!ValidacoesUtils.isValidCnpj(autorPedidoDadosNumero) && !ValidacoesUtils.isValidCpf(autorPedidoDadosNumero)) {
-      erros.add('CNPJ/CPF do autor do pedido inválido: $autorPedidoDadosNumero');
+    if (!ValidacoesUtils.isValidCnpj(autorPedidoDadosNumero) &&
+        !ValidacoesUtils.isValidCpf(autorPedidoDadosNumero)) {
+      erros.add(
+        'CNPJ/CPF do autor do pedido inválido: $autorPedidoDadosNumero',
+      );
     }
 
     // Validar nome do contratante
@@ -65,12 +73,16 @@ class TermoAutorizacaoRequest {
 
     // Validar formato da data de assinatura (AAAAMMDD)
     if (!_isValidDateFormat(dataAssinatura)) {
-      erros.add('Data de assinatura deve estar no formato AAAAMMDD: $dataAssinatura');
+      erros.add(
+        'Data de assinatura deve estar no formato AAAAMMDD: $dataAssinatura',
+      );
     }
 
     // Validar formato da data de vigência (AAAAMMDD)
     if (!_isValidDateFormat(dataVigencia)) {
-      erros.add('Data de vigência deve estar no formato AAAAMMDD: $dataVigencia');
+      erros.add(
+        'Data de vigência deve estar no formato AAAAMMDD: $dataVigencia',
+      );
     }
 
     // Validar se data de vigência é posterior à data de assinatura

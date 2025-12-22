@@ -27,7 +27,11 @@ class PagtoWebTipoDocumento {
   final String descricao;
   final String descricaoAbreviada;
 
-  PagtoWebTipoDocumento({required this.codigo, required this.descricao, required this.descricaoAbreviada});
+  PagtoWebTipoDocumento({
+    required this.codigo,
+    required this.descricao,
+    required this.descricaoAbreviada,
+  });
 
   factory PagtoWebTipoDocumento.fromJson(Map<String, dynamic> json) {
     return PagtoWebTipoDocumento(
@@ -38,7 +42,11 @@ class PagtoWebTipoDocumento {
   }
 
   Map<String, dynamic> toJson() {
-    return {'codigo': codigo, 'descricao': descricao, 'descricaoAbreviada': descricaoAbreviada};
+    return {
+      'codigo': codigo,
+      'descricao': descricao,
+      'descricaoAbreviada': descricaoAbreviada,
+    };
   }
 
   @override
@@ -49,9 +57,13 @@ class PagtoWebTipoDocumento {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is PagtoWebTipoDocumento && other.codigo == codigo && other.descricao == descricao && other.descricaoAbreviada == descricaoAbreviada;
+    return other is PagtoWebTipoDocumento &&
+        other.codigo == codigo &&
+        other.descricao == descricao &&
+        other.descricaoAbreviada == descricaoAbreviada;
   }
 
   @override
-  int get hashCode => codigo.hashCode ^ descricao.hashCode ^ descricaoAbreviada.hashCode;
+  int get hashCode =>
+      codigo.hashCode ^ descricao.hashCode ^ descricaoAbreviada.hashCode;
 }

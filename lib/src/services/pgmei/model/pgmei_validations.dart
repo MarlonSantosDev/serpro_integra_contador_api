@@ -139,7 +139,10 @@ class PgmeiValidations {
     }
 
     // Verifica se há períodos duplicados
-    final periodos = infoBeneficio.map((info) => info.periodoApuracao).cast<String>().toList();
+    final periodos = infoBeneficio
+        .map((info) => info.periodoApuracao)
+        .cast<String>()
+        .toList();
     return validarPeriodosApuracao(periodos);
   }
 }

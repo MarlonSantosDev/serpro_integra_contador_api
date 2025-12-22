@@ -34,11 +34,12 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print('   - Contratante: $contratante');
     print('   - Autor do pedido: $autorPedido\n');
 
-    final indicadorResponse = await caixaPostalService.obterIndicadorNovasMensagens(
-      cpfTeste,
-      contratanteNumero: contratante,
-      autorPedidoDadosNumero: autorPedido,
-    );
+    final indicadorResponse = await caixaPostalService
+        .obterIndicadorNovasMensagens(
+          cpfTeste,
+          contratanteNumero: contratante,
+          autorPedidoDadosNumero: autorPedido,
+        );
 
     print('📤 RESPOSTA HTTP:');
     print('   Status: ${indicadorResponse.status}\n');
@@ -52,13 +53,23 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
 
         print('\n📋 CONTEÚDO:');
         print('   ┌─────────────────────────────────────────────────────────┐');
-        print('   │ Indicador Mensagens Novas:                               │');
-        print('   │   ${_truncate(conteudo.indicadorMensagensNovas, 55).padRight(55)}│');
+        print(
+          '   │ Indicador Mensagens Novas:                               │',
+        );
+        print(
+          '   │   ${_truncate(conteudo.indicadorMensagensNovas, 55).padRight(55)}│',
+        );
         print('   │   (Valor descritivo retornado diretamente)              │');
         print('   ├─────────────────────────────────────────────────────────┤');
-        print('   │ Status (Enum): ${conteudo.statusMensagensNovas.toString().padRight(38)}│');
-        print('   │ Descrição: ${_truncate(conteudo.descricaoStatus, 42).padRight(42)}│');
-        print('   │ Tem Mensagens Novas: ${conteudo.temMensagensNovas.toString().padRight(33)}│');
+        print(
+          '   │ Status (Enum): ${conteudo.statusMensagensNovas.toString().padRight(38)}│',
+        );
+        print(
+          '   │ Descrição: ${_truncate(conteudo.descricaoStatus, 42).padRight(42)}│',
+        );
+        print(
+          '   │ Tem Mensagens Novas: ${conteudo.temMensagensNovas.toString().padRight(33)}│',
+        );
         print('   └─────────────────────────────────────────────────────────┘');
       }
 
@@ -92,19 +103,21 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     print('   - Contratante: $cnpjTeste');
     print('   - Autor do pedido: $cnpjTeste\n');
 
-    listaMensagensResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-      cnpjTeste,
-      contratanteNumero: cnpjTeste,
-      autorPedidoDadosNumero: cnpjTeste,
-      statusLeitura: 0, // Todas as mensagens
-      indicadorFavorito: null, // Sem filtro
-      indicadorPagina: 0, // Página inicial
-    );
+    listaMensagensResponse = await caixaPostalService
+        .obterListaMensagensPorContribuinte(
+          cnpjTeste,
+          contratanteNumero: cnpjTeste,
+          autorPedidoDadosNumero: cnpjTeste,
+          statusLeitura: 0, // Todas as mensagens
+          indicadorFavorito: null, // Sem filtro
+          indicadorPagina: 0, // Página inicial
+        );
 
     print('📤 RESPOSTA HTTP:');
     print('   Status: ${listaMensagensResponse.status}\n');
 
-    if (listaMensagensResponse.dados != null && listaMensagensResponse.dados!.conteudo.isNotEmpty) {
+    if (listaMensagensResponse.dados != null &&
+        listaMensagensResponse.dados!.conteudo.isNotEmpty) {
       final conteudo = listaMensagensResponse.dados!.conteudo.first;
 
       print('📊 DADOS PARSEADOS:');
@@ -112,11 +125,21 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
 
       print('\n📋 INFORMAÇÕES DA PÁGINA:');
       print('   ┌───────────────────────────────────────────────────────┐');
-      print('   │ Quantidade de Mensagens: ${conteudo.quantidadeMensagensInt.toString().padRight(29)}│');
-      print('   │ É Última Página: ${conteudo.isUltimaPagina.toString().padRight(37)}│');
-      print('   │ Ponteiro Página Retornada: ${conteudo.ponteiroPaginaRetornada.padRight(27)}│');
-      print('   │ Ponteiro Próxima Página: ${conteudo.ponteiroProximaPagina.padRight(29)}│');
-      print('   │ CNPJ Matriz: ${(conteudo.cnpjMatriz ?? 'N/A').padRight(41)}│');
+      print(
+        '   │ Quantidade de Mensagens: ${conteudo.quantidadeMensagensInt.toString().padRight(29)}│',
+      );
+      print(
+        '   │ É Última Página: ${conteudo.isUltimaPagina.toString().padRight(37)}│',
+      );
+      print(
+        '   │ Ponteiro Página Retornada: ${conteudo.ponteiroPaginaRetornada.padRight(27)}│',
+      );
+      print(
+        '   │ Ponteiro Próxima Página: ${conteudo.ponteiroProximaPagina.padRight(29)}│',
+      );
+      print(
+        '   │ CNPJ Matriz: ${(conteudo.cnpjMatriz ?? 'N/A').padRight(41)}│',
+      );
       print('   └───────────────────────────────────────────────────────┘');
 
       // Mostrar as primeiras 3 mensagens
@@ -126,37 +149,81 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
 
         for (var i = 0; i < mensagensParaExibir.length; i++) {
           final msg = mensagensParaExibir.elementAt(i);
-          print('\n   ╔═════════════════════════════════════════════════════════╗');
+          print(
+            '\n   ╔═════════════════════════════════════════════════════════╗',
+          );
           print('   ║ MENSAGEM ${(i + 1).toString().padRight(48)}║');
-          print('   ╠═════════════════════════════════════════════════════════╣');
+          print(
+            '   ╠═════════════════════════════════════════════════════════╣',
+          );
           print('   ║ ISN: ${msg.isn.padRight(51)}║');
-          print('   ╟─────────────────────────────────────────────────────────╢');
-          print('   ║ 📝 Assunto Original (assuntoModelo):                    ║');
+          print(
+            '   ╟─────────────────────────────────────────────────────────╢',
+          );
+          print(
+            '   ║ 📝 Assunto Original (assuntoModelo):                    ║',
+          );
           print('   ║    ${_truncate(msg.assuntoModelo, 51).padRight(51)}║');
-          print('   ║ 🔄 Valor Parâmetro: ${msg.valorParametroAssunto.padRight(34)}║');
-          print('   ║ ✨ Assunto Processado:                                  ║');
+          print(
+            '   ║ 🔄 Valor Parâmetro: ${msg.valorParametroAssunto.padRight(34)}║',
+          );
+          print(
+            '   ║ ✨ Assunto Processado:                                  ║',
+          );
           print('   ║    ${_truncate(msg.assuntoModelo, 51).padRight(51)}║');
-          print('   ╟─────────────────────────────────────────────────────────╢');
+          print(
+            '   ╟─────────────────────────────────────────────────────────╢',
+          );
           print('   ║ 📅 Data Envio: ${msg.dataEnvio.padRight(42)}║');
           print('   ║ ⏰ Hora Envio: ${msg.horaEnvio.padRight(42)}║');
-          print('   ║ 👁️  Status Leitura: ${_truncate(msg.indicadorLeitura, 36).padRight(36)}║');
-          print('   ║    (Valor descritivo: "Não lida", "Lida" ou "Não se aplica")║');
-          print('   ║ ⭐ Favorito: ${_truncate(msg.indicadorFavorito, 40).padRight(40)}║');
-          print('   ║    (Valor descritivo: "Não lida" ou "Lida")              ║');
-          print('   ║ 📊 Relevância: ${_truncate(msg.relevancia, 40).padRight(40)}║');
-          print('   ║    (Valor descritivo: "Sem relevância" ou "Com relevância")║');
-          print('   ║ 📍 Origem Modelo: ${_truncate(msg.origemModelo, 37).padRight(37)}║');
-          print('   ║    (Valor descritivo: "Sistema Remetente" ou "RFB")     ║');
-          print('   ║ 🏛️  Tipo Origem: ${_truncate(msg.tipoOrigem, 39).padRight(39)}║');
-          print('   ║    (Valor descritivo: "Receita", "Estado" ou "Município")║');
-          print('   ║ 📍 Descrição Origem: ${_truncate(msg.descricaoOrigem, 35).padRight(35)}║');
-          print('   ║ 👁️  Foi Lida (boolean): ${msg.foiLida.toString().padRight(35)}║');
-          print('   ║ ⭐ É Favorita (boolean): ${msg.isFavorita.toString().padRight(34)}║');
+          print(
+            '   ║ 👁️  Status Leitura: ${_truncate(msg.indicadorLeitura, 36).padRight(36)}║',
+          );
+          print(
+            '   ║    (Valor descritivo: "Não lida", "Lida" ou "Não se aplica")║',
+          );
+          print(
+            '   ║ ⭐ Favorito: ${_truncate(msg.indicadorFavorito, 40).padRight(40)}║',
+          );
+          print(
+            '   ║    (Valor descritivo: "Não lida" ou "Lida")              ║',
+          );
+          print(
+            '   ║ 📊 Relevância: ${_truncate(msg.relevancia, 40).padRight(40)}║',
+          );
+          print(
+            '   ║    (Valor descritivo: "Sem relevância" ou "Com relevância")║',
+          );
+          print(
+            '   ║ 📍 Origem Modelo: ${_truncate(msg.origemModelo, 37).padRight(37)}║',
+          );
+          print(
+            '   ║    (Valor descritivo: "Sistema Remetente" ou "RFB")     ║',
+          );
+          print(
+            '   ║ 🏛️  Tipo Origem: ${_truncate(msg.tipoOrigem, 39).padRight(39)}║',
+          );
+          print(
+            '   ║    (Valor descritivo: "Receita", "Estado" ou "Município")║',
+          );
+          print(
+            '   ║ 📍 Descrição Origem: ${_truncate(msg.descricaoOrigem, 35).padRight(35)}║',
+          );
+          print(
+            '   ║ 👁️  Foi Lida (boolean): ${msg.foiLida.toString().padRight(35)}║',
+          );
+          print(
+            '   ║ ⭐ É Favorita (boolean): ${msg.isFavorita.toString().padRight(34)}║',
+          );
           print('   ║ 📆 Data Validade: ${msg.dataValidade.padRight(38)}║');
-          print('   ╚═════════════════════════════════════════════════════════╝');
+          print(
+            '   ╚═════════════════════════════════════════════════════════╝',
+          );
         }
 
-        print('\n   Total de mensagens na resposta: ${conteudo.listaMensagens.length}');
+        print(
+          '\n   Total de mensagens na resposta: ${conteudo.listaMensagens.length}',
+        );
       }
 
       print('\n✅ Serviço MSGCONTRIBUINTE61 executado com sucesso!\n');
@@ -180,16 +247,20 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
   try {
     print('📍 Usando filtro statusLeitura=2 (não lidas)\n');
 
-    final naoLidasResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-      cnpjTeste,
-      contratanteNumero: cnpjTeste,
-      autorPedidoDadosNumero: cnpjTeste,
-      statusLeitura: 2, // Apenas não lidas
-    );
+    final naoLidasResponse = await caixaPostalService
+        .obterListaMensagensPorContribuinte(
+          cnpjTeste,
+          contratanteNumero: cnpjTeste,
+          autorPedidoDadosNumero: cnpjTeste,
+          statusLeitura: 2, // Apenas não lidas
+        );
 
-    if (naoLidasResponse.dados != null && naoLidasResponse.dados!.conteudo.isNotEmpty) {
+    if (naoLidasResponse.dados != null &&
+        naoLidasResponse.dados!.conteudo.isNotEmpty) {
       final conteudo = naoLidasResponse.dados!.conteudo.first;
-      print('   Mensagens não lidas encontradas: ${conteudo.quantidadeMensagensInt}');
+      print(
+        '   Mensagens não lidas encontradas: ${conteudo.quantidadeMensagensInt}',
+      );
     }
   } catch (e) {
     print('❌ ERRO ao filtrar mensagens não lidas: $e');
@@ -207,16 +278,20 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
   try {
     print('📍 Usando filtro indicadorFavorito=1 (favoritas)\n');
 
-    final favoritasResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-      cnpjTeste,
-      contratanteNumero: cnpjTeste,
-      autorPedidoDadosNumero: cnpjTeste,
-      indicadorFavorito: 1, // Apenas favoritas
-    );
+    final favoritasResponse = await caixaPostalService
+        .obterListaMensagensPorContribuinte(
+          cnpjTeste,
+          contratanteNumero: cnpjTeste,
+          autorPedidoDadosNumero: cnpjTeste,
+          indicadorFavorito: 1, // Apenas favoritas
+        );
 
-    if (favoritasResponse.dados != null && favoritasResponse.dados!.conteudo.isNotEmpty) {
+    if (favoritasResponse.dados != null &&
+        favoritasResponse.dados!.conteudo.isNotEmpty) {
       final conteudo = favoritasResponse.dados!.conteudo.first;
-      print('   Mensagens favoritas encontradas: ${conteudo.quantidadeMensagensInt}');
+      print(
+        '   Mensagens favoritas encontradas: ${conteudo.quantidadeMensagensInt}',
+      );
     }
   } catch (e) {
     print('❌ ERRO ao filtrar mensagens favoritas: $e');
@@ -236,20 +311,25 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         listaMensagensResponse.dados!.conteudo.isNotEmpty &&
         !listaMensagensResponse.dados!.conteudo.first.isUltimaPagina) {
       print('📍 Carregando próxima página...');
-      final proximaPagina = listaMensagensResponse.dados!.conteudo.first.ponteiroProximaPagina;
+      final proximaPagina =
+          listaMensagensResponse.dados!.conteudo.first.ponteiroProximaPagina;
       print('   Ponteiro da próxima página: $proximaPagina\n');
 
-      final paginaResponse = await caixaPostalService.obterListaMensagensPorContribuinte(
-        cnpjTeste,
-        contratanteNumero: cnpjTeste,
-        autorPedidoDadosNumero: cnpjTeste,
-        indicadorPagina: 1, // Página não-inicial
-        ponteiroPagina: proximaPagina,
-      );
+      final paginaResponse = await caixaPostalService
+          .obterListaMensagensPorContribuinte(
+            cnpjTeste,
+            contratanteNumero: cnpjTeste,
+            autorPedidoDadosNumero: cnpjTeste,
+            indicadorPagina: 1, // Página não-inicial
+            ponteiroPagina: proximaPagina,
+          );
 
-      if (paginaResponse.dados != null && paginaResponse.dados!.conteudo.isNotEmpty) {
+      if (paginaResponse.dados != null &&
+          paginaResponse.dados!.conteudo.isNotEmpty) {
         final conteudo = paginaResponse.dados!.conteudo.first;
-        print('   Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}');
+        print(
+          '   Mensagens da próxima página: ${conteudo.quantidadeMensagensInt}',
+        );
       }
     } else {
       print('⚠️  Não há próxima página disponível ou é a última página');
@@ -272,8 +352,14 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
     // Usar ISN da primeira mensagem da lista, se disponível
     if (listaMensagensResponse?.dados != null &&
         listaMensagensResponse.dados!.conteudo.isNotEmpty &&
-        listaMensagensResponse.dados!.conteudo.first.listaMensagens.isNotEmpty) {
-      final primeiraMsg = listaMensagensResponse.dados!.conteudo.first.listaMensagens.first;
+        listaMensagensResponse
+            .dados!
+            .conteudo
+            .first
+            .listaMensagens
+            .isNotEmpty) {
+      final primeiraMsg =
+          listaMensagensResponse.dados!.conteudo.first.listaMensagens.first;
       final isnExemplo = primeiraMsg.isn;
 
       print('📍 Requisição: obterDetalhesMensagemEspecifica()');
@@ -282,17 +368,19 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
       print('   - Contratante: $contratante');
       print('   - Autor do pedido: $contratante\n');
 
-      final detalhesResponse = await caixaPostalService.obterDetalhesMensagemEspecifica(
-        contratante,
-        isnExemplo,
-        contratanteNumero: contratante,
-        autorPedidoDadosNumero: contratante,
-      );
+      final detalhesResponse = await caixaPostalService
+          .obterDetalhesMensagemEspecifica(
+            contratante,
+            isnExemplo,
+            contratanteNumero: contratante,
+            autorPedidoDadosNumero: contratante,
+          );
 
       print('📤 RESPOSTA HTTP:');
       print('   Status: ${detalhesResponse.status}\n');
 
-      if (detalhesResponse.dados != null && detalhesResponse.dados!.conteudo.isNotEmpty) {
+      if (detalhesResponse.dados != null &&
+          detalhesResponse.dados!.conteudo.isNotEmpty) {
         final detalhe = detalhesResponse.dados!.conteudo.first;
 
         print('📊 DADOS PARSEADOS:');
@@ -302,19 +390,33 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         print('   ╔═════════════════════════════════════════════════════════╗');
         print('   ║ IDENTIFICAÇÃO                                           ║');
         print('   ╠═════════════════════════════════════════════════════════╣');
-        print('   ║ Sistema Remetente: ${detalhe.codigoSistemaRemetente.padRight(35)}║');
+        print(
+          '   ║ Sistema Remetente: ${detalhe.codigoSistemaRemetente.padRight(35)}║',
+        );
         print('   ║ Código Modelo: ${detalhe.codigoModelo.padRight(41)}║');
-        print('   ║ Origem Modelo: ${_truncate(detalhe.origemModelo, 41).padRight(41)}║');
-        print('   ║    (Valor descritivo: "Sistema Remetente" ou "RFB")      ║');
-        print('   ║ Tipo Origem: ${_truncate(detalhe.tipoOrigem, 43).padRight(43)}║');
-        print('   ║    (Valor descritivo: "Receita", "Estado" ou "Município")║');
-        print('   ║ Descrição Origem: ${_truncate(detalhe.descricaoOrigem, 38).padRight(38)}║');
+        print(
+          '   ║ Origem Modelo: ${_truncate(detalhe.origemModelo, 41).padRight(41)}║',
+        );
+        print(
+          '   ║    (Valor descritivo: "Sistema Remetente" ou "RFB")      ║',
+        );
+        print(
+          '   ║ Tipo Origem: ${_truncate(detalhe.tipoOrigem, 43).padRight(43)}║',
+        );
+        print(
+          '   ║    (Valor descritivo: "Receita", "Estado" ou "Município")║',
+        );
+        print(
+          '   ║ Descrição Origem: ${_truncate(detalhe.descricaoOrigem, 38).padRight(38)}║',
+        );
         print('   ╠═════════════════════════════════════════════════════════╣');
         print('   ║ ASSUNTO                                                 ║');
         print('   ╠═════════════════════════════════════════════════════════╣');
         print('   ║ 📝 Assunto Original (assuntoModelo):                    ║');
         print('   ║    ${_truncate(detalhe.assuntoModelo, 51).padRight(51)}║');
-        print('   ║ 🔄 Valor Parâmetro: ${detalhe.valorParametroAssunto.padRight(34)}║');
+        print(
+          '   ║ 🔄 Valor Parâmetro: ${detalhe.valorParametroAssunto.padRight(34)}║',
+        );
         print('   ║ ✨ Assunto Processado:                                  ║');
         print('   ║    ${_truncate(detalhe.assuntoModelo, 51).padRight(51)}║');
         print('   ╠═════════════════════════════════════════════════════════╣');
@@ -323,13 +425,19 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
 
         // Mostrar variáveis se existirem
         if (detalhe.variaveis.isNotEmpty) {
-          print('   ║ 🔧 Variáveis do Corpo:                                  ║');
+          print(
+            '   ║ 🔧 Variáveis do Corpo:                                  ║',
+          );
           for (var i = 0; i < detalhe.variaveis.length; i++) {
             final varLabel = '++${i + 1}++';
             final varValue = detalhe.variaveis[i];
-            print('   ║    $varLabel = ${_truncate(varValue, 45).padRight(45)}║');
+            print(
+              '   ║    $varLabel = ${_truncate(varValue, 45).padRight(45)}║',
+            );
           }
-          print('   ╟─────────────────────────────────────────────────────────╢');
+          print(
+            '   ╟─────────────────────────────────────────────────────────╢',
+          );
         }
 
         // Mostrar corpo processado (primeiros 200 caracteres)
@@ -354,12 +462,16 @@ Future<void> CaixaPostal(ApiClient apiClient) async {
         print('   ╠═════════════════════════════════════════════════════════╣');
         print('   ║ Número Controle: ${detalhe.numeroControle.padRight(39)}║');
         print('   ║ Enquadramento: ${detalhe.enquadramento.padRight(41)}║');
-        print('   ║ Tipo Autenticação: ${detalhe.tipoAutenticacaoUsuario.padRight(35)}║');
+        print(
+          '   ║ Tipo Autenticação: ${detalhe.tipoAutenticacaoUsuario.padRight(35)}║',
+        );
         print('   ║ Código Acesso: ${detalhe.codigoAcesso.padRight(41)}║');
         print('   ║ Tipo Usuário: ${detalhe.tipoUsuario.padRight(42)}║');
         print('   ║ NI Usuário: ${detalhe.niUsuario.padRight(44)}║');
         print('   ║ Papel Usuário: ${detalhe.papelUsuario.padRight(41)}║');
-        print('   ║ Código Aplicação: ${detalhe.codigoAplicacao.padRight(38)}║');
+        print(
+          '   ║ Código Aplicação: ${detalhe.codigoAplicacao.padRight(38)}║',
+        );
         print('   ╚═════════════════════════════════════════════════════════╝');
 
         print('\n✅ Serviço MSGDETALHAMENTO62 executado com sucesso!\n');
@@ -409,7 +521,10 @@ String _truncate(String text, int maxLength) {
 /// Quebra texto em linhas respeitando o limite de caracteres
 List<String> _quebrarEmLinhas(String text, int maxLength, int totalMaxLength) {
   final List<String> linhas = [];
-  String textoRestante = text.substring(0, text.length < totalMaxLength ? text.length : totalMaxLength);
+  String textoRestante = text.substring(
+    0,
+    text.length < totalMaxLength ? text.length : totalMaxLength,
+  );
 
   while (textoRestante.isNotEmpty) {
     if (textoRestante.length <= maxLength) {
@@ -433,7 +548,9 @@ List<String> _quebrarEmLinhas(String text, int maxLength, int totalMaxLength) {
   // Adicionar "..." se o texto foi truncado
   if (text.length > totalMaxLength && linhas.isNotEmpty) {
     final ultimaLinha = linhas.last;
-    linhas[linhas.length - 1] = ultimaLinha.length > 3 ? '${ultimaLinha.substring(0, ultimaLinha.length - 3)}...' : '$ultimaLinha...';
+    linhas[linhas.length - 1] = ultimaLinha.length > 3
+        ? '${ultimaLinha.substring(0, ultimaLinha.length - 3)}...'
+        : '$ultimaLinha...';
   }
 
   return linhas;

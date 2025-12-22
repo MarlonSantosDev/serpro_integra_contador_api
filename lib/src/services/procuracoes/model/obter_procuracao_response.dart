@@ -8,31 +8,42 @@ class ObterProcuracaoResponse {
   final List<MensagemNegocio> mensagens;
   final List<Procuracao>? dados;
 
-  ObterProcuracaoResponse({required this.status, required this.mensagens, this.dados});
+  ObterProcuracaoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a requisição foi bem-sucedida
   bool get sucesso => status == 200;
 
   /// Retorna a mensagem principal (primeira mensagem)
-  String get mensagemPrincipal => mensagens.isNotEmpty ? mensagens.first.texto : '';
+  String get mensagemPrincipal =>
+      mensagens.isNotEmpty ? mensagens.first.texto : '';
 
   /// Retorna o código da mensagem principal
-  String get codigoMensagem => mensagens.isNotEmpty ? mensagens.first.codigo : '';
+  String get codigoMensagem =>
+      mensagens.isNotEmpty ? mensagens.first.codigo : '';
 
   /// Verifica se possui mensagens de sucesso específicas de Procurações
-  bool get isSucessoProcuracoes => mensagens.any((m) => m.codigo.contains('[Sucesso-PROCURACOES]'));
+  bool get isSucessoProcuracoes =>
+      mensagens.any((m) => m.codigo.contains('[Sucesso-PROCURACOES]'));
 
   /// Verifica se possui mensagens de aviso específicas de Procurações
-  bool get isAvisoProcuracoes => mensagens.any((m) => m.codigo.contains('[Aviso-PROCURACOES]'));
+  bool get isAvisoProcuracoes =>
+      mensagens.any((m) => m.codigo.contains('[Aviso-PROCURACOES]'));
 
   /// Verifica se possui acesso negado específico de Procurações
-  bool get isAcessoNegadoProcuracoes => mensagens.any((m) => m.codigo.contains('[AcessoNegado-PROCURACOES]'));
+  bool get isAcessoNegadoProcuracoes =>
+      mensagens.any((m) => m.codigo.contains('[AcessoNegado-PROCURACOES]'));
 
   /// Verifica se possui entrada incorreta específica de Procurações
-  bool get isEntradaIncorretaProcuracoes => mensagens.any((m) => m.codigo.contains('[EntrataIncorreta-PROCURACOES]'));
+  bool get isEntradaIncorretaProcuracoes =>
+      mensagens.any((m) => m.codigo.contains('[EntrataIncorreta-PROCURACOES]'));
 
   /// Verifica se possui erro específico de Procurações
-  bool get isErroProcuracoes => mensagens.any((m) => m.codigo.contains('[Erro-PROCURACOES]'));
+  bool get isErroProcuracoes =>
+      mensagens.any((m) => m.codigo.contains('[Erro-PROCURACOES]'));
 
   factory ObterProcuracaoResponse.fromJson(Map<String, dynamic> json) {
     List<Procuracao>? dadosParsed;
@@ -40,7 +51,9 @@ class ObterProcuracaoResponse {
       final dadosStr = json['dados']?.toString() ?? '';
       if (dadosStr.isNotEmpty) {
         final dadosJson = jsonDecode(dadosStr) as List<dynamic>;
-        dadosParsed = dadosJson.map((e) => Procuracao.fromJson(e as Map<String, dynamic>)).toList();
+        dadosParsed = dadosJson
+            .map((e) => Procuracao.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
     } catch (e) {
       // Se não conseguir parsear, mantém dados como null
@@ -48,7 +61,9 @@ class ObterProcuracaoResponse {
 
     return ObterProcuracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List<dynamic>? ?? []).map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List<dynamic>? ?? [])
+          .map((e) => MensagemNegocio.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -57,7 +72,9 @@ class ObterProcuracaoResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.map((e) => e.toJson()).toList()) : '',
+      'dados': dados != null
+          ? jsonEncode(dados!.map((e) => e.toJson()).toList())
+          : '',
     };
   }
 }
@@ -68,7 +85,11 @@ class Procuracao {
   final int nrsistemas;
   final List<String> sistemas;
 
-  Procuracao({required this.dtexpiracao, required this.nrsistemas, required this.sistemas});
+  Procuracao({
+    required this.dtexpiracao,
+    required this.nrsistemas,
+    required this.sistemas,
+  });
 
   /// Data de expiração formatada (aaaa-MM-dd)
   String get dataExpiracaoFormatada {
@@ -145,12 +166,18 @@ class Procuracao {
     return Procuracao(
       dtexpiracao: json['dtexpiracao'].toString(),
       nrsistemas: int.parse(json['nrsistemas'].toString()),
-      sistemas: (json['sistemas'] as List<dynamic>).map((e) => e as String).toList(),
+      sistemas: (json['sistemas'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'dtexpiracao': dtexpiracao, 'nrsistemas': nrsistemas, 'sistemas': sistemas};
+    return {
+      'dtexpiracao': dtexpiracao,
+      'nrsistemas': nrsistemas,
+      'sistemas': sistemas,
+    };
   }
 
   @override

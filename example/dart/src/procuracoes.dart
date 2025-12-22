@@ -15,7 +15,11 @@ Future<void> Procuracoes(ApiClient apiClient) async {
   };
 
   // Função auxiliar para processar e exibir resultados
-  Future<void> realizarTeste(String titulo, String outorgante, String? outorgado) async {
+  Future<void> realizarTeste(
+    String titulo,
+    String outorgante,
+    String? outorgado,
+  ) async {
     try {
       print('\n📋 === $titulo ===');
 
@@ -34,7 +38,9 @@ Future<void> Procuracoes(ApiClient apiClient) async {
         print('\n📊 RELATÓRIO COMPLETO $titulo:');
         print(procuracoesService.gerarRelatorio(response));
       } else {
-        print('ℹ️ Nenhuma procuração encontrada ou erro: ${response.mensagemPrincipal}');
+        print(
+          'ℹ️ Nenhuma procuração encontrada ou erro: ${response.mensagemPrincipal}',
+        );
       }
     } catch (e) {
       print('❌ Erro no teste $titulo: $e');
@@ -45,7 +51,11 @@ Future<void> Procuracoes(ApiClient apiClient) async {
   }
 
   // 1. TESTE PF → PF (Passando outorgado explicitamente)
-  await realizarTeste('1. TESTE PF → PF (Outorgado explícito)', dadosTesteSerpro['cpfTeste'] as String, dadosTesteSerpro['cpfTeste'] as String);
+  await realizarTeste(
+    '1. TESTE PF → PF (Outorgado explícito)',
+    dadosTesteSerpro['cpfTeste'] as String,
+    dadosTesteSerpro['cpfTeste'] as String,
+  );
 
   // 3. TESTE MISTO (PF → PJ) (Testando sem passar outorgado se possível, ou passando null para simular)
   // Nota: Nos testes, como não estamos realmente autenticados com o CPF/CNPJ de teste na apiClient de forma persistente
@@ -53,13 +63,19 @@ Future<void> Procuracoes(ApiClient apiClient) async {
   // Mas vamos simular a chamada sem outorgado para demonstrar a API (mesmo que falhe na validação interna se a apiClient não tiver o dado)
 
   // Vamos apenas demonstrar a chamada PF->PJ explicitamente por enquanto para garantir sucesso do teste
-  await realizarTeste('3. TESTE PF → PJ (MISTA)', dadosTesteSerpro['cpfTeste'] as String, dadosTesteSerpro['cnpjTeste'] as String);
+  await realizarTeste(
+    '3. TESTE PF → PJ (MISTA)',
+    dadosTesteSerpro['cpfTeste'] as String,
+    dadosTesteSerpro['cnpjTeste'] as String,
+  );
 
   // Resumo final
   print('\n🎯 === RESUMO FINAL DO SERVIÇO PROCURAÇÕES ===');
   if (servicoOk) {
     print('   🎉 ✅ SERVIÇO PROCURAÇÕES: FUNCIONAL');
-    print('      📊 Testes executados com sucesso usando detecção automática de tipos');
+    print(
+      '      📊 Testes executados com sucesso usando detecção automática de tipos',
+    );
   } else {
     print('   ⚠️ ❌ SERVIÇO PROCURAÇÕES: REQUER ATENÇÃO');
     print('      🔧 Alguns testes falharam');

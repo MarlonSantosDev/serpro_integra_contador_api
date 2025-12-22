@@ -7,7 +7,11 @@ import 'gerar_das_response.dart';
 /// Representa a resposta do serviço GERARDASCODBARRA22 que gera DAS
 /// para MEI contendo apenas código de barras, sem PDF
 class GerarDasCodigoBarrasResponse extends PgmeiBaseResponse {
-  GerarDasCodigoBarrasResponse({required super.status, required super.mensagens, required super.dados});
+  GerarDasCodigoBarrasResponse({
+    required super.status,
+    required super.mensagens,
+    required super.dados,
+  });
 
   /// Parse dos dados como lista de DAS gerados (apenas com código de barras)
   List<DasCodigoBarras>? get dasGerados {
@@ -16,14 +20,18 @@ class GerarDasCodigoBarrasResponse extends PgmeiBaseResponse {
 
       // Se dados é uma lista, retorna diretamente
       if (dados is List) {
-        return (dados as List).map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>)).toList();
+        return (dados as List)
+            .map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>))
+            .toList();
       }
 
       // Se dados é um Map com uma chave 'das' ou similar
       if (dados is Map) {
         final dadosMap = dados as Map<String, dynamic>;
         if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
-          return (dadosMap['das'] as List).map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>)).toList();
+          return (dadosMap['das'] as List)
+              .map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>))
+              .toList();
         }
       }
 
@@ -53,7 +61,9 @@ class GerarDasCodigoBarrasResponse extends PgmeiBaseResponse {
 
     return GerarDasCodigoBarrasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -70,10 +80,15 @@ class DasCodigoBarras {
   /// Detalhamento do DAS (lista de detalhamentos)
   final List<DetalhamentoDasCodigoBarras> detalhamento;
 
-  DasCodigoBarras({required this.cnpjCompleto, this.razaoSocial, required this.detalhamento});
+  DasCodigoBarras({
+    required this.cnpjCompleto,
+    this.razaoSocial,
+    required this.detalhamento,
+  });
 
   /// Retorna o primeiro detalhamento (mais comum em DAS únicos)
-  DetalhamentoDasCodigoBarras? get primeiroDetalhamento => detalhamento.isNotEmpty ? detalhamento.first : null;
+  DetalhamentoDasCodigoBarras? get primeiroDetalhamento =>
+      detalhamento.isNotEmpty ? detalhamento.first : null;
 
   Map<String, dynamic> toJson() {
     return {
@@ -87,7 +102,9 @@ class DasCodigoBarras {
     return DasCodigoBarras(
       cnpjCompleto: json['cnpjCompleto'].toString(),
       razaoSocial: json['razaoSocial']?.toString(),
-      detalhamento: (json['detalhamento'] as List).map((d) => DetalhamentoDasCodigoBarras.fromJson(d)).toList(),
+      detalhamento: (json['detalhamento'] as List)
+          .map((d) => DetalhamentoDasCodigoBarras.fromJson(d))
+          .toList(),
     );
   }
 }
@@ -148,7 +165,8 @@ class DetalhamentoDasCodigoBarras {
       if (observacao1 != null) 'observacao1': observacao1,
       if (observacao2 != null) 'observacao2': observacao2,
       if (observacao3 != null) 'observacao3': observacao3,
-      if (composicao != null) 'composicao': composicao!.map((c) => c.toJson()).toList(),
+      if (composicao != null)
+        'composicao': composicao!.map((c) => c.toJson()).toList(),
     };
   }
 
@@ -159,11 +177,17 @@ class DetalhamentoDasCodigoBarras {
       dataVencimento: json['dataVencimento'].toString(),
       dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
       valores: ValoresDas.fromJson(json['valores']),
-      codigoDeBarras: (json['codigoDeBarras'] as List).map((e) => e.toString()).toList(),
+      codigoDeBarras: (json['codigoDeBarras'] as List)
+          .map((e) => e.toString())
+          .toList(),
       observacao1: json['observacao1']?.toString(),
       observacao2: json['observacao2']?.toString(),
       observacao3: json['observacao3']?.toString(),
-      composicao: json['composicao'] != null ? (json['composicao'] as List).map((c) => ComposicaoDas.fromJson(c)).toList() : null,
+      composicao: json['composicao'] != null
+          ? (json['composicao'] as List)
+                .map((c) => ComposicaoDas.fromJson(c))
+                .toList()
+          : null,
     );
   }
 }

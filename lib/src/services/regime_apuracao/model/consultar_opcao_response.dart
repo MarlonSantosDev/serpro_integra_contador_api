@@ -15,7 +15,11 @@ class ConsultarOpcaoRegimeResponse {
   /// Dados de retorno contendo informações do regime de apuração
   final RegimeApuracao? dados;
 
-  ConsultarOpcaoRegimeResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarOpcaoRegimeResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get isSuccess => status == 200;
@@ -30,14 +34,22 @@ class ConsultarOpcaoRegimeResponse {
   bool get hasData => dados != null;
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), if (dados != null) 'dados': dados!.toJson()};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      if (dados != null) 'dados': dados!.toJson(),
+    };
   }
 
   factory ConsultarOpcaoRegimeResponse.fromJson(Map<String, dynamic> json) {
     return ConsultarOpcaoRegimeResponse(
       status: json['status'] as int,
-      mensagens: (json['mensagens'] as List).map((m) => MensagemNegocio.fromJson(m)).toList(),
-      dados: json['dados'] != null ? RegimeApuracao.fromJson(jsonDecode(json['dados'])) : null,
+      mensagens: (json['mensagens'] as List)
+          .map((m) => MensagemNegocio.fromJson(m))
+          .toList(),
+      dados: json['dados'] != null
+          ? RegimeApuracao.fromJson(jsonDecode(json['dados']))
+          : null,
     );
   }
 }
@@ -96,10 +108,12 @@ class RegimeApuracao {
   }
 
   /// Indica se há demonstrativo PDF disponível
-  bool get hasDemonstrativoPdf => demonstrativoPdf != null && demonstrativoPdf!.isNotEmpty;
+  bool get hasDemonstrativoPdf =>
+      demonstrativoPdf != null && demonstrativoPdf!.isNotEmpty;
 
   /// Indica se há texto de resolução disponível
-  bool get hasTextoResolucao => textoResolucao != null && textoResolucao!.isNotEmpty;
+  bool get hasTextoResolucao =>
+      textoResolucao != null && textoResolucao!.isNotEmpty;
 
   Map<String, dynamic> toJson() {
     return {

@@ -15,9 +15,13 @@ Future<void> Ccmei(ApiClient apiClient) async {
       autorPedidoDadosNumero: '00000000000000',
     );
     print('✅ Status: ${emitirResponse.status}');
-    print('📋 Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${emitirResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('🏢 CNPJ: ${emitirResponse.dados.cnpj}');
-    print('📄 PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}');
+    print(
+      '📄 PDF gerado: ${emitirResponse.dados.pdf.isNotEmpty ? 'Sim' : 'Não'}',
+    );
     print('📏 Tamanho do PDF: ${emitirResponse.dados.pdf.length} caracteres');
     final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
       emitirResponse.dados.pdf,
@@ -39,40 +43,70 @@ Future<void> Ccmei(ApiClient apiClient) async {
       autorPedidoDadosNumero: '00000000000000',
     );
     print('✅ Status: ${consultarResponse.status}');
-    print('📋 Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${consultarResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('🏢 CNPJ: ${consultarResponse.dados.cnpj}');
     print('📝 Nome Empresarial: ${consultarResponse.dados.nomeEmpresarial}');
     print('👤 Empresário: ${consultarResponse.dados.empresario.nomeCivil}');
     print('🆔 CPF Empresário: ${consultarResponse.dados.empresario.cpf}');
-    print('📅 Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}');
-    print('📊 Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}');
+    print(
+      '📅 Data Início Atividades: ${consultarResponse.dados.dataInicioAtividades}',
+    );
+    print(
+      '📊 Situação Cadastral: ${consultarResponse.dados.situacaoCadastralVigente}',
+    );
     print('💰 Capital Social: R\$ ${consultarResponse.dados.capitalSocial}');
-    print('📍 Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}');
+    print(
+      '📍 Endereço: ${consultarResponse.dados.enderecoComercial.logradouro}, ${consultarResponse.dados.enderecoComercial.numero}',
+    );
     print('🏘️ Bairro: ${consultarResponse.dados.enderecoComercial.bairro}');
-    print('🏙️ Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}');
+    print(
+      '🏙️ Município: ${consultarResponse.dados.enderecoComercial.municipio}/${consultarResponse.dados.enderecoComercial.uf}',
+    );
     print('📮 CEP: ${consultarResponse.dados.enderecoComercial.cep}');
-    print('🏪 Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}');
-    print('📈 Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}');
-    print('📅 Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)');
+    print(
+      '🏪 Enquadramento MEI: ${consultarResponse.dados.enquadramento.optanteMei ? 'Sim' : 'Não'}',
+    );
+    print(
+      '📈 Situação Enquadramento: ${consultarResponse.dados.enquadramento.situacao}',
+    );
+    print(
+      '📅 Períodos MEI: ${consultarResponse.dados.enquadramento.periodosMei.length} período(s)',
+    );
     for (var periodo in consultarResponse.dados.enquadramento.periodosMei) {
-      print('  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}');
+      print(
+        '  - Período ${periodo.indice}: ${periodo.dataInicio} até ${periodo.dataFim ?? 'atual'}',
+      );
     }
-    print('💼 Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}');
-    print('🎯 Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}');
-    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE != null) {
+    print(
+      '💼 Formas de Atuação: ${consultarResponse.dados.atividade.formasAtuacao.join(', ')}',
+    );
+    print(
+      '🎯 Ocupação Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoOcupacao}',
+    );
+    if (consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE !=
+        null) {
       print(
         '🏷️ CNAE Principal: ${consultarResponse.dados.atividade.ocupacaoPrincipal.codigoCNAE} - ${consultarResponse.dados.atividade.ocupacaoPrincipal.descricaoCNAE}',
       );
     }
-    print('📋 Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}');
-    for (var ocupacao in consultarResponse.dados.atividade.ocupacoesSecundarias) {
+    print(
+      '📋 Ocupações Secundárias: ${consultarResponse.dados.atividade.ocupacoesSecundarias.length}',
+    );
+    for (var ocupacao
+        in consultarResponse.dados.atividade.ocupacoesSecundarias) {
       print('  - ${ocupacao.descricaoOcupacao}');
       if (ocupacao.codigoCNAE != null) {
         print('    CNAE: ${ocupacao.codigoCNAE} - ${ocupacao.descricaoCNAE}');
       }
     }
-    print('📄 Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}');
-    print('📱 QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}');
+    print(
+      '📄 Termo Ciência Dispensa: ${consultarResponse.dados.termoCienciaDispensa.titulo}',
+    );
+    print(
+      '📱 QR Code disponível: ${consultarResponse.dados.qrcode != null ? 'Sim' : 'Não'}',
+    );
     if (consultarResponse.dados.qrcode != null) {
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
         consultarResponse.dados.qrcode!,
@@ -95,7 +129,9 @@ Future<void> Ccmei(ApiClient apiClient) async {
       autorPedidoDadosNumero: '00000000000000',
     );
     print('✅ Status: ${situacaoResponse.status}');
-    print('📋 Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      '📋 Mensagens: ${situacaoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('🔍 CNPJs encontrados: ${situacaoResponse.dados.length}');
     for (var situacao in situacaoResponse.dados) {
       print('  - CNPJ: ${situacao.cnpj}');

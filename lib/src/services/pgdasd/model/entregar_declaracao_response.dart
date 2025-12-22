@@ -14,13 +14,21 @@ class EntregarDeclaracaoResponse {
   /// Estrutura de dados de retorno, contendo uma lista com o objeto DeclaracaoTransmitida parseado
   final DeclaracaoTransmitida? dados;
 
-  EntregarDeclaracaoResponse({required this.status, required this.mensagens, this.dados});
+  EntregarDeclaracaoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   factory EntregarDeclaracaoResponse.fromJson(Map<String, dynamic> json) {
@@ -31,12 +39,18 @@ class EntregarDeclaracaoResponse {
         final dadosMap = jsonDecode(dadosStr);
 
         // Se for uma lista, retorna a lista
-        if (dadosMap is Map && dadosMap.containsKey('dados') && dadosMap['dados'] is List) {
+        if (dadosMap is Map &&
+            dadosMap.containsKey('dados') &&
+            dadosMap['dados'] is List) {
           final lista = dadosMap['dados'];
-          dadosParsed = DeclaracaoTransmitida.fromJson(lista as Map<String, dynamic>);
+          dadosParsed = DeclaracaoTransmitida.fromJson(
+            lista as Map<String, dynamic>,
+          );
         } else if (dadosMap is Map) {
           // Se for um objeto único, retorna como lista com um item
-          dadosParsed = DeclaracaoTransmitida.fromJson(dadosMap as Map<String, dynamic>);
+          dadosParsed = DeclaracaoTransmitida.fromJson(
+            dadosMap as Map<String, dynamic>,
+          );
         }
       }
     } catch (e) {
@@ -45,7 +59,9 @@ class EntregarDeclaracaoResponse {
 
     return EntregarDeclaracaoResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -66,7 +82,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 }
 
@@ -111,7 +130,8 @@ class DeclaracaoTransmitida {
   bool get temMaed => notificacaoMaed != null && darf != null;
 
   /// Valor total devido
-  double get valorTotalDevido => valoresDevidos.fold(0.0, (sum, valor) => sum + valor.valor);
+  double get valorTotalDevido =>
+      valoresDevidos.fold(0.0, (sum, valor) => sum + valor.valor);
 
   Map<String, dynamic> toJson() {
     return {
@@ -122,7 +142,8 @@ class DeclaracaoTransmitida {
       'recibo': recibo,
       if (notificacaoMaed != null) 'notificacaoMaed': notificacaoMaed,
       if (darf != null) 'darf': darf,
-      if (detalhamentoDarfMaed != null) 'detalhamentoDarfMaed': detalhamentoDarfMaed!.toJson(),
+      if (detalhamentoDarfMaed != null)
+        'detalhamentoDarfMaed': detalhamentoDarfMaed!.toJson(),
     };
   }
 
@@ -130,12 +151,16 @@ class DeclaracaoTransmitida {
     return DeclaracaoTransmitida(
       idDeclaracao: json['idDeclaracao'].toString(),
       dataHoraTransmissao: json['dataHoraTransmissao'].toString(),
-      valoresDevidos: (json['valoresDevidos'] as List).map((v) => ValorDevido.fromJson(v)).toList(),
+      valoresDevidos: (json['valoresDevidos'] as List)
+          .map((v) => ValorDevido.fromJson(v))
+          .toList(),
       declaracao: json['declaracao'].toString(),
       recibo: json['recibo'].toString(),
       notificacaoMaed: json['notificacaoMaed']?.toString(),
       darf: json['darf']?.toString(),
-      detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed']) : null,
+      detalhamentoDarfMaed: json['detalhamentoDarfMaed'] != null
+          ? DetalhamentoDarfMaed.fromJson(json['detalhamentoDarfMaed'])
+          : null,
     );
   }
 }
@@ -157,7 +182,10 @@ class ValorDevido {
   factory ValorDevido.fromJson(Map<String, dynamic> json) {
     final codigo = json['codigoTributo']?.toString();
     final descricao = PgdasdDominios.descricaoCodigoTributo(codigo);
-    return ValorDevido(codigoTributo: descricao, valor: (num.parse(json['valor'].toString())).toDouble());
+    return ValorDevido(
+      codigoTributo: descricao,
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
   }
 }
 
@@ -245,10 +273,20 @@ class ValoresDarf {
   /// Valor total
   final double total;
 
-  ValoresDarf({required this.principal, required this.multa, required this.juros, required this.total});
+  ValoresDarf({
+    required this.principal,
+    required this.multa,
+    required this.juros,
+    required this.total,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
+    return {
+      'principal': principal,
+      'multa': multa,
+      'juros': juros,
+      'total': total,
+    };
   }
 
   factory ValoresDarf.fromJson(Map<String, dynamic> json) {

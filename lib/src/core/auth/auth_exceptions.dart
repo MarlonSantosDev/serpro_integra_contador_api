@@ -73,7 +73,7 @@ class TokenExpiredException extends AuthException {
   final DateTime expiredAt;
 
   TokenExpiredException(this.expiredAt)
-      : super('Token expirado em ${expiredAt.toIso8601String()}');
+    : super('Token expirado em ${expiredAt.toIso8601String()}');
 
   @override
   String toString() => 'TokenExpiredException: $message';
@@ -110,7 +110,7 @@ class MtlsNotSupportedException extends AuthException {
   final String platform;
 
   MtlsNotSupportedException(this.platform)
-      : super('mTLS não suportado na plataforma: $platform');
+    : super('mTLS não suportado na plataforma: $platform');
 
   @override
   String toString() => 'MtlsNotSupportedException: $message';

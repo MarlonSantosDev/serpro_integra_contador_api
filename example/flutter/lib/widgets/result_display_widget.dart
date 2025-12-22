@@ -58,10 +58,7 @@ class ResultDisplayWidget extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: SelectableText(
               content,
-              style: const TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 12,
-              ),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
             ),
           ),
         ],
@@ -69,4 +66,3 @@ class ResultDisplayWidget extends StatelessWidget {
     );
   }
 }
-

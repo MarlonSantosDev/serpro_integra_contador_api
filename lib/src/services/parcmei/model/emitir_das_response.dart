@@ -30,12 +30,19 @@ class EmitirDasResponse {
     }
 
     final statusStr = json['status']?.toString() ?? '';
-    final mensagensList = (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [];
+    final mensagensList =
+        (json['mensagens'] as List?)
+            ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
     final sucesso = statusStr == '200';
     final mensagemPrincipal = mensagensList.isNotEmpty
         ? mensagensList.first.texto
-        : (sucesso ? 'Requisição efetuada com sucesso.' : 'Erro na requisição.');
-    final pdfGeradoComSucesso = dadosParsed?.docArrecadacaoPdfB64.isNotEmpty ?? false;
+        : (sucesso
+              ? 'Requisição efetuada com sucesso.'
+              : 'Erro na requisição.');
+    final pdfGeradoComSucesso =
+        dadosParsed?.docArrecadacaoPdfB64.isNotEmpty ?? false;
 
     return EmitirDasResponse(
       status: statusStr,
@@ -48,7 +55,11 @@ class EmitirDasResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Bytes do PDF decodificado
@@ -97,7 +108,9 @@ class EmitirDasResponse {
     if (bytes == null) return null;
 
     // Hash simples usando o tamanho e primeiros bytes
-    final hash = bytes.length.toString() + bytes.take(10).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    final hash =
+        bytes.length.toString() +
+        bytes.take(10).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
     return hash.substring(0, 16);
   }
 
@@ -137,7 +150,8 @@ class DasData {
   factory DasData.fromJson(String jsonString) {
     try {
       final Map<String, dynamic> json = jsonString as Map<String, dynamic>;
-      final docArrecadacaoPdfB64 = json['docArrecadacaoPdfB64']?.toString() ?? '';
+      final docArrecadacaoPdfB64 =
+          json['docArrecadacaoPdfB64']?.toString() ?? '';
 
       final temPdf = docArrecadacaoPdfB64.isNotEmpty;
       final tamanhoBase64 = docArrecadacaoPdfB64.length;
@@ -155,9 +169,13 @@ class DasData {
 
       final base64Preview = docArrecadacaoPdfB64.isEmpty
           ? ''
-          : (docArrecadacaoPdfB64.length > 50 ? '${docArrecadacaoPdfB64.substring(0, 50)}...' : docArrecadacaoPdfB64);
+          : (docArrecadacaoPdfB64.length > 50
+                ? '${docArrecadacaoPdfB64.substring(0, 50)}...'
+                : docArrecadacaoPdfB64);
 
-      final parecePdfValido = docArrecadacaoPdfB64.isNotEmpty && docArrecadacaoPdfB64.startsWith('JVBERi0x');
+      final parecePdfValido =
+          docArrecadacaoPdfB64.isNotEmpty &&
+          docArrecadacaoPdfB64.startsWith('JVBERi0x');
 
       return DasData(
         docArrecadacaoPdfB64: docArrecadacaoPdfB64,

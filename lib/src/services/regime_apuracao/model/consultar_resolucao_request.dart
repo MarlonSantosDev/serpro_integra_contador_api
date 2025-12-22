@@ -11,7 +11,8 @@ class ConsultarResolucaoRequest {
   ConsultarResolucaoRequest({required this.anoCalendario});
 
   /// Valida se o ano calendário está dentro dos limites permitidos
-  bool get isAnoCalendarioValido => RegimeApuracaoValidations.isAnoValido(anoCalendario);
+  bool get isAnoCalendarioValido =>
+      RegimeApuracaoValidations.isAnoValido(anoCalendario);
 
   /// Valida se todos os campos obrigatórios estão preenchidos e válidos
   bool get isValid {
@@ -24,6 +25,8 @@ class ConsultarResolucaoRequest {
   }
 
   factory ConsultarResolucaoRequest.fromJson(Map<String, dynamic> json) {
-    return ConsultarResolucaoRequest(anoCalendario: int.parse(json['anoCalendario'].toString()));
+    return ConsultarResolucaoRequest(
+      anoCalendario: int.parse(json['anoCalendario'].toString()),
+    );
   }
 }

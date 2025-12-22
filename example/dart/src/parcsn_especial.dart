@@ -1,7 +1,9 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 Future<void> ParcsnEspecial(ApiClient apiClient) async {
-  print('=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===');
+  print(
+    '=== Exemplos PARCSN-ESP (Parcelamento Especial do Simples Nacional) ===',
+  );
 
   final parcsnEspecialService = ParcsnEspecialService(apiClient);
   bool servicoOk = true;
@@ -9,16 +11,23 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   // 1. Consultar Pedidos de Parcelamento Especial
   try {
     print('\n--- 1. Consultar Pedidos de Parcelamento Especial ---');
-    final consultarPedidosResponse = await parcsnEspecialService.consultarPedidos();
+    final consultarPedidosResponse = await parcsnEspecialService
+        .consultarPedidos();
     print('✅ Status: ${consultarPedidosResponse.status}');
-    print('Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${consultarPedidosResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${consultarPedidosResponse.sucesso}');
-    print('Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}');
+    print(
+      'Quantidade de parcelamentos: ${consultarPedidosResponse.quantidadeParcelamentos}',
+    );
 
     if (consultarPedidosResponse.temParcelamentos) {
       final parcelamentos = consultarPedidosResponse.dados?.parcelamentos ?? [];
       for (var parcelamento in parcelamentos) {
-        print('  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}');
+        print(
+          '  - Parcelamento ${parcelamento.numero}: ${parcelamento.situacao}',
+        );
         print('    Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
         print('    Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
         print('    Ativo: ${parcelamento.isAtivo}');
@@ -33,9 +42,12 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   // 2. Consultar Parcelamento Específico
   try {
     print('\n--- 2. Consultar Parcelamento Específico ---');
-    final consultarParcelamentoResponse = await parcsnEspecialService.consultarParcelamento(9001);
+    final consultarParcelamentoResponse = await parcsnEspecialService
+        .consultarParcelamento(9001);
     print('✅ Status: ${consultarParcelamentoResponse.status}');
-    print('Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${consultarParcelamentoResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${consultarParcelamentoResponse.sucesso}');
 
     if (consultarParcelamentoResponse.temDadosParcelamento) {
@@ -52,12 +64,20 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
         print('  Quantidade de parcelas: ${consolidacao.quantidadeParcelas}');
         print('  Primeira parcela: ${consolidacao.primeiraParcelaFormatada}');
         print('  Parcela básica: ${consolidacao.parcelaBasicaFormatada}');
-        print('  Data da consolidação: ${consolidacao.dataConsolidacaoFormatada}');
-        print('  Detalhes: ${consolidacao.detalhesConsolidacao.length} item(s)');
+        print(
+          '  Data da consolidação: ${consolidacao.dataConsolidacaoFormatada}',
+        );
+        print(
+          '  Detalhes: ${consolidacao.detalhesConsolidacao.length} item(s)',
+        );
       }
 
-      print('Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}');
-      print('Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}');
+      print(
+        'Alterações de dívida: ${parcelamento?.alteracoesDivida.length ?? 0}',
+      );
+      print(
+        'Demonstrativo de pagamentos: ${parcelamento?.demonstrativoPagamentos.length ?? 0}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelamento específico: $e');
@@ -68,9 +88,12 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   // 3. Consultar Detalhes de Pagamento
   try {
     print('\n--- 3. Consultar Detalhes de Pagamento ---');
-    final consultarDetalhesResponse = await parcsnEspecialService.consultarDetalhesPagamento(9001, 201612);
+    final consultarDetalhesResponse = await parcsnEspecialService
+        .consultarDetalhesPagamento(9001, 201612);
     print('✅ Status: ${consultarDetalhesResponse.status}');
-    print('Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${consultarDetalhesResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${consultarDetalhesResponse.sucesso}');
 
     if (consultarDetalhesResponse.temDadosPagamento) {
@@ -81,7 +104,9 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
       print('Gerado em: ${detalhes?.geradoEm}');
       print('Número do parcelamento: ${detalhes?.numeroParcelamento}');
       print('Número da parcela: ${detalhes?.numeroParcela}');
-      print('Data limite para acolhimento: ${detalhes?.dataLimiteAcolhimentoFormatada}');
+      print(
+        'Data limite para acolhimento: ${detalhes?.dataLimiteAcolhimentoFormatada}',
+      );
       print('Data do pagamento: ${detalhes?.dataPagamentoFormatada}');
       print('Banco/Agência: ${detalhes?.bancoAgencia}');
       print('Valor pago: ${detalhes?.valorPagoArrecadacaoFormatado}');
@@ -95,7 +120,9 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
         print('    Discriminações: ${pagamento.discriminacoesDebito.length}');
 
         for (var discriminacao in pagamento.discriminacoesDebito) {
-          print('      * ${discriminacao.tributo}: ${discriminacao.totalFormatado}');
+          print(
+            '      * ${discriminacao.tributo}: ${discriminacao.totalFormatado}',
+          );
           print('        Principal: ${discriminacao.principalFormatado}');
           print('        Multa: ${discriminacao.multaFormatada}');
           print('        Juros: ${discriminacao.jurosFormatados}');
@@ -112,17 +139,26 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   // 4. Consultar Parcelas para Impressão
   try {
     print('\n--- 4. Consultar Parcelas para Impressão ---');
-    final consultarParcelasResponse = await parcsnEspecialService.consultarParcelas();
+    final consultarParcelasResponse = await parcsnEspecialService
+        .consultarParcelas();
     print('✅ Status: ${consultarParcelasResponse.status}');
-    print('Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${consultarParcelasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${consultarParcelasResponse.sucesso}');
-    print('Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}');
-    print('Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}');
+    print(
+      'Quantidade de parcelas: ${consultarParcelasResponse.quantidadeParcelas}',
+    );
+    print(
+      'Valor total das parcelas: ${consultarParcelasResponse.valorTotalParcelasFormatado}',
+    );
 
     if (consultarParcelasResponse.temParcelas) {
       final parcelas = consultarParcelasResponse.dados?.listaParcelas ?? [];
       for (var parcela in parcelas) {
-        print('  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}');
+        print(
+          '  - Parcela ${parcela.parcelaFormatada}: ${parcela.valorFormatado}',
+        );
         print('    Ano: ${parcela.ano}, Mês: ${parcela.mes}');
         print('    Mês atual: ${parcela.isMesAtual}');
         print('    Mês futuro: ${parcela.isMesFuturo}');
@@ -140,7 +176,9 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     print('\n--- 5. Emitir DAS ---');
     final emitirDasResponse = await parcsnEspecialService.emitirDas(202306);
     print('✅ Status: ${emitirDasResponse.status}');
-    print('Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}');
+    print(
+      'Mensagens: ${emitirDasResponse.mensagens.map((m) => '${m.codigo}: ${m.texto}').join(', ')}',
+    );
     print('Sucesso: ${emitirDasResponse.sucesso}');
     print('PDF gerado com sucesso: ${emitirDasResponse.pdfGeradoComSucesso}');
     print('Tamanho do PDF: ${emitirDasResponse.tamanhoPdfFormatado}');
@@ -167,14 +205,30 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
   // 6. Validações
   try {
     print('\n--- 6. Validações ---');
-    print('✅ Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}');
-    print('✅ Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}');
-    print('✅ Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}');
-    print('✅ Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}');
-    print('✅ Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}');
-    print('✅ Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}');
-    print('✅ Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}');
-    print('✅ Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}');
+    print(
+      '✅ Validação número parcelamento (9001): ${parcsnEspecialService.validarNumeroParcelamento(9001)}',
+    );
+    print(
+      '✅ Validação número parcelamento (null): ${parcsnEspecialService.validarNumeroParcelamento(null)}',
+    );
+    print(
+      '✅ Validação ano/mês parcela (202306): ${parcsnEspecialService.validarAnoMesParcela(202306)}',
+    );
+    print(
+      '✅ Validação ano/mês parcela (202313): ${parcsnEspecialService.validarAnoMesParcela(202313)}',
+    );
+    print(
+      '✅ Validação parcela para emitir (202306): ${parcsnEspecialService.validarParcelaParaEmitir(202306)}',
+    );
+    print(
+      '✅ Validação CNPJ (00000000000000): ${parcsnEspecialService.validarCnpjContribuinte('00000000000000')}',
+    );
+    print(
+      '✅ Validação tipo contribuinte (2): ${parcsnEspecialService.validarTipoContribuinte(2)}',
+    );
+    print(
+      '✅ Validação tipo contribuinte (1): ${parcsnEspecialService.validarTipoContribuinte(1)}',
+    );
   } catch (e) {
     print('❌ Erro nas validações: $e');
     servicoOk = false;
@@ -208,7 +262,10 @@ Future<void> ParcsnEspecial(ApiClient apiClient) async {
     }
 
     // Exemplo de análise de erro
-    final analiseErro = parcsnEspecialService.analyzeError('[Aviso-PARCSN-ESP-ER_E001]', 'Não há parcelamento ativo para o contribuinte.');
+    final analiseErro = parcsnEspecialService.analyzeError(
+      '[Aviso-PARCSN-ESP-ER_E001]',
+      'Não há parcelamento ativo para o contribuinte.',
+    );
     print('✅ Análise de erro:');
     print('  Código: ${analiseErro.codigo}');
     print('  Tipo: ${analiseErro.tipo}');

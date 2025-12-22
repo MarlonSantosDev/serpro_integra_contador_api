@@ -203,7 +203,9 @@ class EventosAtualizacaoService {
     );
 
     // Aguardar o tempo estimado (ou customizado)
-    final tempoEspera = tempoEsperaCustomizado ?? Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
+    final tempoEspera =
+        tempoEsperaCustomizado ??
+        Duration(milliseconds: solicitacao.dados.tempoEsperaMedioEmMs);
     await Future.delayed(tempoEspera);
 
     // Obter resultados

@@ -6,7 +6,11 @@ import 'base_response.dart';
 /// Representa a resposta do serviço DIVIDAATIVA24 que consulta
 /// se o contribuinte está em dívida ativa
 class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
-  ConsultarDividaAtivaResponse({required super.status, required super.mensagens, required super.dados});
+  ConsultarDividaAtivaResponse({
+    required super.status,
+    required super.mensagens,
+    required super.dados,
+  });
 
   /// Parse dos dados como lista de débitos em dívida ativa
   List<Debito>? get debitosDividaAtiva {
@@ -15,14 +19,18 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
 
       // Se dados é uma lista, retorna diretamente
       if (dados is List) {
-        return (dados as List).map((d) => Debito.fromJson(d as Map<String, dynamic>)).toList();
+        return (dados as List)
+            .map((d) => Debito.fromJson(d as Map<String, dynamic>))
+            .toList();
       }
 
       // Se dados é um Map com uma chave 'debitos' ou similar
       if (dados is Map) {
         final dadosMap = dados as Map<String, dynamic>;
         if (dadosMap.containsKey('debitos') && dadosMap['debitos'] is List) {
-          return (dadosMap['debitos'] as List).map((d) => Debito.fromJson(d as Map<String, dynamic>)).toList();
+          return (dadosMap['debitos'] as List)
+              .map((d) => Debito.fromJson(d as Map<String, dynamic>))
+              .toList();
         }
       }
 
@@ -34,13 +42,16 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
   }
 
   /// Indica se existem débitos em dívida ativa
-  bool get temDebitosDividaAtiva => debitosDividaAtiva != null && debitosDividaAtiva!.isNotEmpty;
+  bool get temDebitosDividaAtiva =>
+      debitosDividaAtiva != null && debitosDividaAtiva!.isNotEmpty;
 
   /// Retorna apenas os débitos de um tributo específico
   List<Debito>? getDebitoTributo(String tributo) {
     final debitos = debitosDividaAtiva;
     if (debitos == null) return null;
-    return debitos.where((d) => d.tributo.toLowerCase() == tributo.toLowerCase()).toList();
+    return debitos
+        .where((d) => d.tributo.toLowerCase() == tributo.toLowerCase())
+        .toList();
   }
 
   /// Retorna o valor total em dívida ativa
@@ -69,7 +80,9 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
 
     return ConsultarDividaAtivaResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -92,10 +105,22 @@ class Debito {
   /// Texto descrevendo a situação da dívida do tributo (ex: "Enviado à PFN")
   final String situacaoDebito;
 
-  Debito({required this.periodoApuracao, required this.tributo, required this.valor, required this.enteFederado, required this.situacaoDebito});
+  Debito({
+    required this.periodoApuracao,
+    required this.tributo,
+    required this.valor,
+    required this.enteFederado,
+    required this.situacaoDebito,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'tributo': tributo, 'valor': valor, 'enteFederado': enteFederado, 'situacaoDebito': situacaoDebito};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'tributo': tributo,
+      'valor': valor,
+      'enteFederado': enteFederado,
+      'situacaoDebito': situacaoDebito,
+    };
   }
 
   factory Debito.fromJson(Map<String, dynamic> json) {

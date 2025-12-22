@@ -6,7 +6,11 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     DasData? dadosParsed;
@@ -21,7 +25,9 @@ class EmitirDasResponse {
 
     return EmitirDasResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -95,8 +101,11 @@ class DasData {
   DasData({required this.docArrecadacaoPdfB64});
 
   factory DasData.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {

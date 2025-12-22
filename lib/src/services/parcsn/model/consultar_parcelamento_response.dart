@@ -7,7 +7,11 @@ class ConsultarParcelamentoResponse {
   final List<Mensagem> mensagens;
   final ParcelamentoDetalhado? dados;
 
-  ConsultarParcelamentoResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarParcelamentoResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ConsultarParcelamentoResponse.fromJson(Map<String, dynamic> json) {
     ParcelamentoDetalhado? dadosParsed;
@@ -22,13 +26,19 @@ class ConsultarParcelamentoResponse {
 
     return ConsultarParcelamentoResponse(
       status: json['status'].toString(),
-      mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -71,17 +81,33 @@ class ParcelamentoDetalhado {
   });
 
   factory ParcelamentoDetalhado.fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> json =
+        jsonDecode(jsonString) as Map<String, dynamic>;
     return ParcelamentoDetalhado(
       numero: int.parse(json['numero'].toString()),
       dataDoPedido: int.parse(json['dataDoPedido'].toString()),
       situacao: json['situacao'].toString(),
       dataDaSituacao: int.parse(json['dataDaSituacao'].toString()),
       consolidacoesOriginais:
-          (json['consolidacoesOriginais'] as List?)?.map((e) => ConsolidacaoOriginal.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-      alteracoesDivida: (json['alteracoesDivida'] as List?)?.map((e) => AlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['consolidacoesOriginais'] as List?)
+              ?.map(
+                (e) => ConsolidacaoOriginal.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
+      alteracoesDivida:
+          (json['alteracoesDivida'] as List?)
+              ?.map((e) => AlteracaoDivida.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       demonstrativosPagamento:
-          (json['demonstrativosPagamento'] as List?)?.map((e) => DemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+          (json['demonstrativosPagamento'] as List?)
+              ?.map(
+                (e) =>
+                    DemonstrativoPagamento.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -91,9 +117,13 @@ class ParcelamentoDetalhado {
       'dataDoPedido': dataDoPedido,
       'situacao': situacao,
       'dataDaSituacao': dataDaSituacao,
-      'consolidacoesOriginais': consolidacoesOriginais.map((e) => e.toJson()).toList(),
+      'consolidacoesOriginais': consolidacoesOriginais
+          .map((e) => e.toJson())
+          .toList(),
       'alteracoesDivida': alteracoesDivida.map((e) => e.toJson()).toList(),
-      'demonstrativosPagamento': demonstrativosPagamento.map((e) => e.toJson()).toList(),
+      'demonstrativosPagamento': demonstrativosPagamento
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 
@@ -132,18 +162,28 @@ class ConsolidacaoOriginal {
   final String tipo;
   final List<DetalhesConsolidacao> detalhes;
 
-  ConsolidacaoOriginal({required this.numero, required this.tipo, required this.detalhes});
+  ConsolidacaoOriginal({
+    required this.numero,
+    required this.tipo,
+    required this.detalhes,
+  });
 
   factory ConsolidacaoOriginal.fromJson(Map<String, dynamic> json) {
     return ConsolidacaoOriginal(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List).map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>)).toList(),
+      detalhes: (json['detalhes'] as List)
+          .map((e) => DetalhesConsolidacao.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
+    return {
+      'numero': numero,
+      'tipo': tipo,
+      'detalhes': detalhes.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -204,14 +244,22 @@ class AlteracaoDivida {
   /// Cria uma nova instância de [AlteracaoDivida].
   ///
   /// Os parâmetros [numero], [tipo] e [detalhes] são obrigatórios.
-  AlteracaoDivida({required this.numero, required this.tipo, required this.detalhes});
+  AlteracaoDivida({
+    required this.numero,
+    required this.tipo,
+    required this.detalhes,
+  });
 
   /// Cria uma instância de [AlteracaoDivida] a partir de um mapa JSON.
   factory AlteracaoDivida.fromJson(Map<String, dynamic> json) {
     return AlteracaoDivida(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List).map((e) => DetalhesAlteracaoDivida.fromJson(e as Map<String, dynamic>)).toList(),
+      detalhes: (json['detalhes'] as List)
+          .map(
+            (e) => DetalhesAlteracaoDivida.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );
   }
 
@@ -220,7 +268,11 @@ class AlteracaoDivida {
   /// Retorna um [Map] contendo os dados da alteração de dívida
   /// no formato JSON.
   Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
+    return {
+      'numero': numero,
+      'tipo': tipo,
+      'detalhes': detalhes.map((e) => e.toJson()).toList(),
+    };
   }
 }
 
@@ -270,18 +322,32 @@ class DemonstrativoPagamento {
   final String tipo;
   final List<DetalhesDemonstrativoPagamento> detalhes;
 
-  DemonstrativoPagamento({required this.numero, required this.tipo, required this.detalhes});
+  DemonstrativoPagamento({
+    required this.numero,
+    required this.tipo,
+    required this.detalhes,
+  });
 
   factory DemonstrativoPagamento.fromJson(Map<String, dynamic> json) {
     return DemonstrativoPagamento(
       numero: int.parse(json['numero'].toString()),
       tipo: json['tipo'].toString(),
-      detalhes: (json['detalhes'] as List).map((e) => DetalhesDemonstrativoPagamento.fromJson(e as Map<String, dynamic>)).toList(),
+      detalhes: (json['detalhes'] as List)
+          .map(
+            (e) => DetalhesDemonstrativoPagamento.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'numero': numero, 'tipo': tipo, 'detalhes': detalhes.map((e) => e.toJson()).toList()};
+    return {
+      'numero': numero,
+      'tipo': tipo,
+      'detalhes': detalhes.map((e) => e.toJson()).toList(),
+    };
   }
 }
 

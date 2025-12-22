@@ -26,7 +26,8 @@ class GerarDasCobrancaRequest {
   }
 
   factory GerarDasCobrancaRequest.fromJson(Map<String, dynamic> json) {
-    return GerarDasCobrancaRequest(periodoApuracao: json['periodoApuracao'].toString());
+    return GerarDasCobrancaRequest(
+      periodoApuracao: json['periodoApuracao'].toString(),
+    );
   }
 }
-

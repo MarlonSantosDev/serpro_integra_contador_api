@@ -68,7 +68,12 @@ class RelpmeiService {
   }) async {
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'PEDIDOSPARC233', versaoSistema: '1.0', dados: request.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPMEI',
+        idServico: 'PEDIDOSPARC233',
+        versaoSistema: '1.0',
+        dados: request.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -98,14 +103,17 @@ class RelpmeiService {
   }) async {
     return consultarParcelamentoWithRequest(
       contribuinteNumero: contribuinteNumero,
-      request: ConsultarParcelamentoRelpmeiRequest(numeroParcelamento: numeroParcelamento),
+      request: ConsultarParcelamentoRelpmeiRequest(
+        numeroParcelamento: numeroParcelamento,
+      ),
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
   /// Versão com request específico para consultar parcelamento específico
-  Future<ConsultarParcelamentoRelpmeiResponse> consultarParcelamentoWithRequest({
+  Future<ConsultarParcelamentoRelpmeiResponse>
+  consultarParcelamentoWithRequest({
     required String contribuinteNumero,
     required ConsultarParcelamentoRelpmeiRequest request,
     String? contratanteNumero,
@@ -113,7 +121,12 @@ class RelpmeiService {
   }) async {
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'OBTERPARC234', versaoSistema: '1.0', dados: request.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPMEI',
+        idServico: 'OBTERPARC234',
+        versaoSistema: '1.0',
+        dados: request.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -148,7 +161,8 @@ class RelpmeiService {
   }
 
   /// Versão com request específico para consultar parcelas para impressão
-  Future<ConsultarParcelasImpressaoRelpmeiResponse> consultarParcelasImpressaoWithRequest({
+  Future<ConsultarParcelasImpressaoRelpmeiResponse>
+  consultarParcelasImpressaoWithRequest({
     required String contribuinteNumero,
     required ConsultarParcelasImpressaoRelpmeiRequest request,
     String? contratanteNumero,
@@ -156,7 +170,12 @@ class RelpmeiService {
   }) async {
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'PARCELASPARAGERAR232', versaoSistema: '1.0', dados: request.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPMEI',
+        idServico: 'PARCELASPARAGERAR232',
+        versaoSistema: '1.0',
+        dados: request.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -188,14 +207,18 @@ class RelpmeiService {
   }) async {
     return consultarDetalhesPagamentoWithRequest(
       contribuinteNumero: contribuinteNumero,
-      request: ConsultarDetalhesPagamentoRelpmeiRequest(numeroParcelamento: numeroParcelamento, anoMesParcela: anoMesParcela),
+      request: ConsultarDetalhesPagamentoRelpmeiRequest(
+        numeroParcelamento: numeroParcelamento,
+        anoMesParcela: anoMesParcela,
+      ),
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
   }
 
   /// Versão com request específico para consultar detalhes de pagamento
-  Future<ConsultarDetalhesPagamentoRelpmeiResponse> consultarDetalhesPagamentoWithRequest({
+  Future<ConsultarDetalhesPagamentoRelpmeiResponse>
+  consultarDetalhesPagamentoWithRequest({
     required String contribuinteNumero,
     required ConsultarDetalhesPagamentoRelpmeiRequest request,
     String? contratanteNumero,
@@ -203,7 +226,12 @@ class RelpmeiService {
   }) async {
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'DETPAGTOPARC235', versaoSistema: '1.0', dados: request.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPMEI',
+        idServico: 'DETPAGTOPARC235',
+        versaoSistema: '1.0',
+        dados: request.toJsonString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -247,7 +275,12 @@ class RelpmeiService {
   }) async {
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'RELPMEI', idServico: 'GERARDAS231', versaoSistema: '1.0', dados: request.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'RELPMEI',
+        idServico: 'GERARDAS231',
+        versaoSistema: '1.0',
+        dados: request.toJsonString(),
+      ),
     );
 
     // Nota: DAS usa endpoint Emitir, não Consultar

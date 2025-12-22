@@ -14,7 +14,11 @@ class PgmeiBaseResponse {
   /// Estrutura de dados de retorno (Map parseado)
   final Map<String, dynamic>? dados;
 
-  PgmeiBaseResponse({required this.status, required this.mensagens, this.dados});
+  PgmeiBaseResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
@@ -40,7 +44,9 @@ class PgmeiBaseResponse {
 
     return PgmeiBaseResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -66,7 +72,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 
   @override

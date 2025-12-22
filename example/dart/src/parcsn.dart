@@ -30,7 +30,9 @@ Future<void> Parcsn(ApiClient apiClient) async {
         print('Nenhum parcelamento encontrado');
       }
     } else {
-      print('❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar pedidos: ${pedidosResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar pedidos de parcelamento: $e');
@@ -53,12 +55,20 @@ Future<void> Parcsn(ApiClient apiClient) async {
         print('  Situação: ${parcelamento.situacao}');
         print('  Data do pedido: ${parcelamento.dataDoPedidoFormatada}');
         print('  Data da situação: ${parcelamento.dataDaSituacaoFormatada}');
-        print('  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}');
-        print('  Alterações de dívida: ${parcelamento.alteracoesDivida.length}');
-        print('  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}');
+        print(
+          '  Consolidações originais: ${parcelamento.consolidacoesOriginais.length}',
+        );
+        print(
+          '  Alterações de dívida: ${parcelamento.alteracoesDivida.length}',
+        );
+        print(
+          '  Demonstrativos de pagamento: ${parcelamento.demonstrativosPagamento.length}',
+        );
       }
     } else {
-      print('❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelamento: ${parcelamentoResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro na consulta de parcelamento: $e');
@@ -92,7 +102,9 @@ Future<void> Parcsn(ApiClient apiClient) async {
         print('Nenhuma parcela disponível para impressão');
       }
     } else {
-      print('❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar parcelas: ${parcelasResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro ao consultar parcelas disponíveis: $e');
@@ -103,7 +115,10 @@ Future<void> Parcsn(ApiClient apiClient) async {
   // 4. Consultar detalhes de pagamento
   try {
     print('\n4. Consultando detalhes de pagamento...');
-    final detalhesResponse = await parcsnService.consultarDetalhesPagamento(1, 201612);
+    final detalhesResponse = await parcsnService.consultarDetalhesPagamento(
+      1,
+      201612,
+    );
 
     if (detalhesResponse.sucesso) {
       print('✅ Status: ${detalhesResponse.status}');
@@ -128,7 +143,9 @@ Future<void> Parcsn(ApiClient apiClient) async {
         }
       }
     } else {
-      print('❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}');
+      print(
+        '❌ Erro ao consultar detalhes: ${detalhesResponse.mensagemPrincipal}',
+      );
     }
   } catch (e) {
     print('❌ Erro na consulta de detalhes: $e');
@@ -193,7 +210,9 @@ Future<void> Parcsn(ApiClient apiClient) async {
     }
 
     // Validar CNPJ
-    final validacaoCnpj = parcsnService.validarCnpjContribuinte('12345678901234');
+    final validacaoCnpj = parcsnService.validarCnpjContribuinte(
+      '12345678901234',
+    );
     if (validacaoCnpj != null) {
       print('✅ Validação CNPJ (12345678901234): $validacaoCnpj');
     }
@@ -228,7 +247,10 @@ Future<void> Parcsn(ApiClient apiClient) async {
     }
 
     // Analisar erro
-    final analysis = parcsnService.analyzeError('[Sucesso-PARCSN]', 'Requisição efetuada com sucesso.');
+    final analysis = parcsnService.analyzeError(
+      '[Sucesso-PARCSN]',
+      'Requisição efetuada com sucesso.',
+    );
     print('✅ Análise do erro:');
     print('  Código: ${analysis.codigo}');
     print('  Tipo: ${analysis.tipo}');
