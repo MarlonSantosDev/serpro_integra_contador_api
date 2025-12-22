@@ -1,3 +1,6 @@
+## [2.0.7] - 2025-12-22
+- dart format .
+
 ## [2.0.6] - 2025-12-21
 - Ajustes e correções no código.
 - Atualização de documentação.
