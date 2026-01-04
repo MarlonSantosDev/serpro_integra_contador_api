@@ -13,13 +13,21 @@ class ConsultarDeclaracoesResponse {
   /// Estrutura de dados de retorno, contendo o objeto DeclaracoesEntregues parseado
   final DeclaracoesEntregues? dados;
 
-  ConsultarDeclaracoesResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarDeclaracoesResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((m) => m.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((m) => m.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   factory ConsultarDeclaracoesResponse.fromJson(Map<String, dynamic> json) {
@@ -36,7 +44,9 @@ class ConsultarDeclaracoesResponse {
 
     return ConsultarDeclaracoesResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
+      mensagens: (json['mensagens'] as List)
+          .map((m) => Mensagem.fromJson(m as Map<String, dynamic>))
+          .toList(),
       dados: dadosParsed,
     );
   }
@@ -57,7 +67,10 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
+    return Mensagem(
+      codigo: json['codigo'].toString(),
+      texto: json['texto'].toString(),
+    );
   }
 }
 
@@ -74,7 +87,11 @@ class DeclaracoesEntregues {
   /// Quando for utilizado o periodo da apuração no parâmetro da realização da consulta
   final Periodo? periodo;
 
-  DeclaracoesEntregues({required this.anoCalendario, this.periodos, this.periodo});
+  DeclaracoesEntregues({
+    required this.anoCalendario,
+    this.periodos,
+    this.periodo,
+  });
 
   /// Retorna a lista de períodos (seja de periodos ou periodo único)
   List<Periodo> get listaPeriodos {
@@ -86,7 +103,8 @@ class DeclaracoesEntregues {
   Map<String, dynamic> toJson() {
     return {
       'anoCalendario': anoCalendario,
-      if (periodos != null) 'periodos': periodos!.map((p) => p.toJson()).toList(),
+      if (periodos != null)
+        'periodos': periodos!.map((p) => p.toJson()).toList(),
       if (periodo != null) 'periodo': periodo!.toJson(),
     };
   }
@@ -96,8 +114,12 @@ class DeclaracoesEntregues {
 
     return DeclaracoesEntregues(
       anoCalendario: int.parse(ano.toString()),
-      periodos: json['periodos'] != null ? (json['periodos'] as List).map((p) => Periodo.fromJson(p)).toList() : null,
-      periodo: json['periodo'] != null ? Periodo.fromJson(json['periodo']) : null,
+      periodos: json['periodos'] != null
+          ? (json['periodos'] as List).map((p) => Periodo.fromJson(p)).toList()
+          : null,
+      periodo: json['periodo'] != null
+          ? Periodo.fromJson(json['periodo'])
+          : null,
     );
   }
 }
@@ -114,27 +136,38 @@ class Periodo {
 
   /// Retorna apenas as declarações originais
   List<Operacao> get declaracoesOriginais {
-    return operacoes.where((op) => op.tipoOperacao == 'Declaração Original').toList();
+    return operacoes
+        .where((op) => op.tipoOperacao == 'Declaração Original')
+        .toList();
   }
 
   /// Retorna apenas as declarações retificadoras
   List<Operacao> get declaracoesRetificadoras {
-    return operacoes.where((op) => op.tipoOperacao == 'Declaração Retificadora').toList();
+    return operacoes
+        .where((op) => op.tipoOperacao == 'Declaração Retificadora')
+        .toList();
   }
 
   /// Retorna apenas as gerações de DAS
   List<Operacao> get geracoesDas {
-    return operacoes.where((op) => op.tipoOperacao == 'Geração de DAS').toList();
+    return operacoes
+        .where((op) => op.tipoOperacao == 'Geração de DAS')
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
-    return {'periodoApuracao': periodoApuracao, 'operacoes': operacoes.map((o) => o.toJson()).toList()};
+    return {
+      'periodoApuracao': periodoApuracao,
+      'operacoes': operacoes.map((o) => o.toJson()).toList(),
+    };
   }
 
   factory Periodo.fromJson(Map<String, dynamic> json) {
     return Periodo(
       periodoApuracao: int.parse(json['periodoApuracao'].toString()),
-      operacoes: (json['operacoes'] as List).map((o) => Operacao.fromJson(o)).toList(),
+      operacoes: (json['operacoes'] as List)
+          .map((o) => Operacao.fromJson(o))
+          .toList(),
     );
   }
 }
@@ -155,7 +188,8 @@ class Operacao {
   Map<String, dynamic> toJson() {
     return {
       'tipoOperacao': tipoOperacao,
-      if (indiceDeclaracao != null) 'indiceDeclaracao': indiceDeclaracao!.toJson(),
+      if (indiceDeclaracao != null)
+        'indiceDeclaracao': indiceDeclaracao!.toJson(),
       if (indiceDas != null) 'indiceDas': indiceDas!.toJson(),
     };
   }
@@ -163,8 +197,12 @@ class Operacao {
   factory Operacao.fromJson(Map<String, dynamic> json) {
     return Operacao(
       tipoOperacao: json['tipoOperacao'].toString(),
-      indiceDeclaracao: json['indiceDeclaracao'] != null ? IndiceDeclaracao.fromJson(json['indiceDeclaracao']) : null,
-      indiceDas: json['indiceDas'] != null ? IndiceDas.fromJson(json['indiceDas']) : null,
+      indiceDeclaracao: json['indiceDeclaracao'] != null
+          ? IndiceDeclaracao.fromJson(json['indiceDeclaracao'])
+          : null,
+      indiceDas: json['indiceDas'] != null
+          ? IndiceDas.fromJson(json['indiceDas'])
+          : null,
     );
   }
 }
@@ -182,17 +220,27 @@ class IndiceDeclaracao {
   /// Quando não está em Malha o campo retorna null
   final String malha;
 
-  IndiceDeclaracao({required this.numeroDeclaracao, required this.dataHoraTransmissao, required this.malha});
+  IndiceDeclaracao({
+    required this.numeroDeclaracao,
+    required this.dataHoraTransmissao,
+    required this.malha,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'numeroDeclaracao': numeroDeclaracao, 'dataHoraTransmissao': dataHoraTransmissao, 'malha': malha};
+    return {
+      'numeroDeclaracao': numeroDeclaracao,
+      'dataHoraTransmissao': dataHoraTransmissao,
+      'malha': malha,
+    };
   }
 
   factory IndiceDeclaracao.fromJson(Map<String, dynamic> json) {
     return IndiceDeclaracao(
       numeroDeclaracao: json['numeroDeclaracao'].toString(),
       dataHoraTransmissao: json['dataHoraTransmissao'].toString(),
-      malha: (json['malha']?.toString() == "" || json['malha'] == null) ? "Não" : json['malha']?.toString() ?? "Não",
+      malha: (json['malha']?.toString() == "" || json['malha'] == null)
+          ? "Não"
+          : json['malha']?.toString() ?? "Não",
     );
   }
 }
@@ -209,10 +257,18 @@ class IndiceDas {
   /// Pago (true) e não consta pagamento até o momento (false)
   final bool dasPago;
 
-  IndiceDas({required this.numeroDas, required this.dataHoraEmissaoDas, required this.dasPago});
+  IndiceDas({
+    required this.numeroDas,
+    required this.dataHoraEmissaoDas,
+    required this.dasPago,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'numeroDas': numeroDas, 'dataHoraEmissaoDas': dataHoraEmissaoDas, 'dasPago': dasPago};
+    return {
+      'numeroDas': numeroDas,
+      'dataHoraEmissaoDas': dataHoraEmissaoDas,
+      'dasPago': dasPago,
+    };
   }
 
   factory IndiceDas.fromJson(Map<String, dynamic> json) {

@@ -28,9 +28,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   void _initializeControllers() {
     // Controllers comuns para todos os serviços com valores de exemplo
-    _controllers['contribuinteNumero'] = TextEditingController(text: '00000000000000');
-    _controllers['contratanteNumero'] = TextEditingController(text: '00000000000000');
-    _controllers['autorPedidoDadosNumero'] = TextEditingController(text: '00000000000000');
+    _controllers['contribuinteNumero'] = TextEditingController(
+      text: '00000000000000',
+    );
+    _controllers['contratanteNumero'] = TextEditingController(
+      text: '00000000000000',
+    );
+    _controllers['autorPedidoDadosNumero'] = TextEditingController(
+      text: '00000000000000',
+    );
 
     // Controllers específicos por serviço com valores de exemplo dos arquivos Dart
     switch (widget.service.id) {
@@ -45,9 +51,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         break;
       case 'caixa_postal':
         _controllers['cpfCnpj'] = TextEditingController(text: '99999999999');
-        _controllers['contribuinteNumero'] = TextEditingController(text: '99999999999');
-        _controllers['contratanteNumero'] = TextEditingController(text: '00000000000000');
-        _controllers['autorPedidoDadosNumero'] = TextEditingController(text: '00000000000000');
+        _controllers['contribuinteNumero'] = TextEditingController(
+          text: '99999999999',
+        );
+        _controllers['contratanteNumero'] = TextEditingController(
+          text: '00000000000000',
+        );
+        _controllers['autorPedidoDadosNumero'] = TextEditingController(
+          text: '00000000000000',
+        );
         break;
       case 'dctfweb':
         _controllers['anoPA'] = TextEditingController(text: '2027');
@@ -62,13 +74,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         break;
       case 'eventos_atualizacao':
         // Pode receber múltiplos CNPJs separados por vírgula
-        _controllers['contribuinteNumero'] = TextEditingController(text: '00000000000000');
+        _controllers['contribuinteNumero'] = TextEditingController(
+          text: '00000000000000',
+        );
         break;
       case 'procuracoes':
         _controllers['outorgado'] = TextEditingController();
         break;
       case 'autenticaprocurador':
-        _controllers['contratanteNome'] = TextEditingController(text: 'Empresa Contratante');
+        _controllers['contratanteNome'] = TextEditingController(
+          text: 'Empresa Contratante',
+        );
         _controllers['autorNome'] = TextEditingController(text: 'Procurador');
         _controllers['certificadoBase64'] = TextEditingController();
         _controllers['senhaCertificado'] = TextEditingController();
@@ -228,13 +244,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final response = await service.emitirCcmei(
       cnpj,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
-      'dados': {'cnpj': response.dados.cnpj, 'pdfGerado': response.dados.pdf.isNotEmpty, 'tamanhoPdf': response.dados.pdf.length},
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
+      'dados': {
+        'cnpj': response.dados.cnpj,
+        'pdfGerado': response.dados.pdf.isNotEmpty,
+        'tamanhoPdf': response.dados.pdf.length,
+      },
     };
   }
 
@@ -255,7 +278,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
       'dados': {
         'totalDas': dasGerados.length,
         'das': dasGerados
@@ -283,12 +308,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       contribuinteNumero: cnpj,
       periodoApuracao: periodoApuracao,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
       'dados': response.dados?.toJson() ?? {},
     };
   }
@@ -301,13 +329,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final response = await service.obterIndicadorNovasMensagens(
       cpfCnpj,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
-      'dados': response.dados != null ? (response.dados as Map).map((k, v) => MapEntry(k.toString(), v)) : {},
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
+      'dados': response.dados != null
+          ? (response.dados as Map).map((k, v) => MapEntry(k.toString(), v))
+          : {},
     };
   }
 
@@ -323,13 +356,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       anoPA: anoPA,
       mesPA: mesPA,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
       'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
-      'dados': {'sucesso': response.sucesso, 'pdfGerado': response.pdfBase64 != null, 'tamanhoPdf': response.tamanhoPdfBytes},
+      'dados': {
+        'sucesso': response.sucesso,
+        'pdfGerado': response.pdfBase64 != null,
+        'tamanhoPdf': response.tamanhoPdfBytes,
+      },
     };
   }
 
@@ -341,13 +379,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final response = await service.consultarDeclaracoesTransmitidas(
       contribuinteNumero: cnpj,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
       'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
-      'dados': {'totalDeclaracoes': response.dados.length, 'declaracoes': response.dados.map((d) => d.toJson()).toList()},
+      'dados': {
+        'totalDeclaracoes': response.dados.length,
+        'declaracoes': response.dados.map((d) => d.toJson()).toList(),
+      },
     };
   }
 
@@ -359,7 +401,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final protocoloResponse = await service.solicitarProtocoloRelatorio(
       contribuinte,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -380,11 +423,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final codigoReceita = _getValue('codigoReceita') ?? '6106';
 
     // Consultar receitas (exemplo de sicalc.dart)
-    final request = SicalcService.criarConsultaReceitas(contribuinteNumero: contribuinte, codigoReceita: codigoReceita);
+    final request = SicalcService.criarConsultaReceitas(
+      contribuinteNumero: contribuinte,
+      codigoReceita: codigoReceita,
+    );
     final response = await service.consultarReceitas(
       request,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -408,7 +455,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeParcmeiEspecial(ApiClient apiClient) async {
@@ -417,7 +468,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executePertmei(ApiClient apiClient) async {
@@ -427,7 +482,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos(cnpj);
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeRelpmei(ApiClient apiClient) async {
@@ -438,7 +497,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final response = await service.consultarPedidos(
       contribuinteNumero: cnpj,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -446,7 +506,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
       'dados': {
         'totalParcelamentos': response.parcelamentos?.length ?? 0,
-        'parcelamentos': response.parcelamentos?.map((p) => {'numero': p.numero, 'situacao': p.situacao}).toList() ?? [],
+        'parcelamentos':
+            response.parcelamentos
+                ?.map((p) => {'numero': p.numero, 'situacao': p.situacao})
+                .toList() ??
+            [],
       },
     };
   }
@@ -457,7 +521,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeParcsnEspecial(ApiClient apiClient) async {
@@ -466,7 +534,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executePertsn(ApiClient apiClient) async {
@@ -475,7 +547,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeRelpsn(ApiClient apiClient) async {
@@ -484,7 +560,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Consultar pedidos de parcelamento
     final response = await service.consultarPedidos();
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeDte(ApiClient apiClient) async {
@@ -495,12 +575,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final response = await service.obterIndicadorDte(
       cnpj,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
       'dados': {
         'isOptanteDte': response.isOptanteDte,
         'isOptanteSimples': response.isOptanteSimples,
@@ -522,23 +605,30 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       dataInicial: dataInicial,
       dataFinal: dataFinal,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeMit(ApiClient apiClient) async {
     final service = MitService(apiClient);
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
-    final anoApuracao = int.tryParse(_getValue('anoApuracao') ?? '2024') ?? 2024;
+    final anoApuracao =
+        int.tryParse(_getValue('anoApuracao') ?? '2024') ?? 2024;
 
     // Listar apurações (exemplo padrão)
     final response = await service.listarApuracaoes(
       contribuinteNumero: contribuinte,
       anoApuracao: anoApuracao,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
@@ -546,24 +636,43 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
       'dados': {
         'totalApuracaoes': response.apuracoes?.length ?? 0,
-        'apuracaoes': response.apuracoes?.take(5).map((a) => {'periodoApuracao': a.periodoApuracao, 'situacao': a.situacao}).toList() ?? [],
+        'apuracaoes':
+            response.apuracoes
+                ?.take(5)
+                .map(
+                  (a) => {
+                    'periodoApuracao': a.periodoApuracao,
+                    'situacao': a.situacao,
+                  },
+                )
+                .toList() ??
+            [],
       },
     };
   }
 
   Future<dynamic> _executeEventosAtualizacao(ApiClient apiClient) async {
     final service = EventosAtualizacaoService(apiClient);
-    final cnpjs = _getValue('contribuinteNumero')?.split(',').where((e) => e.trim().isNotEmpty).toList() ?? ['00000000000000'];
+    final cnpjs =
+        _getValue(
+          'contribuinteNumero',
+        )?.split(',').where((e) => e.trim().isNotEmpty).toList() ??
+        ['00000000000000'];
 
     // Solicitar eventos para PJ (exemplo padrão)
     final response = await service.solicitarEventosPJ(
       cnpjs: cnpjs,
       evento: TipoEvento.dctfWeb,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   Future<dynamic> _executeProcuracoes(ApiClient apiClient) async {
@@ -576,17 +685,26 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       outorgante: outorgante,
       outorgado: outorgado,
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
     return {
       'status': response.status,
-      'mensagens': response.mensagens.map((m) => {'codigo': m.codigo, 'texto': m.texto}).toList(),
+      'mensagens': response.mensagens
+          .map((m) => {'codigo': m.codigo, 'texto': m.texto})
+          .toList(),
       'dados': {
         'totalProcuracoes': response.dados?.length ?? 0,
         'procuracoes':
             response.dados
-                ?.map((p) => {'status': p.status.value, 'dataExpiracao': p.dataExpiracaoFormatada, 'sistemas': p.sistemas.join(', ')})
+                ?.map(
+                  (p) => {
+                    'status': p.status.value,
+                    'dataExpiracao': p.dataExpiracaoFormatada,
+                    'sistemas': p.sistemas.join(', '),
+                  },
+                )
                 .toList() ??
             [],
       },
@@ -595,7 +713,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   Future<dynamic> _executeAutenticaProcurador(ApiClient apiClient) async {
     final service = AutenticaProcuradorService(apiClient);
-    final contratanteNome = _getValue('contratanteNome') ?? 'Empresa Contratante';
+    final contratanteNome =
+        _getValue('contratanteNome') ?? 'Empresa Contratante';
     final autorNome = _getValue('autorNome') ?? 'Procurador';
     final contribuinte = _getValue('contribuinteNumero');
     final certBase64 = _getValue('certificadoBase64');
@@ -603,7 +722,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
     if (certBase64 == null || certBase64.isEmpty) {
       return {
-        'erro': 'Certificado Base64 é obrigatório para autenticação de procurador',
+        'erro':
+            'Certificado Base64 é obrigatório para autenticação de procurador',
         'instrucoes': 'Informe o certificado do procurador em Base64 e a senha',
       };
     }
@@ -634,17 +754,23 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Future<dynamic> _executeRegimeApuracao(ApiClient apiClient) async {
     final service = RegimeApuracaoService(apiClient);
     final contribuinte = _getValueOr('contribuinteNumero', '00000000000000');
-    final anoCalendario = int.tryParse(_getValue('anoCalendario') ?? '2024') ?? 2024;
+    final anoCalendario =
+        int.tryParse(_getValue('anoCalendario') ?? '2024') ?? 2024;
 
     // Consultar opção de regime (exemplo padrão)
     final response = await service.consultarOpcaoRegime(
       contribuinteNumero: contribuinte,
       request: ConsultarOpcaoRegimeRequest(anoCalendario: anoCalendario),
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
-      autorPedidoDadosNumero: _getValue('autorPedidoDadosNumero') ?? '00000000000000',
+      autorPedidoDadosNumero:
+          _getValue('autorPedidoDadosNumero') ?? '00000000000000',
     );
 
-    return {'status': response.status, 'mensagens': response.mensagens.map((m) => m.toJson()).toList(), 'dados': response.toJson()};
+    return {
+      'status': response.status,
+      'mensagens': response.mensagens.map((m) => m.toJson()).toList(),
+      'dados': response.toJson(),
+    };
   }
 
   List<Widget> _buildInputFields() {
@@ -698,7 +824,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['competencia'],
-            decoration: const InputDecoration(labelText: 'Competência (AAAAMM)', border: OutlineInputBorder(), helperText: 'Exemplo: 201901'),
+            decoration: const InputDecoration(
+              labelText: 'Competência (AAAAMM)',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 201901',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -722,7 +852,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['periodoApuracao'],
-            decoration: const InputDecoration(labelText: 'Período de Apuração (AAAAMM)', border: OutlineInputBorder(), helperText: 'Exemplo: 202101'),
+            decoration: const InputDecoration(
+              labelText: 'Período de Apuração (AAAAMM)',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 202101',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -732,7 +866,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['anoPA'],
-            decoration: const InputDecoration(labelText: 'Ano PA (AAAA)', border: OutlineInputBorder(), helperText: 'Exemplo: 2027'),
+            decoration: const InputDecoration(
+              labelText: 'Ano PA (AAAA)',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 2027',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -740,7 +878,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['mesPA'],
-            decoration: const InputDecoration(labelText: 'Mês PA (MM)', border: OutlineInputBorder(), helperText: 'Exemplo: 11'),
+            decoration: const InputDecoration(
+              labelText: 'Mês PA (MM)',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 11',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -750,7 +892,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['codigoReceita'],
-            decoration: const InputDecoration(labelText: 'Código da Receita', border: OutlineInputBorder(), helperText: 'Exemplo: 6106'),
+            decoration: const InputDecoration(
+              labelText: 'Código da Receita',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 6106',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -771,7 +917,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['dataFinal'],
-            decoration: const InputDecoration(labelText: 'Data Final (AAAA-MM-DD)', border: OutlineInputBorder(), helperText: 'Exemplo: 2024-12-31'),
+            decoration: const InputDecoration(
+              labelText: 'Data Final (AAAA-MM-DD)',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 2024-12-31',
+            ),
           ),
         );
         break;
@@ -780,7 +930,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['anoApuracao'],
-            decoration: const InputDecoration(labelText: 'Ano de Apuração', border: OutlineInputBorder(), helperText: 'Exemplo: 2024'),
+            decoration: const InputDecoration(
+              labelText: 'Ano de Apuração',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 2024',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -865,7 +1019,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         fields.add(
           TextField(
             controller: _controllers['anoCalendario'],
-            decoration: const InputDecoration(labelText: 'Ano Calendário', border: OutlineInputBorder(), helperText: 'Exemplo: 2024'),
+            decoration: const InputDecoration(
+              labelText: 'Ano Calendário',
+              border: OutlineInputBorder(),
+              helperText: 'Exemplo: 2024',
+            ),
             keyboardType: TextInputType.number,
           ),
         );
@@ -878,7 +1036,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.service.name), backgroundColor: widget.service.color.withValues(alpha: 0.2)),
+      appBar: AppBar(
+        title: Text(widget.service.name),
+        backgroundColor: widget.service.color.withValues(alpha: 0.2),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -897,9 +1058,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(widget.service.icon, color: widget.service.color),
+                              Icon(
+                                widget.service.icon,
+                                color: widget.service.color,
+                              ),
                               const SizedBox(width: 8),
-                              Text(widget.service.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              Text(
+                                widget.service.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -920,19 +1090,35 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _executeService,
-                      style: ElevatedButton.styleFrom(backgroundColor: widget.service.color, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.service.color,
+                        foregroundColor: Colors.white,
+                      ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Executar Serviço', style: TextStyle(fontSize: 16)),
+                          : const Text(
+                              'Executar Serviço',
+                              style: TextStyle(fontSize: 16),
+                            ),
                     ),
                   ),
 
                   const SizedBox(height: 24),
 
                   // Resultado ou erro
-                  if (_error != null) ResultDisplayWidget(title: 'Erro', content: _error!, isError: true),
+                  if (_error != null)
+                    ResultDisplayWidget(
+                      title: 'Erro',
+                      content: _error!,
+                      isError: true,
+                    ),
 
-                  if (_result != null) ResultDisplayWidget(title: 'Resultado', content: _result!, isError: false),
+                  if (_result != null)
+                    ResultDisplayWidget(
+                      title: 'Resultado',
+                      content: _result!,
+                      isError: false,
+                    ),
                 ],
               ),
             ),

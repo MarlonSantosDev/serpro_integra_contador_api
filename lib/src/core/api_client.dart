@@ -56,10 +56,12 @@ import 'auth/auth_exceptions.dart';
 /// ```
 class ApiClient {
   /// URL base para ambiente de demonstração/teste
-  static const String _baseUrlDemo = 'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
+  static const String _baseUrlDemo =
+      'https://gateway.apiserpro.serpro.gov.br/integra-contador-trial/v1';
 
   /// URL base para ambiente de produção
-  static const String _baseUrlProd = 'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
+  static const String _baseUrlProd =
+      'https://gateway.apiserpro.serpro.gov.br/integra-contador/v1';
 
   /// Ambiente atual ('trial' ou 'producao')
   String _ambiente = 'trial';
@@ -109,7 +111,11 @@ class ApiClient {
   ///   urlProxy: 'https://servidor.com.app',
   /// );
   /// ```
-  void setServidores({String? urlAutenticacao, String? urlAutenticacaoProcurado, String? urlProxy}) {
+  void setServidores({
+    String? urlAutenticacao,
+    String? urlAutenticacaoProcurado,
+    String? urlProxy,
+  }) {
     if (urlAutenticacao != null) {
       _urlAutenticacao = urlAutenticacao;
     }
@@ -280,7 +286,8 @@ class ApiClient {
       final novoAutor = autorPedidoDadosNumero.trim();
 
       if (_storedCredentials != null &&
-          (_storedCredentials!.contratanteNumero != novoContratante || _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
+          (_storedCredentials!.contratanteNumero != novoContratante ||
+              _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
         // Limpar dados da autenticação anterior para evitar conflitos
         clearAuthentication();
       }
@@ -290,7 +297,8 @@ class ApiClient {
         throw _buildErrorResponse(
           mensagem: 'Ambiente inválido',
           status: 400,
-          resposta: 'Ambiente deve ser "trial" ou "producao". Recebido: "$ambiente"',
+          resposta:
+              'Ambiente deve ser "trial" ou "producao". Recebido: "$ambiente"',
         );
       }
       _ambiente = ambiente;
@@ -324,14 +332,19 @@ class ApiClient {
         throw _buildErrorResponse(
           mensagem: 'Número do autor não informado',
           status: 400,
-          resposta: 'Campo "autorPedidoDadosNumero" é obrigatório (CPF/CNPJ do autor)',
+          resposta:
+              'Campo "autorPedidoDadosNumero" é obrigatório (CPF/CNPJ do autor)',
         );
       }
 
       // 3. Validar certificado em produção
       if (ambiente == 'producao') {
-        final temCertificadoBase64 = certificadoDigitalBase64 != null && certificadoDigitalBase64.trim().isNotEmpty;
-        final temCertificadoPath = certificadoDigitalPath != null && certificadoDigitalPath.trim().isNotEmpty;
+        final temCertificadoBase64 =
+            certificadoDigitalBase64 != null &&
+            certificadoDigitalBase64.trim().isNotEmpty;
+        final temCertificadoPath =
+            certificadoDigitalPath != null &&
+            certificadoDigitalPath.trim().isNotEmpty;
 
         if (!temCertificadoBase64 && !temCertificadoPath) {
           throw _buildErrorResponse(
@@ -386,15 +399,35 @@ class ApiClient {
 
       // Token já está armazenado em _authModel
     } on InvalidCredentialsException catch (e) {
-      throw _buildErrorResponse(mensagem: e.message, status: 400, resposta: 'Credenciais inválidas');
+      throw _buildErrorResponse(
+        mensagem: e.message,
+        status: 400,
+        resposta: 'Credenciais inválidas',
+      );
     } on CertificateException catch (e) {
-      throw _buildErrorResponse(mensagem: 'Erro no certificado digital', status: 400, resposta: e.message);
+      throw _buildErrorResponse(
+        mensagem: 'Erro no certificado digital',
+        status: 400,
+        resposta: e.message,
+      );
     } on AuthenticationFailedException catch (e) {
-      throw _buildErrorResponse(mensagem: 'Falha na autenticação', status: e.statusCode, resposta: e.responseBody ?? e.message);
+      throw _buildErrorResponse(
+        mensagem: 'Falha na autenticação',
+        status: e.statusCode,
+        resposta: e.responseBody ?? e.message,
+      );
     } on NetworkAuthException catch (e) {
-      throw _buildErrorResponse(mensagem: 'Erro de rede durante autenticação', status: 0, resposta: e.message);
+      throw _buildErrorResponse(
+        mensagem: 'Erro de rede durante autenticação',
+        status: 0,
+        resposta: e.message,
+      );
     } catch (e) {
-      throw _buildErrorResponse(mensagem: 'Erro inesperado durante autenticação', status: 500, resposta: e.toString());
+      throw _buildErrorResponse(
+        mensagem: 'Erro inesperado durante autenticação',
+        status: 500,
+        resposta: e.toString(),
+      );
     }
   }
 
@@ -443,10 +476,15 @@ class ApiClient {
     clearAuthentication();
 
     // Usar autenticação procurador via Cloud Function se URL estiver configurada
-    if (_urlAutenticacaoProcurado != null && _urlAutenticacaoProcurado!.isNotEmpty && contratanteNome != null && autorNome != null) {
+    if (_urlAutenticacaoProcurado != null &&
+        _urlAutenticacaoProcurado!.isNotEmpty &&
+        contratanteNome != null &&
+        autorNome != null) {
       // Armazenar certificado para uso no proxy
-      _cloudFunctionCertBase64 = certificadoProcuradorBase64 ?? certificadoDigitalBase64;
-      _cloudFunctionCertPassword = certificadoProcuradorPassword ?? senhaCertificado;
+      _cloudFunctionCertBase64 =
+          certificadoProcuradorBase64 ?? certificadoDigitalBase64;
+      _cloudFunctionCertPassword =
+          certificadoProcuradorPassword ?? senhaCertificado;
 
       await _authenticateWithProcuradorViaCloudFunction(
         consumerKey: consumerKey,
@@ -476,11 +514,16 @@ class ApiClient {
       }
 
       // Validar se há pelo menos um certificado disponível
-      final hasCertificadoDigital = certificadoDigitalPath != null || certificadoDigitalBase64 != null;
-      final hasCertificadoProcurador = certificadoProcuradorPath != null || certificadoProcuradorBase64 != null;
+      final hasCertificadoDigital =
+          certificadoDigitalPath != null || certificadoDigitalBase64 != null;
+      final hasCertificadoProcurador =
+          certificadoProcuradorPath != null ||
+          certificadoProcuradorBase64 != null;
 
       if (!hasCertificadoDigital && !hasCertificadoProcurador) {
-        throw Exception('Certificado digital necessário. Forneça certificadoDigitalPath/Base64 ou certificadoProcuradorPath/Base64');
+        throw Exception(
+          'Certificado digital necessário. Forneça certificadoDigitalPath/Base64 ou certificadoProcuradorPath/Base64',
+        );
       }
     }
 
@@ -500,7 +543,9 @@ class ApiClient {
     if (contratanteNome != null && autorNome != null) {
       // Validar se a autenticação OAuth2 foi bem-sucedida
       if (_authModel == null) {
-        throw Exception('Falha na autenticação OAuth2. Não é possível prosseguir com a autenticação do procurador.');
+        throw Exception(
+          'Falha na autenticação OAuth2. Não é possível prosseguir com a autenticação do procurador.',
+        );
       }
       final service = AutenticaProcuradorService(this);
       final response = await service.autenticarProcurador(
@@ -515,7 +560,9 @@ class ApiClient {
       );
 
       if (!response.sucesso) {
-        throw Exception('Falha na autenticação do procurador.: ${response.mensagemPrincipal}');
+        throw Exception(
+          'Falha na autenticação do procurador.: ${response.mensagemPrincipal}',
+        );
       }
 
       // Atualizar o _authModel com o token do procurador
@@ -524,8 +571,16 @@ class ApiClient {
   }
 
   /// Constrói resposta de erro padronizada em formato JSON
-  Exception _buildErrorResponse({required String mensagem, required int status, required String resposta}) {
-    final errorJson = {'mensagem': mensagem, 'status': status, 'resposta': resposta};
+  Exception _buildErrorResponse({
+    required String mensagem,
+    required int status,
+    required String resposta,
+  }) {
+    final errorJson = {
+      'mensagem': mensagem,
+      'status': status,
+      'resposta': resposta,
+    };
     return Exception(json.encode(errorJson));
   }
 
@@ -541,7 +596,9 @@ class ApiClient {
     String? firebaseToken,
   }) async {
     if (_urlAutenticacao == null) {
-      throw Exception('urlAutenticacao não configurado. Chame setServidores() primeiro.');
+      throw Exception(
+        'urlAutenticacao não configurado. Chame setServidores() primeiro.',
+      );
     }
     final url = Uri.parse('$_urlAutenticacao/autenticar_serpro');
     final body = <String, String>{
@@ -563,23 +620,34 @@ class ApiClient {
       headers['Authorization'] = 'Bearer $firebaseToken';
     }
 
-    final response = await http.post(url, headers: headers, body: json.encode(body));
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: json.encode(body),
+    );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      final responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       _authModel = AuthenticationModel(
         expiresIn: responseBody['expires_in'] ?? 2008,
         scope: responseBody['scope'] ?? 'default',
         tokenType: responseBody['token_type'] ?? 'Bearer',
         accessToken: responseBody['access_token'],
         jwtToken: responseBody['jwt_token'],
-        contratanteNumero: responseBody['contratante_numero'] ?? contratanteNumero,
-        autorPedidoDadosNumero: responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
+        contratanteNumero:
+            responseBody['contratante_numero'] ?? contratanteNumero,
+        autorPedidoDadosNumero:
+            responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
         tokenCreatedAt: DateTime.now(),
       );
       _ambiente = ambiente;
     } else {
-      throw _buildErrorResponse(mensagem: 'Falha servidor', status: response.statusCode, resposta: response.body);
+      throw _buildErrorResponse(
+        mensagem: 'Falha servidor',
+        status: response.statusCode,
+        resposta: response.body,
+      );
     }
   }
 
@@ -602,7 +670,9 @@ class ApiClient {
     String? certificadoProcuradorPassword,
   }) async {
     if (_urlAutenticacaoProcurado == null) {
-      throw Exception('urlAutenticacaoProcurado não configurado. Chame setServidores() primeiro.');
+      throw Exception(
+        'urlAutenticacaoProcurado não configurado. Chame setServidores() primeiro.',
+      );
     }
     final url = Uri.parse('$_urlAutenticacaoProcurado/autenticar_procurador');
     final body = <String, String>{
@@ -641,24 +711,35 @@ class ApiClient {
       headers['Authorization'] = 'Bearer $firebaseToken';
     }
 
-    final response = await http.post(url, headers: headers, body: json.encode(body));
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: json.encode(body),
+    );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      final responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      final responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       _authModel = AuthenticationModel(
         expiresIn: responseBody['expires_in'] ?? 2008,
         scope: responseBody['scope'] ?? 'default',
         tokenType: responseBody['token_type'] ?? 'Bearer',
         accessToken: responseBody['access_token'],
         jwtToken: responseBody['jwt_token'],
-        contratanteNumero: responseBody['contratante_numero'] ?? contratanteNumero,
-        autorPedidoDadosNumero: responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
+        contratanteNumero:
+            responseBody['contratante_numero'] ?? contratanteNumero,
+        autorPedidoDadosNumero:
+            responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
         tokenCreatedAt: DateTime.now(),
         procuradorToken: responseBody['procurador_token'] ?? '',
       );
       _ambiente = ambiente;
     } else {
-      throw _buildErrorResponse(mensagem: 'Falha procurador via Servidor', status: response.statusCode, resposta: response.body);
+      throw _buildErrorResponse(
+        mensagem: 'Falha procurador via Servidor',
+        status: response.statusCode,
+        resposta: response.body,
+      );
     }
   }
 
@@ -709,23 +790,33 @@ class ApiClient {
       } else {
         // Não temos credenciais para re-autenticar
         _authModel = null;
-        throw Exception('Token expirado. Por favor, chame authenticate() novamente.');
+        throw Exception(
+          'Token expirado. Por favor, chame authenticate() novamente.',
+        );
       }
     }
 
     // Usar dados customizados se fornecidos, senão usar os dados padrão
-    final finalContratanteNumero = contratanteNumero ?? _authModel!.contratanteNumero;
+    final finalContratanteNumero =
+        contratanteNumero ?? _authModel!.contratanteNumero;
 
     // Quando há token de procurador, o autorPedidoDadosNumero deve ser o contribuinteNumero
     final finalAutorPedidoDadosNumero =
-        autorPedidoDadosNumero ?? (hasProcuradorToken ? request.contribuinteNumero : _authModel!.autorPedidoDadosNumero);
+        autorPedidoDadosNumero ??
+        (hasProcuradorToken
+            ? request.contribuinteNumero
+            : _authModel!.autorPedidoDadosNumero);
 
     // Criar o JSON completo usando os dados de autenticação
     final requestBody = request.toJsonWithAuth(
       contratanteNumero: finalContratanteNumero,
-      contratanteTipo: ValidacoesUtils.detectDocumentType(finalContratanteNumero),
+      contratanteTipo: ValidacoesUtils.detectDocumentType(
+        finalContratanteNumero,
+      ),
       autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
-      autorPedidoDadosTipo: ValidacoesUtils.detectDocumentType(finalAutorPedidoDadosNumero),
+      autorPedidoDadosTipo: ValidacoesUtils.detectDocumentType(
+        finalAutorPedidoDadosNumero,
+      ),
     );
 
     // Preparar headers obrigatórios
@@ -753,16 +844,22 @@ class ApiClient {
       // Se urlProxy estiver configurado (Web), usar proxy
       if (_urlProxy != null && _urlProxy!.isNotEmpty) {
         final proxyUrl = Uri.parse('$_urlProxy/proxy_serpro');
-        final proxyHeaders = <String, String>{'Content-Type': 'application/json'};
+        final proxyHeaders = <String, String>{
+          'Content-Type': 'application/json',
+        };
         final proxyBody = {
           'endpoint': endpoint,
           'body': requestBody,
           'access_token': _authModel!.accessToken,
           'jwt_token': _authModel!.jwtToken,
-          'procurador_token': _authModel!.procuradorToken.isNotEmpty ? _authModel!.procuradorToken : null,
+          'procurador_token': _authModel!.procuradorToken.isNotEmpty
+              ? _authModel!.procuradorToken
+              : null,
           'ambiente': _ambiente,
-          'certificado_base64': _cloudFunctionCertBase64 ?? _storedCredentials?.certBase64,
-          'certificado_senha': _cloudFunctionCertPassword ?? _storedCredentials?.certPassword,
+          'certificado_base64':
+              _cloudFunctionCertBase64 ?? _storedCredentials?.certBase64,
+          'certificado_senha':
+              _cloudFunctionCertPassword ?? _storedCredentials?.certPassword,
         };
 
         //print("================================================");
@@ -770,7 +867,11 @@ class ApiClient {
         //print("Proxy body: ${json.encode(proxyBody)}");
         //print("================================================");
 
-        return await http.post(proxyUrl, headers: proxyHeaders, body: json.encode(proxyBody));
+        return await http.post(
+          proxyUrl,
+          headers: proxyHeaders,
+          body: json.encode(proxyBody),
+        );
       } else {
         // Requisição direta (Desktop/Mobile ou quando urlProxy não está configurado)
         //print("================================================");
@@ -779,12 +880,17 @@ class ApiClient {
         //print("requestBody: ${json.encode(requestBody)}");
         //print("================================================");
 
-        return await http.post(Uri.parse('$_baseUrl$endpoint'), headers: headers, body: json.encode(requestBody));
+        return await http.post(
+          Uri.parse('$_baseUrl$endpoint'),
+          headers: headers,
+          body: json.encode(requestBody),
+        );
       }
     })();
     // Verificar se a requisição foi bem-sucedida
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
       // Verificar se a API retornou um erro de negócio
       if (responseBody.isNotEmpty &&
@@ -807,17 +913,31 @@ class ApiClient {
     } else if (response.statusCode == 401) {
       throw Exception({
         "status": response.statusCode,
-        "mensagens": "Credenciais inválidas. Certifique-se de ter fornecido as credenciais de segurança corretas",
+        "mensagens":
+            "Credenciais inválidas. Certifique-se de ter fornecido as credenciais de segurança corretas",
         "body": "Credenciais inválidas",
       });
     } else if (response.statusCode == 304) {
-      final autenticarProcuradorToken = response.headers['etag'].toString().replaceAll(':', '":"');
-      final expiresISO = FormatadorUtils.converterHttpExpiresParaISO(response.headers['expires']) ?? '';
-      final stringBody = "{$autenticarProcuradorToken, \"data_hora_expiracao\":\"$expiresISO\"}";
+      final autenticarProcuradorToken = response.headers['etag']
+          .toString()
+          .replaceAll(':', '":"');
+      final expiresISO =
+          FormatadorUtils.converterHttpExpiresParaISO(
+            response.headers['expires'],
+          ) ??
+          '';
+      final stringBody =
+          "{$autenticarProcuradorToken, \"data_hora_expiracao\":\"$expiresISO\"}";
       final body = jsonDecode(stringBody);
-      return {"status": response.statusCode, "mensagens": "Resposta em cache (304 Not Modified)", "dados": body};
+      return {
+        "status": response.statusCode,
+        "mensagens": "Resposta em cache (304 Not Modified)",
+        "dados": body,
+      };
     } else {
-      throw Exception('Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
+      throw Exception(
+        'Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}',
+      );
     }
   }
 
@@ -836,7 +956,9 @@ class ApiClient {
     required String autorPedidoDadosNumero,
   }) async {
     if (_authModel == null) {
-      throw Exception('Cliente não autenticado. Chame o método authenticate primeiro.');
+      throw Exception(
+        'Cliente não autenticado. Chame o método authenticate primeiro.',
+      );
     }
 
     final requestBody = {'termoAutorizacao': termoAutorizacaoBase64};
@@ -859,7 +981,8 @@ class ApiClient {
     );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
       // Salvar token de procurador no authModel
       if (responseBody['autenticarProcuradorToken'] != null) {
@@ -869,12 +992,15 @@ class ApiClient {
 
       return responseBody;
     } else {
-      throw Exception('Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}');
+      throw Exception(
+        'Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}',
+      );
     }
   }
 
   /// Verifica se existe token de procurador válido no authModel
-  bool get hasProcuradorToken => _authModel?.procuradorToken.isNotEmpty ?? false;
+  bool get hasProcuradorToken =>
+      _authModel?.procuradorToken.isNotEmpty ?? false;
 
   /// Obtém token de procurador do authModel
   String? get procuradorToken => _authModel?.procuradorToken;
@@ -962,7 +1088,9 @@ class ApiClient {
   /// }
   /// ```
   Future<void> forceReauthenticate() async {
-    if (_authModel == null || _authService == null || _storedCredentials == null) {
+    if (_authModel == null ||
+        _authService == null ||
+        _storedCredentials == null) {
       throw Exception(
         'Cliente não autenticado ou credenciais não disponíveis. '
         'Chame authenticate() primeiro.',

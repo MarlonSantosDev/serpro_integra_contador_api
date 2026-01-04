@@ -1,10 +1,14 @@
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' as request_models;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart' as response_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart'
+    as request_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart'
+    as response_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' show GerarDasResponse;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' as gerar_das_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart'
+    show GerarDasResponse;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart'
+    as gerar_das_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_response.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_ultima_declaracao_request.dart';
@@ -78,7 +82,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'TRANSDECLARACAO11', versaoSistema: '1.0', dados: request.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'TRANSDECLARACAO11',
+        versaoSistema: '1.0',
+        dados: request.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -104,7 +113,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final dasRequest = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
+    final dasRequest = GerarDasRequest(
+      periodoApuracao: periodoApuracao,
+      dataConsolidacao: dataConsolidacao,
+    );
 
     if (!dasRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS inválidos');
@@ -112,7 +124,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDAS12', versaoSistema: '1.0', dados: dasRequest.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'GERARDAS12',
+        versaoSistema: '1.0',
+        dados: dasRequest.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -148,7 +165,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECLARACAO13', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'CONSDECLARACAO13',
+        versaoSistema: '1.0',
+        dados: consultaRequest.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -172,7 +194,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final consultaRequest = ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao);
+    final consultaRequest = ConsultarUltimaDeclaracaoRequest(
+      periodoApuracao: periodoApuracao,
+    );
 
     if (!consultaRequest.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -209,7 +233,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final consultaRequest = ConsultarDeclaracaoNumeroRequest(numeroDeclaracao: numeroDeclaracao);
+    final consultaRequest = ConsultarDeclaracaoNumeroRequest(
+      numeroDeclaracao: numeroDeclaracao,
+    );
 
     if (!consultaRequest.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -217,7 +243,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECREC15', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'CONSDECREC15',
+        versaoSistema: '1.0',
+        dados: consultaRequest.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -249,7 +280,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSEXTRATO16', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'CONSEXTRATO16',
+        versaoSistema: '1.0',
+        dados: consultaRequest.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -273,7 +309,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final cobrancaRequest = GerarDasCobrancaRequest(periodoApuracao: periodoApuracao);
+    final cobrancaRequest = GerarDasCobrancaRequest(
+      periodoApuracao: periodoApuracao,
+    );
 
     if (!cobrancaRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS Cobrança inválidos');
@@ -310,7 +348,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final processoRequest = GerarDasProcessoRequest(numeroProcesso: numeroProcesso);
+    final processoRequest = GerarDasProcessoRequest(
+      numeroProcesso: numeroProcesso,
+    );
 
     if (!processoRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS de Processo inválidos');
@@ -353,7 +393,12 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASAVULSO19', versaoSistema: '1.0', dados: request.toJson().toString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGDASD',
+        idServico: 'GERARDASAVULSO19',
+        versaoSistema: '1.0',
+        dados: request.toJson().toString(),
+      ),
     );
 
     final response = await _apiClient.post(
@@ -399,7 +444,7 @@ class PgdasdService {
   /// print('DAS Pago: ${resultado.dasPago ? "Sim" : "Não"}');
   /// ```
   Future<ConsultarUltimaDeclaracaoComPagamentoResponse>
-      consultarUltimaDeclaracaoComPagamento({
+  consultarUltimaDeclaracaoComPagamento({
     required String contribuinteNumero,
     required String periodoApuracao,
     String? contratanteNumero,
