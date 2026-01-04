@@ -79,18 +79,9 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'GERARGUIA31',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIA31', dados: dctfRequest.toDadosJson()),
     );
-    final response = await _apiClient.post(
-      '/Emitir',
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -128,11 +119,7 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSRECIBO32',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSRECIBO32', dados: dctfRequest.toDadosJson()),
     );
 
     final response = await _apiClient.post(
@@ -178,11 +165,7 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSDECCOMPLETA33',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSDECCOMPLETA33', dados: dctfRequest.toDadosJson()),
     );
     final response = await _apiClient.post(
       '/Consultar',
@@ -230,11 +213,7 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'CONSXMLDECLARACAO38',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'CONSXMLDECLARACAO38', dados: dctfRequest.toDadosJson()),
     );
 
     final response = await _apiClient.post(
@@ -272,8 +251,9 @@ class DctfWebService {
   }) async {
     // Validar XML antes de enviar
     if (!validarXmlBase64(xmlAssinadoBase64)) {
-      if (contratanteNumero != '00000000000')
+      if (contratanteNumero != '00000000000') {
         throw ArgumentError('XML Base64 inválido ou mal formado');
+      }
     }
 
     final dctfRequest = TransmitirDeclaracaoDctfRequest(
@@ -287,11 +267,7 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'TRANSDECLARACAO310',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'TRANSDECLARACAO310', dados: dctfRequest.toDadosJson()),
     );
     final response = await _apiClient.post(
       '/Declarar',
@@ -336,18 +312,9 @@ class DctfWebService {
 
     final request = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'DCTFWEB',
-        idServico: 'GERARGUIAANDAMENTO313',
-        dados: dctfRequest.toDadosJson(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'DCTFWEB', idServico: 'GERARGUIAANDAMENTO313', dados: dctfRequest.toDadosJson()),
     );
-    final response = await _apiClient.post(
-      '/Emitir',
-      request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
     return GerarGuiaResponse.fromJson(response);
   }
 
@@ -411,9 +378,7 @@ class DctfWebService {
   }) async {
     return gerarDocumentoArrecadacao(
       contribuinteNumero: contribuinteNumero,
-      categoria: isPessoaFisica
-          ? CategoriaDctf.pf13Salario
-          : CategoriaDctf.geral13Salario,
+      categoria: isPessoaFisica ? CategoriaDctf.pf13Salario : CategoriaDctf.geral13Salario,
       anoPA: anoPA,
       numeroReciboEntrega: numeroReciboEntrega,
       dataAcolhimentoProposta: dataAcolhimentoProposta,
@@ -461,9 +426,7 @@ class DctfWebService {
     );
 
     if (!xmlResponse.sucesso || xmlResponse.xmlBase64 == null) {
-      throw Exception(
-        'Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}',
-      );
+      throw Exception('Falha ao obter XML: ${xmlResponse.mensagemErro ?? "XML não disponível"}');
     }
 
     // 2. Assinar XML externamente
@@ -491,9 +454,7 @@ class DctfWebService {
 
       // Verificar se contém caracteres XML básicos
       final xmlString = String.fromCharCodes(decoded);
-      return xmlString.contains('<?xml') &&
-          xmlString.contains('<ConteudoDeclaracao') &&
-          xmlString.contains('</ConteudoDeclaracao>');
+      return xmlString.contains('<?xml') && xmlString.contains('<ConteudoDeclaracao') && xmlString.contains('</ConteudoDeclaracao>');
     } catch (e) {
       return false;
     }

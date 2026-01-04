@@ -1,6 +1,6 @@
 name: serpro_integra_contador_api
 description: Package Dart para acessar a API do SERPRO Integra Contador.
-version: 2.0.8
+version: 2.0.9
 homepage: https://github.com/MarlonSantosDev/serpro_integra_contador_api
 
 environment:
