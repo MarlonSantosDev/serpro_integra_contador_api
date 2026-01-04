@@ -18,12 +18,7 @@ class EntregarDeclaracaoComDasResponse {
   /// Dados do DAS gerado (null se DAS não foi gerado)
   final List<Das>? dadosDas;
 
-  EntregarDeclaracaoComDasResponse({
-    required this.status,
-    required this.mensagens,
-    this.dadosDeclaracao,
-    this.dadosDas,
-  });
+  EntregarDeclaracaoComDasResponse({required this.status, required this.mensagens, this.dadosDeclaracao, this.dadosDas});
 
   /// Indica se ambas operações foram bem-sucedidas
   bool get sucesso => status == 200;
@@ -41,12 +36,8 @@ class EntregarDeclaracaoComDasResponse {
       'declaracaoEntregue': declaracaoEntregue,
       'dasGerado': dasGerado,
       'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dadosDeclaracao': dadosDeclaracao != null
-          ? jsonEncode(dadosDeclaracao!.toJson())
-          : null,
-      'dadosDas': dadosDas != null
-          ? jsonEncode(dadosDas!.map((d) => d.toJson()).toList())
-          : null,
+      'dadosDeclaracao': dadosDeclaracao != null ? jsonEncode(dadosDeclaracao!.toJson()) : null,
+      'dadosDas': dadosDas != null ? jsonEncode(dadosDas!.map((d) => d.toJson()).toList()) : null,
     };
   }
 
@@ -62,16 +53,11 @@ class EntregarDeclaracaoComDasResponse {
     final mensagensCombinadas = <Mensagem>[
       ...declaracaoResponse.mensagens,
       // Converter mensagens de GerarDasResponse para o tipo Mensagem de EntregarDeclaracaoResponse
-      ...dasResponse.mensagens.map(
-        (m) => Mensagem(codigo: m.codigo, texto: m.texto),
-      ),
+      ...dasResponse.mensagens.map((m) => Mensagem(codigo: m.codigo, texto: m.texto)),
     ];
 
     // Status é 200 apenas se ambos foram 200
-    final statusCombinado =
-        declaracaoResponse.status == 200 && dasResponse.status == 200
-        ? 200
-        : 500;
+    final statusCombinado = declaracaoResponse.status == 200 && dasResponse.status == 200 ? 200 : 500;
 
     return EntregarDeclaracaoComDasResponse(
       status: statusCombinado,
@@ -84,9 +70,7 @@ class EntregarDeclaracaoComDasResponse {
   /// Cria resposta de erro quando a declaração falhou
   ///
   /// [declaracaoResponse] Resposta de entregarDeclaracao com erro
-  factory EntregarDeclaracaoComDasResponse.fromDeclaracaoError({
-    required EntregarDeclaracaoResponse declaracaoResponse,
-  }) {
+  factory EntregarDeclaracaoComDasResponse.fromDeclaracaoError({required EntregarDeclaracaoResponse declaracaoResponse}) {
     return EntregarDeclaracaoComDasResponse(
       status: declaracaoResponse.status,
       mensagens: declaracaoResponse.mensagens,
@@ -107,21 +91,13 @@ class EntregarDeclaracaoComDasResponse {
     final mensagensCombinadas = <Mensagem>[
       ...declaracaoResponse.mensagens,
       // Converter mensagens de GerarDasResponse para o tipo Mensagem de EntregarDeclaracaoResponse
-      ...dasResponse.mensagens.map(
-        (m) => Mensagem(codigo: m.codigo, texto: m.texto),
-      ),
+      ...dasResponse.mensagens.map((m) => Mensagem(codigo: m.codigo, texto: m.texto)),
       Mensagem(
         codigo: 'ERRO_DAS',
-        texto:
-            'Declaração entregue com sucesso, mas falha ao gerar DAS. Você pode gerar o DAS manualmente usando o ID da declaração.',
+        texto: 'Declaração entregue com sucesso, mas falha ao gerar DAS. Você pode gerar o DAS manualmente usando o ID da declaração.',
       ),
     ];
 
-    return EntregarDeclaracaoComDasResponse(
-      status: 500,
-      mensagens: mensagensCombinadas,
-      dadosDeclaracao: declaracaoResponse.dados,
-      dadosDas: null,
-    );
+    return EntregarDeclaracaoComDasResponse(status: 500, mensagens: mensagensCombinadas, dadosDeclaracao: declaracaoResponse.dados, dadosDas: null);
   }
 }
