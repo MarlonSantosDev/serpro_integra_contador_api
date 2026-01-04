@@ -1,0 +1,3616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="serpro_integra_contador_api library API docs, for the Dart programming language.">
+  <title>serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">serpro_integra_contador_api.dart</li>
+  </ol>
+  <div class="self-name">serpro_integra_contador_api</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="serpro_integra_contador_api&#47;serpro_integra_contador_api-library-sidebar.html">
+  
+    <div>
+      
+
+      <h1>
+        <span class="kind-library">serpro_integra_contador_api</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>Package Dart para integração com a API do SERPRO Integra Contador</p>
+<p>Este package fornece uma interface completa e type-safe para interagir com todos os serviços
+disponíveis na API do SERPRO Integra Contador, incluindo:</p>
+<h2 id="servios-disponveis">Serviços Disponíveis:</h2>
+<ul>
+<li><strong>CCMEI</strong>: Cadastro Centralizado de Microempreendedor Individual</li>
+<li><strong>PGDASD</strong>: Pagamento de DAS por Débito Direto Autorizado</li>
+<li><strong>PGMEI</strong>: Pagamento de DAS do MEI</li>
+<li><strong>DCTFWeb</strong>: Declaração de Débitos e Créditos Tributários Federais</li>
+<li><strong>DEFIS</strong>: Declaração de Informações Socioeconômicas e Fiscais</li>
+<li><strong>Parcelamentos</strong>: PARCMEI, PARCSN, PERTMEI, PERTSN, RELPMEI, RELPSN</li>
+<li><strong>SITFIS</strong>: Sistema de Informações Tributárias Fiscais</li>
+<li><strong>SICALC</strong>: Sistema de Cálculo de Impostos</li>
+<li><strong>MIT</strong>: Manifesto de Importação de Trânsito</li>
+<li><strong>Eventos de Atualização</strong>: Consulta de eventos de atualização</li>
+<li><strong>Procurações</strong>: Gestão de procurações eletrônicas</li>
+<li><strong>Caixa Postal</strong>: Consulta de mensagens da Receita Federal</li>
+<li><strong>Regime de Apuração</strong>: Gestão de opções pelo regime de apuração do Simples Nacional</li>
+</ul>
+<h2 id="caractersticas-principais">Características Principais:</h2>
+<ul>
+<li>Autenticação automática com certificados cliente (mTLS)</li>
+<li>Cache inteligente de tokens de procurador</li>
+<li>Validação automática de documentos (CPF/CNPJ)</li>
+<li>Tratamento de erros padronizado</li>
+<li>Suporte completo a procurações eletrônicas</li>
+<li>Modelos de dados type-safe para todas as operações</li>
+<li><strong>Flexibilidade de contratante e autor do pedido</strong>: Todos os serviços suportam
+parâmetros opcionais <code>contratanteNumero</code> e <code>autorPedidoDadosNumero</code> para
+permitir diferentes contextos de uso em uma única requisição</li>
+</ul>
+<h2 id="exemplo-de-uso">Exemplo de Uso:</h2>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Inicializar cliente da API
+  final apiClient = ApiClient();
+
+  // Autenticar com certificados
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certPath: 'caminho/para/certificado.p12',
+    certPassword: 'senha_do_certificado',
+    contratanteNumero: '12345678000100',
+    autorPedidoDadosNumero: '12345678000100',
+  );
+
+  // Usar serviços com valores padrão da autenticação
+  final ccmeiService = CcmeiService(apiClient);
+  final response = await ccmeiService.emitirCcmei('12345678000100');
+  print('CCMEI emitido: ${response.dados.pdf.isNotEmpty}');
+
+  // Usar serviços com valores específicos para esta requisição
+  final sicalcService = SicalcService(apiClient);
+  final darfResponse = await sicalcService.consolidarEGerarDarf(
+    contribuinteNumero: '12345678000100',
+    contratanteNumero: '98765432000100', // Valor específico
+    autorPedidoDadosNumero: '11122233344', // Valor específico
+    // ... outros parâmetros
+  );
+}
+</code></pre>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+      <dl>
+          <dt id="AlteracaoDivida">
+  <span class="name "><a href="../serpro_integra_contador_api/AlteracaoDivida-class.html">AlteracaoDivida</a></span> 
+
+</dt>
+<dd>
+  Representa uma alteração de dívida no parcelamento PARCSN.
+</dd>
+
+          <dt id="AnoCalendarioRegime">
+  <span class="name "><a href="../serpro_integra_contador_api/AnoCalendarioRegime-class.html">AnoCalendarioRegime</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para ano calendário com regime efetivado
+</dd>
+
+          <dt id="ApiClient">
+  <span class="name "><a href="../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></span> 
+
+</dt>
+<dd>
+  Cliente principal para comunicação com a API do SERPRO Integra Contador
+</dd>
+
+          <dt id="ApuracaoDetalhada">
+  <span class="name "><a href="../serpro_integra_contador_api/ApuracaoDetalhada-class.html">ApuracaoDetalhada</a></span> 
+
+</dt>
+<dd>
+  Apuração detalhada
+</dd>
+
+          <dt id="ApuracaoResumo">
+  <span class="name "><a href="../serpro_integra_contador_api/ApuracaoResumo-class.html">ApuracaoResumo</a></span> 
+
+</dt>
+<dd>
+  Resumo da apuração para listagem
+</dd>
+
+          <dt id="AquisicaoDispensadosInscricao">
+  <span class="name "><a href="../serpro_integra_contador_api/AquisicaoDispensadosInscricao-class.html">AquisicaoDispensadosInscricao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AquisicaoProdutoresRurais">
+  <span class="name "><a href="../serpro_integra_contador_api/AquisicaoProdutoresRurais-class.html">AquisicaoProdutoresRurais</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ArquivoDeclaracao">
+  <span class="name "><a href="../serpro_integra_contador_api/ArquivoDeclaracao-class.html">ArquivoDeclaracao</a></span> 
+
+</dt>
+<dd>
+  Arquivo da declaração
+</dd>
+
+          <dt id="ArquivoMaed">
+  <span class="name "><a href="../serpro_integra_contador_api/ArquivoMaed-class.html">ArquivoMaed</a></span> 
+
+</dt>
+<dd>
+  Arquivo MAED
+</dd>
+
+          <dt id="ArquivoRecibo">
+  <span class="name "><a href="../serpro_integra_contador_api/ArquivoRecibo-class.html">ArquivoRecibo</a></span> 
+
+</dt>
+<dd>
+  Arquivo do recibo
+</dd>
+
+          <dt id="ArquivoUtils">
+  <span class="name "><a href="../serpro_integra_contador_api/ArquivoUtils-class.html">ArquivoUtils</a></span> 
+
+</dt>
+<dd>
+  Implementação stub para Web - não suporta operações de arquivo
+</dd>
+
+          <dt id="AssinadorDigitalXml">
+  <span class="name "><a href="../serpro_integra_contador_api/AssinadorDigitalXml-class.html">AssinadorDigitalXml</a></span> 
+
+</dt>
+<dd>
+  Assinador digital XML conforme padrão XMLDSig ICP-Brasil
+</dd>
+
+          <dt id="AssinaturaDigitalModel">
+  <span class="name "><a href="../serpro_integra_contador_api/AssinaturaDigitalModel-class.html">AssinaturaDigitalModel</a></span> 
+
+</dt>
+<dd>
+  Modelo para gerenciamento de assinatura digital
+</dd>
+
+          <dt id="Atividade">
+  <span class="name "><a href="../serpro_integra_contador_api/Atividade-class.html">Atividade</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AtualizarBeneficioIntegraMei">
+  <span class="name "><a href="../serpro_integra_contador_api/AtualizarBeneficioIntegraMei-class.html">AtualizarBeneficioIntegraMei</a></span> 
+
+</dt>
+<dd>
+  Informação sobre benefício atualizado
+</dd>
+
+          <dt id="AtualizarBeneficioRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/AtualizarBeneficioRequest-class.html">AtualizarBeneficioRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de entrada para ATUBENEFICIO23
+</dd>
+
+          <dt id="AtualizarBeneficioResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/AtualizarBeneficioResponse-class.html">AtualizarBeneficioResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para ATUBENEFICIO23 - Atualizar Benefício
+</dd>
+
+          <dt id="AutenticaProcuradorService">
+  <span class="name "><a href="../serpro_integra_contador_api/AutenticaProcuradorService-class.html">AutenticaProcuradorService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> AUTENTICA PROCURADOR
+</dd>
+
+          <dt id="AuthenticationModel">
+  <span class="name "><a href="../serpro_integra_contador_api/AuthenticationModel-class.html">AuthenticationModel</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados de autenticação OAuth2 da API SERPRO Integra Contador
+</dd>
+
+          <dt id="BaseRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/BaseRequest-class.html">BaseRequest</a></span> 
+
+</dt>
+<dd>
+  Classe base para todas as requisições à API do SERPRO Integra Contador
+</dd>
+
+          <dt id="CacheToken">
+  <span class="name "><a href="../serpro_integra_contador_api/CacheToken-class.html">CacheToken</a></span> 
+
+</dt>
+<dd>
+  Modelo para dados de cache do token
+</dd>
+
+          <dt id="CaixaPostalService">
+  <span class="name "><a href="../serpro_integra_contador_api/CaixaPostalService-class.html">CaixaPostalService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> CAIXA POSTAL (Caixa Postal do Simples Nacional)
+</dd>
+
+          <dt id="CamposObrigatorios">
+  <span class="name "><a href="../serpro_integra_contador_api/CamposObrigatorios-class.html">CamposObrigatorios</a></span> 
+
+</dt>
+<dd>
+  Modelo para campos obrigatórios
+</dd>
+
+          <dt id="CamposOpcionais">
+  <span class="name "><a href="../serpro_integra_contador_api/CamposOpcionais-class.html">CamposOpcionais</a></span> 
+
+</dt>
+<dd>
+  Modelo para campos opcionais
+</dd>
+
+          <dt id="CcmeiService">
+  <span class="name "><a href="../serpro_integra_contador_api/CcmeiService-class.html">CcmeiService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> CCMEI (Cadastro Centralizado de Microempreendedor Individual)
+</dd>
+
+          <dt id="CcmeiSituacaoCadastral">
+  <span class="name "><a href="../serpro_integra_contador_api/CcmeiSituacaoCadastral-class.html">CcmeiSituacaoCadastral</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="CodigoBarras">
+  <span class="name "><a href="../serpro_integra_contador_api/CodigoBarras-class.html">CodigoBarras</a></span> 
+
+</dt>
+<dd>
+  Modelo para código de barras
+</dd>
+
+          <dt id="CodigosReceitaMit">
+  <span class="name "><a href="../serpro_integra_contador_api/CodigosReceitaMit-class.html">CodigosReceitaMit</a></span> 
+
+</dt>
+<dd>
+  Códigos de receita mais comuns para cada tributo
+</dd>
+
+          <dt id="ComercialExportadora">
+  <span class="name "><a href="../serpro_integra_contador_api/ComercialExportadora-class.html">ComercialExportadora</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ComposicaoDas">
+  <span class="name "><a href="../serpro_integra_contador_api/ComposicaoDas-class.html">ComposicaoDas</a></span> 
+
+</dt>
+<dd>
+  Composição do DAS
+</dd>
+
+          <dt id="ComposicaoDasAvulso">
+  <span class="name "><a href="../serpro_integra_contador_api/ComposicaoDasAvulso-class.html">ComposicaoDasAvulso</a></span> 
+
+</dt>
+<dd>
+  Composição do DAS Avulso
+</dd>
+
+          <dt id="ComposicaoDasCobranca">
+  <span class="name "><a href="../serpro_integra_contador_api/ComposicaoDasCobranca-class.html">ComposicaoDasCobranca</a></span> 
+
+</dt>
+<dd>
+  Composição do DAS Cobrança
+</dd>
+
+          <dt id="ComposicaoDasProcesso">
+  <span class="name "><a href="../serpro_integra_contador_api/ComposicaoDasProcesso-class.html">ComposicaoDasProcesso</a></span> 
+
+</dt>
+<dd>
+  Composição do DAS de Processo
+</dd>
+
+          <dt id="ConfiguracaoAssinatura">
+  <span class="name "><a href="../serpro_integra_contador_api/ConfiguracaoAssinatura-class.html">ConfiguracaoAssinatura</a></span> 
+
+</dt>
+<dd>
+  Modelo para configuração de assinatura
+</dd>
+
+          <dt id="ConsolidacaoOriginal">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsolidacaoOriginal-class.html">ConsolidacaoOriginal</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsolidacaoRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsolidacaoRelpmei-class.html">ConsolidacaoRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para Consolidação RELPMEI
+</dd>
+
+          <dt id="ConsolidadoDarf">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsolidadoDarf-class.html">ConsolidadoDarf</a></span> 
+
+</dt>
+<dd>
+  Modelo para dados consolidados do DARF
+</dd>
+
+          <dt id="ConsolidarEmitirDarfRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsolidarEmitirDarfRequest-class.html">ConsolidarEmitirDarfRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo para requisição de consolidação e emissão de DARF
+</dd>
+
+          <dt id="ConsolidarEmitirDarfResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsolidarEmitirDarfResponse-class.html">ConsolidarEmitirDarfResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo para resposta de consolidação e emissão de DARF
+</dd>
+
+          <dt id="ConsultarAnosCalendariosRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarAnosCalendariosRequest-class.html">ConsultarAnosCalendariosRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar anos calendários com opções de regime
+</dd>
+
+          <dt id="ConsultarAnosCalendariosResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarAnosCalendariosResponse-class.html">ConsultarAnosCalendariosResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados de resposta para consultar anos calendários
+</dd>
+
+          <dt id="ConsultarApuracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarApuracaoRequest-class.html">ConsultarApuracaoRequest</a></span> 
+
+</dt>
+<dd>
+  Request para consultar apuração (CONSAPURACAO316)
+</dd>
+
+          <dt id="ConsultarApuracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarApuracaoResponse-class.html">ConsultarApuracaoResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consultar apuração
+</dd>
+
+          <dt id="ConsultarDadosCcmeiDados">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDadosCcmeiDados-class.html">ConsultarDadosCcmeiDados</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarDadosCcmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDadosCcmeiResponse-class.html">ConsultarDadosCcmeiResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarDctfWebRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDctfWebRequest-class.html">ConsultarDctfWebRequest</a></span> 
+
+</dt>
+<dd>
+  Request para consultas que podem usar filtros por CNPJ de referência
+</dd>
+
+          <dt id="ConsultarDeclaracaoEspecificaRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracaoEspecificaRequest-class.html">ConsultarDeclaracaoEspecificaRequest</a></span> 
+
+</dt>
+<dd>
+  Request para consultar uma declaração específica transmitida na DEFIS
+</dd>
+
+          <dt id="ConsultarDeclaracaoEspecificaResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracaoEspecificaResponse-class.html">ConsultarDeclaracaoEspecificaResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consultar uma declaração específica transmitida na DEFIS
+</dd>
+
+          <dt id="ConsultarDeclaracaoNumeroRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracaoNumeroRequest-class.html">ConsultarDeclaracaoNumeroRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar declaração por número PGDASD
+</dd>
+
+          <dt id="ConsultarDeclaracaoNumeroResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracaoNumeroResponse-class.html">ConsultarDeclaracaoNumeroResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar declaração por número PGDASD
+</dd>
+
+          <dt id="ConsultarDeclaracoesRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracoesRequest-class.html">ConsultarDeclaracoesRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar declarações PGDASD
+</dd>
+
+          <dt id="ConsultarDeclaracoesResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDeclaracoesResponse-class.html">ConsultarDeclaracoesResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar declarações PGDASD
+</dd>
+
+          <dt id="ConsultarDetalhesPagamentoRelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDetalhesPagamentoRelpmeiRequest-class.html">ConsultarDetalhesPagamentoRelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para consultar detalhes de pagamento (DETPAGTOPARC235)
+</dd>
+
+          <dt id="ConsultarDetalhesPagamentoRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDetalhesPagamentoRelpmeiResponse-class.html">ConsultarDetalhesPagamentoRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar detalhes de pagamento (DETPAGTOPARC235)
+</dd>
+
+          <dt id="ConsultarDetalhesPagamentoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDetalhesPagamentoResponse-class.html">ConsultarDetalhesPagamentoResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarDividaAtivaRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDividaAtivaRequest-class.html">ConsultarDividaAtivaRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de entrada para DIVIDAATIVA24
+</dd>
+
+          <dt id="ConsultarDividaAtivaResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarDividaAtivaResponse-class.html">ConsultarDividaAtivaResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para DIVIDAATIVA24 - Consultar Dívida Ativa
+</dd>
+
+          <dt id="ConsultarExtratoDasRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarExtratoDasRequest-class.html">ConsultarExtratoDasRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar extrato do DAS PGDASD
+</dd>
+
+          <dt id="ConsultarExtratoDasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarExtratoDasResponse-class.html">ConsultarExtratoDasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar extrato do DAS PGDASD
+</dd>
+
+          <dt id="ConsultarOpcaoRegimeRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarOpcaoRegimeRequest-class.html">ConsultarOpcaoRegimeRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar opção específica de regime por ano
+</dd>
+
+          <dt id="ConsultarOpcaoRegimeResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarOpcaoRegimeResponse-class.html">ConsultarOpcaoRegimeResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados de resposta para consultar opção específica de regime
+</dd>
+
+          <dt id="ConsultarPagamentosRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarPagamentosRequest-class.html">ConsultarPagamentosRequest</a></span> 
+
+</dt>
+<dd>
+  Request para consultar pagamentos (PAGAMENTOS71)
+</dd>
+
+          <dt id="ConsultarPagamentosResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarPagamentosResponse-class.html">ConsultarPagamentosResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consulta de pagamentos
+</dd>
+
+          <dt id="ConsultarParcelamentoRelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelamentoRelpmeiRequest-class.html">ConsultarParcelamentoRelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para consultar parcelamento específico (OBTERPARC234)
+</dd>
+
+          <dt id="ConsultarParcelamentoRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelamentoRelpmeiResponse-class.html">ConsultarParcelamentoRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar parcelamento específico (OBTERPARC234)
+</dd>
+
+          <dt id="ConsultarParcelamentoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelamentoResponse-class.html">ConsultarParcelamentoResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarParcelasImpressaoRelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelasImpressaoRelpmeiRequest-class.html">ConsultarParcelasImpressaoRelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para consultar parcelas para impressão (PARCELASPARAGERAR232)
+</dd>
+
+          <dt id="ConsultarParcelasImpressaoRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelasImpressaoRelpmeiResponse-class.html">ConsultarParcelasImpressaoRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar parcelas para impressão (PARCELASPARAGERAR232)
+</dd>
+
+          <dt id="ConsultarParcelasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarParcelasResponse-class.html">ConsultarParcelasResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarPedidosRelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarPedidosRelpmeiRequest-class.html">ConsultarPedidosRelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para consultar pedidos de parcelamento (PEDIDOSPARC233)
+</dd>
+
+          <dt id="ConsultarPedidosRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarPedidosRelpmeiResponse-class.html">ConsultarPedidosRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar pedidos de parcelamento (PEDIDOSPARC233)
+</dd>
+
+          <dt id="ConsultarPedidosResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarPedidosResponse-class.html">ConsultarPedidosResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarReceitasRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarReceitasRequest-class.html">ConsultarReceitasRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo para requisição de consulta de receitas
+</dd>
+
+          <dt id="ConsultarReceitasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarReceitasResponse-class.html">ConsultarReceitasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo para resposta de consulta de receitas
+</dd>
+
+          <dt id="ConsultarRelatorioResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarRelatorioResponse-class.html">ConsultarRelatorioResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consulta de relatórios (Recibo e Declaração Completa)
+</dd>
+
+          <dt id="ConsultarResolucaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarResolucaoRequest-class.html">ConsultarResolucaoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar resolução do Regime de Caixa
+</dd>
+
+          <dt id="ConsultarResolucaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarResolucaoResponse-class.html">ConsultarResolucaoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados de resposta para consultar resolução do regime de caixa
+</dd>
+
+          <dt id="ConsultarSituacaoCadastralCcmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarSituacaoCadastralCcmeiResponse-class.html">ConsultarSituacaoCadastralCcmeiResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ConsultarSituacaoEncerramentoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarSituacaoEncerramentoRequest-class.html">ConsultarSituacaoEncerramentoRequest</a></span> 
+
+</dt>
+<dd>
+  Request para consultar situação de encerramento (SITUACAOENC315)
+</dd>
+
+          <dt id="ConsultarSituacaoEncerramentoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarSituacaoEncerramentoResponse-class.html">ConsultarSituacaoEncerramentoResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consultar situação de encerramento
+</dd>
+
+          <dt id="ConsultarUltimaDeclaracaoComPagamentoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarUltimaDeclaracaoComPagamentoResponse-class.html">ConsultarUltimaDeclaracaoComPagamentoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar última declaração com informação de pagamento
+</dd>
+
+          <dt id="ConsultarUltimaDeclaracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarUltimaDeclaracaoRequest-class.html">ConsultarUltimaDeclaracaoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para consultar última declaração PGDASD
+</dd>
+
+          <dt id="ConsultarUltimaDeclaracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarUltimaDeclaracaoResponse-class.html">ConsultarUltimaDeclaracaoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para consultar última declaração PGDASD
+</dd>
+
+          <dt id="ConsultarXmlResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ConsultarXmlResponse-class.html">ConsultarXmlResponse</a></span> 
+
+</dt>
+<dd>
+  Response para consulta/geração de XML da declaração
+</dd>
+
+          <dt id="ContarPagamentosRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ContarPagamentosRequest-class.html">ContarPagamentosRequest</a></span> 
+
+</dt>
+<dd>
+  Request para contar pagamentos (CONTACONSDOCARRPG73)
+</dd>
+
+          <dt id="ContarPagamentosResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ContarPagamentosResponse-class.html">ContarPagamentosResponse</a></span> 
+
+</dt>
+<dd>
+  Response para contagem de pagamentos
+</dd>
+
+          <dt id="ConteudoIndicadorMensagens">
+  <span class="name "><a href="../serpro_integra_contador_api/ConteudoIndicadorMensagens-class.html">ConteudoIndicadorMensagens</a></span> 
+
+</dt>
+<dd>
+  Conteúdo do indicador de mensagens novas
+</dd>
+
+          <dt id="ConteudoListaMensagens">
+  <span class="name "><a href="../serpro_integra_contador_api/ConteudoListaMensagens-class.html">ConteudoListaMensagens</a></span> 
+
+</dt>
+<dd>
+  Conteúdo da resposta de lista de mensagens
+</dd>
+
+          <dt id="Credito">
+  <span class="name "><a href="../serpro_integra_contador_api/Credito-class.html">Credito</a></span> 
+
+</dt>
+<dd>
+  Crédito individual
+</dd>
+
+          <dt id="Creditos">
+  <span class="name "><a href="../serpro_integra_contador_api/Creditos-class.html">Creditos</a></span> 
+
+</dt>
+<dd>
+  Créditos da apuração
+</dd>
+
+          <dt id="DadosDetalhesMensagem">
+  <span class="name "><a href="../serpro_integra_contador_api/DadosDetalhesMensagem-class.html">DadosDetalhesMensagem</a></span> 
+
+</dt>
+<dd>
+  Dados parseados do campo 'dados' para detalhes de mensagem
+</dd>
+
+          <dt id="DadosIndicadorMensagens">
+  <span class="name "><a href="../serpro_integra_contador_api/DadosIndicadorMensagens-class.html">DadosIndicadorMensagens</a></span> 
+
+</dt>
+<dd>
+  Dados parseados do campo 'dados' para indicador de mensagens
+</dd>
+
+          <dt id="DadosIniciais">
+  <span class="name "><a href="../serpro_integra_contador_api/DadosIniciais-class.html">DadosIniciais</a></span> 
+
+</dt>
+<dd>
+  Dados iniciais da apuração
+</dd>
+
+          <dt id="DadosListaMensagens">
+  <span class="name "><a href="../serpro_integra_contador_api/DadosListaMensagens-class.html">DadosListaMensagens</a></span> 
+
+</dt>
+<dd>
+  Dados parseados do campo 'dados' para lista de mensagens
+</dd>
+
+          <dt id="DasAvulso">
+  <span class="name "><a href="../serpro_integra_contador_api/DasAvulso-class.html">DasAvulso</a></span> 
+
+</dt>
+<dd>
+  DAS Avulso gerado
+</dd>
+
+          <dt id="DasCobranca">
+  <span class="name "><a href="../serpro_integra_contador_api/DasCobranca-class.html">DasCobranca</a></span> 
+
+</dt>
+<dd>
+  DAS Cobrança gerado
+</dd>
+
+          <dt id="DasCodigoBarras">
+  <span class="name "><a href="../serpro_integra_contador_api/DasCodigoBarras-class.html">DasCodigoBarras</a></span> 
+
+</dt>
+<dd>
+  DAS gerado apenas com código de barras (sem PDF)
+</dd>
+
+          <dt id="DasData">
+  <span class="name "><a href="../serpro_integra_contador_api/DasData-class.html">DasData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DasEmitidoRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/DasEmitidoRelpmei-class.html">DasEmitidoRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para DAS Emitido RELPMEI
+</dd>
+
+          <dt id="DasProcesso">
+  <span class="name "><a href="../serpro_integra_contador_api/DasProcesso-class.html">DasProcesso</a></span> 
+
+</dt>
+<dd>
+  DAS de Processo gerado
+</dd>
+
+          <dt id="DctfWebRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/DctfWebRequest-class.html">DctfWebRequest</a></span> 
+
+</dt>
+<dd>
+  Request base para serviços DCTFWeb
+</dd>
+
+          <dt id="DctfWebResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/DctfWebResponse-class.html">DctfWebResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DctfWebService">
+  <span class="name "><a href="../serpro_integra_contador_api/DctfWebService-class.html">DctfWebService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> DCTFWeb (Declaração de Débitos e Créditos Tributários Federais)
+</dd>
+
+          <dt id="Debito">
+  <span class="name "><a href="../serpro_integra_contador_api/Debito-class.html">Debito</a></span> 
+
+</dt>
+<dd>
+  Débito individual
+</dd>
+
+          <dt id="Debitos">
+  <span class="name "><a href="../serpro_integra_contador_api/Debitos-class.html">Debitos</a></span> 
+
+</dt>
+<dd>
+  Débitos da apuração
+</dd>
+
+          <dt id="Declaracao">
+  <span class="name "><a href="../serpro_integra_contador_api/Declaracao-class.html">Declaracao</a></span> 
+
+</dt>
+<dd>
+  Modelo para declaração na lista de declarações
+</dd>
+
+          <dt id="DeclaracaoCompleta">
+  <span class="name "><a href="../serpro_integra_contador_api/DeclaracaoCompleta-class.html">DeclaracaoCompleta</a></span> 
+
+</dt>
+<dd>
+  Declaração completa
+</dd>
+
+          <dt id="DeclaracaoEspecifica">
+  <span class="name "><a href="../serpro_integra_contador_api/DeclaracaoEspecifica-class.html">DeclaracaoEspecifica</a></span> 
+
+</dt>
+<dd>
+  Modelo para declaração específica
+</dd>
+
+          <dt id="DeclaracaoTransmitida">
+  <span class="name "><a href="../serpro_integra_contador_api/DeclaracaoTransmitida-class.html">DeclaracaoTransmitida</a></span> 
+
+</dt>
+<dd>
+  Declaração transmitida
+</dd>
+
+          <dt id="DeclaracoesEntregues">
+  <span class="name "><a href="../serpro_integra_contador_api/DeclaracoesEntregues-class.html">DeclaracoesEntregues</a></span> 
+
+</dt>
+<dd>
+  Declarações entregues
+</dd>
+
+          <dt id="DeclararResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/DeclararResponse-class.html">DeclararResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta básico para declaração PGDASD (mantido para compatibilidade)
+</dd>
+
+          <dt id="DefisService">
+  <span class="name "><a href="../serpro_integra_contador_api/DefisService-class.html">DefisService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> DEFIS (Declaração de Informações Socioeconômicas e Fiscais)
+</dd>
+
+          <dt id="DemonstrativoPagamento">
+  <span class="name "><a href="../serpro_integra_contador_api/DemonstrativoPagamento-class.html">DemonstrativoPagamento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Desmembramento">
+  <span class="name "><a href="../serpro_integra_contador_api/Desmembramento-class.html">Desmembramento</a></span> 
+
+</dt>
+<dd>
+  Desmembramento
+</dd>
+
+          <dt id="DetalhamentoDarfMaed">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDarfMaed-class.html">DetalhamentoDarfMaed</a></span> 
+
+</dt>
+<dd>
+  Detalhamento do DARF/MAED
+</dd>
+
+          <dt id="DetalhamentoDas">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDas-class.html">DetalhamentoDas</a></span> 
+
+</dt>
+<dd>
+  Detalhamento de um DAS gerado
+</dd>
+
+          <dt id="DetalhamentoDasAvulso">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDasAvulso-class.html">DetalhamentoDasAvulso</a></span> 
+
+</dt>
+<dd>
+  Detalhamento do DAS Avulso
+</dd>
+
+          <dt id="DetalhamentoDasCobranca">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDasCobranca-class.html">DetalhamentoDasCobranca</a></span> 
+
+</dt>
+<dd>
+  Detalhamento do DAS Cobrança
+</dd>
+
+          <dt id="DetalhamentoDasCodigoBarras">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDasCodigoBarras-class.html">DetalhamentoDasCodigoBarras</a></span> 
+
+</dt>
+<dd>
+  Detalhamento de um DAS gerado apenas com código de barras
+</dd>
+
+          <dt id="DetalhamentoDasProcesso">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhamentoDasProcesso-class.html">DetalhamentoDasProcesso</a></span> 
+
+</dt>
+<dd>
+  Detalhamento do DAS de Processo
+</dd>
+
+          <dt id="DetalheMensagemCompleta">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalheMensagemCompleta-class.html">DetalheMensagemCompleta</a></span> 
+
+</dt>
+<dd>
+  Detalhes completos de uma mensagem
+</dd>
+
+          <dt id="DetalhesAlteracaoDivida">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesAlteracaoDivida-class.html">DetalhesAlteracaoDivida</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetalhesConsolidacao">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesConsolidacao-class.html">DetalhesConsolidacao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetalhesDemonstrativoPagamento">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesDemonstrativoPagamento-class.html">DetalhesDemonstrativoPagamento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetalhesMensagemResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesMensagemResponse-class.html">DetalhesMensagemResponse</a></span> 
+
+</dt>
+<dd>
+  Response para obter detalhes de uma mensagem específica
+</dd>
+
+          <dt id="DetalhesPagamento">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesPagamento-class.html">DetalhesPagamento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetalhesPagamentoData">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesPagamentoData-class.html">DetalhesPagamentoData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetalhesPagamentoRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/DetalhesPagamentoRelpmei-class.html">DetalhesPagamentoRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para Detalhes de Pagamento RELPMEI
+</dd>
+
+          <dt id="DiscriminacaoDebito">
+  <span class="name "><a href="../serpro_integra_contador_api/DiscriminacaoDebito-class.html">DiscriminacaoDebito</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Doacao">
+  <span class="name "><a href="../serpro_integra_contador_api/Doacao-class.html">Doacao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DocumentoArrecadacao">
+  <span class="name "><a href="../serpro_integra_contador_api/DocumentoArrecadacao-class.html">DocumentoArrecadacao</a></span> 
+
+</dt>
+<dd>
+  Documento de arrecadação
+</dd>
+
+          <dt id="DteDados">
+  <span class="name "><a href="../serpro_integra_contador_api/DteDados-class.html">DteDados</a></span> 
+
+</dt>
+<dd>
+  Dados específicos do DTE
+</dd>
+
+          <dt id="DteResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/DteResponse-class.html">DteResponse</a></span> 
+
+</dt>
+<dd>
+  Resposta do serviço DTE - Domicílio Tributário Eletrônico
+</dd>
+
+          <dt id="DteService">
+  <span class="name "><a href="../serpro_integra_contador_api/DteService-class.html">DteService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> DTE (Domicílio Tributário Eletrônico)
+</dd>
+
+          <dt id="EfetuarOpcaoRegimeRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EfetuarOpcaoRegimeRequest-class.html">EfetuarOpcaoRegimeRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para efetuar opção pelo regime de apuração
+</dd>
+
+          <dt id="EfetuarOpcaoRegimeResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EfetuarOpcaoRegimeResponse-class.html">EfetuarOpcaoRegimeResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados de resposta para efetuar opção pelo regime de apuração
+</dd>
+
+          <dt id="EmitirCcmeiDados">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirCcmeiDados-class.html">EmitirCcmeiDados</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EmitirCcmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirCcmeiResponse-class.html">EmitirCcmeiResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EmitirComprovanteRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirComprovanteRequest-class.html">EmitirComprovanteRequest</a></span> 
+
+</dt>
+<dd>
+  Request para emitir comprovante de pagamento (EMITECOMPROVANTEPAGAMENTO72)
+</dd>
+
+          <dt id="EmitirComprovanteResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirComprovanteResponse-class.html">EmitirComprovanteResponse</a></span> 
+
+</dt>
+<dd>
+  Response para emissão de comprovante
+</dd>
+
+          <dt id="EmitirDasRelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirDasRelpmeiRequest-class.html">EmitirDasRelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para emitir DAS (GERARDAS231)
+</dd>
+
+          <dt id="EmitirDasRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirDasRelpmeiResponse-class.html">EmitirDasRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para emitir DAS (GERARDAS231)
+</dd>
+
+          <dt id="EmitirDasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirDasResponse-class.html">EmitirDasResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EmitirRelatorioDados">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirRelatorioDados-class.html">EmitirRelatorioDados</a></span> 
+
+</dt>
+<dd>
+  Dados retornados na emissão do relatório
+</dd>
+
+          <dt id="EmitirRelatorioRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirRelatorioRequest-class.html">EmitirRelatorioRequest</a></span> 
+
+</dt>
+<dd>
+  Request para emitir relatório de situação fiscal
+</dd>
+
+          <dt id="EmitirRelatorioResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EmitirRelatorioResponse-class.html">EmitirRelatorioResponse</a></span> 
+
+</dt>
+<dd>
+  Response da emissão do relatório de situação fiscal
+</dd>
+
+          <dt id="Empresa">
+  <span class="name "><a href="../serpro_integra_contador_api/Empresa-class.html">Empresa</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Empresario">
+  <span class="name "><a href="../serpro_integra_contador_api/Empresario-class.html">Empresario</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EncerrarApuracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EncerrarApuracaoRequest-class.html">EncerrarApuracaoRequest</a></span> 
+
+</dt>
+<dd>
+  Request para encerrar apuração MIT (ENCAPURACAO314)
+</dd>
+
+          <dt id="EncerrarApuracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EncerrarApuracaoResponse-class.html">EncerrarApuracaoResponse</a></span> 
+
+</dt>
+<dd>
+  Response para encerrar apuração MIT
+</dd>
+
+          <dt id="EnderecoComercial">
+  <span class="name "><a href="../serpro_integra_contador_api/EnderecoComercial-class.html">EnderecoComercial</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Enquadramento">
+  <span class="name "><a href="../serpro_integra_contador_api/Enquadramento-class.html">Enquadramento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EntregarDeclaracaoComDasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EntregarDeclaracaoComDasResponse-class.html">EntregarDeclaracaoComDasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para entrega de declaração com geração automática de DAS
+</dd>
+
+          <dt id="EntregarDeclaracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/EntregarDeclaracaoRequest-class.html">EntregarDeclaracaoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para entrega de declaração PGDASD
+</dd>
+
+          <dt id="EntregarDeclaracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/EntregarDeclaracaoResponse-class.html">EntregarDeclaracaoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para entrega de declaração PGDASD
+</dd>
+
+          <dt id="Estabelecimento">
+  <span class="name "><a href="../serpro_integra_contador_api/Estabelecimento-class.html">Estabelecimento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EventoAtualizacaoPF">
+  <span class="name "><a href="../serpro_integra_contador_api/EventoAtualizacaoPF-class.html">EventoAtualizacaoPF</a></span> 
+
+</dt>
+<dd>
+  Modelo para um evento de atualização de PF
+</dd>
+
+          <dt id="EventoAtualizacaoPJ">
+  <span class="name "><a href="../serpro_integra_contador_api/EventoAtualizacaoPJ-class.html">EventoAtualizacaoPJ</a></span> 
+
+</dt>
+<dd>
+  Modelo para um evento de atualização de PJ
+</dd>
+
+          <dt id="EventoEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/EventoEspecial-class.html">EventoEspecial</a></span> 
+
+</dt>
+<dd>
+  Evento especial da apuração
+</dd>
+
+          <dt id="EventosAtualizacaoCommon">
+  <span class="name "><a href="../serpro_integra_contador_api/EventosAtualizacaoCommon-class.html">EventosAtualizacaoCommon</a></span> 
+
+</dt>
+<dd>
+  Enums e constantes comuns para os serviços de Eventos de Atualização
+</dd>
+
+          <dt id="EventosAtualizacaoService">
+  <span class="name "><a href="../serpro_integra_contador_api/EventosAtualizacaoService-class.html">EventosAtualizacaoService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> EVENTOS DE ATUALIZAÇÃO
+</dd>
+
+          <dt id="ExigibilidadeSuspensa">
+  <span class="name "><a href="../serpro_integra_contador_api/ExigibilidadeSuspensa-class.html">ExigibilidadeSuspensa</a></span> 
+
+</dt>
+<dd>
+  Exigibilidade Suspensa
+</dd>
+
+          <dt id="ExtensaoReceita">
+  <span class="name "><a href="../serpro_integra_contador_api/ExtensaoReceita-class.html">ExtensaoReceita</a></span> 
+
+</dt>
+<dd>
+  Modelo para extensão da receita
+</dd>
+
+          <dt id="Extrato">
+  <span class="name "><a href="../serpro_integra_contador_api/Extrato-class.html">Extrato</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ExtratoDas">
+  <span class="name "><a href="../serpro_integra_contador_api/ExtratoDas-class.html">ExtratoDas</a></span> 
+
+</dt>
+<dd>
+  Extrato do DAS
+</dd>
+
+          <dt id="FolhaSalario">
+  <span class="name "><a href="../serpro_integra_contador_api/FolhaSalario-class.html">FolhaSalario</a></span> 
+
+</dt>
+<dd>
+  Folha de salário
+</dd>
+
+          <dt id="FormatadorUtils">
+  <span class="name "><a href="../serpro_integra_contador_api/FormatadorUtils-class.html">FormatadorUtils</a></span> 
+
+</dt>
+<dd>
+  Utilitários centralizados para formatação de dados
+</dd>
+
+          <dt id="GenericRelpmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GenericRelpmeiResponse-class.html">GenericRelpmeiResponse</a></span> 
+
+</dt>
+<dd>
+  Implementação genérica para respostas RELPMEI
+</dd>
+
+          <dt id="GerarCodigoBarrasRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarCodigoBarrasRequest-class.html">GerarCodigoBarrasRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo para requisição de geração de código de barras
+</dd>
+
+          <dt id="GerarCodigoBarrasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarCodigoBarrasResponse-class.html">GerarCodigoBarrasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo para resposta de geração de código de barras
+</dd>
+
+          <dt id="GerarDasAvulsoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasAvulsoRequest-class.html">GerarDasAvulsoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para gerar DAS Avulso PGDASD
+</dd>
+
+          <dt id="GerarDasAvulsoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasAvulsoResponse-class.html">GerarDasAvulsoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para gerar DAS Avulso PGDASD
+</dd>
+
+          <dt id="GerarDasCobrancaRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasCobrancaRequest-class.html">GerarDasCobrancaRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para gerar DAS Cobrança PGDASD
+</dd>
+
+          <dt id="GerarDasCobrancaResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasCobrancaResponse-class.html">GerarDasCobrancaResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para gerar DAS Cobrança PGDASD
+</dd>
+
+          <dt id="GerarDasCodigoBarrasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasCodigoBarrasResponse-class.html">GerarDasCodigoBarrasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para GERARDASCODBARRA22 - Gerar DAS apenas com código de barras
+</dd>
+
+          <dt id="GerarDasProcessoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasProcessoRequest-class.html">GerarDasProcessoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para gerar DAS de Processo PGDASD
+</dd>
+
+          <dt id="GerarDasProcessoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasProcessoResponse-class.html">GerarDasProcessoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para gerar DAS de Processo PGDASD
+</dd>
+
+          <dt id="GerarDasRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasRequest-class.html">GerarDasRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados para gerar DAS PGDASD
+</dd>
+
+          <dt id="GerarDasResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarDasResponse-class.html">GerarDasResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para gerar DAS PGDASD
+</dd>
+
+          <dt id="GerarGuiaResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/GerarGuiaResponse-class.html">GerarGuiaResponse</a></span> 
+
+</dt>
+<dd>
+  Response para geração de documentos de arrecadação (DARF/DAE)
+</dd>
+
+          <dt id="IndicadorMensagensResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/IndicadorMensagensResponse-class.html">IndicadorMensagensResponse</a></span> 
+
+</dt>
+<dd>
+  Response para obter indicador de novas mensagens
+</dd>
+
+          <dt id="IndiceDas">
+  <span class="name "><a href="../serpro_integra_contador_api/IndiceDas-class.html">IndiceDas</a></span> 
+
+</dt>
+<dd>
+  Índice do DAS
+</dd>
+
+          <dt id="IndiceDeclaracao">
+  <span class="name "><a href="../serpro_integra_contador_api/IndiceDeclaracao-class.html">IndiceDeclaracao</a></span> 
+
+</dt>
+<dd>
+  Índice da declaração
+</dd>
+
+          <dt id="InfoBeneficio">
+  <span class="name "><a href="../serpro_integra_contador_api/InfoBeneficio-class.html">InfoBeneficio</a></span> 
+
+</dt>
+<dd>
+  Informação sobre benefício de um período
+</dd>
+
+          <dt id="InformacaoOpcional">
+  <span class="name "><a href="../serpro_integra_contador_api/InformacaoOpcional-class.html">InformacaoOpcional</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="InformacoesAdicionais">
+  <span class="name "><a href="../serpro_integra_contador_api/InformacoesAdicionais-class.html">InformacoesAdicionais</a></span> 
+
+</dt>
+<dd>
+  Modelo para informações adicionais
+</dd>
+
+          <dt id="InformacoesCertificado">
+  <span class="name "><a href="../serpro_integra_contador_api/InformacoesCertificado-class.html">InformacoesCertificado</a></span> 
+
+</dt>
+<dd>
+  Informações extraídas do certificado digital X509
+</dd>
+
+          <dt id="Isencao">
+  <span class="name "><a href="../serpro_integra_contador_api/Isencao-class.html">Isencao</a></span> 
+
+</dt>
+<dd>
+  Isenção
+</dd>
+
+          <dt id="IssRetidoFonte">
+  <span class="name "><a href="../serpro_integra_contador_api/IssRetidoFonte-class.html">IssRetidoFonte</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosBase">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosBase-class.html">ListaCreditosBase</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCideCombustiveis">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCideCombustiveis-class.html">ListaCreditosCideCombustiveis</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCideRemessas">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCideRemessas-class.html">ListaCreditosCideRemessas</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCofins">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCofins-class.html">ListaCreditosCofins</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCondecine">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCondecine-class.html">ListaCreditosCondecine</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosContribuicaoConcursoPrognosticos">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosContribuicaoConcursoPrognosticos-class.html">ListaCreditosContribuicaoConcursoPrognosticos</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosContribuicoesDiversas">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosContribuicoesDiversas-class.html">ListaCreditosContribuicoesDiversas</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCpss">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCpss-class.html">ListaCreditosCpss</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosCsll">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosCsll-class.html">ListaCreditosCsll</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosIof">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosIof-class.html">ListaCreditosIof</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosIpi">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosIpi-class.html">ListaCreditosIpi</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosIrpj">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosIrpj-class.html">ListaCreditosIrpj</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosIrrf">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosIrrf-class.html">ListaCreditosIrrf</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosPisPasep">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosPisPasep-class.html">ListaCreditosPisPasep</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaCreditosRetPagamentoUnificado">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaCreditosRetPagamentoUnificado-class.html">ListaCreditosRetPagamentoUnificado</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosBase">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosBase-class.html">ListaDebitosBase</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCideCombustiveis">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCideCombustiveis-class.html">ListaDebitosCideCombustiveis</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCideRemessas">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCideRemessas-class.html">ListaDebitosCideRemessas</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCofins">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCofins-class.html">ListaDebitosCofins</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCondecine">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCondecine-class.html">ListaDebitosCondecine</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosContribuicaoConcursoPrognosticos">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosContribuicaoConcursoPrognosticos-class.html">ListaDebitosContribuicaoConcursoPrognosticos</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosContribuicoesDiversas">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosContribuicoesDiversas-class.html">ListaDebitosContribuicoesDiversas</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCpss">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCpss-class.html">ListaDebitosCpss</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosCsll">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosCsll-class.html">ListaDebitosCsll</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosIof">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosIof-class.html">ListaDebitosIof</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosIpi">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosIpi-class.html">ListaDebitosIpi</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosIrpj">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosIrpj-class.html">ListaDebitosIrpj</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosIrrf">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosIrrf-class.html">ListaDebitosIrrf</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosPisPasep">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosPisPasep-class.html">ListaDebitosPisPasep</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaDebitosRetPagamentoUnificado">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaDebitosRetPagamentoUnificado-class.html">ListaDebitosRetPagamentoUnificado</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListaMensagensResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaMensagensResponse-class.html">ListaMensagensResponse</a></span> 
+
+</dt>
+<dd>
+  Response para obter lista de mensagens por contribuinte
+</dd>
+
+          <dt id="ListaParcelasData">
+  <span class="name "><a href="../serpro_integra_contador_api/ListaParcelasData-class.html">ListaParcelasData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ListarApuracaoesRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ListarApuracaoesRequest-class.html">ListarApuracaoesRequest</a></span> 
+
+</dt>
+<dd>
+  Request para listar apurações (LISTAAPURACOES317)
+</dd>
+
+          <dt id="ListarApuracaoesResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ListarApuracaoesResponse-class.html">ListarApuracaoesResponse</a></span> 
+
+</dt>
+<dd>
+  Response para listar apurações
+</dd>
+
+          <dt id="Mensagem">
+  <span class="name "><a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a></span> 
+
+</dt>
+<dd>
+  Classe base para mensagens utilizada nos módulos de parcelamento
+</dd>
+
+          <dt id="MensagemCaixaPostal">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemCaixaPostal-class.html">MensagemCaixaPostal</a></span> 
+
+</dt>
+<dd>
+  Mensagem individual da Caixa Postal
+</dd>
+
+          <dt id="MensagemCcmei">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemCcmei-class.html">MensagemCcmei</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="MensagemDctf">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemDctf-class.html">MensagemDctf</a></span> 
+
+</dt>
+<dd>
+  Classes comuns para respostas DCTFWeb
+Mensagem específica do DCTFWeb
+</dd>
+
+          <dt id="MensagemDefis">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemDefis-class.html">MensagemDefis</a></span> 
+
+</dt>
+<dd>
+  Classes compartilhadas para responses do DEFIS
+Mensagem padrão do DEFIS
+</dd>
+
+          <dt id="MensagemEventosAtualizacao">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemEventosAtualizacao-class.html">MensagemEventosAtualizacao</a></span> 
+
+</dt>
+<dd>
+  Modelo para mensagens de negócio dos eventos de atualização
+</dd>
+
+          <dt id="MensagemMit">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemMit-class.html">MensagemMit</a></span> 
+
+</dt>
+<dd>
+  Mensagem MIT
+</dd>
+
+          <dt id="MensagemNegocio">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemNegocio-class.html">MensagemNegocio</a></span> 
+
+</dt>
+<dd>
+  Classe base para mensagens de negócio utilizada em todos os módulos da API SERPRO
+</dd>
+
+          <dt id="MensagemRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemRelpmei-class.html">MensagemRelpmei</a></span> 
+
+</dt>
+<dd>
+  Mensagem de resposta RELPMEI
+</dd>
+
+          <dt id="MitRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/MitRequest-class.html">MitRequest</a></span> 
+
+</dt>
+<dd>
+  Request base para serviços MIT
+</dd>
+
+          <dt id="MitResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/MitResponse-class.html">MitResponse</a></span> 
+
+</dt>
+<dd>
+  Response base para serviços MIT
+</dd>
+
+          <dt id="MitService">
+  <span class="name "><a href="../serpro_integra_contador_api/MitService-class.html">MitService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> MIT (Módulo de Inclusão de Tributos)
+</dd>
+
+          <dt id="MudancaOutroMunicipio">
+  <span class="name "><a href="../serpro_integra_contador_api/MudancaOutroMunicipio-class.html">MudancaOutroMunicipio</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="NaoOptante">
+  <span class="name "><a href="../serpro_integra_contador_api/NaoOptante-class.html">NaoOptante</a></span> 
+
+</dt>
+<dd>
+  Informações de não optante
+</dd>
+
+          <dt id="ObterEventosPFRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterEventosPFRequest-class.html">ObterEventosPFRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de requisição para obter eventos de atualização de Pessoa Física
+</dd>
+
+          <dt id="ObterEventosPFResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterEventosPFResponse-class.html">ObterEventosPFResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para obter eventos de atualização de Pessoa Física
+</dd>
+
+          <dt id="ObterEventosPJRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterEventosPJRequest-class.html">ObterEventosPJRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de requisição para obter eventos de atualização de Pessoa Jurídica
+</dd>
+
+          <dt id="ObterEventosPJResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterEventosPJResponse-class.html">ObterEventosPJResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para obter eventos de atualização de Pessoa Jurídica
+</dd>
+
+          <dt id="ObterProcuracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterProcuracaoRequest-class.html">ObterProcuracaoRequest</a></span> 
+
+</dt>
+<dd>
+  Request para obter procurações eletrônicas
+</dd>
+
+          <dt id="ObterProcuracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ObterProcuracaoResponse-class.html">ObterProcuracaoResponse</a></span> 
+
+</dt>
+<dd>
+  Response para obter procurações eletrônicas
+</dd>
+
+          <dt id="Ocupacao">
+  <span class="name "><a href="../serpro_integra_contador_api/Ocupacao-class.html">Ocupacao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Operacao">
+  <span class="name "><a href="../serpro_integra_contador_api/Operacao-class.html">Operacao</a></span> 
+
+</dt>
+<dd>
+  Operação realizada
+</dd>
+
+          <dt id="OperacaoInterestadual">
+  <span class="name "><a href="../serpro_integra_contador_api/OperacaoInterestadual-class.html">OperacaoInterestadual</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PagamentoDebito">
+  <span class="name "><a href="../serpro_integra_contador_api/PagamentoDebito-class.html">PagamentoDebito</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PagtoWebRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/PagtoWebRequest-class.html">PagtoWebRequest</a></span> 
+
+</dt>
+<dd>
+  Classe base para requests do PAGTOWEB
+</dd>
+
+          <dt id="PagtoWebResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/PagtoWebResponse-class.html">PagtoWebResponse</a></span> 
+
+</dt>
+<dd>
+  Classe base para responses do PAGTOWEB
+</dd>
+
+          <dt id="PagtoWebService">
+  <span class="name "><a href="../serpro_integra_contador_api/PagtoWebService-class.html">PagtoWebService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PAGTOWEB (Sistema de Pagamentos do Simples Nacional)
+</dd>
+
+          <dt id="PagtoWebTipoDocumento">
+  <span class="name "><a href="../serpro_integra_contador_api/PagtoWebTipoDocumento-class.html">PagtoWebTipoDocumento</a></span> 
+
+</dt>
+<dd>
+  Classe para tipo de documento utilizado no módulo PAGTOWEB
+</dd>
+
+          <dt id="Parcela">
+  <span class="name "><a href="../serpro_integra_contador_api/Parcela-class.html">Parcela</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcelaAlteracao">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelaAlteracao-class.html">ParcelaAlteracao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcelaDisponivelRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelaDisponivelRelpmei-class.html">ParcelaDisponivelRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para Parcela Disponívvel RELPMEI
+</dd>
+
+          <dt id="Parcelamento">
+  <span class="name "><a href="../serpro_integra_contador_api/Parcelamento-class.html">Parcelamento</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcelamentoDetalhado">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelamentoDetalhado-class.html">ParcelamentoDetalhado</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcelamentoDetalhadoRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelamentoDetalhadoRelpmei-class.html">ParcelamentoDetalhadoRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para Parcelamento Detalhado RELPMEI
+</dd>
+
+          <dt id="ParcelamentoRelpmei">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelamentoRelpmei-class.html">ParcelamentoRelpmei</a></span> 
+
+</dt>
+<dd>
+  Modelo para Parcelamento RELPMEI
+</dd>
+
+          <dt id="ParcelamentosData">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcelamentosData-class.html">ParcelamentosData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcmeiErrorAnalysis">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiErrorAnalysis-class.html">ParcmeiErrorAnalysis</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcmeiErrorInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiErrorInfo-class.html">ParcmeiErrorInfo</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcmeiErrors">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiErrors-class.html">ParcmeiErrors</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcmeiEspecialErrorAnalysis">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialErrorAnalysis-class.html">ParcmeiEspecialErrorAnalysis</a></span> 
+
+</dt>
+<dd>
+  Análise completa de um erro do PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiEspecialErrorInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialErrorInfo-class.html">ParcmeiEspecialErrorInfo</a></span> 
+
+</dt>
+<dd>
+  Informações sobre um erro específico do PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiEspecialErrors">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialErrors-class.html">ParcmeiEspecialErrors</a></span> 
+
+</dt>
+<dd>
+  Tratamento de erros específicos para os serviços PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiEspecialResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialResponse-class.html">ParcmeiEspecialResponse</a></span> 
+
+</dt>
+<dd>
+  Classe base para respostas do sistema PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiEspecialService">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialService-class.html">ParcmeiEspecialService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PARCMEI-ESP (Parcelamento Especial do MEI)
+</dd>
+
+          <dt id="ParcmeiEspecialValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialValidations-class.html">ParcmeiEspecialValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para os serviços PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiResponse-class.html">ParcmeiResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcmeiService">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiService-class.html">ParcmeiService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PARCMEI (Parcelamento do MEI)
+</dd>
+
+          <dt id="ParcmeiValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiValidations-class.html">ParcmeiValidations</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcsnEspecialErrorAnalysis">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialErrorAnalysis-class.html">ParcsnEspecialErrorAnalysis</a></span> 
+
+</dt>
+<dd>
+  Análise de erro do PARCSN-ESP
+</dd>
+
+          <dt id="ParcsnEspecialErrorInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialErrorInfo-class.html">ParcsnEspecialErrorInfo</a></span> 
+
+</dt>
+<dd>
+  Informações sobre um erro específico do PARCSN-ESP
+</dd>
+
+          <dt id="ParcsnEspecialErrors">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialErrors-class.html">ParcsnEspecialErrors</a></span> 
+
+</dt>
+<dd>
+  Tratamento de erros específicos do sistema PARCSN-ESP (Parcelamento Especial do Simples Nacional)
+</dd>
+
+          <dt id="ParcsnEspecialResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialResponse-class.html">ParcsnEspecialResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcsnEspecialService">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialService-class.html">ParcsnEspecialService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PARCSN-ESP (Parcelamento Especial do Simples Nacional)
+</dd>
+
+          <dt id="ParcsnEspecialValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialValidations-class.html">ParcsnEspecialValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para o sistema PARCSN-ESP (Parcelamento Especial do Simples Nacional)
+</dd>
+
+          <dt id="ParcsnResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnResponse-class.html">ParcsnResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ParcsnService">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnService-class.html">ParcsnService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PARCSN (Parcelamento do Simples Nacional)
+</dd>
+
+          <dt id="PedidoDados">
+  <span class="name "><a href="../serpro_integra_contador_api/PedidoDados-class.html">PedidoDados</a></span> 
+
+</dt>
+<dd>
+  Classe que encapsula os dados específicos de cada pedido à API
+</dd>
+
+          <dt id="Pendencia">
+  <span class="name "><a href="../serpro_integra_contador_api/Pendencia-class.html">Pendencia</a></span> 
+
+</dt>
+<dd>
+  Pendência da apuração
+</dd>
+
+          <dt id="Periodo">
+  <span class="name "><a href="../serpro_integra_contador_api/Periodo-class.html">Periodo</a></span> 
+
+</dt>
+<dd>
+  Período de apuração
+</dd>
+
+          <dt id="PeriodoApuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/PeriodoApuracao-class.html">PeriodoApuracao</a></span> 
+
+</dt>
+<dd>
+  Período da apuração
+</dd>
+
+          <dt id="PeriodosMei">
+  <span class="name "><a href="../serpro_integra_contador_api/PeriodosMei-class.html">PeriodosMei</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PertmeiService">
+  <span class="name "><a href="../serpro_integra_contador_api/PertmeiService-class.html">PertmeiService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PERTMEI (Parcelamento Especial de Regularização Tributária para MEI)
+</dd>
+
+          <dt id="PertsnErrorAnalysis">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnErrorAnalysis-class.html">PertsnErrorAnalysis</a></span> 
+
+</dt>
+<dd>
+  Análise de erro do PARCSN
+</dd>
+
+          <dt id="PertsnErrorInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnErrorInfo-class.html">PertsnErrorInfo</a></span> 
+
+</dt>
+<dd>
+  Informações sobre um erro específico do PARCSN
+</dd>
+
+          <dt id="PertsnErrors">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnErrors-class.html">PertsnErrors</a></span> 
+
+</dt>
+<dd>
+  Tratamento de erros específicos do sistema PARCSN
+</dd>
+
+          <dt id="PertsnResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnResponse-class.html">PertsnResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PertsnService">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnService-class.html">PertsnService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PERTSN (Parcelamento Especial de Regularização Tributária do Simples Nacional)
+</dd>
+
+          <dt id="PertsnValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnValidations-class.html">PertsnValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para o sistema PARCSN
+</dd>
+
+          <dt id="PgdasdService">
+  <span class="name "><a href="../serpro_integra_contador_api/PgdasdService-class.html">PgdasdService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PGDASD (Programa Gerador do DAS do Simples Nacional)
+</dd>
+
+          <dt id="PgmeiBaseResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/PgmeiBaseResponse-class.html">PgmeiBaseResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo base de resposta para todos os serviços PGMEI
+</dd>
+
+          <dt id="PgmeiService">
+  <span class="name "><a href="../serpro_integra_contador_api/PgmeiService-class.html">PgmeiService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PGMEI (Programa Gerador do DAS para o MEI)
+</dd>
+
+          <dt id="PgmeiValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/PgmeiValidations-class.html">PgmeiValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para o sistema PGMEI (Programa Gerador do DAS para o MEI)
+</dd>
+
+          <dt id="PreparoComercializacaoRefeicoes">
+  <span class="name "><a href="../serpro_integra_contador_api/PreparoComercializacaoRefeicoes-class.html">PreparoComercializacaoRefeicoes</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PrestacaoServicoComunicacao">
+  <span class="name "><a href="../serpro_integra_contador_api/PrestacaoServicoComunicacao-class.html">PrestacaoServicoComunicacao</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PrestacaoServicoTransporte">
+  <span class="name "><a href="../serpro_integra_contador_api/PrestacaoServicoTransporte-class.html">PrestacaoServicoTransporte</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Procuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/Procuracao-class.html">Procuracao</a></span> 
+
+</dt>
+<dd>
+  Modelo de uma procuração eletrônica
+</dd>
+
+          <dt id="ProcuracoesConstants">
+  <span class="name "><a href="../serpro_integra_contador_api/ProcuracoesConstants-class.html">ProcuracoesConstants</a></span> 
+
+</dt>
+<dd>
+  Constantes e enums específicos para o módulo Procurações SERPRO
+</dd>
+
+          <dt id="ProcuracoesService">
+  <span class="name "><a href="../serpro_integra_contador_api/ProcuracoesService-class.html">ProcuracoesService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> PROCURACOES (Procurações Eletrônicas)
+</dd>
+
+          <dt id="ProducaoRural">
+  <span class="name "><a href="../serpro_integra_contador_api/ProducaoRural-class.html">ProducaoRural</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="QualificacaoTributaria">
+  <span class="name "><a href="../serpro_integra_contador_api/QualificacaoTributaria-class.html">QualificacaoTributaria</a></span> 
+
+</dt>
+<dd>
+  Qualificação Tributária
+</dd>
+
+          <dt id="RateioDecisaoJudicial">
+  <span class="name "><a href="../serpro_integra_contador_api/RateioDecisaoJudicial-class.html">RateioDecisaoJudicial</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="RateioReceitaOutrosRateios">
+  <span class="name "><a href="../serpro_integra_contador_api/RateioReceitaOutrosRateios-class.html">RateioReceitaOutrosRateios</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="RateioReceitaRegimeEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/RateioReceitaRegimeEspecial-class.html">RateioReceitaRegimeEspecial</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ReceitaAtividade">
+  <span class="name "><a href="../serpro_integra_contador_api/ReceitaAtividade-class.html">ReceitaAtividade</a></span> 
+
+</dt>
+<dd>
+  Receita da atividade
+</dd>
+
+          <dt id="ReceitaBrutaAnterior">
+  <span class="name "><a href="../serpro_integra_contador_api/ReceitaBrutaAnterior-class.html">ReceitaBrutaAnterior</a></span> 
+
+</dt>
+<dd>
+  Receita bruta anterior
+</dd>
+
+          <dt id="ReceitaInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/ReceitaInfo-class.html">ReceitaInfo</a></span> 
+
+</dt>
+<dd>
+  Modelo para informações da receita
+</dd>
+
+          <dt id="ReceitaPrincipal">
+  <span class="name "><a href="../serpro_integra_contador_api/ReceitaPrincipal-class.html">ReceitaPrincipal</a></span> 
+
+</dt>
+<dd>
+  Receita principal
+</dd>
+
+          <dt id="Reducao">
+  <span class="name "><a href="../serpro_integra_contador_api/Reducao-class.html">Reducao</a></span> 
+
+</dt>
+<dd>
+  Redução
+</dd>
+
+          <dt id="RegimeApuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/RegimeApuracao-class.html">RegimeApuracao</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados do regime de apuração
+</dd>
+
+          <dt id="RegimeApuracaoMensagens">
+  <span class="name "><a href="../serpro_integra_contador_api/RegimeApuracaoMensagens-class.html">RegimeApuracaoMensagens</a></span> 
+
+</dt>
+<dd>
+  Códigos de mensagens específicas do serviço de Regime de Apuração
+</dd>
+
+          <dt id="RegimeApuracaoService">
+  <span class="name "><a href="../serpro_integra_contador_api/RegimeApuracaoService-class.html">RegimeApuracaoService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> REGIME DE APURAÇÃO (Regime de Apuração do Simples Nacional)
+</dd>
+
+          <dt id="RegimeApuracaoValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/RegimeApuracaoValidations-class.html">RegimeApuracaoValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para o serviço de Regime de Apuração
+</dd>
+
+          <dt id="RegistroCrc">
+  <span class="name "><a href="../serpro_integra_contador_api/RegistroCrc-class.html">RegistroCrc</a></span> 
+
+</dt>
+<dd>
+  Registro CRC do responsável
+</dd>
+
+          <dt id="RelpmeiBaseResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpmeiBaseResponse-class.html">RelpmeiBaseResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo base para respostas RELPMEI seguindo padrão dos outros serviços
+</dd>
+
+          <dt id="RelpmeiRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpmeiRequest-class.html">RelpmeiRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de entrada para serviços RELPMEI
+Baseado no padrão dos outros serviços como PGMEI, PGdasd, etc.
+</dd>
+
+          <dt id="RelpmeiService">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpmeiService-class.html">RelpmeiService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> RELPMEI (Regime Especial de Regularização Tributária para o Microempreendedor Individual)
+</dd>
+
+          <dt id="RelpsnErrorAnalysis">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnErrorAnalysis-class.html">RelpsnErrorAnalysis</a></span> 
+
+</dt>
+<dd>
+  Análise detalhada de um erro
+</dd>
+
+          <dt id="RelpsnErrorInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnErrorInfo-class.html">RelpsnErrorInfo</a></span> 
+
+</dt>
+<dd>
+  Informações sobre um erro específico do RELPSN
+</dd>
+
+          <dt id="RelpsnErrors">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnErrors-class.html">RelpsnErrors</a></span> 
+
+</dt>
+<dd>
+  Tratamento de erros específicos para os serviços RELPSN
+</dd>
+
+          <dt id="RelpsnService">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnService-class.html">RelpsnService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> RELPSN (Regime Especial de Regularização Tributária para o Simples Nacional)
+</dd>
+
+          <dt id="RelpsnValidations">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnValidations-class.html">RelpsnValidations</a></span> 
+
+</dt>
+<dd>
+  Validações específicas para os serviços RELPSN
+</dd>
+
+          <dt id="ResolucaoRegimeCaixa">
+  <span class="name "><a href="../serpro_integra_contador_api/ResolucaoRegimeCaixa-class.html">ResolucaoRegimeCaixa</a></span> 
+
+</dt>
+<dd>
+  Modelo de dados da resolução do regime de caixa
+</dd>
+
+          <dt id="ResponsavelApuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/ResponsavelApuracao-class.html">ResponsavelApuracao</a></span> 
+
+</dt>
+<dd>
+  Responsável pelo preenchimento da apuração
+</dd>
+
+          <dt id="RestanteDivida">
+  <span class="name "><a href="../serpro_integra_contador_api/RestanteDivida-class.html">RestanteDivida</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="SaidaEntregar">
+  <span class="name "><a href="../serpro_integra_contador_api/SaidaEntregar-class.html">SaidaEntregar</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="SicalcEnums">
+  <span class="name "><a href="../serpro_integra_contador_api/SicalcEnums-class.html">SicalcEnums</a></span> 
+
+</dt>
+<dd>
+  Enums para os serviços SICALC
+</dd>
+
+          <dt id="SicalcService">
+  <span class="name "><a href="../serpro_integra_contador_api/SicalcService-class.html">SicalcService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> SICALC (Sistema de Cálculo de Acréscimos Legais)
+</dd>
+
+          <dt id="SitfisCache">
+  <span class="name "><a href="../serpro_integra_contador_api/SitfisCache-class.html">SitfisCache</a></span> 
+
+</dt>
+<dd>
+  Modelo para cache de protocolos do SITFIS
+</dd>
+
+          <dt id="SitfisCacheUtils">
+  <span class="name "><a href="../serpro_integra_contador_api/SitfisCacheUtils-class.html">SitfisCacheUtils</a></span> 
+
+</dt>
+<dd>
+  Utilitários para trabalhar com cache do SITFIS
+</dd>
+
+          <dt id="SitfisMensagem">
+  <span class="name "><a href="../serpro_integra_contador_api/SitfisMensagem-class.html">SitfisMensagem</a></span> 
+
+</dt>
+<dd>
+  Mensagens específicas do serviço SITFIS
+</dd>
+
+          <dt id="SitfisMensagemCodigos">
+  <span class="name "><a href="../serpro_integra_contador_api/SitfisMensagemCodigos-class.html">SitfisMensagemCodigos</a></span> 
+
+</dt>
+<dd>
+  Códigos de mensagem específicos do SITFIS
+</dd>
+
+          <dt id="SitfisService">
+  <span class="name "><a href="../serpro_integra_contador_api/SitfisService-class.html">SitfisService</a></span> 
+
+</dt>
+<dd>
+  <strong>Serviço:</strong> SITFIS (Situação Fiscal)
+</dd>
+
+          <dt id="SituacaoEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/SituacaoEspecial-class.html">SituacaoEspecial</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Socio">
+  <span class="name "><a href="../serpro_integra_contador_api/Socio-class.html">Socio</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="SolicitarEventosPFDados">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPFDados-class.html">SolicitarEventosPFDados</a></span> 
+
+</dt>
+<dd>
+  Dados retornados na solicitação de eventos PF
+</dd>
+
+          <dt id="SolicitarEventosPFRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPFRequest-class.html">SolicitarEventosPFRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de requisição para solicitar eventos de atualização de Pessoa Física
+</dd>
+
+          <dt id="SolicitarEventosPFResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPFResponse-class.html">SolicitarEventosPFResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para solicitar eventos de atualização de Pessoa Física
+</dd>
+
+          <dt id="SolicitarEventosPJDados">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPJDados-class.html">SolicitarEventosPJDados</a></span> 
+
+</dt>
+<dd>
+  Dados retornados na solicitação de eventos PJ
+</dd>
+
+          <dt id="SolicitarEventosPJRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPJRequest-class.html">SolicitarEventosPJRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo de requisição para solicitar eventos de atualização de Pessoa Jurídica
+</dd>
+
+          <dt id="SolicitarEventosPJResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarEventosPJResponse-class.html">SolicitarEventosPJResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo de resposta para solicitar eventos de atualização de Pessoa Jurídica
+</dd>
+
+          <dt id="SolicitarProtocoloDados">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarProtocoloDados-class.html">SolicitarProtocoloDados</a></span> 
+
+</dt>
+<dd>
+  Dados retornados na solicitação de protocolo
+</dd>
+
+          <dt id="SolicitarProtocoloRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarProtocoloRequest-class.html">SolicitarProtocoloRequest</a></span> 
+
+</dt>
+<dd>
+  Request para solicitar protocolo do relatório de situação fiscal
+</dd>
+
+          <dt id="SolicitarProtocoloResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/SolicitarProtocoloResponse-class.html">SolicitarProtocoloResponse</a></span> 
+
+</dt>
+<dd>
+  Response da solicitação de protocolo do relatório de situação fiscal
+</dd>
+
+          <dt id="TelefoneResponsavel">
+  <span class="name "><a href="../serpro_integra_contador_api/TelefoneResponsavel-class.html">TelefoneResponsavel</a></span> 
+
+</dt>
+<dd>
+  Telefone do responsável
+</dd>
+
+          <dt id="TermoAutorizacaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/TermoAutorizacaoRequest-class.html">TermoAutorizacaoRequest</a></span> 
+
+</dt>
+<dd>
+  Modelo para criação do Termo de Autorização XML
+</dd>
+
+          <dt id="TermoAutorizacaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/TermoAutorizacaoResponse-class.html">TermoAutorizacaoResponse</a></span> 
+
+</dt>
+<dd>
+  Modelo para resposta da autenticação de procurador
+</dd>
+
+          <dt id="TermoCienciaDispensa">
+  <span class="name "><a href="../serpro_integra_contador_api/TermoCienciaDispensa-class.html">TermoCienciaDispensa</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="TransmissaoInfo">
+  <span class="name "><a href="../serpro_integra_contador_api/TransmissaoInfo-class.html">TransmissaoInfo</a></span> 
+
+</dt>
+<dd>
+  Informações da transmissão extraídas do campo dados
+</dd>
+
+          <dt id="TransmitirDeclaracaoDctfRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/TransmitirDeclaracaoDctfRequest-class.html">TransmitirDeclaracaoDctfRequest</a></span> 
+
+</dt>
+<dd>
+  Request específico para transmissão de declaração DCTFWeb
+</dd>
+
+          <dt id="TransmitirDeclaracaoDctfResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/TransmitirDeclaracaoDctfResponse-class.html">TransmitirDeclaracaoDctfResponse</a></span> 
+
+</dt>
+<dd>
+  Response para transmissão de declaração DCTFWeb
+</dd>
+
+          <dt id="TransmitirDeclaracaoRequest">
+  <span class="name "><a href="../serpro_integra_contador_api/TransmitirDeclaracaoRequest-class.html">TransmitirDeclaracaoRequest</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="TransmitirDeclaracaoResponse">
+  <span class="name "><a href="../serpro_integra_contador_api/TransmitirDeclaracaoResponse-class.html">TransmitirDeclaracaoResponse</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="TributoAvulso">
+  <span class="name "><a href="../serpro_integra_contador_api/TributoAvulso-class.html">TributoAvulso</a></span> 
+
+</dt>
+<dd>
+  Tributo para DAS Avulso
+</dd>
+
+          <dt id="UltimaDeclaracao">
+  <span class="name "><a href="../serpro_integra_contador_api/UltimaDeclaracao-class.html">UltimaDeclaracao</a></span> 
+
+</dt>
+<dd>
+  Modelo para última declaração
+</dd>
+
+          <dt id="ValidacoesMit">
+  <span class="name "><a href="../serpro_integra_contador_api/ValidacoesMit-class.html">ValidacoesMit</a></span> 
+
+</dt>
+<dd>
+  Validações específicas do MIT
+</dd>
+
+          <dt id="ValidacoesUtils">
+  <span class="name "><a href="../serpro_integra_contador_api/ValidacoesUtils-class.html">ValidacoesUtils</a></span> 
+
+</dt>
+<dd>
+  Utilitários centralizados para trabalhar com documentos (CPF/CNPJ)
+</dd>
+
+          <dt id="ValorDevido">
+  <span class="name "><a href="../serpro_integra_contador_api/ValorDevido-class.html">ValorDevido</a></span> 
+
+</dt>
+<dd>
+  Valor devido
+</dd>
+
+          <dt id="ValoresDarf">
+  <span class="name "><a href="../serpro_integra_contador_api/ValoresDarf-class.html">ValoresDarf</a></span> 
+
+</dt>
+<dd>
+  Valores do DARF
+</dd>
+
+          <dt id="ValoresDas">
+  <span class="name "><a href="../serpro_integra_contador_api/ValoresDas-class.html">ValoresDas</a></span> 
+
+</dt>
+<dd>
+  Valores do DAS
+</dd>
+
+          <dt id="ValoresDasAvulso">
+  <span class="name "><a href="../serpro_integra_contador_api/ValoresDasAvulso-class.html">ValoresDasAvulso</a></span> 
+
+</dt>
+<dd>
+  Valores do DAS Avulso
+</dd>
+
+          <dt id="ValoresDasCobranca">
+  <span class="name "><a href="../serpro_integra_contador_api/ValoresDasCobranca-class.html">ValoresDasCobranca</a></span> 
+
+</dt>
+<dd>
+  Valores do DAS Cobrança
+</dd>
+
+          <dt id="ValoresDasProcesso">
+  <span class="name "><a href="../serpro_integra_contador_api/ValoresDasProcesso-class.html">ValoresDasProcesso</a></span> 
+
+</dt>
+<dd>
+  Valores do DAS de Processo
+</dd>
+
+          <dt id="VendaRevendedorAmbulante">
+  <span class="name "><a href="../serpro_integra_contador_api/VendaRevendedorAmbulante-class.html">VendaRevendedorAmbulante</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+      <dl>
+          <dt id="AdministracaoTributaria">
+  <span class="name "><a href="../serpro_integra_contador_api/AdministracaoTributaria.html">AdministracaoTributaria</a></span> 
+
+</dt>
+<dd>
+  Administração tributária
+</dd>
+
+          <dt id="CategoriaDctf">
+  <span class="name "><a href="../serpro_integra_contador_api/CategoriaDctf.html">CategoriaDctf</a></span> 
+
+</dt>
+<dd>
+  Categorias de declaração DCTFWeb
+</dd>
+
+          <dt id="CertificateErrorReason">
+  <span class="name "><a href="../serpro_integra_contador_api/CertificateErrorReason.html">CertificateErrorReason</a></span> 
+
+</dt>
+<dd>
+  Razões específicas para falhas de certificado
+</dd>
+
+          <dt id="EndpointSicalc">
+  <span class="name "><a href="../serpro_integra_contador_api/EndpointSicalc.html">EndpointSicalc</a></span> 
+
+</dt>
+<dd>
+  Endpoints dos serviços SICALC
+</dd>
+
+          <dt id="FormaDoacao">
+  <span class="name "><a href="../serpro_integra_contador_api/FormaDoacao.html">FormaDoacao</a></span> 
+
+</dt>
+<dd>
+  Forma de doação
+</dd>
+
+          <dt id="GrupoTributo">
+  <span class="name "><a href="../serpro_integra_contador_api/GrupoTributo.html">GrupoTributo</a></span> 
+
+</dt>
+<dd>
+  Grupos de tributos MIT
+</dd>
+
+          <dt id="MitTipoDocumento">
+  <span class="name "><a href="../serpro_integra_contador_api/MitTipoDocumento.html">MitTipoDocumento</a></span> 
+
+</dt>
+<dd>
+  Enum para tipo de documento utilizado no módulo MIT
+</dd>
+
+          <dt id="ParcmeiEspecialErrorCategory">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialErrorCategory.html">ParcmeiEspecialErrorCategory</a></span> 
+
+</dt>
+<dd>
+  Categorias de erro do PARCMEI-ESP
+</dd>
+
+          <dt id="ParcmeiEspecialErrorType">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcmeiEspecialErrorType.html">ParcmeiEspecialErrorType</a></span> 
+
+</dt>
+<dd>
+  Tipos de erro do PARCMEI-ESP
+</dd>
+
+          <dt id="ParcsnEspecialErrorCategory">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialErrorCategory.html">ParcsnEspecialErrorCategory</a></span> 
+
+</dt>
+<dd>
+  Categorias de erro do PARCSN-ESP
+</dd>
+
+          <dt id="ParcsnEspecialErrorType">
+  <span class="name "><a href="../serpro_integra_contador_api/ParcsnEspecialErrorType.html">ParcsnEspecialErrorType</a></span> 
+
+</dt>
+<dd>
+  Tipos de erro do PARCSN-ESP
+</dd>
+
+          <dt id="PeriodicidadeTributo">
+  <span class="name "><a href="../serpro_integra_contador_api/PeriodicidadeTributo.html">PeriodicidadeTributo</a></span> 
+
+</dt>
+<dd>
+  Periodicidade dos tributos
+</dd>
+
+          <dt id="PertsnErrorCategory">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnErrorCategory.html">PertsnErrorCategory</a></span> 
+
+</dt>
+<dd>
+  Categorias de erro do PARCSN
+</dd>
+
+          <dt id="PertsnErrorType">
+  <span class="name "><a href="../serpro_integra_contador_api/PertsnErrorType.html">PertsnErrorType</a></span> 
+
+</dt>
+<dd>
+  Tipos de erro do PARCSN
+</dd>
+
+          <dt id="QualificacaoPj">
+  <span class="name "><a href="../serpro_integra_contador_api/QualificacaoPj.html">QualificacaoPj</a></span> 
+
+</dt>
+<dd>
+  Qualificação da Pessoa Jurídica
+</dd>
+
+          <dt id="RegimePisCofins">
+  <span class="name "><a href="../serpro_integra_contador_api/RegimePisCofins.html">RegimePisCofins</a></span> 
+
+</dt>
+<dd>
+  Regime de apuração do PIS/Pasep e/ou da Cofins
+</dd>
+
+          <dt id="RegraInatividade">
+  <span class="name "><a href="../serpro_integra_contador_api/RegraInatividade.html">RegraInatividade</a></span> 
+
+</dt>
+<dd>
+  Regra para inatividade
+</dd>
+
+          <dt id="RelpsnErrorSeverity">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnErrorSeverity.html">RelpsnErrorSeverity</a></span> 
+
+</dt>
+<dd>
+  Severidade do erro
+</dd>
+
+          <dt id="RelpsnErrorType">
+  <span class="name "><a href="../serpro_integra_contador_api/RelpsnErrorType.html">RelpsnErrorType</a></span> 
+
+</dt>
+<dd>
+  Tipos de erro do RELPSN
+</dd>
+
+          <dt id="ServicoSicalc">
+  <span class="name "><a href="../serpro_integra_contador_api/ServicoSicalc.html">ServicoSicalc</a></span> 
+
+</dt>
+<dd>
+  Serviços disponíveis no SICALC
+</dd>
+
+          <dt id="SistemaOrigem">
+  <span class="name "><a href="../serpro_integra_contador_api/SistemaOrigem.html">SistemaOrigem</a></span> 
+
+</dt>
+<dd>
+  Sistemas de origem das receitas
+</dd>
+
+          <dt id="SituacaoApuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/SituacaoApuracao.html">SituacaoApuracao</a></span> 
+
+</dt>
+<dd>
+  Enums específicos do MIT (Módulo de Inclusão de Tributos)
+Situação da apuração MIT
+</dd>
+
+          <dt id="SituacaoEncerramento">
+  <span class="name "><a href="../serpro_integra_contador_api/SituacaoEncerramento.html">SituacaoEncerramento</a></span> 
+
+</dt>
+<dd>
+  Enum para situação de encerramento
+</dd>
+
+          <dt id="StatusMensagensNovas">
+  <span class="name "><a href="../serpro_integra_contador_api/StatusMensagensNovas.html">StatusMensagensNovas</a></span> 
+
+</dt>
+<dd>
+  Enum para status de mensagens novas
+</dd>
+
+          <dt id="StatusProcuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/StatusProcuracao.html">StatusProcuracao</a></span> 
+
+</dt>
+<dd>
+  Enum para status de procuração baseado na data de expiração
+</dd>
+
+          <dt id="TipoBeneficiarioDoacao">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoBeneficiarioDoacao.html">TipoBeneficiarioDoacao</a></span> 
+
+</dt>
+<dd>
+  Tipo de beneficiário da doação à campanha eleitoral
+</dd>
+
+          <dt id="TipoCertificado">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoCertificado.html">TipoCertificado</a></span> 
+
+</dt>
+<dd>
+  Tipos de certificado ICP-Brasil
+</dd>
+
+          <dt id="TipoContribuinte">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoContribuinte.html">TipoContribuinte</a></span> 
+
+</dt>
+<dd>
+  Enum para os tipos de contribuinte
+</dd>
+
+          <dt id="TipoDocumentoSERPRO">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoDocumentoSERPRO.html">TipoDocumentoSERPRO</a></span> 
+
+</dt>
+<dd>
+  Enum para tipos de documento (mapeamento DIRETO da API SERPRO)
+</dd>
+
+          <dt id="TipoEvento">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoEvento.html">TipoEvento</a></span> 
+
+</dt>
+<dd>
+  Enum para os tipos de eventos disponíveis
+</dd>
+
+          <dt id="TipoEventoEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoEventoEspecial.html">TipoEventoEspecial</a></span> 
+
+</dt>
+<dd>
+  Tipo do evento especial
+</dd>
+
+          <dt id="TipoEventoSituacaoEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoEventoSituacaoEspecial.html">TipoEventoSituacaoEspecial</a></span> 
+
+</dt>
+<dd>
+  Enums para os dados de domínio do DEFIS conforme documentação oficial
+Tipos de evento para situação especial
+</dd>
+
+          <dt id="TipoOperacao">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoOperacao.html">TipoOperacao</a></span> 
+
+</dt>
+<dd>
+  Tipo de operação
+</dd>
+
+          <dt id="TipoPeriodoApuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoPeriodoApuracao.html">TipoPeriodoApuracao</a></span> 
+
+</dt>
+<dd>
+  Tipos de período de apuração
+</dd>
+
+          <dt id="TipoProcuracao">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoProcuracao.html">TipoProcuracao</a></span> 
+
+</dt>
+<dd>
+  Enums para tipos de procuração
+</dd>
+
+          <dt id="TipoRegime">
+  <span class="name "><a href="../serpro_integra_contador_api/TipoRegime.html">TipoRegime</a></span> 
+
+</dt>
+<dd>
+  Tipos de regime de apuração disponíveis
+</dd>
+
+          <dt id="TributacaoLucro">
+  <span class="name "><a href="../serpro_integra_contador_api/TributacaoLucro.html">TributacaoLucro</a></span> 
+
+</dt>
+<dd>
+  Forma de Tributação do Lucro
+</dd>
+
+          <dt id="UnidadeFederativa">
+  <span class="name "><a href="../serpro_integra_contador_api/UnidadeFederativa.html">UnidadeFederativa</a></span> 
+
+</dt>
+<dd>
+  Estados brasileiros (UF)
+</dd>
+
+          <dt id="VariacoesMonetarias">
+  <span class="name "><a href="../serpro_integra_contador_api/VariacoesMonetarias.html">VariacoesMonetarias</a></span> 
+
+</dt>
+<dd>
+  Critério de reconhecimento das variações monetárias
+</dd>
+
+      </dl>
+    </section>
+
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+      <dl>
+          <dt id="MensagemNegocioDte">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemNegocioDte.html">MensagemNegocioDte</a></span>
+  on <a href="../serpro_integra_contador_api/MensagemNegocio-class.html">MensagemNegocio</a>
+  
+
+</dt>
+<dd>
+  Extensões para módulo DTE
+</dd>
+
+          <dt id="MensagemNegocioProcuracoes">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemNegocioProcuracoes.html">MensagemNegocioProcuracoes</a></span>
+  on <a href="../serpro_integra_contador_api/MensagemNegocio-class.html">MensagemNegocio</a>
+  
+
+</dt>
+<dd>
+  Extensões específicas para diferentes módulos
+</dd>
+
+          <dt id="MensagemParcmei">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemParcmei.html">MensagemParcmei</a></span>
+  on <a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a>
+  
+
+</dt>
+<dd>
+  Extensões para módulo PARCMEI
+</dd>
+
+          <dt id="MensagemParcmeiEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemParcmeiEspecial.html">MensagemParcmeiEspecial</a></span>
+  on <a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a>
+  
+
+</dt>
+<dd>
+  Extensões para módulo PARCMEI-ESPECIAL
+</dd>
+
+          <dt id="MensagemParcsn">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemParcsn.html">MensagemParcsn</a></span>
+  on <a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a>
+  
+
+</dt>
+<dd>
+  Extensões específicas para diferentes módulos de parcelamento
+Extensões para módulo PARCSN
+</dd>
+
+          <dt id="MensagemParcsnEspecial">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemParcsnEspecial.html">MensagemParcsnEspecial</a></span>
+  on <a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a>
+  
+
+</dt>
+<dd>
+  Extensões para módulo PARCSN-ESPECIAL
+</dd>
+
+          <dt id="MensagemPertsn">
+  <span class="name "><a href="../serpro_integra_contador_api/MensagemPertsn.html">MensagemPertsn</a></span>
+  on <a href="../serpro_integra_contador_api/Mensagem-class.html">Mensagem</a>
+  
+
+</dt>
+<dd>
+  Extensões para módulo PERTSN
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+
+    <section class="summary offset-anchor" id="exceptions">
+      <h2>Exceptions / Errors</h2>
+      <dl>
+          <dt id="AuthenticationFailedException">
+  <span class="name "><a href="../serpro_integra_contador_api/AuthenticationFailedException-class.html">AuthenticationFailedException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando a requisição de autenticação falha
+</dd>
+
+          <dt id="AuthException">
+  <span class="name "><a href="../serpro_integra_contador_api/AuthException-class.html">AuthException</a></span> 
+
+</dt>
+<dd>
+  Exceção base para todos os erros de autenticação
+</dd>
+
+          <dt id="CertificateException">
+  <span class="name "><a href="../serpro_integra_contador_api/CertificateException-class.html">CertificateException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando há problemas com o certificado digital
+</dd>
+
+          <dt id="ExcecaoAssinaturaCertificado">
+  <span class="name "><a href="../serpro_integra_contador_api/ExcecaoAssinaturaCertificado-class.html">ExcecaoAssinaturaCertificado</a></span> 
+
+</dt>
+<dd>
+  Exceções relacionadas ao certificado digital
+</dd>
+
+          <dt id="ExcecaoAssinaturaXml">
+  <span class="name "><a href="../serpro_integra_contador_api/ExcecaoAssinaturaXml-class.html">ExcecaoAssinaturaXml</a></span> 
+
+</dt>
+<dd>
+  Exceções relacionadas à assinatura XML
+</dd>
+
+          <dt id="ExcecaoAutenticaProcurador">
+  <span class="name "><a href="../serpro_integra_contador_api/ExcecaoAutenticaProcurador-class.html">ExcecaoAutenticaProcurador</a></span> 
+
+</dt>
+<dd>
+  Exceção base para o serviço Autentica Procurador
+</dd>
+
+          <dt id="ExcecaoErroSerpro">
+  <span class="name "><a href="../serpro_integra_contador_api/ExcecaoErroSerpro-class.html">ExcecaoErroSerpro</a></span> 
+
+</dt>
+<dd>
+  Mapeia erros específicos da API SERPRO
+</dd>
+
+          <dt id="ExcecaoValidacaoICPBrasil">
+  <span class="name "><a href="../serpro_integra_contador_api/ExcecaoValidacaoICPBrasil-class.html">ExcecaoValidacaoICPBrasil</a></span> 
+
+</dt>
+<dd>
+  Exceções relacionadas à validação ICP-Brasil
+</dd>
+
+          <dt id="InvalidCredentialsException">
+  <span class="name "><a href="../serpro_integra_contador_api/InvalidCredentialsException-class.html">InvalidCredentialsException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando as credenciais fornecidas são inválidas
+</dd>
+
+          <dt id="MtlsNotSupportedException">
+  <span class="name "><a href="../serpro_integra_contador_api/MtlsNotSupportedException-class.html">MtlsNotSupportedException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando mTLS não é suportado na plataforma atual
+</dd>
+
+          <dt id="NetworkAuthException">
+  <span class="name "><a href="../serpro_integra_contador_api/NetworkAuthException-class.html">NetworkAuthException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando ocorrem erros de rede durante a autenticação
+</dd>
+
+          <dt id="TokenExpiredException">
+  <span class="name "><a href="../serpro_integra_contador_api/TokenExpiredException-class.html">TokenExpiredException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando o token de autenticação expira
+</dd>
+
+          <dt id="TokenRefreshException">
+  <span class="name "><a href="../serpro_integra_contador_api/TokenRefreshException-class.html">TokenRefreshException</a></span> 
+
+</dt>
+<dd>
+  Lançada quando a renovação de token falha
+</dd>
+
+      </dl>
+    </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">serpro_integra_contador_api.dart</li>
+</ol>
+
+    <h5><span class="package-name">serpro_integra_contador_api</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>serpro_integra_contador_api library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

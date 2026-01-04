@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the ExcecaoErroSerpro.doCodigo constructor from Class ExcecaoErroSerpro from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>ExcecaoErroSerpro.doCodigo constructor - ExcecaoErroSerpro - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/ExcecaoErroSerpro-class.html">ExcecaoErroSerpro</a></li>
+    <li class="self-crumb">ExcecaoErroSerpro.doCodigo factory constructor</li>
+  </ol>
+  <div class="self-name">ExcecaoErroSerpro.doCodigo</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="serpro_integra_contador_api&#47;ExcecaoErroSerpro-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-constructor">ExcecaoErroSerpro.doCodigo</span> constructor 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">ExcecaoErroSerpro.doCodigo</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="doCodigo-param-codigo"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigo</span></span></li>
+</ol>)
+    </section>
+    
+<section class="desc markdown">
+  <p>Cria exceção a partir do código de erro SERPRO</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">factory ExcecaoErroSerpro.doCodigo(String codigo) {
+  switch (codigo) {
+    &#47;&#47; Erros de acesso negado
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-009&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Certificado Digital deve ser e-PF, e-CPF, e-PJ ou e-CNPJ&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-010&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Certificado Digital está expirado&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-011&#39;:
+      return ExcecaoErroSerpro(
+        &#39;NI do procurador difere do NI no certificado&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-012&#39;:
+      return ExcecaoErroSerpro(
+        &#39;NI do contratante difere do NI do assinante do XML&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-013&#39;:
+      return ExcecaoErroSerpro(
+        &#39;XML assinado inválido&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-021&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Certificado fornecido não possui extensões da ICP-Brasil&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-023&#39;:
+      return ExcecaoErroSerpro(
+        &#39;O certificado informado não está autorizado&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-037&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Certificado revogado&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-039&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Certificado inválido conforme padrão X509Certificate2&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-040&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Cadeia de certificados não é confiável&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+    case &#39;AcessoNegado-AUTENTICAPROCURADOR-041&#39;:
+      return ExcecaoErroSerpro(
+        &#39;O certificado não pode ser do tipo autoassinado&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+
+    &#47;&#47; Erros de entrada incorreta
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-002&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Parâmetros de entrada inválidos. Campo xml nulo, vazio ou não encontrado&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-015&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Estrutura XML inválida: tag obrigatória ausente&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-016&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Estrutura XML inválida: atributo de tag incorreto&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-017&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Data de vigência deve ser maior ou igual que a data corrente&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-018&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Data de assinatura não deve ser posterior à data atual&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-019&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Tag raiz deve ser termoDeAutorizacao&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-020&#39;:
+      return ExcecaoErroSerpro(
+        &#39;String XML não é base64 válido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-025&#39;:
+      return ExcecaoErroSerpro(
+        &#39;XML sem assinatura&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-026&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Elemento CanonicalizationMethod inválido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-027&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Elemento SignatureMethod inválido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-028&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Apenas um elemento Reference é requerido&#47;permitido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-029&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Assinatura deve cobrir todo o documento&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-030&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Elemento DigestMethod inválido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-031&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Métodos de transformação obrigatórios ausentes&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-032&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Apenas um elemento KeyInfo&#47;X509Data é requerido&#47;permitido&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-033&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Documento alterado pós-assinatura ou validade da assinatura comprometida&#39;,
+        codigo: codigo,
+        statusHttp: 400,
+      );
+    case &#39;EntradaIncorreta-AUTENTICAPROCURADOR-038&#39;:
+      return ExcecaoErroSerpro(
+        &#39;XML malformado com caracteres inválidos detectados&#39;,
+        codigo: codigo,
+        statusHttp: 403,
+      );
+
+    &#47;&#47; Erros do sistema
+    case &#39;Erro-AUTENTICAPROCURADOR-003&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Falha no login&#39;,
+        codigo: codigo,
+        statusHttp: 500,
+      );
+    case &#39;Erro-AUTENTICAPROCURADOR-008&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Erro na validação do certificado digital&#39;,
+        codigo: codigo,
+        statusHttp: 500,
+      );
+    case &#39;Erro-AUTENTICAPROCURADOR-014&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Falha na extração de CNPJ do certificado&#39;,
+        codigo: codigo,
+        statusHttp: 500,
+      );
+    case &#39;Erro-AUTENTICAPROCURADOR-034&#39;:
+      return ExcecaoErroSerpro(
+        &#39;Padrão de assinatura não reconhecido&#39;,
+        codigo: codigo,
+        statusHttp: 500,
+      );
+
+    default:
+      return ExcecaoErroSerpro(
+        &#39;Erro desconhecido: $codigo&#39;,
+        codigo: codigo,
+        statusHttp: 500,
+      );
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/ExcecaoErroSerpro-class.html">ExcecaoErroSerpro</a></li>
+    <li class="self-crumb">ExcecaoErroSerpro.doCodigo factory constructor</li>
+</ol>
+
+    <h5>ExcecaoErroSerpro class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

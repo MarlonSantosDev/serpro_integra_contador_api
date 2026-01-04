@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the MensagemCaixaPostal.fromJson constructor from Class MensagemCaixaPostal from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>MensagemCaixaPostal.fromJson constructor - MensagemCaixaPostal - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/MensagemCaixaPostal-class.html">MensagemCaixaPostal</a></li>
+    <li class="self-crumb">MensagemCaixaPostal.fromJson factory constructor</li>
+  </ol>
+  <div class="self-name">MensagemCaixaPostal.fromJson</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="serpro_integra_contador_api&#47;MensagemCaixaPostal-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-constructor">MensagemCaixaPostal.fromJson</span> constructor 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">MensagemCaixaPostal.fromJson</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span></li>
+</ol>)
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">factory MensagemCaixaPostal.fromJson(Map&lt;String, dynamic&gt; json) {
+  &#47;&#47; Processar assuntoModelo substituindo ++VARIAVEL++ por valorParametroAssunto
+  final assuntoModeloOriginal = json[&#39;assuntoModelo&#39;]?.toString() ?? &#39;&#39;;
+  final valorParametroAssunto =
+      json[&#39;valorParametroAssunto&#39;]?.toString() ?? &#39;&#39;;
+  final assuntoModeloProcessado = valorParametroAssunto.isEmpty
+      ? assuntoModeloOriginal
+      : assuntoModeloOriginal.replaceAll(
+          &#39;++VARIAVEL++&#39;,
+          valorParametroAssunto,
+        );
+
+  &#47;&#47; Converter campos numéricos para valores descritivos
+  final indicadorLeituraStr = json[&#39;indicadorLeitura&#39;]?.toString() ?? &#39;&#39;;
+  final indicadorLeitura = switch (indicadorLeituraStr) {
+    &#39;0&#39; =&gt; &#39;Não lida&#39;,
+    &#39;1&#39; =&gt; &#39;Lida&#39;,
+    &#39;2&#39; =&gt; &#39;Não se aplica&#39;,
+    _ =&gt; indicadorLeituraStr,
+  };
+
+  final indicadorFavoritoStr = json[&#39;indicadorFavorito&#39;]?.toString() ?? &#39;&#39;;
+  final indicadorFavorito = switch (indicadorFavoritoStr) {
+    &#39;0&#39; =&gt; &#39;Não lida&#39;,
+    &#39;1&#39; =&gt; &#39;Lida&#39;,
+    _ =&gt; indicadorFavoritoStr,
+  };
+
+  final origemModeloStr = json[&#39;origemModelo&#39;]?.toString() ?? &#39;&#39;;
+  final origemModelo = switch (origemModeloStr) {
+    &#39;1&#39; =&gt; &#39;Sistema Remetente&#39;,
+    &#39;2&#39; =&gt; &#39;RFB&#39;,
+    _ =&gt; origemModeloStr,
+  };
+
+  final relevanciaStr = json[&#39;relevancia&#39;]?.toString() ?? &#39;&#39;;
+  final relevancia = switch (relevanciaStr) {
+    &#39;1&#39; =&gt; &#39;Sem relevância&#39;,
+    &#39;2&#39; =&gt; &#39;Com relevância&#39;,
+    _ =&gt; relevanciaStr,
+  };
+
+  final tipoOrigemStr = json[&#39;tipoOrigem&#39;]?.toString() ?? &#39;&#39;;
+  final tipoOrigem = switch (tipoOrigemStr) {
+    &#39;1&#39; =&gt; &#39;Receita&#39;,
+    &#39;2&#39; =&gt; &#39;Estado&#39;,
+    &#39;3&#39; =&gt; &#39;Município&#39;,
+    _ =&gt; tipoOrigemStr,
+  };
+
+  return MensagemCaixaPostal(
+    codigoSistemaRemetente: json[&#39;codigoSistemaRemetente&#39;]?.toString() ?? &#39;&#39;,
+    codigoModelo: json[&#39;codigoModelo&#39;]?.toString() ?? &#39;&#39;,
+    dataEnvio: json[&#39;dataEnvio&#39;]?.toString() ?? &#39;&#39;,
+    horaEnvio: json[&#39;horaEnvio&#39;]?.toString() ?? &#39;&#39;,
+    numeroControle: json[&#39;numeroControle&#39;]?.toString() ?? &#39;&#39;,
+    indicadorLeitura: indicadorLeitura,
+    dataLeitura: json[&#39;dataLeitura&#39;]?.toString() ?? &#39;&#39;,
+    horaLeitura: json[&#39;horaLeitura&#39;]?.toString() ?? &#39;&#39;,
+    dataExclusao: json[&#39;dataExclusao&#39;]?.toString() ?? &#39;&#39;,
+    horaExclusao: json[&#39;horaExclusao&#39;]?.toString() ?? &#39;&#39;,
+    dataCiencia: json[&#39;dataCiencia&#39;]?.toString() ?? &#39;&#39;,
+    assuntoModelo: assuntoModeloProcessado,
+    dataValidade: json[&#39;dataValidade&#39;]?.toString() ?? &#39;&#39;,
+    origemModelo: origemModelo,
+    valorParametroAssunto: valorParametroAssunto,
+    relevancia: relevancia,
+    isn: json[&#39;isn&#39;]?.toString() ?? &#39;&#39;,
+    tipoOrigem: tipoOrigem,
+    descricaoOrigem: json[&#39;descricaoOrigem&#39;]?.toString() ?? &#39;&#39;,
+    indicadorFavorito: indicadorFavorito,
+    foiLida: indicadorLeituraStr == &#39;1&#39;,
+    isFavorita: indicadorFavoritoStr == &#39;1&#39;,
+    temAltaRelevancia: relevanciaStr == &#39;2&#39;,
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/MensagemCaixaPostal-class.html">MensagemCaixaPostal</a></li>
+    <li class="self-crumb">MensagemCaixaPostal.fromJson factory constructor</li>
+</ol>
+
+    <h5>MensagemCaixaPostal class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

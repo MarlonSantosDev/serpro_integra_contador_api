@@ -45,7 +45,7 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 - **SICALC**: Sistema de Cálculo de Impostos
 - **SITFIS**: Sistema de Informações Tributárias Fiscais
 - **MIT**: Módulo de Inclusão de Tributos
-- **PGDASD**: Pagamento de DAS por Débito Direto Autorizado
+- **PGDASD**: Pagamento de DAS por Débito Direto Autorizado (inclui métodos compostos para operações combinadas)
 
 ### 📬 Serviços de Comunicação
 - **Caixa Postal**: Consulta de mensagens da Receita Federal
@@ -66,7 +66,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^2.0.2
+  serpro_integra_contador_api: ^2.0.8
 ```
 
 Execute:
@@ -294,7 +294,7 @@ final servicos = CatalogoServicosUtils.getAllServices();
 - [PARCSN Especial Service](doc/parcsn_especial_service.md) - Parcelamento Especial do Simples Nacional
 - [PERTMEI Service](doc/pertmei_service.md) - Pertinência do MEI
 - [PERTSN Service](doc/pertsn_service.md) - Pertinência do Simples Nacional
-- [PGDASD Service](doc/pgdasd_service.md) - Pagamento de DAS por Débito Direto Autorizado
+- [PGDASD Service](doc/pgdasd_service.md) - Pagamento de DAS por Débito Direto Autorizado (com métodos compostos)
 - [PGMEI Service](doc/pgmei_service.md) - Pagamento de DAS do MEI
 - [Procurações Service](doc/procuracoes_service.md) - Gestão de procurações eletrônicas
 - [Regime Apuração Service](doc/regime_apuracao_service.md) - Gestão do regime de apuração do Simples Nacional
@@ -405,6 +405,69 @@ void main() async {
       print('Assunto: ${mensagem.assunto}');
       print('Data: ${mensagem.dataEnvio}');
     }
+  }
+}
+```
+
+#### 4. Usar Métodos Compostos do PGDASD
+
+Os métodos compostos combinam múltiplas operações em uma única chamada, reduzindo o número de requisições à API:
+
+```dart
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
+  );
+
+  final pgdasdService = PgdasdService(apiClient);
+  
+  // Exemplo 1: Consultar última declaração com verificação de pagamento
+  final consultaResponse = await pgdasdService.consultarUltimaDeclaracaoComPagamento(
+    contribuinteNumero: '00000000000100',
+    periodoApuracao: '202504',
+  );
+  
+  if (consultaResponse.sucesso) {
+    print('Declaração: ${consultaResponse.dados?.numeroDeclaracao}');
+    print('DAS Pago: ${consultaResponse.dasPago ? "Sim" : "Não"}');
+  }
+  
+  // Exemplo 2: Entregar declaração e gerar DAS automaticamente
+  final declaracao = Declaracao(
+    tipoDeclaracao: 1,
+    receitaPaCompetenciaInterno: 50000.00,
+    receitaPaCompetenciaExterno: 10000.00,
+    estabelecimentos: [
+      // ... estrutura da declaração
+    ],
+  );
+  
+  final entregaResponse = await pgdasdService.entregarDeclaracaoComDas(
+    contribuinteNumero: '00000000000100',
+    request: EntregarDeclaracaoRequest(
+      cnpjCompleto: '00000000000100',
+      pa: 202504,
+      indicadorTransmissao: true,
+      indicadorComparacao: true,
+      declaracao: declaracao,
+      valoresParaComparacao: [],
+    ),
+  );
+  
+  if (entregaResponse.sucesso) {
+    print('✅ Declaração e DAS gerados!');
+    print('ID: ${entregaResponse.dadosDeclaracao?.idDeclaracao}');
+    print('DAS: ${entregaResponse.dadosDas?.first.detalhamento.numeroDocumento}');
+  } else if (entregaResponse.declaracaoEntregue) {
+    print('⚠️ Declaração OK, mas DAS falhou');
   }
 }
 ```

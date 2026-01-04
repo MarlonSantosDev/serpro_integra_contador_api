@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the authenticate method from the ApiClient class, for the Dart programming language.">
+  <title>authenticate method - ApiClient class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></li>
+    <li class="self-crumb">authenticate method</li>
+  </ol>
+  <div class="self-name">authenticate</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;ApiClient-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">authenticate</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">authenticate</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="authenticate-param-consumerKey"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">consumerKey</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-consumerSecret"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">consumerSecret</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-contratanteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contratanteNumero</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-autorPedidoDadosNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-certificadoDigitalBase64"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">certificadoDigitalBase64</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-certificadoDigitalPath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">certificadoDigitalPath</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-senhaCertificado"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">senhaCertificado</span>, </span></li>
+<li><span class="parameter" id="authenticate-param-ambiente"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">ambiente</span> = <span class="default-value">&#39;trial&#39;</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Autentica o cliente com a API do SERPRO usando OAuth2 e mTLS</p>
+<h2 id="parmetros">Parâmetros</h2>
+<ul>
+<li><code>consumerKey</code>: Consumer Key fornecido pelo SERPRO (obrigatório)</li>
+<li><code>consumerSecret</code>: Consumer Secret fornecido pelo SERPRO (obrigatório)</li>
+<li><code>contratanteNumero</code>: CNPJ da empresa contratante (obrigatório)</li>
+<li><code>autorPedidoDadosNumero</code>: CPF/CNPJ do autor da requisição (obrigatório)</li>
+<li><code>certificadoDigitalBase64</code>: Certificado P12/PFX em Base64 (produção)</li>
+<li><code>certificadoDigitalPath</code>: Caminho do arquivo P12/PFX (produção)</li>
+<li><code>senhaCertificado</code>: Senha do certificado (produção)</li>
+<li><code>ambiente</code>: 'trial' ou 'producao' (padrão: 'trial')</li>
+</ul>
+<h2 id="exemplos">Exemplos</h2>
+<p><strong>Trial (sem certificado):</strong></p>
+<pre class="language-dart"><code class="language-dart">await apiClient.authenticate(
+  consumerKey: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+  consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+  contratanteNumero: '00000000000191',
+  autorPedidoDadosNumero: '00000000191',
+  ambiente: 'trial',
+);
+</code></pre>
+<p><strong>Produção (com certificado em Base64):</strong></p>
+<pre class="language-dart"><code class="language-dart">await apiClient.authenticate(
+  consumerKey: 'sua_key',
+  consumerSecret: 'seu_secret',
+  contratanteNumero: '12345678000100',
+  autorPedidoDadosNumero: '11122233344',
+  certificadoDigitalBase64: 'MIIJqQIBAzCCCW8GCSqGSIb3...',
+  senhaCertificado: 'senha123',
+  ambiente: 'producao',
+);
+</code></pre>
+<p><strong>Produção (com certificado em arquivo):</strong></p>
+<pre class="language-dart"><code class="language-dart">await apiClient.authenticate(
+  consumerKey: 'sua_key',
+  consumerSecret: 'seu_secret',
+  contratanteNumero: '12345678000100',
+  autorPedidoDadosNumero: '11122233344',
+  certificadoDigitalPath: '/caminho/certificado.pfx',
+  senhaCertificado: 'senha123',
+  ambiente: 'producao',
+);
+</code></pre>
+<h2 id="erros-retornados-formato-json">Erros Retornados (formato JSON)</h2>
+<pre class="language-json"><code class="language-json">{
+  "mensagem": "Consumer Secret não informado ou inválido",
+  "status": 400,
+  "resposta": "Campo 'consumerSecret' é obrigatório"
+}
+</code></pre>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; authenticate({
+  required String consumerKey,
+  required String consumerSecret,
+  required String contratanteNumero,
+  required String autorPedidoDadosNumero,
+  String? certificadoDigitalBase64,
+  String? certificadoDigitalPath,
+  String? senhaCertificado,
+  String ambiente = &#39;trial&#39;,
+}) async {
+  try {
+    &#47;&#47; Usar autenticação via Cloud Function se URL estiver configurada
+    if (_urlAutenticacao != null &amp;&amp; _urlAutenticacao!.isNotEmpty) {
+      &#47;&#47; Armazenar certificado para uso no proxy
+      _cloudFunctionCertBase64 = certificadoDigitalBase64;
+      _cloudFunctionCertPassword = senhaCertificado;
+
+      await _authenticateViaCloudFunction(
+        consumerKey: consumerKey,
+        consumerSecret: consumerSecret,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+        ambiente: ambiente,
+      );
+      return;
+    }
+
+    &#47;&#47; 0. Verificar se é uma nova autenticação com dados diferentes
+    final novoContratante = contratanteNumero.trim();
+    final novoAutor = autorPedidoDadosNumero.trim();
+
+    if (_storedCredentials != null &amp;&amp;
+        (_storedCredentials!.contratanteNumero != novoContratante || _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
+      &#47;&#47; Limpar dados da autenticação anterior para evitar conflitos
+      clearAuthentication();
+    }
+
+    &#47;&#47; 1. Validar ambiente
+    if (ambiente != &#39;trial&#39; &amp;&amp; ambiente != &#39;producao&#39;) {
+      throw _buildErrorResponse(
+        mensagem: &#39;Ambiente inválido&#39;,
+        status: 400,
+        resposta: &#39;Ambiente deve ser &quot;trial&quot; ou &quot;producao&quot;. Recebido: &quot;$ambiente&quot;&#39;,
+      );
+    }
+    _ambiente = ambiente;
+
+    &#47;&#47; 2. Validar credenciais obrigatórias
+    if (consumerKey.trim().isEmpty) {
+      throw _buildErrorResponse(
+        mensagem: &#39;Consumer Key não informado ou inválido&#39;,
+        status: 400,
+        resposta: &#39;Campo &quot;consumerKey&quot; é obrigatório e não pode ser vazio&#39;,
+      );
+    }
+
+    if (consumerSecret.trim().isEmpty) {
+      throw _buildErrorResponse(
+        mensagem: &#39;Consumer Secret não informado ou inválido&#39;,
+        status: 400,
+        resposta: &#39;Campo &quot;consumerSecret&quot; é obrigatório e não pode ser vazio&#39;,
+      );
+    }
+
+    if (contratanteNumero.trim().isEmpty) {
+      throw _buildErrorResponse(
+        mensagem: &#39;Número do contratante não informado&#39;,
+        status: 400,
+        resposta: &#39;Campo &quot;contratanteNumero&quot; é obrigatório (CNPJ da empresa)&#39;,
+      );
+    }
+
+    if (autorPedidoDadosNumero.trim().isEmpty) {
+      throw _buildErrorResponse(
+        mensagem: &#39;Número do autor não informado&#39;,
+        status: 400,
+        resposta: &#39;Campo &quot;autorPedidoDadosNumero&quot; é obrigatório (CPF&#47;CNPJ do autor)&#39;,
+      );
+    }
+
+    &#47;&#47; 3. Validar certificado em produção
+    if (ambiente == &#39;producao&#39;) {
+      final temCertificadoBase64 = certificadoDigitalBase64 != null &amp;&amp; certificadoDigitalBase64.trim().isNotEmpty;
+      final temCertificadoPath = certificadoDigitalPath != null &amp;&amp; certificadoDigitalPath.trim().isNotEmpty;
+
+      if (!temCertificadoBase64 &amp;&amp; !temCertificadoPath) {
+        throw _buildErrorResponse(
+          mensagem: &#39;Certificado digital obrigatório em produção&#39;,
+          status: 400,
+          resposta:
+              &#39;Para ambiente de produção é necessário informar o certificado digital. &#39;
+              &#39;Use &quot;certificadoDigitalBase64&quot; (recomendado) ou &quot;certificadoDigitalPath&quot;.&#39;,
+        );
+      }
+
+      if (senhaCertificado == null) {
+        throw _buildErrorResponse(
+          mensagem: &#39;Senha do certificado não informada&#39;,
+          status: 400,
+          resposta:
+              &#39;Para ambiente de produção é necessário informar a senha do certificado digital (use string vazia &quot;&quot; para certificados sem senha).&#39;,
+        );
+      }
+    }
+
+    &#47;&#47; 4. Criar credenciais
+    final credentials = AuthCredentials(
+      consumerKey: consumerKey.trim(),
+      consumerSecret: consumerSecret.trim(),
+      certPath: certificadoDigitalPath?.trim(),
+      certBase64: certificadoDigitalBase64?.trim(),
+      certPassword: senhaCertificado?.trim(),
+      contratanteNumero: contratanteNumero.trim(),
+      autorPedidoDadosNumero: autorPedidoDadosNumero.trim(),
+      ambiente: ambiente,
+    );
+
+    credentials.validate();
+    _storedCredentials = credentials;
+
+    &#47;&#47; 5. Inicializar HTTP adapter com mTLS (aceita Base64 diretamente - sem arquivo temporário)
+    _httpAdapter = HttpClientAdapter();
+
+    await _httpAdapter!.configureMtlsUnified(
+      certBase64: certificadoDigitalBase64,
+      certPath: certificadoDigitalPath,
+      certPassword: senhaCertificado,
+      isProduction: ambiente == &#39;producao&#39;,
+    );
+
+    &#47;&#47; 6. Inicializar serviço de autenticação
+    _authService = AuthService(_httpAdapter!, ambiente);
+
+    &#47;&#47; 7. Executar autenticação
+    _authModel = await _authService!.authenticate(credentials);
+
+    &#47;&#47; Token já está armazenado em _authModel
+  } on InvalidCredentialsException catch (e) {
+    throw _buildErrorResponse(mensagem: e.message, status: 400, resposta: &#39;Credenciais inválidas&#39;);
+  } on CertificateException catch (e) {
+    throw _buildErrorResponse(mensagem: &#39;Erro no certificado digital&#39;, status: 400, resposta: e.message);
+  } on AuthenticationFailedException catch (e) {
+    throw _buildErrorResponse(mensagem: &#39;Falha na autenticação&#39;, status: e.statusCode, resposta: e.responseBody ?? e.message);
+  } on NetworkAuthException catch (e) {
+    throw _buildErrorResponse(mensagem: &#39;Erro de rede durante autenticação&#39;, status: 0, resposta: e.message);
+  } catch (e) {
+    throw _buildErrorResponse(mensagem: &#39;Erro inesperado durante autenticação&#39;, status: 500, resposta: e.toString());
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></li>
+    <li class="self-crumb">authenticate method</li>
+</ol>
+
+    <h5>ApiClient class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

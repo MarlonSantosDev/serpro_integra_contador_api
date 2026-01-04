@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the PgdasdService class from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>PgdasdService class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li class="self-crumb">PgdasdService class</li>
+  </ol>
+  <div class="self-name">PgdasdService</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;serpro_integra_contador_api-library-sidebar.html"
+    data-below-sidebar="serpro_integra_contador_api&#47;PgdasdService-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">PgdasdService</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p><strong>Serviço:</strong> PGDASD (Programa Gerador do DAS do Simples Nacional)</p>
+<p>O PGDASD é o sistema para declaração e geração de DAS do Simples Nacional para MEI.</p>
+<p><strong>Este serviço permite:</strong></p>
+<ul>
+<li>Entregar declaração mensal (TRANSDECLARACAO11)</li>
+<li>Gerar DAS (GERARDAS12)</li>
+<li>Consultar declarações transmitidas (CONSDECLARACAO13)</li>
+<li>Consultar última declaração/recibo (CONSULTIMADECREC14)</li>
+<li>Consultar declaração/recibo por número (CONSDECREC15)</li>
+<li>Consultar extrato do DAS (CONSEXTRATO16)</li>
+<li>Gerar DAS cobrança (GERARDASCOBRANCA17)</li>
+<li>Gerar DAS de processo (GERARDASPROCESSO18)</li>
+<li>Gerar DAS avulso (GERARDASAVULSO19)</li>
+</ul>
+<p><strong>Documentação oficial:</strong> <code>.cursor/rules/pgdasd.mdc</code></p>
+<p><strong>Exemplo de uso:</strong></p>
+<pre class="language-dart"><code class="language-dart">final pgdasdService = PgdasdService(apiClient);
+
+// Entregar declaração mensal
+final resultado = await pgdasdService.entregarDeclaracao(
+  request: EntregarDeclaracaoRequest(...),
+);
+print('Número do recibo: ${resultado.numeroRecibo}');
+
+// Gerar DAS
+final das = await pgdasdService.gerarDas(
+  request: GerarDasRequest(periodoApuracao: '012024'),
+);
+print('DAS Base64: ${das.pdfBase64}');
+</code></pre>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="PgdasdService.new" class="callable">
+          <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/PgdasdService.html">PgdasdService</a></span><span class="signature">(<span class="parameter" id="-param-_apiClient"><span class="type-annotation"><a href="../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></span> <span class="parameter-name">_apiClient</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="consultarDeclaracaoPorNumero" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/consultarDeclaracaoPorNumero.html">consultarDeclaracaoPorNumero</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarDeclaracaoPorNumero-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarDeclaracaoPorNumero-param-numeroDeclaracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">numeroDeclaracao</span>, </span><span class="parameter" id="consultarDeclaracaoPorNumero-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarDeclaracaoPorNumero-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarDeclaracaoNumeroResponse-class.html">ConsultarDeclaracaoNumeroResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar declaração/recibo específica por número de declaração
+  
+
+</dd>
+
+        <dt id="consultarDeclaracoes" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/consultarDeclaracoes.html">consultarDeclaracoes</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarDeclaracoes-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarDeclaracoes-param-anoCalendario"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">anoCalendario</span>, </span><span class="parameter" id="consultarDeclaracoes-param-periodoApuracao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="consultarDeclaracoes-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarDeclaracoes-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarDeclaracoesResponse-class.html">ConsultarDeclaracoesResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar declarações transmitidas por ano-calendário ou período de apuração
+  
+
+</dd>
+
+        <dt id="consultarExtratoDas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/consultarExtratoDas.html">consultarExtratoDas</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarExtratoDas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarExtratoDas-param-numeroDas"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">numeroDas</span>, </span><span class="parameter" id="consultarExtratoDas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarExtratoDas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarExtratoDasResponse-class.html">ConsultarExtratoDasResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar extrato da apuração do DAS por número de DAS
+  
+
+</dd>
+
+        <dt id="consultarUltimaDeclaracao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/consultarUltimaDeclaracao.html">consultarUltimaDeclaracao</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarUltimaDeclaracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarUltimaDeclaracao-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="consultarUltimaDeclaracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarUltimaDeclaracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarUltimaDeclaracaoResponse-class.html">ConsultarUltimaDeclaracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar a última declaração/recibo transmitida por período de apuração
+  
+
+</dd>
+
+        <dt id="consultarUltimaDeclaracaoComPagamento" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/consultarUltimaDeclaracaoComPagamento.html">consultarUltimaDeclaracaoComPagamento</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarUltimaDeclaracaoComPagamentoResponse-class.html">ConsultarUltimaDeclaracaoComPagamentoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar última declaração com informação de pagamento do DAS
+  
+
+</dd>
+
+        <dt id="entregarDeclaracao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/entregarDeclaracao.html">entregarDeclaracao</a></span><span class="signature">(<wbr>{<span class="parameter" id="entregarDeclaracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="entregarDeclaracao-param-request"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/EntregarDeclaracaoRequest-class.html">EntregarDeclaracaoRequest</a></span> <span class="parameter-name">request</span>, </span><span class="parameter" id="entregarDeclaracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="entregarDeclaracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EntregarDeclaracaoResponse-class.html">EntregarDeclaracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Entregar declaração mensal do Simples Nacional
+  
+
+</dd>
+
+        <dt id="entregarDeclaracaoComDas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/entregarDeclaracaoComDas.html">entregarDeclaracaoComDas</a></span><span class="signature">(<wbr>{<span class="parameter" id="entregarDeclaracaoComDas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="entregarDeclaracaoComDas-param-request"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/EntregarDeclaracaoRequest-class.html">EntregarDeclaracaoRequest</a></span> <span class="parameter-name">request</span>, </span><span class="parameter" id="entregarDeclaracaoComDas-param-dataConsolidacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataConsolidacao</span>, </span><span class="parameter" id="entregarDeclaracaoComDas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="entregarDeclaracaoComDas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EntregarDeclaracaoComDasResponse-class.html">EntregarDeclaracaoComDasResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Entregar declaração e gerar DAS automaticamente
+  
+
+</dd>
+
+        <dt id="gerarDas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/gerarDas.html">gerarDas</a></span><span class="signature">(<wbr>{<span class="parameter" id="gerarDas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="gerarDas-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="gerarDas-param-dataConsolidacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataConsolidacao</span>, </span><span class="parameter" id="gerarDas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="gerarDas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/GerarDasResponse-class.html">GerarDasResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gerar DAS de uma declaração previamente transmitida
+  
+
+</dd>
+
+        <dt id="gerarDasAvulso" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/gerarDasAvulso.html">gerarDasAvulso</a></span><span class="signature">(<wbr>{<span class="parameter" id="gerarDasAvulso-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="gerarDasAvulso-param-request"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/GerarDasAvulsoRequest-class.html">GerarDasAvulsoRequest</a></span> <span class="parameter-name">request</span>, </span><span class="parameter" id="gerarDasAvulso-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="gerarDasAvulso-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/GerarDasAvulsoResponse-class.html">GerarDasAvulsoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gerar DAS Avulso
+  
+
+</dd>
+
+        <dt id="gerarDasCobranca" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/gerarDasCobranca.html">gerarDasCobranca</a></span><span class="signature">(<wbr>{<span class="parameter" id="gerarDasCobranca-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="gerarDasCobranca-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="gerarDasCobranca-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="gerarDasCobranca-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/GerarDasCobrancaResponse-class.html">GerarDasCobrancaResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gerar DAS Cobrança com débitos em sistema de cobrança
+  
+
+</dd>
+
+        <dt id="gerarDasProcesso" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/PgdasdService/gerarDasProcesso.html">gerarDasProcesso</a></span><span class="signature">(<wbr>{<span class="parameter" id="gerarDasProcesso-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="gerarDasProcesso-param-numeroProcesso"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">numeroProcesso</span>, </span><span class="parameter" id="gerarDasProcesso-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="gerarDasProcesso-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/GerarDasProcessoResponse-class.html">GerarDasProcessoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gerar DAS de Processo com débitos de processo em sistema de cobrança
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">PgdasdService class</li>
+</ol>
+
+    <h5>serpro_integra_contador_api library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

@@ -1,5 +1,14 @@
 ## [2.0.8] - 2026-01-04
-- Ajueste do serviço PGDASD.
+- ✨ **Métodos Compostos no PGDASD**: Novos métodos que combinam múltiplas operações em uma única chamada
+  - `consultarUltimaDeclaracaoComPagamento()`: Consulta a última declaração e verifica automaticamente se o DAS foi pago
+  - `entregarDeclaracaoComDas()`: Entrega a declaração e gera o DAS automaticamente em uma única operação
+- Novos modelos de resposta para métodos compostos:
+  - `ConsultarUltimaDeclaracaoComPagamentoResponse`: Resposta combinada com informação de pagamento do DAS
+  - `EntregarDeclaracaoComDasResponse`: Resposta combinada de entrega de declaração e geração de DAS
+- Melhorias na documentação do serviço PGDASD com exemplos dos novos métodos compostos
+- Atualização da documentação completa dos serviços
+- Correções e ajustes gerais no código
+
 
 ## [2.0.7] - 2025-12-22
 - dart format .

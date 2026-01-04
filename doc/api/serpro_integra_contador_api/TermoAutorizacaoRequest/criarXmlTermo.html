@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the criarXmlTermo method from the TermoAutorizacaoRequest class, for the Dart programming language.">
+  <title>criarXmlTermo method - TermoAutorizacaoRequest class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/TermoAutorizacaoRequest-class.html">TermoAutorizacaoRequest</a></li>
+    <li class="self-crumb">criarXmlTermo method</li>
+  </ol>
+  <div class="self-name">criarXmlTermo</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;TermoAutorizacaoRequest-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">criarXmlTermo</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+<span class="name ">criarXmlTermo</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Cria o XML do termo de autorização conforme especificação SERPRO</p>
+<p>O XML é criado SEM a tag Signature.
+A assinatura digital será adicionada posteriormente pelo assinador.
+Isso segue o padrão do PHP de referência do SERPRO.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">String criarXmlTermo() {
+  final contratanteTipo = ValidacoesUtils.detectDocumentType(
+    contratanteNumero,
+  );
+  final autorTipo = ValidacoesUtils.detectDocumentType(
+    autorPedidoDadosNumero,
+  );
+
+  &#47;&#47; XML sem Signature - será adicionada pelo assinador (conforme padrão SERPRO PHP)
+  final xml =
+      &#39;&#39;&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;termoDeAutorizacao&gt;&lt;dados&gt;&lt;sistema id=&quot;API Integra Contador&quot;&#47;&gt;&lt;termo texto=&quot;Autorizo a empresa CONTRATANTE, identificada neste termo de autorização como DESTINATÁRIO, a executar as requisições dos serviços web disponibilizados pela API INTEGRA CONTADOR, onde terei o papel de AUTOR PEDIDO DE DADOS no corpo da mensagem enviada na requisição do serviço web. Esse termo de autorização está assinado digitalmente com o certificado digital do PROCURADOR ou OUTORGADO DO CONTRIBUINTE responsável, identificado como AUTOR DO PEDIDO DE DADOS.&quot;&#47;&gt;&lt;avisoLegal texto=&quot;O acesso a estas informações foi autorizado pelo próprio PROCURADOR ou OUTORGADO DO CONTRIBUINTE, responsável pela informação, via assinatura digital. É dever do destinatário da autorização e consumidor deste acesso observar a adoção de base legal para o tratamento dos dados recebidos conforme artigos 7º ou 11º da LGPD (Lei n.º 13.709, de 14 de agosto de 2018), aos direitos do titular dos dados (art. 9º, 17 e 18, da LGPD) e aos princípios que norteiam todos os tratamentos de dados no Brasil (art. 6º, da LGPD).&quot;&#47;&gt;&lt;finalidade texto=&quot;A finalidade única e exclusiva desse TERMO DE AUTORIZAÇÃO, é garantir que o CONTRATANTE apresente a API INTEGRA CONTADOR esse consentimento do PROCURADOR ou OUTORGADO DO CONTRIBUINTE assinado digitalmente, para que possa realizar as requisições dos serviços web da API INTEGRA CONTADOR em nome do AUTOR PEDIDO DE DADOS (PROCURADOR ou OUTORGADO DO CONTRIBUINTE).&quot;&#47;&gt;&lt;dataAssinatura data=&quot;$dataAssinatura&quot;&#47;&gt;&lt;vigencia data=&quot;$dataVigencia&quot;&#47;&gt;&lt;destinatario numero=&quot;${ValidacoesUtils.cleanDocumentNumber(contratanteNumero)}&quot; nome=&quot;$contratanteNome&quot; tipo=&quot;${contratanteTipo == 1 ? &#39;PF&#39; : &#39;PJ&#39;}&quot; papel=&quot;contratante&quot;&#47;&gt;&lt;assinadoPor numero=&quot;${ValidacoesUtils.cleanDocumentNumber(autorPedidoDadosNumero)}&quot; nome=&quot;$autorPedidoDadosNome&quot; tipo=&quot;${autorTipo == 1 ? &#39;PF&#39; : &#39;PJ&#39;}&quot; papel=&quot;autor pedido de dados&quot;&#47;&gt;&lt;&#47;dados&gt;&lt;&#47;termoDeAutorizacao&gt;&#39;&#39;&#39;;
+
+  return xml;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/TermoAutorizacaoRequest-class.html">TermoAutorizacaoRequest</a></li>
+    <li class="self-crumb">criarXmlTermo method</li>
+</ol>
+
+    <h5>TermoAutorizacaoRequest class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

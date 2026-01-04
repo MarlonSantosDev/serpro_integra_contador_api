@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the SicalcService class from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>SicalcService class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li class="self-crumb">SicalcService class</li>
+  </ol>
+  <div class="self-name">SicalcService</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;serpro_integra_contador_api-library-sidebar.html"
+    data-below-sidebar="serpro_integra_contador_api&#47;SicalcService-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">SicalcService</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p><strong>Serviço:</strong> SICALC (Sistema de Cálculo de Acréscimos Legais)</p>
+<p>O SICALC é um sistema para cálculo de multa e juros sobre débitos tributários.</p>
+<p><strong>Este serviço permite:</strong></p>
+<ul>
+<li>Consolidar e emitir DARF (CONSOLEMITEDARF111)</li>
+<li>Calcular valor sem emissão (CALCULOSICALC112)</li>
+<li>Consultar códigos de receita (CONSCODIGOSRECEITA113)</li>
+<li>Consultar pagamentos (CONSPAGAMENTOS114)</li>
+<li>Consultar saldo de parcelamento (CONSSALDOPARC115)</li>
+</ul>
+<p><strong>Documentação oficial:</strong> <code>.cursor/rules/sicalc.mdc</code></p>
+<p><strong>Exemplo de uso:</strong></p>
+<pre class="language-dart"><code class="language-dart">final sicalcService = SicalcService(apiClient);
+
+// Consolidar e emitir DARF
+final darf = await sicalcService.consolidarEmitirDarf(
+  ConsolidarEmitirDarfRequest(
+    codigoReceita: '1850',
+    valorPrincipal: 1000.00,
+    dataVencimento: DateTime(2024, 1, 20),
+    dataPagamento: DateTime(2024, 3, 15),
+  ),
+);
+print('Valor consolidado: R\$ ${darf.valorConsolidado}');
+print('DARF PDF: ${darf.pdfBase64}');
+</code></pre>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="SicalcService.new" class="callable">
+          <span class="name"><a href="../serpro_integra_contador_api/SicalcService/SicalcService.html">SicalcService</a></span><span class="signature">(<span class="parameter" id="-param-_apiClient"><span class="type-annotation"><a href="../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></span> <span class="parameter-name">_apiClient</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="consolidarEmitirDarf" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/consolidarEmitirDarf.html">consolidarEmitirDarf</a></span><span class="signature">(<wbr><span class="parameter" id="consolidarEmitirDarf-param-request"><span class="type-annotation"><a href="../serpro_integra_contador_api/ConsolidarEmitirDarfRequest-class.html">ConsolidarEmitirDarfRequest</a></span> <span class="parameter-name">request</span>, {</span><span class="parameter" id="consolidarEmitirDarf-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consolidarEmitirDarf-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsolidarEmitirDarfResponse-class.html">ConsolidarEmitirDarfResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consolidar e emitir um DARF
+  
+
+</dd>
+
+        <dt id="consultarReceitas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/consultarReceitas.html">consultarReceitas</a></span><span class="signature">(<wbr><span class="parameter" id="consultarReceitas-param-request"><span class="type-annotation"><a href="../serpro_integra_contador_api/ConsultarReceitasRequest-class.html">ConsultarReceitasRequest</a></span> <span class="parameter-name">request</span>, {</span><span class="parameter" id="consultarReceitas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarReceitas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarReceitasResponse-class.html">ConsultarReceitasResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consultar receitas do SICALC
+  
+
+</dd>
+
+        <dt id="gerarCodigoBarras" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/gerarCodigoBarras.html">gerarCodigoBarras</a></span><span class="signature">(<wbr><span class="parameter" id="gerarCodigoBarras-param-request"><span class="type-annotation"><a href="../serpro_integra_contador_api/GerarCodigoBarrasRequest-class.html">GerarCodigoBarrasRequest</a></span> <span class="parameter-name">request</span>, {</span><span class="parameter" id="gerarCodigoBarras-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="gerarCodigoBarras-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/GerarCodigoBarrasResponse-class.html">GerarCodigoBarrasResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consolidar e emitir código de barras do DARF
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="obterInfoReceita" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/obterInfoReceita.html">obterInfoReceita</a></span><span class="signature">(<wbr><span class="parameter" id="obterInfoReceita-param-codigoReceita"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, {</span><span class="parameter" id="obterInfoReceita-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="obterInfoReceita-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span>?</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Obtém informações sobre campos obrigatórios de uma receita
+  
+
+</dd>
+
+        <dt id="receitaPermiteCodigoBarras" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/receitaPermiteCodigoBarras.html">receitaPermiteCodigoBarras</a></span><span class="signature">(<wbr><span class="parameter" id="receitaPermiteCodigoBarras-param-codigoReceita"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, {</span><span class="parameter" id="receitaPermiteCodigoBarras-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="receitaPermiteCodigoBarras-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Valida se uma receita permite código de barras
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+  <section class="summary offset-anchor" id="static-methods">
+    <h2>Static Methods</h2>
+    <dl class="callables">
+        <dt id="criarCodigoBarras" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/criarCodigoBarras.html">criarCodigoBarras</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarCodigoBarras-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarCodigoBarras-param-uf"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">uf</span>, </span><span class="parameter" id="criarCodigoBarras-param-municipio"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">municipio</span>, </span><span class="parameter" id="criarCodigoBarras-param-codigoReceita"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, </span><span class="parameter" id="criarCodigoBarras-param-codigoReceitaExtensao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceitaExtensao</span>, </span><span class="parameter" id="criarCodigoBarras-param-tipoPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tipoPA</span>, </span><span class="parameter" id="criarCodigoBarras-param-dataPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataPA</span>, </span><span class="parameter" id="criarCodigoBarras-param-vencimento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">vencimento</span>, </span><span class="parameter" id="criarCodigoBarras-param-valorImposto"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorImposto</span>, </span><span class="parameter" id="criarCodigoBarras-param-dataConsolidacao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataConsolidacao</span>, </span><span class="parameter" id="criarCodigoBarras-param-observacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">observacao</span>, </span><span class="parameter" id="criarCodigoBarras-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarCodigoBarras-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/GerarCodigoBarrasRequest-class.html">GerarCodigoBarrasRequest</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Método auxiliar para criar requisição de código de barras
+  
+
+</dd>
+
+        <dt id="criarConsultaReceitas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/criarConsultaReceitas.html">criarConsultaReceitas</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarConsultaReceitas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarConsultaReceitas-param-codigoReceita"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, </span><span class="parameter" id="criarConsultaReceitas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarConsultaReceitas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/ConsultarReceitasRequest-class.html">ConsultarReceitasRequest</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Método auxiliar para criar requisição de consulta de receitas
+  
+
+</dd>
+
+        <dt id="criarDarfPessoaFisica" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/criarDarfPessoaFisica.html">criarDarfPessoaFisica</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarDarfPessoaFisica-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-uf"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">uf</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-municipio"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">municipio</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-codigoReceita"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-codigoReceitaExtensao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceitaExtensao</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-tipoPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tipoPA</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-dataPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataPA</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-vencimento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">vencimento</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-valorImposto"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorImposto</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-dataConsolidacao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataConsolidacao</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-observacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">observacao</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarDarfPessoaFisica-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/ConsolidarEmitirDarfRequest-class.html">ConsolidarEmitirDarfRequest</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Método auxiliar para criar requisição de DARF de pessoa física
+  
+
+</dd>
+
+        <dt id="criarDarfPessoaJuridica" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/SicalcService/criarDarfPessoaJuridica.html">criarDarfPessoaJuridica</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarDarfPessoaJuridica-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-uf"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">uf</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-municipio"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">municipio</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-codigoReceita"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceita</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-codigoReceitaExtensao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoReceitaExtensao</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-tipoPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tipoPA</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-dataPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataPA</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-vencimento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">vencimento</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-valorImposto"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorImposto</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-dataConsolidacao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">dataConsolidacao</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-cota"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">cota</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-observacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">observacao</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarDarfPessoaJuridica-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/ConsolidarEmitirDarfRequest-class.html">ConsolidarEmitirDarfRequest</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Método auxiliar para criar requisição de DARF de pessoa jurídica
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">SicalcService class</li>
+</ol>
+
+    <h5>serpro_integra_contador_api library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

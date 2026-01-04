@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the carregarCertificado method from the AssinadorDigitalXml class, for the Dart programming language.">
+  <title>carregarCertificado method - AssinadorDigitalXml class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/AssinadorDigitalXml-class.html">AssinadorDigitalXml</a></li>
+    <li class="self-crumb">carregarCertificado method</li>
+  </ol>
+  <div class="self-name">carregarCertificado</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;AssinadorDigitalXml-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">carregarCertificado</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">carregarCertificado</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Carrega e analisa o certificado digital</p>
+<h2 id="formatos-suportados">Formatos suportados:</h2>
+<ul>
+<li><strong>PFX/P12</strong>: Parse Pure Dart em todas as plataformas</li>
+<li><strong>PEM</strong>: Parse texto em todas as plataformas</li>
+</ul>
+<h2 id="desktop-com-openssl">Desktop com OpenSSL:</h2>
+<p>Se OpenSSL estiver disponível, tenta conversão automática PFX-&gt;PEM
+para melhor compatibilidade com certificados ICP-Brasil.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; carregarCertificado() async {
+  try {
+    Uint8List certificadoBytes;
+
+    &#47;&#47; Obter bytes do certificado
+    if (certificadoBase64 != null &amp;&amp; certificadoBase64!.isNotEmpty) {
+      &#47;&#47; Certificado em Base64 (funciona em todas as plataformas!)
+      certificadoBytes = base64.decode(certificadoBase64!);
+    } else if (caminhoCertificado != null &amp;&amp; caminhoCertificado!.isNotEmpty) {
+      &#47;&#47; Certificado em arquivo (Desktop&#47;Mobile apenas)
+      if (!FileIO.isSupported) {
+        throw ExcecaoAssinaturaCertificado(
+          &#39;📱 Leitura de arquivo não suportada em Web.\n&#39;
+          &#39;Use certificadoBase64 em vez de certificadoPath.&#39;,
+        );
+      }
+
+      if (!await FileIO.fileExists(caminhoCertificado!)) {
+        throw ExcecaoAssinaturaCertificado(
+          &#39;Certificado não encontrado: $caminhoCertificado&#39;,
+        );
+      }
+      certificadoBytes = await FileIO.readFileAsBytes(caminhoCertificado!);
+    } else {
+      throw ExcecaoAssinaturaCertificado(
+        &#39;Nenhum certificado fornecido. Use certificadoBase64 ou caminhoCertificado.&#39;,
+      );
+    }
+
+    &#47;&#47; Detectar formato: PEM (texto) ou PKCS#12 (binário)
+    final certificadoTexto = utf8.decode(
+      certificadoBytes,
+      allowMalformed: true,
+    );
+    final isPem =
+        certificadoTexto.contains(&#39;-----BEGIN&#39;) &amp;&amp;
+        certificadoTexto.contains(&#39;-----END&#39;);
+
+    _DadosPkcs12 dadosCertificado;
+
+    if (isPem) {
+      &#47;&#47;print(&#39;✅ Detectado formato PEM&#39;);
+      dadosCertificado = _extrairDePem(certificadoTexto);
+    } else {
+      &#47;&#47; PKCS#12&#47;PFX
+      &#47;&#47;print(&#39;✅ Detectado formato PKCS#12&#47;PFX&#39;);
+
+      &#47;&#47; Tentar conversão via OpenSSL em Desktop (melhor compatibilidade)
+      if (FileIO.isDesktop &amp;&amp; caminhoCertificado != null) {
+        final pemConvertido = await FileIO.runOpenSSLConversion(
+          caminhoCertificado!,
+          senhaCertificado,
+        );
+
+        if (pemConvertido != null) {
+          &#47;&#47;print(&#39;✅ Convertido para PEM usando OpenSSL&#39;);
+          dadosCertificado = _extrairDePem(pemConvertido);
+        } else {
+          &#47;&#47; Fallback para parse Pure Dart
+          &#47;&#47;print(&#39;⚠️  OpenSSL não disponível, usando parser Pure Dart&#39;);
+          dadosCertificado = _extrairPkcs12PureDart(
+            certificadoBytes,
+            senhaCertificado,
+          );
+        }
+      } else {
+        &#47;&#47; Web&#47;Mobile: usar parser Pure Dart diretamente
+        dadosCertificado = _extrairPkcs12PureDart(
+          certificadoBytes,
+          senhaCertificado,
+        );
+      }
+    }
+
+    _chavePrivada = dadosCertificado.chavePrivada;
+    _certificadoX509Base64 = dadosCertificado.certificado;
+    _infoCertificado = dadosCertificado.info;
+
+    if (!_infoCertificado!.isValido) {
+      throw ExcecaoAssinaturaCertificado(
+        &#39;Certificado fora da validade. Válido de ${_infoCertificado!.validoDe} até ${_infoCertificado!.validoAte}&#39;,
+      );
+    }
+
+    &#47;&#47; print(&#39;✅ Certificado carregado: ${_infoCertificado!.nomeExibicao}&#39;);
+    &#47;&#47; print(&#39;   Válido até: ${_infoCertificado!.validoAte}&#39;);
+    &#47;&#47; print(&#39;   Dias restantes: ${_infoCertificado!.diasRestantes}&#39;);
+  } catch (e) {
+    if (e is ExcecaoAutenticaProcurador) rethrow;
+    throw ExcecaoAssinaturaCertificado(&#39;Erro ao carregar certificado: $e&#39;);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/AssinadorDigitalXml-class.html">AssinadorDigitalXml</a></li>
+    <li class="self-crumb">carregarCertificado method</li>
+</ol>
+
+    <h5>AssinadorDigitalXml class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

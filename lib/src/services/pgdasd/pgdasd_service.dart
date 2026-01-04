@@ -3,7 +3,8 @@ import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' as request_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart' as response_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart';
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' show GerarDasResponse;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' as gerar_das_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_response.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_ultima_declaracao_request.dart';
@@ -18,6 +19,8 @@ import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_cobranca_response.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_processo_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_processo_response.dart';
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_ultima_declaracao_com_pagamento_response.dart';
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_com_das_response.dart';
 
 /// **Serviço:** PGDASD (Programa Gerador do DAS do Simples Nacional)
 ///
@@ -360,5 +363,220 @@ class PgdasdService {
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
     return GerarDasAvulsoResponse.fromJson(response);
+  }
+
+  /// Consultar última declaração com informação de pagamento do DAS
+  ///
+  /// Combina a consulta da última declaração (CONSULTIMADECREC14) com
+  /// consulta de declarações para obter status de pagamento do DAS.
+  ///
+  /// Este método executa duas operações:
+  /// 1. Consulta a última declaração do período (PDFs e detalhes)
+  /// 2. Consulta as declarações do ano para obter status de pagamento do DAS
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [periodoApuracao] Período de apuração (formato: AAAAMM, exemplo: "202504")
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  ///
+  /// Returns: [ConsultarUltimaDeclaracaoComPagamentoResponse] com todos os dados da declaração
+  /// mais o campo adicional `dasPago` indicando se o DAS foi pago.
+  ///
+  /// O campo `dasPago`:
+  /// - `true`: DAS foi pago OU não foi encontrado DAS para o período (assume pago)
+  /// - `false`: DAS existe e não consta pagamento
+  ///
+  /// Throws: Exception se a consulta da última declaração falhar
+  ///
+  /// Exemplo:
+  /// ```dart
+  /// final resultado = await pgdasdService.consultarUltimaDeclaracaoComPagamento(
+  ///   contribuinteNumero: '12345678000100',
+  ///   periodoApuracao: '202504',
+  /// );
+  ///
+  /// print('Número: ${resultado.dados?.numeroDeclaracao}');
+  /// print('DAS Pago: ${resultado.dasPago ? "Sim" : "Não"}');
+  /// ```
+  Future<ConsultarUltimaDeclaracaoComPagamentoResponse>
+      consultarUltimaDeclaracaoComPagamento({
+    required String contribuinteNumero,
+    required String periodoApuracao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    // Passo 1: Consultar última declaração
+    final ultimaDeclaracaoResponse = await consultarUltimaDeclaracao(
+      contribuinteNumero: contribuinteNumero,
+      periodoApuracao: periodoApuracao,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    // Passo 2: Extrair ano calendário do período (primeiros 4 dígitos)
+    final anoCalendario = periodoApuracao.substring(0, 4);
+
+    // Passo 3: Consultar declarações para obter status de pagamento
+    bool dasPago = true; // Default: assume pago
+
+    try {
+      final declaracoesResponse = await consultarDeclaracoes(
+        contribuinteNumero: contribuinteNumero,
+        anoCalendario: anoCalendario,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
+
+      // Passo 4: Procurar período correspondente e extrair dasPago
+      if (declaracoesResponse.sucesso && declaracoesResponse.dados != null) {
+        final periodoInt = int.parse(periodoApuracao);
+
+        // Iterar pelos períodos do ano
+        for (final periodo in declaracoesResponse.dados!.listaPeriodos) {
+          if (periodo.periodoApuracao == periodoInt) {
+            // Procurar DAS nas operações do período
+            for (final operacao in periodo.operacoes) {
+              if (operacao.indiceDas != null) {
+                dasPago = operacao.indiceDas!.dasPago;
+                break; // Usa o primeiro DAS encontrado
+              }
+            }
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      // Se falhar ao consultar declarações, mantém default dasPago = true
+      // Não falha o método composto, apenas usa o valor padrão
+    }
+
+    // Passo 5: Criar resposta composta
+    return ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase(
+      baseResponse: ultimaDeclaracaoResponse,
+      dasPago: dasPago,
+    );
+  }
+
+  /// Entregar declaração e gerar DAS automaticamente
+  ///
+  /// Combina a entrega de declaração (TRANSDECLARACAO11) com
+  /// geração automática do DAS (GERARDAS12) após sucesso.
+  ///
+  /// Este método executa duas operações em sequência:
+  /// 1. Transmite a declaração para a RFB
+  /// 2. Se a declaração for bem-sucedida, gera o DAS automaticamente
+  ///
+  /// [contribuinteNumero] CNPJ do contribuinte
+  /// [request] Dados da declaração a ser transmitida
+  /// [dataConsolidacao] Data de consolidação futura para o DAS (opcional, formato: AAAAMMDD)
+  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  ///
+  /// Returns: [EntregarDeclaracaoComDasResponse] com dados combinados de ambas operações
+  ///
+  /// Comportamento em caso de erros:
+  /// - Se a declaração falhar: Retorna erro imediatamente, não tenta gerar DAS
+  /// - Se o DAS falhar: Retorna erro MAS preserva os dados da declaração
+  ///
+  /// A resposta contém getters úteis:
+  /// - `sucesso`: true se ambas operações foram bem-sucedidas
+  /// - `declaracaoEntregue`: true se a declaração foi transmitida
+  /// - `dasGerado`: true se o DAS foi gerado
+  ///
+  /// IMPORTANTE: Se o DAS falhar mas a declaração foi entregue, você pode
+  /// gerar o DAS manualmente usando o método `gerarDas()` com o período
+  /// da declaração. O ID da declaração estará disponível em `dadosDeclaracao`.
+  ///
+  /// Exemplo:
+  /// ```dart
+  /// final resultado = await pgdasdService.entregarDeclaracaoComDas(
+  ///   contribuinteNumero: '12345678000100',
+  ///   request: EntregarDeclaracaoRequest(
+  ///     cnpjCompleto: '12345678000100',
+  ///     pa: 202504,
+  ///     declaracao: declaracao,
+  ///     // ... outros campos
+  ///   ),
+  /// );
+  ///
+  /// if (resultado.sucesso) {
+  ///   print('✅ Declaração e DAS gerados!');
+  ///   print('ID: ${resultado.dadosDeclaracao!.idDeclaracao}');
+  ///   print('DAS: ${resultado.dadosDas![0].detalhamento.numeroDocumento}');
+  /// } else if (resultado.declaracaoEntregue) {
+  ///   print('⚠️ Declaração OK, mas DAS falhou');
+  ///   print('Tente gerar DAS manualmente');
+  /// } else {
+  ///   print('❌ Erro ao entregar declaração');
+  /// }
+  /// ```
+  Future<EntregarDeclaracaoComDasResponse> entregarDeclaracaoComDas({
+    required String contribuinteNumero,
+    required request_models.EntregarDeclaracaoRequest request,
+    String? dataConsolidacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    // Passo 1: Entregar declaração
+    final entregarResponse = await entregarDeclaracao(
+      contribuinteNumero: contribuinteNumero,
+      request: request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
+
+    // Passo 2: Verificar se a declaração foi bem-sucedida
+    if (!entregarResponse.sucesso) {
+      // Declaração falhou, retornar erro imediatamente
+      return EntregarDeclaracaoComDasResponse.fromDeclaracaoError(
+        declaracaoResponse: entregarResponse,
+      );
+    }
+
+    // Passo 3: Extrair período de apuração do request (int → String)
+    final periodoApuracao = request.pa.toString();
+
+    // Passo 4: Tentar gerar DAS
+    try {
+      final gerarDasResponse = await gerarDas(
+        contribuinteNumero: contribuinteNumero,
+        periodoApuracao: periodoApuracao,
+        dataConsolidacao: dataConsolidacao,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
+
+      // Passo 5a: Verificar se DAS foi gerado com sucesso
+      if (!gerarDasResponse.sucesso) {
+        // DAS falhou, mas declaração foi entregue
+        return EntregarDeclaracaoComDasResponse.fromDasError(
+          declaracaoResponse: entregarResponse,
+          dasResponse: gerarDasResponse,
+        );
+      }
+
+      // Passo 5b: Ambas operações bem-sucedidas
+      return EntregarDeclaracaoComDasResponse.fromResponses(
+        declaracaoResponse: entregarResponse,
+        dasResponse: gerarDasResponse,
+      );
+    } catch (e) {
+      // DAS lançou exception, criar resposta de erro artificial
+      final gerarDasResponseErro = GerarDasResponse(
+        status: 500,
+        mensagens: [
+          gerar_das_models.Mensagem(
+            codigo: 'ERRO_GERACAO_DAS',
+            texto: 'Erro ao gerar DAS: ${e.toString()}',
+          ),
+        ],
+        dados: null,
+      );
+
+      return EntregarDeclaracaoComDasResponse.fromDasError(
+        declaracaoResponse: entregarResponse,
+        dasResponse: gerarDasResponseErro,
+      );
+    }
   }
 }

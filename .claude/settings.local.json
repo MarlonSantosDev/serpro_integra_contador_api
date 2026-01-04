@@ -37,7 +37,8 @@
       "Bash(test:*)",
       "Bash(mkdir:*)",
       "Bash(python:*)",
-      "Bash(python -c:*)"
+      "Bash(python -c:*)",
+      "Bash(dart format:*)"
     ],
     "deny": [],
     "ask": []

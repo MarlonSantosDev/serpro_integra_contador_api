@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the errorCodes constant from the RelpsnErrors class, for the Dart programming language.">
+  <title>errorCodes constant - RelpsnErrors class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/RelpsnErrors-class.html">RelpsnErrors</a></li>
+    <li class="self-crumb">errorCodes constant</li>
+  </ol>
+  <div class="self-name">errorCodes</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;RelpsnErrors-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-property">errorCodes</span> constant 
+</h1></div>
+
+    
+      <section class="multi-line-signature">
+        
+        <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../../serpro_integra_contador_api/RelpsnErrorInfo-class.html">RelpsnErrorInfo</a></span>&gt;</span>
+        const <span class="name ">errorCodes</span>
+        
+
+      </section>
+      
+<section class="desc markdown">
+  <p>Códigos de erro específicos do RELPSN</p>
+</section>
+
+      
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static const Map&lt;String, RelpsnErrorInfo&gt; errorCodes = {
+  &#39;[Aviso-RELPSN-ER_E001]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_E001]&#39;,
+    mensagem: &#39;Não há parcelamento ativo para o contribuinte.&#39;,
+    acao: &#39;O número do parcelamento informado não está ativo ou não existe.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Erro-RELPSN-ER_N001]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Erro-RELPSN-ER_N001]&#39;,
+    mensagem:
+        &#39;Erro ao utilizar o Integra Contador Parcelamentos. Tente novamente mais tarde.&#39;,
+    acao: &#39;Erro interno. Efetuar nova tentativa.&#39;,
+    tipo: RelpsnErrorType.erro,
+  ),
+  &#39;[EntradaIncorreta-RELPSN-ER_N002]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[EntradaIncorreta-RELPSN-ER_N002]&#39;,
+    mensagem: &#39;Parâmetro de entrada inválido: {}.&#39;,
+    acao:
+        &#39;Foi enviado um parâmetro de forma incorreta. Reenviar corrigindo o problema.&#39;,
+    tipo: RelpsnErrorType.entradaIncorreta,
+  ),
+  &#39;[Aviso-RELPSN-ER_N003]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N003]&#39;,
+    mensagem:
+        &#39;Não há mais saldo devedor para os débitos incluídos no parcelamento. No próximo processamento mensal, o parcelamento será encerrado.&#39;,
+    acao: &#39;Não há parcela disponível.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[EntradaIncorreta-RELPSN-ER_N004]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[EntradaIncorreta-RELPSN-ER_N004]&#39;,
+    mensagem:
+        &#39;Houve uma reconsolidação do parcelamento. Não é possível utilizar o Integra Contador para esta ação, que deve ser feita diretamente no portal do contribuinte ou eCac.&#39;,
+    acao: &#39;Quando há reconsolidação, deve ser utilizada a versão web.&#39;,
+    tipo: RelpsnErrorType.entradaIncorreta,
+  ),
+  &#39;[Aviso-RELPSN-ER_N005]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N005]&#39;,
+    mensagem:
+        &#39;O DAS da parcela do mês corrente só pode ser emitido a partir do dia {}.&#39;,
+    acao: &#39;Reenviar a partir do dia indicado.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N006]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N006]&#39;,
+    mensagem:
+        &#39;A parcela {0} está indisponível para impressão devido a um dos seguintes motivos: 1- A parcela não existe no parcelamento; 2- Já existe pagamento para a parcela ou 3- É uma parcela de um mês futuro ainda não disponível.&#39;,
+    acao:
+        &#39;Foi solicitada uma parcela que não está disponível para o parcelamento solicitado.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[EntradaIncorreta-RELPSN-ER_N007]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[EntradaIncorreta-RELPSN-ER_N007]&#39;,
+    mensagem:
+        &#39;Esta funcionalidade não requer nenhuma informação no campo dados. Remova e envie novamente a requisição.&#39;,
+    acao:
+        &#39;Foram enviados parâmetros de entrada desnecessários. Reenviar retirando os parâmetros.&#39;,
+    tipo: RelpsnErrorType.entradaIncorreta,
+  ),
+  &#39;[Aviso-RELPSN-ER_N008]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N008]&#39;,
+    mensagem: &#39;Não foram encontradas parcelas para emissão.&#39;,
+    acao: &#39;Não há parcelas para o parcelamento solicitado.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N009]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N009]&#39;,
+    mensagem: &#39;Não existe parcelamento para o numeroParcelamento informado.&#39;,
+    acao: &#39;Verificar o número do parcelamento passado no parâmetro&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N010]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N010]&#39;,
+    mensagem:
+        &#39;A parcela {} informada não é uma parcela válida para consulta de pagamento do parcelamento {}.&#39;,
+    acao: &#39;Foi passada uma parcela que não existe ou não possui pagamento.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N011]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N011]&#39;,
+    mensagem: &#39;Não existe parcelamento com o número informado.&#39;,
+    acao: &#39;Reenviar corrigindo o parâmetro.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N012]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N012]&#39;,
+    mensagem:
+        &#39;Não existe pagamento para o anoMesParcela e numeroParcelamento informados.&#39;,
+    acao: &#39;Não existe pagamento para a parcela informada.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[Aviso-RELPSN-ER_N013]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N013]&#39;,
+    mensagem:
+        &#39;Há um pedido de parcelamento para o contribuinte aguardando confirmação do pagamento da primeira parcela. Mensalmente, após a confirmação, estarão disponíveis os documentos para pagamento das demais.&#39;,
+    acao: &#39;Aguardar o pagamento.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[EntradaIncorreta-RELPSN-ER_N014]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[EntradaIncorreta-RELPSN-ER_N014]&#39;,
+    mensagem:
+        &#39;Não será possível utilizar o IC para este contribuinte. Utilize o sistema web.&#39;,
+    acao:
+        &#39;A condição do parcelamento do contribuinte não permite a utilização pelo Integra Contador.&#39;,
+    tipo: RelpsnErrorType.entradaIncorreta,
+  ),
+  &#39;[Aviso-RELPSN-ER_N015]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[Aviso-RELPSN-ER_N015]&#39;,
+    mensagem:
+        &#39;Informe a parcela {0} na requisição para obter o documento de arrecadação da primeira parcela.&#39;,
+    acao:
+        &#39;Mensagem que pode ser emitida em conjunto com outra. Deve ser corrigido o parâmetro de entrada.&#39;,
+    tipo: RelpsnErrorType.aviso,
+  ),
+  &#39;[EntradaIncorreta-RELPSN-ER_N016]&#39;: RelpsnErrorInfo(
+    codigo: &#39;[EntradaIncorreta-RELPSN-ER_N016]&#39;,
+    mensagem:
+        &#39;O Integra Contador Parcelamento possui o limite de {0} parcelas e este parcelamento possui {1} parcelas. Utilize o sistema na WEB para obter a guia.&#39;,
+    acao: &#39;Não será possível emitir guia para este parcelamento.&#39;,
+    tipo: RelpsnErrorType.entradaIncorreta,
+  ),
+};</code></pre>
+</section>
+
+
+    
+</div> <!-- /.main-content -->
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/RelpsnErrors-class.html">RelpsnErrors</a></li>
+    <li class="self-crumb">errorCodes constant</li>
+</ol>
+
+  <h5>RelpsnErrors class</h5>
+  <div id="dartdoc-sidebar-left-content"></div>
+</div><!--/.sidebar-offcanvas-->
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

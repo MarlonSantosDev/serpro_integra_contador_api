@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the obterListaMensagensPorContribuinte method from the CaixaPostalService class, for the Dart programming language.">
+  <title>obterListaMensagensPorContribuinte method - CaixaPostalService class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li><a href="../../serpro_integra_contador_api/CaixaPostalService-class.html">CaixaPostalService</a></li>
+    <li class="self-crumb">obterListaMensagensPorContribuinte method</li>
+  </ol>
+  <div class="self-name">obterListaMensagensPorContribuinte</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;CaixaPostalService-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">obterListaMensagensPorContribuinte</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ListaMensagensResponse-class.html">ListaMensagensResponse</a></span>&gt;</span></span>
+<span class="name ">obterListaMensagensPorContribuinte</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="obterListaMensagensPorContribuinte-param-contribuinte"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinte</span>, {</span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-cnpjReferencia"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpjReferencia</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-statusLeitura"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">statusLeitura</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-indicadorFavorito"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">indicadorFavorito</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-indicadorPagina"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">indicadorPagina</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-ponteiroPagina"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">ponteiroPagina</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
+<li><span class="parameter" id="obterListaMensagensPorContribuinte-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Obtém a lista de mensagens da Caixa Postal de um contribuinte</p>
+<p><strong>Serviço API:</strong> MSGCONTRIBUINTE61
+<strong>Endpoint:</strong> /Consultar</p>
+<p><code>contribuinte</code> - Número do CPF/CNPJ do contribuinte
+<code>cnpjReferencia</code> - Número do CNPJ para filtro (apenas para PJ)
+<code>statusLeitura</code> - Status da mensagem: 0=Todas (não se aplica), 1=Lida, 2=Não Lida
+<code>indicadorFavorito</code> - Filtro por favorita: 0=Não favorita, 1=Favorita, null=Sem filtro
+<code>indicadorPagina</code> - Página: 0=Inicial (mais recentes), 1=Não-inicial
+<code>ponteiroPagina</code> - Ponteiro para página (necessário se indicadorPagina=1)
+<code>contratanteNumero</code> - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
+<code>autorPedidoDadosNumero</code> - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;ListaMensagensResponse&gt; obterListaMensagensPorContribuinte(
+  String contribuinte, {
+  String? cnpjReferencia,
+  int statusLeitura = 0,
+  int? indicadorFavorito,
+  int indicadorPagina = 0,
+  String? ponteiroPagina,
+  String? contratanteNumero,
+  String? autorPedidoDadosNumero,
+}) async {
+  final dadosMap = &lt;String, dynamic&gt;{
+    &#39;statusLeitura&#39;: statusLeitura.toString(),
+    &#39;indicadorPagina&#39;: indicadorPagina.toString(),
+  };
+
+  if (cnpjReferencia != null &amp;&amp; cnpjReferencia.isNotEmpty) {
+    dadosMap[&#39;cnpjReferencia&#39;] = cnpjReferencia;
+  }
+
+  if (indicadorFavorito != null) {
+    dadosMap[&#39;indicadorFavorito&#39;] = indicadorFavorito.toString();
+  }
+
+  if (ponteiroPagina != null &amp;&amp; ponteiroPagina.isNotEmpty) {
+    dadosMap[&#39;ponteiroPagina&#39;] = ponteiroPagina;
+  } else if (indicadorPagina == 0) {
+    dadosMap[&#39;ponteiroPagina&#39;] = &#39;00000000000000&#39;;
+  }
+
+  final request = BaseRequest(
+    contribuinteNumero: contribuinte,
+    pedidoDados: PedidoDados(
+      idSistema: &#39;CAIXAPOSTAL&#39;,
+      idServico: &#39;MSGCONTRIBUINTE61&#39;,
+      versaoSistema: &#39;1.0&#39;,
+      dados: jsonEncode(dadosMap),
+    ),
+  );
+
+  final response = await _apiClient.post(
+    &#39;&#47;Consultar&#39;,
+    request,
+    contratanteNumero: contratanteNumero,
+    autorPedidoDadosNumero: autorPedidoDadosNumero,
+  );
+  return ListaMensagensResponse.fromJson(response);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li><a href="../../serpro_integra_contador_api/CaixaPostalService-class.html">CaixaPostalService</a></li>
+    <li class="self-crumb">obterListaMensagensPorContribuinte method</li>
+</ol>
+
+    <h5>CaixaPostalService class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="serpro_integra_contador_api API docs, for the Dart programming language.">
+  <title>serpro_integra_contador_api - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/MarlonSantosDev/serpro_integra_contador_api">serpro_integra_contador_api package</a></li>
+  </ol>
+  <div class="self-name">serpro_integra_contador_api</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="serpro-integra-contador-api---dart-package">SERPRO Integra Contador API - Dart Package</h1>
+<p><a href="https://pub.dev/packages/serpro_integra_contador_api"><img src="https://img.shields.io/pub/v/serpro_integra_contador_api.svg" alt="pub package"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></p>
+<p>Package Dart para integração completa com a API do SERPRO Integra Contador, fornecendo uma interface type-safe para todos os serviços disponíveis da Receita Federal do Brasil.</p>
+<h2 id="-caractersticas-principais">🚀 Características Principais</h2>
+<ul>
+<li><strong>Autenticação automática</strong> com certificados cliente (mTLS nativo)</li>
+<li><strong>Autenticação unificada</strong> (OAuth2 + Procurador) via <code>authenticateWithProcurador</code></li>
+<li><strong>Assinatura XML digital</strong> completa com RSA-SHA256 para autenticação de procurador</li>
+<li><strong>Suporte multiplataforma</strong> completo: Android, iOS, Web, Desktop, Windows</li>
+<li><strong>Validação automática</strong> de documentos (CPF/CNPJ) com utilitários centralizados</li>
+<li><strong>Tratamento de erros</strong> padronizado e robusto</li>
+<li><strong>Suporte completo</strong> a procurações eletrônicas</li>
+<li><strong>Modelos de dados</strong> type-safe para todas as operações</li>
+<li><strong>Flexibilidade de contratante e autor do pedido</strong>: Todos os serviços suportam parâmetros opcionais <code>contratanteNumero</code> e <code>autorPedidoDadosNumero</code></li>
+<li><strong>Documentação completa</strong> com exemplos práticos e anotações <code>@formatador_utils</code> e <code>@validacoes_utils</code></li>
+<li><strong>Suporte a múltiplos ambientes</strong> (trial e produção)</li>
+<li><strong>Utilitários centralizados</strong> para validações, formatação e manipulação de arquivos</li>
+<li><strong>Exemplos completos</strong> para todos os serviços com entrada e saída detalhadas</li>
+<li><strong>Catálogo de serviços</strong> integrado para mapeamento de códigos funcionais</li>
+</ul>
+<h2 id="-servios-disponveis">📋 Serviços Disponíveis</h2>
+<h3 id="-servios-de-microempreendedor-individual-mei">🏢 Serviços de Microempreendedor Individual (MEI)</h3>
+<ul>
+<li><strong>CCMEI</strong>: Certificado da Condição de Microempreendedor Individual</li>
+<li><strong>PGMEI</strong>: Pagamento de DAS do MEI</li>
+<li><strong>PARCMEI</strong>: Parcelamento do MEI</li>
+<li><strong>PARCMEI Especial</strong>: Parcelamento Especial do MEI</li>
+<li><strong>PERTMEI</strong>: Pertinência do MEI</li>
+<li><strong>RELPMEI</strong>: Relatório de Pagamentos do MEI</li>
+</ul>
+<h3 id="-servios-do-simples-nacional">🏛️ Serviços do Simples Nacional</h3>
+<ul>
+<li><strong>PARCSN</strong>: Parcelamento do Simples Nacional</li>
+<li><strong>PARCSN Especial</strong>: Parcelamento Especial do Simples Nacional</li>
+<li><strong>PERTSN</strong>: Pertinência do Simples Nacional</li>
+<li><strong>RELPSN</strong>: Relatório de Pagamentos do Simples Nacional</li>
+</ul>
+<h3 id="-servios-tributrios-gerais">📊 Serviços Tributários Gerais</h3>
+<ul>
+<li><strong>DCTFWeb</strong>: Declaração de Débitos e Créditos Tributários Federais</li>
+<li><strong>DEFIS</strong>: Declaração de Informações Socioeconômicas e Fiscais</li>
+<li><strong>SICALC</strong>: Sistema de Cálculo de Impostos</li>
+<li><strong>SITFIS</strong>: Sistema de Informações Tributárias Fiscais</li>
+<li><strong>MIT</strong>: Módulo de Inclusão de Tributos</li>
+<li><strong>PGDASD</strong>: Pagamento de DAS por Débito Direto Autorizado (inclui métodos compostos para operações combinadas)</li>
+</ul>
+<h3 id="-servios-de-comunicao">📬 Serviços de Comunicação</h3>
+<ul>
+<li><strong>Caixa Postal</strong>: Consulta de mensagens da Receita Federal</li>
+<li><strong>Eventos de Atualização</strong>: Monitoramento de atualizações em sistemas</li>
+</ul>
+<h3 id="-servios-de-autenticao-e-procurao">🔐 Serviços de Autenticação e Procuração</h3>
+<ul>
+<li><strong>Autentica Procurador</strong>: Gestão de autenticação de procuradores</li>
+<li><strong>Procurações</strong>: Gestão de procurações eletrônicas</li>
+</ul>
+<h3 id="-servios-especiais">🏠 Serviços Especiais</h3>
+<ul>
+<li><strong>DTE</strong>: Domicílio Tributário Eletrônico</li>
+<li><strong>PagtoWeb</strong>: Consulta de pagamentos e emissão de comprovantes</li>
+<li><strong>Regime Apuração</strong>: Gestão do regime de apuração (Competência/Caixa) do Simples Nacional</li>
+</ul>
+<h2 id="-instalao">🔧 Instalação</h2>
+<p>Adicione ao seu <code>pubspec.yaml</code>:</p>
+<pre class="language-yaml"><code class="language-yaml">dependencies:
+  serpro_integra_contador_api: ^2.0.8
+</code></pre>
+<p>Execute:</p>
+<pre class="language-bash"><code class="language-bash">flutter pub get
+</code></pre>
+<h2 id="-uso-bsico">💡 Uso Básico</h2>
+<h3 id="autenticao-oauth2">Autenticação OAuth2</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Inicializar cliente da API
+  final apiClient = ApiClient();
+
+  // Autenticar com certificados
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    contratanteNumero: '12345678000100',
+    autorPedidoDadosNumero: '12345678000100',
+    ambiente: 'trial', // ou 'producao'
+  );
+}
+</code></pre>
+<h3 id="autenticao-unificada-oauth2--procurador">Autenticação unificada (OAuth2 + Procurador)</h3>
+<p>Use um único passo para obter o token OAuth2 e o token de procurador. Se não precisar de procuração, basta omitir os parâmetros do procurador e o método executa apenas a autenticação básica.</p>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  final apiClient = ApiClient();
+
+  await apiClient.authenticateWithProcurador(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    contratanteNumero: '12345678000100',
+    autorPedidoDadosNumero: '12345678000100',
+    certificadoDigitalPath: 'contratante.pfx',
+    senhaCertificado: 'senha_contratante',
+    ambiente: 'producao', // ou 'trial'
+    // Dados do procurador (opcionais, obrigatórios para gerar token de procurador)
+    contratanteNome: 'Minha Empresa de Contabilidade',
+    autorNome: 'Nome do Procurador',
+    contribuinteNumero: '12345678000100',
+    autorNumero: '12345678901',
+    certificadoProcuradorPath: 'procurador.pfx',
+    certificadoProcuradorPassword: 'senha_procurador',
+  );
+
+  // Token do procurador fica disponível automaticamente no ApiClient
+  print('Token procurador ativo: ${apiClient.hasProcuradorToken}');
+}
+</code></pre>
+<h3 id="usando-servios-com-valores-padro">Usando Serviços com Valores Padrão</h3>
+<pre class="language-dart"><code class="language-dart">// Usar valores padrão da autenticação
+final ccmeiService = CcmeiService(apiClient);
+final response = await ccmeiService.emitirCcmei('12345678000100');
+print('CCMEI emitido: ${response.dados.pdf.isNotEmpty}');
+</code></pre>
+<h3 id="usando-servios-com-valores-especficos">Usando Serviços com Valores Específicos</h3>
+<pre class="language-dart"><code class="language-dart">// Usar valores específicos para esta requisição
+final sicalcService = SicalcService(apiClient);
+final darfResponse = await sicalcService.consolidarEGerarDarf(
+  contribuinteNumero: '12345678000100',
+  contratanteNumero: '98765432000100', // Valor específico
+  autorPedidoDadosNumero: '11122233344', // Valor específico
+  uf: 'SP',
+  municipio: 3550308,
+  codigoReceita: 190,
+  codigoReceitaExtensao: 1,
+  dataPA: '2024-01',
+  vencimento: '2024-02-15',
+  valorImposto: 1000.00,
+  dataConsolidacao: '2024-01-15',
+);
+</code></pre>
+<h2 id="-flexibilidade-de-contratante-e-autor-do-pedido">🔄 Flexibilidade de Contratante e Autor do Pedido</h2>
+<p>Todos os serviços da biblioteca suportam parâmetros opcionais <code>contratanteNumero</code> e <code>autorPedidoDadosNumero</code>. Isso permite:</p>
+<h3 id="cenrios-de-uso">Cenários de Uso</h3>
+<ol>
+<li><strong>Valores Padrão</strong>: Quando não especificados, usa os valores definidos na autenticação</li>
+<li><strong>Valores Específicos</strong>: Permite usar diferentes contratantes ou autores para requisições específicas</li>
+<li><strong>Contextos Múltiplos</strong>: Ideal para sistemas que atendem múltiplos clientes ou contextos</li>
+</ol>
+<h3 id="exemplos-prticos">Exemplos Práticos</h3>
+<pre class="language-dart"><code class="language-dart">// Consulta DTE com valores padrão
+final dteService = DteService(apiClient);
+final dteResponse = await dteService.obterIndicadorDte('12345678000100');
+
+// Consulta DTE com contratante específico
+final dteResponse2 = await dteService.obterIndicadorDte(
+  '12345678000100',
+  contratanteNumero: '98765432000100',
+  autorPedidoDadosNumero: '11122233344',
+);
+
+// Caixa Postal com autor específico
+final caixaPostalService = CaixaPostalService(apiClient);
+final mensagens = await caixaPostalService.listarTodasMensagens(
+  '12345678000100',
+  contratanteNumero: '98765432000100',
+);
+</code></pre>
+<h2 id="-utilitrios-centralizados">🛠️ Utilitários Centralizados</h2>
+<h3 id="validaes-utilitrias">Validações Utilitárias</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+// Validar CNPJ
+final isValidCnpj = ValidacoesUtils.isValidCnpj('12345678000195');
+
+// Validar CPF
+final isValidCpf = ValidacoesUtils.isValidCpf('12345678901');
+
+// Validar número de parcelamento
+final error = ValidacoesUtils.validarNumeroParcelamento(123456);
+if (error != null) {
+  print('Erro: $error');
+}
+
+// Validar ano/mês
+final errorAnoMes = ValidacoesUtils.validarAnoMes(202401);
+if (errorAnoMes != null) {
+  print('Erro: $errorAnoMes');
+}
+
+// Validar valor monetário
+final errorValor = ValidacoesUtils.validarValorMonetario(1000.50);
+if (errorValor != null) {
+  print('Erro: $errorValor');
+}
+</code></pre>
+<h3 id="formatao-utilitria">Formatação Utilitária</h3>
+<pre class="language-dart"><code class="language-dart">// Formatar CNPJ
+final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
+// Resultado: 12.345.678/0001-95
+
+// Formatar CPF
+final cpfFormatado = FormatadorUtils.formatCpf('12345678901');
+// Resultado: 123.456.789-01
+
+// Formatar moeda
+final valorFormatado = FormatadorUtils.formatCurrency(1234.56);
+// Resultado: R$ 1.234,56
+
+// Formatar data
+final dataFormatada = FormatadorUtils.formatDateFromString('20240115');
+// Resultado: 15/01/2024
+
+// Formatar período
+final periodoFormatado = FormatadorUtils.formatPeriodFromString('202401');
+// Resultado: Janeiro/2024
+</code></pre>
+<h3 id="utilitrios-de-arquivo">Utilitários de Arquivo</h3>
+<pre class="language-dart"><code class="language-dart">// Salvar PDF em base64 no sistema de arquivos
+final sucesso = await ArquivoUtils.salvarArquivo(
+  pdfBase64,
+  'ccmei_certificado.pdf'
+);
+// Resultado: true (arquivo salvo em arquivos/pdf/ccmei_certificado.pdf)
+</code></pre>
+<h3 id="catlogo-de-servios">Catálogo de Serviços</h3>
+<pre class="language-dart"><code class="language-dart">// Obter código funcional de um serviço
+final codigoFuncional = CatalogoServicosUtils.getFunctionCode('TRANSDECLARACAO11');
+// Resultado: '01'
+
+// Verificar se serviço existe no catálogo
+final existe = CatalogoServicosUtils.isServiceInCatalog('TRANSDECLARACAO11');
+// Resultado: true
+
+// Obter todos os serviços disponíveis
+final servicos = CatalogoServicosUtils.getAllServices();
+// Resultado: ['TRANSDECLARACAO11', 'GERARDAS12', ...]
+</code></pre>
+<h2 id="-documentao-completa">📚 Documentação Completa</h2>
+<h3 id="documentao-dos-servios">Documentação dos Serviços</h3>
+<ul>
+<li><a href="doc/autenticaprocurador_service.md">Autentica Procurador Service</a> - Gestão de autenticação de procuradores</li>
+<li><a href="doc/caixa_postal_service.md">Caixa Postal Service</a> - Consulta de mensagens da RFB</li>
+<li><a href="doc/ccmei_service.md">CCMEI Service</a> - Certificado da Condição de MEI</li>
+<li><a href="doc/dctfweb_service.md">DCTFWeb Service</a> - Declaração de Débitos e Créditos Tributários</li>
+<li><a href="doc/defis_service.md">DEFIS Service</a> - Declaração de Informações Socioeconômicas e Fiscais</li>
+<li><a href="doc/dte_service.md">DTE Service</a> - Domicílio Tributário Eletrônico</li>
+<li><a href="doc/eventos_atualizacao_service.md">Eventos Atualização Service</a> - Monitoramento de atualizações</li>
+<li><a href="doc/mit_service.md">MIT Service</a> - Módulo de Inclusão de Tributos</li>
+<li><a href="doc/pagtoweb_service.md">PagtoWeb Service</a> - Consulta de pagamentos</li>
+<li><a href="doc/parcmei_service.md">PARCMEI Service</a> - Parcelamento do MEI</li>
+<li><a href="doc/parcmei_especial_service.md">PARCMEI Especial Service</a> - Parcelamento Especial do MEI</li>
+<li><a href="doc/parcsn_service.md">PARCSN Service</a> - Parcelamento do Simples Nacional</li>
+<li><a href="doc/parcsn_especial_service.md">PARCSN Especial Service</a> - Parcelamento Especial do Simples Nacional</li>
+<li><a href="doc/pertmei_service.md">PERTMEI Service</a> - Pertinência do MEI</li>
+<li><a href="doc/pertsn_service.md">PERTSN Service</a> - Pertinência do Simples Nacional</li>
+<li><a href="doc/pgdasd_service.md">PGDASD Service</a> - Pagamento de DAS por Débito Direto Autorizado (com métodos compostos)</li>
+<li><a href="doc/pgmei_service.md">PGMEI Service</a> - Pagamento de DAS do MEI</li>
+<li><a href="doc/procuracoes_service.md">Procurações Service</a> - Gestão de procurações eletrônicas</li>
+<li><a href="doc/regime_apuracao_service.md">Regime Apuração Service</a> - Gestão do regime de apuração do Simples Nacional</li>
+<li><a href="doc/relpmei_service.md">RELPMEI Service</a> - Relatório de Pagamentos do MEI</li>
+<li><a href="doc/relpsn_service.md">RELPSN Service</a> - Relatório de Pagamentos do Simples Nacional</li>
+<li><a href="doc/sicalc_service.md">SICALC Service</a> - Sistema de Cálculo de Impostos</li>
+<li><a href="doc/sitfis_service.md">SITFIS Service</a> - Sistema de Informações Tributárias Fiscais</li>
+</ul>
+<h3 id="guias-de-incio-rpido">Guias de Início Rápido</h3>
+<h4 id="1-primeiro-uso---consultar-ccmei">1. Primeiro Uso - Consultar CCMEI</h4>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
+  );
+
+  // Consultar CCMEI
+  final ccmeiService = CcmeiService(apiClient);
+  final response = await ccmeiService.emitirCcmei('00000000000000');
+  
+  if (response.sucesso) {
+    print('CCMEI emitido com sucesso!');
+    print('Número: ${response.dados?.numeroCertificado}');
+    
+    // Salvar PDF
+    if (response.dados?.pdf.isNotEmpty == true) {
+      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+        response.dados!.pdf,
+        'ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+}
+</code></pre>
+<h4 id="2-gerar-darf-com-sicalc">2. Gerar DARF com SICALC</h4>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
+  );
+
+  // Gerar DARF
+  final sicalcService = SicalcService(apiClient);
+  final response = await sicalcService.gerarDarfPessoaFisica(
+    contribuinteNumero: '00000000000',
+    uf: 'SP',
+    municipio: 3550308,
+    dataPA: '20240101',
+    vencimento: '20240215',
+    valorImposto: 1000.0,
+    dataConsolidacao: '20240215',
+  );
+  
+  if (response.sucesso) {
+    print('DARF gerado com sucesso!');
+    print('Número: ${response.dados?.numeroDocumento}');
+    print('Valor total: R\$ ${response.dados?.valorTotal}');
+  }
+}
+</code></pre>
+<h4 id="3-consultar-caixa-postal">3. Consultar Caixa Postal</h4>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
+  );
+
+  // Consultar caixa postal
+  final caixaPostalService = CaixaPostalService(apiClient);
+  final response = await caixaPostalService.listarTodasMensagens('00000000000000');
+  
+  if (response.sucesso) {
+    print('Mensagens encontradas: ${response.dadosParsed?.mensagens.length ?? 0}');
+    for (final mensagem in response.dadosParsed?.mensagens ?? []) {
+      print('Assunto: ${mensagem.assunto}');
+      print('Data: ${mensagem.dataEnvio}');
+    }
+  }
+}
+</code></pre>
+<h4 id="4-usar-mtodos-compostos-do-pgdasd">4. Usar Métodos Compostos do PGDASD</h4>
+<p>Os métodos compostos combinam múltiplas operações em uma única chamada, reduzindo o número de requisições à API:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() async {
+  // Configurar cliente
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
+  );
+
+  final pgdasdService = PgdasdService(apiClient);
+  
+  // Exemplo 1: Consultar última declaração com verificação de pagamento
+  final consultaResponse = await pgdasdService.consultarUltimaDeclaracaoComPagamento(
+    contribuinteNumero: '00000000000100',
+    periodoApuracao: '202504',
+  );
+  
+  if (consultaResponse.sucesso) {
+    print('Declaração: ${consultaResponse.dados?.numeroDeclaracao}');
+    print('DAS Pago: ${consultaResponse.dasPago ? "Sim" : "Não"}');
+  }
+  
+  // Exemplo 2: Entregar declaração e gerar DAS automaticamente
+  final declaracao = Declaracao(
+    tipoDeclaracao: 1,
+    receitaPaCompetenciaInterno: 50000.00,
+    receitaPaCompetenciaExterno: 10000.00,
+    estabelecimentos: [
+      // ... estrutura da declaração
+    ],
+  );
+  
+  final entregaResponse = await pgdasdService.entregarDeclaracaoComDas(
+    contribuinteNumero: '00000000000100',
+    request: EntregarDeclaracaoRequest(
+      cnpjCompleto: '00000000000100',
+      pa: 202504,
+      indicadorTransmissao: true,
+      indicadorComparacao: true,
+      declaracao: declaracao,
+      valoresParaComparacao: [],
+    ),
+  );
+  
+  if (entregaResponse.sucesso) {
+    print('✅ Declaração e DAS gerados!');
+    print('ID: ${entregaResponse.dadosDeclaracao?.idDeclaracao}');
+    print('DAS: ${entregaResponse.dadosDas?.first.detalhamento.numeroDocumento}');
+  } else if (entregaResponse.declaracaoEntregue) {
+    print('⚠️ Declaração OK, mas DAS falhou');
+  }
+}
+</code></pre>
+<h2 id="-configurao-avanada">🛠️ Configuração Avançada</h2>
+<h3 id="configurao-de-ambiente">Configuração de Ambiente</h3>
+<h4 id="desktopmobile-android-ios-windows-linux-macos">Desktop/Mobile (Android, iOS, Windows, Linux, macOS)</h4>
+<pre class="language-dart"><code class="language-dart">// Ambiente Trial (desenvolvimento)
+final apiClient = ApiClient();
+
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'trial', // Usa URL de trial
+);
+
+// Ambiente Produção
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'producao', // Usa URL de produção
+);
+</code></pre>
+<h4 id="flutter-web">Flutter Web</h4>
+<p>Para Flutter Web, é necessário usar um servidor proxy (Cloud Functions ou servidor próprio) para autenticação OAuth2, pois o navegador não suporta mTLS nativo.</p>
+<pre class="language-dart"><code class="language-dart">// Configurar servidores para Web
+final apiClient = ApiClient();
+apiClient.setServidores(
+  urlAutenticacao: 'https://servidor.com.br',
+  urlAutenticacaoProcurado: 'https://servidor.com.br',
+  urlProxy: 'https://servidor.com.br',
+);
+
+// Autenticação na Web
+await apiClient.authenticate(
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  contratanteNumero: '12345678000100',
+  autorPedidoDadosNumero: '12345678000100',
+  certificadoDigitalBase64: certBase64, // Certificado em Base64
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'producao',
+  // Opcional: usar secrets do Firebase
+  certSecretName: 'certificado_serpro',
+  certPasswordSecretName: 'senha_certificado',
+  firebaseToken: await FirebaseAuth.instance.currentUser?.getIdToken(),
+);
+</code></pre>
+<p><strong>Nota</strong>: A assinatura XML digital funciona nativamente na Web (pure Dart), apenas a autenticação OAuth2 requer o servidor proxy.</p>
+<h2 id="-segurana">🔒 Segurança</h2>
+<h3 id="autenticao-mtls-nativa">Autenticação mTLS Nativa</h3>
+<p>O package utiliza autenticação mTLS nativa do Dart através da classe <code>SecurityContext</code>, garantindo:</p>
+<ul>
+<li><strong>Compatibilidade multiplataforma</strong>: Android, iOS, Desktop e Windows</li>
+<li><strong>Flutter Web</strong>: Requer servidor proxy (Cloud Functions ou servidor próprio) para OAuth2</li>
+<li><strong>Suporte a algoritmos legados</strong>: RC2-40-CBC, 3DES, etc. (comuns em certificados antigos)</li>
+<li><strong>Processamento nativo</strong>: Sem dependências externas para criptografia (Desktop/Mobile)</li>
+<li><strong>Validação automática</strong>: Certificados Base64 são processados corretamente</li>
+<li><strong>Detecção automática de plataforma</strong>: O package detecta automaticamente se está rodando em Web ou Desktop/Mobile</li>
+</ul>
+<h3 id="assinatura-xml-digital">Assinatura XML Digital</h3>
+<p>Implementação completa de XMLDSig (W3C) para autenticação de procurador:</p>
+<ul>
+<li><strong>RSA-SHA256</strong>: Algoritmo de assinatura digital padrão</li>
+<li><strong>Certificados ICP-Brasil</strong>: Suporte completo a e-CPF e e-CNPJ</li>
+<li><strong>Validação automática</strong>: Verificação de validade e cadeia de certificação</li>
+<li><strong>Modo Trial</strong>: Assinatura simulada para desenvolvimento sem certificado</li>
+</ul>
+<h3 id="certificados-digitais">Certificados Digitais</h3>
+<p>O package suporta certificados ICP-Brasil nos formatos:</p>
+<ul>
+<li><strong>A1</strong>: Arquivo .p12/.pfx</li>
+<li><strong>A3</strong>: Token/cartão inteligente (através do sistema operacional)</li>
+<li><strong>PEM</strong>: Certificados em formato texto (PKCS#1 e PKCS#8)</li>
+<li><strong>Base64</strong>: Certificados codificados para aplicações Web/Mobile</li>
+</ul>
+<h3 id="validao-de-documentos">Validação de Documentos</h3>
+<pre class="language-dart"><code class="language-dart">// Validar CNPJ
+final isValidCnpj = ValidacoesUtils.isValidCnpj('12345678000195');
+
+// Validar CPF
+final isValidCpf = ValidacoesUtils.isValidCpf('12345678901');
+
+// Formatar documento
+final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
+// Resultado: 12.345.678/0001-95
+</code></pre>
+<h2 id="-tratamento-de-erros">📊 Tratamento de Erros</h2>
+<h3 id="estrutura-padro-de-resposta">Estrutura Padrão de Resposta</h3>
+<pre class="language-dart"><code class="language-dart">class ApiResponse&lt;T&gt; {
+  final bool sucesso;
+  final String? mensagemErro;
+  final T? dados;
+  final List&lt;MensagemNegocio&gt; mensagens;
+}
+</code></pre>
+<h3 id="tratamento-de-erros-comum">Tratamento de Erros Comum</h3>
+<pre class="language-dart"><code class="language-dart">try {
+  final response = await service.metodoExemplo();
+  
+  if (response.sucesso) {
+    // Processar dados
+    print('Sucesso: ${response.dados}');
+  } else {
+    // Tratar erro
+    print('Erro: ${response.mensagemErro}');
+    
+    // Analisar mensagens específicas
+    for (final mensagem in response.mensagens) {
+      if (mensagem.isErro) {
+        print('Código: ${mensagem.codigo}');
+        print('Texto: ${mensagem.texto}');
+      }
+    }
+  }
+} catch (e) {
+  print('Exceção: $e');
+}
+</code></pre>
+<h2 id="-testes">🧪 Testes</h2>
+<h3 id="dados-de-teste">Dados de Teste</h3>
+<p>Para desenvolvimento e testes, utilize os seguintes dados:</p>
+<pre class="language-dart"><code class="language-dart">// CNPJs/CPFs de teste (sempre usar zeros)
+const cnpjTeste = '00000000000000';
+const cpfTeste = '00000000000';
+
+// Dados de teste comuns
+const ufTeste = 'SP';
+const municipioTeste = 3550308; // São Paulo
+const codigoReceitaTeste = 190; // IRPF
+</code></pre>
+<h3 id="exemplo-de-teste">Exemplo de Teste</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:flutter_test/flutter_test.dart';
+import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
+
+void main() {
+  group('CCMEI Service Tests', () {
+    late ApiClient apiClient;
+    late CcmeiService ccmeiService;
+
+    setUp(() {
+      apiClient = ApiClient();
+      ccmeiService = CcmeiService(apiClient);
+    });
+
+    test('deve emitir CCMEI com sucesso', () async {
+      // Arrange
+      const cnpj = '00000000000000';
+      
+      // Act
+      final response = await ccmeiService.emitirCcmei(cnpj);
+      
+      // Assert
+      expect(response.sucesso, isTrue);
+      expect(response.dados, isNotNull);
+    });
+  });
+}
+</code></pre>
+<h2 id="-performance-e-otimizao">🚀 Performance e Otimização</h2>
+<h3 id="gerenciamento-de-tokens">Gerenciamento de tokens</h3>
+<pre class="language-dart"><code class="language-dart">// Status do token OAuth2 (expiração, ambiente, mTLS)
+print(apiClient.authTokenInfo);
+
+// Limpar cache em memória do token de procurador ao trocar de usuário
+AutenticaProcuradorService.limparCache();
+</code></pre>
+<h3 id="requisies-em-lote">Requisições em Lote</h3>
+<pre class="language-dart"><code class="language-dart">// Consultar múltiplos contribuintes
+final cpfs = ['12345678901', '98765432109', '11122233344'];
+final eventos = await eventosAtualizacaoService.solicitarEObterEventosPF(
+  cpfs: cpfs,
+  evento: TipoEvento.dctfweb,
+);
+</code></pre>
+<h2 id="-troubleshooting">🔧 Troubleshooting</h2>
+<h3 id="problemas-comuns">Problemas Comuns</h3>
+<h4 id="1-erro-de-certificado">1. Erro de Certificado</h4>
+<pre class="language-dart"><code>Erro: Certificado digital inválido
+</code></pre>
+<p><strong>Solução</strong>: Verificar se o certificado é válido ICP-Brasil e se a senha está correta.</p>
+<h4 id="2-erro-de-autenticao">2. Erro de Autenticação</h4>
+<pre class="language-dart"><code>Erro: Consumer Key/Secret inválidos
+</code></pre>
+<p><strong>Solução</strong>: Verificar as credenciais no Portal do Cliente SERPRO.</p>
+<h4 id="3-erro-de-timeout">3. Erro de Timeout</h4>
+<pre class="language-dart"><code>Erro: Timeout na requisição
+</code></pre>
+<p><strong>Solução</strong>: Verificar a conexão de rede.</p>
+<h2 id="-contribuio">🤝 Contribuição</h2>
+<p>Contribuições são bem-vindas!</p>
+<h3 id="padres-de-cdigo">Padrões de Código</h3>
+<ul>
+<li>Siga as convenções do Dart/Flutter</li>
+<li>Adicione testes para novas funcionalidades</li>
+<li>Atualize a documentação</li>
+<li>Use commits semânticos</li>
+</ul>
+<h2 id="-licena">📄 Licença</h2>
+<p>Este projeto está licenciado sob a licença MIT - veja o arquivo <a href="LICENSE">LICENSE</a> para detalhes.</p>
+<h2 id="-suporte">🆘 Suporte</h2>
+<h3 id="documentao-oficial">Documentação Oficial</h3>
+<ul>
+<li><a href="https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/">SERPRO Integra Contador API</a></li>
+<li><a href="https://cliente.serpro.gov.br">Portal do Cliente SERPRO</a></li>
+</ul>
+<h3 id="comunidade">Comunidade</h3>
+<ul>
+<li><a href="https://github.com/MarlonSantosDev/serpro_integra_contador_api/issues">Issues do GitHub</a></li>
+<li><a href="https://github.com/MarlonSantosDev/serpro_integra_contador_api/discussions">Discussões</a></li>
+</ul>
+<h3 id="contato">Contato</h3>
+<p>Para suporte técnico específico:</p>
+<ul>
+<li>Email: <a href="mailto:marlon-20-12@hotmail.com">marlon-20-12@hotmail.com</a></li>
+</ul>
+<hr>
+<p><strong>Desenvolvido com ❤️ para a comunidade brasileira de desenvolvedores</strong></p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="serpro_integra_contador_api">
+  <span class="name"><a href="serpro_integra_contador_api/">serpro_integra_contador_api</a></span> 
+
+</dt>
+<dd>Package Dart para integração com a API do SERPRO Integra Contador
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="https://github.com/MarlonSantosDev/serpro_integra_contador_api">serpro_integra_contador_api package</a></li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">serpro_integra_contador_api</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the MitService class from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>MitService class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li class="self-crumb">MitService class</li>
+  </ol>
+  <div class="self-name">MitService</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;serpro_integra_contador_api-library-sidebar.html"
+    data-below-sidebar="serpro_integra_contador_api&#47;MitService-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">MitService</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p><strong>Serviço:</strong> MIT (Módulo de Inclusão de Tributos)</p>
+<p>O MIT é um módulo para apuração de tributos no sistema DCTFWeb.</p>
+<p><strong>Este serviço permite:</strong></p>
+<ul>
+<li>Encerrar apuração (ENCAPURACAO314)</li>
+<li>Consultar situação do encerramento (SITUACAOENC315)</li>
+<li>Consultar apuração específica (CONSAPURACAO316)</li>
+<li>Listar todas as apurações (LISTAAPURACOES317)</li>
+</ul>
+<p><strong>Documentação oficial:</strong> <code>.cursor/rules/mit.mdc</code></p>
+<p><strong>Exemplo de uso:</strong></p>
+<pre class="language-dart"><code class="language-dart">final mitService = MitService(apiClient);
+
+// Encerrar apuração
+final resultado = await mitService.encerrarApuracao(
+  contribuinteNumero: '12345678000190',
+  anoMes: 202401,
+);
+print('Protocolo: ${resultado.protocoloEncerramento}');
+
+// Consultar situação do encerramento
+final situacao = await mitService.consultarSituacaoEncerramento(
+  contribuinteNumero: '12345678000190',
+  protocoloEncerramento: resultado.protocoloEncerramento,
+);
+print('Situação: ${situacao.situacao}');
+</code></pre>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="MitService.new" class="callable">
+          <span class="name"><a href="../serpro_integra_contador_api/MitService/MitService.html">MitService</a></span><span class="signature">(<span class="parameter" id="-param-_apiClient"><span class="type-annotation"><a href="../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></span> <span class="parameter-name">_apiClient</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="aguardarEncerramento" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/aguardarEncerramento.html">aguardarEncerramento</a></span><span class="signature">(<wbr>{<span class="parameter" id="aguardarEncerramento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="aguardarEncerramento-param-protocoloEncerramento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">protocoloEncerramento</span>, </span><span class="parameter" id="aguardarEncerramento-param-timeoutSegundos"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">timeoutSegundos</span> = <span class="default-value">300</span>, </span><span class="parameter" id="aguardarEncerramento-param-intervaloConsulta"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">intervaloConsulta</span> = <span class="default-value">10</span>, </span><span class="parameter" id="aguardarEncerramento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="aguardarEncerramento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarSituacaoEncerramentoResponse-class.html">ConsultarSituacaoEncerramentoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Aguarda o encerramento de uma apuração com polling
+  
+
+</dd>
+
+        <dt id="consultarApuracao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/consultarApuracao.html">consultarApuracao</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarApuracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarApuracao-param-idApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">idApuracao</span>, </span><span class="parameter" id="consultarApuracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarApuracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarApuracaoResponse-class.html">ConsultarApuracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consulta os dados de uma apuração MIT
+  
+
+</dd>
+
+        <dt id="consultarApuracaoesEncerradas" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/consultarApuracaoesEncerradas.html">consultarApuracaoesEncerradas</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarApuracaoesEncerradas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarApuracaoesEncerradas-param-anoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoApuracao</span>, </span><span class="parameter" id="consultarApuracaoesEncerradas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarApuracaoesEncerradas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ListarApuracaoesResponse-class.html">ListarApuracaoesResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consulta apurações encerradas por ano
+  
+
+</dd>
+
+        <dt id="consultarApuracaoesPorMes" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/consultarApuracaoesPorMes.html">consultarApuracaoesPorMes</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarApuracaoesPorMes-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarApuracaoesPorMes-param-anoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoApuracao</span>, </span><span class="parameter" id="consultarApuracaoesPorMes-param-mesApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">mesApuracao</span>, </span><span class="parameter" id="consultarApuracaoesPorMes-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarApuracaoesPorMes-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ListarApuracaoesResponse-class.html">ListarApuracaoesResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consulta apurações por mês específico
+  
+
+</dd>
+
+        <dt id="consultarSituacaoEncerramento" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/consultarSituacaoEncerramento.html">consultarSituacaoEncerramento</a></span><span class="signature">(<wbr>{<span class="parameter" id="consultarSituacaoEncerramento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="consultarSituacaoEncerramento-param-protocoloEncerramento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">protocoloEncerramento</span>, </span><span class="parameter" id="consultarSituacaoEncerramento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="consultarSituacaoEncerramento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ConsultarSituacaoEncerramentoResponse-class.html">ConsultarSituacaoEncerramentoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Consulta a situação de encerramento de uma apuração MIT
+  
+
+</dd>
+
+        <dt id="criarApuracaoComMovimento" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/criarApuracaoComMovimento.html">criarApuracaoComMovimento</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarApuracaoComMovimento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-mesApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">mesApuracao</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-anoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoApuracao</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-qualificacaoPj"><span class="type-annotation"><a href="../serpro_integra_contador_api/QualificacaoPj.html">QualificacaoPj</a></span> <span class="parameter-name">qualificacaoPj</span> = <span class="default-value">QualificacaoPj.pjEmGeral</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-tributacaoLucro"><span class="type-annotation"><a href="../serpro_integra_contador_api/TributacaoLucro.html">TributacaoLucro</a></span> <span class="parameter-name">tributacaoLucro</span> = <span class="default-value">TributacaoLucro.realAnual</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-variacoesMonetarias"><span class="type-annotation"><a href="../serpro_integra_contador_api/VariacoesMonetarias.html">VariacoesMonetarias</a></span> <span class="parameter-name">variacoesMonetarias</span> = <span class="default-value">VariacoesMonetarias.regimeCaixa</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-regimePisCofins"><span class="type-annotation"><a href="../serpro_integra_contador_api/RegimePisCofins.html">RegimePisCofins</a></span> <span class="parameter-name">regimePisCofins</span> = <span class="default-value">RegimePisCofins.naoCumulativa</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-debitos"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/Debitos-class.html">Debitos</a></span> <span class="parameter-name">debitos</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-cpfResponsavel"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cpfResponsavel</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-emailResponsavel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">emailResponsavel</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarApuracaoComMovimento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EncerrarApuracaoResponse-class.html">EncerrarApuracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Cria uma apuração com movimento de forma simplificada
+  
+
+</dd>
+
+        <dt id="criarApuracaoSemMovimento" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/criarApuracaoSemMovimento.html">criarApuracaoSemMovimento</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarApuracaoSemMovimento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-mesApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">mesApuracao</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-anoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoApuracao</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-qualificacaoPj"><span class="type-annotation"><a href="../serpro_integra_contador_api/QualificacaoPj.html">QualificacaoPj</a></span> <span class="parameter-name">qualificacaoPj</span> = <span class="default-value">QualificacaoPj.pjEmGeral</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-cpfResponsavel"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cpfResponsavel</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-emailResponsavel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">emailResponsavel</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="criarApuracaoSemMovimento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EncerrarApuracaoResponse-class.html">EncerrarApuracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Cria uma apuração sem movimento de forma simplificada
+  
+
+</dd>
+
+        <dt id="criarCredito" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/criarCredito.html">criarCredito</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarCredito-param-idCredito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">idCredito</span>, </span><span class="parameter" id="criarCredito-param-codigoCredito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoCredito</span>, </span><span class="parameter" id="criarCredito-param-valorCredito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorCredito</span>, </span><span class="parameter" id="criarCredito-param-cnpjScp"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpjScp</span>, </span><span class="parameter" id="criarCredito-param-estabelecimento"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">estabelecimento</span>, </span><span class="parameter" id="criarCredito-param-municipioEstabelecimento"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">municipioEstabelecimento</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/Credito-class.html">Credito</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Cria um crédito de forma simplificada
+  
+
+</dd>
+
+        <dt id="criarDebito" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/criarDebito.html">criarDebito</a></span><span class="signature">(<wbr>{<span class="parameter" id="criarDebito-param-idDebito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">idDebito</span>, </span><span class="parameter" id="criarDebito-param-codigoDebito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoDebito</span>, </span><span class="parameter" id="criarDebito-param-valorDebito"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorDebito</span>, </span><span class="parameter" id="criarDebito-param-cnpjScp"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpjScp</span>, </span><span class="parameter" id="criarDebito-param-estabelecimento"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">estabelecimento</span>, </span><span class="parameter" id="criarDebito-param-municipioEstabelecimento"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">municipioEstabelecimento</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../serpro_integra_contador_api/Debito-class.html">Debito</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Cria um débito de forma simplificada
+  
+
+</dd>
+
+        <dt id="encerrarApuracao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/encerrarApuracao.html">encerrarApuracao</a></span><span class="signature">(<wbr>{<span class="parameter" id="encerrarApuracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="encerrarApuracao-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/PeriodoApuracao-class.html">PeriodoApuracao</a></span> <span class="parameter-name">periodoApuracao</span>, </span><span class="parameter" id="encerrarApuracao-param-dadosIniciais"><span>required</span> <span class="type-annotation"><a href="../serpro_integra_contador_api/DadosIniciais-class.html">DadosIniciais</a></span> <span class="parameter-name">dadosIniciais</span>, </span><span class="parameter" id="encerrarApuracao-param-debitos"><span class="type-annotation"><a href="../serpro_integra_contador_api/Debitos-class.html">Debitos</a>?</span> <span class="parameter-name">debitos</span>, </span><span class="parameter" id="encerrarApuracao-param-creditos"><span class="type-annotation"><a href="../serpro_integra_contador_api/Creditos-class.html">Creditos</a>?</span> <span class="parameter-name">creditos</span>, </span><span class="parameter" id="encerrarApuracao-param-listaEventosEspeciais"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EventoEspecial-class.html">EventoEspecial</a></span>&gt;</span>?</span> <span class="parameter-name">listaEventosEspeciais</span>, </span><span class="parameter" id="encerrarApuracao-param-transmissaoImediata"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">transmissaoImediata</span>, </span><span class="parameter" id="encerrarApuracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="encerrarApuracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/EncerrarApuracaoResponse-class.html">EncerrarApuracaoResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Encerra uma apuração MIT
+  
+
+</dd>
+
+        <dt id="listarApuracaoes" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/listarApuracaoes.html">listarApuracaoes</a></span><span class="signature">(<wbr>{<span class="parameter" id="listarApuracaoes-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span><span class="parameter" id="listarApuracaoes-param-anoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoApuracao</span>, </span><span class="parameter" id="listarApuracaoes-param-mesApuracao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">mesApuracao</span>, </span><span class="parameter" id="listarApuracaoes-param-situacaoApuracao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">situacaoApuracao</span>, </span><span class="parameter" id="listarApuracaoes-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="listarApuracaoes-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ListarApuracaoesResponse-class.html">ListarApuracaoesResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Lista todas as apurações MIT por ano ou mês
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="obterCodigosReceita" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/obterCodigosReceita.html">obterCodigosReceita</a></span><span class="signature">(<wbr><span class="parameter" id="obterCodigosReceita-param-tributo"><span class="type-annotation"><a href="../serpro_integra_contador_api/GrupoTributo.html">GrupoTributo</a></span> <span class="parameter-name">tributo</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Obtém códigos de receita válidos para um tributo
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="validarCodigoDebito" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/validarCodigoDebito.html">validarCodigoDebito</a></span><span class="signature">(<wbr><span class="parameter" id="validarCodigoDebito-param-codigoDebito"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">codigoDebito</span>, </span><span class="parameter" id="validarCodigoDebito-param-tributo"><span class="type-annotation"><a href="../serpro_integra_contador_api/GrupoTributo.html">GrupoTributo</a></span> <span class="parameter-name">tributo</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Valida se um código de débito é válido para o tributo
+  
+
+</dd>
+
+        <dt id="validarTributoParaQualificacao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/validarTributoParaQualificacao.html">validarTributoParaQualificacao</a></span><span class="signature">(<wbr><span class="parameter" id="validarTributoParaQualificacao-param-tributo"><span class="type-annotation"><a href="../serpro_integra_contador_api/GrupoTributo.html">GrupoTributo</a></span> <span class="parameter-name">tributo</span>, </span><span class="parameter" id="validarTributoParaQualificacao-param-qualificacao"><span class="type-annotation"><a href="../serpro_integra_contador_api/QualificacaoPj.html">QualificacaoPj</a></span> <span class="parameter-name">qualificacao</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Valida se a qualificação PJ permite o tributo
+  
+
+</dd>
+
+        <dt id="validarTributoParaTributacao" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/MitService/validarTributoParaTributacao.html">validarTributoParaTributacao</a></span><span class="signature">(<wbr><span class="parameter" id="validarTributoParaTributacao-param-tributo"><span class="type-annotation"><a href="../serpro_integra_contador_api/GrupoTributo.html">GrupoTributo</a></span> <span class="parameter-name">tributo</span>, </span><span class="parameter" id="validarTributoParaTributacao-param-tributacao"><span class="type-annotation"><a href="../serpro_integra_contador_api/TributacaoLucro.html">TributacaoLucro</a></span> <span class="parameter-name">tributacao</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Valida se a tributação do lucro permite o tributo
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">MitService class</li>
+</ol>
+
+    <h5>serpro_integra_contador_api library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

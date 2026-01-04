@@ -15,6 +15,9 @@ O serviço PGDASD permite gerenciar declarações e pagamentos do Simples Nacion
 - **Gerar DAS Cobrança**: Geração de DAS para cobrança
 - **Gerar DAS Processo**: Geração de DAS para processo
 - **Gerar DAS Avulso**: Geração de DAS avulso
+- **Métodos Compostos**: Operações que combinam múltiplas chamadas em uma única operação
+  - **Consultar Última Declaração com Pagamento**: Consulta a última declaração e verifica se o DAS foi pago
+  - **Entregar Declaração com DAS**: Entrega a declaração e gera o DAS automaticamente
 
 ## Configuração
 
@@ -32,9 +35,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 final apiClient = ApiClient();
 await apiClient.authenticate(
   consumerKey: 'seu_consumer_key',
-  consumerSecret: 'seu_consumer_secret', 
-  certPath: 'caminho/para/certificado.p12',
-  certPassword: 'senha_do_certificado',
+  consumerSecret: 'seu_consumer_secret',
+  contratanteNumero: '12345678000100',
+  autorPedidoDadosNumero: '12345678000100',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
   ambiente: 'trial', // ou 'producao'
 );
 ```
@@ -346,6 +351,133 @@ try {
 }
 ```
 
+### 11. Consultar Última Declaração com Pagamento (Método Composto)
+
+Este método combina a consulta da última declaração com a verificação automática do status de pagamento do DAS.
+
+```dart
+try {
+  final response = await pgdasdService.consultarUltimaDeclaracaoComPagamento(
+    contribuinteNumero: '00000000000100',
+    periodoApuracao: '202504',
+  );
+
+  if (response.sucesso) {
+    print('Última declaração encontrada!');
+    print('Número: ${response.dados?.numeroDeclaracao}');
+    print('Período: ${response.dados?.periodoApuracao}');
+    print('Data Transmissão: ${response.dados?.dataHoraTransmissao}');
+    print('Valor Total: R\$ ${response.dados?.valorTotalDevido.toStringAsFixed(2)}');
+    
+    // Informação de pagamento do DAS
+    print('DAS Pago: ${response.dasPago ? "Sim" : "Não"}');
+    
+    if (response.dasPago) {
+      print('✅ DAS já foi pago');
+    } else {
+      print('⚠️ DAS ainda não foi pago');
+    }
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao consultar última declaração com pagamento: $e');
+}
+```
+
+**Vantagens do método composto:**
+- Reduz o número de chamadas à API
+- Fornece informação completa em uma única resposta
+- Verifica automaticamente o status de pagamento do DAS
+
+### 12. Entregar Declaração com DAS (Método Composto)
+
+Este método combina a entrega da declaração com a geração automática do DAS em uma única operação.
+
+```dart
+try {
+  // Criar declaração
+  final declaracao = Declaracao(
+    tipoDeclaracao: 1,
+    receitaPaCompetenciaInterno: 50000.00,
+    receitaPaCompetenciaExterno: 10000.00,
+    estabelecimentos: [
+      Estabelecimento(
+        cnpjCompleto: '00000000000100',
+        atividades: [
+          Atividade(
+            idAtividade: 1,
+            valorAtividade: 60000.00,
+            receitasAtividade: [
+              ReceitaAtividade(
+                valor: 60000.00,
+                isencoes: [],
+                reducoes: [],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+
+  final response = await pgdasdService.entregarDeclaracaoComDas(
+    contribuinteNumero: '00000000000100',
+    request: EntregarDeclaracaoRequest(
+      cnpjCompleto: '00000000000100',
+      pa: 202504,
+      indicadorTransmissao: true,
+      indicadorComparacao: true,
+      declaracao: declaracao,
+      valoresParaComparacao: [],
+    ),
+    // dataConsolidacao: '20250515', // Opcional
+  );
+
+  if (response.sucesso) {
+    print('✅ Declaração e DAS gerados com sucesso!');
+    print('ID Declaração: ${response.dadosDeclaracao?.idDeclaracao}');
+    print('Data Transmissão: ${response.dadosDeclaracao?.dataHoraTransmissao}');
+    print('Valor Total: R\$ ${response.dadosDeclaracao?.valorTotalDevido.toStringAsFixed(2)}');
+    
+    if (response.dadosDas != null && response.dadosDas!.isNotEmpty) {
+      final das = response.dadosDas!.first;
+      print('Número DAS: ${das.detalhamento.numeroDocumento}');
+      print('Valor DAS: R\$ ${das.detalhamento.valorTotal.toStringAsFixed(2)}');
+      print('Vencimento: ${das.detalhamento.dataVencimento}');
+      
+      // Salvar PDF do DAS
+      if (das.detalhamento.pdfBase64.isNotEmpty) {
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
+          das.detalhamento.pdfBase64,
+          'das_${das.detalhamento.numeroDocumento}.pdf',
+        );
+        print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+      }
+    }
+  } else if (response.declaracaoEntregue) {
+    print('⚠️ Declaração entregue, mas DAS falhou');
+    print('ID Declaração: ${response.dadosDeclaracao?.idDeclaracao}');
+    print('Tente gerar DAS manualmente usando gerarDas()');
+  } else {
+    print('❌ Erro ao entregar declaração');
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro ao entregar declaração com DAS: $e');
+}
+```
+
+**Vantagens do método composto:**
+- Automatiza o fluxo completo de entrega e geração de DAS
+- Reduz o número de chamadas à API
+- Tratamento inteligente de erros: preserva dados da declaração mesmo se o DAS falhar
+- Getters úteis: `declaracaoEntregue`, `dasGerado`, `sucesso`
+
+**Comportamento em caso de erros:**
+- Se a declaração falhar: retorna erro imediatamente, não tenta gerar DAS
+- Se o DAS falhar: retorna erro MAS preserva os dados da declaração para geração manual posterior
+
 ## Validações Disponíveis
 
 O serviço utiliza validações centralizadas do `ValidacoesUtils`:
@@ -434,6 +566,34 @@ class DasGerado {
 }
 ```
 
+### ConsultarUltimaDeclaracaoComPagamentoResponse
+
+```dart
+class ConsultarUltimaDeclaracaoComPagamentoResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final DeclaracaoCompleta? dados; // Dados da última declaração
+  final bool dasPago; // Indica se o DAS foi pago
+  final List<MensagemNegocio> mensagens;
+}
+```
+
+### EntregarDeclaracaoComDasResponse
+
+```dart
+class EntregarDeclaracaoComDasResponse {
+  final bool sucesso;
+  final String? mensagemErro;
+  final DeclaracaoTransmitida? dadosDeclaracao; // Dados da declaração entregue
+  final List<DasGerado>? dadosDas; // Dados do DAS gerado
+  final List<MensagemNegocio> mensagens;
+  
+  // Getters úteis
+  bool get declaracaoEntregue => dadosDeclaracao != null;
+  bool get dasGerado => dadosDas != null && dadosDas!.isNotEmpty;
+}
+```
+
 ## Códigos de Erro Comuns
 
 | Código | Descrição | Solução |
@@ -456,9 +616,11 @@ void main() async {
   final apiClient = ApiClient();
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
-    consumerSecret: 'seu_consumer_secret', 
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    consumerSecret: 'seu_consumer_secret',
+    contratanteNumero: '12345678000100',
+    autorPedidoDadosNumero: '12345678000100',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     ambiente: 'trial',
   );
   

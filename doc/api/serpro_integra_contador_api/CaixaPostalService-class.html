@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the CaixaPostalService class from the serpro_integra_contador_api library, for the Dart programming language.">
+  <title>CaixaPostalService class - serpro_integra_contador_api library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api.dart</a></li>
+    <li class="self-crumb">CaixaPostalService class</li>
+  </ol>
+  <div class="self-name">CaixaPostalService</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="serpro_integra_contador_api&#47;serpro_integra_contador_api-library-sidebar.html"
+    data-below-sidebar="serpro_integra_contador_api&#47;CaixaPostalService-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">CaixaPostalService</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p><strong>Serviço:</strong> CAIXA POSTAL (Caixa Postal do Simples Nacional)</p>
+<p>A Caixa Postal é um sistema de comunicação entre a Receita Federal e os contribuintes do Simples Nacional.</p>
+<p><strong>Este serviço disponibiliza APENAS os 3 serviços oficiais da API SERPRO:</strong></p>
+<ul>
+<li><strong>MSGCONTRIBUINTE61</strong>: Obter Lista de Mensagens por Contribuintes</li>
+<li><strong>MSGDETALHAMENTO62</strong>: Obter Detalhes de uma Mensagem Específica</li>
+<li><strong>INNOVAMSG63</strong>: Obter Indicador de Novas Mensagens</li>
+</ul>
+<p><strong>Documentação oficial:</strong> <code>.cursor/rules/caixapostal.mdc</code></p>
+<p><strong>Observação sobre variáveis:</strong>
+O campo <code>assuntoModelo</code> pode conter <code>++VARIAVEL++</code> que é substituído pelo valor de <code>valorParametroAssunto</code>.
+O campo <code>corpoModelo</code> pode conter <code>++1++</code>, <code>++2++</code>, etc. que são substituídos pelos valores do array <code>variaveis</code>.
+Exemplo: "<code>IRPF</code> Declaração do exercício ++VARIAVEL++ processada" com valorParametroAssunto="2023"
+resulta em: "<code>IRPF</code> Declaração do exercício 2023 processada"</p>
+<p><strong>Exemplo de uso:</strong></p>
+<pre class="language-dart"><code class="language-dart">final caixaPostalService = CaixaPostalService(apiClient);
+
+// 1. Obter lista de mensagens
+final mensagens = await caixaPostalService.obterListaMensagensPorContribuinte(
+  '12345678000190',
+  statusLeitura: 2, // 0=Todas, 1=Lida, 2=Não lida
+  indicadorFavorito: null, // 0=Não favorita, 1=Favorita, null=Sem filtro
+);
+
+// 2. Obter detalhes de uma mensagem
+final detalhes = await caixaPostalService.obterDetalhesMensagemEspecifica(
+  '12345678000190',
+  '0001626772', // ISN da mensagem
+);
+
+// 3. Obter indicador de novas mensagens
+final indicador = await caixaPostalService.obterIndicadorNovasMensagens('12345678000190');
+</code></pre>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="CaixaPostalService.new" class="callable">
+          <span class="name"><a href="../serpro_integra_contador_api/CaixaPostalService/CaixaPostalService.html">CaixaPostalService</a></span><span class="signature">(<span class="parameter" id="-param-_apiClient"><span class="type-annotation"><a href="../serpro_integra_contador_api/ApiClient-class.html">ApiClient</a></span> <span class="parameter-name">_apiClient</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="obterDetalhesMensagemEspecifica" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/CaixaPostalService/obterDetalhesMensagemEspecifica.html">obterDetalhesMensagemEspecifica</a></span><span class="signature">(<wbr><span class="parameter" id="obterDetalhesMensagemEspecifica-param-contribuinte"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinte</span>, </span><span class="parameter" id="obterDetalhesMensagemEspecifica-param-isn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">isn</span>, {</span><span class="parameter" id="obterDetalhesMensagemEspecifica-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="obterDetalhesMensagemEspecifica-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/DetalhesMensagemResponse-class.html">DetalhesMensagemResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Obtém os detalhes de uma mensagem específica
+  
+
+</dd>
+
+        <dt id="obterIndicadorNovasMensagens" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/CaixaPostalService/obterIndicadorNovasMensagens.html">obterIndicadorNovasMensagens</a></span><span class="signature">(<wbr><span class="parameter" id="obterIndicadorNovasMensagens-param-contribuinte"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinte</span>, {</span><span class="parameter" id="obterIndicadorNovasMensagens-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="obterIndicadorNovasMensagens-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/IndicadorMensagensResponse-class.html">IndicadorMensagensResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Obtém o indicador de mensagens novas para um contribuinte
+  
+
+</dd>
+
+        <dt id="obterListaMensagensPorContribuinte" class="callable">
+  <span class="name"><a href="../serpro_integra_contador_api/CaixaPostalService/obterListaMensagensPorContribuinte.html">obterListaMensagensPorContribuinte</a></span><span class="signature">(<wbr><span class="parameter" id="obterListaMensagensPorContribuinte-param-contribuinte"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinte</span>, {</span><span class="parameter" id="obterListaMensagensPorContribuinte-param-cnpjReferencia"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpjReferencia</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-statusLeitura"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">statusLeitura</span> = <span class="default-value">0</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-indicadorFavorito"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">indicadorFavorito</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-indicadorPagina"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">indicadorPagina</span> = <span class="default-value">0</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-ponteiroPagina"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">ponteiroPagina</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span><span class="parameter" id="obterListaMensagensPorContribuinte-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../serpro_integra_contador_api/ListaMensagensResponse-class.html">ListaMensagensResponse</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Obtém a lista de mensagens da Caixa Postal de um contribuinte
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">serpro_integra_contador_api</a></li>
+    <li><a href="../serpro_integra_contador_api/">serpro_integra_contador_api</a></li>
+    <li class="self-crumb">CaixaPostalService class</li>
+</ol>
+
+    <h5>serpro_integra_contador_api library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    serpro_integra_contador_api
+      2.0.8
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
