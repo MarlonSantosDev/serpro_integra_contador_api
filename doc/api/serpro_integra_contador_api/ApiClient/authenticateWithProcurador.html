@@ -125,10 +125,15 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
   clearAuthentication();
 
   &#47;&#47; Usar autenticação procurador via Cloud Function se URL estiver configurada
-  if (_urlAutenticacaoProcurado != null &amp;&amp; _urlAutenticacaoProcurado!.isNotEmpty &amp;&amp; contratanteNome != null &amp;&amp; autorNome != null) {
+  if (_urlAutenticacaoProcurado != null &amp;&amp;
+      _urlAutenticacaoProcurado!.isNotEmpty &amp;&amp;
+      contratanteNome != null &amp;&amp;
+      autorNome != null) {
     &#47;&#47; Armazenar certificado para uso no proxy
-    _cloudFunctionCertBase64 = certificadoProcuradorBase64 ?? certificadoDigitalBase64;
-    _cloudFunctionCertPassword = certificadoProcuradorPassword ?? senhaCertificado;
+    _cloudFunctionCertBase64 =
+        certificadoProcuradorBase64 ?? certificadoDigitalBase64;
+    _cloudFunctionCertPassword =
+        certificadoProcuradorPassword ?? senhaCertificado;
 
     await _authenticateWithProcuradorViaCloudFunction(
       consumerKey: consumerKey,
@@ -158,11 +163,16 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
     }
 
     &#47;&#47; Validar se há pelo menos um certificado disponível
-    final hasCertificadoDigital = certificadoDigitalPath != null || certificadoDigitalBase64 != null;
-    final hasCertificadoProcurador = certificadoProcuradorPath != null || certificadoProcuradorBase64 != null;
+    final hasCertificadoDigital =
+        certificadoDigitalPath != null || certificadoDigitalBase64 != null;
+    final hasCertificadoProcurador =
+        certificadoProcuradorPath != null ||
+        certificadoProcuradorBase64 != null;
 
     if (!hasCertificadoDigital &amp;&amp; !hasCertificadoProcurador) {
-      throw Exception(&#39;Certificado digital necessário. Forneça certificadoDigitalPath&#47;Base64 ou certificadoProcuradorPath&#47;Base64&#39;);
+      throw Exception(
+        &#39;Certificado digital necessário. Forneça certificadoDigitalPath&#47;Base64 ou certificadoProcuradorPath&#47;Base64&#39;,
+      );
     }
   }
 
@@ -182,7 +192,9 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
   if (contratanteNome != null &amp;&amp; autorNome != null) {
     &#47;&#47; Validar se a autenticação OAuth2 foi bem-sucedida
     if (_authModel == null) {
-      throw Exception(&#39;Falha na autenticação OAuth2. Não é possível prosseguir com a autenticação do procurador.&#39;);
+      throw Exception(
+        &#39;Falha na autenticação OAuth2. Não é possível prosseguir com a autenticação do procurador.&#39;,
+      );
     }
     final service = AutenticaProcuradorService(this);
     final response = await service.autenticarProcurador(
@@ -197,7 +209,9 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
     );
 
     if (!response.sucesso) {
-      throw Exception(&#39;Falha na autenticação do procurador.: ${response.mensagemPrincipal}&#39;);
+      throw Exception(
+        &#39;Falha na autenticação do procurador.: ${response.mensagemPrincipal}&#39;,
+      );
     }
 
     &#47;&#47; Atualizar o _authModel com o token do procurador
@@ -231,7 +245,7 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

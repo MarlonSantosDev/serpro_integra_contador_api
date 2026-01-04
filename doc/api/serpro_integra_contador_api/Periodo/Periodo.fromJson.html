@@ -66,7 +66,9 @@
   <pre class="language-dart"><code class="language-dart">factory Periodo.fromJson(Map&lt;String, dynamic&gt; json) {
   return Periodo(
     periodoApuracao: int.parse(json[&#39;periodoApuracao&#39;].toString()),
-    operacoes: (json[&#39;operacoes&#39;] as List).map((o) =&gt; Operacao.fromJson(o)).toList(),
+    operacoes: (json[&#39;operacoes&#39;] as List)
+        .map((o) =&gt; Operacao.fromJson(o))
+        .toList(),
   );
 }</code></pre>
 </section>
@@ -96,7 +98,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

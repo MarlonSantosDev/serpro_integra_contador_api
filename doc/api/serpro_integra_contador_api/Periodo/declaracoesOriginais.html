@@ -74,7 +74,9 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">List&lt;Operacao&gt; get declaracoesOriginais {
-  return operacoes.where((op) =&gt; op.tipoOperacao == &#39;Declaração Original&#39;).toList();
+  return operacoes
+      .where((op) =&gt; op.tipoOperacao == &#39;Declaração Original&#39;)
+      .toList();
 }</code></pre>
 </section>
 
@@ -105,7 +107,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

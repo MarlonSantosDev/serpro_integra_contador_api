@@ -67,7 +67,11 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Map&lt;String, dynamic&gt; toJson() {
-  return {&#39;status&#39;: status, &#39;mensagens&#39;: mensagens.map((m) =&gt; m.toJson()).toList(), &#39;dados&#39;: dados != null ? jsonEncode(dados!.toJson()) : &#39;&#39;};
+  return {
+    &#39;status&#39;: status,
+    &#39;mensagens&#39;: mensagens.map((m) =&gt; m.toJson()).toList(),
+    &#39;dados&#39;: dados != null ? jsonEncode(dados!.toJson()) : &#39;&#39;,
+  };
 }</code></pre>
 </section>
 
@@ -96,7 +100,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

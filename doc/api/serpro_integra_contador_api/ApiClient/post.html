@@ -116,23 +116,33 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
     } else {
       &#47;&#47; Não temos credenciais para re-autenticar
       _authModel = null;
-      throw Exception(&#39;Token expirado. Por favor, chame authenticate() novamente.&#39;);
+      throw Exception(
+        &#39;Token expirado. Por favor, chame authenticate() novamente.&#39;,
+      );
     }
   }
 
   &#47;&#47; Usar dados customizados se fornecidos, senão usar os dados padrão
-  final finalContratanteNumero = contratanteNumero ?? _authModel!.contratanteNumero;
+  final finalContratanteNumero =
+      contratanteNumero ?? _authModel!.contratanteNumero;
 
   &#47;&#47; Quando há token de procurador, o autorPedidoDadosNumero deve ser o contribuinteNumero
   final finalAutorPedidoDadosNumero =
-      autorPedidoDadosNumero ?? (hasProcuradorToken ? request.contribuinteNumero : _authModel!.autorPedidoDadosNumero);
+      autorPedidoDadosNumero ??
+      (hasProcuradorToken
+          ? request.contribuinteNumero
+          : _authModel!.autorPedidoDadosNumero);
 
   &#47;&#47; Criar o JSON completo usando os dados de autenticação
   final requestBody = request.toJsonWithAuth(
     contratanteNumero: finalContratanteNumero,
-    contratanteTipo: ValidacoesUtils.detectDocumentType(finalContratanteNumero),
+    contratanteTipo: ValidacoesUtils.detectDocumentType(
+      finalContratanteNumero,
+    ),
     autorPedidoDadosNumero: finalAutorPedidoDadosNumero,
-    autorPedidoDadosTipo: ValidacoesUtils.detectDocumentType(finalAutorPedidoDadosNumero),
+    autorPedidoDadosTipo: ValidacoesUtils.detectDocumentType(
+      finalAutorPedidoDadosNumero,
+    ),
   );
 
   &#47;&#47; Preparar headers obrigatórios
@@ -160,16 +170,22 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
     &#47;&#47; Se urlProxy estiver configurado (Web), usar proxy
     if (_urlProxy != null &amp;&amp; _urlProxy!.isNotEmpty) {
       final proxyUrl = Uri.parse(&#39;$_urlProxy&#47;proxy_serpro&#39;);
-      final proxyHeaders = &lt;String, String&gt;{&#39;Content-Type&#39;: &#39;application&#47;json&#39;};
+      final proxyHeaders = &lt;String, String&gt;{
+        &#39;Content-Type&#39;: &#39;application&#47;json&#39;,
+      };
       final proxyBody = {
         &#39;endpoint&#39;: endpoint,
         &#39;body&#39;: requestBody,
         &#39;access_token&#39;: _authModel!.accessToken,
         &#39;jwt_token&#39;: _authModel!.jwtToken,
-        &#39;procurador_token&#39;: _authModel!.procuradorToken.isNotEmpty ? _authModel!.procuradorToken : null,
+        &#39;procurador_token&#39;: _authModel!.procuradorToken.isNotEmpty
+            ? _authModel!.procuradorToken
+            : null,
         &#39;ambiente&#39;: _ambiente,
-        &#39;certificado_base64&#39;: _cloudFunctionCertBase64 ?? _storedCredentials?.certBase64,
-        &#39;certificado_senha&#39;: _cloudFunctionCertPassword ?? _storedCredentials?.certPassword,
+        &#39;certificado_base64&#39;:
+            _cloudFunctionCertBase64 ?? _storedCredentials?.certBase64,
+        &#39;certificado_senha&#39;:
+            _cloudFunctionCertPassword ?? _storedCredentials?.certPassword,
       };
 
       &#47;&#47;print(&quot;================================================&quot;);
@@ -177,7 +193,11 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
       &#47;&#47;print(&quot;Proxy body: ${json.encode(proxyBody)}&quot;);
       &#47;&#47;print(&quot;================================================&quot;);
 
-      return await http.post(proxyUrl, headers: proxyHeaders, body: json.encode(proxyBody));
+      return await http.post(
+        proxyUrl,
+        headers: proxyHeaders,
+        body: json.encode(proxyBody),
+      );
     } else {
       &#47;&#47; Requisição direta (Desktop&#47;Mobile ou quando urlProxy não está configurado)
       &#47;&#47;print(&quot;================================================&quot;);
@@ -186,12 +206,17 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
       &#47;&#47;print(&quot;requestBody: ${json.encode(requestBody)}&quot;);
       &#47;&#47;print(&quot;================================================&quot;);
 
-      return await http.post(Uri.parse(&#39;$_baseUrl$endpoint&#39;), headers: headers, body: json.encode(requestBody));
+      return await http.post(
+        Uri.parse(&#39;$_baseUrl$endpoint&#39;),
+        headers: headers,
+        body: json.encode(requestBody),
+      );
     }
   })();
   &#47;&#47; Verificar se a requisição foi bem-sucedida
   if (response.statusCode &gt;= 200 &amp;&amp; response.statusCode &lt; 300) {
-    Map&lt;String, dynamic&gt; responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map&lt;String, dynamic&gt;;
+    Map&lt;String, dynamic&gt; responseBody =
+        json.decode(utf8.decode(response.bodyBytes)) as Map&lt;String, dynamic&gt;;
 
     &#47;&#47; Verificar se a API retornou um erro de negócio
     if (responseBody.isNotEmpty &amp;&amp;
@@ -214,17 +239,31 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
   } else if (response.statusCode == 401) {
     throw Exception({
       &quot;status&quot;: response.statusCode,
-      &quot;mensagens&quot;: &quot;Credenciais inválidas. Certifique-se de ter fornecido as credenciais de segurança corretas&quot;,
+      &quot;mensagens&quot;:
+          &quot;Credenciais inválidas. Certifique-se de ter fornecido as credenciais de segurança corretas&quot;,
       &quot;body&quot;: &quot;Credenciais inválidas&quot;,
     });
   } else if (response.statusCode == 304) {
-    final autenticarProcuradorToken = response.headers[&#39;etag&#39;].toString().replaceAll(&#39;:&#39;, &#39;&quot;:&quot;&#39;);
-    final expiresISO = FormatadorUtils.converterHttpExpiresParaISO(response.headers[&#39;expires&#39;]) ?? &#39;&#39;;
-    final stringBody = &quot;{$autenticarProcuradorToken, \&quot;data_hora_expiracao\&quot;:\&quot;$expiresISO\&quot;}&quot;;
+    final autenticarProcuradorToken = response.headers[&#39;etag&#39;]
+        .toString()
+        .replaceAll(&#39;:&#39;, &#39;&quot;:&quot;&#39;);
+    final expiresISO =
+        FormatadorUtils.converterHttpExpiresParaISO(
+          response.headers[&#39;expires&#39;],
+        ) ??
+        &#39;&#39;;
+    final stringBody =
+        &quot;{$autenticarProcuradorToken, \&quot;data_hora_expiracao\&quot;:\&quot;$expiresISO\&quot;}&quot;;
     final body = jsonDecode(stringBody);
-    return {&quot;status&quot;: response.statusCode, &quot;mensagens&quot;: &quot;Resposta em cache (304 Not Modified)&quot;, &quot;dados&quot;: body};
+    return {
+      &quot;status&quot;: response.statusCode,
+      &quot;mensagens&quot;: &quot;Resposta em cache (304 Not Modified)&quot;,
+      &quot;dados&quot;: body,
+    };
   } else {
-    throw Exception(&#39;Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}&#39;);
+    throw Exception(
+      &#39;Falha na requisição: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}&#39;,
+    );
   }
 }</code></pre>
 </section>
@@ -254,7 +293,7 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

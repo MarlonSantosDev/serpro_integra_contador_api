@@ -91,7 +91,12 @@
 
   final baseRequest = BaseRequest(
     contribuinteNumero: contribuinteNumero,
-    pedidoDados: PedidoDados(idSistema: &#39;PGDASD&#39;, idServico: &#39;CONSEXTRATO16&#39;, versaoSistema: &#39;1.0&#39;, dados: consultaRequest.toJson().toString()),
+    pedidoDados: PedidoDados(
+      idSistema: &#39;PGDASD&#39;,
+      idServico: &#39;CONSEXTRATO16&#39;,
+      versaoSistema: &#39;1.0&#39;,
+      dados: consultaRequest.toJson().toString(),
+    ),
   );
 
   final response = await _apiClient.post(
@@ -129,7 +134,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

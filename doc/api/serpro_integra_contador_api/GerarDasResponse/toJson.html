@@ -70,7 +70,9 @@
   return {
     &#39;status&#39;: status,
     &#39;mensagens&#39;: mensagens.map((m) =&gt; m.toJson()).toList(),
-    &#39;dados&#39;: dados != null ? jsonEncode(dados!.map((d) =&gt; d.toJson()).toList()) : &#39;&#39;,
+    &#39;dados&#39;: dados != null
+        ? jsonEncode(dados!.map((d) =&gt; d.toJson()).toList())
+        : &#39;&#39;,
   };
 }</code></pre>
 </section>
@@ -100,7 +102,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

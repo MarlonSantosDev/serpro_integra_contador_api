@@ -83,7 +83,11 @@ apiClient.setServidores(
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void setServidores({String? urlAutenticacao, String? urlAutenticacaoProcurado, String? urlProxy}) {
+  <pre class="language-dart"><code class="language-dart">void setServidores({
+  String? urlAutenticacao,
+  String? urlAutenticacaoProcurado,
+  String? urlProxy,
+}) {
   if (urlAutenticacao != null) {
     _urlAutenticacao = urlAutenticacao;
   }
@@ -121,7 +125,7 @@ apiClient.setServidores(
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

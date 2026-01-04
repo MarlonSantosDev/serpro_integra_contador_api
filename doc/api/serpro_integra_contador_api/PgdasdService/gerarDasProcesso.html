@@ -83,7 +83,9 @@
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
-  final processoRequest = GerarDasProcessoRequest(numeroProcesso: numeroProcesso);
+  final processoRequest = GerarDasProcessoRequest(
+    numeroProcesso: numeroProcesso,
+  );
 
   if (!processoRequest.isValid) {
     throw ArgumentError(&#39;Dados para geração do DAS de Processo inválidos&#39;);
@@ -134,7 +136,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

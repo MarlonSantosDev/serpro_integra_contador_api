@@ -69,7 +69,8 @@
   <pre class="language-dart"><code class="language-dart">Map&lt;String, dynamic&gt; toJson() {
   return {
     &#39;anoCalendario&#39;: anoCalendario,
-    if (periodos != null) &#39;periodos&#39;: periodos!.map((p) =&gt; p.toJson()).toList(),
+    if (periodos != null)
+      &#39;periodos&#39;: periodos!.map((p) =&gt; p.toJson()).toList(),
     if (periodo != null) &#39;periodo&#39;: periodo!.toJson(),
   };
 }</code></pre>
@@ -100,7 +101,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

@@ -83,7 +83,9 @@
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
-  final consultaRequest = ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao);
+  final consultaRequest = ConsultarUltimaDeclaracaoRequest(
+    periodoApuracao: periodoApuracao,
+  );
 
   if (!consultaRequest.isValid) {
     throw ArgumentError(&#39;Dados da consulta inválidos&#39;);
@@ -134,7 +136,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

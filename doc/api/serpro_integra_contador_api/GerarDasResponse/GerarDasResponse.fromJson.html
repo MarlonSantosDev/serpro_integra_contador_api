@@ -69,7 +69,9 @@
     final dadosStr = json[&#39;dados&#39;]?.toString() ?? &#39;&#39;;
     if (dadosStr.isNotEmpty) {
       final dadosList = jsonDecode(dadosStr) as List;
-      dadosParsed = dadosList.map((d) =&gt; Das.fromJson(d as Map&lt;String, dynamic&gt;)).toList();
+      dadosParsed = dadosList
+          .map((d) =&gt; Das.fromJson(d as Map&lt;String, dynamic&gt;))
+          .toList();
     }
   } catch (e) {
     &#47;&#47; Se não conseguir fazer parse, mantém dados como null
@@ -77,7 +79,9 @@
 
   return GerarDasResponse(
     status: int.parse(json[&#39;status&#39;].toString()),
-    mensagens: (json[&#39;mensagens&#39;] as List).map((m) =&gt; Mensagem.fromJson(m as Map&lt;String, dynamic&gt;)).toList(),
+    mensagens: (json[&#39;mensagens&#39;] as List)
+        .map((m) =&gt; Mensagem.fromJson(m as Map&lt;String, dynamic&gt;))
+        .toList(),
     dados: dadosParsed,
   );
 }</code></pre>
@@ -108,7 +112,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

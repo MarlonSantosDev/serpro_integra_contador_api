@@ -159,7 +159,8 @@
     final novoAutor = autorPedidoDadosNumero.trim();
 
     if (_storedCredentials != null &amp;&amp;
-        (_storedCredentials!.contratanteNumero != novoContratante || _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
+        (_storedCredentials!.contratanteNumero != novoContratante ||
+            _storedCredentials!.autorPedidoDadosNumero != novoAutor)) {
       &#47;&#47; Limpar dados da autenticação anterior para evitar conflitos
       clearAuthentication();
     }
@@ -169,7 +170,8 @@
       throw _buildErrorResponse(
         mensagem: &#39;Ambiente inválido&#39;,
         status: 400,
-        resposta: &#39;Ambiente deve ser &quot;trial&quot; ou &quot;producao&quot;. Recebido: &quot;$ambiente&quot;&#39;,
+        resposta:
+            &#39;Ambiente deve ser &quot;trial&quot; ou &quot;producao&quot;. Recebido: &quot;$ambiente&quot;&#39;,
       );
     }
     _ambiente = ambiente;
@@ -203,14 +205,19 @@
       throw _buildErrorResponse(
         mensagem: &#39;Número do autor não informado&#39;,
         status: 400,
-        resposta: &#39;Campo &quot;autorPedidoDadosNumero&quot; é obrigatório (CPF&#47;CNPJ do autor)&#39;,
+        resposta:
+            &#39;Campo &quot;autorPedidoDadosNumero&quot; é obrigatório (CPF&#47;CNPJ do autor)&#39;,
       );
     }
 
     &#47;&#47; 3. Validar certificado em produção
     if (ambiente == &#39;producao&#39;) {
-      final temCertificadoBase64 = certificadoDigitalBase64 != null &amp;&amp; certificadoDigitalBase64.trim().isNotEmpty;
-      final temCertificadoPath = certificadoDigitalPath != null &amp;&amp; certificadoDigitalPath.trim().isNotEmpty;
+      final temCertificadoBase64 =
+          certificadoDigitalBase64 != null &amp;&amp;
+          certificadoDigitalBase64.trim().isNotEmpty;
+      final temCertificadoPath =
+          certificadoDigitalPath != null &amp;&amp;
+          certificadoDigitalPath.trim().isNotEmpty;
 
       if (!temCertificadoBase64 &amp;&amp; !temCertificadoPath) {
         throw _buildErrorResponse(
@@ -265,15 +272,35 @@
 
     &#47;&#47; Token já está armazenado em _authModel
   } on InvalidCredentialsException catch (e) {
-    throw _buildErrorResponse(mensagem: e.message, status: 400, resposta: &#39;Credenciais inválidas&#39;);
+    throw _buildErrorResponse(
+      mensagem: e.message,
+      status: 400,
+      resposta: &#39;Credenciais inválidas&#39;,
+    );
   } on CertificateException catch (e) {
-    throw _buildErrorResponse(mensagem: &#39;Erro no certificado digital&#39;, status: 400, resposta: e.message);
+    throw _buildErrorResponse(
+      mensagem: &#39;Erro no certificado digital&#39;,
+      status: 400,
+      resposta: e.message,
+    );
   } on AuthenticationFailedException catch (e) {
-    throw _buildErrorResponse(mensagem: &#39;Falha na autenticação&#39;, status: e.statusCode, resposta: e.responseBody ?? e.message);
+    throw _buildErrorResponse(
+      mensagem: &#39;Falha na autenticação&#39;,
+      status: e.statusCode,
+      resposta: e.responseBody ?? e.message,
+    );
   } on NetworkAuthException catch (e) {
-    throw _buildErrorResponse(mensagem: &#39;Erro de rede durante autenticação&#39;, status: 0, resposta: e.message);
+    throw _buildErrorResponse(
+      mensagem: &#39;Erro de rede durante autenticação&#39;,
+      status: 0,
+      resposta: e.message,
+    );
   } catch (e) {
-    throw _buildErrorResponse(mensagem: &#39;Erro inesperado durante autenticação&#39;, status: 500, resposta: e.toString());
+    throw _buildErrorResponse(
+      mensagem: &#39;Erro inesperado durante autenticação&#39;,
+      status: 500,
+      resposta: e.toString(),
+    );
   }
 }</code></pre>
 </section>
@@ -303,7 +330,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

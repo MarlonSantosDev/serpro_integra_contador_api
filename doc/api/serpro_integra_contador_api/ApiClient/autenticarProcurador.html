@@ -83,7 +83,9 @@
   required String autorPedidoDadosNumero,
 }) async {
   if (_authModel == null) {
-    throw Exception(&#39;Cliente não autenticado. Chame o método authenticate primeiro.&#39;);
+    throw Exception(
+      &#39;Cliente não autenticado. Chame o método authenticate primeiro.&#39;,
+    );
   }
 
   final requestBody = {&#39;termoAutorizacao&#39;: termoAutorizacaoBase64};
@@ -106,7 +108,8 @@
   );
 
   if (response.statusCode &gt;= 200 &amp;&amp; response.statusCode &lt; 300) {
-    Map&lt;String, dynamic&gt; responseBody = json.decode(utf8.decode(response.bodyBytes)) as Map&lt;String, dynamic&gt;;
+    Map&lt;String, dynamic&gt; responseBody =
+        json.decode(utf8.decode(response.bodyBytes)) as Map&lt;String, dynamic&gt;;
 
     &#47;&#47; Salvar token de procurador no authModel
     if (responseBody[&#39;autenticarProcuradorToken&#39;] != null) {
@@ -116,7 +119,9 @@
 
     return responseBody;
   } else {
-    throw Exception(&#39;Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}&#39;);
+    throw Exception(
+      &#39;Falha na autenticação de procurador: ${response.statusCode} - ${utf8.decode(response.bodyBytes)}&#39;,
+    );
   }
 }</code></pre>
 </section>
@@ -146,7 +151,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

@@ -81,7 +81,9 @@ quando deseja garantir um token novo.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; forceReauthenticate() async {
-  if (_authModel == null || _authService == null || _storedCredentials == null) {
+  if (_authModel == null ||
+      _authService == null ||
+      _storedCredentials == null) {
     throw Exception(
       &#39;Cliente não autenticado ou credenciais não disponíveis. &#39;
       &#39;Chame authenticate() primeiro.&#39;,
@@ -122,7 +124,7 @@ quando deseja garantir um token novo.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

@@ -67,7 +67,9 @@
   return IndiceDeclaracao(
     numeroDeclaracao: json[&#39;numeroDeclaracao&#39;].toString(),
     dataHoraTransmissao: json[&#39;dataHoraTransmissao&#39;].toString(),
-    malha: (json[&#39;malha&#39;]?.toString() == &quot;&quot; || json[&#39;malha&#39;] == null) ? &quot;Não&quot; : json[&#39;malha&#39;]?.toString() ?? &quot;Não&quot;,
+    malha: (json[&#39;malha&#39;]?.toString() == &quot;&quot; || json[&#39;malha&#39;] == null)
+        ? &quot;Não&quot;
+        : json[&#39;malha&#39;]?.toString() ?? &quot;Não&quot;,
   );
 }</code></pre>
 </section>
@@ -97,7 +99,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

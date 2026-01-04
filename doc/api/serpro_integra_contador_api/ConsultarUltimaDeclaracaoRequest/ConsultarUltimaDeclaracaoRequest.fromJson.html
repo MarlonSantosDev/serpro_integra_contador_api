@@ -64,7 +64,9 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">factory ConsultarUltimaDeclaracaoRequest.fromJson(Map&lt;String, dynamic&gt; json) {
-  return ConsultarUltimaDeclaracaoRequest(periodoApuracao: json[&#39;periodoApuracao&#39;].toString());
+  return ConsultarUltimaDeclaracaoRequest(
+    periodoApuracao: json[&#39;periodoApuracao&#39;].toString(),
+  );
 }</code></pre>
 </section>
 
@@ -93,7 +95,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

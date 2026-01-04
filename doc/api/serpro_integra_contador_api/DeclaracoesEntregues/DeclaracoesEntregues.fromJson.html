@@ -68,8 +68,12 @@
 
   return DeclaracoesEntregues(
     anoCalendario: int.parse(ano.toString()),
-    periodos: json[&#39;periodos&#39;] != null ? (json[&#39;periodos&#39;] as List).map((p) =&gt; Periodo.fromJson(p)).toList() : null,
-    periodo: json[&#39;periodo&#39;] != null ? Periodo.fromJson(json[&#39;periodo&#39;]) : null,
+    periodos: json[&#39;periodos&#39;] != null
+        ? (json[&#39;periodos&#39;] as List).map((p) =&gt; Periodo.fromJson(p)).toList()
+        : null,
+    periodo: json[&#39;periodo&#39;] != null
+        ? Periodo.fromJson(json[&#39;periodo&#39;])
+        : null,
   );
 }</code></pre>
 </section>
@@ -99,7 +103,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

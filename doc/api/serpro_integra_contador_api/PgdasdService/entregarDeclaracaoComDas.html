@@ -55,8 +55,12 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/EntregarDeclaracaoComDasResponse-class.html">EntregarDeclaracaoComDasResponse</a></span>&gt;</span></span>
-<span class="name ">entregarDeclaracaoComDas</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="entregarDeclaracaoComDas-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
-<li><span class="parameter" id="entregarDeclaracaoComDas-param-request"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/EntregarDeclaracaoRequest-class.html">EntregarDeclaracaoRequest</a></span> <span class="parameter-name">request</span>, </span></li>
+<span class="name ">entregarDeclaracaoComDas</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="entregarDeclaracaoComDas-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracaoComDas-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracaoComDas-param-declaracao"><span>required</span> <span class="type-annotation">Declaracao</span> <span class="parameter-name">declaracao</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracaoComDas-param-indicadorTransmissao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">indicadorTransmissao</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracaoComDas-param-indicadorComparacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">indicadorComparacao</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracaoComDas-param-valoresParaComparacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ValorDevido-class.html">ValorDevido</a></span>&gt;</span>?</span> <span class="parameter-name">valoresParaComparacao</span>, </span></li>
 <li><span class="parameter" id="entregarDeclaracaoComDas-param-dataConsolidacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataConsolidacao</span>, </span></li>
 <li><span class="parameter" id="entregarDeclaracaoComDas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="entregarDeclaracaoComDas-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -75,8 +79,12 @@ geração automática do DAS (GERARDAS12) após sucesso.</p>
 <li>Transmite a declaração para a RFB</li>
 <li>Se a declaração for bem-sucedida, gera o DAS automaticamente</li>
 </ol>
-<p><code>contribuinteNumero</code> CNPJ do contribuinte
-<code>request</code> Dados da declaração a ser transmitida
+<p><code>cnpj</code> CNPJ do contribuinte (14 dígitos sem formatação)
+<code>periodoApuracao</code> Período de apuração da declaração (formato: AAAAMM, exemplo: 202504)
+<code>declaracao</code> Objeto contendo os dados da declaração
+<code>indicadorTransmissao</code> Indica se a declaração deve ser transmitida (padrão: true)
+<code>indicadorComparacao</code> Indica se há necessidade de comparação dos valores (padrão: true)
+<code>valoresParaComparacao</code> Valores para comparação com o valor apurado pelo sistema (opcional)
 <code>dataConsolidacao</code> Data de consolidação futura para o DAS (opcional, formato: AAAAMMDD)
 <code>contratanteNumero</code> CNPJ do contratante (opcional, usa dados da autenticação se não informado)
 <code>autorPedidoDadosNumero</code> CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)</p>
@@ -97,13 +105,10 @@ gerar o DAS manualmente usando o método <code>gerarDas()</code> com o período
 da declaração. O ID da declaração estará disponível em <code>dadosDeclaracao</code>.</p>
 <p>Exemplo:</p>
 <pre class="language-dart"><code class="language-dart">final resultado = await pgdasdService.entregarDeclaracaoComDas(
-  contribuinteNumero: '12345678000100',
-  request: EntregarDeclaracaoRequest(
-    cnpjCompleto: '12345678000100',
-    pa: 202504,
-    declaracao: declaracao,
-    // ... outros campos
-  ),
+  cnpj: '12345678000100',
+  periodoApuracao: 202504,
+  declaracao: declaracao,
+  autorPedidoDadosNumero: '12345678000100',
 );
 
 if (resultado.sucesso) {
@@ -124,16 +129,24 @@ if (resultado.sucesso) {
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;EntregarDeclaracaoComDasResponse&gt; entregarDeclaracaoComDas({
-  required String contribuinteNumero,
-  required request_models.EntregarDeclaracaoRequest request,
+  required String cnpj,
+  required int periodoApuracao,
+  required Declaracao declaracao,
+  bool indicadorTransmissao = true,
+  bool indicadorComparacao = true,
+  List&lt;ValorDevido&gt;? valoresParaComparacao,
   String? dataConsolidacao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
-  &#47;&#47; Passo 1: Entregar declaração
+  &#47;&#47; Passo 1: Entregar declaração usando o método refatorado
   final entregarResponse = await entregarDeclaracao(
-    contribuinteNumero: contribuinteNumero,
-    request: request,
+    cnpj: cnpj,
+    periodoApuracao: periodoApuracao,
+    declaracao: declaracao,
+    indicadorTransmissao: indicadorTransmissao,
+    indicadorComparacao: indicadorComparacao,
+    valoresParaComparacao: valoresParaComparacao,
     contratanteNumero: contratanteNumero,
     autorPedidoDadosNumero: autorPedidoDadosNumero,
   );
@@ -146,14 +159,14 @@ if (resultado.sucesso) {
     );
   }
 
-  &#47;&#47; Passo 3: Extrair período de apuração do request (int → String)
-  final periodoApuracao = request.pa.toString();
+  &#47;&#47; Passo 3: Converter período de apuração (int → String)
+  final periodoApuracaoString = periodoApuracao.toString();
 
   &#47;&#47; Passo 4: Tentar gerar DAS
   try {
     final gerarDasResponse = await gerarDas(
-      contribuinteNumero: contribuinteNumero,
-      periodoApuracao: periodoApuracao,
+      contribuinteNumero: cnpj,
+      periodoApuracao: periodoApuracaoString,
       dataConsolidacao: dataConsolidacao,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
@@ -219,7 +232,7 @@ if (resultado.sucesso) {
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

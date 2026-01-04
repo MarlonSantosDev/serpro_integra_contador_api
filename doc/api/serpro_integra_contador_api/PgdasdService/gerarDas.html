@@ -86,7 +86,10 @@
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
-  final dasRequest = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
+  final dasRequest = GerarDasRequest(
+    periodoApuracao: periodoApuracao,
+    dataConsolidacao: dataConsolidacao,
+  );
 
   if (!dasRequest.isValid) {
     throw ArgumentError(&#39;Dados para geração do DAS inválidos&#39;);
@@ -94,7 +97,12 @@
 
   final baseRequest = BaseRequest(
     contribuinteNumero: contribuinteNumero,
-    pedidoDados: PedidoDados(idSistema: &#39;PGDASD&#39;, idServico: &#39;GERARDAS12&#39;, versaoSistema: &#39;1.0&#39;, dados: dasRequest.toJson().toString()),
+    pedidoDados: PedidoDados(
+      idSistema: &#39;PGDASD&#39;,
+      idServico: &#39;GERARDAS12&#39;,
+      versaoSistema: &#39;1.0&#39;,
+      dados: dasRequest.toJson().toString(),
+    ),
   );
 
   final response = await _apiClient.post(
@@ -132,7 +140,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>

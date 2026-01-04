@@ -55,8 +55,12 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/EntregarDeclaracaoResponse-class.html">EntregarDeclaracaoResponse</a></span>&gt;</span></span>
-<span class="name ">entregarDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="entregarDeclaracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
-<li><span class="parameter" id="entregarDeclaracao-param-request"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/EntregarDeclaracaoRequest-class.html">EntregarDeclaracaoRequest</a></span> <span class="parameter-name">request</span>, </span></li>
+<span class="name ">entregarDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="entregarDeclaracao-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracao-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracao-param-declaracao"><span>required</span> <span class="type-annotation">Declaracao</span> <span class="parameter-name">declaracao</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracao-param-indicadorTransmissao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">indicadorTransmissao</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracao-param-indicadorComparacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">indicadorComparacao</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="entregarDeclaracao-param-valoresParaComparacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ValorDevido-class.html">ValorDevido</a></span>&gt;</span>?</span> <span class="parameter-name">valoresParaComparacao</span>, </span></li>
 <li><span class="parameter" id="entregarDeclaracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="entregarDeclaracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
 </ol>})
@@ -67,10 +71,22 @@
     
 <section class="desc markdown">
   <p>Entregar declaração mensal do Simples Nacional</p>
-<p><code>contribuinteNumero</code> CNPJ do contribuinte
-<code>request</code> Dados da declaração a ser transmitida
+<p><code>cnpj</code> CNPJ do contribuinte (14 dígitos sem formatação)
+<code>periodoApuracao</code> Período de apuração da declaração (formato: AAAAMM, exemplo: 202504)
+<code>declaracao</code> Objeto contendo os dados da declaração
+<code>indicadorTransmissao</code> Indica se a declaração deve ser transmitida (padrão: true)
+<code>indicadorComparacao</code> Indica se há necessidade de comparação dos valores (padrão: true)
+<code>valoresParaComparacao</code> Valores para comparação com o valor apurado pelo sistema (opcional)
 <code>contratanteNumero</code> CNPJ do contratante (opcional, usa dados da autenticação se não informado)
 <code>autorPedidoDadosNumero</code> CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)</p>
+<p>Exemplo:</p>
+<pre class="language-dart"><code class="language-dart">final resultado = await pgdasdService.entregarDeclaracao(
+  cnpj: '12345678000100',
+  periodoApuracao: 202504,
+  declaracao: declaracao,
+  autorPedidoDadosNumero: '12345678000100',
+);
+</code></pre>
 </section>
 
 
@@ -78,18 +94,37 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;response_models.EntregarDeclaracaoResponse&gt; entregarDeclaracao({
-  required String contribuinteNumero,
-  required request_models.EntregarDeclaracaoRequest request,
+  required String cnpj,
+  required int periodoApuracao,
+  required Declaracao declaracao,
+  bool indicadorTransmissao = true,
+  bool indicadorComparacao = true,
+  List&lt;ValorDevido&gt;? valoresParaComparacao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  &#47;&#47; Construir request internamente de forma transparente
+  final request = request_models.EntregarDeclaracaoRequest(
+    cnpjCompleto: cnpj,
+    pa: periodoApuracao,
+    indicadorTransmissao: indicadorTransmissao,
+    indicadorComparacao: indicadorComparacao,
+    declaracao: declaracao,
+    valoresParaComparacao: valoresParaComparacao,
+  );
+
   if (!request.isValid &amp;&amp; request.cnpjCompleto != &#39;00000000000100&#39;) {
     throw ArgumentError(&#39;Dados da declaração inválidos&#39;);
   }
 
   final baseRequest = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
-    pedidoDados: PedidoDados(idSistema: &#39;PGDASD&#39;, idServico: &#39;TRANSDECLARACAO11&#39;, versaoSistema: &#39;1.0&#39;, dados: request.toJson().toString()),
+    contribuinteNumero: cnpj,
+    pedidoDados: PedidoDados(
+      idSistema: &#39;PGDASD&#39;,
+      idServico: &#39;TRANSDECLARACAO11&#39;,
+      versaoSistema: &#39;1.0&#39;,
+      dados: request.toJson().toString(),
+    ),
   );
 
   final response = await _apiClient.post(
@@ -127,7 +162,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.8
+      2.0.9
   </span>
   
 </footer>
