@@ -37,16 +37,19 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       ],
     );
 
-    final entregarResponse = await pgdasdService.entregarDeclaracaoSimples(
-      cnpj: '00000000000100',
-      periodoApuracao: 202101,
-      declaracao: declaracao,
-      transmitir: true,
-      compararValores: true,
-      valoresParaComparacao: [
-        pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
-        pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
-      ],
+    final entregarResponse = await pgdasdService.entregarDeclaracao(
+      contribuinteNumero: '00000000000100',
+      request: pgdasd_models.EntregarDeclaracaoRequest(
+        cnpjCompleto: '00000000000100',
+        pa: 202101,
+        indicadorTransmissao: true,
+        indicadorComparacao: true,
+        declaracao: declaracao,
+        valoresParaComparacao: [
+          pgdasd_models.ValorDevido(codigoTributo: 1, valor: 1000.00),
+          pgdasd_models.ValorDevido(codigoTributo: 2, valor: 500.00),
+        ],
+      ),
       autorPedidoDadosNumero: '00000000000100',
       contratanteNumero: '00000000000100',
     );
@@ -83,8 +86,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 2. Gerando DAS ---');
 
-    final gerarDasResponse = await pgdasdService.gerarDasSimples(
-      cnpj: '00000000000100',
+    final gerarDasResponse = await pgdasdService.gerarDas(
+      contribuinteNumero: '00000000000100',
       periodoApuracao: '202101',
       //dataConsolidacao: '20220831', // Data futura para consolidação
     );
@@ -143,11 +146,11 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 3. Consultando Declarações por Ano ---');
 
-    final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(
-      cnpj: '00000000000000',
+    final consultarAnoResponse = await pgdasdService.consultarDeclaracoes(
+      contribuinteNumero: '00000000000000',
+      anoCalendario: '2018',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
-      anoCalendario: '2018',
     );
 
     print('✅ Status: ${consultarAnoResponse.status}');
@@ -187,8 +190,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 4. Consultando Declarações por Período ---');
 
-    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(
-      cnpj: '00000000000000',
+    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoes(
+      contribuinteNumero: '00000000000000',
       periodoApuracao: '201801',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
@@ -214,7 +217,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracao(
       contribuinteNumero: '00000000000000',
-      request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: '201801'),
+      periodoApuracao: '201801',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
     );
@@ -274,7 +277,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumero(
       contribuinteNumero: '00000000000000',
-      request: ConsultarDeclaracaoNumeroRequest(numeroDeclaracao: '00000000201801001'),
+      numeroDeclaracao: '00000000201801001',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
     );
@@ -316,7 +319,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     final extratoDasResponse = await pgdasdService.consultarExtratoDas(
       contribuinteNumero: '00000000000000',
-      request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
+      numeroDas: '07202136999997159',
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
     );
@@ -400,10 +403,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 9. Gerando DAS Cobrança ---');
 
-    final dasCobrancaResponse = await pgdasdService.gerarDasCobranca(
-      contribuinteNumero: '00000000000100',
-      request: GerarDasCobrancaRequest(periodoApuracao: '202301'),
-    );
+    final dasCobrancaResponse = await pgdasdService.gerarDasCobranca(contribuinteNumero: '00000000000100', periodoApuracao: '202301');
 
     print('✅ Status: ${dasCobrancaResponse.status}');
     print('✅ Sucesso: ${dasCobrancaResponse.sucesso}');
@@ -442,10 +442,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 10. Gerando DAS de Processo ---');
 
-    final dasProcessoResponse = await pgdasdService.gerarDasProcesso(
-      contribuinteNumero: '00000000000100',
-      request: GerarDasProcessoRequest(numeroProcesso: '00000000000000000'),
-    );
+    final dasProcessoResponse = await pgdasdService.gerarDasProcesso(contribuinteNumero: '00000000000100', numeroProcesso: '00000000000000000');
 
     print('✅ Status: ${dasProcessoResponse.status}');
     print('✅ Sucesso: ${dasProcessoResponse.sucesso}');
@@ -506,12 +503,14 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       ),
     ];
 
-    final dasAvulsoResponse = await pgdasdService.gerarDasAvulsoSimples(
-      cnpj: '00000000000100',
-      periodoApuracao: '202401',
-      listaTributos: listaTributos,
-      dataConsolidacao: '20251231', // Data futura para consolidação
-      prorrogacaoEspecial: 1, // Indicador de prorrogação especial
+    final dasAvulsoResponse = await pgdasdService.gerarDasAvulso(
+      contribuinteNumero: '00000000000100',
+      request: GerarDasAvulsoRequest(
+        periodoApuracao: '202401',
+        listaTributos: listaTributos,
+        dataConsolidacao: '20251231', // Data futura para consolidação
+        prorrogacaoEspecial: 1, // Indicador de prorrogação especial
+      ),
     );
 
     print('✅ Status: ${dasAvulsoResponse.status}');

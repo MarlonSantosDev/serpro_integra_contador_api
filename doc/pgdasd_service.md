@@ -89,14 +89,16 @@ try {
     ],
   );
 
-  final response = await pgdasdService.entregarDeclaracaoSimples(
-    cnpj: '00000000000100',
-    periodoApuracao: 202101,
-    declaracao: declaracao,
-    transmitir: true,
-    compararValores: true,
-    valoresParaComparacao: [
-      ValorDevido(codigoTributo: 1, valor: 1000.00),
+  final response = await pgdasdService.entregarDeclaracao(
+    contribuinteNumero: '00000000000100',
+    request: EntregarDeclaracaoRequest(
+      cnpjCompleto: '00000000000100',
+      pa: 202101,
+      indicadorTransmissao: true,
+      indicadorComparacao: true,
+      declaracao: declaracao,
+      valoresParaComparacao: [
+        ValorDevido(codigoTributo: 1, valor: 1000.00),
       ValorDevido(codigoTributo: 2, valor: 500.00),
     ],
   );
@@ -135,10 +137,12 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.gerarDasSimples(
-    cnpj: '00000000000100',
-    periodoApuracao: '202101',
-    // dataConsolidacao: '20220831', // Opcional
+  final response = await pgdasdService.gerarDas(
+    contribuinteNumero: '00000000000100',
+    request: GerarDasRequest(
+      periodoApuracao: '202101',
+      // dataConsolidacao: '20220831', // Opcional
+    ),
   );
 
   if (response.sucesso) {
@@ -167,9 +171,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.consultarDeclaracoesPorAno(
-    cnpj: '00000000000100',
-    anoCalendario: 2021,
+  final response = await pgdasdService.consultarDeclaracoes(
+    contribuinteNumero: '00000000000100',
+    request: ConsultarDeclaracoesRequest.porAnoCalendario('2021'),
   );
 
   if (response.sucesso) {
@@ -194,10 +198,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.consultarDeclaracoesPorPeriodo(
-    cnpj: '00000000000100',
-    periodoInicial: 202101,
-    periodoFinal: 202112,
+  final response = await pgdasdService.consultarDeclaracoes(
+    contribuinteNumero: '00000000000100',
+    request: ConsultarDeclaracoesRequest.porPeriodoApuracao('202101'),
   );
 
   if (response.sucesso) {
@@ -321,11 +324,14 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.gerarDasAvulsoSimples(
-    cnpj: '00000000000100',
-    periodoApuracao: '202301',
-    valorTotal: 1000.00,
-    dataVencimento: '20240315',
+  final response = await pgdasdService.gerarDasAvulso(
+    contribuinteNumero: '00000000000100',
+    request: GerarDasAvulsoRequest(
+      periodoApuracao: '202301',
+      listaTributos: [
+        TributoAvulso(codigoTributo: 1, valor: 1000.00),
+      ],
+    ),
   );
 
   if (response.sucesso) {
@@ -493,16 +499,19 @@ void main() async {
       ],
     );
 
-    final entregarResponse = await pgdasdService.entregarDeclaracaoSimples(
-      cnpj: cnpj,
-      periodoApuracao: periodoApuracao,
-      declaracao: declaracao,
-      transmitir: true,
-      compararValores: true,
-      valoresParaComparacao: [
-        ValorDevido(codigoTributo: 1, valor: 1000.00),
-        ValorDevido(codigoTributo: 2, valor: 500.00),
-      ],
+    final entregarResponse = await pgdasdService.entregarDeclaracao(
+      contribuinteNumero: cnpj,
+      request: EntregarDeclaracaoRequest(
+        cnpjCompleto: cnpj,
+        pa: periodoApuracao,
+        indicadorTransmissao: true,
+        indicadorComparacao: true,
+        declaracao: declaracao,
+        valoresParaComparacao: [
+          ValorDevido(codigoTributo: 1, valor: 1000.00),
+          ValorDevido(codigoTributo: 2, valor: 500.00),
+        ],
+      ),
     );
 
     if (entregarResponse.sucesso) {
@@ -514,9 +523,9 @@ void main() async {
       
       // 4. Gerar DAS
       print('\n=== Gerando DAS ===');
-      final dasResponse = await pgdasdService.gerarDasSimples(
-        cnpj: cnpj,
-        periodoApuracao: periodoApuracao.toString(),
+      final dasResponse = await pgdasdService.gerarDas(
+        contribuinteNumero: cnpj,
+        request: GerarDasRequest(periodoApuracao: periodoApuracao.toString()),
       );
 
       if (dasResponse.sucesso) {
@@ -538,9 +547,9 @@ void main() async {
       
       // 5. Consultar declarações do ano
       print('\n=== Consultando Declarações do Ano ===');
-      final consultarAnoResponse = await pgdasdService.consultarDeclaracoesPorAno(
-        cnpj: cnpj,
-        anoCalendario: 2021,
+      final consultarAnoResponse = await pgdasdService.consultarDeclaracoes(
+        contribuinteNumero: cnpj,
+        request: ConsultarDeclaracoesRequest.porAnoCalendario('2021'),
       );
 
       if (consultarAnoResponse.sucesso) {
@@ -617,9 +626,9 @@ void main() async {
   }
   
   // CNPJ e período válidos, prosseguir
-  final response = await pgdasdService.consultarDeclaracoesPorAno(
-    cnpj: cnpj,
-    anoCalendario: 2024,
+  final response = await pgdasdService.consultarDeclaracoes(
+    contribuinteNumero: cnpj,
+    request: ConsultarDeclaracoesRequest.porAnoCalendario('2024'),
   );
   
   if (response.sucesso) {
