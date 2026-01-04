@@ -1,14 +1,11 @@
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart'
-    as request_models;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart'
-    as response_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' as request_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' show Declaracao, ValorDevido;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart' as response_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart'
-    show GerarDasResponse;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart'
-    as gerar_das_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' show GerarDasResponse;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart' as gerar_das_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_response.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_ultima_declaracao_request.dart';
@@ -49,13 +46,16 @@ import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_d
 ///
 /// // Entregar declaração mensal
 /// final resultado = await pgdasdService.entregarDeclaracao(
-///   request: EntregarDeclaracaoRequest(...),
+///   cnpj: '12345678000100',
+///   periodoApuracao: 202504,
+///   declaracao: declaracao,
 /// );
 /// print('Número do recibo: ${resultado.numeroRecibo}');
 ///
 /// // Gerar DAS
 /// final das = await pgdasdService.gerarDas(
-///   request: GerarDasRequest(periodoApuracao: '012024'),
+///   contribuinteNumero: '12345678000100',
+///   periodoApuracao: '202504',
 /// );
 /// print('DAS Base64: ${das.pdfBase64}');
 /// ```
@@ -66,28 +66,51 @@ class PgdasdService {
 
   /// Entregar declaração mensal do Simples Nacional
   ///
-  /// [contribuinteNumero] CNPJ do contribuinte
-  /// [request] Dados da declaração a ser transmitida
+  /// [cnpj] CNPJ do contribuinte (14 dígitos sem formatação)
+  /// [periodoApuracao] Período de apuração da declaração (formato: AAAAMM, exemplo: 202504)
+  /// [declaracao] Objeto contendo os dados da declaração
+  /// [indicadorTransmissao] Indica se a declaração deve ser transmitida (padrão: true)
+  /// [indicadorComparacao] Indica se há necessidade de comparação dos valores (padrão: true)
+  /// [valoresParaComparacao] Valores para comparação com o valor apurado pelo sistema (opcional)
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
+  ///
+  /// Exemplo:
+  /// ```dart
+  /// final resultado = await pgdasdService.entregarDeclaracao(
+  ///   cnpj: '12345678000100',
+  ///   periodoApuracao: 202504,
+  ///   declaracao: declaracao,
+  ///   autorPedidoDadosNumero: '12345678000100',
+  /// );
+  /// ```
   Future<response_models.EntregarDeclaracaoResponse> entregarDeclaracao({
-    required String contribuinteNumero,
-    required request_models.EntregarDeclaracaoRequest request,
+    required String cnpj,
+    required int periodoApuracao,
+    required Declaracao declaracao,
+    bool indicadorTransmissao = true,
+    bool indicadorComparacao = true,
+    List<ValorDevido>? valoresParaComparacao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    // Construir request internamente de forma transparente
+    final request = request_models.EntregarDeclaracaoRequest(
+      cnpjCompleto: cnpj,
+      pa: periodoApuracao,
+      indicadorTransmissao: indicadorTransmissao,
+      indicadorComparacao: indicadorComparacao,
+      declaracao: declaracao,
+      valoresParaComparacao: valoresParaComparacao,
+    );
+
     if (!request.isValid && request.cnpjCompleto != '00000000000100') {
       throw ArgumentError('Dados da declaração inválidos');
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'TRANSDECLARACAO11',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      contribuinteNumero: cnpj,
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'TRANSDECLARACAO11', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -113,10 +136,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final dasRequest = GerarDasRequest(
-      periodoApuracao: periodoApuracao,
-      dataConsolidacao: dataConsolidacao,
-    );
+    final dasRequest = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
 
     if (!dasRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS inválidos');
@@ -124,12 +144,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDAS12',
-        versaoSistema: '1.0',
-        dados: dasRequest.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDAS12', versaoSistema: '1.0', dados: dasRequest.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -165,12 +180,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSDECLARACAO13',
-        versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECLARACAO13', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -194,9 +204,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final consultaRequest = ConsultarUltimaDeclaracaoRequest(
-      periodoApuracao: periodoApuracao,
-    );
+    final consultaRequest = ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao);
 
     if (!consultaRequest.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -233,9 +241,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final consultaRequest = ConsultarDeclaracaoNumeroRequest(
-      numeroDeclaracao: numeroDeclaracao,
-    );
+    final consultaRequest = ConsultarDeclaracaoNumeroRequest(numeroDeclaracao: numeroDeclaracao);
 
     if (!consultaRequest.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
@@ -243,12 +249,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSDECREC15',
-        versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECREC15', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -280,12 +281,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSEXTRATO16',
-        versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSEXTRATO16', versaoSistema: '1.0', dados: consultaRequest.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -309,9 +305,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final cobrancaRequest = GerarDasCobrancaRequest(
-      periodoApuracao: periodoApuracao,
-    );
+    final cobrancaRequest = GerarDasCobrancaRequest(periodoApuracao: periodoApuracao);
 
     if (!cobrancaRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS Cobrança inválidos');
@@ -348,9 +342,7 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final processoRequest = GerarDasProcessoRequest(
-      numeroProcesso: numeroProcesso,
-    );
+    final processoRequest = GerarDasProcessoRequest(numeroProcesso: numeroProcesso);
 
     if (!processoRequest.isValid) {
       throw ArgumentError('Dados para geração do DAS de Processo inválidos');
@@ -393,12 +385,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDASAVULSO19',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASAVULSO19', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -443,8 +430,7 @@ class PgdasdService {
   /// print('Número: ${resultado.dados?.numeroDeclaracao}');
   /// print('DAS Pago: ${resultado.dasPago ? "Sim" : "Não"}');
   /// ```
-  Future<ConsultarUltimaDeclaracaoComPagamentoResponse>
-  consultarUltimaDeclaracaoComPagamento({
+  Future<ConsultarUltimaDeclaracaoComPagamentoResponse> consultarUltimaDeclaracaoComPagamento({
     required String contribuinteNumero,
     required String periodoApuracao,
     String? contratanteNumero,
@@ -496,10 +482,7 @@ class PgdasdService {
     }
 
     // Passo 5: Criar resposta composta
-    return ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase(
-      baseResponse: ultimaDeclaracaoResponse,
-      dasPago: dasPago,
-    );
+    return ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase(baseResponse: ultimaDeclaracaoResponse, dasPago: dasPago);
   }
 
   /// Entregar declaração e gerar DAS automaticamente
@@ -511,8 +494,12 @@ class PgdasdService {
   /// 1. Transmite a declaração para a RFB
   /// 2. Se a declaração for bem-sucedida, gera o DAS automaticamente
   ///
-  /// [contribuinteNumero] CNPJ do contribuinte
-  /// [request] Dados da declaração a ser transmitida
+  /// [cnpj] CNPJ do contribuinte (14 dígitos sem formatação)
+  /// [periodoApuracao] Período de apuração da declaração (formato: AAAAMM, exemplo: 202504)
+  /// [declaracao] Objeto contendo os dados da declaração
+  /// [indicadorTransmissao] Indica se a declaração deve ser transmitida (padrão: true)
+  /// [indicadorComparacao] Indica se há necessidade de comparação dos valores (padrão: true)
+  /// [valoresParaComparacao] Valores para comparação com o valor apurado pelo sistema (opcional)
   /// [dataConsolidacao] Data de consolidação futura para o DAS (opcional, formato: AAAAMMDD)
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
@@ -535,13 +522,10 @@ class PgdasdService {
   /// Exemplo:
   /// ```dart
   /// final resultado = await pgdasdService.entregarDeclaracaoComDas(
-  ///   contribuinteNumero: '12345678000100',
-  ///   request: EntregarDeclaracaoRequest(
-  ///     cnpjCompleto: '12345678000100',
-  ///     pa: 202504,
-  ///     declaracao: declaracao,
-  ///     // ... outros campos
-  ///   ),
+  ///   cnpj: '12345678000100',
+  ///   periodoApuracao: 202504,
+  ///   declaracao: declaracao,
+  ///   autorPedidoDadosNumero: '12345678000100',
   /// );
   ///
   /// if (resultado.sucesso) {
@@ -556,16 +540,24 @@ class PgdasdService {
   /// }
   /// ```
   Future<EntregarDeclaracaoComDasResponse> entregarDeclaracaoComDas({
-    required String contribuinteNumero,
-    required request_models.EntregarDeclaracaoRequest request,
+    required String cnpj,
+    required int periodoApuracao,
+    required Declaracao declaracao,
+    bool indicadorTransmissao = true,
+    bool indicadorComparacao = true,
+    List<ValorDevido>? valoresParaComparacao,
     String? dataConsolidacao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    // Passo 1: Entregar declaração
+    // Passo 1: Entregar declaração usando o método refatorado
     final entregarResponse = await entregarDeclaracao(
-      contribuinteNumero: contribuinteNumero,
-      request: request,
+      cnpj: cnpj,
+      periodoApuracao: periodoApuracao,
+      declaracao: declaracao,
+      indicadorTransmissao: indicadorTransmissao,
+      indicadorComparacao: indicadorComparacao,
+      valoresParaComparacao: valoresParaComparacao,
       contratanteNumero: contratanteNumero,
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
@@ -573,19 +565,17 @@ class PgdasdService {
     // Passo 2: Verificar se a declaração foi bem-sucedida
     if (!entregarResponse.sucesso) {
       // Declaração falhou, retornar erro imediatamente
-      return EntregarDeclaracaoComDasResponse.fromDeclaracaoError(
-        declaracaoResponse: entregarResponse,
-      );
+      return EntregarDeclaracaoComDasResponse.fromDeclaracaoError(declaracaoResponse: entregarResponse);
     }
 
-    // Passo 3: Extrair período de apuração do request (int → String)
-    final periodoApuracao = request.pa.toString();
+    // Passo 3: Converter período de apuração (int → String)
+    final periodoApuracaoString = periodoApuracao.toString();
 
     // Passo 4: Tentar gerar DAS
     try {
       final gerarDasResponse = await gerarDas(
-        contribuinteNumero: contribuinteNumero,
-        periodoApuracao: periodoApuracao,
+        contribuinteNumero: cnpj,
+        periodoApuracao: periodoApuracaoString,
         dataConsolidacao: dataConsolidacao,
         contratanteNumero: contratanteNumero,
         autorPedidoDadosNumero: autorPedidoDadosNumero,
@@ -594,34 +584,20 @@ class PgdasdService {
       // Passo 5a: Verificar se DAS foi gerado com sucesso
       if (!gerarDasResponse.sucesso) {
         // DAS falhou, mas declaração foi entregue
-        return EntregarDeclaracaoComDasResponse.fromDasError(
-          declaracaoResponse: entregarResponse,
-          dasResponse: gerarDasResponse,
-        );
+        return EntregarDeclaracaoComDasResponse.fromDasError(declaracaoResponse: entregarResponse, dasResponse: gerarDasResponse);
       }
 
       // Passo 5b: Ambas operações bem-sucedidas
-      return EntregarDeclaracaoComDasResponse.fromResponses(
-        declaracaoResponse: entregarResponse,
-        dasResponse: gerarDasResponse,
-      );
+      return EntregarDeclaracaoComDasResponse.fromResponses(declaracaoResponse: entregarResponse, dasResponse: gerarDasResponse);
     } catch (e) {
       // DAS lançou exception, criar resposta de erro artificial
       final gerarDasResponseErro = GerarDasResponse(
         status: 500,
-        mensagens: [
-          gerar_das_models.Mensagem(
-            codigo: 'ERRO_GERACAO_DAS',
-            texto: 'Erro ao gerar DAS: ${e.toString()}',
-          ),
-        ],
+        mensagens: [gerar_das_models.Mensagem(codigo: 'ERRO_GERACAO_DAS', texto: 'Erro ao gerar DAS: ${e.toString()}')],
         dados: null,
       );
 
-      return EntregarDeclaracaoComDasResponse.fromDasError(
-        declaracaoResponse: entregarResponse,
-        dasResponse: gerarDasResponseErro,
-      );
+      return EntregarDeclaracaoComDasResponse.fromDasError(declaracaoResponse: entregarResponse, dasResponse: gerarDasResponseErro);
     }
   }
 }

@@ -1,3 +1,6 @@
+## [2.0.9] - 2026-01-04
+- Ajustes 
+
 ## [2.0.8] - 2026-01-04
 - ✨ **Métodos Compostos no PGDASD**: Novos métodos que combinam múltiplas operações em uma única chamada
   - `consultarUltimaDeclaracaoComPagamento()`: Consulta a última declaração e verifica automaticamente se o DAS foi pago
