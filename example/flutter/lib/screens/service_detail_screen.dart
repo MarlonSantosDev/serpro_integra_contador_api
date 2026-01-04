@@ -304,9 +304,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     final periodoApuracao = _getValue('periodoApuracao') ?? '201801';
 
     // Consultar última declaração (exemplo de pgdasd.dart)
-    final response = await service.consultarUltimaDeclaracaoPorPeriodo(
-      cnpj: cnpj,
-      periodoApuracao: periodoApuracao,
+    final response = await service.consultarUltimaDeclaracao(
+      contribuinteNumero: cnpj,
+      request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: periodoApuracao),
       contratanteNumero: _getValue('contratanteNumero') ?? '00000000000000',
       autorPedidoDadosNumero:
           _getValue('autorPedidoDadosNumero') ?? '00000000000000',

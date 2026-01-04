@@ -220,9 +220,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.consultarUltimaDeclaracaoPorPeriodo(
-    cnpj: '00000000000100',
-    periodoApuracao: 202101,
+  final response = await pgdasdService.consultarUltimaDeclaracao(
+    contribuinteNumero: '00000000000100',
+    request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: '202101'),
   );
 
   if (response.sucesso) {
@@ -243,9 +243,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.consultarExtratoDasSimples(
-    cnpj: '00000000000100',
-    periodoApuracao: '202101',
+  final response = await pgdasdService.consultarExtratoDas(
+    contribuinteNumero: '00000000000100',
+    request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
   );
 
   if (response.sucesso) {
@@ -270,9 +270,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.gerarDasCobrancaSimples(
-    cnpj: '00000000000100',
-    periodoApuracao: '202301',
+  final response = await pgdasdService.gerarDasCobranca(
+    contribuinteNumero: '00000000000100',
+    request: GerarDasCobrancaRequest(periodoApuracao: '202301'),
   );
 
   if (response.sucesso) {
@@ -300,9 +300,9 @@ try {
 
 ```dart
 try {
-  final response = await pgdasdService.gerarDasProcessoSimples(
-    cnpj: '00000000000100',
-    numeroProcesso: '00000000000000000',
+  final response = await pgdasdService.gerarDasProcesso(
+    contribuinteNumero: '00000000000100',
+    request: GerarDasProcessoRequest(numeroProcesso: '00000000000000000'),
   );
 
   if (response.sucesso) {
@@ -555,9 +555,9 @@ void main() async {
       
       // 6. Consultar extrato DAS
       print('\n=== Consultando Extrato DAS ===');
-      final extratoResponse = await pgdasdService.consultarExtratoDasSimples(
-        cnpj: cnpj,
-        periodoApuracao: periodoApuracao.toString(),
+      final extratoResponse = await pgdasdService.consultarExtratoDas(
+        contribuinteNumero: cnpj,
+        request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
       );
 
       if (extratoResponse.sucesso) {

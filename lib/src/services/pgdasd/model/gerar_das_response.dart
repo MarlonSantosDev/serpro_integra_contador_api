@@ -22,9 +22,7 @@ class GerarDasResponse {
     return {
       'status': status,
       'mensagens': mensagens.map((m) => m.toJson()).toList(),
-      'dados': dados != null
-          ? jsonEncode(dados!.map((d) => d.toJson()).toList())
-          : '',
+      'dados': dados != null ? jsonEncode(dados!.map((d) => d.toJson()).toList()) : '',
     };
   }
 
@@ -34,9 +32,7 @@ class GerarDasResponse {
       final dadosStr = json['dados']?.toString() ?? '';
       if (dadosStr.isNotEmpty) {
         final dadosList = jsonDecode(dadosStr) as List;
-        dadosParsed = dadosList
-            .map((d) => Das.fromJson(d as Map<String, dynamic>))
-            .toList();
+        dadosParsed = dadosList.map((d) => Das.fromJson(d as Map<String, dynamic>)).toList();
       }
     } catch (e) {
       // Se não conseguir fazer parse, mantém dados como null
@@ -44,9 +40,7 @@ class GerarDasResponse {
 
     return GerarDasResponse(
       status: int.parse(json['status'].toString()),
-      mensagens: (json['mensagens'] as List)
-          .map((m) => Mensagem.fromJson(m as Map<String, dynamic>))
-          .toList(),
+      mensagens: (json['mensagens'] as List).map((m) => Mensagem.fromJson(m as Map<String, dynamic>)).toList(),
       dados: dadosParsed,
     );
   }
@@ -67,10 +61,7 @@ class Mensagem {
   }
 
   factory Mensagem.fromJson(Map<String, dynamic> json) {
-    return Mensagem(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return Mensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 }
 
@@ -85,18 +76,10 @@ class Das {
   /// Detalhamento do DAS
   final DetalhamentoDas detalhamento;
 
-  Das({
-    required this.pdf,
-    required this.cnpjCompleto,
-    required this.detalhamento,
-  });
+  Das({required this.pdf, required this.cnpjCompleto, required this.detalhamento});
 
   Map<String, dynamic> toJson() {
-    return {
-      'pdf': pdf,
-      'cnpjCompleto': cnpjCompleto,
-      'detalhamento': detalhamento.toJson(),
-    };
+    return {'pdf': pdf, 'cnpjCompleto': cnpjCompleto, 'detalhamento': detalhamento.toJson()};
   }
 
   factory Das.fromJson(Map<String, dynamic> json) {
@@ -159,8 +142,7 @@ class DetalhamentoDas {
       if (observacao1 != null) 'observacao1': observacao1,
       if (observacao2 != null) 'observacao2': observacao2,
       if (observacao3 != null) 'observacao3': observacao3,
-      if (composicao != null)
-        'composicao': composicao!.map((c) => c.toJson()).toList(),
+      if (composicao != null) 'composicao': composicao!.map((c) => c.toJson()).toList(),
     };
   }
 
@@ -174,11 +156,7 @@ class DetalhamentoDas {
       observacao1: json['observacao1']?.toString(),
       observacao2: json['observacao2']?.toString(),
       observacao3: json['observacao3']?.toString(),
-      composicao: json['composicao'] != null
-          ? (json['composicao'] as List)
-                .map((c) => ComposicaoDas.fromJson(c))
-                .toList()
-          : null,
+      composicao: json['composicao'] != null ? (json['composicao'] as List).map((c) => ComposicaoDas.fromJson(c)).toList() : null,
     );
   }
 }
@@ -197,20 +175,10 @@ class ValoresDas {
   /// Valor total
   final double total;
 
-  ValoresDas({
-    required this.principal,
-    required this.multa,
-    required this.juros,
-    required this.total,
-  });
+  ValoresDas({required this.principal, required this.multa, required this.juros, required this.total});
 
   Map<String, dynamic> toJson() {
-    return {
-      'principal': principal,
-      'multa': multa,
-      'juros': juros,
-      'total': total,
-    };
+    return {'principal': principal, 'multa': multa, 'juros': juros, 'total': total};
   }
 
   factory ValoresDas.fromJson(Map<String, dynamic> json) {
@@ -237,20 +205,10 @@ class ComposicaoDas {
   /// Discriminação dos valores do tributo
   final ValoresDas valores;
 
-  ComposicaoDas({
-    required this.periodoApuracao,
-    required this.codigo,
-    required this.denominacao,
-    required this.valores,
-  });
+  ComposicaoDas({required this.periodoApuracao, required this.codigo, required this.denominacao, required this.valores});
 
   Map<String, dynamic> toJson() {
-    return {
-      'periodoApuracao': periodoApuracao,
-      'codigo': codigo,
-      'denominacao': denominacao,
-      'valores': valores.toJson(),
-    };
+    return {'periodoApuracao': periodoApuracao, 'codigo': codigo, 'denominacao': denominacao, 'valores': valores.toJson()};
   }
 
   factory ComposicaoDas.fromJson(Map<String, dynamic> json) {

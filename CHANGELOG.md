@@ -1,3 +1,6 @@
+## [2.0.8] - 2026-01-04
+- Ajueste do serviço PGDASD.
+
 ## [2.0.7] - 2025-12-22
 - dart format .
 

@@ -1,9 +1,7 @@
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart'
-    as request_models;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart'
-    as response_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' as request_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_response.dart' as response_models;
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_response.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/consultar_declaracoes_request.dart';
@@ -77,12 +75,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'TRANSDECLARACAO11',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'TRANSDECLARACAO11', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -112,12 +105,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDAS12',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDAS12', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -147,12 +135,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSDECLARACAO13',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECLARACAO13', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -182,12 +165,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSULTIMADECREC14',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSULTIMADECREC14', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -217,12 +195,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSDECREC15',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSDECREC15', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -252,12 +225,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'CONSEXTRATO16',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'CONSEXTRATO16', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -287,12 +255,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDASCOBRANCA17',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASCOBRANCA17', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -322,12 +285,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDASPROCESSO18',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASPROCESSO18', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -357,12 +315,7 @@ class PgdasdService {
 
     final baseRequest = BaseRequest(
       contribuinteNumero: contribuinteNumero,
-      pedidoDados: PedidoDados(
-        idSistema: 'PGDASD',
-        idServico: 'GERARDASAVULSO19',
-        versaoSistema: '1.0',
-        dados: request.toJson().toString(),
-      ),
+      pedidoDados: PedidoDados(idSistema: 'PGDASD', idServico: 'GERARDASAVULSO19', versaoSistema: '1.0', dados: request.toJson().toString()),
     );
 
     final response = await _apiClient.post(
@@ -425,17 +378,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = GerarDasRequest(
-      periodoApuracao: periodoApuracao,
-      dataConsolidacao: dataConsolidacao,
-    );
+    final request = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
 
-    return gerarDas(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
+    return gerarDas(contribuinteNumero: cnpj, request: request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
   }
 
   /// Consultar declarações por ano-calendário
@@ -472,127 +417,9 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final request = ConsultarDeclaracoesRequest.porPeriodoApuracao(
-      periodoApuracao,
-    );
+    final request = ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao);
 
     return consultarDeclaracoes(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Consultar última declaração por período
-  ///
-  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
-  /// [periodoApuracao] Período de apuração (formato: AAAAMM)
-  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
-  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
-  Future<ConsultarUltimaDeclaracaoResponse>
-  consultarUltimaDeclaracaoPorPeriodo({
-    required String cnpj,
-    required String periodoApuracao,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    final request = ConsultarUltimaDeclaracaoRequest(
-      periodoApuracao: periodoApuracao,
-    );
-
-    return consultarUltimaDeclaracao(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Consultar declaração por número
-  ///
-  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
-  /// [numeroDeclaracao] Número da declaração (17 dígitos)
-  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
-  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
-  Future<ConsultarDeclaracaoNumeroResponse>
-  consultarDeclaracaoPorNumeroSimples({
-    required String cnpj,
-    required String numeroDeclaracao,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    final request = ConsultarDeclaracaoNumeroRequest(
-      numeroDeclaracao: numeroDeclaracao,
-    );
-
-    return consultarDeclaracaoPorNumero(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Consultar extrato do DAS
-  ///
-  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
-  /// [numeroDas] Número do DAS (17 dígitos)
-  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
-  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
-  Future<ConsultarExtratoDasResponse> consultarExtratoDasSimples({
-    required String cnpj,
-    required String numeroDas,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    final request = ConsultarExtratoDasRequest(numeroDas: numeroDas);
-
-    return consultarExtratoDas(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Gerar DAS Cobrança com dados simplificados
-  ///
-  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
-  /// [periodoApuracao] Período de apuração (formato: AAAAMM)
-  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
-  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
-  Future<GerarDasCobrancaResponse> gerarDasCobrancaSimples({
-    required String cnpj,
-    required String periodoApuracao,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    final request = GerarDasCobrancaRequest(periodoApuracao: periodoApuracao);
-
-    return gerarDasCobranca(
-      contribuinteNumero: cnpj,
-      request: request,
-      contratanteNumero: contratanteNumero,
-      autorPedidoDadosNumero: autorPedidoDadosNumero,
-    );
-  }
-
-  /// Gerar DAS de Processo com dados simplificados
-  ///
-  /// [cnpj] CNPJ do contribuinte (usado para contratante, autor e contribuinte)
-  /// [numeroProcesso] Número do processo (17 dígitos)
-  /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
-  /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
-  Future<GerarDasProcessoResponse> gerarDasProcessoSimples({
-    required String cnpj,
-    required String numeroProcesso,
-    String? contratanteNumero,
-    String? autorPedidoDadosNumero,
-  }) async {
-    final request = GerarDasProcessoRequest(numeroProcesso: numeroProcesso);
-
-    return gerarDasProcesso(
       contribuinteNumero: cnpj,
       request: request,
       contratanteNumero: contratanteNumero,

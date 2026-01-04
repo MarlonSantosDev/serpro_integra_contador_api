@@ -1,8 +1,6 @@
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart'
-    as pgdasd_models;
-import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_avulso_request.dart'
-    as pgdasd_avulso_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart' as pgdasd_models;
+import 'package:serpro_integra_contador_api/src/services/pgdasd/model/gerar_das_avulso_request.dart' as pgdasd_avulso_models;
 
 Future<void> Pgdasd(ApiClient apiClient) async {
   print('=== Exemplos PGDASD ===');
@@ -29,21 +27,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
               receitasAtividade: [
                 pgdasd_models.ReceitaAtividade(
                   valor: 60000.00,
-                  isencoes: [
-                    pgdasd_models.Isencao(
-                      codTributo: 1,
-                      valor: 1000.00,
-                      identificador: 1,
-                    ),
-                  ],
-                  reducoes: [
-                    pgdasd_models.Reducao(
-                      codTributo: 1,
-                      valor: 500.00,
-                      percentualReducao: 5.0,
-                      identificador: 1,
-                    ),
-                  ],
+                  isencoes: [pgdasd_models.Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
+                  reducoes: [pgdasd_models.Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
                 ),
               ],
             ),
@@ -68,55 +53,25 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('✅ Sucesso: ${entregarResponse.sucesso}');
 
     if (entregarResponse.dados != null) {
-      print(
-        "Mensagens: ${entregarResponse.mensagens.map((m) => m.toJson()).toList()}",
-      );
+      print("Mensagens: ${entregarResponse.mensagens.map((m) => m.toJson()).toList()}");
       print("idDeclaracao: ${entregarResponse.dados!.idDeclaracao}.");
-      print(
-        "dataHoraTransmissao: ${entregarResponse.dados!.dataHoraTransmissao}",
-      );
-      print(
-        "valoresDevidos: ${entregarResponse.dados!.valoresDevidos.map((v) => v.toJson()).toList()}",
-      );
-      print(
-        "total valoresDevidos: ${entregarResponse.dados!.valorTotalDevido}",
-      );
+      print("dataHoraTransmissao: ${entregarResponse.dados!.dataHoraTransmissao}");
+      print("valoresDevidos: ${entregarResponse.dados!.valoresDevidos.map((v) => v.toJson()).toList()}");
+      print("total valoresDevidos: ${entregarResponse.dados!.valorTotalDevido}");
       print("declaracao: ${entregarResponse.dados!.declaracao.isEmpty}");
       print("recibo: ${entregarResponse.dados!.recibo.isEmpty}");
-      print(
-        "notificacaoMaed: ${entregarResponse.dados!.notificacaoMaed!.isEmpty}",
-      );
+      print("notificacaoMaed: ${entregarResponse.dados!.notificacaoMaed!.isEmpty}");
       print("darf: ${entregarResponse.dados!.darf!.isEmpty}");
-      print(
-        "detalhamentoDarfMaed: ${entregarResponse.dados!.detalhamentoDarfMaed != null}",
-      );
-      print(
-        "detalhamentoDarfMaed.periodoApuracao: ${entregarResponse.dados!.detalhamentoDarfMaed!.periodoApuracao}",
-      );
-      print(
-        "detalhamentoDarfMaed.numeroDocumento: ${entregarResponse.dados!.detalhamentoDarfMaed?.numeroDocumento}",
-      );
-      print(
-        "detalhamentoDarfMaed.dataVencimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataVencimento}",
-      );
-      print(
-        "detalhamentoDarfMaed.dataLimiteAcolhimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataLimiteAcolhimento}",
-      );
-      print(
-        "detalhamentoDarfMaed.valores: ${entregarResponse.dados!.detalhamentoDarfMaed?.valores.toJson()}",
-      );
-      print(
-        "detalhamentoDarfMaed.observacao1: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao1}",
-      );
-      print(
-        "detalhamentoDarfMaed.observacao2: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao2}",
-      );
-      print(
-        "detalhamentoDarfMaed.observacao3: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao3}",
-      );
-      print(
-        "detalhamentoDarfMaed.composicao: ${entregarResponse.dados!.detalhamentoDarfMaed?.composicao}\n\n",
-      );
+      print("detalhamentoDarfMaed: ${entregarResponse.dados!.detalhamentoDarfMaed != null}");
+      print("detalhamentoDarfMaed.periodoApuracao: ${entregarResponse.dados!.detalhamentoDarfMaed!.periodoApuracao}");
+      print("detalhamentoDarfMaed.numeroDocumento: ${entregarResponse.dados!.detalhamentoDarfMaed?.numeroDocumento}");
+      print("detalhamentoDarfMaed.dataVencimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataVencimento}");
+      print("detalhamentoDarfMaed.dataLimiteAcolhimento: ${entregarResponse.dados!.detalhamentoDarfMaed?.dataLimiteAcolhimento}");
+      print("detalhamentoDarfMaed.valores: ${entregarResponse.dados!.detalhamentoDarfMaed?.valores.toJson()}");
+      print("detalhamentoDarfMaed.observacao1: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao1}");
+      print("detalhamentoDarfMaed.observacao2: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao2}");
+      print("detalhamentoDarfMaed.observacao3: ${entregarResponse.dados!.detalhamentoDarfMaed?.observacao3}");
+      print("detalhamentoDarfMaed.composicao: ${entregarResponse.dados!.detalhamentoDarfMaed?.composicao}\n\n");
     }
   } catch (e) {
     print('❌ Erro ao entregar declaração mensal: $e');
@@ -143,53 +98,40 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${das.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${das.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${das.detalhamento.dataVencimento}');
-      print(
-        '📅 Data Limite Acolhimento: ${das.detalhamento.dataLimiteAcolhimento}',
-      );
-      print(
-        '💰 Valor Total: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}',
-      );
+      print('📅 Data Limite Acolhimento: ${das.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${das.pdf.isNotEmpty}');
 
       // Salvar PDF em arquivo
       if (das.pdf.isNotEmpty) {
-        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-          das.pdf,
-          'das_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
-        );
+        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(das.pdf, 'das_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('PDF salvo em arquivo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
       }
 
       // Detalhamento dos valores
       print('\n📊 Composição dos Valores:');
-      print(
-        '  💰 Principal: R\$ ${das.detalhamento.valores.principal.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Multa: R\$ ${das.detalhamento.valores.multa.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Juros: R\$ ${das.detalhamento.valores.juros.toStringAsFixed(2)}',
-      );
+      print('  💰 Principal: R\$ ${das.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${das.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${das.detalhamento.valores.juros.toStringAsFixed(2)}');
 
       // Composição por tributo se disponível
-      if (das.detalhamento.composicao != null &&
-          das.detalhamento.composicao!.isNotEmpty) {
+      if (das.detalhamento.composicao != null && das.detalhamento.composicao!.isNotEmpty) {
         print('\n📋 Composição por Tributo:');
         for (final composicao in das.detalhamento.composicao!) {
-          print(
-            '  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}',
-          );
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
         }
       }
 
       // Observações se houver
-      if (das.detalhamento.observacao1 != null)
+      if (das.detalhamento.observacao1 != null) {
         print('📝 Observação 1: ${das.detalhamento.observacao1}');
-      if (das.detalhamento.observacao2 != null)
+      }
+      if (das.detalhamento.observacao2 != null) {
         print('📝 Observação 2: ${das.detalhamento.observacao2}');
-      if (das.detalhamento.observacao3 != null)
+      }
+      if (das.detalhamento.observacao3 != null) {
         print('📝 Observação 3: ${das.detalhamento.observacao3}');
+      }
     }
   } catch (e) {
     print('❌ Erro ao gerar DAS: $e');
@@ -222,25 +164,15 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
         for (final operacao in periodo.operacoes.take(2)) {
           print('    ${operacao.tipoOperacao}');
-          if (operacao.isDeclaracao) {
-            print(
-              '      📄 Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}',
-            );
-            print(
-              '      🔍 Malha: ${operacao.indiceDeclaracao!.malha ?? 'Não está em malha'}',
-            );
-            print(
-              '      📅 Transmissão: ${operacao.indiceDeclaracao!.dataHoraTransmissao}',
-            );
+          if (operacao.indiceDeclaracao != null) {
+            print('      📄 Número: ${operacao.indiceDeclaracao!.numeroDeclaracao}');
+            print('      🔍 Malha: ${operacao.indiceDeclaracao!.malha}');
+            print('      📅 Transmissão: ${operacao.indiceDeclaracao!.dataHoraTransmissao}');
           }
-          if (operacao.isDas) {
+          if (operacao.indiceDas != null) {
             print('      💰 DAS: ${operacao.indiceDas!.numeroDas}');
-            print(
-              '      ✅ Pago: ${operacao.indiceDas!.foiPago ? 'Sim' : 'Não'}',
-            );
-            print(
-              '      📅 Emissão: ${operacao.indiceDas!.dataHoraEmissaoDas}',
-            );
+            print('      ✅ Pago: ${operacao.indiceDas!.dasPago ? 'Sim' : 'Não'}');
+            print('      📅 Emissão: ${operacao.indiceDas!.dataHoraEmissaoDas}');
           }
         }
       }
@@ -255,13 +187,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 4. Consultando Declarações por Período ---');
 
-    final consultarPeriodoResponse = await pgdasdService
-        .consultarDeclaracoesPorPeriodo(
-          cnpj: '00000000000000',
-          periodoApuracao: '201801',
-          contratanteNumero: '00000000000000',
-          autorPedidoDadosNumero: '00000000000000',
-        );
+    final consultarPeriodoResponse = await pgdasdService.consultarDeclaracoesPorPeriodo(
+      cnpj: '00000000000000',
+      periodoApuracao: '201801',
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${consultarPeriodoResponse.status}');
     print('✅ Sucesso: ${consultarPeriodoResponse.sucesso}');
@@ -281,13 +212,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 5. Consultando Última Declaração ---');
 
-    final ultimaDeclaracaoResponse = await pgdasdService
-        .consultarUltimaDeclaracaoPorPeriodo(
-          cnpj: '00000000000000',
-          periodoApuracao: '201801',
-          contratanteNumero: '00000000000000',
-          autorPedidoDadosNumero: '00000000000000',
-        );
+    final ultimaDeclaracaoResponse = await pgdasdService.consultarUltimaDeclaracao(
+      contribuinteNumero: '00000000000000',
+      request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: '201801'),
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${ultimaDeclaracaoResponse.status}');
     print('✅ Sucesso: ${ultimaDeclaracaoResponse.sucesso}');
@@ -296,16 +226,11 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       final declaracao = ultimaDeclaracaoResponse.dados!;
       print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
       print('📄 Recibo disponível: ${declaracao.recibo.pdf.isNotEmpty}');
-      print(
-        '📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}',
-      );
+      print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
 
       // Salvar PDFs em arquivo
       if (declaracao.recibo.pdf.isNotEmpty) {
-        final sucessoRecibo = await ArquivoUtils.salvarArquivo(
-          declaracao.recibo.pdf,
-          'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
-        );
+        final sucessoRecibo = await ArquivoUtils.salvarArquivo(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
       }
 
@@ -314,16 +239,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
           declaracao.declaracao.pdf,
           'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
-        print(
-          'Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}',
-        );
+        print('Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}');
       }
       print('📋 Tem MAED: ${declaracao.temMaed}');
 
       if (declaracao.temMaed) {
-        print(
-          '  📋 Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}',
-        );
+        print('  📋 Notificação MAED: ${declaracao.maed!.pdfNotificacao.isNotEmpty}');
         print('  💰 DARF MAED: ${declaracao.maed!.pdfDarf.isNotEmpty}');
 
         // Salvar PDFs MAED em arquivo
@@ -332,19 +253,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
             declaracao.maed!.pdfNotificacao,
             'notificacao_maed_${DateTime.now().millisecondsSinceEpoch}.pdf',
           );
-          print(
-            '  Notificação MAED PDF salvo em arquivo: ${sucessoNotificacao ? 'Sim' : 'Não'}',
-          );
+          print('  Notificação MAED PDF salvo em arquivo: ${sucessoNotificacao ? 'Sim' : 'Não'}');
         }
 
         if (declaracao.maed!.pdfDarf.isNotEmpty) {
-          final sucessoDarf = await ArquivoUtils.salvarArquivo(
-            declaracao.maed!.pdfDarf,
-            'darf_maed_${DateTime.now().millisecondsSinceEpoch}.pdf',
-          );
-          print(
-            '  DARF MAED PDF salvo em arquivo: ${sucessoDarf ? 'Sim' : 'Não'}',
-          );
+          final sucessoDarf = await ArquivoUtils.salvarArquivo(declaracao.maed!.pdfDarf, 'darf_maed_${DateTime.now().millisecondsSinceEpoch}.pdf');
+          print('  DARF MAED PDF salvo em arquivo: ${sucessoDarf ? 'Sim' : 'Não'}');
         }
       }
     }
@@ -358,13 +272,12 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 6. Consultando Declaração por Número ---');
 
-    final declaracaoNumeroResponse = await pgdasdService
-        .consultarDeclaracaoPorNumeroSimples(
-          cnpj: '00000000000000',
-          contratanteNumero: '00000000000000',
-          autorPedidoDadosNumero: '00000000000000',
-          numeroDeclaracao: '00000000201801001',
-        );
+    final declaracaoNumeroResponse = await pgdasdService.consultarDeclaracaoPorNumero(
+      contribuinteNumero: '00000000000000',
+      request: ConsultarDeclaracaoNumeroRequest(numeroDeclaracao: '00000000201801001'),
+      contratanteNumero: '00000000000000',
+      autorPedidoDadosNumero: '00000000000000',
+    );
 
     print('✅ Status: ${declaracaoNumeroResponse.status}');
     print('✅ Sucesso: ${declaracaoNumeroResponse.sucesso}');
@@ -374,16 +287,11 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📄 Número Declaração: ${declaracao.numeroDeclaracao}');
       print('📄 Nome do arquivo: ${declaracao.declaracao.nomeArquivo}');
       print('📄 Arquivo Recibo: ${declaracao.recibo.pdf.isNotEmpty}');
-      print(
-        '📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}',
-      );
+      print('📄 Declaração disponível: ${declaracao.declaracao.pdf.isNotEmpty}');
 
       // Salvar PDFs em arquivo
       if (declaracao.recibo.pdf.isNotEmpty) {
-        final sucessoRecibo = await ArquivoUtils.salvarArquivo(
-          declaracao.recibo.pdf,
-          'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
-        );
+        final sucessoRecibo = await ArquivoUtils.salvarArquivo(declaracao.recibo.pdf, 'recibo_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf');
         print('Recibo PDF salvo em arquivo: ${sucessoRecibo ? 'Sim' : 'Não'}');
       }
 
@@ -392,9 +300,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
           declaracao.declaracao.pdf,
           'declaracao_pgdasd_${DateTime.now().millisecondsSinceEpoch}.pdf',
         );
-        print(
-          'Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}',
-        );
+        print('Declaração PDF salvo em arquivo: ${sucessoDeclaracao ? 'Sim' : 'Não'}');
       }
       print('📋 Tem MAED: ${declaracao.temMaed}');
     }
@@ -408,9 +314,9 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 7. Consultando Extrato do DAS ---');
 
-    final extratoDasResponse = await pgdasdService.consultarExtratoDasSimples(
-      cnpj: '00000000000000',
-      numeroDas: '07202136999997159',
+    final extratoDasResponse = await pgdasdService.consultarExtratoDas(
+      contribuinteNumero: '00000000000000',
+      request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
       contratanteNumero: '00000000000000',
       autorPedidoDadosNumero: '00000000000000',
     );
@@ -420,9 +326,7 @@ Future<void> Pgdasd(ApiClient apiClient) async {
 
     if (extratoDasResponse.dados.extrato.pdf.isNotEmpty) {
       print('✅ Número do DAS: ${extratoDasResponse.dados.numeroDas}');
-      print(
-        '✅ Nome do arquivo: ${extratoDasResponse.dados.extrato.nomeArquivo}',
-      );
+      print('✅ Nome do arquivo: ${extratoDasResponse.dados.extrato.nomeArquivo}');
       print('✅ PDF: ${extratoDasResponse.dados.extrato.pdf.isNotEmpty}');
     }
   } catch (e) {
@@ -440,21 +344,10 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       receitaPaCompetenciaInterno: 100000.00,
       receitaPaCompetenciaExterno: 20000.00,
       receitasBrutasAnteriores: [
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202012,
-          valorInterno: 80000.00,
-          valorExterno: 15000.00,
-        ),
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202011,
-          valorInterno: 75000.00,
-          valorExterno: 12000.00,
-        ),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
       ],
-      folhasSalario: [
-        pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00),
-        pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00),
-      ],
+      folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
       estabelecimentos: [
         pgdasd_models.Estabelecimento(
           cnpjCompleto: '00000000000100',
@@ -466,14 +359,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
                 pgdasd_models.ReceitaAtividade(
                   valor: 120000.00,
                   qualificacoesTributarias: [
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 1,
-                      id: 1,
-                    ),
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 2,
-                      id: 2,
-                    ),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
                   ],
                   exigibilidadesSuspensas: [
                     pgdasd_models.ExigibilidadeSuspensa(
@@ -494,18 +381,10 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     );
 
     print('✅ Declaração complexa criada com:');
-    print(
-      '📅 - Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos',
-    );
-    print(
-      '💰 - Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos',
-    );
-    print(
-      '🏢 - Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}',
-    );
-    print(
-      '💼 - Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}',
-    );
+    print('📅 - Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
+    print('💰 - Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
+    print('🏢 - Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
+    print('💼 - Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
     print(
       '🏷️ - Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
     );
@@ -521,9 +400,9 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 9. Gerando DAS Cobrança ---');
 
-    final dasCobrancaResponse = await pgdasdService.gerarDasCobrancaSimples(
-      cnpj: '00000000000100',
-      periodoApuracao: '202301',
+    final dasCobrancaResponse = await pgdasdService.gerarDasCobranca(
+      contribuinteNumero: '00000000000100',
+      request: GerarDasCobrancaRequest(periodoApuracao: '202301'),
     );
 
     print('✅ Status: ${dasCobrancaResponse.status}');
@@ -535,34 +414,21 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${dasCobranca.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasCobranca.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${dasCobranca.detalhamento.dataVencimento}');
-      print(
-        '📅 Data Limite Acolhimento: ${dasCobranca.detalhamento.dataLimiteAcolhimento}',
-      );
-      print(
-        '💰 Valor Total: R\$ ${dasCobranca.detalhamento.valores.total.toStringAsFixed(2)}',
-      );
+      print('📅 Data Limite Acolhimento: ${dasCobranca.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${dasCobranca.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasCobranca.pdf.isNotEmpty}');
 
       // Detalhamento dos valores
       print('\n📊 Composição dos Valores:');
-      print(
-        '  💰 Principal: R\$ ${dasCobranca.detalhamento.valores.principal.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Multa: R\$ ${dasCobranca.detalhamento.valores.multa.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Juros: R\$ ${dasCobranca.detalhamento.valores.juros.toStringAsFixed(2)}',
-      );
+      print('  💰 Principal: R\$ ${dasCobranca.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasCobranca.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasCobranca.detalhamento.valores.juros.toStringAsFixed(2)}');
 
       // Composição por tributo se disponível
-      if (dasCobranca.detalhamento.composicao != null &&
-          dasCobranca.detalhamento.composicao!.isNotEmpty) {
+      if (dasCobranca.detalhamento.composicao != null && dasCobranca.detalhamento.composicao!.isNotEmpty) {
         print('\n📋 Composição por Tributo:');
         for (final composicao in dasCobranca.detalhamento.composicao!) {
-          print(
-            '  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}',
-          );
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
         }
       }
     }
@@ -576,9 +442,9 @@ Future<void> Pgdasd(ApiClient apiClient) async {
   try {
     print('\n--- 10. Gerando DAS de Processo ---');
 
-    final dasProcessoResponse = await pgdasdService.gerarDasProcessoSimples(
-      cnpj: '00000000000100',
-      numeroProcesso: '00000000000000000',
+    final dasProcessoResponse = await pgdasdService.gerarDasProcesso(
+      contribuinteNumero: '00000000000100',
+      request: GerarDasProcessoRequest(numeroProcesso: '00000000000000000'),
     );
 
     print('✅ Status: ${dasProcessoResponse.status}');
@@ -592,37 +458,22 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       if (dasProcesso.detalhamento.dataVencimento != null) {
         print('📅 Data Vencimento: ${dasProcesso.detalhamento.dataVencimento}');
       }
-      print(
-        '📅 Data Limite Acolhimento: ${dasProcesso.detalhamento.dataLimiteAcolhimento}',
-      );
-      print(
-        '💰 Valor Total: R\$ ${dasProcesso.detalhamento.valores.total.toStringAsFixed(2)}',
-      );
+      print('📅 Data Limite Acolhimento: ${dasProcesso.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${dasProcesso.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasProcesso.pdf.isNotEmpty}');
-      print(
-        '🔄 Múltiplos Períodos: ${dasProcesso.detalhamento.temMultiplosPeriodos ? 'Sim' : 'Não'}',
-      );
+      print('🔄 Múltiplos Períodos: ${dasProcesso.detalhamento.temMultiplosPeriodos ? 'Sim' : 'Não'}');
 
       // Detalhamento dos valores
       print('\n📊 Composição dos Valores:');
-      print(
-        '  💰 Principal: R\$ ${dasProcesso.detalhamento.valores.principal.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Multa: R\$ ${dasProcesso.detalhamento.valores.multa.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Juros: R\$ ${dasProcesso.detalhamento.valores.juros.toStringAsFixed(2)}',
-      );
+      print('  💰 Principal: R\$ ${dasProcesso.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasProcesso.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasProcesso.detalhamento.valores.juros.toStringAsFixed(2)}');
 
       // Composição por tributo se disponível
-      if (dasProcesso.detalhamento.composicao != null &&
-          dasProcesso.detalhamento.composicao!.isNotEmpty) {
+      if (dasProcesso.detalhamento.composicao != null && dasProcesso.detalhamento.composicao!.isNotEmpty) {
         print('\n📋 Composição por Tributo:');
         for (final composicao in dasProcesso.detalhamento.composicao!) {
-          print(
-            '  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}',
-          );
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
         }
       }
     }
@@ -672,35 +523,21 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print('📅 Período: ${dasAvulso.detalhamento.periodoApuracao}');
       print('📄 Número Documento: ${dasAvulso.detalhamento.numeroDocumento}');
       print('📅 Data Vencimento: ${dasAvulso.detalhamento.dataVencimento}');
-      print(
-        '📅 Data Limite Acolhimento: ${dasAvulso.detalhamento.dataLimiteAcolhimento}',
-      );
-      print(
-        '💰 Valor Total: R\$ ${dasAvulso.detalhamento.valores.total.toStringAsFixed(2)}',
-      );
+      print('📅 Data Limite Acolhimento: ${dasAvulso.detalhamento.dataLimiteAcolhimento}');
+      print('💰 Valor Total: R\$ ${dasAvulso.detalhamento.valores.total.toStringAsFixed(2)}');
       print('📄 PDF disponível: ${dasAvulso.pdf.isNotEmpty}');
-      print(
-        '📋 Composição: ${dasAvulso.detalhamento.composicao?.length ?? 0} tributos',
-      );
+      print('📋 Composição: ${dasAvulso.detalhamento.composicao?.length ?? 0} tributos');
 
       // Detalhamento dos valores
       print('\n📊 Composição dos Valores:');
-      print(
-        '  💰 Principal: R\$ ${dasAvulso.detalhamento.valores.principal.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Multa: R\$ ${dasAvulso.detalhamento.valores.multa.toStringAsFixed(2)}',
-      );
-      print(
-        '  💰 Juros: R\$ ${dasAvulso.detalhamento.valores.juros.toStringAsFixed(2)}',
-      );
+      print('  💰 Principal: R\$ ${dasAvulso.detalhamento.valores.principal.toStringAsFixed(2)}');
+      print('  💰 Multa: R\$ ${dasAvulso.detalhamento.valores.multa.toStringAsFixed(2)}');
+      print('  💰 Juros: R\$ ${dasAvulso.detalhamento.valores.juros.toStringAsFixed(2)}');
 
       if (dasAvulso.detalhamento.composicao != null) {
         print('\n📋 Composição por Tributo:');
         for (final composicao in dasAvulso.detalhamento.composicao!.take(3)) {
-          print(
-            '  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}',
-          );
+          print('  • ${composicao.denominacao} (${composicao.codigo}): R\$ ${composicao.valores.total.toStringAsFixed(2)}');
         }
       }
     }
@@ -719,21 +556,10 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       receitaPaCompetenciaInterno: 100000.00,
       receitaPaCompetenciaExterno: 20000.00,
       receitasBrutasAnteriores: [
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202012,
-          valorInterno: 80000.00,
-          valorExterno: 15000.00,
-        ),
-        pgdasd_models.ReceitaBrutaAnterior(
-          pa: 202011,
-          valorInterno: 75000.00,
-          valorExterno: 12000.00,
-        ),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202012, valorInterno: 80000.00, valorExterno: 15000.00),
+        pgdasd_models.ReceitaBrutaAnterior(pa: 202011, valorInterno: 75000.00, valorExterno: 12000.00),
       ],
-      folhasSalario: [
-        pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00),
-        pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00),
-      ],
+      folhasSalario: [pgdasd_models.FolhaSalario(pa: 202012, valor: 5000.00), pgdasd_models.FolhaSalario(pa: 202011, valor: 4800.00)],
       estabelecimentos: [
         pgdasd_models.Estabelecimento(
           cnpjCompleto: '00000000000100',
@@ -745,14 +571,8 @@ Future<void> Pgdasd(ApiClient apiClient) async {
                 pgdasd_models.ReceitaAtividade(
                   valor: 120000.00,
                   qualificacoesTributarias: [
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 1,
-                      id: 1,
-                    ),
-                    pgdasd_models.QualificacaoTributaria(
-                      codigoTributo: 2,
-                      id: 2,
-                    ),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 1, id: 1),
+                    pgdasd_models.QualificacaoTributaria(codigoTributo: 2, id: 2),
                   ],
                   exigibilidadesSuspensas: [
                     pgdasd_models.ExigibilidadeSuspensa(
@@ -773,18 +593,10 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     );
 
     print('✅ Declaração complexa criada com:');
-    print(
-      '📅 - Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos',
-    );
-    print(
-      '💰 - Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos',
-    );
-    print(
-      '🏢 - Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}',
-    );
-    print(
-      '💼 - Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}',
-    );
+    print('📅 - Receitas brutas anteriores: ${declaracaoComplexa.receitasBrutasAnteriores!.length} períodos');
+    print('💰 - Folhas de salário: ${declaracaoComplexa.folhasSalario!.length} períodos');
+    print('🏢 - Estabelecimentos: ${declaracaoComplexa.estabelecimentos.length}');
+    print('💼 - Atividades: ${declaracaoComplexa.estabelecimentos.first.atividades!.length}');
     print(
       '🏷️ - Qualificações tributárias: ${declaracaoComplexa.estabelecimentos.first.atividades!.first.receitasAtividade.first.qualificacoesTributarias!.length}',
     );
