@@ -38,7 +38,9 @@
       "Bash(mkdir:*)",
       "Bash(python:*)",
       "Bash(python -c:*)",
-      "Bash(dart format:*)"
+      "Bash(dart format:*)",
+      "Bash(timeout 30 dart:*)",
+      "Bash(openssl req:*)"
     ],
     "deny": [],
     "ask": []
