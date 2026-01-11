@@ -1,3 +1,6 @@
+## [2.0.10] - 2026-01-10
+- Ajustes e correções no código.
+
 ## [2.0.9] - 2026-01-04
 - Ajustes 
 

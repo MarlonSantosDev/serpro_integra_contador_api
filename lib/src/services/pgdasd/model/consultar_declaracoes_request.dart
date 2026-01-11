@@ -17,7 +17,9 @@ class ConsultarDeclaracoesRequest {
   }
 
   /// Construtor para consulta por período de apuração
-  factory ConsultarDeclaracoesRequest.porPeriodoApuracao(String periodoApuracao) {
+  factory ConsultarDeclaracoesRequest.porPeriodoApuracao(
+    String periodoApuracao,
+  ) {
     return ConsultarDeclaracoesRequest(periodoApuracao: periodoApuracao);
   }
 
@@ -53,7 +55,8 @@ class ConsultarDeclaracoesRequest {
 
   /// Valida se pelo menos um parâmetro foi informado
   bool get temParametro {
-    return (anoCalendario != null && anoCalendario!.isNotEmpty) || (periodoApuracao != null && periodoApuracao!.isNotEmpty);
+    return (anoCalendario != null && anoCalendario!.isNotEmpty) ||
+        (periodoApuracao != null && periodoApuracao!.isNotEmpty);
   }
 
   /// Valida se todos os campos estão corretos
@@ -88,6 +91,9 @@ class ConsultarDeclaracoesRequest {
   }
 
   factory ConsultarDeclaracoesRequest.fromJson(Map<String, dynamic> json) {
-    return ConsultarDeclaracoesRequest(anoCalendario: json['anoCalendario']?.toString(), periodoApuracao: json['periodoApuracao']?.toString());
+    return ConsultarDeclaracoesRequest(
+      anoCalendario: json['anoCalendario']?.toString(),
+      periodoApuracao: json['periodoApuracao']?.toString(),
+    );
   }
 }

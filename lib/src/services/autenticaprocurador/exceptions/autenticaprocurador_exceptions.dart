@@ -13,8 +13,31 @@ class ExcecaoAutenticaProcurador implements Exception {
 
 /// Exceções relacionadas ao certificado digital
 class ExcecaoAssinaturaCertificado extends ExcecaoAutenticaProcurador {
-  ExcecaoAssinaturaCertificado(String mensagem, {String? codigo})
-    : super(mensagem, codigo: codigo ?? 'ERRO_CERTIFICADO', statusHttp: 400);
+  final Map<String, dynamic>? diagnostico;
+
+  ExcecaoAssinaturaCertificado(
+    String mensagem, {
+    String? codigo,
+    this.diagnostico,
+  }) : super(mensagem, codigo: codigo ?? 'ERRO_CERTIFICADO', statusHttp: 400);
+
+  @override
+  String toString() {
+    final buffer = StringBuffer();
+    buffer.write('ExcecaoAutenticaProcurador: $mensagem');
+    if (codigo != null) {
+      buffer.write(' (código: $codigo)');
+    }
+
+    if (diagnostico != null && diagnostico!.isNotEmpty) {
+      buffer.write('\n\nDiagnóstico:');
+      diagnostico!.forEach((key, value) {
+        buffer.write('\n  $key: $value');
+      });
+    }
+
+    return buffer.toString();
+  }
 }
 
 /// Exceções relacionadas à assinatura XML
