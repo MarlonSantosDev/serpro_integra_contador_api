@@ -297,11 +297,21 @@ class MensagemMit {
 
 /// Apuração detalhada
 class ApuracaoDetalhada {
+  /// Período de apuração
   final String? periodoApuracao;
+
+  /// Identificador da apuração
   final int? idApuracao;
+
+  /// Situação da apuração
   final int? situacao;
+
+  /// Data de encerramento
   final String? dataEncerramento;
+
+  /// Indica se há evento especial
   final bool? eventoEspecial;
+
   final double? valorTotalApurado;
 
   /// Construtor para criar uma instância de ApuracaoDetalhada

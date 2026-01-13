@@ -496,6 +496,7 @@ class PgdasdService {
 
     // Passo 3: Consultar declarações para obter status de pagamento
     bool dasPago = true; // Default: assume pago
+    String? alertaPagamento;
 
     try {
       final declaracoesResponse = await consultarDeclaracoes(
@@ -505,22 +506,42 @@ class PgdasdService {
         autorPedidoDadosNumero: autorPedidoDadosNumero,
       );
 
-      // Passo 4: Procurar período correspondente e extrair dasPago
+      // Passo 4: Procurar período correspondente e extrair dasPago + coletar pendências do ano
       if (declaracoesResponse.sucesso && declaracoesResponse.dados != null) {
         final periodoInt = int.parse(periodoApuracao);
+        final pendenciasNoAno = <String>[];
 
         // Iterar pelos períodos do ano
         for (final periodo in declaracoesResponse.dados!.listaPeriodos) {
-          if (periodo.periodoApuracao == periodoInt) {
-            // Procurar DAS nas operações do período
-            for (final operacao in periodo.operacoes) {
-              if (operacao.indiceDas != null) {
-                dasPago = operacao.indiceDas!.dasPago;
-                break; // Usa o primeiro DAS encontrado
+          bool periodoTemPendente = false;
+
+          // Verificar se qualquer operação do período possui um DAS não pago
+          for (final operacao in periodo.operacoes) {
+            if (operacao.indiceDas != null && !operacao.indiceDas!.dasPago) {
+              periodoTemPendente = true;
+
+              // Se for o mês solicitado, atualiza o status principal
+              if (periodo.periodoApuracao == periodoInt) {
+                dasPago = false;
               }
+              break;
             }
-            break;
           }
+
+          if (periodoTemPendente) {
+            // Formatar período de AAAAMM para MM/AAAA
+            final paStr = periodo.periodoApuracao.toString();
+            if (paStr.length == 6) {
+              final mes = paStr.substring(4, 6);
+              final ano = paStr.substring(0, 4);
+              pendenciasNoAno.add('$mes/$ano');
+            }
+          }
+        }
+
+        if (pendenciasNoAno.isNotEmpty) {
+          alertaPagamento =
+              'Atenção: Constam guias em aberto para os meses: ${pendenciasNoAno.join(', ')}';
         }
       }
     } catch (e) {
@@ -532,6 +553,7 @@ class PgdasdService {
     return ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase(
       baseResponse: ultimaDeclaracaoResponse,
       dasPago: dasPago,
+      alertaPagamento: alertaPagamento,
     );
   }
 

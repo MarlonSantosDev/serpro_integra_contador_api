@@ -12,17 +12,22 @@ class ConsultarUltimaDeclaracaoComPagamentoResponse
   /// Default: true (assume pago se DAS não for encontrado)
   final bool dasPago;
 
+  /// Mensagem informativa sobre pendências de pagamento no ano
+  final String? alertaPagamento;
+
   ConsultarUltimaDeclaracaoComPagamentoResponse({
     required super.status,
     required super.mensagens,
     super.dados,
     required this.dasPago,
+    this.alertaPagamento,
   });
 
   @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     json['dasPago'] = dasPago;
+    json['alertaPagamento'] = alertaPagamento;
     return json;
   }
 
@@ -30,15 +35,18 @@ class ConsultarUltimaDeclaracaoComPagamentoResponse
   ///
   /// [baseResponse] Resposta de consultarUltimaDeclaracao
   /// [dasPago] Status de pagamento do DAS
+  /// [alertaPagamento] Mensagem informativa sobre pendências
   factory ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase({
     required ConsultarUltimaDeclaracaoResponse baseResponse,
     required bool dasPago,
+    String? alertaPagamento,
   }) {
     return ConsultarUltimaDeclaracaoComPagamentoResponse(
       status: baseResponse.status,
       mensagens: baseResponse.mensagens,
       dados: baseResponse.dados,
       dasPago: dasPago,
+      alertaPagamento: alertaPagamento,
     );
   }
 }

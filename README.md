@@ -44,7 +44,7 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 - **DEFIS**: Declaração de Informações Socioeconômicas e Fiscais
 - **SICALC**: Sistema de Cálculo de Impostos
 - **SITFIS**: Sistema de Informações Tributárias Fiscais
-- **MIT**: Módulo de Inclusão de Tributos
+- **MIT**: Módulo de Inclusão de Tributos (apuração de tributos integrada à DCTFWeb)
 - **PGDASD**: Pagamento de DAS por Débito Direto Autorizado (inclui métodos compostos para operações combinadas)
 
 ### 📬 Serviços de Comunicação
@@ -66,7 +66,7 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  serpro_integra_contador_api: ^2.0.8
+  serpro_integra_contador_api: ^2.0.11
 ```
 
 Execute:

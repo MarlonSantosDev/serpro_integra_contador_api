@@ -285,19 +285,19 @@
     },
     {
       "name": "test",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.28.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test-1.29.0",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.8",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.9",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "test_core",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.14",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/test_core-0.6.15",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -369,8 +369,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.10.4",
+  "generatorVersion": "3.10.7",
   "flutterRoot": "file:///C:/flutter",
-  "flutterVersion": "3.38.5",
+  "flutterVersion": "3.38.6",
   "pubCache": "file:///C:/Users/marlon/AppData/Local/Pub/Cache"
 }

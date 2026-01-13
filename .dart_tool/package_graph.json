@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "serpro_integra_contador_api",
-      "version": "2.0.10",
+      "version": "2.0.11",
       "dependencies": [
         "asn1lib",
         "crypto",
@@ -22,7 +22,7 @@
     },
     {
       "name": "test",
-      "version": "1.28.0",
+      "version": "1.29.0",
       "dependencies": [
         "analyzer",
         "async",
@@ -150,7 +150,7 @@
     },
     {
       "name": "test_core",
-      "version": "0.6.14",
+      "version": "0.6.15",
       "dependencies": [
         "analyzer",
         "args",
@@ -177,7 +177,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.8",
+      "version": "0.7.9",
       "dependencies": [
         "async",
         "boolean_selector",

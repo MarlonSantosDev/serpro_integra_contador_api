@@ -1,3 +1,9 @@
+## [2.0.11] - 2026-01-13
+- Ajustes e correções no código.
+- Atualização de dependências.
+- Atualização de documentação.
+- Adicionado novo método composto no PGDASD: `consultarUltimaDeclaracaoComPagamento()`.
+
 ## [2.0.10] - 2026-01-10
 - Ajustes e correções no código.
 
