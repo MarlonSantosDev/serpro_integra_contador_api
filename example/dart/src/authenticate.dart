@@ -32,6 +32,32 @@ void main() async {
   } catch (e) {
     print('❌ Erro: ${e}\n');
   }
+
+  // ========================================
+  // EXEMPLO 1B: Modo Trial usando construtor autenticar
+  // ========================================
+  print('\n📋 EXEMPLO 1B: Trial usando ApiClient.autenticar()\n');
+
+  try {
+    final apiClientAutenticado = await ApiClient.autenticar(
+      consumerKey: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+      consumerSecret: '06aef429-a981-3ec5-a1f8-71d38d86481e',
+      contratanteNumero: '00000000000191',
+      autorPedidoDadosNumero: '00000000191',
+      ambiente: 'trial',
+    );
+
+    print('✅ Autenticado com sucesso usando construtor!');
+    print('   Contratante: ${apiClientAutenticado.contratanteNumero}');
+    print('   Autor: ${apiClientAutenticado.autorPedidoDadosNumero}\n');
+
+    // Usar o serviço
+    //await CaixaPostal(apiClientAutenticado);
+
+    print('\n✅ Exemplo 1B concluído!\n');
+  } catch (e) {
+    print('❌ Erro: ${e}\n');
+  }
   // ========================================
   // EXEMPLO 2: Modo Produção (com certificado Base64)
   // ========================================
@@ -90,7 +116,7 @@ void main() async {
   // ========================================
   // EXEMPLO 4: Erro - Sem Autenticação
   // ========================================
-  print('\n📋 EXEMPLO 5: Tentando usar sem autenticar\n');
+  print('\n📋 EXEMPLO 4: Tentando usar sem autenticar\n');
 
   try {
     final apiClient = ApiClient();

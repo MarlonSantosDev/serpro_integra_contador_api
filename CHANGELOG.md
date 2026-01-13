@@ -3,6 +3,7 @@
 - Atualização de dependências.
 - Atualização de documentação.
 - Adicionado novo método composto no PGDASD: `consultarUltimaDeclaracaoComPagamento()`.
+- Atualização do exemplo de uso DART
 
 ## [2.0.10] - 2026-01-10
 - Ajustes e correções no código.

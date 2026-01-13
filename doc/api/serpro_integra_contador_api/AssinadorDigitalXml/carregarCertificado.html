@@ -62,9 +62,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Carrega e analisa o certificado digital</p>
-<h2 id="formatos-suportados">Formatos suportados:</h2>
-<ul>
+  <ul>
 <li><strong>PFX/P12</strong>: Parse Pure Dart em todas as plataformas</li>
 <li><strong>PEM</strong>: Parse texto em todas as plataformas</li>
 </ul>
@@ -84,7 +82,7 @@ para melhor compatibilidade com certificados ICP-Brasil.</p>
     &#47;&#47; Obter bytes do certificado
     if (certificadoBase64 != null &amp;&amp; certificadoBase64!.isNotEmpty) {
       &#47;&#47; Certificado em Base64 (funciona em todas as plataformas!)
-      certificadoBytes = base64.decode(certificadoBase64!);
+      certificadoBytes = _decodificarCertificadoBase64(certificadoBase64!);
     } else if (caminhoCertificado != null &amp;&amp; caminhoCertificado!.isNotEmpty) {
       &#47;&#47; Certificado em arquivo (Desktop&#47;Mobile apenas)
       if (!FileIO.isSupported) {
@@ -196,7 +194,7 @@ para melhor compatibilidade com certificados ICP-Brasil.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.9
+      2.0.11
   </span>
   
 </footer>

@@ -87,7 +87,7 @@
 <li><strong>DEFIS</strong>: Declaração de Informações Socioeconômicas e Fiscais</li>
 <li><strong>SICALC</strong>: Sistema de Cálculo de Impostos</li>
 <li><strong>SITFIS</strong>: Sistema de Informações Tributárias Fiscais</li>
-<li><strong>MIT</strong>: Módulo de Inclusão de Tributos</li>
+<li><strong>MIT</strong>: Módulo de Inclusão de Tributos (apuração de tributos integrada à DCTFWeb)</li>
 <li><strong>PGDASD</strong>: Pagamento de DAS por Débito Direto Autorizado (inclui métodos compostos para operações combinadas)</li>
 </ul>
 <h3 id="-servios-de-comunicao">📬 Serviços de Comunicação</h3>
@@ -109,7 +109,7 @@
 <h2 id="-instalao">🔧 Instalação</h2>
 <p>Adicione ao seu <code>pubspec.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  serpro_integra_contador_api: ^2.0.8
+  serpro_integra_contador_api: ^2.0.11
 </code></pre>
 <p>Execute:</p>
 <pre class="language-bash"><code class="language-bash">flutter pub get
@@ -722,7 +722,7 @@ final eventos = await eventosAtualizacaoService.solicitarEObterEventosPF(
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.9
+      2.0.11
   </span>
   
 </footer>

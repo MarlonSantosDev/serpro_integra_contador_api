@@ -121,6 +121,7 @@ consultarUltimaDeclaracaoComPagamento({
 
   &#47;&#47; Passo 3: Consultar declarações para obter status de pagamento
   bool dasPago = true; &#47;&#47; Default: assume pago
+  String? alertaPagamento;
 
   try {
     final declaracoesResponse = await consultarDeclaracoes(
@@ -130,22 +131,42 @@ consultarUltimaDeclaracaoComPagamento({
       autorPedidoDadosNumero: autorPedidoDadosNumero,
     );
 
-    &#47;&#47; Passo 4: Procurar período correspondente e extrair dasPago
+    &#47;&#47; Passo 4: Procurar período correspondente e extrair dasPago + coletar pendências do ano
     if (declaracoesResponse.sucesso &amp;&amp; declaracoesResponse.dados != null) {
       final periodoInt = int.parse(periodoApuracao);
+      final pendenciasNoAno = &lt;String&gt;[];
 
       &#47;&#47; Iterar pelos períodos do ano
       for (final periodo in declaracoesResponse.dados!.listaPeriodos) {
-        if (periodo.periodoApuracao == periodoInt) {
-          &#47;&#47; Procurar DAS nas operações do período
-          for (final operacao in periodo.operacoes) {
-            if (operacao.indiceDas != null) {
-              dasPago = operacao.indiceDas!.dasPago;
-              break; &#47;&#47; Usa o primeiro DAS encontrado
+        bool periodoTemPendente = false;
+
+        &#47;&#47; Verificar se qualquer operação do período possui um DAS não pago
+        for (final operacao in periodo.operacoes) {
+          if (operacao.indiceDas != null &amp;&amp; !operacao.indiceDas!.dasPago) {
+            periodoTemPendente = true;
+
+            &#47;&#47; Se for o mês solicitado, atualiza o status principal
+            if (periodo.periodoApuracao == periodoInt) {
+              dasPago = false;
             }
+            break;
           }
-          break;
         }
+
+        if (periodoTemPendente) {
+          &#47;&#47; Formatar período de AAAAMM para MM&#47;AAAA
+          final paStr = periodo.periodoApuracao.toString();
+          if (paStr.length == 6) {
+            final mes = paStr.substring(4, 6);
+            final ano = paStr.substring(0, 4);
+            pendenciasNoAno.add(&#39;$mes&#47;$ano&#39;);
+          }
+        }
+      }
+
+      if (pendenciasNoAno.isNotEmpty) {
+        alertaPagamento =
+            &#39;Atenção: Constam guias em aberto para os meses: ${pendenciasNoAno.join(&#39;, &#39;)}&#39;;
       }
     }
   } catch (e) {
@@ -157,6 +178,7 @@ consultarUltimaDeclaracaoComPagamento({
   return ConsultarUltimaDeclaracaoComPagamentoResponse.fromBase(
     baseResponse: ultimaDeclaracaoResponse,
     dasPago: dasPago,
+    alertaPagamento: alertaPagamento,
   );
 }</code></pre>
 </section>
@@ -186,7 +208,7 @@ consultarUltimaDeclaracaoComPagamento({
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.9
+      2.0.11
   </span>
   
 </footer>

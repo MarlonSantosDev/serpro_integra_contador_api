@@ -798,6 +798,130 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     servicoOk = false;
   }
 
+  // 13. Consultar Última Declaração com Pagamento (Método Composto)
+  try {
+    print(
+      '\n--- 13. Consultar Última Declaração com Informação de Pagamento ---',
+    );
+
+    final consultaComPagamentoResponse = await pgdasdService
+        .consultarUltimaDeclaracaoComPagamento(
+          contribuinteNumero: '00000000000100',
+          periodoApuracao: '202101',
+          contratanteNumero: '00000000000100',
+          autorPedidoDadosNumero: '00000000000100',
+        );
+
+    print('✅ Status: ${consultaComPagamentoResponse.status}');
+    print('✅ Sucesso: ${consultaComPagamentoResponse.sucesso}');
+    print(
+      '💰 DAS Pago: ${consultaComPagamentoResponse.dasPago ? 'Sim ✅' : 'Não ❌'}',
+    );
+
+    if (consultaComPagamentoResponse.alertaPagamento != null &&
+        consultaComPagamentoResponse.alertaPagamento!.isNotEmpty) {
+      print('⚠️ Alerta: ${consultaComPagamentoResponse.alertaPagamento}');
+    }
+
+    if (consultaComPagamentoResponse.sucesso &&
+        consultaComPagamentoResponse.dados != null) {
+      final dados = consultaComPagamentoResponse.dados!;
+      print('📋 Número Declaração: ${dados.numeroDeclaracao}');
+
+      if (dados.declaracao.pdf.isNotEmpty) {
+        print(
+          '📄 Declaração disponível: Sim (${dados.declaracao.nomeArquivo})',
+        );
+      }
+      if (dados.recibo.pdf.isNotEmpty) {
+        print('📄 Recibo disponível: Sim (${dados.recibo.nomeArquivo})');
+      }
+      if (dados.maed != null) {
+        print('📄 MAED disponível: Sim');
+        print('   - Notificação: ${dados.maed!.nomeArquivoNotificacao}');
+        print('   - DARF: ${dados.maed!.nomeArquivoDarf}');
+      }
+    }
+  } catch (e) {
+    print('❌ Erro ao consultar última declaração com pagamento: $e');
+    servicoOk = false;
+  }
+  await Future.delayed(Duration(seconds: 5));
+
+  // 14. Entregar Declaração com DAS (Método Composto)
+  try {
+    print('\n--- 14. Entregar Declaração com Geração Automática de DAS ---');
+
+    // Criar declaração simples para o exemplo
+    final declaracaoSimples = pgdasd_models.Declaracao(
+      tipoDeclaracao: 1, // Original
+      receitaPaCompetenciaInterno: 30000.00,
+      receitaPaCompetenciaExterno: 5000.00,
+      estabelecimentos: [
+        pgdasd_models.Estabelecimento(
+          cnpjCompleto: '00000000000100',
+          atividades: [
+            pgdasd_models.Atividade(
+              idAtividade: 1,
+              valorAtividade: 35000.00,
+              receitasAtividade: [
+                pgdasd_models.ReceitaAtividade(valor: 35000.00),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+
+    final entregarComDasResponse = await pgdasdService.entregarDeclaracaoComDas(
+      cnpj: '00000000000100',
+      periodoApuracao: 202101,
+      declaracao: declaracaoSimples,
+      indicadorTransmissao: true,
+      indicadorComparacao: true,
+      contratanteNumero: '00000000000100',
+      autorPedidoDadosNumero: '00000000000100',
+    );
+
+    print('✅ Status: ${entregarComDasResponse.status}');
+    print('✅ Sucesso geral: ${entregarComDasResponse.sucesso}');
+    print(
+      '📋 Declaração entregue: ${entregarComDasResponse.declaracaoEntregue ? 'Sim ✅' : 'Não ❌'}',
+    );
+    print(
+      '💰 DAS gerado: ${entregarComDasResponse.dasGerado ? 'Sim ✅' : 'Não ❌'}',
+    );
+
+    if (entregarComDasResponse.dadosDeclaracao != null) {
+      print(
+        '📋 ID Declaração: ${entregarComDasResponse.dadosDeclaracao!.idDeclaracao}',
+      );
+      print(
+        '📅 Data/Hora Transmissão: ${entregarComDasResponse.dadosDeclaracao!.dataHoraTransmissao}',
+      );
+    }
+
+    if (entregarComDasResponse.dadosDas != null &&
+        entregarComDasResponse.dadosDas!.isNotEmpty) {
+      final das = entregarComDasResponse.dadosDas!.first;
+      print('📄 Número Documento DAS: ${das.detalhamento.numeroDocumento}');
+      print('📅 Data Vencimento: ${das.detalhamento.dataVencimento}');
+      print(
+        '💰 Valor Total: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}',
+      );
+    }
+
+    if (entregarComDasResponse.mensagens.isNotEmpty) {
+      print('\n📋 Mensagens:');
+      for (final mensagem in entregarComDasResponse.mensagens) {
+        print('  • ${mensagem.codigo}: ${mensagem.texto}');
+      }
+    }
+  } catch (e) {
+    print('❌ Erro ao entregar declaração com DAS: $e');
+    servicoOk = false;
+  }
+
   // Resumo final
   print('\n=== RESUMO DO SERVIÇO PGDASD ===');
   if (servicoOk) {
@@ -806,5 +930,5 @@ Future<void> Pgdasd(ApiClient apiClient) async {
     print('❌ Serviço PGDASD: ERRO');
   }
 
-  print('\n🎉 Todos os 9 serviços PGDASD executados!');
+  print('\n🎉 Todos os serviços PGDASD executados!');
 }
