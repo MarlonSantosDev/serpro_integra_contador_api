@@ -39,7 +39,7 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.4.0",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -83,7 +83,7 @@
       "name": "flutter",
       "rootUri": "file:///C:/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "flutter_lints",
@@ -147,9 +147,9 @@
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1",
+      "rootUri": "file:///C:/Users/marlon/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.13.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.5"
     },
     {
       "name": "meta",
@@ -233,7 +233,7 @@
       "name": "sky_engine",
       "rootUri": "file:///C:/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "source_map_stack_trace",
@@ -359,12 +359,12 @@
       "name": "serpro_integra_contador_api",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.11"
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.10.7",
+  "generatorVersion": "3.11.0",
   "flutterRoot": "file:///C:/flutter",
-  "flutterVersion": "3.38.6",
+  "flutterVersion": "3.41.0",
   "pubCache": "file:///C:/Users/marlon/AppData/Local/Pub/Cache"
 }
