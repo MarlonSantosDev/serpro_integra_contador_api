@@ -6,10 +6,7 @@ class SitfisMensagem {
   SitfisMensagem({required this.codigo, required this.texto});
 
   factory SitfisMensagem.fromJson(Map<String, dynamic> json) {
-    return SitfisMensagem(
-      codigo: json['codigo'].toString(),
-      texto: json['texto'].toString(),
-    );
+    return SitfisMensagem(codigo: json['codigo'].toString(), texto: json['texto'].toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -58,26 +55,7 @@ class SitfisMensagemCodigos {
   static const String erroER05 = '[Erro-Sitfis-ER05]';
 
   /// Descrições das mensagens
-  static const Map<String, String> descricoes = {
-    sucessoSC01: 'A requisição foi efetuada com sucesso.',
-    sucessoSC02:
-        'A emissão relatório de situação fiscal está em processamento.',
-    avisoAV01: 'Obtenha o relatório no serviço /emitir.',
-    avisoAV02:
-        'O limite de solicitações em processamento foi atingido. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação.',
-    avisoAV03:
-        'Não foi possível concluir a ação para o contribuinte informado. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação.',
-    entradaIncorretaEI01: 'Requisição inválida.',
-    entradaIncorretaEI02: 'Requisição inválida. Versão Inexistente.',
-    entradaIncorretaEI03: 'Requisição inválida. Versão Descontinuada.',
-    erroER01: 'URL não encontrada.',
-    erroER02:
-        'Erro ao solicitar o protocolo do relatório. Tente novamente mais tarde.',
-    erroER03: 'Erro ao obter o relatório. Tente novamente mais tarde.',
-    erroER04: 'Erro ao processar a requisição. Tente novamente mais tarde.',
-    erroER05:
-        'Erro ao processar a requisição. Inicie uma nova solicitação /apoiar.',
-  };
+  static const Map<String, String> descricoes = {sucessoSC01: 'A requisição foi efetuada com sucesso.', sucessoSC02: 'A emissão relatório de situação fiscal está em processamento.', avisoAV01: 'Obtenha o relatório no serviço /emitir.', avisoAV02: 'O limite de solicitações em processamento foi atingido. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação.', avisoAV03: 'Não foi possível concluir a ação para o contribuinte informado. Aguarde o tempo informado no campo tempoEspera para fazer uma nova solicitação.', entradaIncorretaEI01: 'Requisição inválida.', entradaIncorretaEI02: 'Requisição inválida. Versão Inexistente.', entradaIncorretaEI03: 'Requisição inválida. Versão Descontinuada.', erroER01: 'URL não encontrada.', erroER02: 'Erro ao solicitar o protocolo do relatório. Tente novamente mais tarde.', erroER03: 'Erro ao obter o relatório. Tente novamente mais tarde.', erroER04: 'Erro ao processar a requisição. Tente novamente mais tarde.', erroER05: 'Erro ao processar a requisição. Inicie uma nova solicitação /apoiar.'};
 
   /// Obtém a descrição de uma mensagem pelo código
   static String? obterDescricao(String codigo) {

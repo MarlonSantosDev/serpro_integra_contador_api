@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'base_response.dart';
 
 /// Modelo de resposta para ATUBENEFICIO23 - Atualizar Benefício
@@ -45,7 +46,7 @@ class AtualizarBeneficioResponse extends PgmeiBaseResponse {
 
       return [];
     } catch (e) {
-      print('Erro ao parsear benefícios atualizados: $e');
+      printE('Erro ao parsear benefícios atualizados: $e');
       return null;
     }
   }

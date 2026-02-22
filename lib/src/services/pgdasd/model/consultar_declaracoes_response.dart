@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 
 /// Modelo de resposta para consultar declarações PGDASD
 ///
@@ -39,7 +40,7 @@ class ConsultarDeclaracoesResponse {
         dadosParsed = DeclaracoesEntregues.fromJson(dadosMap);
       }
     } catch (e) {
-      print('❌ Erro ao fazer parse dos dados: $e');
+      printE('❌ Erro ao fazer parse dos dados: $e');
     }
 
     return ConsultarDeclaracoesResponse(

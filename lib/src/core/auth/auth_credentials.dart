@@ -35,6 +35,7 @@ class AuthCredentials {
   /// Ambiente de execução: 'trial' para testes ou 'producao' para produção
   final String ambiente;
 
+  /// Constrói [AuthCredentials] com os parâmetros fornecidos.
   AuthCredentials({
     required this.consumerKey,
     required this.consumerSecret,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'base_response.dart';
 import 'gerar_das_response.dart';
 
@@ -37,7 +38,7 @@ class GerarDasCodigoBarrasResponse extends PgmeiBaseResponse {
 
       return [];
     } catch (e) {
-      print('Erro ao parsear DAS código barras gerados: $e');
+      printE('Erro ao parsear DAS código barras gerados: $e');
       return null;
     }
   }

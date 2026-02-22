@@ -3,11 +3,19 @@ import 'mit_enums.dart';
 
 /// Response base para serviços MIT
 class MitResponse {
+  /// Código de status da resposta (ex.: "200").
   final String status;
+
+  /// Identificador da resposta.
   final String? responseId;
+
+  /// Data/hora da resposta.
   final String? responseDateTime;
+
+  /// Lista de mensagens retornadas pelo serviço.
   final List<MensagemMit> mensagens;
 
+  /// Construtor para [MitResponse].
   MitResponse({
     required this.status,
     this.responseId,
@@ -15,6 +23,7 @@ class MitResponse {
     required this.mensagens,
   });
 
+  /// Cria uma instância de [MitResponse] a partir de um mapa JSON.
   factory MitResponse.fromJson(Map<String, dynamic> json) {
     final mensagens = <MensagemMit>[];
     if (json['mensagens'] != null) {
@@ -38,7 +47,10 @@ class MitResponse {
     required this.mensagens,
   });
 
+  /// Indica se a requisição foi bem-sucedida (status 200).
   bool get sucesso => status == '200';
+
+  /// Texto da primeira mensagem de erro, se houver.
   String? get mensagemErro =>
       mensagens.isNotEmpty ? mensagens.first.texto : null;
 
@@ -57,9 +69,13 @@ class MitResponse {
 
 /// Response para encerrar apuração MIT
 class EncerrarApuracaoResponse extends MitResponse {
+  /// Protocolo do encerramento.
   final String? protocoloEncerramento;
+
+  /// Identificador da apuração encerrada.
   final int? idApuracao;
 
+  /// Construtor para [EncerrarApuracaoResponse].
   EncerrarApuracaoResponse({
     required super.status,
     super.responseId,
@@ -69,6 +85,7 @@ class EncerrarApuracaoResponse extends MitResponse {
     this.idApuracao,
   });
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory EncerrarApuracaoResponse.fromJson(Map<String, dynamic> json) {
     final baseResponse = MitResponse.fromJson(json);
 
@@ -99,8 +116,10 @@ class EncerrarApuracaoResponse extends MitResponse {
 
 /// Response para consultar situação de encerramento
 class ConsultarSituacaoEncerramentoResponse extends MitResponse {
+  /// Código da situação do encerramento (1=Em Processamento, 2=Sucesso, 3=Erro, 4=Em andamento).
   final int? situacaoEncerramento;
 
+  /// Construtor para [ConsultarSituacaoEncerramentoResponse].
   ConsultarSituacaoEncerramentoResponse({
     required super.status,
     super.responseId,
@@ -109,6 +128,7 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
     this.situacaoEncerramento,
   });
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory ConsultarSituacaoEncerramentoResponse.fromJson(
     Map<String, dynamic> json,
   ) {
@@ -149,9 +169,13 @@ class ConsultarSituacaoEncerramentoResponse extends MitResponse {
 
 /// Response para consultar apuração
 class ConsultarApuracaoResponse extends MitResponse {
+  /// Dados detalhados da apuração, se disponível.
   final ApuracaoDetalhada? apuracao;
+
+  /// Lista de pendências associadas à apuração.
   final List<Pendencia>? pendencias;
 
+  /// Construtor para [ConsultarApuracaoResponse].
   ConsultarApuracaoResponse({
     required super.status,
     super.responseId,
@@ -161,6 +185,7 @@ class ConsultarApuracaoResponse extends MitResponse {
     this.pendencias,
   });
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory ConsultarApuracaoResponse.fromJson(Map<String, dynamic> json) {
     final baseResponse = MitResponse.fromJson(json);
 
@@ -202,8 +227,10 @@ class ConsultarApuracaoResponse extends MitResponse {
 
 /// Response para listar apurações
 class ListarApuracaoesResponse extends MitResponse {
+  /// Lista de resumos das apurações.
   final List<ApuracaoResumo>? apuracoes;
 
+  /// Construtor para [ListarApuracaoesResponse].
   ListarApuracaoesResponse({
     required super.status,
     super.responseId,
@@ -212,6 +239,7 @@ class ListarApuracaoesResponse extends MitResponse {
     this.apuracoes,
   });
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory ListarApuracaoesResponse.fromJson(Map<String, dynamic> json) {
     final baseResponse = MitResponse.fromJson(json);
 
@@ -258,11 +286,16 @@ class ListarApuracaoesResponse extends MitResponse {
 
 /// Mensagem MIT
 class MensagemMit {
+  /// Código da mensagem (ex.: [Sucesso-MIT], [Erro-MIT]).
   final String codigo;
+
+  /// Texto da mensagem.
   final String texto;
 
+  /// Construtor para [MensagemMit].
   MensagemMit({required this.codigo, required this.texto});
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory MensagemMit.fromJson(Map<String, dynamic> json) {
     return MensagemMit(
       codigo: json['codigo']?.toString() ?? '',
@@ -270,6 +303,7 @@ class MensagemMit {
     );
   }
 
+  /// Serializa a mensagem para um mapa JSON.
   Map<String, dynamic> toJson() {
     return {'codigo': codigo, 'texto': texto};
   }
@@ -312,6 +346,7 @@ class ApuracaoDetalhada {
   /// Indica se há evento especial
   final bool? eventoEspecial;
 
+  /// Valor total apurado na apuração.
   final double? valorTotalApurado;
 
   /// Construtor para criar uma instância de ApuracaoDetalhada
@@ -348,17 +383,23 @@ class ApuracaoDetalhada {
     );
   }
 
+  /// Situação da apuração como enum [SituacaoApuracao].
   SituacaoApuracao? get situacaoEnum =>
       situacao != null ? SituacaoApuracao.fromCodigo(situacao!) : null;
 }
 
 /// Pendência da apuração
 class Pendencia {
+  /// Código da pendência.
   final String? codigo;
+
+  /// Texto descritivo da pendência.
   final String? texto;
 
+  /// Construtor para [Pendencia].
   Pendencia({this.codigo, this.texto});
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory Pendencia.fromJson(Map<String, dynamic> json) {
     return Pendencia(
       codigo: json['codigo']?.toString(),
@@ -366,6 +407,7 @@ class Pendencia {
     );
   }
 
+  /// Serializa a pendência para um mapa JSON.
   Map<String, dynamic> toJson() {
     return {'codigo': codigo, 'texto': texto};
   }
@@ -373,14 +415,28 @@ class Pendencia {
 
 /// Resumo da apuração para listagem
 class ApuracaoResumo {
+  /// Período de apuração.
   final String? periodoApuracao;
+
+  /// Identificador da apuração.
   final int? idApuracao;
+
+  /// Situação descritiva (ex.: "Em Processamento", "Processado com Sucesso").
   final String? situacao;
+
+  /// Código numérico da situação.
   final int? situacaoInt;
+
+  /// Data de encerramento da apuração.
   final String? dataEncerramento;
+
+  /// Indica se há evento especial.
   final bool? eventoEspecial;
+
+  /// Valor total apurado.
   final double? valorTotalApurado;
 
+  /// Construtor para criar uma instância de [ApuracaoResumo].
   ApuracaoResumo({
     this.periodoApuracao,
     this.idApuracao,
@@ -391,6 +447,9 @@ class ApuracaoResumo {
     this.valorTotalApurado,
   });
 
+  /// Cria uma instância de [ApuracaoResumo] a partir de um mapa JSON.
+  ///
+  /// [json] Mapa contendo os dados do resumo da apuração.
   factory ApuracaoResumo.fromJson(Map<String, dynamic> json) {
     // Converter situacao numérica para valor descritivo
     final situacaoInt = json['situacao'] as int?;
@@ -416,6 +475,7 @@ class ApuracaoResumo {
     );
   }
 
+  /// Situação do encerramento como enum [SituacaoEncerramento].
   SituacaoEncerramento? get situacaoEnum {
     if (situacao == null) return null;
     return switch (situacao) {
@@ -426,21 +486,31 @@ class ApuracaoResumo {
     };
   }
 
-  /// Obtém a situação da apuração como enum SituacaoApuracao
+  /// Obtém a situação da apuração como enum [SituacaoApuracao].
   SituacaoApuracao? get situacaoApuracaoEnum =>
       situacaoInt != null ? SituacaoApuracao.fromCodigo(situacaoInt!) : null;
 }
 
 /// Enum para situação de encerramento
 enum SituacaoEncerramento {
+  /// Em processamento
   emProcessamento(1, 'Em Processamento'),
+
+  /// Processado com sucesso
   processadoComSucesso(2, 'Processado com Sucesso'),
+
+  /// Processado com erro
   processadoComErro(3, 'Processado com Erro');
 
   const SituacaoEncerramento(this.codigo, this.descricao);
+
+  /// Código numérico da situação.
   final int codigo;
+
+  /// Descrição da situação.
   final String descricao;
 
+  /// Obtém o enum a partir do código numérico.
   static SituacaoEncerramento? fromCodigo(int codigo) {
     for (final situacao in SituacaoEncerramento.values) {
       if (situacao.codigo == codigo) return situacao;

@@ -23,17 +23,23 @@ class AuthenticationModel {
 
   /// Dados do contratante (empresa que contratou o serviço na Loja Serpro)
   final String contratanteNumero;
+
+  /// Tipo do documento do contratante (1 = CPF, 2 = CNPJ).
   final int contratanteTipo;
 
   /// Dados do autor do pedido (quem está fazendo a requisição)
   final String autorPedidoDadosNumero;
+
+  /// Tipo do documento do autor (1 = CPF, 2 = CNPJ).
   final int autorPedidoDadosTipo;
 
   /// Indica se a autenticação foi recuperada do cache
   final bool fromCache;
 
+  /// Token do procurador, quando aplicável.
   final String procuradorToken;
 
+  /// Constrói o modelo com tokens e dados do contratante/autor.
   AuthenticationModel({
     required this.accessToken,
     required this.jwtToken,

@@ -6,12 +6,16 @@
 /// - Detecção automática de tipo de documento
 /// - Validações de formato e estrutura
 class ValidacoesUtils {
-  // Constantes para tipos de documento
+  /// Código do tipo documento CPF (11 dígitos).
   static const int tipoCpf = 1;
+
+  /// Código do tipo documento CNPJ (14 dígitos).
   static const int tipoCnpj = 2;
 
-  // Constantes para tamanhos
+  /// Quantidade de dígitos de um CPF.
   static const int tamanhoCpf = 11;
+
+  /// Quantidade de dígitos de um CNPJ.
   static const int tamanhoCnpj = 14;
 
   // Padrão regex para limpeza

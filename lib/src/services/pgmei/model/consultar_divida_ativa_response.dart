@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'base_response.dart';
 
 /// Modelo de resposta para DIVIDAATIVA24 - Consultar Dívida Ativa
@@ -36,7 +37,7 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
 
       return [];
     } catch (e) {
-      print('Erro ao parsear débitos dívida ativa: $e');
+      printE('Erro ao parsear débitos dívida ativa: $e');
       return null;
     }
   }

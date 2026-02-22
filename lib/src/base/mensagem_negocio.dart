@@ -4,9 +4,13 @@
 /// espalhadas pelos diferentes módulos, mantendo compatibilidade com todas
 /// as funcionalidades específicas através de métodos de extensão.
 class MensagemNegocio {
+  /// Código da mensagem de negócio.
   final String codigo;
+
+  /// Texto da mensagem de negócio.
   final String texto;
 
+  /// Construtor para [MensagemNegocio].
   MensagemNegocio({required this.codigo, required this.texto});
 
   /// Factory constructor para criar a partir de JSON
@@ -63,14 +67,24 @@ class MensagemNegocio {
 
 /// Extensões para módulo de Procurações
 extension MensagemNegocioProcuracoes on MensagemNegocio {
+  /// Indica se a mensagem é de sucesso no contexto de Procurações.
   bool get isSucessoProcuracoes => codigo.contains('[Sucesso-PROCURACOES]');
+
+  /// Indica se a mensagem é de aviso no contexto de Procurações.
   bool get isAvisoProcuracoes => codigo.contains('[Aviso-PROCURACOES]');
+
+  /// Indica se a mensagem é de acesso negado no contexto de Procurações.
   bool get isAcessoNegadoProcuracoes =>
       codigo.contains('[AcessoNegado-PROCURACOES]');
+
+  /// Indica se a mensagem é de entrada incorreta no contexto de Procurações.
   bool get isEntradaIncorretaProcuracoes =>
       codigo.contains('[EntrataIncorreta-PROCURACOES]');
+
+  /// Indica se a mensagem é de erro no contexto de Procurações.
   bool get isErroProcuracoes => codigo.contains('[Erro-PROCURACOES]');
 
+  /// Retorna o tipo da mensagem no contexto de Procurações.
   String get tipoProcuracoes {
     if (isSucessoProcuracoes) return 'Sucesso';
     if (isAvisoProcuracoes) return 'Aviso';
@@ -83,9 +97,13 @@ extension MensagemNegocioProcuracoes on MensagemNegocio {
 
 /// Extensões para módulo DTE
 extension MensagemNegocioDte on MensagemNegocio {
+  /// Indica se a mensagem é de sucesso no contexto DTE.
   bool get isSucessoDte => codigo.startsWith('Sucesso-DTE');
+
+  /// Indica se a mensagem é de erro no contexto DTE.
   bool get isErroDte => codigo.startsWith('Erro-DTE');
 
+  /// Retorna o tipo da mensagem no contexto DTE.
   String get tipoDte {
     if (isSucessoDte) return 'Sucesso';
     if (isErroDte) return 'Erro';

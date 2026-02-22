@@ -3,10 +3,7 @@ import 'dart:convert';
 
 /// Classe base para requests do PAGTOWEB
 abstract class PagtoWebRequest extends BaseRequest {
-  PagtoWebRequest({
-    required String contribuinteNumero,
-    required PedidoDados pedidoDados,
-  }) : super(contribuinteNumero: contribuinteNumero, pedidoDados: pedidoDados);
+  PagtoWebRequest({required super.contribuinteNumero, required super.pedidoDados}) : super();
 }
 
 /// Request para consultar pagamentos (PAGAMENTOS71)
@@ -21,47 +18,16 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
   final int primeiroDaPagina;
   final int tamanhoDaPagina;
 
-  ConsultarPagamentosRequest({
-    required String contribuinteNumero,
-    this.dataInicial,
-    this.dataFinal,
-    this.codigoReceitaLista,
-    this.valorInicial,
-    this.valorFinal,
-    this.numeroDocumentoLista,
-    this.codigoTipoDocumentoLista,
-    this.primeiroDaPagina = 0,
-    this.tamanhoDaPagina = 100,
-  }) : super(
-         contribuinteNumero: contribuinteNumero,
-         pedidoDados: PedidoDados(
-           idSistema: 'PAGTOWEB',
-           idServico: 'PAGAMENTOS71',
-           dados: _buildDadosJson(
-             dataInicial: dataInicial,
-             dataFinal: dataFinal,
-             codigoReceitaLista: codigoReceitaLista,
-             valorInicial: valorInicial,
-             valorFinal: valorFinal,
-             numeroDocumentoLista: numeroDocumentoLista,
-             codigoTipoDocumentoLista: codigoTipoDocumentoLista,
-             primeiroDaPagina: primeiroDaPagina,
-             tamanhoDaPagina: tamanhoDaPagina,
-           ),
-         ),
-       );
+  ConsultarPagamentosRequest({required super.contribuinteNumero, this.dataInicial, this.dataFinal, this.codigoReceitaLista, this.valorInicial, this.valorFinal, this.numeroDocumentoLista, this.codigoTipoDocumentoLista, this.primeiroDaPagina = 0, this.tamanhoDaPagina = 100})
+    : super(
+        pedidoDados: PedidoDados(
+          idSistema: 'PAGTOWEB',
+          idServico: 'PAGAMENTOS71',
+          dados: _buildDadosJson(dataInicial: dataInicial, dataFinal: dataFinal, codigoReceitaLista: codigoReceitaLista, valorInicial: valorInicial, valorFinal: valorFinal, numeroDocumentoLista: numeroDocumentoLista, codigoTipoDocumentoLista: codigoTipoDocumentoLista, primeiroDaPagina: primeiroDaPagina, tamanhoDaPagina: tamanhoDaPagina),
+        ),
+      );
 
-  static String _buildDadosJson({
-    String? dataInicial,
-    String? dataFinal,
-    List<String>? codigoReceitaLista,
-    double? valorInicial,
-    double? valorFinal,
-    List<String>? numeroDocumentoLista,
-    List<String>? codigoTipoDocumentoLista,
-    int primeiroDaPagina = 0,
-    int tamanhoDaPagina = 100,
-  }) {
+  static String _buildDadosJson({String? dataInicial, String? dataFinal, List<String>? codigoReceitaLista, double? valorInicial, double? valorFinal, List<String>? numeroDocumentoLista, List<String>? codigoTipoDocumentoLista, int primeiroDaPagina = 0, int tamanhoDaPagina = 100}) {
     final Map<String, dynamic> dados = {};
 
     // Intervalo de data de arrecadação
@@ -97,8 +63,7 @@ class ConsultarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null &&
-        codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
@@ -120,42 +85,17 @@ class ContarPagamentosRequest extends PagtoWebRequest {
   final List<String>? numeroDocumentoLista;
   final List<String>? codigoTipoDocumentoLista;
 
-  ContarPagamentosRequest({
-    required String contribuinteNumero,
-    this.dataInicial,
-    this.dataFinal,
-    this.codigoReceitaLista,
-    this.valorInicial,
-    this.valorFinal,
-    this.numeroDocumentoLista,
-    this.codigoTipoDocumentoLista,
-  }) : super(
-         contribuinteNumero: contribuinteNumero,
-         pedidoDados: PedidoDados(
-           idSistema: 'PAGTOWEB',
-           idServico: 'CONTACONSDOCARRPG73',
-           versaoSistema: '1.0',
-           dados: _buildDadosJson(
-             dataInicial: dataInicial,
-             dataFinal: dataFinal,
-             codigoReceitaLista: codigoReceitaLista,
-             valorInicial: valorInicial,
-             valorFinal: valorFinal,
-             numeroDocumentoLista: numeroDocumentoLista,
-             codigoTipoDocumentoLista: codigoTipoDocumentoLista,
-           ),
-         ),
-       );
+  ContarPagamentosRequest({required super.contribuinteNumero, this.dataInicial, this.dataFinal, this.codigoReceitaLista, this.valorInicial, this.valorFinal, this.numeroDocumentoLista, this.codigoTipoDocumentoLista})
+    : super(
+        pedidoDados: PedidoDados(
+          idSistema: 'PAGTOWEB',
+          idServico: 'CONTACONSDOCARRPG73',
+          versaoSistema: '1.0',
+          dados: _buildDadosJson(dataInicial: dataInicial, dataFinal: dataFinal, codigoReceitaLista: codigoReceitaLista, valorInicial: valorInicial, valorFinal: valorFinal, numeroDocumentoLista: numeroDocumentoLista, codigoTipoDocumentoLista: codigoTipoDocumentoLista),
+        ),
+      );
 
-  static String _buildDadosJson({
-    String? dataInicial,
-    String? dataFinal,
-    List<String>? codigoReceitaLista,
-    double? valorInicial,
-    double? valorFinal,
-    List<String>? numeroDocumentoLista,
-    List<String>? codigoTipoDocumentoLista,
-  }) {
+  static String _buildDadosJson({String? dataInicial, String? dataFinal, List<String>? codigoReceitaLista, double? valorInicial, double? valorFinal, List<String>? numeroDocumentoLista, List<String>? codigoTipoDocumentoLista}) {
     final Map<String, dynamic> dados = {};
 
     // Intervalo de data de arrecadação
@@ -191,8 +131,7 @@ class ContarPagamentosRequest extends PagtoWebRequest {
     }
 
     // Lista de tipos de documento
-    if (codigoTipoDocumentoLista != null &&
-        codigoTipoDocumentoLista.isNotEmpty) {
+    if (codigoTipoDocumentoLista != null && codigoTipoDocumentoLista.isNotEmpty) {
       dados['codigoTipoDocumentoLista'] = codigoTipoDocumentoLista;
     }
 
@@ -204,16 +143,8 @@ class ContarPagamentosRequest extends PagtoWebRequest {
 class EmitirComprovanteRequest extends PagtoWebRequest {
   final String numeroDocumento;
 
-  EmitirComprovanteRequest({
-    required String contribuinteNumero,
-    required this.numeroDocumento,
-  }) : super(
-         contribuinteNumero: contribuinteNumero,
-         pedidoDados: PedidoDados(
-           idSistema: 'PAGTOWEB',
-           idServico: 'COMPARRECADACAO72',
-           versaoSistema: '1.0',
-           dados: jsonEncode({'numeroDocumento': numeroDocumento}),
-         ),
-       );
+  EmitirComprovanteRequest({required super.contribuinteNumero, required this.numeroDocumento})
+    : super(
+        pedidoDados: PedidoDados(idSistema: 'PAGTOWEB', idServico: 'COMPARRECADACAO72', versaoSistema: '1.0', dados: jsonEncode({'numeroDocumento': numeroDocumento})),
+      );
 }

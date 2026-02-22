@@ -1,3 +1,7 @@
+## [2.0.12] - 2026-02-22
+- Ajustes e correções no código.
+- Atualização de documentação.
+
 ## [2.0.11] - 2026-01-13
 - Ajustes e correções no código.
 - Atualização de dependências.

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'dctfweb_common.dart';
 
 /// Response para geração de documentos de arrecadação (DARF/DAE)
@@ -32,7 +33,7 @@ class GerarGuiaResponse {
 
       return dadosJson['PDFByteArrayBase64'].toString();
     } catch (e) {
-      print('Erro ao obter PDF em Base64: $e');
+      printE('Erro ao obter PDF em Base64: $e');
       return null;
     }
   }

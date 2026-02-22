@@ -1,4 +1,5 @@
 import '../../../base/common.dart';
+import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'dart:convert';
 
 /// Modelo para resposta de consolidação e emissão de DARF
@@ -44,7 +45,7 @@ class ConsolidarEmitirDarfResponse {
         darf = dados['darf']?.toString();
         numeroDocumento = dados['numeroDocumento']?.toString();
       } catch (e) {
-        print('Erro ao processar dados: $e');
+        printE('Erro ao processar dados: $e');
         // Ignorar erro de parsing, manter campos como null
       }
     }

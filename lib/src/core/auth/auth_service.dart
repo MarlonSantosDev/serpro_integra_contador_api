@@ -20,6 +20,7 @@ class AuthService {
   static const String _authUrlProd =
       'https://autenticacao.sapi.serpro.gov.br/authenticate';
 
+  /// Cria o serviço com [HttpClientAdapter] e ambiente (_environment).
   AuthService(this._httpAdapter, this._environment);
 
   /// Retorna a URL de autenticação apropriada para o ambiente

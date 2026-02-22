@@ -6,11 +6,7 @@ class ConsultarPedidosResponse {
   final List<Mensagem> mensagens;
   final ParcelamentosData? dados;
 
-  ConsultarPedidosResponse({
-    required this.status,
-    required this.mensagens,
-    this.dados,
-  });
+  ConsultarPedidosResponse({required this.status, required this.mensagens, this.dados});
 
   factory ConsultarPedidosResponse.fromJson(Map<String, dynamic> json) {
     ParcelamentosData? dadosParsed;
@@ -23,23 +19,11 @@ class ConsultarPedidosResponse {
       // Se não conseguir fazer parse, mantém dados como null
     }
 
-    return ConsultarPedidosResponse(
-      status: json['status']?.toString() ?? '',
-      mensagens:
-          (json['mensagens'] as List?)
-              ?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      dados: dadosParsed,
-    );
+    return ConsultarPedidosResponse(status: json['status']?.toString() ?? '', mensagens: (json['mensagens'] as List?)?.map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList() ?? [], dados: dadosParsed);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'mensagens': mensagens.map((e) => e.toJson()).toList(),
-      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
-    };
+    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -81,15 +65,8 @@ class ParcelamentosData {
 
   factory ParcelamentosData.fromJson(String jsonString) {
     try {
-      final Map<String, dynamic> json =
-          jsonDecode(jsonString) as Map<String, dynamic>;
-      return ParcelamentosData(
-        parcelamentos:
-            (json['parcelamentos'] as List?)
-                ?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-      );
+      final Map<String, dynamic> json = jsonDecode(jsonString) as Map<String, dynamic>;
+      return ParcelamentosData(parcelamentos: (json['parcelamentos'] as List?)?.map((e) => Parcelamento.fromJson(e as Map<String, dynamic>)).toList() ?? []);
     } catch (e) {
       return ParcelamentosData(parcelamentos: []);
     }
@@ -106,30 +83,14 @@ class Parcelamento {
   final String situacao;
   final int dataDaSituacao;
 
-  Parcelamento({
-    required this.numero,
-    required this.dataDoPedido,
-    required this.situacao,
-    required this.dataDaSituacao,
-  });
+  Parcelamento({required this.numero, required this.dataDoPedido, required this.situacao, required this.dataDaSituacao});
 
   factory Parcelamento.fromJson(Map<String, dynamic> json) {
-    return Parcelamento(
-      numero: int.tryParse(json['numero']?.toString() ?? '0') ?? 0,
-      dataDoPedido: int.tryParse(json['dataDoPedido']?.toString() ?? '0') ?? 0,
-      situacao: json['situacao']?.toString() ?? '',
-      dataDaSituacao:
-          int.tryParse(json['dataDaSituacao']?.toString() ?? '0') ?? 0,
-    );
+    return Parcelamento(numero: int.tryParse(json['numero']?.toString() ?? '0') ?? 0, dataDoPedido: int.tryParse(json['dataDoPedido']?.toString() ?? '0') ?? 0, situacao: json['situacao']?.toString() ?? '', dataDaSituacao: int.tryParse(json['dataDaSituacao']?.toString() ?? '0') ?? 0);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'numero': numero,
-      'dataDoPedido': dataDoPedido,
-      'situacao': situacao,
-      'dataDaSituacao': dataDaSituacao,
-    };
+    return {'numero': numero, 'dataDoPedido': dataDoPedido, 'situacao': situacao, 'dataDaSituacao': dataDaSituacao};
   }
 
   /// Formata a data do pedido (AAAAMMDD)
@@ -163,9 +124,7 @@ class Parcelamento {
   bool get isSuspenso => situacao.toLowerCase().contains('suspenso');
 
   /// Verifica se o parcelamento está em análise
-  bool get isEmAnalise =>
-      situacao.toLowerCase().contains('análise') ||
-      situacao.toLowerCase().contains('analise');
+  bool get isEmAnalise => situacao.toLowerCase().contains('análise') || situacao.toLowerCase().contains('analise');
 
   /// Verifica se o parcelamento foi aprovado
   bool get isAprovado => situacao.toLowerCase().contains('aprovado');
@@ -175,6 +134,6 @@ class Parcelamento {
 
   @override
   String toString() {
-    return 'Parcelamento $numero: $situacao (${dataDoPedidoFormatada})';
+    return 'Parcelamento $numero: $situacao ($dataDoPedidoFormatada)';
   }
 }

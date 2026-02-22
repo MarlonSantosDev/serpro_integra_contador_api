@@ -1,0 +1,13 @@
+# Configuração do analisador para o pacote serpro_integra_contador_api
+# https://dart.dev/guides/language/analysis-options
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - example/**
+
+linter:
+  rules:
+    # Documentação pública: desativado para evitar milhares de infos; ativar e documentar gradualmente se desejar meta 100%
+    # - public_member_api_docs

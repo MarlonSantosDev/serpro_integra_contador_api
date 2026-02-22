@@ -13,38 +13,16 @@ class AssinaturaDigitalModel {
   final DateTime? certificadoValidadeFim;
   final bool isValido;
 
-  AssinaturaDigitalModel({
-    this.certificadoPath,
-    this.certificadoPassword,
-    this.certificadoBase64,
-    this.chavePrivada,
-    this.certificadoSerial,
-    this.certificadoSubject,
-    this.certificadoValidadeInicio,
-    this.certificadoValidadeFim,
-    this.isValido = false,
-  });
+  AssinaturaDigitalModel({this.certificadoPath, this.certificadoPassword, this.certificadoBase64, this.chavePrivada, this.certificadoSerial, this.certificadoSubject, this.certificadoValidadeInicio, this.certificadoValidadeFim, this.isValido = false});
 
   /// Cria modelo a partir de arquivo de certificado
-  factory AssinaturaDigitalModel.fromFile({
-    required String certificadoPath,
-    required String certificadoPassword,
-  }) {
-    return AssinaturaDigitalModel(
-      certificadoPath: certificadoPath,
-      certificadoPassword: certificadoPassword,
-    );
+  factory AssinaturaDigitalModel.fromFile({required String certificadoPath, required String certificadoPassword}) {
+    return AssinaturaDigitalModel(certificadoPath: certificadoPath, certificadoPassword: certificadoPassword);
   }
 
   /// Cria modelo a partir de certificado em base64
-  factory AssinaturaDigitalModel.fromBase64({
-    required String certificadoBase64,
-    required String chavePrivada,
-  }) {
-    return AssinaturaDigitalModel(
-      certificadoBase64: certificadoBase64,
-      chavePrivada: chavePrivada,
-    );
+  factory AssinaturaDigitalModel.fromBase64({required String certificadoBase64, required String chavePrivada}) {
+    return AssinaturaDigitalModel(certificadoBase64: certificadoBase64, chavePrivada: chavePrivada);
   }
 
   /// Valida o certificado digital
@@ -121,10 +99,7 @@ class AssinaturaDigitalModel {
   /// Insere a assinatura no XML
   String _inserirAssinaturaNoXml(String xml, String assinatura) {
     // Substitui o placeholder da assinatura pelo conteúdo real
-    return xml.replaceAll(
-      '<!-- Assinatura digital será inserida aqui -->',
-      assinatura,
-    );
+    return xml.replaceAll('<!-- Assinatura digital será inserida aqui -->', assinatura);
   }
 
   /// Verifica se o certificado está dentro da validade
@@ -134,35 +109,16 @@ class AssinaturaDigitalModel {
     }
 
     final now = DateTime.now();
-    return now.isAfter(certificadoValidadeInicio!) &&
-        now.isBefore(certificadoValidadeFim!);
+    return now.isAfter(certificadoValidadeInicio!) && now.isBefore(certificadoValidadeFim!);
   }
 
   /// Obtém informações do certificado
   Map<String, dynamic> get informacoesCertificado {
-    return {
-      'serial': certificadoSerial,
-      'subject': certificadoSubject,
-      'validade_inicio': certificadoValidadeInicio?.toIso8601String(),
-      'validade_fim': certificadoValidadeFim?.toIso8601String(),
-      'is_valido': isCertificadoValido,
-      'tempo_restante': certificadoValidadeFim != null
-          ? certificadoValidadeFim!.difference(DateTime.now()).inDays
-          : null,
-    };
+    return {'serial': certificadoSerial, 'subject': certificadoSubject, 'validade_inicio': certificadoValidadeInicio?.toIso8601String(), 'validade_fim': certificadoValidadeFim?.toIso8601String(), 'is_valido': isCertificadoValido, 'tempo_restante': certificadoValidadeFim?.difference(DateTime.now()).inDays};
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'certificado_path': certificadoPath,
-      'certificado_base64': certificadoBase64,
-      'certificado_serial': certificadoSerial,
-      'certificado_subject': certificadoSubject,
-      'validade_inicio': certificadoValidadeInicio?.toIso8601String(),
-      'validade_fim': certificadoValidadeFim?.toIso8601String(),
-      'is_valido': isValido,
-      'is_certificado_valido': isCertificadoValido,
-    };
+    return {'certificado_path': certificadoPath, 'certificado_base64': certificadoBase64, 'certificado_serial': certificadoSerial, 'certificado_subject': certificadoSubject, 'validade_inicio': certificadoValidadeInicio?.toIso8601String(), 'validade_fim': certificadoValidadeFim?.toIso8601String(), 'is_valido': isValido, 'is_certificado_valido': isCertificadoValido};
   }
 
   @override
@@ -190,7 +146,10 @@ enum FormatoCertificado {
 
   const FormatoCertificado(this.codigo, this.descricao);
 
+  /// Código do formato de certificado
   final String codigo;
+
+  /// Descrição do formato de certificado
   final String descricao;
 }
 
@@ -202,20 +161,10 @@ class ConfiguracaoAssinatura {
   final String algoritmoAssinatura;
   final bool incluirCadeiaCompleta;
 
-  ConfiguracaoAssinatura({
-    required this.tipoCertificado,
-    required this.formatoCertificado,
-    this.algoritmoHash = 'http://www.w3.org/2001/04/xmlenc#sha256',
-    this.algoritmoAssinatura =
-        'http://www.w3.org/2001/04/xmldsigmore#rsa-sha256',
-    this.incluirCadeiaCompleta = false,
-  });
+  ConfiguracaoAssinatura({required this.tipoCertificado, required this.formatoCertificado, this.algoritmoHash = 'http://www.w3.org/2001/04/xmlenc#sha256', this.algoritmoAssinatura = 'http://www.w3.org/2001/04/xmldsigmore#rsa-sha256', this.incluirCadeiaCompleta = false});
 
   /// Configuração padrão para ICP-Brasil
-  factory ConfiguracaoAssinatura.padraoICPBrasil({
-    required TipoCertificado tipoCertificado,
-    required FormatoCertificado formatoCertificado,
-  }) {
+  factory ConfiguracaoAssinatura.padraoICPBrasil({required TipoCertificado tipoCertificado, required FormatoCertificado formatoCertificado}) {
     return ConfiguracaoAssinatura(
       tipoCertificado: tipoCertificado,
       formatoCertificado: formatoCertificado,
@@ -226,12 +175,6 @@ class ConfiguracaoAssinatura {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'tipo_certificado': tipoCertificado.codigo,
-      'formato_certificado': formatoCertificado.codigo,
-      'algoritmo_hash': algoritmoHash,
-      'algoritmo_assinatura': algoritmoAssinatura,
-      'incluir_cadeia_completa': incluirCadeiaCompleta,
-    };
+    return {'tipo_certificado': tipoCertificado.codigo, 'formato_certificado': formatoCertificado.codigo, 'algoritmo_hash': algoritmoHash, 'algoritmo_assinatura': algoritmoAssinatura, 'incluir_cadeia_completa': incluirCadeiaCompleta};
   }
 }

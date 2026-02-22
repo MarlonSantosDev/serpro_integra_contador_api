@@ -1,3 +1,5 @@
+import 'package:serpro_integra_contador_api/src/util/print.dart';
+
 /// Validações específicas para o sistema PGMEI (Programa Gerador do DAS para o MEI)
 class PgmeiValidations {
   /// Valida período de apuração no formato AAAAMM
@@ -79,13 +81,13 @@ class PgmeiValidations {
     final data = DateTime(ano, mes, dia);
     final agora = DateTime.now();
     if (data.isAfter(agora)) {
-      print('Aviso: Data de consolidação é futura ($dataConsolidacao)');
+      printW('Aviso: Data de consolidação é futura ($dataConsolidacao)');
     }
 
     // Verifica se não é muito antiga
     final limiteAntigo = DateTime(2010, 1, 1);
     if (data.isBefore(limiteAntigo)) {
-      print('Aviso: Data de consolidação é muito antiga ($dataConsolidacao)');
+      printW('Aviso: Data de consolidação é muito antiga ($dataConsolidacao)');
     }
 
     return null;

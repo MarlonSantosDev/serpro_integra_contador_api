@@ -3,13 +3,21 @@
 /// Este enum é específico para o módulo MIT e representa CPF/CNPJ
 /// com códigos numéricos específicos.
 enum MitTipoDocumento {
+  /// CPF (código 1)
   cpf(1, 'CPF'),
+
+  /// CNPJ (código 2)
   cnpj(2, 'CNPJ');
 
   const MitTipoDocumento(this.codigo, this.descricao);
+
+  /// Código numérico do tipo (1=CPF, 2=CNPJ).
   final int codigo;
+
+  /// Descrição do tipo de documento.
   final String descricao;
 
+  /// Obtém o enum a partir do código numérico.
   static MitTipoDocumento? fromCodigo(int codigo) {
     for (final tipo in MitTipoDocumento.values) {
       if (tipo.codigo == codigo) return tipo;
@@ -23,16 +31,23 @@ enum MitTipoDocumento {
 /// Esta classe é específica para o módulo PAGTOWEB e representa
 /// tipos de documento com informações mais detalhadas.
 class PagtoWebTipoDocumento {
+  /// Código do tipo de documento.
   final String codigo;
+
+  /// Descrição completa do tipo.
   final String descricao;
+
+  /// Descrição abreviada do tipo.
   final String descricaoAbreviada;
 
+  /// Construtor para [PagtoWebTipoDocumento].
   PagtoWebTipoDocumento({
     required this.codigo,
     required this.descricao,
     required this.descricaoAbreviada,
   });
 
+  /// Cria uma instância a partir de um mapa JSON.
   factory PagtoWebTipoDocumento.fromJson(Map<String, dynamic> json) {
     return PagtoWebTipoDocumento(
       codigo: json['codigo'].toString(),
@@ -41,6 +56,7 @@ class PagtoWebTipoDocumento {
     );
   }
 
+  /// Serializa para um mapa JSON.
   Map<String, dynamic> toJson() {
     return {
       'codigo': codigo,
