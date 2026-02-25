@@ -21,6 +21,8 @@ class ValidacoesUtils {
   // Padrão regex para limpeza
   static final RegExp _apenasDigitos = RegExp(r'[^\d]');
 
+  static List<String> cpfEcnpjDeTeste = ['00000000000100', '99999999999', '99999999999999', '00000000000000', '11111111111111', '22222222222222', '33333333333333', '00000000000', '11111111111', '22222222222', '33333333333', '44444444444'];
+
   /// Detecta automaticamente o tipo do documento baseado no número
   /// Retorna 1 para CPF (11 dígitos) e 2 para CNPJ (14 dígitos)
   /// Lança ArgumentError se o documento não for válido
@@ -80,9 +82,7 @@ class ValidacoesUtils {
 
     final tipoComum = validateDocumentListConsistency(cpfs);
     if (tipoComum != tipoCpf) {
-      throw ArgumentError(
-        'Todos os documentos na lista devem ser CPFs válidos',
-      );
+      throw ArgumentError('Todos os documentos na lista devem ser CPFs válidos');
     }
 
     // Validar cada CPF individualmente
@@ -101,9 +101,7 @@ class ValidacoesUtils {
 
     final tipoComum = validateDocumentListConsistency(cnpjs);
     if (tipoComum != tipoCnpj) {
-      throw ArgumentError(
-        'Todos os documentos na lista devem ser CNPJs válidos',
-      );
+      throw ArgumentError('Todos os documentos na lista devem ser CNPJs válidos');
     }
 
     // Validar cada CNPJ individualmente
@@ -122,17 +120,7 @@ class ValidacoesUtils {
 
   /// Valida se é um CPF válido (formato e dígitos verificadores)
   static bool isValidCpf(String cpf) {
-    List<String> cnpjDeTeste = [
-      '00000000000100',
-      '99999999999',
-      '99999999999999',
-      '00000000000',
-      '11111111111',
-      '22222222222',
-      '33333333333',
-      '44444444444',
-    ];
-    if (cnpjDeTeste.contains(cpf)) {
+    if (cpfEcnpjDeTeste.contains(cpf)) {
       return true;
     }
     final cleanCpf = cleanDocumentNumber(cpf);
@@ -152,14 +140,7 @@ class ValidacoesUtils {
 
   /// Valida se é um CNPJ válido (formato e dígitos verificadores)
   static bool isValidCnpj(String cnpj) {
-    List<String> cnpjDeTeste = [
-      '00000000000000',
-      '11111111111111',
-      '22222222222222',
-      '33333333333333',
-      '99999999999999',
-    ];
-    if (cnpjDeTeste.contains(cnpj)) {
+    if (cpfEcnpjDeTeste.contains(cnpj)) {
       return true;
     }
     final cleanCnpj = cleanDocumentNumber(cnpj);
@@ -303,64 +284,46 @@ class ValidacoesUtils {
 
   /// Valida e lança exceção se inválido
   static void validateCNPJ(String cnpj, {String? fieldName}) {
-    List<String> cnpjDeTeste = [
-      '00000000000100',
-      '99999999999',
-      '99999999999999',
-      '00000000000000',
-    ];
-    if (cnpjDeTeste.contains(cnpj)) {
+    if (cpfEcnpjDeTeste.contains(cnpj)) {
       return;
     }
     if (!isValidCnpj(cnpj)) {
-      throw ArgumentError(
-        '${fieldName ?? 'CNPJ'} inválido: deve ter exatamente 14 dígitos',
-      );
+      throw ArgumentError('${fieldName ?? 'CNPJ'} inválido: deve ter exatamente 14 dígitos');
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateCPF(String cpf, {String? fieldName}) {
     if (!isValidCpf(cpf)) {
-      throw ArgumentError(
-        '${fieldName ?? 'CPF'} inválido: deve ter exatamente 11 dígitos',
-      );
+      throw ArgumentError('${fieldName ?? 'CPF'} inválido: deve ter exatamente 11 dígitos');
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validatePeriodo(String periodo, {String? fieldName}) {
     if (!isValidPeriodo(periodo)) {
-      throw ArgumentError(
-        '${fieldName ?? 'Período'} inválido: deve estar no formato AAAAMM (ex: 202401)',
-      );
+      throw ArgumentError('${fieldName ?? 'Período'} inválido: deve estar no formato AAAAMM (ex: 202401)');
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateNumeroDeclaracao(String numero, {String? fieldName}) {
     if (!isValidNumeroDeclaracao(numero)) {
-      throw ArgumentError(
-        '${fieldName ?? 'Número da declaração'} inválido: deve ter exatamente 17 dígitos',
-      );
+      throw ArgumentError('${fieldName ?? 'Número da declaração'} inválido: deve ter exatamente 17 dígitos');
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateNumeroDas(String numero, {String? fieldName}) {
     if (!isValidNumeroDas(numero)) {
-      throw ArgumentError(
-        '${fieldName ?? 'Número do DAS'} inválido: deve ter exatamente 17 dígitos',
-      );
+      throw ArgumentError('${fieldName ?? 'Número do DAS'} inválido: deve ter exatamente 17 dígitos');
     }
   }
 
   /// Valida e lança exceção se inválido
   static void validateAno(String ano, {String? fieldName}) {
     if (!isValidAno(ano)) {
-      throw ArgumentError(
-        '${fieldName ?? 'Ano'} inválido: deve ter 4 dígitos (ex: 2024)',
-      );
+      throw ArgumentError('${fieldName ?? 'Ano'} inválido: deve ter 4 dígitos (ex: 2024)');
     }
   }
 
@@ -418,31 +381,17 @@ class ValidacoesUtils {
   }
 
   /// Valida e lança exceção se período de apuração inválido
-  static void validatePeriodoApuracao(
-    String ano,
-    String? mes,
-    String? dia, {
-    String? fieldName,
-  }) {
+  static void validatePeriodoApuracao(String ano, String? mes, String? dia, {String? fieldName}) {
     if (!isValidPeriodoApuracao(ano, mes, dia)) {
-      final periodoStr = mes != null
-          ? (dia != null ? '$ano$mes$dia' : '$ano$mes')
-          : ano;
-      throw ArgumentError(
-        '${fieldName ?? 'Período de apuração'} inválido: $periodoStr',
-      );
+      final periodoStr = mes != null ? (dia != null ? '$ano$mes$dia' : '$ano$mes') : ano;
+      throw ArgumentError('${fieldName ?? 'Período de apuração'} inválido: $periodoStr');
     }
   }
 
   /// Valida e lança exceção se data de acolhimento inválida
-  static void validateDataAcolhimento(
-    int dataAcolhimento, {
-    String? fieldName,
-  }) {
+  static void validateDataAcolhimento(int dataAcolhimento, {String? fieldName}) {
     if (!isValidDataAcolhimento(dataAcolhimento)) {
-      throw ArgumentError(
-        '${fieldName ?? 'Data de acolhimento'} inválida: deve estar no formato AAAAMMDD',
-      );
+      throw ArgumentError('${fieldName ?? 'Data de acolhimento'} inválida: deve estar no formato AAAAMMDD');
     }
   }
 
@@ -603,12 +552,7 @@ class ValidacoesUtils {
     final minuto = int.tryParse(dataHoraStr.substring(10, 12));
     final segundo = int.tryParse(dataHoraStr.substring(12, 14));
 
-    if (ano == null ||
-        mes == null ||
-        dia == null ||
-        hora == null ||
-        minuto == null ||
-        segundo == null) {
+    if (ano == null || mes == null || dia == null || hora == null || minuto == null || segundo == null) {
       return 'Data/hora deve conter apenas números';
     }
 

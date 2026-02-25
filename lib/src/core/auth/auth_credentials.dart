@@ -36,16 +36,7 @@ class AuthCredentials {
   final String ambiente;
 
   /// Constrói [AuthCredentials] com os parâmetros fornecidos.
-  AuthCredentials({
-    required this.consumerKey,
-    required this.consumerSecret,
-    this.certPath,
-    this.certBase64,
-    this.certPassword,
-    required this.contratanteNumero,
-    required this.autorPedidoDadosNumero,
-    required this.ambiente,
-  });
+  AuthCredentials({required this.consumerKey, required this.consumerSecret, this.certPath, this.certBase64, this.certPassword, required this.contratanteNumero, required this.autorPedidoDadosNumero, required this.ambiente});
 
   /// Valida todas as credenciais
   ///
@@ -55,17 +46,11 @@ class AuthCredentials {
   void validate() {
     // Validar consumer credentials
     if (consumerKey.isEmpty) {
-      throw InvalidCredentialsException(
-        'Consumer Key não pode ser vazio',
-        field: 'consumerKey',
-      );
+      throw InvalidCredentialsException('Consumer Key não pode ser vazio', field: 'consumerKey');
     }
 
     if (consumerSecret.isEmpty) {
-      throw InvalidCredentialsException(
-        'Consumer Secret não pode ser vazio',
-        field: 'consumerSecret',
-      );
+      throw InvalidCredentialsException('Consumer Secret não pode ser vazio', field: 'consumerSecret');
     }
 
     // Validar números de documentos
@@ -74,16 +59,13 @@ class AuthCredentials {
     }
 
     if (!ValidacoesUtils.isValidDocument(autorPedidoDadosNumero)) {
-      throw ArgumentError(
-        'Número do autor do pedido inválido: $autorPedidoDadosNumero',
-      );
+      throw ArgumentError('Número do autor do pedido inválido: $autorPedidoDadosNumero');
     }
 
     // Validar ambiente
     if (ambiente != 'trial' && ambiente != 'producao') {
       throw ArgumentError('Ambiente deve ser "trial" ou "producao"');
     }
-
     // Produção requer certificados (via Base64 ou arquivo)
     if (isProduction && !hasCertificate) {
       throw CertificateException(
@@ -94,13 +76,8 @@ class AuthCredentials {
     }
 
     // Se tem certificado, senha é obrigatória
-    if (isProduction &&
-        hasCertificate &&
-        (certPassword == null || certPassword!.isEmpty)) {
-      throw CertificateException(
-        'Senha do certificado é obrigatória em ambiente de produção',
-        reason: CertificateErrorReason.invalidPassword,
-      );
+    if (isProduction && hasCertificate && (certPassword == null || certPassword!.isEmpty)) {
+      throw CertificateException('Senha do certificado é obrigatória em ambiente de produção', reason: CertificateErrorReason.invalidPassword);
     }
   }
 
