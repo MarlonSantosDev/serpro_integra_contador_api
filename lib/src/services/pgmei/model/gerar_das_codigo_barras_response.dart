@@ -17,25 +17,13 @@ class GerarDasCodigoBarrasResponse extends PgmeiBaseResponse {
   /// Parse dos dados como lista de DAS gerados (apenas com código de barras)
   List<DasCodigoBarras>? get dasGerados {
     try {
-      if (dados == null) return [];
-
-      // Se dados é uma lista, retorna diretamente
-      if (dados is List) {
-        return (dados as List)
+      final dadosMap = dados;
+      if (dadosMap == null) return [];
+      if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
+        return (dadosMap['das'] as List)
             .map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>))
             .toList();
       }
-
-      // Se dados é um Map com uma chave 'das' ou similar
-      if (dados is Map) {
-        final dadosMap = dados as Map<String, dynamic>;
-        if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
-          return (dadosMap['das'] as List)
-              .map((d) => DasCodigoBarras.fromJson(d as Map<String, dynamic>))
-              .toList();
-        }
-      }
-
       return [];
     } catch (e) {
       printE('Erro ao parsear DAS código barras gerados: $e');
@@ -125,7 +113,7 @@ class DetalhamentoDasCodigoBarras {
   final String dataLimiteAcolhimento;
 
   /// Discriminação dos valores
-  final ValoresDas valores;
+  final PgmeiValoresDas valores;
 
   /// Lista de códigos de barras gerados
   final List<String> codigoDeBarras;
@@ -140,7 +128,7 @@ class DetalhamentoDasCodigoBarras {
   final String? observacao3;
 
   /// Composição do DAS gerado
-  final List<ComposicaoDas>? composicao;
+  final List<PgmeiComposicaoDas>? composicao;
 
   DetalhamentoDasCodigoBarras({
     required this.periodoApuracao,
@@ -177,7 +165,7 @@ class DetalhamentoDasCodigoBarras {
       numeroDocumento: json['numeroDocumento'].toString(),
       dataVencimento: json['dataVencimento'].toString(),
       dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
-      valores: ValoresDas.fromJson(json['valores']),
+      valores: PgmeiValoresDas.fromJson(json['valores']),
       codigoDeBarras: (json['codigoDeBarras'] as List)
           .map((e) => e.toString())
           .toList(),
@@ -186,7 +174,7 @@ class DetalhamentoDasCodigoBarras {
       observacao3: json['observacao3']?.toString(),
       composicao: json['composicao'] != null
           ? (json['composicao'] as List)
-                .map((c) => ComposicaoDas.fromJson(c))
+                .map((c) => PgmeiComposicaoDas.fromJson(c))
                 .toList()
           : null,
     );

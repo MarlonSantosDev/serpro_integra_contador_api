@@ -6,35 +6,23 @@ import 'base_response.dart';
 ///
 /// Representa a resposta do serviço GERARDASPDF21 que gera DAS
 /// para MEI com PDF completo
-class GerarDasResponse extends PgmeiBaseResponse {
-  GerarDasResponse({
+class PgmeiGerarDasResponse extends PgmeiBaseResponse {
+  PgmeiGerarDasResponse({
     required super.status,
     required super.mensagens,
     required super.dados,
   });
 
   /// Parse dos dados como lista de DAS gerados
-  List<Das>? get dasGerados {
+  List<PgmeiDas>? get dasGerados {
     try {
-      if (dados == null) return [];
-
-      // Se dados é uma lista, retorna diretamente
-      if (dados is List) {
-        return (dados as List)
-            .map((d) => Das.fromJson(d as Map<String, dynamic>))
+      final dadosMap = dados;
+      if (dadosMap == null) return [];
+      if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
+        return (dadosMap['das'] as List)
+            .map((d) => PgmeiDas.fromJson(d as Map<String, dynamic>))
             .toList();
       }
-
-      // Se dados é um Map com uma chave 'das' ou similar
-      if (dados is Map) {
-        final dadosMap = dados as Map<String, dynamic>;
-        if (dadosMap.containsKey('das') && dadosMap['das'] is List) {
-          return (dadosMap['das'] as List)
-              .map((d) => Das.fromJson(d as Map<String, dynamic>))
-              .toList();
-        }
-      }
-
       return [];
     } catch (e) {
       printE('Erro ao parsear DAS gerados: $e');
@@ -42,7 +30,7 @@ class GerarDasResponse extends PgmeiBaseResponse {
     }
   }
 
-  factory GerarDasResponse.fromJson(Map<String, dynamic> json) {
+  factory PgmeiGerarDasResponse.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic>? dadosParsed;
     try {
       final dadosStr = json['dados']?.toString() ?? '';
@@ -59,7 +47,7 @@ class GerarDasResponse extends PgmeiBaseResponse {
       // Se não conseguir fazer parse, mantém dados como null
     }
 
-    return GerarDasResponse(
+    return PgmeiGerarDasResponse(
       status: int.parse(json['status'].toString()),
       mensagens: (json['mensagens'] as List)
           .map((m) => Mensagem.fromJson(m))
@@ -70,7 +58,7 @@ class GerarDasResponse extends PgmeiBaseResponse {
 }
 
 /// DAS gerado pelo PGMEI
-class Das {
+class PgmeiDas {
   /// PDF do DAS no formato Base64
   final String pdf;
 
@@ -83,14 +71,14 @@ class Das {
   /// Detalhamento do DAS (lista de detalhamentos)
   final List<DetalhamentoDas> detalhamento;
 
-  Das({
+  PgmeiDas({
     required this.pdf,
     required this.cnpjCompleto,
     this.razaoSocial,
     required this.detalhamento,
   });
 
-  /// Retorna o primeiro detalhamente (mais comum em DAS únicos)
+  /// Retorna o primeiro detalhamento (mais comum em DAS únicos)
   DetalhamentoDas? get primeiroDetalhamento =>
       detalhamento.isNotEmpty ? detalhamento.first : null;
 
@@ -103,8 +91,8 @@ class Das {
     };
   }
 
-  factory Das.fromJson(Map<String, dynamic> json) {
-    return Das(
+  factory PgmeiDas.fromJson(Map<String, dynamic> json) {
+    return PgmeiDas(
       pdf: json['pdf'].toString(),
       cnpjCompleto: json['cnpjCompleto'].toString(),
       razaoSocial: json['razaoSocial']?.toString(),
@@ -130,7 +118,7 @@ class DetalhamentoDas {
   final String dataLimiteAcolhimento;
 
   /// Discriminação dos valores
-  final ValoresDas valores;
+  final PgmeiValoresDas valores;
 
   /// Lista de códigos de barras gerados (quando aplicável)
   final List<String>? codigoDeBarras;
@@ -145,7 +133,7 @@ class DetalhamentoDas {
   final String? observacao3;
 
   /// Composição do DAS gerado
-  final List<ComposicaoDas>? composicao;
+  final List<PgmeiComposicaoDas>? composicao;
 
   DetalhamentoDas({
     required this.periodoApuracao,
@@ -182,7 +170,7 @@ class DetalhamentoDas {
       numeroDocumento: json['numeroDocumento'].toString(),
       dataVencimento: json['dataVencimento'].toString(),
       dataLimiteAcolhimento: json['dataLimiteAcolhimento'].toString(),
-      valores: ValoresDas.fromJson(json['valores']),
+      valores: PgmeiValoresDas.fromJson(json['valores']),
       codigoDeBarras: json['codigoDeBarras'] != null
           ? (json['codigoDeBarras'] as List).map((e) => e.toString()).toList()
           : null,
@@ -191,15 +179,15 @@ class DetalhamentoDas {
       observacao3: json['observacao3']?.toString(),
       composicao: json['composicao'] != null
           ? (json['composicao'] as List)
-                .map((c) => ComposicaoDas.fromJson(c))
+                .map((c) => PgmeiComposicaoDas.fromJson(c))
                 .toList()
           : null,
     );
   }
 }
 
-/// Valores de um DAS
-class ValoresDas {
+/// Valores de um DAS do PGMEI
+class PgmeiValoresDas {
   /// Valor do principal
   final double principal;
 
@@ -212,7 +200,7 @@ class ValoresDas {
   /// Valor total
   final double total;
 
-  ValoresDas({
+  PgmeiValoresDas({
     required this.principal,
     required this.multa,
     required this.juros,
@@ -228,8 +216,8 @@ class ValoresDas {
     };
   }
 
-  factory ValoresDas.fromJson(Map<String, dynamic> json) {
-    return ValoresDas(
+  factory PgmeiValoresDas.fromJson(Map<String, dynamic> json) {
+    return PgmeiValoresDas(
       principal: double.parse(json['principal'].toString()),
       multa: double.parse(json['multa'].toString()),
       juros: double.parse(json['juros'].toString()),
@@ -238,8 +226,8 @@ class ValoresDas {
   }
 }
 
-/// Composição de um DAS por tributo
-class ComposicaoDas {
+/// Composição de um DAS por tributo (PGMEI)
+class PgmeiComposicaoDas {
   /// Período de apuração do tributo no formato AAAAMM
   final String periodoApuracao;
 
@@ -250,9 +238,9 @@ class ComposicaoDas {
   final String denominacao;
 
   /// Valores discriminados do tributo
-  final ValoresDas valores;
+  final PgmeiValoresDas valores;
 
-  ComposicaoDas({
+  PgmeiComposicaoDas({
     required this.periodoApuracao,
     required this.codigo,
     required this.denominacao,
@@ -268,12 +256,12 @@ class ComposicaoDas {
     };
   }
 
-  factory ComposicaoDas.fromJson(Map<String, dynamic> json) {
-    return ComposicaoDas(
+  factory PgmeiComposicaoDas.fromJson(Map<String, dynamic> json) {
+    return PgmeiComposicaoDas(
       periodoApuracao: json['periodoApuracao'].toString(),
       codigo: json['codigo'].toString(),
       denominacao: json['denominacao'].toString(),
-      valores: ValoresDas.fromJson(json['valores']),
+      valores: PgmeiValoresDas.fromJson(json['valores']),
     );
   }
 }

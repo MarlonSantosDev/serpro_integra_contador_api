@@ -36,7 +36,11 @@ class PgmeiBaseResponse {
     try {
       final dadosStr = json['dados']?.toString() ?? '';
       if (dadosStr.isNotEmpty) {
-        dadosParsed = jsonDecode(dadosStr) as Map<String, dynamic>;
+        final decoded = jsonDecode(dadosStr);
+        if (decoded is Map<String, dynamic>) {
+          dadosParsed = decoded;
+        }
+        // Se decoded for List, os subtipos concretos tratam com chave própria
       }
     } catch (e) {
       // Se não conseguir fazer parse, mantém dados como null

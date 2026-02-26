@@ -7,25 +7,24 @@ Future<void> Pgmei(ApiClient apiClient) async {
   int sucessos = 0;
   int erros = 0;
 
-  // CNPJs de teste da documentação
-  const cnpjContribuinte1 = '00000000000100';
-  const cnpjContribuinte2 = '00000000000101';
+  // CNPJ de teste da documentação
+  const cnpjContribuinte = '00000000000100';
 
   // ========================================
   // 1. GERARDASPDF21 - Gerar DAS com PDF
   // ========================================
   try {
     print('📋 1. GERARDASPDF21 - Gerar DAS com PDF');
-    print('   CNPJ: $cnpjContribuinte1');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Período: 201901');
 
     final response = await pgmeiService.gerarDas(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       periodoApuracao: '201901',
     );
 
     if (response.sucesso) {
-      print('   ✅ Successo: ${response.mensagens.first.texto}');
+      print('   ✅ Sucesso: ${response.mensagens.first.texto}');
 
       final dasGerados = response.dasGerados;
       if (dasGerados != null && dasGerados.isNotEmpty) {
@@ -76,16 +75,16 @@ Future<void> Pgmei(ApiClient apiClient) async {
   // ===================================================
   try {
     print('\n📋 2. GERARDASCODBARRA22 - Gerar DAS código barras');
-    print('   CNPJ: $cnpjContribuinte1');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Período: 201901');
 
     final response = await pgmeiService.gerarDasCodigoBarras(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       periodoApuracao: '201901',
     );
 
     if (response.sucesso) {
-      print('   ✅ Successo: ${response.mensagens.first.texto}');
+      print('   ✅ Sucesso: ${response.mensagens.first.texto}');
 
       final dasGerados = response.dasGerados;
       if (dasGerados != null && dasGerados.isNotEmpty) {
@@ -125,7 +124,7 @@ Future<void> Pgmei(ApiClient apiClient) async {
   // ========================================
   try {
     print('\n📋 3. ATUBENEFICIO23 - Atualizar Benefício');
-    print('   CNPJ: $cnpjContribuinte1');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Ano: 2021');
     print('   Períodos: 202101, 202102');
 
@@ -135,13 +134,13 @@ Future<void> Pgmei(ApiClient apiClient) async {
     ];
 
     final response = await pgmeiService.atualizarBeneficio(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       anoCalendario: 2021,
       beneficios: beneficios,
     );
 
     if (response.sucesso) {
-      print('   ✅ Successo: ${response.mensagens.first.texto}');
+      print('   ✅ Sucesso: ${response.mensagens.first.texto}');
 
       final beneficiosAtualizados = response.beneficiosAtualizados;
       if (beneficiosAtualizados != null && beneficiosAtualizados.isNotEmpty) {
@@ -172,16 +171,16 @@ Future<void> Pgmei(ApiClient apiClient) async {
   // ============================================
   try {
     print('\n📋 4. DIVIDAATIVA24 - Consultar Dívida Ativa');
-    print('   CNPJ: $cnpjContribuinte2');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Ano: 2020');
 
     final response = await pgmeiService.consultarDividaAtiva(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       anoCalendario: '2020',
     );
 
     if (response.sucesso) {
-      print('   ✅ Successo: ${response.mensagens.first.texto}');
+      print('   ✅ Sucesso: ${response.mensagens.first.texto}');
 
       final debitosDividaAtiva = response.debitosDividaAtiva;
       if (response.temDebitosDividaAtiva) {
@@ -223,11 +222,11 @@ Future<void> Pgmei(ApiClient apiClient) async {
   // Teste da interface moderna (sem deprecated)
   try {
     print('\n📋 5. Interface Moderna - Gerar DAS código barras');
-    print('   CNPJ: $cnpjContribuinte1');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Período: 202310');
 
     final response = await pgmeiService.gerarDasCodigoBarras(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       periodoApuracao: '202310',
     );
 
@@ -252,11 +251,11 @@ Future<void> Pgmei(ApiClient apiClient) async {
   // Teste do método simplificado para benefício único
   try {
     print('\n📋 6. Benefício Período Único');
-    print('   CNPJ: $cnpjContribuinte1');
+    print('   CNPJ: $cnpjContribuinte');
     print('   Ano: 2021, Período: 202101');
 
     final response = await pgmeiService.atualizarBeneficioPeriodoUnico(
-      cnpj: cnpjContribuinte1,
+      cnpj: cnpjContribuinte,
       anoCalendario: 2021,
       periodoApuracao: '202101',
       indicadorBeneficio: true,

@@ -27,11 +27,14 @@ import 'model/pgmei_validations.dart';
 /// final pgmeiService = PgmeiService(apiClient);
 ///
 /// // Gerar DAS com PDF
-/// final das = await pgmeiService.gerarDas(
+/// final response = await pgmeiService.gerarDas(
 ///   cnpj: '12345678000190',
 ///   periodoApuracao: '202403',
 /// );
-/// print('PDF: ${das.pdfBase64}');
+/// if (response.sucesso) {
+///   final pdf = response.dasGerados?.first.pdf;
+///   print('PDF Base64: $pdf');
+/// }
 /// ```
 class PgmeiService {
   final ApiClient _apiClient;
@@ -48,7 +51,7 @@ class PgmeiService {
   /// [dataConsolidacao] Data de consolidação no formato AAAAMMDD (opcional)
   /// [contratanteNumero] CNPJ da empresa contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor (opcional)
-  Future<GerarDasResponse> gerarDas({required String cnpj, required String periodoApuracao, String? dataConsolidacao, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
+  Future<PgmeiGerarDasResponse> gerarDas({required String cnpj, required String periodoApuracao, String? dataConsolidacao, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
     // Validações de entrada
     ValidacoesUtils.validateCNPJ(cnpj);
     final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(periodoApuracao);
@@ -70,7 +73,7 @@ class PgmeiService {
     // Chamada à API
     final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
 
-    return GerarDasResponse.fromJson(response);
+    return PgmeiGerarDasResponse.fromJson(response);
   }
 
   /// GERARDASCODBARRA22 - Gerar DAS apenas com código de barras

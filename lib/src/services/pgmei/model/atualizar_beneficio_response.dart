@@ -16,34 +16,13 @@ class AtualizarBeneficioResponse extends PgmeiBaseResponse {
   /// Parse dos dados como lista de benefícios atualizados
   List<AtualizarBeneficioIntegraMei>? get beneficiosAtualizados {
     try {
-      if (dados == null) return [];
-
-      // Se dados é uma lista, retorna diretamente
-      if (dados is List) {
-        return (dados as List)
-            .map(
-              (d) => AtualizarBeneficioIntegraMei.fromJson(
-                d as Map<String, dynamic>,
-              ),
-            )
+      final dadosMap = dados;
+      if (dadosMap == null) return [];
+      if (dadosMap.containsKey('beneficios') && dadosMap['beneficios'] is List) {
+        return (dadosMap['beneficios'] as List)
+            .map((d) => AtualizarBeneficioIntegraMei.fromJson(d as Map<String, dynamic>))
             .toList();
       }
-
-      // Se dados é um Map com uma chave 'beneficios' ou similar
-      if (dados is Map) {
-        final dadosMap = dados as Map<String, dynamic>;
-        if (dadosMap.containsKey('beneficios') &&
-            dadosMap['beneficios'] is List) {
-          return (dadosMap['beneficios'] as List)
-              .map(
-                (d) => AtualizarBeneficioIntegraMei.fromJson(
-                  d as Map<String, dynamic>,
-                ),
-              )
-              .toList();
-        }
-      }
-
       return [];
     } catch (e) {
       printE('Erro ao parsear benefícios atualizados: $e');

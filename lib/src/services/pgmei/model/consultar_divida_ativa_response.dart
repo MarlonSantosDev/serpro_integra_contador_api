@@ -14,27 +14,15 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
   });
 
   /// Parse dos dados como lista de débitos em dívida ativa
-  List<Debito>? get debitosDividaAtiva {
+  List<PgmeiDebito>? get debitosDividaAtiva {
     try {
-      if (dados == null) return [];
-
-      // Se dados é uma lista, retorna diretamente
-      if (dados is List) {
-        return (dados as List)
-            .map((d) => Debito.fromJson(d as Map<String, dynamic>))
+      final dadosMap = dados;
+      if (dadosMap == null) return [];
+      if (dadosMap.containsKey('debitos') && dadosMap['debitos'] is List) {
+        return (dadosMap['debitos'] as List)
+            .map((d) => PgmeiDebito.fromJson(d as Map<String, dynamic>))
             .toList();
       }
-
-      // Se dados é um Map com uma chave 'debitos' ou similar
-      if (dados is Map) {
-        final dadosMap = dados as Map<String, dynamic>;
-        if (dadosMap.containsKey('debitos') && dadosMap['debitos'] is List) {
-          return (dadosMap['debitos'] as List)
-              .map((d) => Debito.fromJson(d as Map<String, dynamic>))
-              .toList();
-        }
-      }
-
       return [];
     } catch (e) {
       printE('Erro ao parsear débitos dívida ativa: $e');
@@ -47,7 +35,7 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
       debitosDividaAtiva != null && debitosDividaAtiva!.isNotEmpty;
 
   /// Retorna apenas os débitos de um tributo específico
-  List<Debito>? getDebitoTributo(String tributo) {
+  List<PgmeiDebito>? getDebitoTributo(String tributo) {
     final debitos = debitosDividaAtiva;
     if (debitos == null) return null;
     return debitos
@@ -89,8 +77,8 @@ class ConsultarDividaAtivaResponse extends PgmeiBaseResponse {
   }
 }
 
-/// Débito em dívida ativa
-class Debito {
+/// Débito em dívida ativa do PGMEI
+class PgmeiDebito {
   /// Período de apuração em formato AAAAMM
   final String periodoApuracao;
 
@@ -106,7 +94,7 @@ class Debito {
   /// Texto descrevendo a situação da dívida do tributo (ex: "Enviado à PFN")
   final String situacaoDebito;
 
-  Debito({
+  PgmeiDebito({
     required this.periodoApuracao,
     required this.tributo,
     required this.valor,
@@ -124,8 +112,8 @@ class Debito {
     };
   }
 
-  factory Debito.fromJson(Map<String, dynamic> json) {
-    return Debito(
+  factory PgmeiDebito.fromJson(Map<String, dynamic> json) {
+    return PgmeiDebito(
       periodoApuracao: json['periodoApuracao'].toString(),
       tributo: json['tributo'].toString(),
       valor: double.parse(json['valor'].toString()),

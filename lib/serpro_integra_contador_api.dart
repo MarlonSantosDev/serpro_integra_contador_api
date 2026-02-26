@@ -115,10 +115,10 @@ export 'src/services/pgdasd/model/entregar_declaracao_com_das_response.dart';
 
 // PGMEI Models
 export 'src/services/pgmei/model/base_response.dart' hide Mensagem;
-export 'src/services/pgmei/model/gerar_das_response.dart' hide GerarDasResponse, ValoresDas, Das, ComposicaoDas;
+export 'src/services/pgmei/model/gerar_das_response.dart';
 export 'src/services/pgmei/model/gerar_das_codigo_barras_response.dart';
 export 'src/services/pgmei/model/atualizar_beneficio_response.dart';
-export 'src/services/pgmei/model/consultar_divida_ativa_response.dart' hide Debito;
+export 'src/services/pgmei/model/consultar_divida_ativa_response.dart';
 export 'src/services/pgmei/model/pgmei_requests.dart' hide GerarDasRequest;
 
 // DCTFWeb Models
