@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarUltimaDeclaracaoComPagamentoResponse-class.html">ConsultarUltimaDeclaracaoComPagamentoResponse</a></span>&gt;</span></span>
-<span class="name ">consultarUltimaDeclaracaoComPagamento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarUltimaDeclaracaoComPagamento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracaoComPagamento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -103,7 +103,7 @@ print('DAS Pago: ${resultado.dasPago ? "Sim" : "Não"}');
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarUltimaDeclaracaoComPagamentoResponse&gt;
 consultarUltimaDeclaracaoComPagamento({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required String periodoApuracao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
@@ -208,7 +208,7 @@ consultarUltimaDeclaracaoComPagamento({
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

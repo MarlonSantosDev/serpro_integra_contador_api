@@ -51,28 +51,54 @@ class PgmeiService {
   /// [dataConsolidacao] Data de consolidação no formato AAAAMMDD (opcional)
   /// [contratanteNumero] CNPJ da empresa contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor (opcional)
-  Future<PgmeiGerarDasResponse> gerarDas({String? cnpj, required String periodoApuracao, String? dataConsolidacao, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+  Future<PgmeiGerarDasResponse> gerarDas({
+    String? cnpj,
+    required String periodoApuracao,
+    String? dataConsolidacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validações de entrada
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
-    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(periodoApuracao);
+    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(
+      periodoApuracao,
+    );
     if (validacaoPeriodo != null) throw ArgumentError(validacaoPeriodo);
     if (dataConsolidacao != null) {
-      final validacao = PgmeiValidations.validarDataConsolidacao(dataConsolidacao);
+      final validacao = PgmeiValidations.validarDataConsolidacao(
+        dataConsolidacao,
+      );
       if (validacao != null) throw ArgumentError(validacao);
     }
 
     // Criação dos dados de entrada
-    final requestData = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
+    final requestData = GerarDasRequest(
+      periodoApuracao: periodoApuracao,
+      dataConsolidacao: dataConsolidacao,
+    );
 
     // Montagem da requisição
     final request = BaseRequest(
       contribuinteNumero: resolvedCnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'GERARDASPDF21', versaoSistema: '1.0', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'GERARDASPDF21',
+        versaoSistema: '1.0',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     // Chamada à API
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     return PgmeiGerarDasResponse.fromJson(response);
   }
@@ -87,28 +113,54 @@ class PgmeiService {
   /// [dataConsolidacao] Data de consolidação no formato AAAAMMDD (opcional)
   /// [contratanteNumero] CNPJ da empresa contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor (opcional)
-  Future<GerarDasCodigoBarrasResponse> gerarDasCodigoBarras({String? cnpj, required String periodoApuracao, String? dataConsolidacao, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+  Future<GerarDasCodigoBarrasResponse> gerarDasCodigoBarras({
+    String? cnpj,
+    required String periodoApuracao,
+    String? dataConsolidacao,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validações de entrada
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
-    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(periodoApuracao);
+    final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(
+      periodoApuracao,
+    );
     if (validacaoPeriodo != null) throw ArgumentError(validacaoPeriodo);
     if (dataConsolidacao != null) {
-      final validacao = PgmeiValidations.validarDataConsolidacao(dataConsolidacao);
+      final validacao = PgmeiValidations.validarDataConsolidacao(
+        dataConsolidacao,
+      );
       if (validacao != null) throw ArgumentError(validacao);
     }
 
     // Criação dos dados de entrada
-    final requestData = GerarDasRequest(periodoApuracao: periodoApuracao, dataConsolidacao: dataConsolidacao);
+    final requestData = GerarDasRequest(
+      periodoApuracao: periodoApuracao,
+      dataConsolidacao: dataConsolidacao,
+    );
 
     // Montagem da requisição
     final request = BaseRequest(
       contribuinteNumero: resolvedCnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'GERARDASCODBARRA22', versaoSistema: '1.0', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'GERARDASCODBARRA22',
+        versaoSistema: '1.0',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     // Chamada à API
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     return GerarDasCodigoBarrasResponse.fromJson(response);
   }
@@ -122,8 +174,17 @@ class PgmeiService {
   /// [beneficios] Lista de informações de benefícios por período
   /// [contratanteNumero] CNPJ da empresa contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor (opcional)
-  Future<AtualizarBeneficioResponse> atualizarBeneficio({String? cnpj, required int anoCalendario, required List<InfoBeneficio> beneficios, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+  Future<AtualizarBeneficioResponse> atualizarBeneficio({
+    String? cnpj,
+    required int anoCalendario,
+    required List<InfoBeneficio> beneficios,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validações de entrada
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
     // Valida ano (1900-2099)
@@ -136,20 +197,35 @@ class PgmeiService {
     if (anoCalendario > anoAtual + 1) {
       printW('Aviso: Ano calendário é futuro ($anoCalendario)');
     }
-    final validacaoBeneficios = PgmeiValidations.validarInfoBeneficio(beneficios);
+    final validacaoBeneficios = PgmeiValidations.validarInfoBeneficio(
+      beneficios,
+    );
     if (validacaoBeneficios != null) throw ArgumentError(validacaoBeneficios);
 
     // Criação dos dados de entrada
-    final requestData = AtualizarBeneficioRequest(anoCalendario: anoCalendario, infoBeneficio: beneficios);
+    final requestData = AtualizarBeneficioRequest(
+      anoCalendario: anoCalendario,
+      infoBeneficio: beneficios,
+    );
 
     // Montagem da requisição
     final request = BaseRequest(
       contribuinteNumero: resolvedCnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'ATUBENEFICIO23', versaoSistema: '1.0', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'ATUBENEFICIO23',
+        versaoSistema: '1.0',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     // Chamada à API
-    final response = await _apiClient.post('/Emitir', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Emitir',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     return AtualizarBeneficioResponse.fromJson(response);
   }
@@ -162,8 +238,16 @@ class PgmeiService {
   /// [anoCalendario] Ano calendário no formato AAAA
   /// [contratanteNumero] CNPJ da empresa contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor (opcional)
-  Future<ConsultarDividaAtivaResponse> consultarDividaAtiva({String? cnpj, required String anoCalendario, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+  Future<ConsultarDividaAtivaResponse> consultarDividaAtiva({
+    String? cnpj,
+    required String anoCalendario,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validações de entrada
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
@@ -178,7 +262,9 @@ class PgmeiService {
 
     // Verifica se são apenas números
     if (!RegExp(r'^\d{4}$').hasMatch(anoCalendario)) {
-      throw ArgumentError('Ano calendário deve conter apenas números no formato AAAA');
+      throw ArgumentError(
+        'Ano calendário deve conter apenas números no formato AAAA',
+      );
     }
 
     // Valida ano (1900-2099)
@@ -194,16 +280,28 @@ class PgmeiService {
     }
 
     // Criação dos dados de entrada
-    final requestData = ConsultarDividaAtivaRequest(anoCalendario: anoCalendario);
+    final requestData = ConsultarDividaAtivaRequest(
+      anoCalendario: anoCalendario,
+    );
 
     // Montagem da requisição
     final request = BaseRequest(
       contribuinteNumero: resolvedCnpj,
-      pedidoDados: PedidoDados(idSistema: 'PGMEI', idServico: 'DIVIDAATIVA24', versaoSistema: '1.0', dados: requestData.toJsonString()),
+      pedidoDados: PedidoDados(
+        idSistema: 'PGMEI',
+        idServico: 'DIVIDAATIVA24',
+        versaoSistema: '1.0',
+        dados: requestData.toJsonString(),
+      ),
     );
 
     // Chamada à API
-    final response = await _apiClient.post('/Consultar', request, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    final response = await _apiClient.post(
+      '/Consultar',
+      request,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
 
     return ConsultarDividaAtivaResponse.fromJson(response);
   }
@@ -215,9 +313,27 @@ class PgmeiService {
   /// Wrapper simplificado para atualizar benefício com período único
   ///
   /// Para casos simples onde se atualiza apenas um período
-  Future<AtualizarBeneficioResponse> atualizarBeneficioPeriodoUnico({String? cnpj, required int anoCalendario, required String periodoApuracao, required bool indicadorBeneficio, String? contratanteNumero, String? autorPedidoDadosNumero}) async {
-    final beneficios = [InfoBeneficio(periodoApuracao: periodoApuracao, indicadorBeneficio: indicadorBeneficio)];
+  Future<AtualizarBeneficioResponse> atualizarBeneficioPeriodoUnico({
+    String? cnpj,
+    required int anoCalendario,
+    required String periodoApuracao,
+    required bool indicadorBeneficio,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) async {
+    final beneficios = [
+      InfoBeneficio(
+        periodoApuracao: periodoApuracao,
+        indicadorBeneficio: indicadorBeneficio,
+      ),
+    ];
 
-    return atualizarBeneficio(cnpj: cnpj, anoCalendario: anoCalendario, beneficios: beneficios, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero);
+    return atualizarBeneficio(
+      cnpj: cnpj,
+      anoCalendario: anoCalendario,
+      beneficios: beneficios,
+      contratanteNumero: contratanteNumero,
+      autorPedidoDadosNumero: autorPedidoDadosNumero,
+    );
   }
 }

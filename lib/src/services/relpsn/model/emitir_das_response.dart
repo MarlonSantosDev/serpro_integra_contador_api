@@ -6,7 +6,11 @@ class EmitirDasResponse {
   final List<Mensagem> mensagens;
   final DasData? dados;
 
-  EmitirDasResponse({required this.status, required this.mensagens, this.dados});
+  EmitirDasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory EmitirDasResponse.fromJson(Map<String, dynamic> json) {
     DasData? dadosParsed;
@@ -16,7 +20,9 @@ class EmitirDasResponse {
         // Se dadosJson já é um JSON válido, usa diretamente
         if (dadosStr.startsWith('{')) {
           final Map<String, dynamic> jsonMap = jsonDecode(dadosStr);
-          dadosParsed = DasData(docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString());
+          dadosParsed = DasData(
+            docArrecadacaoPdfB64: jsonMap['docArrecadacaoPdfB64'].toString(),
+          );
         } else {
           // Caso contrário, tenta parsear como string
           dadosParsed = DasData.fromJson(dadosStr);
@@ -26,11 +32,21 @@ class EmitirDasResponse {
       // Se não conseguir fazer parse, mantém dados como null
     }
 
-    return EmitirDasResponse(status: json['status'].toString(), mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e as Map<String, dynamic>)).toList(), dados: dadosParsed);
+    return EmitirDasResponse(
+      status: json['status'].toString(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      dados: dadosParsed,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -46,7 +62,9 @@ class EmitirDasResponse {
 
   /// Verifica se o PDF foi gerado com sucesso
   bool get pdfGeradoComSucesso {
-    return sucesso && dados?.docArrecadacaoPdfB64 != null && dados!.docArrecadacaoPdfB64.isNotEmpty;
+    return sucesso &&
+        dados?.docArrecadacaoPdfB64 != null &&
+        dados!.docArrecadacaoPdfB64.isNotEmpty;
   }
 
   /// Retorna o tamanho do PDF em bytes
@@ -81,7 +99,9 @@ class DasData {
 
   factory DasData.fromJson(String jsonString) {
     final Map<String, dynamic> json = {"docArrecadacaoPdfB64": jsonString};
-    return DasData(docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString());
+    return DasData(
+      docArrecadacaoPdfB64: json['docArrecadacaoPdfB64'].toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +119,11 @@ class DasData {
 
   /// Retorna informações sobre o PDF
   Map<String, dynamic> get pdfInfo {
-    return {'disponivel': pdfDisponivel, 'tamanho_caracteres': docArrecadacaoPdfB64.length, 'tamanho_bytes_aproximado': (docArrecadacaoPdfB64.length * 3) ~/ 4, 'preview': pdfPreview};
+    return {
+      'disponivel': pdfDisponivel,
+      'tamanho_caracteres': docArrecadacaoPdfB64.length,
+      'tamanho_bytes_aproximado': (docArrecadacaoPdfB64.length * 3) ~/ 4,
+      'preview': pdfPreview,
+    };
   }
 }

@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">ConsultarUltimaDeclaracaoResponse</span>&gt;</span></span>
-<span class="name ">consultarUltimaDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarUltimaDeclaracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarUltimaDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarUltimaDeclaracao-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracao-param-ano"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">ano</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarUltimaDeclaracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -78,15 +78,19 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarUltimaDeclaracaoResponse&gt; consultarUltimaDeclaracao({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required int ano,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   final consultaRequest = ConsultarUltimaDeclaracaoRequest(ano: ano);
 
   final request = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;DEFIS&#39;,
       idServico: &#39;CONSULTIMADECREC143&#39;,
@@ -130,7 +134,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

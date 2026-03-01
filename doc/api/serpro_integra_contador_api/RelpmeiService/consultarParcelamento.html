@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarParcelamentoRelpmeiResponse-class.html">ConsultarParcelamentoRelpmeiResponse</a></span>&gt;</span></span>
-<span class="name ">consultarParcelamento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarParcelamento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarParcelamento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarParcelamento-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarParcelamento-param-numeroParcelamento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">numeroParcelamento</span>, </span></li>
 <li><span class="parameter" id="consultarParcelamento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarParcelamento-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -80,7 +80,7 @@ na modalidade RELPMEI.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarParcelamentoRelpmeiResponse&gt; consultarParcelamento({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required int numeroParcelamento,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
@@ -121,7 +121,7 @@ na modalidade RELPMEI.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

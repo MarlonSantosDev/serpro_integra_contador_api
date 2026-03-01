@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/GerarDasProcessoResponse-class.html">GerarDasProcessoResponse</a></span>&gt;</span></span>
-<span class="name ">gerarDasProcesso</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDasProcesso-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">gerarDasProcesso</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDasProcesso-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="gerarDasProcesso-param-numeroProcesso"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">numeroProcesso</span>, </span></li>
 <li><span class="parameter" id="gerarDasProcesso-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="gerarDasProcesso-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -78,11 +78,15 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;GerarDasProcessoResponse&gt; gerarDasProcesso({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required String numeroProcesso,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   final processoRequest = GerarDasProcessoRequest(
     numeroProcesso: numeroProcesso,
   );
@@ -92,7 +96,7 @@
   }
 
   final baseRequest = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGDASD&#39;,
       idServico: &#39;GERARDASPROCESSO18&#39;,
@@ -136,7 +140,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarDeclaracoesResponse-class.html">ConsultarDeclaracoesResponse</a></span>&gt;</span></span>
-<span class="name ">consultarDeclaracoes</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDeclaracoes-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarDeclaracoes</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDeclaracoes-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracoes-param-anoCalendario"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">anoCalendario</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracoes-param-periodoApuracao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">periodoApuracao</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracoes-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
@@ -80,12 +80,16 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarDeclaracoesResponse&gt; consultarDeclaracoes({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   String? anoCalendario,
   String? periodoApuracao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   final consultaRequest = anoCalendario != null
       ? ConsultarDeclaracoesRequest.porAnoCalendario(anoCalendario)
       : ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao!);
@@ -95,7 +99,7 @@
   }
 
   final baseRequest = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGDASD&#39;,
       idServico: &#39;CONSDECLARACAO13&#39;,
@@ -139,7 +143,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

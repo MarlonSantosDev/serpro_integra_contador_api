@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:serpro_integra_contador_api/src/util/print.dart';
 import 'base_response.dart';
 
 /// Modelo de resposta para GERARDASPDF21 - Gerar DAS com PDF
@@ -25,8 +24,8 @@ class PgmeiGerarDasResponse extends PgmeiBaseResponse {
       }
       return [];
     } catch (e) {
-      printE('Erro ao parsear DAS gerados: $e');
-      return null;
+      // printE('Erro ao parsear DAS gerados: $e');
+      return [];
     }
   }
 

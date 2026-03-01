@@ -80,7 +80,7 @@
     final dadosMap = jsonDecode(dados) as Map&lt;String, dynamic&gt;;
     return DasEmitidoRelpmei.fromJson(dadosMap);
   } catch (e) {
-    print(&#39;Erro ao parsear DAS emitido: $e&#39;);
+    printE(&#39;Erro ao parsear DAS emitido: $e&#39;);
     return null;
   }
 }</code></pre>
@@ -113,7 +113,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

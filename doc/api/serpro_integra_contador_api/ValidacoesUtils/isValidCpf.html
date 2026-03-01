@@ -71,17 +71,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static bool isValidCpf(String cpf) {
-  List&lt;String&gt; cnpjDeTeste = [
-    &#39;00000000000100&#39;,
-    &#39;99999999999&#39;,
-    &#39;99999999999999&#39;,
-    &#39;00000000000&#39;,
-    &#39;11111111111&#39;,
-    &#39;22222222222&#39;,
-    &#39;33333333333&#39;,
-    &#39;44444444444&#39;,
-  ];
-  if (cnpjDeTeste.contains(cpf)) {
+  if (cpfEcnpjDeTeste.contains(cpf)) {
     return true;
   }
   final cleanCpf = cleanDocumentNumber(cpf);
@@ -125,7 +115,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -69,7 +69,10 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = ConsultarPagamentosRequest(
       contribuinteNumero: resolvedContribuinte,
       dataInicial: dataInicial,
@@ -116,7 +119,10 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = ContarPagamentosRequest(
       contribuinteNumero: resolvedContribuinte,
       dataInicial: dataInicial,
@@ -150,7 +156,10 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = EmitirComprovanteRequest(
       contribuinteNumero: resolvedContribuinte,
       numeroDocumento: numeroDocumento,

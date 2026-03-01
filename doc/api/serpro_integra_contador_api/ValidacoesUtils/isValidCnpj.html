@@ -71,14 +71,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static bool isValidCnpj(String cnpj) {
-  List&lt;String&gt; cnpjDeTeste = [
-    &#39;00000000000000&#39;,
-    &#39;11111111111111&#39;,
-    &#39;22222222222222&#39;,
-    &#39;33333333333333&#39;,
-    &#39;99999999999999&#39;,
-  ];
-  if (cnpjDeTeste.contains(cnpj)) {
+  if (cpfEcnpjDeTeste.contains(cnpj)) {
     return true;
   }
   final cleanCnpj = cleanDocumentNumber(cnpj);
@@ -122,7 +115,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

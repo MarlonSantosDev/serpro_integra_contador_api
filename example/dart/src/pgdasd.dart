@@ -84,14 +84,14 @@ Future<void> Pgdasd(ApiClient apiClient) async {
       print("declaracao: ${entregarResponse.dados!.declaracao.isEmpty}");
       print("recibo: ${entregarResponse.dados!.recibo.isEmpty}");
       print(
-        "notificacaoMaed: ${entregarResponse.dados!.notificacaoMaed!.isEmpty}",
+        "notificacaoMaed: ${entregarResponse.dados!.notificacaoMaed?.isEmpty ?? 'N/A'}",
       );
-      print("darf: ${entregarResponse.dados!.darf!.isEmpty}");
+      print("darf: ${entregarResponse.dados!.darf?.isEmpty ?? 'N/A'}");
       print(
         "detalhamentoDarfMaed: ${entregarResponse.dados!.detalhamentoDarfMaed != null}",
       );
       print(
-        "detalhamentoDarfMaed.periodoApuracao: ${entregarResponse.dados!.detalhamentoDarfMaed!.periodoApuracao}",
+        "detalhamentoDarfMaed.periodoApuracao: ${entregarResponse.dados!.detalhamentoDarfMaed?.periodoApuracao}",
       );
       print(
         "detalhamentoDarfMaed.numeroDocumento: ${entregarResponse.dados!.detalhamentoDarfMaed?.numeroDocumento}",

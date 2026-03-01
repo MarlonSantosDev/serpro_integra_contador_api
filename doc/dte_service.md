@@ -164,10 +164,13 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 void main() async {
   // Configurar cliente
-  final apiClient = ApiClient(
-    baseUrl: 'https://apigateway.serpro.gov.br/integra-contador-trial/v1',
-    clientId: 'seu_client_id',
-    clientSecret: 'seu_client_secret',
+  final apiClient = ApiClient();
+  await apiClient.authenticate(
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial', // ou 'producao'
   );
 
   // Criar serviço

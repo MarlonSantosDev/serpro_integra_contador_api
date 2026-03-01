@@ -109,7 +109,7 @@
 <h2 id="-instalao">🔧 Instalação</h2>
 <p>Adicione ao seu <code>pubspec.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  serpro_integra_contador_api: ^2.0.11
+  serpro_integra_contador_api: ^2.0.12
 </code></pre>
 <p>Execute:</p>
 <pre class="language-bash"><code class="language-bash">flutter pub get
@@ -328,20 +328,20 @@ void main() async {
   final ccmeiService = CcmeiService(apiClient);
   final response = await ccmeiService.emitirCcmei('00000000000000');
   
-  if (response.sucesso) {
+  if (response.status == 200) {
     print('CCMEI emitido com sucesso!');
-    print('Número: ${response.dados?.numeroCertificado}');
+    print('CNPJ: ${response.dados.cnpj}');
     
     // Salvar PDF
-    if (response.dados?.pdf.isNotEmpty == true) {
+    if (response.dados.pdf.isNotEmpty) {
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-        response.dados!.pdf,
+        response.dados.pdf,
         'ccmei_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );
       print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
     }
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('Erro: ${response.mensagens.isNotEmpty ? response.mensagens.first.texto : ""}');
   }
 }
 </code></pre>
@@ -394,12 +394,13 @@ void main() async {
 
   // Consultar caixa postal
   final caixaPostalService = CaixaPostalService(apiClient);
-  final response = await caixaPostalService.listarTodasMensagens('00000000000000');
+  final response = await caixaPostalService.obterListaMensagensPorContribuinte('00000000000000');
   
-  if (response.sucesso) {
-    print('Mensagens encontradas: ${response.dadosParsed?.mensagens.length ?? 0}');
-    for (final mensagem in response.dadosParsed?.mensagens ?? []) {
-      print('Assunto: ${mensagem.assunto}');
+  if (response.status == 200 &amp;&amp; response.dados != null) {
+    final mensagens = response.dados!.conteudo.expand((c) =&gt; c.listaMensagens).toList();
+    print('Mensagens encontradas: ${mensagens.length}');
+    for (final mensagem in mensagens) {
+      print('Assunto: ${mensagem.assuntoModelo}');
       print('Data: ${mensagem.dataEnvio}');
     }
   }
@@ -439,26 +440,25 @@ void main() async {
     receitaPaCompetenciaInterno: 50000.00,
     receitaPaCompetenciaExterno: 10000.00,
     estabelecimentos: [
-      // ... estrutura da declaração
+      // ... estrutura da declaração (Estabelecimento com atividades, etc.)
     ],
   );
   
   final entregaResponse = await pgdasdService.entregarDeclaracaoComDas(
-    contribuinteNumero: '00000000000100',
-    request: EntregarDeclaracaoRequest(
-      cnpjCompleto: '00000000000100',
-      pa: 202504,
-      indicadorTransmissao: true,
-      indicadorComparacao: true,
-      declaracao: declaracao,
-      valoresParaComparacao: [],
-    ),
+    cnpj: '00000000000100',
+    periodoApuracao: 202504,
+    declaracao: declaracao,
+    indicadorTransmissao: true,
+    indicadorComparacao: true,
+    valoresParaComparacao: [],
   );
   
   if (entregaResponse.sucesso) {
     print('✅ Declaração e DAS gerados!');
     print('ID: ${entregaResponse.dadosDeclaracao?.idDeclaracao}');
-    print('DAS: ${entregaResponse.dadosDas?.first.detalhamento.numeroDocumento}');
+    if (entregaResponse.dadosDas != null &amp;&amp; entregaResponse.dadosDas!.isNotEmpty) {
+      print('DAS: ${entregaResponse.dadosDas!.first.detalhamento.numeroDocumento}');
+    }
   } else if (entregaResponse.declaracaoEntregue) {
     print('⚠️ Declaração OK, mas DAS falhou');
   }
@@ -553,30 +553,28 @@ final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
 </code></pre>
 <h2 id="-tratamento-de-erros">📊 Tratamento de Erros</h2>
 <h3 id="estrutura-padro-de-resposta">Estrutura Padrão de Resposta</h3>
-<pre class="language-dart"><code class="language-dart">class ApiResponse&lt;T&gt; {
-  final bool sucesso;
-  final String? mensagemErro;
-  final T? dados;
-  final List&lt;MensagemNegocio&gt; mensagens;
-}
-</code></pre>
+<p>As respostas variam por serviço. Em geral há:</p>
+<ul>
+<li><code>status</code> (int): código HTTP (200 = sucesso)</li>
+<li><code>mensagens</code> (List): lista de mensagens de negócio</li>
+<li><code>dados</code>: payload parseado (tipo específico de cada serviço)</li>
+<li>Muitos serviços expõem getter <code>sucesso</code> (status == 200). Alguns (ex.: PGMEI) também expõem <code>mensagemErro</code> (texto da primeira mensagem).</li>
+</ul>
 <h3 id="tratamento-de-erros-comum">Tratamento de Erros Comum</h3>
 <pre class="language-dart"><code class="language-dart">try {
   final response = await service.metodoExemplo();
   
-  if (response.sucesso) {
+  if (response.sucesso) {  // ou response.status == 200
     // Processar dados
     print('Sucesso: ${response.dados}');
   } else {
-    // Tratar erro
-    print('Erro: ${response.mensagemErro}');
+    // Tratar erro (quando há getter mensagemErro use-o; senão use mensagens)
+    final textoErro = response.mensagemErro ?? 
+        (response.mensagens.isNotEmpty ? response.mensagens.first.texto : '');
+    print('Erro: $textoErro');
     
-    // Analisar mensagens específicas
     for (final mensagem in response.mensagens) {
-      if (mensagem.isErro) {
-        print('Código: ${mensagem.codigo}');
-        print('Texto: ${mensagem.texto}');
-      }
+      print('Código: ${mensagem.codigo}, Texto: ${mensagem.texto}');
     }
   }
 } catch (e) {
@@ -722,7 +720,7 @@ final eventos = await eventosAtualizacaoService.solicitarEObterEventosPF(
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

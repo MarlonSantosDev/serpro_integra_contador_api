@@ -25,10 +25,16 @@ class AuthenticationFailedException extends AuthException {
   final String? responseBody;
 
   /// Cria exceção com [message], [statusCode] e opcional [responseBody].
-  AuthenticationFailedException(super.message, {required this.statusCode, this.responseBody, super.originalError});
+  AuthenticationFailedException(
+    super.message, {
+    required this.statusCode,
+    this.responseBody,
+    super.originalError,
+  });
 
   @override
-  String toString() => 'AuthenticationFailedException: $message (Status: $statusCode)';
+  String toString() =>
+      'AuthenticationFailedException: $message (Status: $statusCode)';
 }
 
 /// Razões específicas para falhas de certificado
@@ -61,7 +67,11 @@ class CertificateException extends AuthException {
   final CertificateErrorReason reason;
 
   /// Cria exceção com [message], [reason] e opcional [certificatePath].
-  CertificateException(super.message, {this.certificatePath, required this.reason});
+  CertificateException(
+    super.message, {
+    this.certificatePath,
+    required this.reason,
+  });
 
   @override
   String toString() {
@@ -76,7 +86,8 @@ class TokenExpiredException extends AuthException {
   final DateTime expiredAt;
 
   /// Cria exceção indicando expiração em [expiredAt].
-  TokenExpiredException(this.expiredAt) : super('Token expirado em ${expiredAt.toIso8601String()}');
+  TokenExpiredException(this.expiredAt)
+    : super('Token expirado em ${expiredAt.toIso8601String()}');
 
   @override
   String toString() => 'TokenExpiredException: $message';
@@ -118,7 +129,8 @@ class MtlsNotSupportedException extends AuthException {
   final String platform;
 
   /// Cria exceção para a [platform] não suportada.
-  MtlsNotSupportedException(this.platform) : super('mTLS não suportado na plataforma: $platform');
+  MtlsNotSupportedException(this.platform)
+    : super('mTLS não suportado na plataforma: $platform');
 
   @override
   String toString() => 'MtlsNotSupportedException: $message';

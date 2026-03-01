@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/TransmitirDeclaracaoResponse-class.html">TransmitirDeclaracaoResponse</a></span>&gt;</span></span>
-<span class="name ">transmitirDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="transmitirDeclaracao-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">transmitirDeclaracao</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="transmitirDeclaracao-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="transmitirDeclaracao-param-declaracaoData"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/TransmitirDeclaracaoRequest-class.html">TransmitirDeclaracaoRequest</a></span> <span class="parameter-name">declaracaoData</span>, </span></li>
 <li><span class="parameter" id="transmitirDeclaracao-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="transmitirDeclaracao-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -78,13 +78,17 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;TransmitirDeclaracaoResponse&gt; transmitirDeclaracao({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required TransmitirDeclaracaoRequest declaracaoData,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   final request = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;DEFIS&#39;,
       idServico: &#39;TRANSDECLARACAO141&#39;,
@@ -128,7 +132,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

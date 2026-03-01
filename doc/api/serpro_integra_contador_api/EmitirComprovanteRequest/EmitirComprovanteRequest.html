@@ -65,10 +65,9 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">EmitirComprovanteRequest({
-  required String contribuinteNumero,
+  required super.contribuinteNumero,
   required this.numeroDocumento,
 }) : super(
-       contribuinteNumero: contribuinteNumero,
        pedidoDados: PedidoDados(
          idSistema: &#39;PAGTOWEB&#39;,
          idServico: &#39;COMPARRECADACAO72&#39;,
@@ -103,7 +102,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

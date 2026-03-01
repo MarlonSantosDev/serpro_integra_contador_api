@@ -70,7 +70,10 @@ class CaixaPostalService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinte ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final dadosMap = <String, dynamic>{
       'statusLeitura': statusLeitura.toString(),
       'indicadorPagina': indicadorPagina.toString(),
@@ -124,7 +127,10 @@ class CaixaPostalService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinte ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -160,7 +166,10 @@ class CaixaPostalService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinte ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(

@@ -55,7 +55,10 @@ class SitfisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final request = SolicitarProtocoloRequest(
       contribuinteNumero: resolvedContribuinte,
     );
@@ -86,7 +89,10 @@ class SitfisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final request = EmitirRelatorioRequest(
       contribuinteNumero: resolvedContribuinte,
       protocoloRelatorio: protocoloRelatorio,

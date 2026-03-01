@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/AtualizarBeneficioResponse-class.html">AtualizarBeneficioResponse</a></span>&gt;</span></span>
-<span class="name ">atualizarBeneficio</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="atualizarBeneficio-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<span class="name ">atualizarBeneficio</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="atualizarBeneficio-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficio-param-anoCalendario"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoCalendario</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficio-param-beneficios"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/InfoBeneficio-class.html">InfoBeneficio</a></span>&gt;</span></span> <span class="parameter-name">beneficios</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficio-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
@@ -81,14 +81,18 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;AtualizarBeneficioResponse&gt; atualizarBeneficio({
-  required String cnpj,
+  String? cnpj,
   required int anoCalendario,
   required List&lt;InfoBeneficio&gt; beneficios,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validações de entrada
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
   &#47;&#47; Valida ano (1900-2099)
   if (anoCalendario &lt; 1900 || anoCalendario &gt; 2099) {
     throw ArgumentError(&#39;Ano calendário deve estar entre 1900 e 2099&#39;);
@@ -97,7 +101,7 @@
   &#47;&#47; Verifica se não é ano muito futuro
   final anoAtual = DateTime.now().year;
   if (anoCalendario &gt; anoAtual + 1) {
-    print(&#39;Aviso: Ano calendário é futuro ($anoCalendario)&#39;);
+    printW(&#39;Aviso: Ano calendário é futuro ($anoCalendario)&#39;);
   }
   final validacaoBeneficios = PgmeiValidations.validarInfoBeneficio(
     beneficios,
@@ -112,7 +116,7 @@
 
   &#47;&#47; Montagem da requisição
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGMEI&#39;,
       idServico: &#39;ATUBENEFICIO23&#39;,
@@ -158,7 +162,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

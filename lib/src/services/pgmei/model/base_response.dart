@@ -23,6 +23,11 @@ class PgmeiBaseResponse {
   /// Indica se a operação foi bem-sucedida
   bool get sucesso => status == 200;
 
+  /// Texto da primeira mensagem de erro (conveniência para exibição).
+  /// Retorna null se não houver mensagens.
+  String? get mensagemErro =>
+      mensagens.isNotEmpty ? mensagens.first.texto : null;
+
   Map<String, dynamic> toJson() {
     return {
       'status': status,

@@ -72,7 +72,7 @@
     ocupacoesSecundarias: (json[&#39;ocupacoesSecundarias&#39;] as List)
         .map((e) =&gt; Ocupacao.fromJson(e))
         .toList(),
-    optanteMei: json[&#39;optanteMei&#39;] == null ? false : json[&#39;optanteMei&#39;],
+    optanteMei: json[&#39;optanteMei&#39;] ?? false,
   );
 }</code></pre>
 </section>
@@ -102,7 +102,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

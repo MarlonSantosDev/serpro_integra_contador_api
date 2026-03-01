@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ContarPagamentosResponse-class.html">ContarPagamentosResponse</a></span>&gt;</span></span>
-<span class="name ">contarPagamentosPorIntervaloValorTotalDocumento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="contarPagamentosPorIntervaloValorTotalDocumento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">contarPagamentosPorIntervaloValorTotalDocumento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="contarPagamentosPorIntervaloValorTotalDocumento-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="contarPagamentosPorIntervaloValorTotalDocumento-param-valorInicial"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorInicial</span>, </span></li>
 <li><span class="parameter" id="contarPagamentosPorIntervaloValorTotalDocumento-param-valorFinal"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorFinal</span>, </span></li>
 <li><span class="parameter" id="contarPagamentosPorIntervaloValorTotalDocumento-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
@@ -76,7 +76,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ContarPagamentosResponse&gt;
 contarPagamentosPorIntervaloValorTotalDocumento({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required double valorInicial,
   required double valorFinal,
   String? contratanteNumero,
@@ -117,7 +117,7 @@ contarPagamentosPorIntervaloValorTotalDocumento({
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

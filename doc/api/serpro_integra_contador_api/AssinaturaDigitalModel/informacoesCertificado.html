@@ -80,9 +80,9 @@
     &#39;validade_inicio&#39;: certificadoValidadeInicio?.toIso8601String(),
     &#39;validade_fim&#39;: certificadoValidadeFim?.toIso8601String(),
     &#39;is_valido&#39;: isCertificadoValido,
-    &#39;tempo_restante&#39;: certificadoValidadeFim != null
-        ? certificadoValidadeFim!.difference(DateTime.now()).inDays
-        : null,
+    &#39;tempo_restante&#39;: certificadoValidadeFim
+        ?.difference(DateTime.now())
+        .inDays,
   };
 }</code></pre>
 </section>
@@ -114,7 +114,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

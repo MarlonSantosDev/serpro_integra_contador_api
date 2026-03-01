@@ -5,7 +5,10 @@ import 'package:serpro_integra_contador_api/src/util/print.dart';
 /// Implementação nativa para Desktop/Mobile - suporta operações de arquivo
 class ArquivoUtils {
   /// Salva um arquivo em base64 em um arquivo local
-  static Future<bool> salvarArquivo(String pdfBase64, String nomeDoArquivo) async {
+  static Future<bool> salvarArquivo(
+    String pdfBase64,
+    String nomeDoArquivo,
+  ) async {
     try {
       if (pdfBase64.isEmpty) {
         throw Exception('PDF base64 vazio');

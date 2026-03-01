@@ -52,7 +52,10 @@ class DteService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
       contribuinteNumero: resolvedCnpj,
       pedidoDados: PedidoDados(

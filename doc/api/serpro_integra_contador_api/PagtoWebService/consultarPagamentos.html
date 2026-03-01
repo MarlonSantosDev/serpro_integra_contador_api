@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarPagamentosResponse-class.html">ConsultarPagamentosResponse</a></span>&gt;</span></span>
-<span class="name ">consultarPagamentos</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarPagamentos-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarPagamentos</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarPagamentos-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentos-param-dataInicial"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataInicial</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentos-param-dataFinal"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataFinal</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentos-param-codigoReceitaLista"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">codigoReceitaLista</span>, </span></li>
@@ -94,7 +94,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarPagamentosResponse&gt; consultarPagamentos({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   String? dataInicial,
   String? dataFinal,
   List&lt;String&gt;? codigoReceitaLista,
@@ -107,8 +107,12 @@
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ&#47;CPF do contribuinte é obrigatório&#39;));
   final request = ConsultarPagamentosRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     dataInicial: dataInicial,
     dataFinal: dataFinal,
     codigoReceitaLista: codigoReceitaLista,
@@ -155,7 +159,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/SolicitarProtocoloResponse-class.html">SolicitarProtocoloResponse</a></span>&gt;</span></span>
-<span class="name ">solicitarProtocoloRelatorio</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="solicitarProtocoloRelatorio-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, {</span></li>
+<span class="name ">solicitarProtocoloRelatorio</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="solicitarProtocoloRelatorio-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, {</span></li>
 <li><span class="parameter" id="solicitarProtocoloRelatorio-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="solicitarProtocoloRelatorio-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
 </ol>})
@@ -79,12 +79,16 @@ um protocolo que será usado posteriormente para emitir o relatório.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;SolicitarProtocoloResponse&gt; solicitarProtocoloRelatorio(
-  String contribuinteNumero, {
+  String? contribuinteNumero, {
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CPF&#47;CNPJ do contribuinte é obrigatório&#39;));
   final request = SolicitarProtocoloRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
   );
 
   final response = await _apiClient.post(
@@ -122,7 +126,7 @@ um protocolo que será usado posteriormente para emitir o relatório.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

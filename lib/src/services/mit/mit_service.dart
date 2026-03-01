@@ -70,7 +70,10 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = EncerrarApuracaoRequest(
       periodoApuracao: periodoApuracao,
       dadosIniciais: dadosIniciais,
@@ -115,7 +118,10 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ConsultarSituacaoEncerramentoRequest(
       protocoloEncerramento: protocoloEncerramento,
     );
@@ -155,7 +161,10 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ConsultarApuracaoRequest(idApuracao: idApuracao);
 
     final baseRequest = BaseRequest(
@@ -197,7 +206,10 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ListarApuracaoesRequest(
       anoApuracao: anoApuracao,
       mesApuracao: mesApuracao,

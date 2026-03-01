@@ -28,8 +28,8 @@ final apiClient = ApiClient();
 await apiClient.authenticate(
   consumerKey: 'seu_consumer_key',
   consumerSecret: 'seu_consumer_secret', 
-  certPath: 'caminho/para/certificado.p12',
-  certPassword: 'senha_do_certificado',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
   ambiente: 'trial', // ou 'producao'
 );
 ```
@@ -436,8 +436,8 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho/para/certificado.p12',
-    certPassword: 'senha_do_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
   );
   
   // 2. Criar serviço

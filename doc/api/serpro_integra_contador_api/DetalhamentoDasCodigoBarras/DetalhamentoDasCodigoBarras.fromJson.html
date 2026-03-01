@@ -69,7 +69,7 @@
     numeroDocumento: json[&#39;numeroDocumento&#39;].toString(),
     dataVencimento: json[&#39;dataVencimento&#39;].toString(),
     dataLimiteAcolhimento: json[&#39;dataLimiteAcolhimento&#39;].toString(),
-    valores: ValoresDas.fromJson(json[&#39;valores&#39;]),
+    valores: PgmeiValoresDas.fromJson(json[&#39;valores&#39;]),
     codigoDeBarras: (json[&#39;codigoDeBarras&#39;] as List)
         .map((e) =&gt; e.toString())
         .toList(),
@@ -78,7 +78,7 @@
     observacao3: json[&#39;observacao3&#39;]?.toString(),
     composicao: json[&#39;composicao&#39;] != null
         ? (json[&#39;composicao&#39;] as List)
-              .map((c) =&gt; ComposicaoDas.fromJson(c))
+              .map((c) =&gt; PgmeiComposicaoDas.fromJson(c))
               .toList()
         : null,
   );
@@ -110,7 +110,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

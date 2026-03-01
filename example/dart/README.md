@@ -125,11 +125,7 @@ example/dart/
 │   ├── sicalc.dart
 │   ├── sitfis.dart
 │   └── import.dart              # Exportações de todos os exemplos
-├── my_test/                     # Testes e exemplos adicionais
-│   ├── pgdas.dart
-│   ├── pgdas2.dart
-│   ├── teste.dart
-│   └── teste2.dart
+│   └── ...                      # outros arquivos de teste
 └── arquivos/                    # Arquivos gerados (PDFs, etc.)
     └── pdf/
 ```

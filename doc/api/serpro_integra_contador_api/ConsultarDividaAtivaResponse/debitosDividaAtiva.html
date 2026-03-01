@@ -59,7 +59,7 @@
   <section id="getter">
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">Debito</span>&gt;</span>?</span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/PgmeiDebito-class.html">PgmeiDebito</a></span>&gt;</span>?</span>
       get
       <span class="name ">debitosDividaAtiva</span>
       
@@ -73,30 +73,18 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List&lt;Debito&gt;? get debitosDividaAtiva {
+  <pre class="language-dart"><code class="language-dart">List&lt;PgmeiDebito&gt;? get debitosDividaAtiva {
   try {
-    if (dados == null) return [];
-
-    &#47;&#47; Se dados é uma lista, retorna diretamente
-    if (dados is List) {
-      return (dados as List)
-          .map((d) =&gt; Debito.fromJson(d as Map&lt;String, dynamic&gt;))
+    final dadosMap = dados;
+    if (dadosMap == null) return [];
+    if (dadosMap.containsKey(&#39;debitos&#39;) &amp;&amp; dadosMap[&#39;debitos&#39;] is List) {
+      return (dadosMap[&#39;debitos&#39;] as List)
+          .map((d) =&gt; PgmeiDebito.fromJson(d as Map&lt;String, dynamic&gt;))
           .toList();
     }
-
-    &#47;&#47; Se dados é um Map com uma chave &#39;debitos&#39; ou similar
-    if (dados is Map) {
-      final dadosMap = dados as Map&lt;String, dynamic&gt;;
-      if (dadosMap.containsKey(&#39;debitos&#39;) &amp;&amp; dadosMap[&#39;debitos&#39;] is List) {
-        return (dadosMap[&#39;debitos&#39;] as List)
-            .map((d) =&gt; Debito.fromJson(d as Map&lt;String, dynamic&gt;))
-            .toList();
-      }
-    }
-
     return [];
   } catch (e) {
-    print(&#39;Erro ao parsear débitos dívida ativa: $e&#39;);
+    printE(&#39;Erro ao parsear débitos dívida ativa: $e&#39;);
     return null;
   }
 }</code></pre>
@@ -129,7 +117,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

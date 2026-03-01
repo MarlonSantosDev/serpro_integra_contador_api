@@ -18,9 +18,14 @@ class AtualizarBeneficioResponse extends PgmeiBaseResponse {
     try {
       final dadosMap = dados;
       if (dadosMap == null) return [];
-      if (dadosMap.containsKey('beneficios') && dadosMap['beneficios'] is List) {
+      if (dadosMap.containsKey('beneficios') &&
+          dadosMap['beneficios'] is List) {
         return (dadosMap['beneficios'] as List)
-            .map((d) => AtualizarBeneficioIntegraMei.fromJson(d as Map<String, dynamic>))
+            .map(
+              (d) => AtualizarBeneficioIntegraMei.fromJson(
+                d as Map<String, dynamic>,
+              ),
+            )
             .toList();
       }
       return [];

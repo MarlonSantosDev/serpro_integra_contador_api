@@ -66,7 +66,10 @@ class RelpmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -120,7 +123,10 @@ class RelpmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -170,7 +176,10 @@ class RelpmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -227,7 +236,10 @@ class RelpmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -277,7 +289,10 @@ class RelpmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(

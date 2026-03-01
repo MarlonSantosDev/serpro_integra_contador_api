@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/EmitirCcmeiResponse-class.html">EmitirCcmeiResponse</a></span>&gt;</span></span>
-<span class="name ">emitirCcmei</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="emitirCcmei-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, {</span></li>
+<span class="name ">emitirCcmei</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="emitirCcmei-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, {</span></li>
 <li><span class="parameter" id="emitirCcmei-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="emitirCcmei-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
 </ol>})
@@ -97,16 +97,20 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;EmitirCcmeiResponse&gt; emitirCcmei(
-  String cnpj, {
+  String? cnpj, {
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validar formato do CNPJ antes de fazer a requisição
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
   &#47;&#47; Criar requisição com dados específicos do serviço CCMEI
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;CCMEI&#39;,
       idServico: &#39;EMITIRCCMEI121&#39;, &#47;&#47; ID específico para emissão de CCMEI
@@ -151,7 +155,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

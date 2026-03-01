@@ -72,13 +72,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static void validateCNPJ(String cnpj, {String? fieldName}) {
-  List&lt;String&gt; cnpjDeTeste = [
-    &#39;00000000000100&#39;,
-    &#39;99999999999&#39;,
-    &#39;99999999999999&#39;,
-    &#39;00000000000000&#39;,
-  ];
-  if (cnpjDeTeste.contains(cnpj)) {
+  if (cpfEcnpjDeTeste.contains(cnpj)) {
     return;
   }
   if (!isValidCnpj(cnpj)) {
@@ -114,7 +108,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

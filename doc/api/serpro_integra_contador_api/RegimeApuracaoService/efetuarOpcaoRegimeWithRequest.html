@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/EfetuarOpcaoRegimeResponse-class.html">EfetuarOpcaoRegimeResponse</a></span>&gt;</span></span>
-<span class="name ">efetuarOpcaoRegimeWithRequest</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="efetuarOpcaoRegimeWithRequest-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">efetuarOpcaoRegimeWithRequest</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="efetuarOpcaoRegimeWithRequest-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegimeWithRequest-param-request"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/EfetuarOpcaoRegimeRequest-class.html">EfetuarOpcaoRegimeRequest</a></span> <span class="parameter-name">request</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegimeWithRequest-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegimeWithRequest-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -80,17 +80,21 @@ efetuem a opção anual pelo regime de apuração (Competência ou Caixa).</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;EfetuarOpcaoRegimeResponse&gt; efetuarOpcaoRegimeWithRequest({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required EfetuarOpcaoRegimeRequest request,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   if (!request.isValid) {
     throw ArgumentError(&#39;Dados da opção pelo regime inválidos&#39;);
   }
 
   final baseRequest = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;REGIMEAPURACAO&#39;,
       idServico: &#39;EFETUAROPCAOREGIME101&#39;,
@@ -134,7 +138,7 @@ efetuem a opção anual pelo regime de apuração (Competência ou Caixa).</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

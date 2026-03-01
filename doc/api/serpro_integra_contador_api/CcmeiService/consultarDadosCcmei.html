@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarDadosCcmeiResponse-class.html">ConsultarDadosCcmeiResponse</a></span>&gt;</span></span>
-<span class="name ">consultarDadosCcmei</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="consultarDadosCcmei-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, {</span></li>
+<span class="name ">consultarDadosCcmei</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="consultarDadosCcmei-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, {</span></li>
 <li><span class="parameter" id="consultarDadosCcmei-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarDadosCcmei-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
 </ol>})
@@ -85,16 +85,20 @@ Lança exceção se o CNPJ for inválido ou houver erro na API</li>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarDadosCcmeiResponse&gt; consultarDadosCcmei(
-  String cnpj, {
+  String? cnpj, {
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validar formato do CNPJ antes de fazer a requisição
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
   &#47;&#47; Criar requisição para consulta de dados completos
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;CCMEI&#39;,
       idServico: &#39;DADOSCCMEI122&#39;, &#47;&#47; ID específico para consulta de dados
@@ -139,7 +143,7 @@ Lança exceção se o CNPJ for inválido ou houver erro na API</li>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

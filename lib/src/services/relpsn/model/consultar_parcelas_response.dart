@@ -6,7 +6,11 @@ class ConsultarParcelasResponse {
   final List<Mensagem> mensagens;
   final ListaParcelasData? dados;
 
-  ConsultarParcelasResponse({required this.status, required this.mensagens, this.dados});
+  ConsultarParcelasResponse({
+    required this.status,
+    required this.mensagens,
+    this.dados,
+  });
 
   factory ConsultarParcelasResponse.fromJson(Map<String, dynamic> json) {
     ListaParcelasData? dadosParsed;
@@ -19,11 +23,21 @@ class ConsultarParcelasResponse {
       // Se não conseguir fazer parse, mantém dados como null
     }
 
-    return ConsultarParcelasResponse(status: json['status'].toString(), mensagens: (json['mensagens'] as List).map((e) => Mensagem.fromJson(e)).toList(), dados: dadosParsed);
+    return ConsultarParcelasResponse(
+      status: json['status'].toString(),
+      mensagens: (json['mensagens'] as List)
+          .map((e) => Mensagem.fromJson(e))
+          .toList(),
+      dados: dadosParsed,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'status': status, 'mensagens': mensagens.map((e) => e.toJson()).toList(), 'dados': dados != null ? jsonEncode(dados!.toJson()) : ''};
+    return {
+      'status': status,
+      'mensagens': mensagens.map((e) => e.toJson()).toList(),
+      'dados': dados != null ? jsonEncode(dados!.toJson()) : '',
+    };
   }
 
   /// Verifica se a requisição foi bem-sucedida
@@ -45,7 +59,11 @@ class ListaParcelasData {
 
   factory ListaParcelasData.fromJson(String jsonString) {
     final json = jsonDecode(jsonString);
-    return ListaParcelasData(listaParcelas: (json['listaParcelas'] as List).map((e) => Parcela.fromJson(e as Map<String, dynamic>)).toList());
+    return ListaParcelasData(
+      listaParcelas: (json['listaParcelas'] as List)
+          .map((e) => Parcela.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -72,9 +90,13 @@ class ListaParcelasData {
     if (listaParcelas.isEmpty) return null;
 
     final hoje = DateTime.now();
-    final anoMesAtual = int.parse('${hoje.year}${hoje.month.toString().padLeft(2, '0')}');
+    final anoMesAtual = int.parse(
+      '${hoje.year}${hoje.month.toString().padLeft(2, '0')}',
+    );
 
-    final parcelasFuturas = listaParcelas.where((p) => p.parcelaInt >= anoMesAtual).toList();
+    final parcelasFuturas = listaParcelas
+        .where((p) => p.parcelaInt >= anoMesAtual)
+        .toList();
 
     if (parcelasFuturas.isEmpty) return null;
 
@@ -90,7 +112,10 @@ class Parcela {
   Parcela({required this.parcela, required this.valor});
 
   factory Parcela.fromJson(Map<String, dynamic> json) {
-    return Parcela(parcela: json['parcela'].toString(), valor: (num.parse(json['valor'].toString())).toDouble());
+    return Parcela(
+      parcela: json['parcela'].toString(),
+      valor: (num.parse(json['valor'].toString())).toDouble(),
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarPagamentosResponse-class.html">ConsultarPagamentosResponse</a></span>&gt;</span></span>
-<span class="name ">consultarPagamentosPorIntervaloValorTotalDocumento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarPagamentosPorIntervaloValorTotalDocumento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarPagamentosPorIntervaloValorTotalDocumento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarPagamentosPorIntervaloValorTotalDocumento-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentosPorIntervaloValorTotalDocumento-param-valorInicial"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorInicial</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentosPorIntervaloValorTotalDocumento-param-valorFinal"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">valorFinal</span>, </span></li>
 <li><span class="parameter" id="consultarPagamentosPorIntervaloValorTotalDocumento-param-primeiroDaPagina"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">primeiroDaPagina</span> = <span class="default-value">0</span>, </span></li>
@@ -78,7 +78,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarPagamentosResponse&gt;
 consultarPagamentosPorIntervaloValorTotalDocumento({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required double valorInicial,
   required double valorFinal,
   int primeiroDaPagina = 0,
@@ -123,7 +123,7 @@ consultarPagamentosPorIntervaloValorTotalDocumento({
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

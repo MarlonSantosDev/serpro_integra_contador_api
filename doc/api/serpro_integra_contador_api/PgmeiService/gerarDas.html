@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">GerarDasResponse</span>&gt;</span></span>
-<span class="name ">gerarDas</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDas-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/PgmeiGerarDasResponse-class.html">PgmeiGerarDasResponse</a></span>&gt;</span></span>
+<span class="name ">gerarDas</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDas-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, </span></li>
 <li><span class="parameter" id="gerarDas-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
 <li><span class="parameter" id="gerarDas-param-dataConsolidacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataConsolidacao</span>, </span></li>
 <li><span class="parameter" id="gerarDas-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
@@ -81,15 +81,19 @@ para contribuintes MEI (Microempreendedor Individual)</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;GerarDasResponse&gt; gerarDas({
-  required String cnpj,
+  <pre class="language-dart"><code class="language-dart">Future&lt;PgmeiGerarDasResponse&gt; gerarDas({
+  String? cnpj,
   required String periodoApuracao,
   String? dataConsolidacao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validações de entrada
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
   final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(
     periodoApuracao,
   );
@@ -109,7 +113,7 @@ para contribuintes MEI (Microempreendedor Individual)</p>
 
   &#47;&#47; Montagem da requisição
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGMEI&#39;,
       idServico: &#39;GERARDASPDF21&#39;,
@@ -126,7 +130,7 @@ para contribuintes MEI (Microempreendedor Individual)</p>
     autorPedidoDadosNumero: autorPedidoDadosNumero,
   );
 
-  return GerarDasResponse.fromJson(response);
+  return PgmeiGerarDasResponse.fromJson(response);
 }</code></pre>
 </section>
 
@@ -155,7 +159,7 @@ para contribuintes MEI (Microempreendedor Individual)</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarRelatorioResponse-class.html">ConsultarRelatorioResponse</a></span>&gt;</span></span>
-<span class="name ">consultarDeclaracaoCompleta</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDeclaracaoCompleta-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">consultarDeclaracaoCompleta</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDeclaracaoCompleta-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracaoCompleta-param-categoria"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/CategoriaDctf.html">CategoriaDctf</a></span> <span class="parameter-name">categoria</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracaoCompleta-param-anoPA"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">anoPA</span>, </span></li>
 <li><span class="parameter" id="consultarDeclaracaoCompleta-param-mesPA"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">mesPA</span>, </span></li>
@@ -88,7 +88,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarRelatorioResponse&gt; consultarDeclaracaoCompleta({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required CategoriaDctf categoria,
   required String anoPA,
   String? mesPA,
@@ -99,6 +99,10 @@
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedContribuinte =
+      contribuinteNumero ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CPF&#47;CNPJ do contribuinte é obrigatório&#39;));
   final dctfRequest = ConsultarDctfWebRequest(
     categoria: categoria,
     anoPA: anoPA,
@@ -110,7 +114,7 @@
   );
 
   final request = BaseRequest(
-    contribuinteNumero: contribuinteNumero,
+    contribuinteNumero: resolvedContribuinte,
     pedidoDados: PedidoDados(
       idSistema: &#39;DCTFWEB&#39;,
       idServico: &#39;CONSDECCOMPLETA33&#39;,
@@ -152,7 +156,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

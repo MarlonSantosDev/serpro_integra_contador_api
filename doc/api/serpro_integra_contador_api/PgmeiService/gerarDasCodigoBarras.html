@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/GerarDasCodigoBarrasResponse-class.html">GerarDasCodigoBarrasResponse</a></span>&gt;</span></span>
-<span class="name ">gerarDasCodigoBarras</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDasCodigoBarras-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<span class="name ">gerarDasCodigoBarras</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="gerarDasCodigoBarras-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, </span></li>
 <li><span class="parameter" id="gerarDasCodigoBarras-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
 <li><span class="parameter" id="gerarDasCodigoBarras-param-dataConsolidacao"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">dataConsolidacao</span>, </span></li>
 <li><span class="parameter" id="gerarDasCodigoBarras-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
@@ -82,14 +82,18 @@ código de barras, sem PDF, para contribuintes MEI</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;GerarDasCodigoBarrasResponse&gt; gerarDasCodigoBarras({
-  required String cnpj,
+  String? cnpj,
   required String periodoApuracao,
   String? dataConsolidacao,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validações de entrada
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
   final validacaoPeriodo = PgmeiValidations.validarPeriodoApuracao(
     periodoApuracao,
   );
@@ -109,7 +113,7 @@ código de barras, sem PDF, para contribuintes MEI</p>
 
   &#47;&#47; Montagem da requisição
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGMEI&#39;,
       idServico: &#39;GERARDASCODBARRA22&#39;,
@@ -155,7 +159,7 @@ código de barras, sem PDF, para contribuintes MEI</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

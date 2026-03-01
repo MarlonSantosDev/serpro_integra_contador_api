@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/AtualizarBeneficioResponse-class.html">AtualizarBeneficioResponse</a></span>&gt;</span></span>
-<span class="name ">atualizarBeneficioPeriodoUnico</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="atualizarBeneficioPeriodoUnico-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<span class="name ">atualizarBeneficioPeriodoUnico</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="atualizarBeneficioPeriodoUnico-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficioPeriodoUnico-param-anoCalendario"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoCalendario</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficioPeriodoUnico-param-periodoApuracao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">periodoApuracao</span>, </span></li>
 <li><span class="parameter" id="atualizarBeneficioPeriodoUnico-param-indicadorBeneficio"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">indicadorBeneficio</span>, </span></li>
@@ -77,7 +77,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;AtualizarBeneficioResponse&gt; atualizarBeneficioPeriodoUnico({
-  required String cnpj,
+  String? cnpj,
   required int anoCalendario,
   required String periodoApuracao,
   required bool indicadorBeneficio,
@@ -126,7 +126,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

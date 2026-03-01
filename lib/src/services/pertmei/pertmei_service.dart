@@ -46,7 +46,8 @@ class PertmeiService {
     String? contribuinteNumero,
   ) async {
     try {
-      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
+      final resolvedContribuinte =
+          contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
       if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarPedidosResponse(
@@ -98,7 +99,8 @@ class PertmeiService {
     int numeroParcelamento,
   ) async {
     try {
-      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
+      final resolvedContribuinte =
+          contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
       if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarParcelamentoResponse(
@@ -161,7 +163,8 @@ class PertmeiService {
     String? contribuinteNumero,
   ) async {
     try {
-      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
+      final resolvedContribuinte =
+          contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
       if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarParcelasResponse(
@@ -215,7 +218,8 @@ class PertmeiService {
     int anoMesParcela,
   ) async {
     try {
-      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
+      final resolvedContribuinte =
+          contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
       if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarDetalhesPagamentoResponse(
@@ -297,7 +301,8 @@ class PertmeiService {
     int parcelaParaEmitir,
   ) async {
     try {
-      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
+      final resolvedContribuinte =
+          contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
       if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return EmitirDasResponse(

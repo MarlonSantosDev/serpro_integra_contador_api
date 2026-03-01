@@ -51,7 +51,10 @@ class DefisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -81,7 +84,10 @@ class DefisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
       contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
@@ -113,7 +119,10 @@ class DefisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarUltimaDeclaracaoRequest(ano: ano);
 
     final request = BaseRequest(
@@ -148,7 +157,10 @@ class DefisService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarDeclaracaoEspecificaRequest(
       idDefis: idDefis,
     );

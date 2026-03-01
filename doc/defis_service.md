@@ -171,8 +171,8 @@ void main() async {
   await apiClient.authenticate(
     consumerKey: 'seu_consumer_key',
     consumerSecret: 'seu_consumer_secret',
-    certPath: 'caminho_certificado',
-    certPassword: 'senha_certificado',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
     contratanteNumero: '00000000000100',
     autorPedidoDadosNumero: '00000000000100',
   );

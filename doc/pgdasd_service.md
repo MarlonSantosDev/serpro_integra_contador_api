@@ -1,21 +1,21 @@
-# PGDASD - Pagamento de DAS por Débito Direto Autorizado
+# PGDASD - Programa Gerador do DAS do Simples Nacional
 
 ## Visão Geral
 
-O serviço PGDASD permite gerenciar declarações e pagamentos do Simples Nacional para MEI, incluindo entrega de declarações mensais, geração de DAS, consulta de declarações e extratos.
+O serviço PGDASD permite gerenciar declarações e pagamentos do Simples Nacional, incluindo entrega de declarações mensais, geração de DAS, consulta de declarações e extratos.
 
 ## Funcionalidades
 
-- **Entregar Declaração Mensal**: Transmissão de declarações mensais do Simples Nacional
-- **Gerar DAS**: Geração de Documento de Arrecadação Simples Nacional
-- **Consultar Declarações**: Consulta de declarações transmitidas por ano ou período
-- **Consultar Última Declaração**: Consulta da última declaração transmitida
-- **Consultar Declaração por Número**: Consulta de declaração específica
-- **Consultar Extrato DAS**: Consulta de extrato de DAS
-- **Gerar DAS Cobrança**: Geração de DAS para cobrança
-- **Gerar DAS Processo**: Geração de DAS para processo
-- **Gerar DAS Avulso**: Geração de DAS avulso
-- **Métodos Compostos**: Operações que combinam múltiplas chamadas em uma única operação
+- **Entregar Declaração Mensal** (`TRANSDECLARACAO11`): Transmissão de declarações mensais do Simples Nacional
+- **Gerar DAS** (`GERARDAS12`): Geração de Documento de Arrecadação Simples Nacional
+- **Consultar Declarações** (`CONSDECLARACAO13`): Consulta de declarações transmitidas por ano ou período
+- **Consultar Última Declaração** (`CONSULTIMADECREC14`): Consulta da última declaração/recibo transmitida
+- **Consultar Declaração por Número** (`CONSDECREC15`): Consulta de declaração/recibo específica por número
+- **Consultar Extrato DAS** (`CONSEXTRATO16`): Consulta de extrato da apuração por número de DAS
+- **Gerar DAS Cobrança** (`GERARDASCOBRANCA17`): Geração de DAS com débitos em sistema de cobrança
+- **Gerar DAS Processo** (`GERARDASPROCESSO18`): Geração de DAS de processo
+- **Gerar DAS Avulso** (`GERARDASAVULSO19`): Geração de DAS avulso com tributos específicos
+- **Métodos Compostos**:
   - **Consultar Última Declaração com Pagamento**: Consulta a última declaração e verifica se o DAS foi pago
   - **Entregar Declaração com DAS**: Entrega a declaração e gera o DAS automaticamente
 
@@ -52,7 +52,7 @@ await apiClient.authenticate(
 final pgdasdService = PgdasdService(apiClient);
 ```
 
-### 2. Entregar Declaração Mensal
+### 2. Entregar Declaração Mensal (TRANSDECLARACAO11)
 
 ```dart
 try {
@@ -72,19 +72,10 @@ try {
               ReceitaAtividade(
                 valor: 60000.00,
                 isencoes: [
-                  Isencao(
-                    codTributo: 1,
-                    valor: 1000.00,
-                    identificador: 1,
-                  ),
+                  Isencao(codTributo: 1, valor: 1000.00, identificador: 1),
                 ],
                 reducoes: [
-                  Reducao(
-                    codTributo: 1,
-                    valor: 500.00,
-                    percentualReducao: 5.0,
-                    identificador: 1,
-                  ),
+                  Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1),
                 ],
               ),
             ],
@@ -95,33 +86,33 @@ try {
   );
 
   final response = await pgdasdService.entregarDeclaracao(
-    contribuinteNumero: '00000000000100',
-    request: EntregarDeclaracaoRequest(
-      cnpjCompleto: '00000000000100',
-      pa: 202101,
-      indicadorTransmissao: true,
-      indicadorComparacao: true,
-      declaracao: declaracao,
-      valoresParaComparacao: [
-        ValorDevido(codigoTributo: 1, valor: 1000.00),
+    cnpj: '00000000000100',
+    periodoApuracao: 202504,
+    declaracao: declaracao,
+    indicadorTransmissao: true,
+    indicadorComparacao: true,
+    valoresParaComparacao: [
+      ValorDevido(codigoTributo: 1, valor: 1000.00),
       ValorDevido(codigoTributo: 2, valor: 500.00),
     ],
   );
 
   if (response.sucesso) {
     print('Declaração entregue com sucesso!');
-    print('ID Declaração: ${response.dadosParsed?.first.idDeclaracao}');
-    print('Data Transmissão: ${response.dadosParsed?.first.dataHoraTransmissao}');
-    print('Valor Total Devido: R\$ ${response.dadosParsed?.first.valorTotalDevido.toStringAsFixed(2)}');
-    
-    // Detalhamento dos valores devidos
-    for (final valor in response.dadosParsed?.first.valoresDevidos ?? []) {
-      print('Tributo ${valor.codigoTributo}: R\$ ${valor.valor.toStringAsFixed(2)}');
-    }
-    
-    // Detalhamento MAED se houver
-    if (response.dadosParsed?.first.temMaed == true) {
-      final maed = response.dadosParsed!.first.detalhamentoDarfMaed!;
+    final dados = response.dados;
+    if (dados != null) {
+      print('ID Declaração: ${dados.idDeclaracao}');
+      print('Data Transmissão: ${dados.dataHoraTransmissao}');
+      print('Valor Total Devido: R\$ ${dados.valorTotalDevido.toStringAsFixed(2)}');
+      
+      // Detalhamento dos valores devidos
+      for (final valor in dados.valoresDevidos) {
+        print('Tributo ${valor.codigoTributo}: R\$ ${valor.valor.toStringAsFixed(2)}');
+      }
+      
+      // Detalhamento MAED se houver
+      if (dados.temMaed) {
+        final maed = dados.detalhamentoDarfMaed!;
       print('MAED:');
       print('  Número Documento: ${maed.numeroDocumento}');
       print('  Data Vencimento: ${maed.dataVencimento}');
@@ -129,210 +120,255 @@ try {
       print('  Multa: R\$ ${maed.valores.multa.toStringAsFixed(2)}');
       print('  Juros: R\$ ${maed.valores.juros.toStringAsFixed(2)}');
       print('  Total: R\$ ${maed.valores.total.toStringAsFixed(2)}');
+      }
     }
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('Erro: ${response.mensagens.isNotEmpty ? response.mensagens.first.texto : ""}');
   }
 } catch (e) {
   print('Erro ao entregar declaração: $e');
 }
 ```
 
-### 3. Gerar DAS
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte (14 dígitos, usa ApiClient se não fornecido) |
+| `periodoApuracao` | `int` | Sim | Período de apuração (formato: AAAAMM, ex: 202504) |
+| `declaracao` | `Declaracao` | Sim | Objeto com os dados da declaração |
+| `indicadorTransmissao` | `bool` | Não | Se deve transmitir (padrão: `true`) |
+| `indicadorComparacao` | `bool` | Não | Se há comparação de valores (padrão: `true`) |
+| `valoresParaComparacao` | `List<ValorDevido>?` | Não | Valores para comparação |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 3. Gerar DAS (GERARDAS12)
 
 ```dart
 try {
   final response = await pgdasdService.gerarDas(
     contribuinteNumero: '00000000000100',
-    request: GerarDasRequest(
-      periodoApuracao: '202101',
-      // dataConsolidacao: '20220831', // Opcional
-    ),
+    periodoApuracao: '202504',
+    // dataConsolidacao: '20250531', // Opcional
   );
 
-  if (response.sucesso) {
+  if (response.sucesso && response.dados != null && response.dados!.isNotEmpty) {
+    final das = response.dados!.first;
+    final det = das.detalhamento;
     print('DAS gerado com sucesso!');
-    print('Número do DAS: ${response.dadosParsed?.first.numeroDas}');
-    print('Valor Total: R\$ ${response.dadosParsed?.first.valorTotal.toStringAsFixed(2)}');
-    print('Data Vencimento: ${response.dadosParsed?.first.dataVencimento}');
+    print('Número do DAS: ${det.numeroDocumento}');
+    print('Valor Total: R\$ ${det.valores.total.toStringAsFixed(2)}');
+    print('Data Vencimento: ${det.dataVencimento}');
     
     // Salvar PDF
-    if (response.dadosParsed?.first.pdfBase64.isNotEmpty == true) {
+    if (das.pdf.isNotEmpty) {
       final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-        response.dadosParsed!.first.pdfBase64,
-        'das_${response.dadosParsed!.first.numeroDas}.pdf',
+        das.pdf,
+        'das_${det.numeroDocumento}.pdf',
       );
       print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
     }
   } else {
-    print('Erro: ${response.mensagemErro}');
+    print('Erro: ${response.mensagens.isNotEmpty ? response.mensagens.first.texto : ""}');
   }
 } catch (e) {
   print('Erro ao gerar DAS: $e');
 }
 ```
 
-### 4. Consultar Declarações por Ano
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `periodoApuracao` | `String` | Sim | Período de apuração (formato: AAAAMM) |
+| `dataConsolidacao` | `String?` | Não | Data de consolidação futura (formato: AAAAMMDD) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 4. Consultar Declarações (CONSDECLARACAO13)
+
+Pode consultar por **ano calendário** ou **período de apuração**.
 
 ```dart
+// Por ano calendário
 try {
   final response = await pgdasdService.consultarDeclaracoes(
     contribuinteNumero: '00000000000100',
-    request: ConsultarDeclaracoesRequest.porAnoCalendario('2021'),
+    anoCalendario: '2024',
   );
 
   if (response.sucesso) {
-    print('Declarações encontradas: ${response.dadosParsed?.length ?? 0}');
-    
-    for (final declaracao in response.dadosParsed ?? []) {
-      print('Período: ${declaracao.periodoApuracao}');
-      print('Situação: ${declaracao.situacao}');
-      print('Data Transmissão: ${declaracao.dataHoraTransmissao}');
-      print('Valor Total: R\$ ${declaracao.valorTotalDevido.toStringAsFixed(2)}');
-      print('---');
-    }
-  } else {
-    print('Erro: ${response.mensagemErro}');
+    print('Declarações encontradas!');
   }
 } catch (e) {
-  print('Erro ao consultar declarações: $e');
+  print('Erro: $e');
 }
-```
 
-### 5. Consultar Declarações por Período
-
-```dart
+// Por período de apuração
 try {
   final response = await pgdasdService.consultarDeclaracoes(
     contribuinteNumero: '00000000000100',
-    request: ConsultarDeclaracoesRequest.porPeriodoApuracao('202101'),
+    periodoApuracao: '202504',
   );
 
   if (response.sucesso) {
-    print('Declarações no período: ${response.dadosParsed?.length ?? 0}');
-    
-    for (final declaracao in response.dadosParsed ?? []) {
-      print('Período: ${declaracao.periodoApuracao}');
-      print('Situação: ${declaracao.situacao}');
-      print('Valor: R\$ ${declaracao.valorTotalDevido.toStringAsFixed(2)}');
-    }
-  } else {
-    print('Erro: ${response.mensagemErro}');
+    print('Declarações no período encontradas!');
   }
 } catch (e) {
-  print('Erro ao consultar por período: $e');
+  print('Erro: $e');
 }
 ```
 
-### 6. Consultar Última Declaração
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `anoCalendario` | `String?` | Condicional | Ano calendário (AAAA) — forneça este OU `periodoApuracao` |
+| `periodoApuracao` | `String?` | Condicional | Período de apuração (AAAAMM) — forneça este OU `anoCalendario` |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 5. Consultar Última Declaração (CONSULTIMADECREC14)
 
 ```dart
 try {
   final response = await pgdasdService.consultarUltimaDeclaracao(
     contribuinteNumero: '00000000000100',
-    request: ConsultarUltimaDeclaracaoRequest(periodoApuracao: '202101'),
+    periodoApuracao: '202504',
   );
 
   if (response.sucesso) {
     print('Última declaração encontrada!');
-    print('Período: ${response.dadosParsed?.first.periodoApuracao}');
-    print('Situação: ${response.dadosParsed?.first.situacao}');
-    print('Data Transmissão: ${response.dadosParsed?.first.dataHoraTransmissao}');
-    print('Valor Total: R\$ ${response.dadosParsed?.first.valorTotalDevido.toStringAsFixed(2)}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar última declaração: $e');
+  print('Erro: $e');
 }
 ```
 
-### 7. Consultar Extrato DAS
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `periodoApuracao` | `String` | Sim | Período de apuração (formato: AAAAMM) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 6. Consultar Declaração por Número (CONSDECREC15)
+
+```dart
+try {
+  final response = await pgdasdService.consultarDeclaracaoPorNumero(
+    contribuinteNumero: '00000000000100',
+    numeroDeclaracao: '07202136999997159',
+  );
+
+  if (response.sucesso) {
+    print('Declaração encontrada!');
+  }
+} catch (e) {
+  print('Erro: $e');
+}
+```
+
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `numeroDeclaracao` | `String` | Sim | Número da declaração (17 dígitos) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 7. Consultar Extrato DAS (CONSEXTRATO16)
 
 ```dart
 try {
   final response = await pgdasdService.consultarExtratoDas(
     contribuinteNumero: '00000000000100',
-    request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
+    numeroDas: '07202136999997159',
   );
 
   if (response.sucesso) {
     print('Extrato DAS encontrado!');
-    print('Período: ${response.dadosParsed?.first.periodoApuracao}');
-    print('Valor Total: R\$ ${response.dadosParsed?.first.valorTotal.toStringAsFixed(2)}');
-    print('Data Vencimento: ${response.dadosParsed?.first.dataVencimento}');
-    
-    // Detalhamento dos tributos
-    for (final tributo in response.dadosParsed?.first.tributos ?? []) {
-      print('Tributo ${tributo.codigoTributo}: R\$ ${tributo.valor.toStringAsFixed(2)}');
-    }
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar extrato: $e');
+  print('Erro: $e');
 }
 ```
 
-### 8. Gerar DAS Cobrança
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `numeroDas` | `String` | Sim | Número do DAS (17 dígitos) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 8. Gerar DAS Cobrança (GERARDASCOBRANCA17)
 
 ```dart
 try {
   final response = await pgdasdService.gerarDasCobranca(
     contribuinteNumero: '00000000000100',
-    request: GerarDasCobrancaRequest(periodoApuracao: '202301'),
+    periodoApuracao: '202504',
   );
 
   if (response.sucesso) {
     print('DAS Cobrança gerado!');
-    print('Número: ${response.dadosParsed?.first.numeroDas}');
-    print('Valor: R\$ ${response.dadosParsed?.first.valorTotal.toStringAsFixed(2)}');
-    
-    // Salvar PDF
-    if (response.dadosParsed?.first.pdfBase64.isNotEmpty == true) {
-      final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-        response.dadosParsed!.first.pdfBase64,
-        'das_cobranca_${response.dadosParsed!.first.numeroDas}.pdf',
-      );
-      print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
-    }
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao gerar DAS cobrança: $e');
+  print('Erro: $e');
 }
 ```
 
-### 9. Gerar DAS Processo
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `periodoApuracao` | `String` | Sim | Período de apuração (formato: AAAAMM) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 9. Gerar DAS Processo (GERARDASPROCESSO18)
 
 ```dart
 try {
   final response = await pgdasdService.gerarDasProcesso(
     contribuinteNumero: '00000000000100',
-    request: GerarDasProcessoRequest(numeroProcesso: '00000000000000000'),
+    numeroProcesso: '00000000000000000',
   );
 
   if (response.sucesso) {
     print('DAS Processo gerado!');
-    print('Número: ${response.dadosParsed?.first.numeroDas}');
-    print('Valor: R\$ ${response.dadosParsed?.first.valorTotal.toStringAsFixed(2)}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao gerar DAS processo: $e');
+  print('Erro: $e');
 }
 ```
 
-### 10. Gerar DAS Avulso
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `numeroProcesso` | `String` | Sim | Número do processo (17 dígitos) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+### 10. Gerar DAS Avulso (GERARDASAVULSO19)
 
 ```dart
 try {
   final response = await pgdasdService.gerarDasAvulso(
     contribuinteNumero: '00000000000100',
     request: GerarDasAvulsoRequest(
-      periodoApuracao: '202301',
+      periodoApuracao: '202504',
       listaTributos: [
         TributoAvulso(codigoTributo: 1, valor: 1000.00),
       ],
@@ -341,19 +377,24 @@ try {
 
   if (response.sucesso) {
     print('DAS Avulso gerado!');
-    print('Número: ${response.dadosParsed?.first.numeroDas}');
-    print('Valor: R\$ ${response.dadosParsed?.first.valorTotal.toStringAsFixed(2)}');
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao gerar DAS avulso: $e');
+  print('Erro: $e');
 }
 ```
 
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `request` | `GerarDasAvulsoRequest` | Sim | Dados para geração do DAS Avulso |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
 ### 11. Consultar Última Declaração com Pagamento (Método Composto)
 
-Este método combina a consulta da última declaração com a verificação automática do status de pagamento do DAS.
+Combina a consulta da última declaração com verificação automática do status de pagamento do DAS.
 
 ```dart
 try {
@@ -366,37 +407,37 @@ try {
     print('Última declaração encontrada!');
     print('Número: ${response.dados?.numeroDeclaracao}');
     print('Período: ${response.dados?.periodoApuracao}');
-    print('Data Transmissão: ${response.dados?.dataHoraTransmissao}');
-    print('Valor Total: R\$ ${response.dados?.valorTotalDevido.toStringAsFixed(2)}');
-    
-    // Informação de pagamento do DAS
     print('DAS Pago: ${response.dasPago ? "Sim" : "Não"}');
     
-    if (response.dasPago) {
-      print('✅ DAS já foi pago');
-    } else {
-      print('⚠️ DAS ainda não foi pago');
+    // Alerta de pagamento (pendências no ano)
+    if (response.alertaPagamento != null) {
+      print('⚠️ ${response.alertaPagamento}');
     }
-  } else {
-    print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar última declaração com pagamento: $e');
+  print('Erro: $e');
 }
 ```
 
-**Vantagens do método composto:**
-- Reduz o número de chamadas à API
-- Fornece informação completa em uma única resposta
-- Verifica automaticamente o status de pagamento do DAS
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `contribuinteNumero` | `String?` | Não* | CNPJ do contribuinte |
+| `periodoApuracao` | `String` | Sim | Período de apuração (formato: AAAAMM) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+**Comportamento do campo `dasPago`:**
+- `true`: DAS foi pago OU não foi encontrado DAS para o período (assume pago)
+- `false`: DAS existe e não consta pagamento
 
 ### 12. Entregar Declaração com DAS (Método Composto)
 
-Este método combina a entrega da declaração com a geração automática do DAS em uma única operação.
+Combina a entrega da declaração com geração automática do DAS em uma única operação.
 
 ```dart
 try {
-  // Criar declaração
   final declaracao = Declaracao(
     tipoDeclaracao: 1,
     receitaPaCompetenciaInterno: 50000.00,
@@ -409,11 +450,7 @@ try {
             idAtividade: 1,
             valorAtividade: 60000.00,
             receitasAtividade: [
-              ReceitaAtividade(
-                valor: 60000.00,
-                isencoes: [],
-                reducoes: [],
-              ),
+              ReceitaAtividade(valor: 60000.00, isencoes: [], reducoes: []),
             ],
           ),
         ],
@@ -422,107 +459,54 @@ try {
   );
 
   final response = await pgdasdService.entregarDeclaracaoComDas(
-    contribuinteNumero: '00000000000100',
-    request: EntregarDeclaracaoRequest(
-      cnpjCompleto: '00000000000100',
-      pa: 202504,
-      indicadorTransmissao: true,
-      indicadorComparacao: true,
-      declaracao: declaracao,
-      valoresParaComparacao: [],
-    ),
+    cnpj: '00000000000100',
+    periodoApuracao: 202504,
+    declaracao: declaracao,
+    indicadorTransmissao: true,
+    indicadorComparacao: true,
+    valoresParaComparacao: [],
     // dataConsolidacao: '20250515', // Opcional
   );
 
   if (response.sucesso) {
     print('✅ Declaração e DAS gerados com sucesso!');
     print('ID Declaração: ${response.dadosDeclaracao?.idDeclaracao}');
-    print('Data Transmissão: ${response.dadosDeclaracao?.dataHoraTransmissao}');
-    print('Valor Total: R\$ ${response.dadosDeclaracao?.valorTotalDevido.toStringAsFixed(2)}');
     
-    if (response.dadosDas != null && response.dadosDas!.isNotEmpty) {
+    if (response.dasGerado) {
       final das = response.dadosDas!.first;
       print('Número DAS: ${das.detalhamento.numeroDocumento}');
-      print('Valor DAS: R\$ ${das.detalhamento.valorTotal.toStringAsFixed(2)}');
-      print('Vencimento: ${das.detalhamento.dataVencimento}');
-      
-      // Salvar PDF do DAS
-      if (das.detalhamento.pdfBase64.isNotEmpty) {
-        final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-          das.detalhamento.pdfBase64,
-          'das_${das.detalhamento.numeroDocumento}.pdf',
-        );
-        print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
-      }
+      print('Valor DAS: R\$ ${das.detalhamento.valores.total.toStringAsFixed(2)}');
     }
   } else if (response.declaracaoEntregue) {
     print('⚠️ Declaração entregue, mas DAS falhou');
-    print('ID Declaração: ${response.dadosDeclaracao?.idDeclaracao}');
     print('Tente gerar DAS manualmente usando gerarDas()');
   } else {
-    print('❌ Erro ao entregar declaração');
-    print('Erro: ${response.mensagemErro}');
+    print('❌ Erro ao entregar declaração: ${response.mensagens.isNotEmpty ? response.mensagens.first.texto : ""}');
   }
 } catch (e) {
-  print('Erro ao entregar declaração com DAS: $e');
+  print('Erro: $e');
 }
 ```
 
-**Vantagens do método composto:**
-- Automatiza o fluxo completo de entrega e geração de DAS
-- Reduz o número de chamadas à API
-- Tratamento inteligente de erros: preserva dados da declaração mesmo se o DAS falhar
-- Getters úteis: `declaracaoEntregue`, `dasGerado`, `sucesso`
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte |
+| `periodoApuracao` | `int` | Sim | Período de apuração (formato: AAAAMM) |
+| `declaracao` | `Declaracao` | Sim | Dados da declaração |
+| `indicadorTransmissao` | `bool` | Não | Se transmitir (padrão: `true`) |
+| `indicadorComparacao` | `bool` | Não | Se comparar valores (padrão: `true`) |
+| `valoresParaComparacao` | `List<ValorDevido>?` | Não | Valores para comparação |
+| `dataConsolidacao` | `String?` | Não | Data de consolidação para o DAS (AAAAMMDD) |
+| `contratanteNumero` | `String?` | Não | CNPJ do contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
 
 **Comportamento em caso de erros:**
 - Se a declaração falhar: retorna erro imediatamente, não tenta gerar DAS
 - Se o DAS falhar: retorna erro MAS preserva os dados da declaração para geração manual posterior
 
-## Validações Disponíveis
-
-O serviço utiliza validações centralizadas do `ValidacoesUtils`:
-
-```dart
-// Validar CNPJ
-final errorCnpj = ValidacoesUtils.validarCnpjContribuinte('12345678000195');
-if (errorCnpj != null) {
-  print('CNPJ inválido: $errorCnpj');
-}
-
-// Validar período de apuração
-final errorPeriodo = ValidacoesUtils.validarAnoMes(202401);
-if (errorPeriodo != null) {
-  print('Período inválido: $errorPeriodo');
-}
-
-// Validar valor monetário
-final errorValor = ValidacoesUtils.validarValorMonetario(1000.50);
-if (errorValor != null) {
-  print('Valor inválido: $errorValor');
-}
-```
-
-## Formatação de Dados
-
-Utilize os utilitários de formatação do `FormatadorUtils`:
-
-```dart
-// Formatar CNPJ
-final cnpjFormatado = FormatadorUtils.formatCnpj('12345678000195');
-print('CNPJ: $cnpjFormatado'); // 12.345.678/0001-95
-
-// Formatar moeda
-final valorFormatado = FormatadorUtils.formatCurrency(1234.56);
-print('Valor: $valorFormatado'); // R$ 1.234,56
-
-// Formatar período
-final periodoFormatado = FormatadorUtils.formatPeriodFromString('202401');
-print('Período: $periodoFormatado'); // Janeiro/2024
-
-// Formatar data
-final dataFormatada = FormatadorUtils.formatDateFromString('20240315');
-print('Data: $dataFormatada'); // 15/03/2024
-```
+**Getters úteis:** `sucesso`, `declaracaoEntregue`, `dasGerado`
 
 ## Estrutura de Dados
 
@@ -530,20 +514,19 @@ print('Data: $dataFormatada'); // 15/03/2024
 
 ```dart
 class EntregarDeclaracaoResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final List<DeclaracaoTransmitida>? dadosParsed;
-  final List<MensagemNegocio> mensagens;
+  final int status;
+  final List<Mensagem> mensagens;
+  final DeclaracaoTransmitida? dados;  // objeto único, não lista
+  bool get sucesso => status == 200;
 }
 
 class DeclaracaoTransmitida {
   final String idDeclaracao;
   final String dataHoraTransmissao;
-  final double valorTotalDevido;
-  final bool temMaed;
   final List<ValorDevido> valoresDevidos;
+  double get valorTotalDevido => ...;
+  bool get temMaed => ...;
   final DetalhamentoDarfMaed? detalhamentoDarfMaed;
-  // ... outros campos
 }
 ```
 
@@ -551,30 +534,28 @@ class DeclaracaoTransmitida {
 
 ```dart
 class GerarDasResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final List<DasGerado>? dadosParsed;
-  final List<MensagemNegocio> mensagens;
+  final int status;
+  final List<Mensagem> mensagens;
+  final List<Das>? dados;
+  bool get sucesso => status == 200;
 }
 
-class DasGerado {
-  final String numeroDas;
-  final double valorTotal;
-  final String dataVencimento;
-  final String pdfBase64;
-  // ... outros campos
-}
+// Cada item de dados possui:
+// - pdf: String (PDF em Base64)
+// - cnpjCompleto: String
+// - detalhamento: objeto com numeroDocumento, dataVencimento, valores.total
 ```
 
 ### ConsultarUltimaDeclaracaoComPagamentoResponse
 
 ```dart
 class ConsultarUltimaDeclaracaoComPagamentoResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final DeclaracaoCompleta? dados; // Dados da última declaração
-  final bool dasPago; // Indica se o DAS foi pago
-  final List<MensagemNegocio> mensagens;
+  final int status;
+  final List<Mensagem> mensagens;
+  final DeclaracaoCompleta? dados;
+  final bool dasPago;
+  final String? alertaPagamento; // Alerta sobre pendências no ano
+  bool get sucesso => status == 200;
 }
 ```
 
@@ -582,13 +563,11 @@ class ConsultarUltimaDeclaracaoComPagamentoResponse {
 
 ```dart
 class EntregarDeclaracaoComDasResponse {
-  final bool sucesso;
-  final String? mensagemErro;
-  final DeclaracaoTransmitida? dadosDeclaracao; // Dados da declaração entregue
-  final List<DasGerado>? dadosDas; // Dados do DAS gerado
-  final List<MensagemNegocio> mensagens;
-  
-  // Getters úteis
+  final int status;
+  final List<Mensagem> mensagens;
+  final DeclaracaoTransmitida? dadosDeclaracao;
+  final List<Das>? dadosDas;
+  bool get sucesso => status == 200;
   bool get declaracaoEntregue => dadosDeclaracao != null;
   bool get dasGerado => dadosDas != null && dadosDas!.isNotEmpty;
 }
@@ -600,13 +579,11 @@ class EntregarDeclaracaoComDasResponse {
 |--------|-----------|---------|
 | 001 | Dados inválidos | Verificar estrutura dos dados enviados |
 | 002 | CNPJ inválido | Verificar formato do CNPJ |
-| 003 | Período inválido | Verificar formato do período de apuração |
+| 003 | Período inválido | Verificar formato do período de apuração (AAAAMM) |
 | 004 | Declaração não encontrada | Verificar se declaração foi transmitida |
 | 005 | Valores inválidos | Verificar valores monetários |
 
-## Exemplos Práticos
-
-### Exemplo Completo - Fluxo Completo PGDASD
+## Exemplo Completo
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -629,10 +606,9 @@ void main() async {
   
   try {
     const cnpj = '00000000000100';
-    const periodoApuracao = 202101;
     
     // 3. Entregar declaração mensal
-    print('=== Entregando Declaração Mensal ===');
+    print('=== Entregando Declaração ===');
     final declaracao = Declaracao(
       tipoDeclaracao: 1,
       receitaPaCompetenciaInterno: 50000.00,
@@ -647,12 +623,8 @@ void main() async {
               receitasAtividade: [
                 ReceitaAtividade(
                   valor: 60000.00,
-                  isencoes: [
-                    Isencao(codTributo: 1, valor: 1000.00, identificador: 1),
-                  ],
-                  reducoes: [
-                    Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1),
-                  ],
+                  isencoes: [Isencao(codTributo: 1, valor: 1000.00, identificador: 1)],
+                  reducoes: [Reducao(codTributo: 1, valor: 500.00, percentualReducao: 5.0, identificador: 1)],
                 ),
               ],
             ),
@@ -662,169 +634,64 @@ void main() async {
     );
 
     final entregarResponse = await pgdasdService.entregarDeclaracao(
-      contribuinteNumero: cnpj,
-      request: EntregarDeclaracaoRequest(
-        cnpjCompleto: cnpj,
-        pa: periodoApuracao,
-        indicadorTransmissao: true,
-        indicadorComparacao: true,
-        declaracao: declaracao,
-        valoresParaComparacao: [
-          ValorDevido(codigoTributo: 1, valor: 1000.00),
-          ValorDevido(codigoTributo: 2, valor: 500.00),
-        ],
-      ),
+      cnpj: cnpj,
+      periodoApuracao: 202504,
+      declaracao: declaracao,
     );
 
-    if (entregarResponse.sucesso) {
-      print('Declaração entregue com sucesso!');
-      final declaracaoTransmitida = entregarResponse.dadosParsed!.first;
-      print('ID: ${declaracaoTransmitida.idDeclaracao}');
-      print('Data: ${declaracaoTransmitida.dataHoraTransmissao}');
-      print('Valor Total: ${FormatadorUtils.formatCurrency(declaracaoTransmitida.valorTotalDevido)}');
+    if (entregarResponse.sucesso && entregarResponse.dados != null) {
+      final decl = entregarResponse.dados!;
+      print('Declaração entregue!');
+      print('ID: ${decl.idDeclaracao}');
+      print('Valor: ${FormatadorUtils.formatCurrency(decl.valorTotalDevido)}');
       
       // 4. Gerar DAS
       print('\n=== Gerando DAS ===');
       final dasResponse = await pgdasdService.gerarDas(
         contribuinteNumero: cnpj,
-        request: GerarDasRequest(periodoApuracao: periodoApuracao.toString()),
+        periodoApuracao: '202504',
       );
 
-      if (dasResponse.sucesso) {
-        print('DAS gerado com sucesso!');
-        final das = dasResponse.dadosParsed!.first;
-        print('Número: ${das.numeroDas}');
-        print('Valor: ${FormatadorUtils.formatCurrency(das.valorTotal)}');
-        print('Vencimento: ${FormatadorUtils.formatDateFromString(das.dataVencimento)}');
+      if (dasResponse.sucesso && dasResponse.dados != null && dasResponse.dados!.isNotEmpty) {
+        final das = dasResponse.dados!.first;
+        final det = das.detalhamento;
+        print('DAS gerado!');
+        print('Número: ${det.numeroDocumento}');
+        print('Valor: ${FormatadorUtils.formatCurrency(det.valores.total)}');
         
         // Salvar PDF
-        if (das.pdfBase64.isNotEmpty) {
-          final sucessoSalvamento = await ArquivoUtils.salvarArquivo(
-            das.pdfBase64,
-            'das_${das.numeroDas}.pdf',
-          );
-          print('PDF salvo: ${sucessoSalvamento ? 'Sim' : 'Não'}');
+        if (das.pdf.isNotEmpty) {
+          await ArquivoUtils.salvarArquivo(das.pdf, 'das_${det.numeroDocumento}.pdf');
         }
       }
       
       // 5. Consultar declarações do ano
-      print('\n=== Consultando Declarações do Ano ===');
-      final consultarAnoResponse = await pgdasdService.consultarDeclaracoes(
+      print('\n=== Consultando Declarações ===');
+      final consultarResponse = await pgdasdService.consultarDeclaracoes(
         contribuinteNumero: cnpj,
-        request: ConsultarDeclaracoesRequest.porAnoCalendario('2021'),
+        anoCalendario: '2025',
       );
 
-      if (consultarAnoResponse.sucesso) {
-        print('Declarações encontradas: ${consultarAnoResponse.dadosParsed?.length ?? 0}');
-        for (final declaracao in consultarAnoResponse.dadosParsed ?? []) {
-          print('Período: ${FormatadorUtils.formatPeriodFromString(declaracao.periodoApuracao.toString())}');
-          print('Situação: ${declaracao.situacao}');
-          print('Valor: ${FormatadorUtils.formatCurrency(declaracao.valorTotalDevido)}');
-          print('---');
-        }
-      }
-      
-      // 6. Consultar extrato DAS
-      print('\n=== Consultando Extrato DAS ===');
-      final extratoResponse = await pgdasdService.consultarExtratoDas(
-        contribuinteNumero: cnpj,
-        request: ConsultarExtratoDasRequest(numeroDas: '07202136999997159'),
-      );
-
-      if (extratoResponse.sucesso) {
-        print('Extrato encontrado!');
-        final extrato = extratoResponse.dadosParsed!.first;
-        print('Período: ${FormatadorUtils.formatPeriodFromString(extrato.periodoApuracao)}');
-        print('Valor Total: ${FormatadorUtils.formatCurrency(extrato.valorTotal)}');
-        print('Vencimento: ${FormatadorUtils.formatDateFromString(extrato.dataVencimento)}');
-        
-        // Detalhamento dos tributos
-        for (final tributo in extrato.tributos ?? []) {
-          print('Tributo ${tributo.codigoTributo}: ${FormatadorUtils.formatCurrency(tributo.valor)}');
-        }
-      }
-      
-    } else {
-      print('Erro ao entregar declaração: ${entregarResponse.mensagemErro}');
-      
-      // Analisar mensagens de erro
-      for (final mensagem in entregarResponse.mensagens) {
-        if (mensagem.isErro) {
-          print('Erro: ${mensagem.codigo} - ${mensagem.texto}');
-        }
+      if (consultarResponse.sucesso) {
+        print('Declarações encontradas!');
       }
     }
     
   } catch (e) {
-    print('Erro na operação: $e');
-  }
-}
-```
-
-### Exemplo - Validação e Formatação
-
-```dart
-import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
-
-void main() async {
-  final pgdasdService = PgdasdService(apiClient);
-  
-  // Validar CNPJ antes de usar
-  const cnpj = '12345678000195';
-  final errorCnpj = ValidacoesUtils.validarCnpjContribuinte(cnpj);
-  
-  if (errorCnpj != null) {
-    print('CNPJ inválido: $errorCnpj');
-    return;
-  }
-  
-  // Validar período
-  const periodo = 202401;
-  final errorPeriodo = ValidacoesUtils.validarAnoMes(periodo);
-  
-  if (errorPeriodo != null) {
-    print('Período inválido: $errorPeriodo');
-    return;
-  }
-  
-  // CNPJ e período válidos, prosseguir
-  final response = await pgdasdService.consultarDeclaracoes(
-    contribuinteNumero: cnpj,
-    request: ConsultarDeclaracoesRequest.porAnoCalendario('2024'),
-  );
-  
-  if (response.sucesso) {
-    print('=== Declarações do Ano ===');
-    print('CNPJ: ${FormatadorUtils.formatCnpj(cnpj)}');
-    print('Ano: 2024');
-    print('Declarações: ${response.dadosParsed?.length ?? 0}');
-    
-    double valorTotalAno = 0;
-    for (final declaracao in response.dadosParsed ?? []) {
-      print('\nPeríodo: ${FormatadorUtils.formatPeriodFromString(declaracao.periodoApuracao.toString())}');
-      print('Situação: ${declaracao.situacao}');
-      print('Data Transmissão: ${FormatadorUtils.formatDateFromString(declaracao.dataHoraTransmissao)}');
-      print('Valor: ${FormatadorUtils.formatCurrency(declaracao.valorTotalDevido)}');
-      
-      valorTotalAno += declaracao.valorTotalDevido;
-    }
-    
-    print('\nValor Total do Ano: ${FormatadorUtils.formatCurrency(valorTotalAno)}');
+    print('Erro: $e');
   }
 }
 ```
 
 ## Dados de Teste
 
-Para desenvolvimento e testes, utilize os seguintes dados:
-
 ```dart
 // CNPJs de teste (sempre usar zeros)
 const cnpjTeste = '00000000000100';
 
 // Períodos de teste
-const periodoTeste = 202101;
-const anoTeste = 2021;
+const periodoTeste = 202504;
+const anoTeste = '2025';
 
 // Valores de teste
 const valorTeste = 1000.00;
@@ -834,8 +701,8 @@ const valorTeste = 1000.00;
 
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
-3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Período de Apuração**: Deve estar no formato AAAAMM
+3. **Validação**: Todos os dados são validados automaticamente antes do envio
+4. **Período de Apuração**: Deve estar no formato AAAAMM (int para `entregarDeclaracao`, String para os demais)
 5. **Valores Monetários**: Devem ser valores positivos válidos
 
 ## Suporte

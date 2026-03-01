@@ -99,7 +99,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Construir request internamente de forma transparente
     final request = request_models.EntregarDeclaracaoRequest(
       cnpjCompleto: resolvedCnpj,
@@ -147,7 +150,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final dasRequest = GerarDasRequest(
       periodoApuracao: periodoApuracao,
       dataConsolidacao: dataConsolidacao,
@@ -190,7 +196,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = anoCalendario != null
         ? ConsultarDeclaracoesRequest.porAnoCalendario(anoCalendario)
         : ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao!);
@@ -230,7 +239,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarUltimaDeclaracaoRequest(
       periodoApuracao: periodoApuracao,
     );
@@ -270,7 +282,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarDeclaracaoNumeroRequest(
       numeroDeclaracao: numeroDeclaracao,
     );
@@ -310,7 +325,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarExtratoDasRequest(numeroDas: numeroDas);
 
     if (!consultaRequest.isValid) {
@@ -348,7 +366,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final cobrancaRequest = GerarDasCobrancaRequest(
       periodoApuracao: periodoApuracao,
     );
@@ -388,7 +409,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final processoRequest = GerarDasProcessoRequest(
       numeroProcesso: numeroProcesso,
     );
@@ -428,7 +452,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     if (!request.isValid) {
       throw ArgumentError('Dados para geração do DAS Avulso inválidos');
     }

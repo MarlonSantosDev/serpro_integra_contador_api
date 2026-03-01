@@ -66,10 +66,10 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">ContarPagamentosResponse({
-  required int status,
-  required List&lt;MensagemNegocio&gt; mensagens,
+  required super.status,
+  required super.mensagens,
   required this.quantidade,
-}) : super(status: status, mensagens: mensagens);</code></pre>
+}) : super();</code></pre>
 </section>
 
 
@@ -97,7 +97,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -149,6 +149,7 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
       certificadoProcuradorBase64: certificadoProcuradorBase64,
       certificadoProcuradorPassword: certificadoProcuradorPassword,
     );
+    _contribuinteNumero = contribuinteNumero ?? contratanteNumero;
     return;
   }
 
@@ -187,6 +188,9 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
     senhaCertificado: senhaCertificado,
     ambiente: ambiente,
   );
+
+  &#47;&#47; Armazenar contribuinteNumero para uso como padrão nos serviços
+  _contribuinteNumero = contribuinteNumero ?? contratanteNumero;
 
   &#47;&#47; 2. Se parâmetros do procurador foram fornecidos, fazer autenticação do procurador
   if (contratanteNome != null &amp;&amp; autorNome != null) {
@@ -245,7 +249,7 @@ em uma única chamada, facilitando o uso quando ambas são necessárias.</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -63,7 +63,10 @@ class CcmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validar formato do CNPJ antes de fazer a requisição
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
@@ -106,7 +109,10 @@ class CcmeiService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    final resolvedCnpj =
+        cnpj ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validar formato do CNPJ antes de fazer a requisição
     ValidacoesUtils.validateCNPJ(resolvedCnpj);
 

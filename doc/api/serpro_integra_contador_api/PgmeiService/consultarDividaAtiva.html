@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarDividaAtivaResponse-class.html">ConsultarDividaAtivaResponse</a></span>&gt;</span></span>
-<span class="name ">consultarDividaAtiva</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDividaAtiva-param-cnpj"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">cnpj</span>, </span></li>
+<span class="name ">consultarDividaAtiva</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="consultarDividaAtiva-param-cnpj"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">cnpj</span>, </span></li>
 <li><span class="parameter" id="consultarDividaAtiva-param-anoCalendario"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">anoCalendario</span>, </span></li>
 <li><span class="parameter" id="consultarDividaAtiva-param-contratanteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contratanteNumero</span>, </span></li>
 <li><span class="parameter" id="consultarDividaAtiva-param-autorPedidoDadosNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">autorPedidoDadosNumero</span>, </span></li>
@@ -79,13 +79,17 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarDividaAtivaResponse&gt; consultarDividaAtiva({
-  required String cnpj,
+  String? cnpj,
   required String anoCalendario,
   String? contratanteNumero,
   String? autorPedidoDadosNumero,
 }) async {
+  final resolvedCnpj =
+      cnpj ??
+      _apiClient.contribuinteNumero ??
+      (throw ArgumentError(&#39;CNPJ do contribuinte é obrigatório&#39;));
   &#47;&#47; Validações de entrada
-  ValidacoesUtils.validateCNPJ(cnpj);
+  ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
   if (anoCalendario.isEmpty) {
     throw ArgumentError(&#39;Ano calendário não pode estar vazio&#39;);
@@ -112,7 +116,7 @@
   &#47;&#47; Verifica se não é ano muito futuro
   final anoAtual = DateTime.now().year;
   if (ano &gt; anoAtual + 1) {
-    print(&#39;Aviso: Ano calendário é futuro ($anoCalendario)&#39;);
+    printW(&#39;Aviso: Ano calendário é futuro ($anoCalendario)&#39;);
   }
 
   &#47;&#47; Criação dos dados de entrada
@@ -122,7 +126,7 @@
 
   &#47;&#47; Montagem da requisição
   final request = BaseRequest(
-    contribuinteNumero: cnpj,
+    contribuinteNumero: resolvedCnpj,
     pedidoDados: PedidoDados(
       idSistema: &#39;PGMEI&#39;,
       idServico: &#39;DIVIDAATIVA24&#39;,
@@ -168,7 +172,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -65,7 +65,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -117,7 +120,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -168,7 +174,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -221,7 +230,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -274,7 +286,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     // Validar XML antes de enviar
     if (!validarXmlBase64(xmlAssinadoBase64)) {
       if (contratanteNumero != '00000000000') {
@@ -330,7 +345,10 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
-    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
+    final resolvedContribuinte =
+        contribuinteNumero ??
+        _apiClient.contribuinteNumero ??
+        (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,

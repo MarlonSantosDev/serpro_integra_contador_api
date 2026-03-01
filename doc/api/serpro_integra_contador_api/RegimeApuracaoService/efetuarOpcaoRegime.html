@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/EfetuarOpcaoRegimeResponse-class.html">EfetuarOpcaoRegimeResponse</a></span>&gt;</span></span>
-<span class="name ">efetuarOpcaoRegime</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="efetuarOpcaoRegime-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">efetuarOpcaoRegime</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="efetuarOpcaoRegime-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegime-param-anoOpcao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">anoOpcao</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegime-param-tipoRegime"><span>required</span> <span class="type-annotation"><a href="../../serpro_integra_contador_api/TipoRegime.html">TipoRegime</a></span> <span class="parameter-name">tipoRegime</span>, </span></li>
 <li><span class="parameter" id="efetuarOpcaoRegime-param-deAcordoResolucao"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deAcordoResolucao</span>, </span></li>
@@ -84,7 +84,7 @@ efetuem a opção anual pelo regime de apuração (Competência ou Caixa).</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;EfetuarOpcaoRegimeResponse&gt; efetuarOpcaoRegime({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required int anoOpcao,
   required TipoRegime tipoRegime,
   required bool deAcordoResolucao,
@@ -130,7 +130,7 @@ efetuem a opção anual pelo regime de apuração (Competência ou Caixa).</p>
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

@@ -68,7 +68,11 @@
   try {
     final dadosStr = json[&#39;dados&#39;]?.toString() ?? &#39;&#39;;
     if (dadosStr.isNotEmpty) {
-      dadosParsed = jsonDecode(dadosStr) as Map&lt;String, dynamic&gt;;
+      final decoded = jsonDecode(dadosStr);
+      if (decoded is Map&lt;String, dynamic&gt;) {
+        dadosParsed = decoded;
+      }
+      &#47;&#47; Se decoded for List, os subtipos concretos tratam com chave própria
     }
   } catch (e) {
     &#47;&#47; Se não conseguir fazer parse, mantém dados como null
@@ -109,7 +113,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

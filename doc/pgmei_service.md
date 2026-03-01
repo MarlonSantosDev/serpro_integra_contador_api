@@ -1,16 +1,16 @@
-# PGMEI - Pagamento de DAS do MEI
+# PGMEI - Programa Gerador do DAS para o MEI
 
 ## Visão Geral
 
-O serviço PGMEI permite gerenciar pagamentos de DAS (Documento de Arrecadação do Simples Nacional) para Microempreendedores Individuais, incluindo consulta de DAS disponíveis, consulta de DAS específicos, consulta de detalhes de pagamento e emissão de DAS.
+O serviço PGMEI permite gerar e consultar o DAS (Documento de Arrecadação do Simples Nacional) para contribuintes Microempreendedores Individuais (MEI), incluindo geração com PDF completo, geração apenas com código de barras, atualização de benefícios e consulta de dívida ativa.
 
 ## Funcionalidades
 
-- **Consultar DAS Disponíveis**: Consulta de todos os DAS disponíveis para pagamento
-- **Consultar DAS Específico**: Consulta de informações detalhadas de um DAS específico
-- **Consultar Detalhes de Pagamento**: Consulta de detalhes de pagamento de um DAS
-- **Emitir DAS**: Emissão de DAS para pagamento
-- **Validações**: Validações específicas do sistema PGMEI
+- **Gerar DAS com PDF** (`GERARDASPDF21`): Gera o DAS com PDF completo para contribuintes MEI
+- **Gerar DAS com Código de Barras** (`GERARDASCODBARRA22`): Gera o DAS apenas com código de barras, sem PDF
+- **Atualizar Benefício** (`ATUBENEFICIO23`): Registra benefício para determinada apuração do PGMEI
+- **Consultar Dívida Ativa** (`DIVIDAATIVA24`): Consulta se o contribuinte está em dívida ativa
+- **Atualizar Benefício Período Único** (conveniência): Wrapper simplificado para atualizar benefício de um único período
 
 ## Configuração
 
@@ -27,10 +27,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 final apiClient = ApiClient();
 await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'trial', // ou 'producao'
 );
 ```
 
@@ -42,207 +43,250 @@ await apiClient.authenticate(
 final pgmeiService = PgmeiService(apiClient);
 ```
 
-### 2. Consultar DAS Disponíveis
+### 2. Gerar DAS com PDF (GERARDASPDF21)
+
+Gera o Documento de Arrecadação do Simples Nacional com PDF completo.
 
 ```dart
 try {
-  final response = await pgmeiService.consultarDasDisponiveis();
-  
+  final response = await pgmeiService.gerarDas(
+    cnpj: '12345678000190',
+    periodoApuracao: '202403',
+    // dataConsolidacao: '20240331', // Opcional, formato AAAAMMDD
+  );
+
   if (response.sucesso) {
-    print('DAS disponíveis: ${response.dadosParsed?.listaDas.length ?? 0}');
-    
-    for (final das in response.dadosParsed?.listaDas ?? []) {
-      print('DAS ${das.numeroDas}: ${das.valorFormatado}');
-      print('Vencimento: ${das.dataVencimentoFormatada}');
-      print('Situação: ${das.situacao}');
+    print('DAS gerado com sucesso!');
+    // Acessar dados do DAS gerado
+    final dasGerados = response.dasGerados;
+    if (dasGerados != null && dasGerados.isNotEmpty) {
+      final das = dasGerados.first;
+      print('PDF Base64: ${das.pdf}');
     }
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar DAS: $e');
+  print('Erro ao gerar DAS: $e');
 }
 ```
 
-### 3. Consultar DAS Específico
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte MEI (usa o do ApiClient se não fornecido) |
+| `periodoApuracao` | `String` | Sim | Período no formato AAAAMM (ex: `'202403'`) |
+| `dataConsolidacao` | `String?` | Não | Data de consolidação no formato AAAAMMDD |
+| `contratanteNumero` | `String?` | Não | CNPJ da empresa contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+**Retorna:** `PgmeiGerarDasResponse`
+
+### 3. Gerar DAS com Código de Barras (GERARDASCODBARRA22)
+
+Gera o DAS contendo apenas código de barras, sem PDF, para contribuintes MEI.
 
 ```dart
 try {
-  final response = await pgmeiService.consultarDasEspecifico('DAS123456');
-  
+  final response = await pgmeiService.gerarDasCodigoBarras(
+    cnpj: '12345678000190',
+    periodoApuracao: '202403',
+    // dataConsolidacao: '20240331', // Opcional
+  );
+
   if (response.sucesso) {
-    print('DAS encontrado!');
-    print('Número: ${response.dadosParsed?.numeroDas}');
-    print('Valor: ${response.dadosParsed?.valorFormatado}');
-    print('Vencimento: ${response.dadosParsed?.dataVencimentoFormatada}');
-    print('Situação: ${response.dadosParsed?.situacao}');
+    print('DAS com código de barras gerado!');
+    // Acessar dados do código de barras
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar DAS específico: $e');
+  print('Erro ao gerar DAS código de barras: $e');
 }
 ```
 
-### 4. Consultar Detalhes de Pagamento
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte MEI |
+| `periodoApuracao` | `String` | Sim | Período no formato AAAAMM |
+| `dataConsolidacao` | `String?` | Não | Data de consolidação no formato AAAAMMDD |
+| `contratanteNumero` | `String?` | Não | CNPJ da empresa contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+**Retorna:** `GerarDasCodigoBarrasResponse`
+
+### 4. Atualizar Benefício (ATUBENEFICIO23)
+
+Registra benefício para determinada apuração do PGMEI.
 
 ```dart
 try {
-  final response = await pgmeiService.consultarDetalhesPagamento('DAS123456');
-  
+  final response = await pgmeiService.atualizarBeneficio(
+    cnpj: '12345678000190',
+    anoCalendario: 2024,
+    beneficios: [
+      InfoBeneficio(
+        periodoApuracao: '202401',
+        indicadorBeneficio: true,
+      ),
+      InfoBeneficio(
+        periodoApuracao: '202402',
+        indicadorBeneficio: false,
+      ),
+    ],
+  );
+
   if (response.sucesso) {
-    print('Detalhes de pagamento encontrados!');
-    print('Valor pago: ${response.valorPagoFormatado}');
-    print('Data de pagamento: ${response.dataPagamentoFormatada}');
-    print('Forma de pagamento: ${response.formaPagamento}');
+    print('Benefício atualizado com sucesso!');
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao consultar detalhes: $e');
+  print('Erro ao atualizar benefício: $e');
 }
 ```
 
-### 5. Emitir DAS
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte MEI |
+| `anoCalendario` | `int` | Sim | Ano calendário (formato AAAA, entre 1900-2099) |
+| `beneficios` | `List<InfoBeneficio>` | Sim | Lista de benefícios por período |
+| `contratanteNumero` | `String?` | Não | CNPJ da empresa contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+**Retorna:** `AtualizarBeneficioResponse`
+
+### 5. Consultar Dívida Ativa (DIVIDAATIVA24)
+
+Consulta se o contribuinte está em dívida ativa.
 
 ```dart
 try {
-  final response = await pgmeiService.emitirDas('DAS123456');
-  
-  if (response.sucesso && response.pdfGeradoComSucesso) {
-    print('DAS emitido com sucesso!');
-    print('Tamanho do PDF: ${response.tamanhoPdfFormatado}');
-    
-    // Salvar PDF
-    final pdfBytes = response.pdfBytes;
-    if (pdfBytes != null) {
-      // Implementar salvamento do PDF
-      print('PDF pronto para salvamento');
-    }
+  final response = await pgmeiService.consultarDividaAtiva(
+    cnpj: '12345678000190',
+    anoCalendario: '2024',
+  );
+
+  if (response.sucesso) {
+    print('Consulta de dívida ativa realizada!');
+    // Processar resultado
   } else {
     print('Erro: ${response.mensagemErro}');
   }
 } catch (e) {
-  print('Erro ao emitir DAS: $e');
+  print('Erro ao consultar dívida ativa: $e');
 }
 ```
+
+**Parâmetros:**
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `cnpj` | `String?` | Não* | CNPJ do contribuinte MEI |
+| `anoCalendario` | `String` | Sim | Ano calendário no formato AAAA |
+| `contratanteNumero` | `String?` | Não | CNPJ da empresa contratante |
+| `autorPedidoDadosNumero` | `String?` | Não | CPF/CNPJ do autor do pedido |
+
+**Retorna:** `ConsultarDividaAtivaResponse`
+
+### 6. Atualizar Benefício Período Único (Conveniência)
+
+Wrapper simplificado para atualizar benefício de um único período.
+
+```dart
+try {
+  final response = await pgmeiService.atualizarBeneficioPeriodoUnico(
+    cnpj: '12345678000190',
+    anoCalendario: 2024,
+    periodoApuracao: '202403',
+    indicadorBeneficio: true,
+  );
+
+  if (response.sucesso) {
+    print('Benefício atualizado para período único!');
+  } else {
+    print('Erro: ${response.mensagemErro}');
+  }
+} catch (e) {
+  print('Erro: $e');
+}
+```
+
+## Validações Internas
+
+O serviço realiza as seguintes validações automaticamente:
+
+- **CNPJ**: Validação de formato e dígitos verificadores via `ValidacoesUtils.validateCNPJ()`
+- **Período de Apuração**: Validação de formato AAAAMM via `PgmeiValidations.validarPeriodoApuracao()`
+- **Data de Consolidação**: Validação de formato AAAAMMDD via `PgmeiValidations.validarDataConsolidacao()`
+- **Ano Calendário**: Deve estar entre 1900 e 2099
+- **Lista de Benefícios**: Validação via `PgmeiValidations.validarInfoBeneficio()`
+
+> **Nota:** Se o `cnpj` não for fornecido, será utilizado o `contribuinteNumero` do `ApiClient` (definido na autenticação). Se ambos forem nulos, será lançado um `ArgumentError`.
 
 ## Estrutura de Dados
 
-### ConsultarDasDisponiveisResponse
+### PgmeiGerarDasResponse
 
 ```dart
-class ConsultarDasDisponiveisResponse {
+// Resposta da geração de DAS com PDF
+class PgmeiGerarDasResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final ConsultarDasDisponiveisDados? dadosParsed;
-}
-
-class ConsultarDasDisponiveisDados {
-  final List<DasItem> listaDas;
-  // ... outros campos
-}
-
-class DasItem {
-  final String numeroDas;
-  final String valorFormatado;
-  final String dataVencimentoFormatada;
-  final String situacao;
+  final List<DasGerado>? dasGerados;
   // ... outros campos
 }
 ```
 
-### ConsultarDasEspecificoResponse
+### GerarDasCodigoBarrasResponse
 
 ```dart
-class ConsultarDasEspecificoResponse {
+// Resposta da geração de DAS com código de barras
+class GerarDasCodigoBarrasResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final ConsultarDasEspecificoDados? dadosParsed;
+  // ... campos com dados do código de barras
 }
+```
 
-class ConsultarDasEspecificoDados {
-  final String numeroDas;
-  final String valorFormatado;
-  final String dataVencimentoFormatada;
-  final String situacao;
+### AtualizarBeneficioResponse
+
+```dart
+// Resposta da atualização de benefício
+class AtualizarBeneficioResponse {
+  final bool sucesso;
+  final String? mensagemErro;
   // ... outros campos
 }
 ```
 
-### EmitirDasResponse
+### ConsultarDividaAtivaResponse
 
 ```dart
-class EmitirDasResponse {
+// Resposta da consulta de dívida ativa
+class ConsultarDividaAtivaResponse {
   final bool sucesso;
   final String? mensagemErro;
-  final EmitirDasDados? dadosParsed;
-  final bool pdfGeradoComSucesso;
-  final String tamanhoPdfFormatado;
-  final Uint8List? pdfBytes;
+  // ... campos com dados da dívida ativa
 }
 ```
 
-## Validações Disponíveis
-
-O serviço PGMEI inclui várias validações para garantir a integridade dos dados:
+### InfoBeneficio (Request)
 
 ```dart
-// Validar número do DAS
-final erro = pgmeiService.validarNumeroDas('DAS123456');
-if (erro != null) {
-  print('Erro: $erro');
-}
-
-// Validar CNPJ do contribuinte
-final erroCnpj = pgmeiService.validarCnpjContribuinte('00000000000000');
-if (erroCnpj != null) {
-  print('Erro: $erroCnpj');
-}
-
-// Validar situação do DAS
-final erroSituacao = pgmeiService.validarSituacaoDas('ATIVO');
-if (erroSituacao != null) {
-  print('Erro: $erroSituacao');
+// Usado no método atualizarBeneficio
+class InfoBeneficio {
+  final String periodoApuracao;  // Formato AAAAMM
+  final bool indicadorBeneficio; // true para ativar, false para desativar
 }
 ```
 
-## Análise de Erros
-
-O serviço inclui análise detalhada de erros específicos do PGMEI:
-
-```dart
-// Analisar erro
-final analise = pgmeiService.analyzeError('001', 'Erro de validação');
-print('Tipo: ${analise.tipo}');
-print('Descrição: ${analise.descricao}');
-print('Solução: ${analise.solucao}');
-
-// Verificar se erro é conhecido
-if (pgmeiService.isKnownError('001')) {
-  print('Erro conhecido pelo sistema');
-}
-
-// Obter informações do erro
-final info = pgmeiService.getErrorInfo('001');
-if (info != null) {
-  print('Informações: ${info.descricao}');
-}
-```
-
-## Códigos de Erro Comuns
-
-| Código | Descrição | Solução |
-|--------|-----------|---------|
-| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
-| 002 | CNPJ inválido | Verificar formato do CNPJ |
-| 003 | DAS não encontrado | Verificar se DAS existe |
-| 004 | DAS não disponível | Verificar se DAS está disponível para emissão |
-| 005 | Prazo expirado | Verificar prazo para emissão do DAS |
-
-## Exemplos Práticos
-
-### Exemplo Completo - Consultar e Emitir DAS
+## Exemplo Completo
 
 ```dart
 import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
@@ -251,169 +295,125 @@ void main() async {
   // 1. Configurar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial',
   );
   
   // 2. Criar serviço
   final pgmeiService = PgmeiService(apiClient);
   
-  // 3. Consultar DAS disponíveis
   try {
-    final dasResponse = await pgmeiService.consultarDasDisponiveis();
+    const cnpj = '12345678000190';
+    
+    // 3. Gerar DAS com PDF
+    print('=== Gerando DAS com PDF ===');
+    final dasResponse = await pgmeiService.gerarDas(
+      cnpj: cnpj,
+      periodoApuracao: '202403',
+    );
     
     if (dasResponse.sucesso) {
-      print('DAS encontrados: ${dasResponse.dadosParsed?.listaDas.length ?? 0}');
-      
-      // 4. Emitir DAS para o primeiro disponível
-      final listaDas = dasResponse.dadosParsed?.listaDas ?? [];
-      if (listaDas.isNotEmpty) {
-        final primeiroDas = listaDas.first;
-        final emitirResponse = await pgmeiService.emitirDas(primeiroDas.numeroDas);
-        
-        if (emitirResponse.sucesso && emitirResponse.pdfGeradoComSucesso) {
-          print('DAS emitido com sucesso!');
-          print('Tamanho: ${emitirResponse.tamanhoPdfFormatado}');
-        }
+      print('DAS gerado com sucesso!');
+      final dasGerados = dasResponse.dasGerados;
+      if (dasGerados != null && dasGerados.isNotEmpty) {
+        final das = dasGerados.first;
+        print('PDF disponível: ${das.pdf?.isNotEmpty == true}');
       }
-    } else {
-      print('Erro: ${dasResponse.mensagemErro}');
     }
+    
+    // 4. Gerar DAS com Código de Barras
+    print('\n=== Gerando DAS com Código de Barras ===');
+    final codBarraResponse = await pgmeiService.gerarDasCodigoBarras(
+      cnpj: cnpj,
+      periodoApuracao: '202403',
+    );
+    
+    if (codBarraResponse.sucesso) {
+      print('DAS com código de barras gerado!');
+    }
+    
+    // 5. Atualizar Benefício
+    print('\n=== Atualizando Benefício ===');
+    final beneficioResponse = await pgmeiService.atualizarBeneficio(
+      cnpj: cnpj,
+      anoCalendario: 2024,
+      beneficios: [
+        InfoBeneficio(
+          periodoApuracao: '202401',
+          indicadorBeneficio: true,
+        ),
+      ],
+    );
+    
+    if (beneficioResponse.sucesso) {
+      print('Benefício atualizado!');
+    }
+    
+    // 6. Consultar Dívida Ativa
+    print('\n=== Consultando Dívida Ativa ===');
+    final dividaResponse = await pgmeiService.consultarDividaAtiva(
+      cnpj: cnpj,
+      anoCalendario: '2024',
+    );
+    
+    if (dividaResponse.sucesso) {
+      print('Consulta de dívida ativa realizada!');
+    }
+    
   } catch (e) {
     print('Erro na operação: $e');
   }
 }
 ```
 
+## Códigos de Erro Comuns
+
+| Código | Descrição | Solução |
+|--------|-----------|---------|
+| 001 | Dados inválidos | Verificar estrutura dos dados enviados |
+| 002 | CNPJ inválido | Verificar formato do CNPJ (14 dígitos) |
+| 003 | Período de apuração inválido | Verificar formato AAAAMM |
+| 004 | Data de consolidação inválida | Verificar formato AAAAMMDD |
+| 005 | Ano calendário inválido | Verificar se está entre 1900-2099 |
+
 ## Dados de Teste
 
 Para desenvolvimento e testes, utilize os seguintes dados:
 
 ```dart
-// CNPJs de teste (sempre usar zeros)
-const cnpjTeste = '00000000000000';
+// CNPJ de teste
+const cnpjTeste = '12345678000190';
 
-// Números de DAS de teste
-const numeroDasTeste = 'DAS123456';
+// Períodos de teste
+const periodoTeste = '202403';
 
-// Situações de teste
-const situacaoTeste = 'ATIVO';
+// Ano calendário de teste
+const anoCalendarioTeste = 2024;
 ```
 
 ## Limitações
 
 1. **Certificado Digital**: Requer certificado digital válido para autenticação
 2. **Ambiente de Produção**: Requer configuração adicional para uso em produção
-3. **Validação**: Todos os dados devem ser validados antes do envio
-4. **Prazo**: DAS têm prazo específico para emissão
-5. **MEI**: Apenas para Microempreendedores Individuais
-
-## Casos de Uso Comuns
-
-### 1. Consulta Completa de DAS
-
-```dart
-Future<void> consultarDasCompleto(String numeroDas) async {
-  try {
-    // Consultar DAS específico
-    final das = await pgmeiService.consultarDasEspecifico(numeroDas);
-    if (!das.sucesso) return;
-    
-    // Consultar detalhes de pagamento
-    final detalhes = await pgmeiService.consultarDetalhesPagamento(numeroDas);
-    if (!detalhes.sucesso) return;
-    
-    print('=== DAS $numeroDas ===');
-    print('Valor: ${das.dadosParsed?.valorFormatado}');
-    print('Vencimento: ${das.dadosParsed?.dataVencimentoFormatada}');
-    print('Situação: ${das.dadosParsed?.situacao}');
-    print('Valor pago: ${detalhes.valorPagoFormatado}');
-  } catch (e) {
-    print('Erro: $e');
-  }
-}
-```
-
-### 2. Emissão de DAS em Lote
-
-```dart
-Future<void> emitirDasLote() async {
-  try {
-    // Consultar DAS disponíveis
-    final das = await pgmeiService.consultarDasDisponiveis();
-    if (!das.sucesso) return;
-    
-    final listaDas = das.dadosParsed?.listaDas ?? [];
-    
-    for (final dasItem in listaDas) {
-      try {
-        final emitir = await pgmeiService.emitirDas(dasItem.numeroDas);
-        if (emitir.sucesso && emitir.pdfGeradoComSucesso) {
-          print('DAS emitido para ${dasItem.numeroDas}');
-          // Salvar PDF
-        }
-      } catch (e) {
-        print('Erro ao emitir DAS ${dasItem.numeroDas}: $e');
-      }
-    }
-  } catch (e) {
-    print('Erro geral: $e');
-  }
-}
-```
-
-### 3. Monitoramento de DAS
-
-```dart
-Future<void> monitorarDas() async {
-  try {
-    // Consultar DAS disponíveis
-    final das = await pgmeiService.consultarDasDisponiveis();
-    if (!das.sucesso) return;
-    
-    final listaDas = das.dadosParsed?.listaDas ?? [];
-    
-    for (final dasItem in listaDas) {
-      final vencimento = DateTime.tryParse(dasItem.dataVencimentoFormatada);
-      if (vencimento != null) {
-        final diasParaVencimento = vencimento.difference(DateTime.now()).inDays;
-        
-        if (diasParaVencimento <= 5) {
-          print('⚠️ DAS ${dasItem.numeroDas} vence em $diasParaVencimento dias');
-        }
-      }
-    }
-  } catch (e) {
-    print('Erro no monitoramento: $e');
-  }
-}
-```
+3. **Validação**: CNPJ, período e dados de benefícios são validados automaticamente
+4. **MEI**: Exclusivo para contribuintes Microempreendedores Individuais
+5. **Ano Calendário**: Deve estar entre 1900 e 2099
 
 ## Integração com Outros Serviços
 
 O PGMEI Service pode ser usado em conjunto com:
 
-- **CCMEI Service**: Para consultar dados do MEI antes de emitir DAS
+- **CCMEI Service**: Para consultar dados cadastrais do MEI antes de gerar DAS
 - **PARCMEI Service**: Para consultar parcelamentos relacionados
-- **Eventos Atualização Service**: Para monitorar atualizações de DAS
 - **Caixa Postal Service**: Para consultar mensagens sobre pagamentos
-
-## Monitoramento e Logs
-
-Para monitoramento eficaz:
-
-- Logar todas as consultas de DAS
-- Monitorar emissões de DAS
-- Alertar sobre DAS próximos do vencimento
-- Rastrear erros de validação
-- Monitorar performance das requisições
+- **DTE Service**: Para verificar adesão ao Domicílio Tributário Eletrônico
 
 ## Suporte
 
 Para dúvidas sobre o serviço PGMEI:
-
 - Consulte a [Documentação Oficial](https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/)
 - Acesse o [Portal do Cliente SERPRO](https://cliente.serpro.gov.br)
 - Abra uma issue no repositório para questões específicas do package

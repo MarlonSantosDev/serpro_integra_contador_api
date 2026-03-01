@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../serpro_integra_contador_api/ConsultarSituacaoEncerramentoResponse-class.html">ConsultarSituacaoEncerramentoResponse</a></span>&gt;</span></span>
-<span class="name ">aguardarEncerramento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="aguardarEncerramento-param-contribuinteNumero"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
+<span class="name ">aguardarEncerramento</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="aguardarEncerramento-param-contribuinteNumero"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">contribuinteNumero</span>, </span></li>
 <li><span class="parameter" id="aguardarEncerramento-param-protocoloEncerramento"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">protocoloEncerramento</span>, </span></li>
 <li><span class="parameter" id="aguardarEncerramento-param-timeoutSegundos"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">timeoutSegundos</span> = <span class="default-value">300</span>, </span></li>
 <li><span class="parameter" id="aguardarEncerramento-param-intervaloConsulta"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">intervaloConsulta</span> = <span class="default-value">10</span>, </span></li>
@@ -82,7 +82,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;ConsultarSituacaoEncerramentoResponse&gt; aguardarEncerramento({
-  required String contribuinteNumero,
+  String? contribuinteNumero,
   required String protocoloEncerramento,
   int timeoutSegundos = 300,
   int intervaloConsulta = 10,
@@ -144,7 +144,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>

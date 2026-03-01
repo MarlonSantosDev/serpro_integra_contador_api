@@ -26,10 +26,11 @@ import 'package:serpro_integra_contador_api/serpro_integra_contador_api.dart';
 
 final apiClient = ApiClient();
 await apiClient.authenticate(
-  'seu_consumer_key',
-  'seu_consumer_secret', 
-  'caminho/para/certificado.p12',
-  'senha_do_certificado',
+  consumerKey: 'seu_consumer_key',
+  consumerSecret: 'seu_consumer_secret',
+  certificadoDigitalPath: 'caminho/para/certificado.p12',
+  senhaCertificado: 'senha_do_certificado',
+  ambiente: 'trial', // ou 'producao'
 );
 ```
 
@@ -235,10 +236,11 @@ void main() async {
   // 1. Configurar cliente
   final apiClient = ApiClient();
   await apiClient.authenticate(
-    'seu_consumer_key',
-    'seu_consumer_secret', 
-    'caminho/para/certificado.p12',
-    'senha_do_certificado',
+    consumerKey: 'seu_consumer_key',
+    consumerSecret: 'seu_consumer_secret',
+    certificadoDigitalPath: 'caminho/para/certificado.p12',
+    senhaCertificado: 'senha_do_certificado',
+    ambiente: 'trial', // ou 'producao'
   );
   
   // 2. Criar serviço

@@ -64,8 +64,8 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">ExcecaoAssinaturaXml(String mensagem, {String? codigo})
-  : super(mensagem, codigo: codigo ?? &#39;ERRO_ASSINATURA_XML&#39;, statusHttp: 400);</code></pre>
+  <pre class="language-dart"><code class="language-dart">ExcecaoAssinaturaXml(super.mensagem, {String? codigo})
+  : super(codigo: codigo ?? &#39;ERRO_ASSINATURA_XML&#39;, statusHttp: 400);</code></pre>
 </section>
 
 
@@ -93,7 +93,7 @@
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.11
+      2.0.12
   </span>
   
 </footer>
