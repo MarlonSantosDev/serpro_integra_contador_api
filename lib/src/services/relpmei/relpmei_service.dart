@@ -47,7 +47,7 @@ class RelpmeiService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarPedidosRelpmeiResponse> consultarPedidos({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
@@ -61,13 +61,14 @@ class RelpmeiService {
 
   /// Versão com request específico para consultar pedidos de parcelamento
   Future<ConsultarPedidosRelpmeiResponse> consultarPedidosWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarPedidosRelpmeiRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'RELPMEI',
         idServico: 'PEDIDOSPARC233',
@@ -96,7 +97,7 @@ class RelpmeiService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
   Future<ConsultarParcelamentoRelpmeiResponse> consultarParcelamento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int numeroParcelamento,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
@@ -114,13 +115,14 @@ class RelpmeiService {
   /// Versão com request específico para consultar parcelamento específico
   Future<ConsultarParcelamentoRelpmeiResponse>
   consultarParcelamentoWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarParcelamentoRelpmeiRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'RELPMEI',
         idServico: 'OBTERPARC234',
@@ -148,7 +150,7 @@ class RelpmeiService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
   Future<ConsultarParcelasImpressaoRelpmeiResponse> consultarParcelasImpressao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
@@ -163,13 +165,14 @@ class RelpmeiService {
   /// Versão com request específico para consultar parcelas para impressão
   Future<ConsultarParcelasImpressaoRelpmeiResponse>
   consultarParcelasImpressaoWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarParcelasImpressaoRelpmeiRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'RELPMEI',
         idServico: 'PARCELASPARAGERAR232',
@@ -199,7 +202,7 @@ class RelpmeiService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
   Future<ConsultarDetalhesPagamentoRelpmeiResponse> consultarDetalhesPagamento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int numeroParcelamento,
     required int anoMesParcela,
     String? contratanteNumero,
@@ -219,13 +222,14 @@ class RelpmeiService {
   /// Versão com request específico para consultar detalhes de pagamento
   Future<ConsultarDetalhesPagamentoRelpmeiResponse>
   consultarDetalhesPagamentoWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarDetalhesPagamentoRelpmeiRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'RELPMEI',
         idServico: 'DETPAGTOPARC235',
@@ -253,7 +257,7 @@ class RelpmeiService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional)
   Future<EmitirDasRelpmeiResponse> emitirDas({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int parcelaParaEmitir,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
@@ -268,13 +272,14 @@ class RelpmeiService {
 
   /// Versão com request específico para emitir DAS
   Future<EmitirDasRelpmeiResponse> emitirDasWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required EmitirDasRelpmeiRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'RELPMEI',
         idServico: 'GERARDAS231',

@@ -67,6 +67,9 @@ class ApiClient {
   /// Modelo de autenticação contendo tokens e dados do contratante/autor
   AuthenticationModel? _authModel;
 
+  /// CNPJ/CPF do contribuinte armazenado durante autenticação com procurador
+  String? _contribuinteNumero;
+
   /// Serviços de autenticação
   AuthService? _authService;
   HttpClientAdapter? _httpAdapter;
@@ -81,6 +84,9 @@ class ApiClient {
 
   /// Número do contratante (CNPJ) configurado na autenticação
   String? get contratanteNumero => _authModel?.contratanteNumero;
+
+  /// CNPJ/CPF do contribuinte configurado durante autenticação com procurador
+  String? get contribuinteNumero => _contribuinteNumero;
 
   /// Número do autor do pedido (CPF/CNPJ) configurado na autenticação
   String? get autorPedidoDadosNumero => _authModel?.autorPedidoDadosNumero;
@@ -375,6 +381,7 @@ class ApiClient {
       _cloudFunctionCertPassword = certificadoProcuradorPassword ?? senhaCertificado;
 
       await _authenticateWithProcuradorViaCloudFunction(consumerKey: consumerKey, consumerSecret: consumerSecret, contratanteNumero: contratanteNumero, contratanteNome: contratanteNome, autorPedidoDadosNumero: autorNumero ?? autorPedidoDadosNumero, autorNome: autorNome, ambiente: ambiente, contribuinteNumero: contribuinteNumero ?? contratanteNumero, certificadoDigitalBase64: certificadoDigitalBase64, senhaCertificado: senhaCertificado, certificadoProcuradorBase64: certificadoProcuradorBase64, certificadoProcuradorPassword: certificadoProcuradorPassword);
+      _contribuinteNumero = contribuinteNumero ?? contratanteNumero;
       return;
     }
 
@@ -399,6 +406,9 @@ class ApiClient {
 
     // 1. Fazer autenticação OAuth2 normal
     await authenticate(consumerKey: consumerKey, consumerSecret: consumerSecret, contratanteNumero: contratanteNumero, autorPedidoDadosNumero: autorPedidoDadosNumero, certificadoDigitalBase64: certificadoDigitalBase64, certificadoDigitalPath: certificadoDigitalPath, senhaCertificado: senhaCertificado, ambiente: ambiente);
+
+    // Armazenar contribuinteNumero para uso como padrão nos serviços
+    _contribuinteNumero = contribuinteNumero ?? contratanteNumero;
 
     // 2. Se parâmetros do procurador foram fornecidos, fazer autenticação do procurador
     if (contratanteNome != null && autorNome != null) {
@@ -742,6 +752,7 @@ class ApiClient {
   /// ```
   void clearAuthentication() {
     _authModel = null;
+    _contribuinteNumero = null;
     _httpAdapter?.dispose();
     _httpAdapter = null;
     _authService = null;

@@ -90,7 +90,7 @@ class PgdasdService {
   /// );
   /// ```
   Future<response_models.EntregarDeclaracaoResponse> entregarDeclaracao({
-    required String cnpj,
+    String? cnpj,
     required int periodoApuracao,
     required Declaracao declaracao,
     bool indicadorTransmissao = true,
@@ -99,9 +99,10 @@ class PgdasdService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Construir request internamente de forma transparente
     final request = request_models.EntregarDeclaracaoRequest(
-      cnpjCompleto: cnpj,
+      cnpjCompleto: resolvedCnpj,
       pa: periodoApuracao,
       indicadorTransmissao: indicadorTransmissao,
       indicadorComparacao: indicadorComparacao,
@@ -114,7 +115,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: cnpj,
+      contribuinteNumero: resolvedCnpj,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'TRANSDECLARACAO11',
@@ -140,12 +141,13 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<GerarDasResponse> gerarDas({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String periodoApuracao,
     String? dataConsolidacao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final dasRequest = GerarDasRequest(
       periodoApuracao: periodoApuracao,
       dataConsolidacao: dataConsolidacao,
@@ -156,7 +158,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'GERARDAS12',
@@ -182,12 +184,13 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarDeclaracoesResponse> consultarDeclaracoes({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? anoCalendario,
     String? periodoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = anoCalendario != null
         ? ConsultarDeclaracoesRequest.porAnoCalendario(anoCalendario)
         : ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao!);
@@ -197,7 +200,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'CONSDECLARACAO13',
@@ -222,11 +225,12 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String periodoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarUltimaDeclaracaoRequest(
       periodoApuracao: periodoApuracao,
     );
@@ -236,7 +240,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'CONSULTIMADECREC14',
@@ -261,11 +265,12 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarDeclaracaoNumeroResponse> consultarDeclaracaoPorNumero({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String numeroDeclaracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarDeclaracaoNumeroRequest(
       numeroDeclaracao: numeroDeclaracao,
     );
@@ -275,7 +280,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'CONSDECREC15',
@@ -300,11 +305,12 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarExtratoDasResponse> consultarExtratoDas({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String numeroDas,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarExtratoDasRequest(numeroDas: numeroDas);
 
     if (!consultaRequest.isValid) {
@@ -312,7 +318,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'CONSEXTRATO16',
@@ -337,11 +343,12 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<GerarDasCobrancaResponse> gerarDasCobranca({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String periodoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final cobrancaRequest = GerarDasCobrancaRequest(
       periodoApuracao: periodoApuracao,
     );
@@ -351,7 +358,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'GERARDASCOBRANCA17',
@@ -376,11 +383,12 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<GerarDasProcessoResponse> gerarDasProcesso({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String numeroProcesso,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final processoRequest = GerarDasProcessoRequest(
       numeroProcesso: numeroProcesso,
     );
@@ -390,7 +398,7 @@ class PgdasdService {
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'GERARDASPROCESSO18',
@@ -415,17 +423,18 @@ class PgdasdService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<GerarDasAvulsoResponse> gerarDasAvulso({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required GerarDasAvulsoRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     if (!request.isValid) {
       throw ArgumentError('Dados para geração do DAS Avulso inválidos');
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'PGDASD',
         idServico: 'GERARDASAVULSO19',
@@ -478,7 +487,7 @@ class PgdasdService {
   /// ```
   Future<ConsultarUltimaDeclaracaoComPagamentoResponse>
   consultarUltimaDeclaracaoComPagamento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String periodoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
@@ -612,7 +621,7 @@ class PgdasdService {
   /// }
   /// ```
   Future<EntregarDeclaracaoComDasResponse> entregarDeclaracaoComDas({
-    required String cnpj,
+    String? cnpj,
     required int periodoApuracao,
     required Declaracao declaracao,
     bool indicadorTransmissao = true,

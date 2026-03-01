@@ -43,11 +43,12 @@ class PertmeiService {
   ///
   /// Retorna lista de parcelamentos encontrados ou erro detalhado
   Future<ConsultarPedidosResponse> consultarPedidos(
-    String contribuinteNumero,
+    String? contribuinteNumero,
   ) async {
     try {
+      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
-      if (contribuinteNumero.isEmpty) {
+      if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarPedidosResponse(
           status: '400',
           mensagens: [
@@ -61,7 +62,7 @@ class PertmeiService {
       }
 
       final request = BaseRequest(
-        contribuinteNumero: contribuinteNumero,
+        contribuinteNumero: resolvedContribuinte,
         pedidoDados: PedidoDados(
           idSistema: 'PERTMEI',
           idServico: 'PEDIDOSPARC223',
@@ -93,12 +94,13 @@ class PertmeiService {
   ///
   /// Retorna informações detalhadas do parcelamento ou erro detalhado
   Future<ConsultarParcelamentoResponse> consultarParcelamento(
-    String contribuinteNumero,
+    String? contribuinteNumero,
     int numeroParcelamento,
   ) async {
     try {
+      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
-      if (contribuinteNumero.isEmpty) {
+      if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarParcelamentoResponse(
           status: '400',
           mensagens: [
@@ -125,7 +127,7 @@ class PertmeiService {
       }
 
       final request = BaseRequest(
-        contribuinteNumero: contribuinteNumero,
+        contribuinteNumero: resolvedContribuinte,
         pedidoDados: PedidoDados(
           idSistema: 'PERTMEI',
           idServico: 'OBTERPARC224',
@@ -156,11 +158,12 @@ class PertmeiService {
   ///
   /// Retorna lista de parcelas disponíveis para geração do DAS ou erro detalhado
   Future<ConsultarParcelasResponse> consultarParcelasParaImpressao(
-    String contribuinteNumero,
+    String? contribuinteNumero,
   ) async {
     try {
+      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
-      if (contribuinteNumero.isEmpty) {
+      if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarParcelasResponse(
           status: '400',
           mensagens: [
@@ -174,7 +177,7 @@ class PertmeiService {
       }
 
       final request = BaseRequest(
-        contribuinteNumero: contribuinteNumero,
+        contribuinteNumero: resolvedContribuinte,
         pedidoDados: PedidoDados(
           idSistema: 'PERTMEI',
           idServico: 'PARCELASPARAGERAR222',
@@ -207,13 +210,14 @@ class PertmeiService {
   ///
   /// Retorna informações detalhadas de pagamento de uma parcela ou erro detalhado
   Future<ConsultarDetalhesPagamentoResponse> consultarDetalhesPagamento(
-    String contribuinteNumero,
+    String? contribuinteNumero,
     int numeroParcelamento,
     int anoMesParcela,
   ) async {
     try {
+      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
-      if (contribuinteNumero.isEmpty) {
+      if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return ConsultarDetalhesPagamentoResponse(
           status: '400',
           mensagens: [
@@ -254,7 +258,7 @@ class PertmeiService {
       }
 
       final request = BaseRequest(
-        contribuinteNumero: contribuinteNumero,
+        contribuinteNumero: resolvedContribuinte,
         pedidoDados: PedidoDados(
           idSistema: 'PERTMEI',
           idServico: 'DETPAGTOPARC225',
@@ -289,12 +293,13 @@ class PertmeiService {
   ///
   /// Retorna PDF do DAS em formato base64 ou erro detalhado
   Future<EmitirDasResponse> emitirDas(
-    String contribuinteNumero,
+    String? contribuinteNumero,
     int parcelaParaEmitir,
   ) async {
     try {
+      final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero;
       // Validação dos dados obrigatórios
-      if (contribuinteNumero.isEmpty) {
+      if (resolvedContribuinte == null || resolvedContribuinte.isEmpty) {
         return EmitirDasResponse(
           status: '400',
           mensagens: [
@@ -322,7 +327,7 @@ class PertmeiService {
       }
 
       final request = BaseRequest(
-        contribuinteNumero: contribuinteNumero,
+        contribuinteNumero: resolvedContribuinte,
         pedidoDados: PedidoDados(
           idSistema: 'PERTMEI',
           idServico: 'GERARDAS221',

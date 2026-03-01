@@ -61,7 +61,7 @@ class CaixaPostalService {
   /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ListaMensagensResponse> obterListaMensagensPorContribuinte(
-    String contribuinte, {
+    String? contribuinte, {
     String? cnpjReferencia,
     int statusLeitura = 0,
     int? indicadorFavorito,
@@ -70,6 +70,7 @@ class CaixaPostalService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final dadosMap = <String, dynamic>{
       'statusLeitura': statusLeitura.toString(),
       'indicadorPagina': indicadorPagina.toString(),
@@ -90,7 +91,7 @@ class CaixaPostalService {
     }
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinte,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'CAIXAPOSTAL',
         idServico: 'MSGCONTRIBUINTE61',
@@ -118,13 +119,14 @@ class CaixaPostalService {
   /// [contratanteNumero] - CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] - CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<DetalhesMensagemResponse> obterDetalhesMensagemEspecifica(
-    String contribuinte,
+    String? contribuinte,
     String isn, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = BaseRequest(
-      contribuinteNumero: contribuinte,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'CAIXAPOSTAL',
         idServico: 'MSGDETALHAMENTO62',
@@ -154,12 +156,13 @@ class CaixaPostalService {
   /// **Retorna:**
   /// - indicadorMensagensNovas: 0=Sem mensagens novas, 1=Uma mensagem nova, 2=Múltiplas mensagens novas
   Future<IndicadorMensagensResponse> obterIndicadorNovasMensagens(
-    String contribuinte, {
+    String? contribuinte, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinte ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = BaseRequest(
-      contribuinteNumero: contribuinte,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'CAIXAPOSTAL',
         idServico: 'INNOVAMSG63',

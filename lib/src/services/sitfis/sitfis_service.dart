@@ -51,12 +51,13 @@ class SitfisService {
   ///
   /// Retorna [SolicitarProtocoloResponse] com o protocolo e tempo de espera
   Future<SolicitarProtocoloResponse> solicitarProtocoloRelatorio(
-    String contribuinteNumero, {
+    String? contribuinteNumero, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final request = SolicitarProtocoloRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
     );
 
     final response = await _apiClient.post(
@@ -80,13 +81,14 @@ class SitfisService {
   ///
   /// Retorna [EmitirRelatorioResponse] com o PDF do relatório ou tempo de espera
   Future<EmitirRelatorioResponse> emitirRelatorioSituacaoFiscal(
-    String contribuinteNumero,
+    String? contribuinteNumero,
     String protocoloRelatorio, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final request = EmitirRelatorioRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       protocoloRelatorio: protocoloRelatorio,
     );
 

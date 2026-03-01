@@ -56,7 +56,7 @@ class PagtoWebService {
   /// [contratanteNumero] Número do contratante (opcional)
   /// [autorPedidoDadosNumero] Número do autor do pedido (opcional)
   Future<ConsultarPagamentosResponse> consultarPagamentos({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? dataInicial,
     String? dataFinal,
     List<String>? codigoReceitaLista,
@@ -69,8 +69,9 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = ConsultarPagamentosRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       dataInicial: dataInicial,
       dataFinal: dataFinal,
       codigoReceitaLista: codigoReceitaLista,
@@ -104,7 +105,7 @@ class PagtoWebService {
   /// [contratanteNumero] Número do contratante (opcional)
   /// [autorPedidoDadosNumero] Número do autor do pedido (opcional)
   Future<ContarPagamentosResponse> contarPagamentos({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? dataInicial,
     String? dataFinal,
     List<String>? codigoReceitaLista,
@@ -115,8 +116,9 @@ class PagtoWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = ContarPagamentosRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       dataInicial: dataInicial,
       dataFinal: dataFinal,
       codigoReceitaLista: codigoReceitaLista,
@@ -143,13 +145,14 @@ class PagtoWebService {
   /// [contratanteNumero] Número do contratante (opcional)
   /// [autorPedidoDadosNumero] Número do autor do pedido (opcional)
   Future<EmitirComprovanteResponse> emitirComprovante({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String numeroDocumento,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ/CPF do contribuinte é obrigatório'));
     final request = EmitirComprovanteRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       numeroDocumento: numeroDocumento,
     );
 
@@ -173,7 +176,7 @@ class PagtoWebService {
   /// Método de conveniência: Consultar pagamentos por intervalo de datas
   Future<ConsultarPagamentosResponse>
   consultarPagamentosPorIntervaloDataArrecadacao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String dataInicial,
     required String dataFinal,
     int primeiroDaPagina = 0,
@@ -194,7 +197,7 @@ class PagtoWebService {
 
   /// Método de conveniência: Consultar pagamentos por código de receita
   Future<ConsultarPagamentosResponse> consultarPagamentosPorCodigoReceitaLista({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required List<String> codigoReceitaLista,
     int primeiroDaPagina = 0,
     int tamanhoDaPagina = 100,
@@ -214,7 +217,7 @@ class PagtoWebService {
   /// Método de conveniência: Consultar pagamentos por intervalo de valores
   Future<ConsultarPagamentosResponse>
   consultarPagamentosPorIntervaloValorTotalDocumento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
     int primeiroDaPagina = 0,
@@ -235,7 +238,7 @@ class PagtoWebService {
 
   /// Método de conveniência: Contar pagamentos por intervalo de datas
   Future<ContarPagamentosResponse> contarPagamentosPorIntervaloDataArrecadacao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String dataInicial,
     required String dataFinal,
     String? contratanteNumero,
@@ -252,7 +255,7 @@ class PagtoWebService {
 
   /// Método de conveniência: Contar pagamentos por código de receita
   Future<ContarPagamentosResponse> contarPagamentosPorCodigoReceitaLista({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required List<String> codigoReceitaLista,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
@@ -268,7 +271,7 @@ class PagtoWebService {
   /// Método de conveniência: Contar pagamentos por intervalo de valores
   Future<ContarPagamentosResponse>
   contarPagamentosPorIntervaloValorTotalDocumento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required double valorInicial,
     required double valorFinal,
     String? contratanteNumero,

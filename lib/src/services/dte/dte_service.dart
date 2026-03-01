@@ -48,12 +48,13 @@ class DteService {
   /// }
   /// ```
   Future<DteResponse> obterIndicadorDte(
-    String cnpj, {
+    String? cnpj, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
-      contribuinteNumero: cnpj,
+      contribuinteNumero: resolvedCnpj,
       pedidoDados: PedidoDados(
         idSistema: 'DTE',
         idServico: 'CONSULTASITUACAODTE111',

@@ -46,13 +46,14 @@ class DefisService {
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
   Future<TransmitirDeclaracaoResponse> transmitirDeclaracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required TransmitirDeclaracaoRequest declaracaoData,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DEFIS',
         idServico: 'TRANSDECLARACAO141',
@@ -76,12 +77,13 @@ class DefisService {
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
   Future<ConsultarDeclaracoesResponse> consultarDeclaracoesTransmitidas({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DEFIS',
         idServico: 'CONSDECLARACAO142',
@@ -106,15 +108,16 @@ class DefisService {
   /// [contratanteNumero] Número do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
   Future<ConsultarUltimaDeclaracaoResponse> consultarUltimaDeclaracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int ano,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarUltimaDeclaracaoRequest(ano: ano);
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DEFIS',
         idServico: 'CONSULTIMADECREC143',
@@ -140,17 +143,18 @@ class DefisService {
   /// [autorPedidoDadosNumero] Número do autor do pedido de dados (opcional, usa dados da autenticação se não informado)
 
   Future<ConsultarDeclaracaoEspecificaResponse> consultarDeclaracaoEspecifica({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String idDefis,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final consultaRequest = ConsultarDeclaracaoEspecificaRequest(
       idDefis: idDefis,
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DEFIS',
         idServico: 'CONSDECREC144',

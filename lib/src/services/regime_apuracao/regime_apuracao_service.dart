@@ -57,7 +57,7 @@ class RegimeApuracaoService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<EfetuarOpcaoRegimeResponse> efetuarOpcaoRegime({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int anoOpcao,
     required TipoRegime tipoRegime,
     required bool deAcordoResolucao,
@@ -87,17 +87,18 @@ class RegimeApuracaoService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<EfetuarOpcaoRegimeResponse> efetuarOpcaoRegimeWithRequest({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required EfetuarOpcaoRegimeRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     if (!request.isValid) {
       throw ArgumentError('Dados da opção pelo regime inválidos');
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'REGIMEAPURACAO',
         idServico: 'EFETUAROPCAOREGIME101',
@@ -124,12 +125,13 @@ class RegimeApuracaoService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarAnosCalendariosResponse> consultarAnosCalendarios({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'REGIMEAPURACAO',
         idServico: 'CONSULTARANOSCALENDARIOS102',
@@ -157,17 +159,18 @@ class RegimeApuracaoService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarOpcaoRegimeResponse> consultarOpcaoRegime({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarOpcaoRegimeRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta inválidos');
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'REGIMEAPURACAO',
         idServico: 'CONSULTAROPCAOREGIME103',
@@ -195,17 +198,18 @@ class RegimeApuracaoService {
   /// [contratanteNumero] CNPJ do contratante (opcional, usa dados da autenticação se não informado)
   /// [autorPedidoDadosNumero] CPF/CNPJ do autor do pedido (opcional, usa dados da autenticação se não informado)
   Future<ConsultarResolucaoResponse> consultarResolucao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required ConsultarResolucaoRequest request,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     if (!request.isValid) {
       throw ArgumentError('Dados da consulta da resolução inválidos');
     }
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'REGIMEAPURACAO',
         idServico: 'CONSULTARRESOLUCAO104',

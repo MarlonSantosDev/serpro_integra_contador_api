@@ -60,7 +60,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<EncerrarApuracaoResponse> encerrarApuracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required PeriodoApuracao periodoApuracao,
     required DadosIniciais dadosIniciais,
     Debitos? debitos,
@@ -70,6 +70,7 @@ class MitService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = EncerrarApuracaoRequest(
       periodoApuracao: periodoApuracao,
       dadosIniciais: dadosIniciais,
@@ -80,7 +81,7 @@ class MitService {
     );
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'MIT',
         idServico: 'ENCAPURACAO314',
@@ -109,17 +110,18 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ConsultarSituacaoEncerramentoResponse> consultarSituacaoEncerramento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String protocoloEncerramento,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ConsultarSituacaoEncerramentoRequest(
       protocoloEncerramento: protocoloEncerramento,
     );
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'MIT',
         idServico: 'SITUACAOENC315',
@@ -148,15 +150,16 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ConsultarApuracaoResponse> consultarApuracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int idApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ConsultarApuracaoRequest(idApuracao: idApuracao);
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'MIT',
         idServico: 'CONSAPURACAO316',
@@ -187,13 +190,14 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ListarApuracaoesResponse> listarApuracaoes({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int anoApuracao,
     int? mesApuracao,
     int? situacaoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     final request = ListarApuracaoesRequest(
       anoApuracao: anoApuracao,
       mesApuracao: mesApuracao,
@@ -201,7 +205,7 @@ class MitService {
     );
 
     final baseRequest = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'MIT',
         idServico: 'LISTAAPURACOES317',
@@ -233,7 +237,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<EncerrarApuracaoResponse> criarApuracaoSemMovimento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int mesApuracao,
     required int anoApuracao,
     QualificacaoPj qualificacaoPj = QualificacaoPj.pjEmGeral,
@@ -283,7 +287,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<EncerrarApuracaoResponse> criarApuracaoComMovimento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int mesApuracao,
     required int anoApuracao,
     QualificacaoPj qualificacaoPj = QualificacaoPj.pjEmGeral,
@@ -333,7 +337,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ListarApuracaoesResponse> consultarApuracaoesPorMes({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int anoApuracao,
     required int mesApuracao,
     String? contratanteNumero,
@@ -355,7 +359,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ListarApuracaoesResponse> consultarApuracaoesEncerradas({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required int anoApuracao,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
@@ -378,7 +382,7 @@ class MitService {
   /// [contratanteNumero] CNPJ do contratante (opcional)
   /// [autorPedidoDadosNumero] CNPJ do autor do pedido (opcional)
   Future<ConsultarSituacaoEncerramentoResponse> aguardarEncerramento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String protocoloEncerramento,
     int timeoutSegundos = 300,
     int intervaloConsulta = 10,

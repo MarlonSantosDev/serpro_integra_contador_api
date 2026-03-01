@@ -52,7 +52,7 @@ class DctfWebService {
   /// [dataAcolhimentoProposta] Data proposta para pagamento (formato: AAAAMMDD)
   /// [idsSistemaOrigem] Lista de sistemas de origem das receitas
   Future<GerarGuiaResponse> gerarDocumentoArrecadacao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -65,6 +65,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -78,7 +79,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'GERARGUIA31',
@@ -105,7 +106,7 @@ class DctfWebService {
   /// [numeroReciboEntrega] Número do recibo - opcional, usa a declaração mais recente se não informado
   /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   Future<ConsultarRelatorioResponse> consultarReciboTransmissao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -116,6 +117,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -127,7 +129,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'CONSRECIBO32',
@@ -155,7 +157,7 @@ class DctfWebService {
   /// [numeroReciboEntrega] Número do recibo - opcional, usa a declaração mais recente se não informado
   /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   Future<ConsultarRelatorioResponse> consultarDeclaracaoCompleta({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -166,6 +168,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -177,7 +180,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'CONSDECCOMPLETA33',
@@ -207,7 +210,7 @@ class DctfWebService {
   /// [numeroReciboEntrega] Número do recibo - opcional, usa a declaração mais recente se não informado
   /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   Future<ConsultarXmlResponse> consultarXmlDeclaracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -218,6 +221,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = ConsultarDctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -229,7 +233,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'CONSXMLDECLARACAO38',
@@ -260,7 +264,7 @@ class DctfWebService {
   /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   /// [xmlAssinadoBase64] XML obtido de consultarXmlDeclaracao, assinado digitalmente e em Base64
   Future<TransmitirDeclaracaoDctfResponse> transmitirDeclaracao({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -270,6 +274,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     // Validar XML antes de enviar
     if (!validarXmlBase64(xmlAssinadoBase64)) {
       if (contratanteNumero != '00000000000') {
@@ -287,7 +292,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'TRANSDECLARACAO310',
@@ -314,7 +319,7 @@ class DctfWebService {
   /// [numProcReclamatoria] Número do processo - apenas para reclamatória trabalhista
   /// [idsSistemaOrigem] Lista de sistemas de origem das receitas
   Future<GerarGuiaResponse> gerarDocumentoArrecadacaoAndamento({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,
@@ -325,6 +330,7 @@ class DctfWebService {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedContribuinte = contribuinteNumero ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
     final dctfRequest = DctfWebRequest(
       categoria: categoria,
       anoPA: anoPA,
@@ -336,7 +342,7 @@ class DctfWebService {
     );
 
     final request = BaseRequest(
-      contribuinteNumero: contribuinteNumero,
+      contribuinteNumero: resolvedContribuinte,
       pedidoDados: PedidoDados(
         idSistema: 'DCTFWEB',
         idServico: 'GERARGUIAANDAMENTO313',
@@ -356,7 +362,7 @@ class DctfWebService {
 
   /// Gera DARF para declaração GERAL MENSAL (categoria 40)
   Future<GerarGuiaResponse> gerarDarfGeralMensal({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String anoPA,
     required String mesPA,
     int? numeroReciboEntrega,
@@ -380,7 +386,7 @@ class DctfWebService {
 
   /// Gera DARF para declaração PESSOA FÍSICA MENSAL (categoria 50)
   Future<GerarGuiaResponse> gerarDarfPfMensal({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String anoPA,
     required String mesPA,
     int? numeroReciboEntrega,
@@ -402,7 +408,7 @@ class DctfWebService {
 
   /// Gera DARF para declaração 13º SALÁRIO (categorias 41 ou 51)
   Future<GerarGuiaResponse> gerarDarf13Salario({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required String anoPA,
     bool isPessoaFisica = false,
     int? numeroReciboEntrega,
@@ -439,7 +445,7 @@ class DctfWebService {
   /// [contratanteNumero] CPF ou CNPJ do contratante do serviço
   /// [autorPedidoDadosNumero] CPF ou CNPJ do autor do pedido de dados
   Future<TransmitirDeclaracaoDctfResponse> consultarXmlETransmitir({
-    required String contribuinteNumero,
+    String? contribuinteNumero,
     required CategoriaDctf categoria,
     required String anoPA,
     String? mesPA,

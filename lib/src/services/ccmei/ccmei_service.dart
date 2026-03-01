@@ -59,16 +59,17 @@ class CcmeiService {
   ///
   /// Throws [ArgumentError] se o CNPJ for inválido
   Future<EmitirCcmeiResponse> emitirCcmei(
-    String cnpj, {
+    String? cnpj, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validar formato do CNPJ antes de fazer a requisição
-    ValidacoesUtils.validateCNPJ(cnpj);
+    ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
     // Criar requisição com dados específicos do serviço CCMEI
     final request = BaseRequest(
-      contribuinteNumero: cnpj,
+      contribuinteNumero: resolvedCnpj,
       pedidoDados: PedidoDados(
         idSistema: 'CCMEI',
         idServico: 'EMITIRCCMEI121', // ID específico para emissão de CCMEI
@@ -101,16 +102,17 @@ class CcmeiService {
   /// - Períodos de enquadramento como MEI
   /// Lança exceção se o CNPJ for inválido ou houver erro na API
   Future<ConsultarDadosCcmeiResponse> consultarDadosCcmei(
-    String cnpj, {
+    String? cnpj, {
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
   }) async {
+    final resolvedCnpj = cnpj ?? _apiClient.contribuinteNumero ?? (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
     // Validar formato do CNPJ antes de fazer a requisição
-    ValidacoesUtils.validateCNPJ(cnpj);
+    ValidacoesUtils.validateCNPJ(resolvedCnpj);
 
     // Criar requisição para consulta de dados completos
     final request = BaseRequest(
-      contribuinteNumero: cnpj,
+      contribuinteNumero: resolvedCnpj,
       pedidoDados: PedidoDados(
         idSistema: 'CCMEI',
         idServico: 'DADOSCCMEI122', // ID específico para consulta de dados
