@@ -1,3 +1,6 @@
+## [2.0.13] - 2026-01-31
+- Ajuste de exportação de classes.
+
 ## [2.0.12] - 2026-01-31
 - Ajustes e correções no código.
 - Atualização de documentação.
