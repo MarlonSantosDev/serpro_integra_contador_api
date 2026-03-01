@@ -77,7 +77,8 @@ export 'src/base/tipo_documento.dart';
 // Utilities
 export 'src/util/validacoes_utils.dart';
 export 'src/util/formatador_utils.dart';
-export 'src/util/print.dart';
+// print.dart não é exportado: utilitário interno para saída colorida em CLI;
+// não deve ser usado em projetos Flutter que consomem o pacote.
 export 'src/services/pgmei/model/pgmei_validations.dart';
 export 'src/util/arquivo_utils.dart';
 
